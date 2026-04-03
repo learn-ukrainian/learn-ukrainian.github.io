@@ -1,0 +1,48 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'DEDUCT for: The required/recommended vocabulary word "порекомендувати"
+    was omitted and replaced with "порадити" in Dialogue 2.'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'DEDUCT for: The text lists the regular Group I plural ending as "**-е́мо**"
+    with an explicit stress mark, which incorrectly implies it is universally end-stressed.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: 'REWARD for: Exceptional PPP flow, citing Grade 3 poetry to explain deep
+    desire, and clear comparative tables.'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'DEDUCT for: Missing "порекомендувати" as noted above. All other required
+    words are used naturally.'
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: 'REWARD for: Perfect placement of all planned activity markers matching
+    the required scope and count.'
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: 'REWARD for: Using Антоненко-Давидович style guidelines, creating realistic
+    cafe and weekend scenarios, and avoiding generic filler.'
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: 'DEDUCT for: Word count outside target range. The deterministic word count
+    is 1587, which is >30% over the planned 1200 word target.'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'REWARD for: Teaching the critical stylistic distinction between ''мусити''
+    (genuine compulsion) and ''мати'' (ordinary duty).'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'DEDUCT for: Minor formatting artifact in Dialogue 2 where speaker "Денис"
+    is given two consecutive separate dialogue lines instead of combining his speech.'
+findings: []

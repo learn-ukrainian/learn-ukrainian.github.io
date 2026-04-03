@@ -1,45 +1,78 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 67,
+  "grounded_items": 56,
+  "ungrounded": [
+    {
+      "word": "ми",
+      "exercise_type": "quiz",
+      "context": "Що ми їмо вранці?"
+    },
+    {
+      "word": "їмо",
+      "exercise_type": "quiz",
+      "context": "Що ми їмо вранці?"
+    },
+    {
+      "word": "це",
+      "exercise_type": "quiz",
+      "context": "Традиційний український суп — це..."
+    },
+    {
+      "word": "сиру",
+      "exercise_type": "quiz",
+      "context": "Українська страва з тіста і картоплі або сиру:"
+    },
+    {
+      "word": "популярний",
+      "exercise_type": "quiz",
+      "context": "Популярний холодний напій з фруктів:"
+    },
+    {
+      "word": "холодний",
+      "exercise_type": "quiz",
+      "context": "Популярний холодний напій з фруктів:"
+    },
+    {
+      "word": "фруктів",
+      "exercise_type": "quiz",
+      "context": "Популярний холодний напій з фруктів:"
+    },
+    {
+      "word": "вона",
+      "exercise_type": "fill-in",
+      "context": "Вона п'є чай ____."
+    },
+    {
+      "word": "п'є",
+      "exercise_type": "fill-in",
+      "context": "Вона п'є чай ____."
+    },
+    {
+      "word": "він",
+      "exercise_type": "fill-in",
+      "context": "Він їсть хліб ____."
+    },
+    {
+      "word": "їсть",
+      "exercise_type": "fill-in",
+      "context": "Він їсть хліб ____."
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 33,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 23,
     "not_tested": [
       "банан",
-      "борщ",
       "вареник",
-      "вечеря",
-      "вода",
-      "кава",
-      "картопля",
-      "каша",
-      "компот",
       "курка",
-      "лимон",
-      "м'ясо",
       "масло",
-      "молоко",
-      "напій",
-      "обід",
-      "огірок",
-      "помідор",
       "піца",
-      "риба",
       "салат",
       "сир",
-      "сметана",
-      "сніданок",
-      "суп",
-      "сік",
       "сіль",
-      "хліб",
       "цукор",
-      "чай",
-      "яблуко",
-      "яйце",
-      "їжа"
+      "яйце"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

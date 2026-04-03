@@ -1,6 +1,6 @@
 # Build Summary: i-eat-i-drink (A1)
 
-Generated: 2026-04-01 13:43
+Generated: 2026-04-03 23:25
 
 ## Pipeline Phases
 
@@ -18,15 +18,16 @@ Generated: 2026-04-01 13:43
 | vocab | complete | 2026-03-30 14:01:41 |
 | enrich | complete | 2026-03-30 14:01:41 |
 | verify | complete | 2026-03-30 14:01:42 |
-| review | complete | 2026-04-01 11:43:33 |
-| stress | complete | 2026-04-01 11:43:39 |
-| publish | complete | 2026-04-01 11:43:40 |
+| review | complete | 2026-04-03 21:25:51 |
+| stress | complete | 2026-04-03 21:25:57 |
+| publish | complete | 2026-04-03 21:25:58 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | i-eat-i-drink-review-r1.md |
+| 2 | i-eat-i-drink-review-r2.md |
 
 ## Dispatch Log
 
@@ -42,6 +43,9 @@ Generated: 2026-04-01 13:43
 | review | gemini (gemini-3-flash-preview) | 1s | ❌ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 2s | ❌ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 122s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 7s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 86s | ✅ |
 
 ## Files
 
@@ -52,6 +56,8 @@ Generated: 2026-04-01 13:43
 - `quick-verify.json`
 - `research-quality.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

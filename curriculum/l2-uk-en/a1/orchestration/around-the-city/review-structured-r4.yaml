@@ -1,0 +1,50 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: The generated text closely follows all the `content_outline` points, including
+    the specific dialogues requested and the synthesis of grammar rules.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: The Ukrainian text is natural and grammatically correct. Cases are correctly
+    applied (e.g., "на вулиці Франка", "в офісі", "їду автобусом", "в театр").
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Strong PPP flow overall, but deduct 2 points because the word "наліво"
+    is tested in the first exercise (`fill-in-directions`) before it has been formally
+    introduced (it is only introduced at the end i
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items from the plan are utilized
+    effectively in the prose.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The injected markers correspond directly to the plan's `activity_hints`.
+    The inline Self-Check effectively reinforces the navigation and case synthesis.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: 'Deduct 2 points for minor meta-commentary ("Every learner needs to describe
+    where they live", "Now put the required vocabulary into full sentences"), which
+    slightly breaks immersion and sounds like a '
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: The text adheres strictly to the requested markdown structure and word
+    count limits (1288 words). All headers are properly formatted.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Strong cultural grounding with realistic examples like Kyiv, Lviv (Площа
+    Ринок, Високий замок), and vul. Franka.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are natural, concise, and highly realistic, with appropriate
+    polite forms ("вибачте") and authentic conversational flow.
+findings: []

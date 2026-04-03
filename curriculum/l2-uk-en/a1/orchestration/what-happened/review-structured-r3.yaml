@@ -1,0 +1,51 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'Covers all major grammar rules and vocabulary. The writer smartly adjusted
+    Dialogue 2 to avoid irregular verbs (`їсти`, `пити`), which is a great pedagogical
+    choice. However, the "Self-check: Tell you'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Excellent. The explanation of `-в, -ла, -ло, -ли` and the reflexive `-ся`
+    behavior is perfectly accurate for Ukrainian.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Exceptional PPP flow. It establishes the pattern through clear dialogues,
+    extracts the rule, provides a comprehensive table, and moves immediately into
+    guided practice.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words (`учора`, `субота`, `фільм`, `разом`,
+    `готувати`, etc.) are naturally integrated into the dialogues and examples.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The three placeholder markers are injected at the exact right moments
+    to test the grammar rules iteratively.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is highly encouraging and practical. The dialogues feel natural,
+    and the explanations are crisp without excessive meta-commentary.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Clean markdown, excellent table usage, and correct headings. Minor typo
+    in the first table where the present tense of "читати" is written twice as `чита́є
+    / читає`.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Authentic Ukrainian names and plausible weekend scenarios. No Russian
+    cultural bleeding.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogues beautifully highlight the gender difference in real-time
+    conversation (e.g., Богдан saying `провів` vs. Марія saying `провела`).
+findings: []

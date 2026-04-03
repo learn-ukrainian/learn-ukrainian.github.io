@@ -1,0 +1,51 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The writer followed the `content_outline` perfectly, but missed the `dialogue_situations`
+    instruction to include Lviv landmarks (Площа Ринок, Оперний театр, Високий замок).
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: The text incorrectly labeled `до центру` as an accusative case construction
+    (it is genitive with 'до'). Also, it wrongly claimed that `на метро` is used for
+    static location, whereas `в/у метро` is the
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: The explanation of motion vs. location is excellent and the PPP flow is
+    strong, but the grammatical mislabeling of `до` as accusative creates a confusing
+    precedent for learners.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required vocabulary is used in natural contexts. One recommended word,
+    `поруч`, was absent from the generated text.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: 'The four `<!-- INJECT_ACTIVITY: ... -->` markers align perfectly with
+    the plan''s hints and are placed logically after the taught concepts.'
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is excellent. The writer uses natural openers like "Navigating
+    a Ukrainian city means juggling two questions at once" and avoids generic enthusiasm.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: The markdown is clean, headings match the plan exactly, and the word count
+    is 1281 words, which is within the target range.
+- dimension: 8
+  name: Cultural accuracy
+  score: 8
+  evidence: The text places a dialogue featuring a metro ride in Lviv ("a stranger
+    asking for help on a Lviv street... Їдьте на метро"). This is factually wrong
+    since Lviv does not have a metro system.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are culturally appropriate and natural, featuring sequence words
+    like "Спочатку... потім" and realistic conversational flow.
+findings: []

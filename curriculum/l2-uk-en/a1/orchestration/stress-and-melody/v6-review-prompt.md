@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 4: Stress and Melody (A1, A1.1 [Sounds, Letters, and First Contact])
-**Writer:** Gemini
+**Writer:** Claude
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -131,15 +131,15 @@ references:
 
 Say the word **наголос** (stress) out loud. One of its three syllables — на, го, лос — comes out louder and longer than the others. That louder syllable is the **наголо́шений склад** (stressed syllable). As noted in the textbook *Заболо́тний Grade 5* (p. 73), Ukrainian has 38 sounds, and stress determines which syllable is pronounced louder and longer. Every Ukrainian word with more than one syllable has one — and only one — stressed syllable. Here is the crucial fact: Ukrainian **наголос** is free. It can land on the first syllable, the middle, or the last, and it can even move between forms of the same word. **Ма́ма** (mother) — stress on the first syllable. **Молоко́** (milk) — stress on the last. **Фотогра́фія** (photograph) — stress on the third syllable, on the а. French locks stress to the final syllable. Czech locks it to the first. Ukrainian gives no such shortcut. You must learn each word's stress individually.
 
-Stress does more than shape how a word sounds — it changes what the word means. Consider three real pairs you will encounter as a learner. **За́мок** with stress on the first syllable means "castle." **Замок** with stress on the second syllable means "lock." Same five letters, entirely different objects. **Мука** with stress on the first syllable means "torment" or "suffering." **Мука** with stress on the last syllable means "flour." **Атлас** with stress on the first syllable is a collection of maps — an atlas. **Атлас** with stress on the second syllable is satin fabric. There is a classic Ukrainian riddle from a Grade 2 textbook by Білоу́с that captures this perfectly: "This word is an ancient building with sharp masonry towers. Change the stress — and you lock the building shut." Wrong stress does not just sound foreign — it says the wrong word entirely. This is why stress marks matter.
+Stress does more than shape how a word sounds — it changes what the word means. Consider three real pairs you will encounter as a learner. **За́мок** with stress on the first syllable means "castle." **Замок** with stress on the second syllable means "lock." Same five letters, entirely different objects. **Мука** with stress on the first syllable means "torment" or "suffering." **Мука** with stress on the last syllable means "flour." **Атлас** with stress on the first syllable is a collection of maps — an atlas. **Атлас** with stress on the second syllable is satin fabric. There is a classic Ukrainian riddle that captures this perfectly: "This word is an ancient building with sharp masonry towers. Change the stress — and you lock the building shut." Wrong stress does not just sound foreign — it says the wrong word entirely. This is why stress marks matter.
 
 In textbooks, dictionaries, and learning materials, stress is marked with an accent sign (´) over the vowel: **ка́ва** has its mark over the first а. But in everyday Ukrainian text — newspapers, messages, novels for adults — you will not see stress marks at all. Ukrainians simply know where the stress falls. As a learner, make a habit: every time you write a new word in your notes, mark its stress. When you are unsure, check goroh.pp.ua — it shows the stressed syllable for over 500,000 Ukrainian words.
 
-Here are common stress positions for A1 words. First-syllable stress: **ма́ма** (mother), **та́то** (father), **ра́нок** (morning), **ка́ва** (coffee), **кни́га** (book). Last-syllable stress: **вода́** (water), **зима́** (winter), **рука́** (hand/arm), **метро́** (metro), **кафе́** (café). These are clusters, not rules — Ukrainian has exceptions in every pattern. One more powerful pair from Авраме́нко's Grade 5 textbook: **ні́коли** (no time, as in "I have no time") vs **ніко́ли** (never) — the same letters, a different word entirely.
+Here are common stress positions for A1 words. First-syllable stress: **ма́ма** (mother), **та́то** (father), **ра́нок** (morning), **ка́ва** (coffee), **кни́га** (book). Last-syllable stress: **вода́** (water), **зима́** (winter), **рука́** (hand/arm), **метро́** (metro), **кафе́** (café). These are clusters, not rules — Ukrainian has exceptions in every pattern. One more powerful pair: **ні́коли** (no time, as in "I have no time") vs **ніко́ли** (never) — the same letters, a different word entirely.
 
 Build the habit now: when you learn a new word, write it with its stress mark immediately. A notebook entry looks like this: **вода́** — water — stress on the last syllable. Do not trust your memory on stress. Write it down.
 
-Stress is also part of Ukrainian identity. The word **Ки́їв** (Kyiv) is stressed on the first syllable — this is the Ukrainian pronunciation. When someone says *Киє́в* with stress on the second syllable, they are using the Russian pronunciation. Similarly, **украї́нська** (Ukrainian) is stressed on the **ї** — not on the third syllable as in Russian. Getting stress right is not just grammar — it is an act of respect for the language and the people who speak it.
+Stress is also part of Ukrainian identity. The word **Ки́їв** (Kyiv) is stressed on the first syllable, with the uniquely Ukrainian letter **ї** — the Russian form uses a different vowel entirely. Always say and write the Ukrainian **Київ**. The word **украї́нська** (Ukrainian) is stressed on **ї** — the third syllable. Hear it: у-кра-ЇН-ська. Getting pronunciation right is not just grammar — it is an act of respect for the language and the people who speak it.
 
 <!-- INJECT_ACTIVITY: quiz-stress-syllable -->
 
@@ -157,7 +157,7 @@ Ukrainian speech has melody. The rise and fall of your voice — **інтона�
 
 Try it yourself. Say **Це кава** three times — once as a calm statement with a falling voice, once as a surprised question with a rising voice, once as a delighted exclamation with a strong drop. Same two words, three entirely different communicative acts.
 
-Question words change the rule. Words like **хто** (who), **що** (what), **де** (where), **як** (how), **коли́** (when) carry the interrogative meaning themselves — they signal "this is a question" without any rise in your voice. **Що це?** ↘ — falling intonation. The word **що** already tells the listener you are asking about identity. **Де метро?** ↘ — falling. The word **де** signals a question about location. **Як справи?** ↘ — falling. The word **як** signals a question about manner. **Коли авто́бус?** ↘ — falling again. But yes/no questions that lack a question word must rise: **Це метро?** ↗ / **Автобус тут?** ↗. The rule: question word present = voice falls; no question word = voice rises.
+Question words change the rule. Words like **хто** (who), **що** (what), **де** (where), **як** (how), **коли́** (when) carry the interrogative meaning themselves — they signal "this is a question" without any rise in your voice. **Що це?** ↘ — falling intonation. The word **що** already tells the listener you are asking about identity. **Де метро?** ↘ — falling. The word **де** signals a question about location. **Як спра́ви?** ↘ — falling. The word **як** signals a question about manner. **Коли авто́бус?** ↘ — falling again. But yes/no questions that lack a question word must rise: **Це метро?** ↗ / **Автобус тут?** ↗. The rule: question word present = voice falls; no question word = voice rises.
 
 Ukrainian grammar classifies sentences by purpose into three types: **розповідні́** (declarative — they tell), **пита́льні** (interrogative — they ask), and **спонука́льні** (imperative — they command or request). Any of these three can also be **окли́чні** (exclamatory) — carrying high emotional charge, shown by an exclamation mark. **Окли́чне** is a separate dimension, not a fourth type. A command can be calm — **І́ди сюди́.** — or exclamatory — **Іди сюди!** For A1, focus on the practical link between punctuation and melody: period (.) = voice falls ↘, question mark (?) = check for a question word, exclamation mark (!) = extra force ↘↘.
 
@@ -236,7 +236,7 @@ Two core skills from this module: **наголос** — stress is free in Ukrai
 
 Module 5 — **Хто Я?** (Who Am I?) — introduces names and greetings. Everything from this module applies immediately: **Ме́не зва́ти Оленка.** ↘ — a statement with falling intonation. **Як тебе звати?** ↘ — a question with falling intonation (the question word **як** signals the question). **Ду́же приє́мно!** ↘↘ — an exclamation with strong falling force. Every new Ukrainian word you learn from now on: write it with its stress mark. Check goroh.pp.ua when unsure. This small habit — marking stress from the very first word — is the foundation of natural-sounding Ukrainian.
 
-**Deterministic word count: 1805 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1791 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -372,8 +372,8 @@ If your verdict is **REVISE**, you MUST output a `<fixes>` block with exact find
 
 Rules for fixes:
 - Each fix is a YAML entry with `find:` (exact text from the module) and `replace:` (corrected text)
-- The `find` string must be an EXACT substring of the module content — copy-paste it
-- Keep fixes minimal — change only what's wrong, preserve surrounding text
+- The `find` string MUST be an EXACT copy-paste from the module content. DO NOT change quotes (« » to " "), dashes (— to -), or spacing. If you change a single character in the `find` string, the automated replacement will fail.
+- Keep fixes minimal — change only what's wrong, preserve surrounding text. Provide enough context (e.g. 5-7 words) to make the match unique.
 - Do NOT fix словник/vocabulary tables (those are generated by a downstream tool)
 - For word count issues: add content as a new `insert_after:` entry instead of find/replace
 
@@ -414,15 +414,12 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 74 words | Not found: 53 words
+Verified: 73 words | Not found: 49 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Інтона — NOT IN VESUM
-  ✗ Авраме — NOT IN VESUM
-  ✗ Білоу — NOT IN VESUM
   ✗ Заболо — NOT IN VESUM
   ✗ Кирилко — NOT IN VESUM
-  ✗ Киє — NOT IN VESUM
   ✗ Окли — NOT IN VESUM
   ✗ Оле — NOT IN VESUM
   ✗ Приві — NOT IN VESUM
@@ -446,7 +443,6 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ льні — NOT IN VESUM
   ✗ мно — NOT IN VESUM
   ✗ нка — NOT IN VESUM
-  ✗ нко' — NOT IN VESUM
   ✗ ння — NOT IN VESUM
   ✗ нок — NOT IN VESUM
   ✗ нська — NOT IN VESUM
@@ -467,8 +463,11 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ чення — NOT IN VESUM
   ✗ чне — NOT IN VESUM
   ✗ чні — NOT IN VESUM
+  ✗ шений — NOT IN VESUM
+  ✗ ємо — NOT IN VESUM
+  ✗ інтона — NOT IN VESUM
 
-All 74 other words are confirmed to exist in VESUM.
+All 73 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

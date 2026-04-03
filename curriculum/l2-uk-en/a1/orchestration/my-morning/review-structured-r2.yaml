@@ -1,0 +1,49 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Missed the `-сь` variant in the explanation despite being in the objectives.
+    Word count is slightly over (1339 vs 1200 target).
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All Ukrainian text, verb endings, and vocabulary are perfectly correct
+    and natural. Pronunciation rules are accurate.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow. Great contrast between actions directed at others
+    (вмивати) and oneself (вмиватися). Good integration of the Kravtsova textbook.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words from the plan are introduced naturally
+    within the text and dialogues.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Inject markers perfectly match the plan's hints and are placed in logical
+    progression after the concepts are taught.
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: Heavy use of English meta-commentary and "telling instead of showing"
+    ("Their conversation is about to teach you...", "grammar heart of this module",
+    "Here's something that trips up learners").
+- dimension: 7
+  name: Structural integrity
+  score: 7
+  evidence: 'An empty heading `### The reflexive test` appears right before `### Self-check:
+    Your turn`. Pronunciation transcriptions use double quotes instead of standard
+    linguistic bracket notation `[]`.'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Decolonized approach. Focuses natively on Ukrainian reflexive patterns
+    without comparing to Russian.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are natural, named, and feel like real roommate conversations.
+findings: []

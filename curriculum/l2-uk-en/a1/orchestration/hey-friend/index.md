@@ -1,6 +1,6 @@
 # Build Summary: hey-friend (A1)
 
-Generated: 2026-04-01 13:44
+Generated: 2026-04-03 23:40
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-01 13:44
 | vocab | complete | 2026-03-30 20:13:28 |
 | enrich | complete | 2026-03-30 20:13:29 |
 | verify | complete | 2026-03-30 20:13:29 |
-| review | complete | 2026-04-01 11:44:26 |
-| stress | complete | 2026-04-01 11:44:26 |
-| publish | complete | 2026-04-01 11:44:31 |
+| review | complete | 2026-04-03 21:40:42 |
+| stress | complete | 2026-04-03 21:40:43 |
+| publish | complete | 2026-04-03 21:40:49 |
 
 ## Reviews
 
@@ -28,6 +28,7 @@ Generated: 2026-04-01 13:44
 |-------|------|
 | 1 | hey-friend-review-r1.md |
 | 2 | hey-friend-review-r2.md |
+| 3 | hey-friend-review-r3.md |
 
 ## Dispatch Log
 
@@ -42,6 +43,8 @@ Generated: 2026-04-01 13:44
 | review | claude-tools (claude-opus-4-6) | 230s | ✅ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 2s | ❌ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 8s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 100s | ✅ |
 
 ## Files
 
@@ -52,6 +55,8 @@ Generated: 2026-04-01 13:44
 - `research-quality.json`
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

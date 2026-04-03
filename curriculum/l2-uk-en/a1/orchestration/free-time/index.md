@@ -1,6 +1,6 @@
 # Build Summary: free-time (A1)
 
-Generated: 2026-04-01 13:41
+Generated: 2026-04-03 17:38
 
 ## Pipeline Phases
 
@@ -18,15 +18,16 @@ Generated: 2026-04-01 13:41
 | vocab | complete | 2026-03-30 06:01:48 |
 | enrich | complete | 2026-03-30 06:01:49 |
 | verify | complete | 2026-03-30 06:01:49 |
-| review | complete | 2026-04-01 11:41:33 |
-| stress | complete | 2026-04-01 11:41:33 |
-| publish | complete | 2026-04-01 11:41:39 |
+| review | complete | 2026-04-03 15:38:43 |
+| stress | complete | 2026-04-03 15:38:43 |
+| publish | complete | 2026-04-03 15:38:50 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | free-time-review-r1.md |
+| 2 | free-time-review-r2.md |
 
 ## Dispatch Log
 
@@ -44,6 +45,8 @@ Generated: 2026-04-01 13:41
 | review | gemini (gemini-3-flash-preview) | 1s | ❌ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 3s | ❌ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 16s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 298s | ✅ |
 
 ## Files
 
@@ -53,6 +56,8 @@ Generated: 2026-04-01 13:41
 - `quick-verify.json`
 - `research-quality.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

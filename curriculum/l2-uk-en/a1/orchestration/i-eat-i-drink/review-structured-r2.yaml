@@ -1,0 +1,52 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Follows the `content_outline` strictly, but misses `бутерброд` and `яблуко`
+    which were explicitly requested in the plan's `dialogue_situations` motivation
+    list.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: Ukrainian text is flawless and corrects a plan error (`їш` → `їси`). However,
+    the English explanation of the apostrophe rule incorrectly uses the term "soft
+    vowel", which is a phonetic inaccuracy.
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent integration of the Grade 4/Grade 7 textbook methodology (бачу
+    що? кого?). The only flaw is the imprecise phonetic explanation for the apostrophe
+    rule.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required (`їсти`, `пити`, `їм`, `п'ю`, `каву`, `воду`, `рибу`) and
+    recommended vocabulary is naturally integrated into the prose and examples.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All four required exercise markers are present and perfectly placed immediately
+    after the relevant grammar instruction.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: 'The tone is direct, encouraging, and practical. The instruction "Build
+    a habit: every time you use їсти or пити, ask що?" is excellent pedagogical framing.'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count (1288) is perfectly within the target +10% range. All H2 headings
+    match the plan exactly. Clean markdown.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Strong cultural grounding by explicitly citing the Ukrainian school system's
+    approach to teaching the accusative case.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'Dialogue 1 is somewhat stilted (essentially an interrogation: "And Olena?
+    And the kids?"), but this is a direct result of following the plan''s highly specific
+    structural mandate. Dialogue 2 is very na'
+findings: []

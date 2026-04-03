@@ -1,0 +1,50 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'Missed the "Я хочу" pattern from the plan. It only included "Я буду"
+    in Pattern 4 ("**Pattern 4: Я бу́ду [accusative].**").'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Excellent. All accusative endings and vocabulary usage are natural and
+    correct.
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: The quiz `quiz-cafe-phrases` is placed at the end of `Як замовити`, but
+    it tests the phrase "Тут вільно?", which is not taught until the next section
+    (`Культура кафе`).
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary are integrated naturally into
+    the prose.
+- dimension: 5
+  name: Exercise quality
+  score: 4
+  evidence: The plan's `activity_hints` places the correct answer at index 0 for every
+    single item in `fill-in-order`, `quiz-cafe-phrases`, and `fill-in-dialogue`. This
+    makes the exercises trivially easy and flaw
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Highly engaging context, especially the cultural explanation of the post-2022
+    cafe scene ("Ми варимо каву..."). Slight meta-commentary ("screenshot this").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Perfect layout, exactly matches the required structure and word count
+    (1210 words).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent distinctions between кафе, ресторан, and кав'ярня. Authentic
+    representation of Ukrainian cafe culture.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Natural and authentic multi-turn dialogues with a mix of formal and casual
+    interactions.
+findings: []

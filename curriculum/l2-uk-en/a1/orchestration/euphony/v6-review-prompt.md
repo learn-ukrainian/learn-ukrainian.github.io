@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 28: Euphony (A1, A1.5 [Places])
-**Writer:** Gemini
+**Writer:** Claude
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -121,7 +121,7 @@ references:
 <generated_module_content>
 ## Діало́ги (Dialogues)
 
-Дари́на and Олексі́й are sitting at a kitchen table, papers spread out. Олексій wrote a short Ukrainian essay about his **город** (garden), and Дарина — who has sharper ears for how Ukrainian flows — is helping him proofread. Their goal: find spots where the sentences stumble.
+Дари́на and Олексі́й are sitting at a kitchen table, papers spread out. Олексій wrote a short Ukrainian essay about his life and his friends, and Дарина — who has sharper ears for how Ukrainian flows — is helping him proofread. Their goal: find spots where the sentences stumble.
 
 > — **Олексій:** Слу́хай. «Я живу́ в Льво́ві.» *(Listen. "I live in Lviv.")*
 > — **Дарина:** Стоп! «В Львові» — ні. «У Львові!» *(Stop! "V Lvovi" — no. "U Lvovi!")*
@@ -138,7 +138,7 @@ Notice what Дарина is doing: she listens to the **sounds** around the prep
 > — **Олексій:** Тут пра́вильно? *(Is this correct?)*
 > — **Дарина:** Так! «Ти» — голосний И, «Олена» — голосний О. «Й» — добре. *(Yes! "Ty" — vowel Y, "Olena" — vowel O. "Y" — good.)*
 > — **Олексій:** А «ма́ма й та́то»? *(And "mama y tato?")*
-> — **Дарина:** Теж добре — голосний А, голосний А. «Й!» *(Also good — vowel A, vowel A. "Y!")*
+> — **Дарина:** Теж добре — слово «мама» закінчується на голосний А. «Й!» *(Also good — the word "mama" ends in vowel A. "Y!")*
 > — **Олексій:** Ось тут: «Макси́м й Семе́н.» *(Here: "Maksym y Semen.")*
 > — **Дарина:** Ні! «Максим» — при́голосний М. «Семен» — приголосний С. «Максим і Семен!» *(No! "Maksym" — consonant M. "Semen" — consonant S. "Maksym i Semen!")*
 > — **Олексій:** Тепе́р мій есе́й звучи́ть по-спра́вжньому га́рно! *(Now my essay sounds truly good!)*
@@ -147,7 +147,7 @@ Both dialogues show the same logic: Ukrainian chooses between sound variants to 
 
 ## У чи В? (У or В?)
 
-The **чергува́ння** (alternation) of **у** and **в** exists for one reason: to prevent consonant pileups that are hard to pronounce. Two rules cover most situations:
+As noted in Авраменко Grade 5 (p.117), the **чергува́ння** (alternation) of **у** and **в** exists for one reason: it ensures the **милозву́чність** (euphony) of the language by preventing consonant pileups that are hard to pronounce. Two rules cover most situations:
 
 **Rule 1 — Use в after a vowel:**
 - живу **в** Києві — "живу" ends in vowel У, "Києві" starts with consonant К
@@ -176,10 +176,10 @@ A simple shorthand: if the next word starts with **в** or **ф** — use **у**
 
 ## І чи Й? З, із, чи зі?
 
-The conjunction "and" has two forms in Ukrainian: **і** and **й**. The logic mirrors у/в:
+According to Літвінова Grade 5 (p.176), the conjunction "and" has two forms in Ukrainian: **і** and **й**. The logic mirrors у/в:
 
 **Use й after a vowel** — it keeps the flow smooth:
-- мама **й** тато — vowel А before, vowel А after
+- мама **й** тато — vowel А before, consonant Т after
 - вона **й** він — vowel А before
 - ти **й** Олена — vowel И before, vowel О after
 
@@ -194,7 +194,7 @@ At the start of a sentence, **і** is standard: **«І він прийшо́в»
 Quick test: does the word before end in a vowel? → **й**. Does it end in a consonant? → **і**. Exception: before words starting with **я, ю, є, ї** (which begin with a [й] sound), use **і** even after a vowel: **Оде́са і Я́лта**, **її і йо́го**.
 :::
 
-The preposition "with" or "from" has three forms: **з**, **із**, and **зі**. Here's when to use each:
+Following the euphony rules from Літвінова Grade 5 (p.177), the preposition "with" or "from" has three forms: **з**, **із**, and **зі**. Here's when to use each:
 
 **З** — the default, before most words (vowels or easy consonants):
 - **з** Оде́си — "from Odesa" (before vowel О)
@@ -203,7 +203,7 @@ The preposition "with" or "from" has three forms: **з**, **із**, and **зі**
 
 **Із** — between two consonant sounds, to break the cluster:
 - Максим **із** Семе́ном — consonant М before, consonant С after
-- поверну́вся **із** Льво́ва — consonant С before, consonant Л after
+- приї́хав **із** Льво́ва — consonant В before, consonant Л after
 
 **Зі** — before the heaviest clusters, especially starting with з, с, ш, щ:
 - **зі** мно́ю — before МН cluster
@@ -231,7 +231,7 @@ Test yourself — which form is correct?
 - Я живу (в / у) Києві. → **в** Києві — after vowel У, before consonant К
 - Я живу (в / у) Львові. → **у** Львові — before Л+В cluster
 - (В / У) мене є кві́ти. → **У** мене — sentence start before consonant М
-- Мама (і / й) тато. → мама **й** тато — between vowels А and А
+- Мама (і / й) тато. → мама **й** тато — after the vowel А
 - Брат (і / й) сестра. → брат **і** сестра — after consonant Т, before consonant С
 - Максим (з / із) Семеном. → **із** Семеном — consonant М before, consonant С after
 - (Зі / З) святом! → **Зі** святом — before СВ cluster
@@ -242,7 +242,7 @@ Next module: **Де? (Where Is It?)** — the same prepositions **у/в** and **
 
 <!-- INJECT_ACTIVITY: quiz-which-sounds-natural -->
 
-**Deterministic word count: 1406 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1442 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -378,8 +378,8 @@ If your verdict is **REVISE**, you MUST output a `<fixes>` block with exact find
 
 Rules for fixes:
 - Each fix is a YAML entry with `find:` (exact text from the module) and `replace:` (corrected text)
-- The `find` string must be an EXACT substring of the module content — copy-paste it
-- Keep fixes minimal — change only what's wrong, preserve surrounding text
+- The `find` string MUST be an EXACT copy-paste from the module content. DO NOT change quotes (« » to " "), dashes (— to -), or spacing. If you change a single character in the `find` string, the automated replacement will fail.
+- Keep fixes minimal — change only what's wrong, preserve surrounding text. Provide enough context (e.g. 5-7 words) to make the match unique.
 - Do NOT fix словник/vocabulary tables (those are generated by a downstream tool)
 - For word count issues: add content as a new `insert_after:` entry instead of find/replace
 
@@ -420,9 +420,10 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 56 words | Not found: 48 words
+Verified: 55 words | Not found: 52 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
+  ✗ Авраменко — NOT IN VESUM
   ✗ Дарина — NOT IN VESUM
   ✗ Діало — NOT IN VESUM
   ✗ Зачека — NOT IN VESUM
@@ -430,6 +431,7 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ Льво — NOT IN VESUM
   ✗ Львові — NOT IN VESUM
   ✗ Львів — NOT IN VESUM
+  ✗ Літвінова — NOT IN VESUM
   ✗ Макси — NOT IN VESUM
   ✗ Оде — NOT IN VESUM
   ✗ Одеси — NOT IN VESUM
@@ -461,18 +463,18 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ пло — NOT IN VESUM
   ✗ пра — NOT IN VESUM
   ✗ прийшо — NOT IN VESUM
+  ✗ приї — NOT IN VESUM
   ✗ рно — NOT IN VESUM
   ✗ свя — NOT IN VESUM
   ✗ секре — NOT IN VESUM
   ✗ спра — NOT IN VESUM
   ✗ тка — NOT IN VESUM
   ✗ фісі — NOT IN VESUM
+  ✗ хав — NOT IN VESUM
   ✗ чергува — NOT IN VESUM
   ✗ чність — NOT IN VESUM
-  ✗ шко — NOT IN VESUM
-  ✗ єві — NOT IN VESUM
 
-All 56 other words are confirmed to exist in VESUM.
+All 55 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

@@ -25,7 +25,7 @@ After the meal, Ростик signals the waiter.
 > — **Офіціант:** Дякуємо, **прихо́дьте** ще! *(Thank you, come again!)*
 
 
-A **рахунок** (bill) in Ukraine doesn't come to your table automatically — you always ask for it. And **чайові́** (tips)? About 10% is standard, but never obligatory.
+Notice how Ростик has to ask for the **рахунок** (bill) to be brought to the table. He might also leave **чайові́** (tips) before leaving.
 
 Now test yourself — can you answer these questions from the dialogues?
 
@@ -35,22 +35,22 @@ Now test yourself — can you answer these questions from the dialogues?
 
 ## Як замо́вити (How to Order)
 
-There are four polite ways to order at a Ukrainian **кафе**. Each one uses the accusative case — the same endings you learned in M37.
+When you want to order (**замовля́ти**) at a Ukrainian **кафе**, there are four polite ways to do it. Each one uses the accusative case — the same endings you learned in M37.
 
 **Pattern 1: Мені [accusative], будь ласка.**
 - **Мені каву, будь ласка.** — Coffee for me, please.
 - **Мені борщ, будь ласка.** — Borshch for me, please.
 
 **Pattern 2: Можна [accusative]?**
-- **Можна воду́?** — May I have water?
+- **Можна во́ду?** — May I have water?
 - **Можна хліб?** — May I have bread?
 
 **Pattern 3: Да́йте, будь ласка, [accusative].**
 - **Дайте, будь ласка, сала́т.** — Give me a salad, please.
 - **Дайте, будь ласка, сік.** — Give me juice, please.
 
-**Pattern 4: Я бу́ду [accusative].**
-- **Я буду пі́цу.** — I'll have pizza.
+**Pattern 4: Я хо́чу / Я бу́ду [accusative].**
+- **Я хо́чу пі́цу.** — I want pizza.
 - **Я буду суп.** — I'll have soup.
 
 All four are polite. **Я буду** is slightly more casual — something you'd say to a friend working behind the counter. **Дайте, будь ласка** is the most formal.
@@ -71,8 +71,6 @@ Once you've ordered, you might want to ask about the **меню**. Here are six 
 Each question gets a real answer. Ask **Скільки коштує борщ?** and the waiter might say: **Борщ коштує вісімдеся́т гривень** (The borshch costs eighty hryvnias).
 
 Try building questions from this mini-menu: **борщ** 80 грн, **піца** 150 грн, **кава** 45 грн. For example: **Скільки коштує кава?** — **Кава коштує со́рок п'ять гривень.** The numbers connect back to what you learned in earlier modules.
-
-<!-- INJECT_ACTIVITY: quiz-cafe-phrases -->
 
 ## Культу́ра кафе (Cafe Culture)
 
@@ -108,6 +106,8 @@ Each phrase fits a micro-situation: you walk in (**Тут вільно?**), you 
 
 <!-- INJECT_ACTIVITY: match-cafe-phrases -->
 
+<!-- INJECT_ACTIVITY: quiz-cafe-phrases -->
+
 ## Підсумок — Summary
 
 Here's your café communication toolkit — screenshot this for your next visit to a Ukrainian **кафе**:
@@ -115,7 +115,7 @@ Here's your café communication toolkit — screenshot this for your next visit 
 | Situation | Phrase | Example |
 |---|---|---|
 | Order food | **Мені [acc], будь ласка** | Мені каву, будь ласка. |
-| Ask about menu | **Скільки коштує?** | Скільки коштує борщ? |
+| Ask about menu | **Скі́льки ко́штує?** | Скільки коштує борщ? |
 | Request the bill | **Рахунок, будь ласка** | — |
 | Pay by card | **Можна карткою?** | — |
 | Compliment food | **Дуже смачно!** | Все було дуже смачно! |

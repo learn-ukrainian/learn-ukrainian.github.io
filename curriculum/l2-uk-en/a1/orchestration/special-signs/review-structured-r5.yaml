@@ -1,0 +1,48 @@
+round: 5
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'The plan explicitly stated a negative constraint: "Do NOT include під''їзд
+    or з''їзд". The text violated this by including them in a `:::note Scope` block
+    to explicitly state they are out of scope.'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: The word "ларьок" is a Russianism (not found in VESUM); "шар" translated
+    as "sphere" is a semantic Russianism ("шар" in Ukrainian means "layer").
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent, clear explanations of phonetics. The distinction between the
+    hard/soft and voiced/voiceless pairs is grounded in textbook methods and highly
+    accessible without being overly academic.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items were used naturally in phonetic
+    examples throughout the text.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All activity markers match the plan's hints and are logically placed after
+    their corresponding teaching sections.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Tone is encouraging and clear without resorting to generic meta-commentary,
+    forced enthusiasm, or corporate speak.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Word count is 1480, which is outside the target range of 1200 (+23%).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Correctly emphasizes non-devoicing and the sound Ґ as defining features
+    of Ukrainian phonetic identity.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: N/A (no dialogues in this phonetics module, but content flows naturally).
+findings: []

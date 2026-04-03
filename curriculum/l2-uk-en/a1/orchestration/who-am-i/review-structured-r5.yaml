@@ -1,0 +1,51 @@
+round: 5
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: The text covers all required points, but the `Deterministic word count
+    is 1828 words`, which exceeds the 1200-word target by >50%, violating the section
+    word budgets.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: All grammar and noun cases are perfectly accurate, but the text explicitly
+    teaches the calque "Мені також!" instead of the authentic "Навзаєм!".
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent breakdown of the zero copula and a great preventative explanation
+    ("Don't try to construct *Моє́ ім'я́ є..."), but teaching a calqued response deducts
+    points.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items from the plan are naturally
+    integrated into the text and dialogues.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 4 injected markers match the plan's activity hints perfectly and are
+    placed logically after the taught concepts.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'Generally good and conversational, but contains minor meta-commentary
+    openers (e.g., "Three conversations. Three situations. One goal: introduce yourself
+    in Ukrainian.").'
+- dimension: 7
+  name: Structural integrity
+  score: 7
+  evidence: Markdown structure is clean, but the word count (1828) is significantly
+    outside the target range.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent explanation of the formal 'ви' doing double duty and the dash
+    usage; the tone is decolonized.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogues are natural and follow a good flow, except for the calqued "Мені
+    також!" response.
+findings: []

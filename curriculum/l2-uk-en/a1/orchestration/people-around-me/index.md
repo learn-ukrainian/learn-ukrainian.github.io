@@ -1,6 +1,6 @@
 # Build Summary: people-around-me (A1)
 
-Generated: 2026-04-01 13:44
+Generated: 2026-04-03 23:37
 
 ## Pipeline Phases
 
@@ -18,15 +18,16 @@ Generated: 2026-04-01 13:44
 | vocab | complete | 2026-03-30 19:50:58 |
 | enrich | complete | 2026-03-30 19:50:59 |
 | verify | complete | 2026-03-30 19:50:59 |
-| review | complete | 2026-04-01 11:44:05 |
-| stress | complete | 2026-04-01 11:44:05 |
-| publish | complete | 2026-04-01 11:44:11 |
+| review | complete | 2026-04-03 21:36:55 |
+| stress | complete | 2026-04-03 21:36:55 |
+| publish | complete | 2026-04-03 21:37:01 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | people-around-me-review-r1.md |
+| 2 | people-around-me-review-r2.md |
 
 ## Dispatch Log
 
@@ -42,6 +43,8 @@ Generated: 2026-04-01 13:44
 | review | gemini (gemini-3-flash-preview) | 1s | ❌ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 3s | ❌ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 5s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 90s | ✅ |
 
 ## Files
 
@@ -51,6 +54,8 @@ Generated: 2026-04-01 13:44
 - `quick-verify.json`
 - `research-quality.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

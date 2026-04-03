@@ -1,0 +1,53 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: The text misses the explicit inclusion of the required imperfective verb
+    `замовляти` (only the perfective `замовити` is used in a heading). All other plan
+    points are covered.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Contains a critical stress error for the accusative form of water (`воду́`
+    instead of `во́ду`) and a double stress typo on `ко́шту́є`. Otherwise, gender
+    and case usage is accurate.
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'Excellent grammar modeling, but suffers from redundant padding: the explanation
+    of the bill and tips is repeated almost verbatim across two sections ("Діалоги"
+    and "Культура кафе").'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required and recommended vocabulary is naturally integrated, except
+    for the missing imperfective form of `замовляти`.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Exercise markers perfectly match the plan's `activity_hints` in quantity,
+    focus, and placement.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Exceptional cultural grounding. The inclusion of the 2023 Kyiv barista
+    quote («Ми варимо каву — значить, ми живемо.») provides meaningful, decolonized
+    context without empty cheerleader tone.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Markdown structure is clean and word count hits the target, but the copy-pasted
+    cultural paragraph hurts structural flow.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Correctly distinguishes the functional and cultural differences between
+    a кафе, ресторан, and кав'ярня in modern Ukraine. Accurately portrays tipping
+    and billing etiquette.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues model natural, everyday exchanges for ordering and paying without
+    sounding overly robotic.
+findings: []

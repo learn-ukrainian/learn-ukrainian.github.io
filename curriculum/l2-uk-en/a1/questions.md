@@ -1,5 +1,5 @@
 ## Діало́ги (Dialogues)
-Ukrainian uses special question words — **пита́льні слова́** (question words) — to ask about the world. The two dialogues below show these words in real conversation before we study each one.
+Ukrainian uses special question words — **пита́льні слова́** (question words) — to ask about the world. These words appear naturally in everyday conversation.
 ### Dialogue 1 — Getting to know someone
 > — **Андрі́й:** Приві́т! Хто ти? *(Hi! Who are you?)*
 > — **Оле́г:** Я студе́нт. А ти? *(I'm a student. And you?)*
@@ -21,12 +21,12 @@ Every question here starts with a different question word: **Хто** (who) asks
 > — **Оля:** Чо́му мама? *(Why mom?)*
 > — **Тарас:** Тому́ що вона́ все знає! *(Because she knows everything!)*
 
-This dialogue combines question words with simple negation (**не**). Notice three things the dialogues just showed you:
+This dialogue combines question words with simple negation (**не**). Three key rules from these dialogues:
 1. **Question words come at the start** of the sentence: **Де** моя книга? **Хто** знає? **Чому** мама?
 2. **Word order after the question word stays natural** — you don't need to rearrange anything. Just put the question word first and the sentence works.
-3. **Не** goes before the verb: **Я не знаю**. We will also study double negation (**ні́чого не...**) in detail below.
+3. **Не** goes before the verb: **Я не знаю**. Double negation (**ні́чого не...**) also strictly follows this rule.
 ## Питальні слова (Question Words)
-Seven question words cover almost everything you need to ask at A1. Here they are as a set, each with the anchor example you already saw in the dialogues:
+These seven question words cover essential A1 situations:
 - **Хто?** (who) — Хто ти?
 - **Що?** (what) — Що ти вивчаєш?
 - **Де?** (where) — Де ти живеш?
@@ -95,7 +95,7 @@ This is not a logic error and does not create a "double positive" like it would 
 When answering with a single word, you can say **Ніхто** or **Нічого** alone. But as soon as the answer becomes a full sentence with a verb, double negation kicks in: **Нічого не бачу**.
 <!-- INJECT_ACTIVITY: quiz-double-negation -->
 ## Підсумок — Summary
-Here is everything from this module in one place:
+Key grammar patterns from this module:
 - **Питальні слова:** **Хто? Що? Де? Куди? Коли? Чому? Як?** — seven question words. Place the question word first; word order after it is flexible.
 - **Де vs. Куди:** **Де** = location (Де книга?); **Куди** = direction (Куди ти йдеш?).
 - **Так/ні пита́ння:** rising intonation only — Ти знаєш? ↑ No special word needed. In formal writing, **чи** may appear at the start.

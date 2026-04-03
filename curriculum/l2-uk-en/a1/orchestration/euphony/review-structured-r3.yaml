@@ -1,0 +1,52 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 6
+  evidence: Completely missed citing the required textbook references (Авраменко,
+    Літвінова). The dialogue completely ignored the specific target phrases ("у городі",
+    "і яблука") from the plan.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 4
+  evidence: CRITICAL hallucinated phonetic facts. The word "тато" is incorrectly described
+    as starting with a vowel ("vowel A, vowel A" / "голосний А, голосний А"). The
+    word "поверну́вся" is incorrectly described
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: Strong PPP structure and good use of dialogue, but the phonetic hallucinations
+    severely undermine the teaching by giving learners completely wrong phonetic analysis
+    of basic words.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: The core alternating prepositions/conjunctions are covered well. "Київ",
+    "Львів", "офіс", "парк" are integrated naturally. However, the required vocabulary
+    word "театр" was completely omitted.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All four activity markers match the `activity_hints` from the plan perfectly
+    and are placed immediately after the concepts are taught.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: Tone is conversational and engaging ("cushion", "listen-and-feel test").
+    Deducted points because the dialogue premise (an essay about a garden) explicitly
+    contradicts the actual dialogue content (sent
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean Markdown, all required H2 headings are present and correctly formatted.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Accurately explains euphony (милозвучність) as a natural phonetic phenomenon
+    without exoticizing it, referencing "солов'їна мова" appropriately.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: The dialogue flows naturally as a peer-correction scenario and has distinct
+    voices. However, the content of the dialogue mismatched the introduced topic.
+findings: []

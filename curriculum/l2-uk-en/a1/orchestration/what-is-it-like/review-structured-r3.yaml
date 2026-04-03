@@ -1,0 +1,49 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Covers all content_outline points exactly. Word count (1529) exceeds target
+    (1200) without padding. Correctly implements negative constraint (no furniture
+    in Dialogue 2).
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All gender agreements are correct (кімната велика, стіл новий, вікно чисте).
+    No Russian contamination.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Follows PPP flow perfectly. Contextualizes grammar through real scenarios
+    (book fair, room description). Uses textbook-aligned strategy (opposites/antonyms).
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Includes all required and recommended vocabulary from the plan. Introduces
+    them in natural contexts.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers are strategically placed to test immediate acquisition. Types
+    and focus match plan hints perfectly.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Professional and direct. Avoids "motivational fluff." The setting of a
+    "weekend book fair" is a nice cultural touch.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All H2 headings from the plan are present. Clean Markdown. No meta-commentary
+    sections.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Cites authentic Ukrainian pedagogical sources (Ponomarova, Vashulenko).
+    Use of "book fair" (книжковий ярмарок) is culturally relevant.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are natural and multi-turn. Speakers have motivation (browsing,
+    asking about a room).
+findings: []

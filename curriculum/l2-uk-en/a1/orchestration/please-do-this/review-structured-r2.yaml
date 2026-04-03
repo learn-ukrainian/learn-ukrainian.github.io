@@ -1,0 +1,55 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: The text follows the outline perfectly. It includes all dialogues exactly
+    as requested ("Слухай, ходімо в кафе!"), and uses all required and recommended
+    vocabulary in natural contexts.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'The text makes a factually incorrect linguistic claim: "Four irregular
+    verbs appear constantly in daily speech. They do not follow the stem pattern —
+    memorize them: ... сказати ... взяти". Both of the'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent PPP flow and great contextualization ("In Ukrainian Grade 5,
+    this grammar topic has a name..."). However, contradicting its own "find the stem
+    from the present tense" rule by calling regular
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All 8 required words (`читати, писати, слухати, дивитися, говорити, дати,
+    сказати, іти`) and all 4 recommended words are integrated naturally into dialogues
+    and examples.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Exercise markers are placed immediately after the relevant teaching points,
+    ensuring learners practice what was just explained before moving on.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is professional and reassuring. It effectively explains that
+    bare imperatives are not rude in Ukrainian culture ("In Ukrainian classrooms,
+    Читайте! and Пишіть! are standard instructions — not
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown. Word count (1269) is within the acceptable +/- 10% range
+    of the 1200 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Superb cultural notes, specifically the callout against Russian calques:
+    "**Ходімо!** is a uniquely Ukrainian form... In standard Ukrainian, do NOT say
+    *давай підемо*".'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues feel authentic to the classroom and cafe situations. The shift
+    from `ти` to `ви` when Олесь addresses the waiter is a great demonstration of
+    register switching.
+findings: []

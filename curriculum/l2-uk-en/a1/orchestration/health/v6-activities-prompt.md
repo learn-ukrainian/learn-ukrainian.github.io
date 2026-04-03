@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 1.1.0 | updated: 2026-03-31 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -27,11 +27,10 @@ Activities have two placement categories:
 
 The writer placed these markers in the module content. Your inline activities must match them:
 
+- `<!-- INJECT_ACTIVITY: quiz-health-response -->`
 - `<!-- INJECT_ACTIVITY: match-body-parts -->`
 - `<!-- INJECT_ACTIVITY: fill-in-symptoms -->`
 - `<!-- INJECT_ACTIVITY: fill-in-pharmacy -->`
-- `<!-- INJECT_ACTIVITY: quiz-health-response -->`
-- `<!-- INJECT_ACTIVITY: fill-in-pharmacy-doctor -->`
 
 Each inline activity's `id` must match one of these markers exactly (lowercase, hyphenated).
 
@@ -133,145 +132,164 @@ required:
 <module_content>
 ## Dialogues
 
-Оленка wakes up feeling terrible — her head is pounding and her throat is on fire. Time to visit the **лікар** (doctor).
+Two situations every learner will face in Ukraine: a visit to the **лікар** (doctor) and a stop at the **аптека** (pharmacy). Both dialogues below use the vocabulary you will study in this module. Read them now for the full picture, then we will break down the pieces.
 
-> **Лікар:** Добрий день! Що у вас болить? *(Good day! What hurts?)*
-> **Пацієнтка:** У мене болить голова і горло. *(My head and throat hurt.)*
+### Діалог 1 — У лікаря (At the doctor's)
+
+> **Лікар:** Добрий день. Що у вас болить? *(Good day. What hurts you?)*
+> **Пацієнт:** У мене болить голова і горло. *(My head and throat hurt.)*
 > **Лікар:** Давно? *(For long?)*
-> **Пацієнтка:** З учора. І в мене температура. *(Since yesterday. And I have a fever.)*
-> **Лікар:** Ви кашляєте? *(Are you coughing?)*
-> **Пацієнтка:** Так, трохи. І є нежить. *(Yes, a little. And I have a runny nose.)*
+> **Пацієнт:** З учора. І в мене температура. *(Since yesterday. And I have a fever.)*
+> **Лікар:** Ви кашляєте? *(Do you cough?)*
+> **Пацієнт:** Так, трохи. І в мене нежить. *(Yes, a little. And I have a runny nose.)*
 > **Лікар:** Зрозуміло. Це застуда. *(Understood. It's a cold.)*
-> **Пацієнтка:** Що мені робити? *(What should I do?)*
 > **Лікар:** Я випишу ліки. Відпочивайте! *(I'll prescribe medicine. Rest!)*
-> **Пацієнтка:** Дякую, лікарю! *(Thank you, doctor!)*
+> **Пацієнт:** Дякую, лікарю! *(Thank you, doctor!)*
 
-With her prescription in hand, Оленка walks to the **аптека** (pharmacy) next door.
+The doctor opens with one question: **«Що у вас болить?»** — and the patient answers with a simple stack of symptoms. That is the entire pattern for a clinic visit.
 
-> **Оленка:** Добрий день! У мене болить голова. Дайте, будь ласка, таблетки. *(Good day! My head hurts. Give me pills, please.)*
+:::tip Key phrases from Dialogue 1
+**«Що у вас болить?»** — the doctor's standard opening question ("What hurts you?"). Memorise this — you will hear it in every Ukrainian clinic.
+
+**«З учора»** — "Since yesterday." A useful time anchor when describing symptoms at A1.
+:::
+
+### Діалог 2 — В аптеці (At the pharmacy)
+
+> **Покупець:** Добрий день! У мене болить голова. Дайте, будь ласка, таблетки. *(Good day! I have a headache. Give me pills, please.)*
 > **Фармацевт:** Проти головного болю? *(For a headache?)*
-> **Оленка:** Так. І проти кашлю, будь ласка. *(Yes. And for a cough, please.)*
+> **Покупець:** Так. І проти кашлю, будь ласка. *(Yes. And for a cough, please.)*
 > **Фармацевт:** Ось, будь ласка. Ще щось? *(Here you go. Anything else?)*
-> **Оленка:** А є щось проти нежитю? *(Do you have something for a runny nose?)*
+> **Покупець:** А є щось проти нежитю? *(Is there something for a runny nose?)*
 > **Фармацевт:** Так, ось краплі. *(Yes, here are drops.)*
-> **Оленка:** Дякую! Скільки це коштує? *(Thanks! How much does this cost?)*
-> **Фармацевт:** Сто двадцять гривень. *(One hundred twenty hryvnias.)*
-> **Оленка:** Будь ласка. *(Here you go.)*
+> **Покупець:** Дякую! Скільки це коштує? *(Thanks! How much does this cost?)*
 
-Notice three key chunks from these dialogues. First: **У мене болить...** (I have a pain in...) — the essential phrase for telling anyone what hurts. Second: **Дайте, будь ласка...** (Give me... please) — the polite request form you already know from shopping modules. Third: **проти головного болю** (for a headache), **проти кашлю** (for a cough), **проти нежитю** (for a runny nose) — these are how you ask for specific medicine. You don't need to analyse the grammar behind these yet — that comes at A2. For now, treat them as ready-made chunks.
+This dialogue introduces the pharmacy formula: **«Дайте, будь ласка, таблетки проти...»** (Give me pills for...). Notice the three symptom chunks: **проти головного болю** (for a headache), **проти кашлю** (for a cough), **проти нежитю** (for a runny nose). Treat these as frozen phrases — no grammar analysis needed.
 
-## Тіло (The Body)
+:::note «Проти» not «від»
+When asking for medicine, Ukrainian uses **проти** (against), not **від** (from): **таблетки проти кашлю**, **краплі проти нежитю**. This is a common mistake even among native speakers influenced by Russian patterns.
+:::
 
-Here are the ten body parts you need at A1. Each one has a grammatical gender — this matters for adjective agreement, but right now your main job is simply learning the words:
-
-- **голова** (head, f)
-- **горло** (throat, n)
-- **спина** (back, f)
-- **живіт** (stomach, m)
-- **рука** (hand/arm, f)
-- **нога** (leg/foot, f)
-- **око** (eye, n)
-- **вухо** (ear, n)
-- **зуб** (tooth, m)
-- **ніс** (nose, m)
-
-Two important notes: **рука** covers the entire arm including the hand — Ukrainian doesn't split them at A1. The same goes for **нога**, which means the whole leg including the foot. If you stub your toe or twist your ankle, it's still **нога**.
-
-Why do genders matter here? Because adjectives must agree: **велике око** (big eye — neuter), **великий ніс** (big nose — masculine), **велика рука** (big hand — feminine). But at this stage, you'll mostly use these words in the chunk **У мене болить...**, where gender doesn't change anything. Memorise the words first — full adjective agreement practice comes at A2.
-
-<!-- INJECT_ACTIVITY: match-body-parts -->
-
-Imagine Михайлик is drawing a person and labelling the parts: «Ось **голова**!» *(Here's the head!)* He draws two arms: «А це **рука** і **рука**.» *(And this is an arm and an arm.)* Then the legs: «Це **нога**.» *(This is a leg.)* He adds a face: «Ось **ніс**, **око** і **вухо**.» *(Here's the nose, eye, and ear.)* He points to the middle: «А тут **живіт**!» *(And here's the stomach!)* Finally he writes across the back: «І **спина**!» *(And the back!)* Simple labelling like this — pointing and naming — is exactly how Ukrainian Grade 1 textbooks introduce body parts.
-
-A few pronunciation tips for tricky words. **Горло** — the «г» is a voiced sound, softer than English "g." Think of a gentle vibration in the throat, not a hard stop. **Живіт** — the «ж» sounds like the "s" in English "measure" or "pleasure." **Вухо** starts with two distinct sounds: «в» then «у» — don't blend them into an English "w." When in doubt about stress or exact pronunciation, check the словник tab where every word has audio.
-
-## У мене болить... (It Hurts...)
-
-The single most useful health phrase in Ukrainian is **У мене болить** + a body part. Learn it as one chunk — a ready-made sentence starter. Here are the five core combinations:
-
-1. **У мене болить голова.** (My head hurts.)
-2. **У мене болить живіт.** (My stomach hurts.)
-3. **У мене болить горло.** (My throat hurts.)
-4. **У мене болить спина.** (My back hurts.)
-5. **У мене болить зуб.** (My tooth hurts.)
-
-The literal structure is "at me hurts head" — that's a dative construction, and you'll study it properly at A2. For now, just memorise the pattern: **У мене болить** + whatever hurts.
-
-When more than one thing hurts — or when the body part is naturally plural — **болить** changes to **болять**:
-
-- **У мене болять зуби.** (My teeth hurt.)
-- **У мене болять ноги.** (My legs hurt.)
-- **У мене болять очі.** (My eyes hurt.)
-
-You don't need to produce these forms yet. Just recognise them when you hear a doctor or friend say **болять** — it means multiple things hurt.
-
-<!-- INJECT_ACTIVITY: fill-in-symptoms -->
-
-Beyond **болить**, there are several common symptom chunks. Each one is a complete statement you can use as-is:
-
-- **У мене температура.** (I have a fever. — literally "I have temperature")
-- **У мене кашель.** (I have a cough.)
-- **У мене нежить.** (I have a runny nose.)
-- **Мені холодно.** (I'm cold.)
-- **Мені погано.** (I feel unwell.)
-- **Я хворий.** (I'm sick. — if you're male)
-- **Я хвора.** (I'm sick. — if you're female)
-
-Notice that **У мене температура** doesn't use **болить** — the fever doesn't "hurt," it "is with you." And **Мені погано** uses **мені** (another dative form) — again, just learn it as a chunk for now.
-
-At the doctor or pharmacy, combine these chunks naturally. A sick person might say: **У мене болить горло і є температура.** (My throat hurts and I have a fever.) Or: **Я хвора. У мене кашель і нежить.** (I'm sick. I have a cough and a runny nose.) You already have enough vocabulary to describe a full set of symptoms — real Ukrainian you'd use on day one in Kyiv.
-
-<!-- INJECT_ACTIVITY: fill-in-pharmacy -->
-
-## Summary
-
-Here is your complete health toolkit from this module.
-
-**Body parts:**
-**голова**, **горло**, **живіт**, **спина**, **рука**, **нога**, **око**, **вухо**, **зуб**, **ніс**
-
-**Symptom chunks:**
-- **У мене болить** [body part].
-- **У мене температура / кашель / нежить.**
-- **Мені погано.**
-- **Я хворий / хвора.**
-
-Two real situations where you'll use all of this:
-
-**At the doctor (у лікаря):**
-- Doctor asks: **Що у вас болить?** → You answer: **У мене болить...**
-
-**At the pharmacy (в аптеці):**
-- **Дайте, будь ласка, таблетки проти головного болю.** (Give me pills for a headache, please.)
-- **Дайте краплі проти нежитю.** (Give me drops for a runny nose.)
-- **Дайте сироп проти кашлю.** (Give me syrup for a cough.)
+Both dialogues stay simple: one phrase to describe the problem (**«У мене болить...»**), one formula to ask for help (**«Дайте, будь ласка...»**). That is the complete A1 health toolkit.
 
 <!-- INJECT_ACTIVITY: quiz-health-response -->
 
-Test yourself with these three questions:
+## Тіло (The Body)
 
-- How do you say "My throat hurts and I have a fever"? → **У мене болить горло і є температура.**
-- You're at the pharmacy. You need something for a cough. What do you say? → **Дайте, будь ласка, щось проти кашлю.**
-- How do you say "I feel unwell"? → **Мені погано.**
+Here are ten body parts you need for a clinic visit. Learn each one with its gender — you will need it later for adjectives.
 
-If you got all three, you're ready for real-world health situations.
+- **голова** (f) — head
+- **горло** (n) — throat
+- **спина** (f) — back
+- **живіт** (m) — stomach
+- **рука** (f) — hand/arm
+- **нога** (f) — leg/foot
+- **око** (n) — eye
+- **вухо** (n) — ear
+- **зуб** (m) — tooth
+- **ніс** (m) — nose
 
-Looking ahead: module 54 (Emergencies) builds directly on this vocabulary. You'll learn phrases like **виклик швидкої** (calling an ambulance), describe urgent situations, and use past-tense forms from module 52. The chunk **У мене болить...** will reappear constantly across future modules — it's one of those patterns that, once learned, never stops being useful.
+Two scope notes: **рука** covers everything from shoulder to fingertip — Ukrainian uses one word where English has "arm" and "hand." The same applies to **нога**, which covers hip to toe — both "leg" and "foot." These ten words are the most useful for an A1 learner at a clinic. This is not a complete anatomy lesson — just the essentials.
 
-<!-- INJECT_ACTIVITY: fill-in-pharmacy-doctor -->
+### Gender in practice
 
-## Підсумок
+At A1 you will mainly use these words after **болить**, but gender matters when you add an adjective (review from M09). Three contrast examples show the pattern:
 
-This module gave you the tools to talk about health in Ukrainian. You can now:
+- **велике око** — big eye (neuter: adjective ends in **-е**)
+- **великий ніс** — big nose (masculine: adjective ends in **-ий**)
+- **велика рука** — big hand (feminine: adjective ends in **-а**)
 
-- ✅ Name ten body parts: **голова, горло, живіт, спина, рука, нога, око, вухо, зуб, ніс**
-- ✅ Say what hurts: **У мене болить голова.**
-- ✅ Describe symptoms: **У мене температура. У мене кашель. Мені погано.**
-- ✅ Tell a doctor what's wrong: **У мене болить горло і є температура.**
-- ✅ Ask for medicine at a pharmacy: **Дайте, будь ласка, таблетки проти головного болю.**
-- ✅ Say you're sick: **Я хворий** (m) / **Я хвора** (f)
+Two more from the health context:
 
-Remember: **У мене болить...** is a chunk. Don't try to analyse the grammar — just use it. The grammar explanation comes at A2. For now, you have everything you need to walk into a Ukrainian pharmacy or doctor's office and be understood.
+- **хворе горло** — sore throat (neuter)
+- **болячий зуб** — aching tooth (masculine)
+
+The takeaway: learn each body part with its gender tag now, and adjective agreement will be automatic later.
+
+### From list to phrase
+
+Every word on the list above slots straight into the pattern you will learn next: **«У мене болить»** + body part. Three quick previews:
+
+- **У мене болить голова.** *(I have a headache.)*
+- **У мене болить живіт.** *(My stomach hurts.)*
+- **У мене болить спина.** *(My back hurts.)*
+
+The body-part list is the input; the chunk is the output. Memorise the list now, and the next section gives you the grammar-free way to use it immediately.
+
+<!-- INJECT_ACTIVITY: match-body-parts -->
+
+## У мене болить... (It Hurts...)
+
+**«У мене болить»** is the single most useful health phrase in Ukrainian. Literally it means "at me hurts," but learn it as an unanalysed block — the same way a Ukrainian child does. You do not need to know that it uses the dative case (that is A2 grammar). Just attach any body part from the previous section:
+
+- **У мене болить голова.** *(I have a headache.)*
+- **У мене болить живіт.** *(My stomach hurts.)*
+- **У мене болить горло.** *(My throat hurts.)*
+- **У мене болить спина.** *(My back hurts.)*
+- **У мене болить зуб.** *(I have a toothache.)*
+
+Five sentences, five body parts — that covers most clinic visits.
+
+### Beyond болить
+
+Five more symptom chunks follow the **«У мене + noun»** pattern:
+
+- **У мене температура.** *(I have a fever.)*
+- **У мене кашель.** *(I have a cough.)*
+- **У мене нежить.** *(I have a runny nose.)* — **нежить** is masculine: **сильний нежить**.
+
+Two phrases for your general state (learn as fixed chunks):
+
+- **Мені холодно.** *(I feel cold.)*
+- **Мені погано.** *(I feel bad / I'm not well.)*
+
+And the direct statement — gender agreement works exactly like M09 adjectives:
+
+- **Я хворий.** *(I'm sick — male speaker.)*
+- **Я хвора.** *(I'm sick — female speaker.)*
+
+:::caution болить vs. болять
+When one thing hurts: **У мене болить зуб.** When multiple things hurt, the verb changes: **У мене болять зуби.** (**болять** = plural form of **болить**.) Just recognise this form for now — do not memorise it.
+:::
+
+### Combining symptoms
+
+Real conversations stack symptoms. Two models from the doctor's dialogue:
+
+- **У мене болить голова і горло.** *(My head and throat hurt — both with болить.)*
+- **У мене нежить і кашель.** *(I have a runny nose and a cough — two noun symptoms, no verb needed.)*
+
+Try building your own combination:
+
+- **Я хвора. У мене болить горло.** *(I'm sick. My throat hurts.)*
+- **У мене температура і кашель.** *(I have a fever and a cough.)*
+
+This is full A1 communication — no grammar analysis required, only chunk combination.
+
+<!-- INJECT_ACTIVITY: fill-in-symptoms -->
+
+## Summary
+
+### Your health toolkit
+
+This module gave you three registers of health communication. First, talking about your body: **голова**, **горло**, **живіт**, **спина**, **рука**, **нога**, **око**, **вухо**, **зуб**, **ніс** — ten essential body parts with gender. Second, describing what hurts: **«У мене болить»** + any body part, plus noun symptoms like **температура**, **кашель**, **нежить**. Third, describing your general state: **«Я хворий»** / **«Я хвора»**, **«Мені погано»**, **«Мені холодно»**.
+
+Two situation-specific formulas tie it all together. At the doctor, answer **«Що у вас болить?»** with **«У мене болить...»**. At the pharmacy, ask **«Дайте, будь ласка, таблетки проти головного болю»** or **«краплі проти нежитю»**. Treat the **проти**-phrases as fixed chunks for now.
+
+### Перевір себе (Self-check)
+
+- Як сказати "My throat hurts and I have a fever"? → **У мене болить горло. У мене температура.**
+- Як сказати "I'm sick" (you are female)? → **Я хвора.**
+- Що означає **«Мені погано»**? → I feel bad / I'm not well.
+- Як попросити таблетки проти кашлю в аптеці? → **Дайте, будь ласка, таблетки проти кашлю.**
+- Як лікар питає про симптоми? → **Що у вас болить?**
+- Яка різниця між **болить** і **болять**? → **болить** = one thing hurts (**зуб**, **голова**); **болять** = several things hurt (**зуби**, **очі**).
+
+### What's next
+
+M54 (Emergencies) builds directly on this module. You will use **«Мені погано»** and **«У мене болить»** in urgent situations and add phrases like **«Викличте швидку!»** (Call an ambulance!). Everything in this module travels forward intact: the chunk **«У мене болить...»**, the symptom nouns, **«Я хворий/хвора»**. Health vocabulary you learn now is vocabulary you keep forever.
+
+<!-- INJECT_ACTIVITY: fill-in-pharmacy -->
 
 </module_content>
 
@@ -361,30 +379,70 @@ workbook:
       - letters: ["к", "н", "и", "г", "а"]
         answer: "книга"
         hint: "book"
+
+  - type: order
+    instruction: "Розставте речення в правильному порядку"
+    items:                         # Lines displayed SHUFFLED to the learner
+      - "— Служба порятунку, слухаю вас."
+      - "— Допоможіть! Тут пожежа!"
+      - "— Де ви?"
+    correct_order: [0, 1, 2]       # TOP-LEVEL field, zero-based indices into items[]
+
+  - type: unjumble
+    instruction: "Складіть правильне речення зі слів"
+    items:
+      - words: ["швидку!", "Викличте"]            # Jumbled words
+        correct_order: ["Викличте", "швидку!"]    # Words as STRINGS in correct order (NOT integers!)
+      - words: ["потрібен", "Мені", "лікар."]
+        correct_order: ["Мені", "потрібен", "лікар."]
+        hint: "Dative + потрібен + noun"
+
+  - type: error-correction
+    instruction: "Знайдіть і виправте помилку"
+    items:
+      - sentence: "Мені потрібна лікар."
+        error: "потрібна"
+        correction: "потрібен"
+        error_type: "word"           # MUST be one of: "word", "phrase", "register", "construction"
+        options: ["потрібен", "потрібне", "потрібно"]
+        explanation: "Лікар is masculine, so потрібен."
 ```
 
 ---
 
 ## Activity Type Reference
 
+**CRITICAL RULE: EVERY single activity object MUST include an `id` field (a unique string like "quiz-grammar", "match-up-vocab"). Do NOT generate an activity without an `id`.**
+
 ### Core types (use for A1-C2):
-- **quiz**: Multiple choice. Required: instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: instruction, items[{sentence, answer}]. Optional: options[]
-- **match-up**: Pair matching. Required: instruction, pairs[{left, right}]. Min 3 pairs.
-- **group-sort**: Categorization. Required: instruction, groups[{label, items[]}]. Min 2 groups.
-- **true-false**: Statement evaluation. Required: instruction, items[{statement, correct}]
-- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]
-- **anagram**: Letter rearrangement. Required: instruction, items[{letters[], answer}]
-- **translate**: Type translation. Required: instruction, items[{source}]. Use options[] for multiple choice.
-- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]
-- **observe**: Pattern discovery. Required: examples[], prompt
-- **classify**: Multi-category sort. Required: instruction, categories[{label, items[]}]
+- **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
+- **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
+- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
+- **error-correction**: Find wrong word. Required: id, instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
+- **anagram**: Letter rearrangement. Required: id, instruction, items[{letters[], answer}]
+- **translate**: Type translation. Required: id, instruction, items[{source}]. Use options[] for multiple choice.
+- **unjumble**: Word reordering. Required: id, instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
+- **order**: Sentence/line ordering. Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
+- **observe**: Pattern discovery. Required: id, examples[], prompt
+- **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
+
+### Ukrainian pedagogy types (A1 phonetics/syllables):
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **image-to-letter**: See image/emoji, identify letter. Required: id, instruction, items[{image, letter}]. Optional: options[]
+- **letter-grid**: Letter reference grid. Required: id, letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
+- **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
+- **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
 
 ### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
-- **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: prompt. Optional: min_words, model_answer, evaluation_criteria[]
-- **reading**: Required: passage, questions[]
-- **source-evaluation**: Required: source_text, criteria[], guiding_questions[]
+- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]
+- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
+- **reading**: Required: id, passage, questions[]
+- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]
 
 ---
 
@@ -404,21 +462,27 @@ Example: 'Оберіть правильний варіант (Choose the correct
 
 These patterns come from МійКлас and Ukrainian textbook analysis. They show what KINDS of exercises work best for this module's topic. Use them as templates — adapt the specific content to this module's vocabulary and concepts.
 
-### Pattern: general-reading
-- **true-false** — Правда чи ні?: Check comprehension of a passage or dialogue
-- **quiz** — Відповідь на запитання: Answer questions about a text passage
+### Pattern: general-reading [§1 (Speech activities — reading)]
+**Розуміння тексту** (Reading comprehension)
+- **true-false** — Правда чи ні?: Перевірити розуміння тексту або діалогу / Check comprehension of a passage or dialogue
+- **quiz** — Відповідь на запитання: Відповісти на запитання за текстом / Answer questions about a text passage
 
 
-**Use these patterns.** If the pattern library recommends `divide-words` for a syllable module, generate a `divide-words` exercise. If it recommends `group-sort` for gender, generate a `group-sort`. The patterns encode how Ukrainian teachers actually test these concepts.
+**You MUST use these patterns.** The pedagogy patterns encode how Ukrainian teachers actually test each concept. For each matched pattern:
+1. Generate **at least one activity of each recommended type** from the pattern. If the pattern lists divide-words, count-syllables, and odd-one-out — your output MUST include all three.
+2. Follow the anti-patterns — if a type is listed under "DO NOT generate", do NOT use it for this topic.
+3. Use the Ukrainian instruction (назва / instruction_uk) when the level allows Ukrainian instructions.
 
 ---
 
 ## Quality Rules
 
 **ITEM COUNT MINIMUMS (non-negotiable):**
-- **Every activity MUST have at least 6 items.** Quiz = 6+ questions. Fill-in = 6+ sentences. Match-up = 6+ pairs. True-false = 6+ statements. Group-sort = 6+ items per group minimum. Anagram = 6+ words.
-- If you can't think of 6 items, add more examples from the module's vocabulary and content. NEVER submit an activity with fewer than 6 items.
-- **3-5 options per quiz/fill-in question** — enough to prevent guessing, not so many to overwhelm.
+- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
+- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
+- If you can't think of enough items, add more examples from the module's vocabulary and content.
+- **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
+- **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
 **Instructions match learner level:**
 1. **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.

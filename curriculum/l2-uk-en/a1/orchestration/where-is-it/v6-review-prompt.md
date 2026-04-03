@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 29: Where Is It? (A1, A1.5 [Places])
-**Writer:** Gemini
+**Writer:** Claude
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -165,7 +165,7 @@ The preposition **в / у** (in / at) is used for enclosed spaces — when you a
 - **ліка́рня** (hospital) → **у ліка́рні** (in/at the hospital)
 - **мі́сто** (city) → **у/в мі́сті** (in the city)
 
-*Brief rule:* Use **в** before a vowel or to avoid awkward consonant clusters, and use **у** before a consonant. This is the euphony rule helping the language flow smoothly, as we saw with **у банку** versus **в офісі**.
+*Brief rule:* Use **в** before a vowel, and use **у** before a consonant or to avoid awkward consonant clusters. This is the euphony rule helping the language flow smoothly, as we saw with **у банку** versus **в офісі**.
 
 The preposition **на** (on / at) is used when something is on a surface, situated in an open area, or simply by pure convention for certain places. Here are five model nouns for this specific pattern:
 - **робота** (work) → **на роботі** (at work)
@@ -182,9 +182,9 @@ You may have noticed that the noun endings change in predictable ways. Here are 
 
 ## В чи на? (В or На?)
 
-How do you choose between the prepositions? **В / у** signals an enclosed, bounded space where you are physically inside something. Think of our prototype examples from the introductory dialogues: **в школі** (inside the school building), **у банку** (inside the bank walls), **в магазині** (inside the shop), and **у лікарні** (inside the hospital). There is a very important special case: **в кафе́** (in the café). The word **кафе** (café) is an indeclinable neuter noun because it is a borrowed foreign word ending in a vowel. The noun itself never changes its ending; only the preposition marks the location. Therefore, **в кафе** is always **в кафе**.
+How do you choose between the prepositions? **В / у** signals an enclosed, bounded space where you are physically inside something. Think of our prototype examples from the introductory dialogues: **в школі** (inside the school building), **у банку** (inside the bank walls), **в магазині** (inside the shop), and **у лікарні** (inside the hospital). There is a very important special case: **в кафе́** (in the café). The word **кафе** (café) is an indeclinable neuter noun because it is a borrowed foreign word ending in a vowel. The noun itself never changes its ending; only the preposition marks the location. Therefore, it is always **в кафе** (or **у кафе**), never changing its ending.
 
-The preposition **на** signals an open area, a surface, or — most importantly — a conventional cultural association. Prototype open spaces include **на вулиці** (on the street, outdoors), **на площі** (on the square), and **на морі** (at the sea). Then there are the tricky conventional ones: **на роботі** (at work — you are not inside a single "work" building, but rather at the concept of work), **на вокзалі** (at the train station — this is a linguistic convention, not pure spatial logic), and **на по́шті** (at the post office — also conventional). As a reliable rule of thumb, when you are in doubt, learn each place with its preposition as a fixed, inseparable phrase.
+The preposition **на** signals an open area, a surface, or — most importantly — a conventional cultural association. Prototype open spaces include **на вулиці** (on the street, outdoors), **на пло́щі** (on the square), and **на морі** (at the sea). It is also used for events, like **на конце́рті** (at the concert). Then there are the tricky conventional ones: **на роботі** (at work — you are not inside a single "work" building, but rather at the concept of work), **на вокзалі** (at the train station — this is a linguistic convention, not pure spatial logic), and **на по́шті** (at the post office — also conventional). As a reliable rule of thumb, when you are in doubt, learn each place with its preposition as a fixed, inseparable phrase.
 
 There is a strict and unbreakable rule for countries and cities — they always take **в / у**: **в Украї́ні** (in Ukraine), **у Києві** (in Kyiv), **у Льво́ві** (in Lviv), **в Оде́сі** (in Odesa), **у Харко́ві** (in Kharkiv). However, there is a special case for streets: you use **на** plus the street name, such as **на вулиці** Хрещатик (on Khreshchatyk street) or **на Майда́ні** Незале́жності (on Independence Square).
 
@@ -214,7 +214,7 @@ To summarize the endings: most feminine nouns take **-і** in the locative (scho
 
 <!-- INJECT_ACTIVITY: quiz -->
 
-**Deterministic word count: 1563 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1581 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -350,8 +350,8 @@ If your verdict is **REVISE**, you MUST output a `<fixes>` block with exact find
 
 Rules for fixes:
 - Each fix is a YAML entry with `find:` (exact text from the module) and `replace:` (corrected text)
-- The `find` string must be an EXACT substring of the module content — copy-paste it
-- Keep fixes minimal — change only what's wrong, preserve surrounding text
+- The `find` string MUST be an EXACT copy-paste from the module content. DO NOT change quotes (« » to " "), dashes (— to -), or spacing. If you change a single character in the `find` string, the automated replacement will fail.
+- Keep fixes minimal — change only what's wrong, preserve surrounding text. Provide enough context (e.g. 5-7 words) to make the match unique.
 - Do NOT fix словник/vocabulary tables (those are generated by a downstream tool)
 - For word count issues: add content as a new `insert_after:` entry instead of find/replace
 
@@ -392,7 +392,7 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 67 words | Not found: 49 words
+Verified: 66 words | Not found: 51 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Діало — NOT IN VESUM
@@ -418,6 +418,7 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ гому — NOT IN VESUM
   ✗ дру — NOT IN VESUM
   ✗ жності — NOT IN VESUM
+  ✗ конце — NOT IN VESUM
   ✗ кімна — NOT IN VESUM
   ✗ ліка — NOT IN VESUM
   ✗ магази — NOT IN VESUM
@@ -432,6 +433,7 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ пло — NOT IN VESUM
   ✗ рня — NOT IN VESUM
   ✗ рні — NOT IN VESUM
+  ✗ рті — NOT IN VESUM
   ✗ студе — NOT IN VESUM
   ✗ сті — NOT IN VESUM
   ✗ університе — NOT IN VESUM
@@ -443,9 +445,8 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ юся — NOT IN VESUM
   ✗ ються — NOT IN VESUM
   ✗ єві — NOT IN VESUM
-  ✗ єшся — NOT IN VESUM
 
-All 67 other words are confirmed to exist in VESUM.
+All 66 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

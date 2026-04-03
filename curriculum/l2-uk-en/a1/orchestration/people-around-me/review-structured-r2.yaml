@@ -1,0 +1,53 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: The module strictly follows the `content_outline`, hitting the 1200 word
+    target (1242 words) and covering all grammatical points (masculine genitive=accusative,
+    whom vs what).
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Perfect grammatical explanations. Properly distinguishes `кого?` vs `що?`.
+    Accurately cites textbook rules (Заболотний, Караман). Phrases like "Я чекаю лікаря"
+    and "Я чекаю його" are natural and corre
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Very strong PPP flow, but DEDUCT for exercises placed before the concept
+    is taught. Specifically, `fill-in-animate-accusative` and `fill-in-family-friends`
+    are placed too early in the text.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required vocabulary (`бачити`, `знати`, `любити`, `чекати`, `шукати`,
+    `друг`, `подруга`) is naturally integrated into the prose. Some recommended words
+    (`колега`, `викладач`, `продавець`) are abse
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: DEDUCT for exercises placed before the concept is taught. `fill-in-family-friends`
+    tests masculine forms but is injected before the masculine rule is taught.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Excellent integration of the Ukrainian school curriculum approach (Grade
+    4 mnemonic). The conversational examples (wedding photos, colleagues at work)
+    feel natural and authentic.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: 'Clean markdown, but DEDUCT for the inclusion of meta-commentary at the
+    very end (`**Deterministic word count: 1242 words**...`).'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Accurately references Ukrainian grade school linguistics methodology.
+    Zero Russianisms or Surzhyk.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogue "Ходімо, я тебе познайомлю" and the workplace chat are highly
+    natural, with culturally appropriate multi-turn exchanges.
+findings: []

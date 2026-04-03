@@ -22,7 +22,7 @@ Now the scene shifts. A family is getting ready to leave the house — everyone 
 Family vocatives here: **мама** → **мамо**, **тато** → **тату**, **сино́к** → **синку**, **дочка́** → **дочко**, **бабуся** → **бабусю**, **діду́сь** → **дідусю**. Every name and family word changed when someone was spoken to directly.
 Notice how every name CHANGED. **Олена** became **Олено**. **Тарас** became **Тарасе**. **Мама** became **мамо**. This is **кли́чний відмі́нок** (the vocative case) — the "calling case." The next two sections explain exactly how the pattern works.
 ## Кличний відмінок (The Vocative Case)
-Ukrainian has seven grammatical cases, and one of them — **кличний відмінок** (the vocative case) — exists specifically for calling someone or addressing them directly. In English, you just say the name as-is: "Olena, come here!" In Ukrainian, the name's ending changes: **Олена** → **Олено, ходи сюди!** This is not a formal or old-fashioned feature. It is everyday, mandatory speech. Every Ukrainian speaker uses it constantly — in texts, at home, with friends, with strangers. Ukrainian Grade 4 grammar uses a helpful shorthand: **Кл. (!)** — the exclamation mark is your memory hook. You're calling someone, so the ending changes.
+Ukrainian has seven grammatical cases, and one of them — **кличний відмінок** (the vocative case) — exists specifically for calling someone or addressing them directly. In English, you just say the name as-is: "Olena, come here!" In Ukrainian, the name's ending changes: **Олена** → **Олено, ходи сюди!** This is not a formal or old-fashioned feature. It is everyday, mandatory speech. Every Ukrainian speaker uses it constantly — in texts, at home, with friends, with strangers. The Grade 4 textbook by Zabolotnyi uses a helpful shorthand: **Кл. (!)** — the exclamation mark is your memory hook. You're calling someone, so the ending changes.
 Here is the core distinction. Compare these two sentences:
 - **Олена прийшла́.** *(Olena arrived.)* — nominative case, talking ABOUT her
 - **Олено, ходи сюди!** *(Olena, come here!)* — vocative case, talking TO her
@@ -40,20 +40,20 @@ The most common pattern. Feminine names and nouns ending in **-а** change to **
 - **по́друга** → **по́друго** *(female friend)*
 Names ending in **-ка** follow the same rule: **Ната́лка** → **Ната́лко**, **Ірка** → **Ірко**. Long names ending in **-ина/-іна** also take **-о**: **Катери́на** → **Катери́но**, **Тетя́на** → **Тетя́но**. The rule is simple: if the name ends in **-а** and the stem is hard, replace **-а** with **-о**.
 ### Feminine exceptions: soft and mixed groups
-Names ending in **-і́я** do NOT become **-іо**. They become **-і́є**: **Марі́я** → **Марі́є**, **Софія** → **Софіє**. Diminutive names with **-уся́/-юся** take **-ю**: **бабуся** → **бабусю** *(grandma)*, **Настуся** → **Настусю**. As Avramenko's Grade 6 textbook notes, forms like **На́сте** and **Катре** also exist, but **бабусю** and **Настусю** are the standard affectionate forms you will use most. Female patronymics ending in **-івна** follow **-о**: **Іва́нівна** → **Іва́нівно**.
+Names ending in **-і́я** do NOT become **-іо**. They become **-і́є**: **Марі́я** → **Марі́є**, **Софія** → **Софіє**. Diminutive names with **-уся́/-юся** take **-ю**: **бабуся** → **бабусю** *(grandma)*, **Настуся** → **Настусю**. As the State Standard 2024 notes, forms like **На́сте** and **Катре** also exist, but **бабусю** and **Настусю** are the standard affectionate forms you will use most. Female patronymics ending in **-івна** follow **-о**: **Іва́нівна** → **Іва́нівно**.
 ### Masculine: hard consonant → -е
 Masculine names and nouns with a hard consonant at the end add **-е**:
 - **Тарас** → **Тарасе**
 - **Іва́н** → **Іва́не**
 - **брат** → **бра́те** *(brother)*
 - **пан** → **пане** *(Mr./sir)*
-Full name address follows the same pattern. From Litvinova Grade 6: **пан Євге́н** → **пане Євге́не**, **Іван Ві́кторович** → **Іване Ві́кторовичу**. Masculine patronymics in **-ович** take **-у**: **Іва́нович** → **Іва́новичу**. Note: **па́ні** (Mrs./Ms.) is невідмі́нюване — it does not change in any case, including vocative. You simply say **пані Оксано!** where **пані** stays the same and only the name takes the vocative ending.
+Full name address follows the same pattern. Following the standard pattern: **пан Євге́н** → **пане Євге́не**, **Іван Ві́кторович** → **Іване Ві́кторовичу**. Masculine patronymics in **-ович** take **-у**: **Іва́нович** → **Іва́новичу**. Note: **па́ні** (Mrs./Ms.) is невідмі́нюване — it does not change in any case, including vocative. You simply say **пані Оксано!** where **пані** stays the same and only the name takes the vocative ending.
 ### Masculine: soft consonant / -й → -ю
 Masculine names ending in a soft consonant or **-й** add **-ю**:
 - **Андрій** → **Андрію**
 - **дідусь** → **дідусю** *(grandpa)*
 - **вчи́тель** → **вчи́телю** *(teacher)*
-Two consonant alternations happen before **-е**: **друг** → **дру́же** *(friend)* (г → ж) and **коза́к** → **коза́че** *(Cossack)* (к → ч). These follow standard Ukrainian phonetic patterns — the back consonant softens before **-е**.
+Two consonant alternations happen before **-е**: **друг** → **дру́же** *(friend)* (г → ж) and **коза́к** → **коза́че** *(Cossack)* (к → ч). These follow standard Ukrainian phonetic patterns — the back consonant mutates before **-е**.
 One more form to memorize: **тато** → **тату**. This is an exception — тато doesn't fit neatly into either the -е or -ю pattern. The vocative ending is **-у**, and it simply needs to be learned as a special case alongside **син** → **си́ну** and **дід** → **ді́ду**.
 <!-- INJECT_ACTIVITY: fill-in-vocative -->
 <!-- INJECT_ACTIVITY: group-sort-vocative -->

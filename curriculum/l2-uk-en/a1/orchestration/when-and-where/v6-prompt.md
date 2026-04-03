@@ -1,21 +1,3 @@
-<correction_directive>
-CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
-
-- FIX: Missing 3/6 required vocab: знати (to know), думати (to think), казати (to say/tell)
-</correction_directive>
-
-LEARNINGS FROM PAST BUILDS (same error patterns seen before):
-- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
-- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
-- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
-- [GLOBAL] NEVER frame Ukrainian as "lacking" or "missing" letters that Russian has. Ukrainian has its own 33-letter alphabet — it is complete. Do NOT write "Ukrainian lacks Ъ, Ы, Э" or "Ukrainian doesn't have these Russian letters." Instead, highlight what Ukrainian HAS: Ґ, Є, Ї, І are unique to Ukrainian. Present Ukrainian on its own terms.
-- [GLOBAL] NO LLM filler phrases. Do NOT write: "Let us start with...", "Numbers unlock the real Ukraine", "You now possess a complete...", "It is incredibly versatile", "one of the most rewarding skills". Start sections with a dialogue, a question, or a concrete example — never with a generic motivational opener. If a sentence could appear in any language course about any topic, delete it.
-- [GLOBAL] Every exercise item must test something EXPLICITLY taught in the preceding prose. If an exercise tests the collocation "малювати картину", the prose must contain "малювати картину" as a taught example. Do NOT test collocations, vocabulary, or patterns that the learner has to infer — test what was taught.
-- [GLOBAL] Quiz correct answers must be RANDOMIZED across positions. Do NOT place the correct answer at index 0 for all items. Distribute correct answers roughly evenly across all positions (0, 1, 2) to prevent pattern-guessing.
-- [GLOBAL] Do NOT use spatial metaphors for abstract grammatical requirements. Example: "на" with musical instruments is NOT "on top of" — it is an abstract grammatical requirement that must be memorized. Misleading mnemonics cause incorrect generalizations. If a rule must simply be memorized, say so directly.
-- [GLOBAL] Memorized chunks are allowed before their grammar is formally taught. Natural Ukrainian expressions (Мені подобається, У мене є, Мене звати, Як справи?, Звідки ти?, Скільки коштує?, Мені ... років) can appear in ANY module as memorized chunks, even if the underlying grammar (dative, genitive, etc.) is not taught until later. This mirrors how Ukrainian children and L2 learners naturally acquire language. Do NOT flag these as forward-references. DO flag premature drilling of case paradigms, untaught vocabulary words, and grammar analysis before its module.
-- [GLOBAL] Inline activity markers (<!-- INJECT_ACTIVITY: ... -->) must ONLY appear AFTER all concepts they test have been taught. If an activity tests both soft signs and apostrophes, it must appear after BOTH sections, not after the first one. This is critical in Ukrainian where apostrophe rules (б,п,в,м,ф,р + я,ю,є,ї) appear constantly — placing an apostrophe exercise before the apostrophe section teaches wrong sequencing. Rule: scan each activity's items and verify every tested concept has a preceding H2 section that teaches it.
-
 
 
 ---
@@ -59,7 +41,7 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
 4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
@@ -262,89 +244,76 @@ You do NOT need to call tools yourself — the facts are already verified.
 <pre_verified_facts>
 ## VESUM Verification
 
-- **Confirmed (12/12):**
-  що (conj), де (adv/part), коли (adv/conj — 7 VESUM forms confirmed; note: first 3 displayed under lemma кіл gen.pl., but the conjunction/adverb sense is present in all 7 matches — standard VESUM behaviour for homographs), знати (verb), думати (verb), казати (verb), сказати (verb), бачити (verb), чути (verb), розуміти (verb), речення (noun), головне (noun/adj)
+**Confirmed (12/12):**
+- ✅ **що** — conj (also noun) — standard conjunction form confirmed
+- ✅ **де** — adv / particle — confirmed
+- ✅ **коли** — FOUND (7 matches; top display shows кіл-noun forms but adv/conj form exists among all 7 — standard Ukrainian adverb/conjunction, no concern)
+- ✅ **знати** — verb (impf.)
+- ✅ **думати** — verb (impf.)
+- ✅ **казати** — verb (impf.)
+- ✅ **сказати** — verb (pf.)
+- ✅ **бачити** — verb (impf.)
+- ✅ **чути** — verb (impf.)
+- ✅ **розуміти** — verb (impf.)
+- ✅ **речення** — noun
+- ✅ **головне** — noun/adj (confirmed)
 
-- **Not found:** none
-
-- ⚠️ **Homograph note on "коли":** VESUM displays the first matches as кіл(noun) gen.pl. because "коли" is a homograph of that form. The conjunction/adverb "коли" is fully valid and confirmed — this is expected VESUM behaviour. No action needed.
+**Not found:** none — all 12 plan vocabulary items are in VESUM.
 
 ---
 
 ## Textbook Excerpts
 
 ### Section: Складне речення (Complex Sentences)
-> "Засобами зв'язку головної й підрядної частин складнопідрядного речення є інтонація та сполучники підрядності чи сполучні слова. Сполучники підрядності не є членами речення (що, щоб, коли, бо, тому що, якщо, хоч...). [...] На письмі підрядну частину складнопідрядного речення відокремлюємо комою, а в усному мовленні — паузою."
-> **Source:** Заболотний, Grade 9, p. 79 (chunk `9-klas-ukrmova-zabolotnyi-2017_s0108`)
-
-This directly confirms: (1) що/коли are subordinating conjunctions (*сполучники підрядності*), де/коли in clausal roles are *сполучні слова*; (2) comma rule before subordinate clause is textbook-authorised.
+> "Складнопідрядним називають складне речення, частини якого нерівноправні за змістом і з'єднані за допомогою сполучників підрядності або сполучних слів."
+> "Сполучники підрядності не є членами речення (що, щоб, коли, бо, тому що, якщо…)"
+> "На письмі підрядну частину складнопідрядного речення відокремлюємо комою, а в усному мовленні – паузою."
+> Source: Заболотний, Grade 9 (§14, p. 78-79)
 
 ### Section: Що, де, коли — двоє облич (Two Faces)
-> "Підрядні речення місця [...] з'єднуються з нею сполучними словами де, куди, звідки. [...] Підрядні речення часу [...] підрядна і головна частини поєднуються сполучниками і сполучними словами коли, поки, доки..."
-> **Source:** Voron, Grade 9, p. 75 (chunk `9-klas-ukrajinska-mova-voron-2017_s0094`)
-
-> "На особливу увагу заслуговують сполучники, що є омонімічними до інших частин мови [...] що. Їх треба відрізняти від співзвучних сполучень займенників або прислівників із прийменниками або частками. [...] До сумнівного слова спробуйте поставити питання. Якщо це сполучник, то питання поставити неможливо."
-> **Source:** Litvinova, Grade 7, p. 206 (chunk `7-klas-ukrmova-litvinova-2024_s0210`) — NUS 2022+, tier 1
-
-> "Відносні займенники — ті самі, що й питальні, але їх уживаємо для зв'язку частин складного речення."
-> **Source:** Заболотний, Grade 6, p. 200 (chunk `6-klas-ukrmova-zabolotnyi-2020_s0203`)
-
-The "two faces" pedagogical concept (question word vs. conjunction) is textbook-confirmed from Grade 6–7.
-
-### Section: Діалоги (Dialogues)
-> "Визначте за ситуацією характер можливої розмови (офіційна/неофіційна) [...] СИТУАЦІЇ. 1. Ваша сім'я планує відпочинок на вихідні. 2. Ваш клас готується до туристичного походу."
-> **Source:** Заболотний, Grade 9, p. 226 (chunk `9-klas-ukrmova-zabolotnyi-2017_s0330`)
-
-> "Ситуація Б. Тато / мама пропонує синові / дочці у вихідні сходити в театр або кіно. Але в них виникло непорозуміння щодо дня відвідування."
-> **Source:** Заболотний, Grade 7, p. 263 (chunk `7-klas-ukrmova-zabolotnyi-2024_s0269`) — NUS 2022+, tier 1
-
-Plan dialogue situation (planning to meet, negotiating when/where) matches textbook dialogue templates closely.
+> "Відносні займенники – ті самі, що й питальні, але їх уживаємо для зв'язку частин складного речення."
+> "Сполучні слова є членами речення, на них падає логічний наголос, до них можна поставити питання. У ролі сполучних слів використовуємо: прислівники: як, наскільки, де, куди, звідки, коли…"
+> Source: Заболотний, Grade 9 (p. 79); Grade 6 (p. 200)
 
 ### Section: Підсумок — Summary
-> "Особливості видів складнопідрядних речень: Зі з'ясувальними підрядними частинами — Сполучники: що, щоб, аби... Сполучні слова: хто, який, чий, де, куди, звідки, скільки, коли, як..."
-> **Source:** Заболотний, Grade 9, p. 84 (chunk `9-klas-ukrmova-zabolotnyi-2017_s0116`) and Grade 11 (chunk `11-klas-ukrmova-zabolotnyi-2019_s0357`)
+> "Складнопідрядне речення складається з головної і підрядної частин. Від головного речення в більшості випадків можна поставити питання до підрядного речення."
+> "Приклади: Я завжди думав і думаю, що без гарячої любові до природи людина не може бути митцем (О. Довженко). І несуть мене по полю, де здобув я нашу волю, коні вороні (П. Воронько)."
+> Source: Ворон, Grade 11 (p. 173-174)
 
-Full table of conjunction types confirmed at Grade 9–11 level — appropriate pedagogical scaffolding for A1 introduction.
+### Section: Діалоги (key verb казати vs говорити)
+> "Я кажу, що прийду" — correct use of казати for conveying specific content.
+> "Він казав знехотя" — казати used for specific utterances/messages.
+> Source: Антоненко-Давидович, §ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ
 
 ---
 
 ## Grammar Rules
 
-- **Comma before subordinate clause:** Textbook-confirmed (Zaболотний Grade 9, p. 79): *"На письмі підрядну частину складнопідрядного речення відокремлюємо комою."* Правопис 2019 query did not return a matching §; the rule is unambiguously confirmed via authoritative textbooks. Comma is obligatory before що/де/коли as subordinating conjunctions — plan's claim that this differs from English is accurate.
-
-- **що as subordinating conjunction vs. pronoun:** Grade 7 Litvinova (tier 1, NUS 2022+) — *"Якщо це сполучник, то питання поставити неможливо"* — confirmed diagnostic rule for the module's "two faces" section.
-
-- **де/коли as сполучні слова vs. сполучники:** Grade 9 Заболотний confirms де, куди, звідки are *сполучні слова* (members of the clause, can be questioned), while що is a *сполучник підрядності* (not a clause member). ⚠️ **Pedagogical precision flag:** In the plan's "Two Faces" section, де and коли are called "conjunctions" (*сполучники*) alongside що. Technically де is a *сполучне слово* (relative adverb) in the clause, not a pure сполучник. For A1, the plan's simplified "conjunction" label is acceptable as a learner approximation, but the module should avoid stating де and що are *the same type* of connector — they behave differently (де has clause membership/stress, що does not).
+- **Comma before subordinating conjunction**: Правопис 2019 did not return a direct section match via topic search, but Grade 9 textbooks (Заболотний §14, Авраменко §17) uniformly confirm: *"підрядну частину складнопідрядного речення відокремлюємо комою"* — always a comma before що/де/коли used as subordinating conjunctions. This is established pedagogical consensus.
+- **що/де/коли as conjunctions vs. question words**: Grade 7 Авраменко (§80) classifies що as з'ясувальний сполучник підрядності; де/коли as сполучні слова (прислівники functioning as connectors). The plan's "two faces" framing matches the textbook distinction between питальні and відносні/сполучні uses.
 
 ---
 
 ## Calque Warnings
 
-- **"казати" vs "говорити":** Антоненко-Давидович (chunk ad-135) flags this explicitly. The plan correctly uses **казати/сказати** (telling, asserting — "Він каже, що...") rather than говорити. ✅ **No calque.** казати is the natural choice for reported speech in Ukrainian.
-
-- **"знаходитися" (not in plan):** AD (chunk ad-148) flags this as a Russian calque (*находиться*) — correct Ukrainian is *бути/перебувати*. The plan correctly avoids this word. ✅ **No issue** — plan uses "де" to ask *location*, not the verb знаходитися.
-
-- **"думаю, що це правильно" pattern:** No calque found. AD search for "думати що" returned unrelated entries. The construction *Я думаю, що...* is natural Ukrainian. ✅ OK.
-
-- ⚠️ **Dialogue line to watch:** Plan Dialogue 1 has *"Я вільний, коли закінчу роботу."* — "закінчу роботу" uses the perfective future of *закінчити*. This is grammatically correct Ukrainian. No calque. However, note below under CEFR.
+- **казати vs. говорити**: ✅ OK — Plan correctly uses **казати** (Він каже, що...; Скажи, коли...) for conveying specific content. Антоненко-Давидович confirms казати is the precise verb for "saying something specific/telling," not a calque. Avoid говорити in these patterns.
+- **зустрітися**: ✅ OK — Plan uses it for a genuine meeting between people ("я хочу зустрітися"). Антоненко-Давидович warns against using зустрічатися in the abstract/figurative sense (calque of Russian встречаться), but person-to-person meetings are correct.
+- **думати, що**: ✅ OK — Я думаю, що... is natural Ukrainian. No calque issue found.
 
 ---
 
 ## CEFR Check
 
-| Word | PULS Level | Status |
-|------|-----------|--------|
-| знати | A1 | ✅ On target |
-| думати | A1 | ✅ On target |
-| казати | A1 | ✅ On target |
-| сказати | A1 | ✅ On target |
-| бачити | A1 | ✅ On target |
-| чути | A1 | ✅ On target |
-| розуміти | A1 | ✅ On target |
-| речення | A1 | ✅ On target |
-| головне | not in PULS as adj | ✅ Core A1 adjective — acceptable |
+- **знати**: A1 ✅ — on target
+- **думати**: A1 ✅ — on target
+- **казати**: A1 ✅ — on target
+- **сказати**: A1 ✅ — on target
+- **розуміти**: A1 ✅ — on target
+- **бачити**: A1 ✅ — on target
+- **чути**: A1 ✅ — on target
+- **речення**: A1 ✅ — on target
 
-⚠️ **One A1-appropriateness flag (not vocabulary, but grammar):** The dialogues in the plan use perfective future verb forms: *закінчу* (закінчити pf.), *побачиш* (побачити pf.), *прийдеш* (прийти pf.). These perfective future forms are B1-level grammar. Their appearance in A1 dialogues is acceptable **only as formulaic chunks** (fixed phrases learners memorise without analysing the aspect system) — they must NOT be explained as grammar in this module. Recommend treating *коли прийдеш*, *коли закінчу* as opaque lexical chunks with a note: "You'll learn how this works in B1." This is consistent with how Ukrainian Grade 1–2 textbooks (Великhakova, Вашуленко) handle adult idioms in early lessons.
+**All vocabulary confirmed A1.** No above-target words detected. Note: metalinguistic term **складнопідрядне речення** appears in Grade 9 curricula — the plan correctly introduces this as a Grade 5 term for reference without requiring learners to produce it at A1.
 </pre_verified_facts>
 
 
@@ -704,7 +673,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Складне речення (Complex Sentences)` (~300 words)
 - `## Що, де, коли — двоє облич (Two Faces)` (~300 words)
 - `## Підсумок — Summary` (~300 words)
-- `## Підсумок` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -762,7 +730,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -863,50 +831,98 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги (Dialogues) (~330 words total)
+## Діалоги (~390 words total)
 
-- P1 (~25 words): Brief framing sentence — today's dialogues show що, де, коли doing a new job: connecting two clauses inside one sentence, not asking a question.
-- Dialogue 1 (~110 words): Two friends planning to meet. Олексій asks Марія where the new café is; she confirms she knows where it is. He asks her to tell him when she's free. She says she's free when she finishes work. He thinks that six o'clock will be good. She agrees she also thinks it's a good time. Lines: — Ти знаєш, де нове кафе? — Так, я знаю, де воно. — Скажи, коли ти вільна. — Я вільна, коли закінчу роботу. — Добре. Я думаю, що о шостій буде добре. — Так, я теж думаю, що це гарний час. Each conjunction bold-marked in the printed version.
-- P2 (~15 words): Transition — a second situation: talking about a mutual friend who's arrived.
-- Dialogue 2 (~110 words): Bohdan tells Natalya that Olena is already in Kyiv. Natalya didn't know. She asks where exactly Olena lives. Bohdan doesn't know where exactly, but knows it's near the centre. She asks him to tell Olena, when he sees her, that she wants to meet. He agrees he'll tell her when he sees her. Lines: — Ти знаєш, що Олена вже в Києві? — Ні, я не знав! А де вона живе? — Я не знаю, де саме. Але я знаю, що біля центру. — Скажи їй, коли побачиш, що я хочу зустрітися. — Добре, скажу, коли побачу. Each conjunction bold-marked.
-- P3 (~70 words): Post-dialogue observation — count the conjunctions. Dialogue 1 uses що twice, де twice, коли twice. Dialogue 2 uses що twice, де twice, коли twice. All six connect two halves of one sentence, not ask a question. That's the pattern this module teaches. Keep these dialogues open; every grammar point below ties back to a line from them.
+- P1 (~30 words): Brief scene-setter — two friends connecting by phone. Олексій cannot find the café; Марта guides him. Introduces all three conjunctions in authentic context before any explanation.
+
+- Dialogue 1 (~120 words): Full 8-turn exchange between Марта and Олексій about finding a café and setting a meeting time.
+  — Марто, ти знаєш, де нове кафе «Вітер»?
+  — Так, я знаю, де воно. Іди прямо, де побачиш фонтан — поверни ліворуч.
+  — Добре. А коли ти там будеш?
+  — Я не знаю точно, коли зможу. Скажи, коли ти вільний.
+  — Я вільний, коли закінчу роботу. Думаю, о шостій.
+  — Я теж думаю, що о шостій — добрий час.
+  — Чудово. А де саме сісти — ти знаєш?
+  — Знаю. Будинок, що стоїть біля великого дерева — там і вхід.
+
+- P2 (~60 words): Observation: Point to three bolded conjunctions from Dialogue 1 — що, де, коли. Each connects two parts of a sentence: Я знаю, [що воно там]. / Я не знаю, [коли зможу]. / [Де побачиш фонтан] — поверни ліворуч. Note comma before each. Learner can already use them receptively.
+
+- Dialogue 2 (~120 words): Full 8-turn exchange — Тарас and Ніна discussing Олена's return to Kyiv.
+  — Ти знаєш, що Олена вже в Києві?
+  — Ні, я не знав! А де вона живе?
+  — Я не знаю, де саме. Але я думаю, що десь біля центру.
+  — А коли вона приїхала?
+  — Я не знаю точно, коли. Вона казала, що приїде в березні.
+  — Скажи їй, коли побачиш, що я хочу зустрітися.
+  — Добре, скажу. Але ти знаєш, що вона дуже зайнята?
+  — Знаю. Але я думаю, що вона знайде час.
+
+- P3 (~60 words): Observation: Point out the chain of complex sentences in Dialogue 2. Notice: Я не знаю, де саме — де саме (exactly where) makes the meaning more natural; я думаю, що... used twice; Скажи їй, коли побачиш connects two time-related actions. These are not just phrases — they are a new sentence architecture.
 
 ---
 
-## Складне речення (Complex Sentences) (~330 words total)
+## Складне речення (~340 words total)
 
-- P1 (~80 words): Connect to M44 — in М44 learners joined EQUAL ideas: Я читаю, і він пише. Він прийшов, але вона пішла. Those conjunctions (і, але, бо) link two clauses that could each stand alone. Today: a MAIN clause + a DEPENDENT clause. The dependent clause can't stand alone — Що він тут doesn't mean anything by itself. It needs a main clause: Я знаю, що він тут. The dependent clause adds detail to the main idea. Ukrainian grammarians call this складнопідрядне речення (a subordinate complex sentence — Grade 5, Заболотний).
-- P2 (~80 words): The three structures, each shown with a full sentence and literal gloss. (1) Я знаю, що він тут. — main clause: Я знаю / conjunction: що / subordinate: він тут. (2) Я не знаю, де вона живе. — main clause: Я не знаю / conjunction: де / subordinate: вона живе. (3) Скажи мені, коли ти прийдеш. — main clause: Скажи мені / conjunction: коли / subordinate: ти прийдеш. Pattern: main clause + comma + conjunction + subordinate clause. Order is always this way when що/де/коли sit in the middle.
-- P3 (~80 words): The comma rule — Ukrainian ALWAYS places a comma before що, де, коли when they act as conjunctions. No exceptions. This differs from English where "I know that he's here" is written without a comma. Show three minimal pairs: Я думаю, що це правильно. / Він не знає, де магазин. / Зателефонуй, коли прийдеш. Point back to Dialogue 1: every line with що, де, or коли in the middle has a comma immediately before it — learners can verify this now.
-- P4 (~30 words): Micro-note — when коли opens the WHOLE sentence (time-clause first), the comma comes after the subordinate clause: Коли я прийду, ми поговоримо. Same comma, different position. One example is enough at A1.
-- Exercise (~60 words of instruction/items): **Fill-in, 8 items** — Choose що, де, or коли to complete each sentence. Items: 1. Я знаю, ___ він тут. 2. Я не знаю, ___ вона живе. 3. Скажи, ___ ти прийдеш. 4. Він думає, ___ це добре. 5. Я чую, ___ вона співає. 6. Ти знаєш, ___ новий ринок? 7. Вона не знає, ___ він повернеться. 8. Я розумію, ___ ти хочеш.
+- P1 (~90 words): Bridge from M44. In M44 you connected EQUAL ideas: Я читаю, і він пише. / Вона хоче піти, але він не хоче. Both clauses could stand alone. Now: a MAIN idea carries a DEPENDENT idea attached to it — the dependent clause cannot stand alone. Я знаю → знаєш WHAT? → Я знаю, що він тут. / Я не знаю → не знаєш WHERE? → Я не знаю, де він живе. / Скажи → скажи WHEN? → Скажи мені, коли ти прийдеш. Grade 5 term: складнопідрядне речення (complex sentence with a subordinate clause).
 
----
+- P2 (~110 words): The three subordinating conjunctions laid out with parallel examples:
+  - **що** (that): Я знаю, що він тут. / Я думаю, що це правильно. / Він каже, що вона в Києві. / Ми бачимо, що ти стараєшся.
+  - **де** (where): Я не знаю, де він живе. / Скажи мені, де кафе. / Я знаю, де це. / Вони не знають, де ми.
+  - **коли** (when): Зателефонуй, коли прийдеш. / Я не знаю, коли він прийде. / Скажи, коли ти вільний. / Коли я прийду, ми поговоримо.
+  Each conjunction answers a different question: що → what/that; де → where; коли → when.
 
-## Що, де, коли — двоє облич (Two Faces) (~330 words total)
+- P3 (~80 words): Comma rule. Ukrainian ALWAYS places a comma before що, де, коли when they serve as conjunctions — no exceptions. English sometimes drops "that" and makes the comma optional: "I think this is right" (no comma, no "that"). Ukrainian never does: Я думаю, що це правильно. (comma + що always). Similarly: Він не знає, де магазин. / Зателефонуй, коли прийдеш. Write this rule in your notebook: comma + conjunction = always paired in Ukrainian.
 
-- P1 (~70 words): Introduce the "two jobs" concept — these three words already appeared in М20 as question words. Learners know them in that role. Now they have a second job. The key: same word, two completely different positions and functions. Don't treat them as new words — treat them as familiar words that learned a new trick. Ukrainian children learn the same distinction in Grade 5 (Заболотний, Chapter: Сполучники).
-- P2 (~80 words): Job 1 — question words. They sit at the START of a sentence or clause. The sentence ends with a question mark. Examples from М20 reactivated: Що це? / Що ти робиш? / Де ти? / Де магазин? / Коли ти прийдеш? / Коли починається фільм? The listener is expected to answer. These sentences have only ONE clause.
-- P3 (~80 words): Job 2 — conjunctions. They sit IN THE MIDDLE of a sentence, after a comma. The sentence does NOT end with a question mark — it makes a statement or gives a command. Examples: Я знаю, що це книжка. / Я знаю, де ти. / Скажи, коли прийдеш. The difference is grammatical position: start of sentence = question word. After comma in middle = conjunction. Show side-by-side: Де ти? (question) vs Я знаю, де ти. (conjunction). Де ти живеш? (question) vs Я знаю, де ти живеш. (conjunction).
-- Exercise (~40 words): **Quiz, 8 items** — Question word or conjunction? Items include: 1. Де ти живеш? 2. Я знаю, де ти живеш. 3. Коли починається урок? 4. Скажи, коли починається урок. 5. Що він хоче? 6. Вона думає, що він хоче чаю. 7. Де знаходиться бібліотека? 8. Він питає, де знаходиться бібліотека.
-- P4 (~60 words): Common що/де/коли patterns worth memorising as chunks — Я знаю, що... / Я не знаю, що... / Я думаю, що... / Він каже, що... (all with що as "that"). Я знаю, де... / Я не знаю, де... (де as "where"). Скажи, коли... / Я не знаю, коли... / Коли я прийду, ми поговоримо. (коли as "when"). Note that Він каже, що... appeared in Dialogue 2 — Скажи їй, коли побачиш, що я хочу зустрітися is two conjunctions in one sentence.
-- Exercise (~40 words): **Fill-in, 6 items** — Complete with a logical subordinate clause. Items: 1. Я думаю, що ___. 2. Він каже, що ___. 3. Я не знаю, де ___. 4. Скажи мені, коли ___. 5. Вона знає, що ___. 6. Ми не знаємо, де ___.
+- Exercise: quiz — Where is the comma? Choose the correctly punctuated sentence from two options (8 items). Examples: "Я знаю що він там" vs "Я знаю, що він там." / "Скажи коли ти прийдеш" vs "Скажи, коли ти прийдеш." Tests comma placement with що, де, коли only — concepts taught in P3 above.
+
+- P4 (~60 words): Practical reinforcement — now you can answer questions more completely. Instead of Я не знаю (I don't know — full stop), you can say Я не знаю, де він. / Я не знаю, коли. / Я не знаю, що це. The subordinate clause turns a dead end into a real answer. Compare: Він тут? → Я думаю, що так. / Де Олена? → Я не знаю, де вона.
 
 ---
 
-## Підсумок — Summary (~330 words total)
+## Що, де, коли — двоє облич (~310 words total)
 
-- P1 (~80 words): Recap the core insight — що, де, коли are conjunctions when they connect a main clause to a subordinate clause in the middle of a sentence, with a comma before them. Compare with М44's coordinate conjunctions: і, але, бо join EQUAL parts; що/де/коли join a MAIN part to a DEPENDENT part. This distinction is the foundation of complex sentence-building in Ukrainian through B2 and beyond.
-- P2 — Reference table (~60 words): Three-column table: Сполучник | Значення | Приклад. Row 1: що | that | Я знаю, що він тут. Row 2: де | where | Я не знаю, де кафе. Row 3: коли | when | Скажи, коли прийдеш. Below table: comma rule reminder — завжди кома перед сполучником.
-- P3 (~70 words): Combining conjunctions — show two advanced A1 sentences that combine what was learned in М44 with today's conjunctions. Sentence 1: Я не йду, бо я не знаю, де це. (бо from М44 + де from today). Sentence 2: Він каже, що прийде, коли закінчить. (що + коли, two subordinate clauses). These sentences feel sophisticated but use only words and structures already taught. Learners should feel the progress.
-- Exercise (~40 words): **Quiz, 8 items** — Where does the comma go? Choose the correctly punctuated version. Items cover: що sentence with comma, що sentence without comma (wrong), де in middle, коли opening the sentence, коли in the middle, two-conjunction sentence, і vs що comma placement, statement vs question.
-- Self-check bullets (~80 words): Build three sentences using the templates below. No answer given — learner produces their own.
-  - Я думаю, що ___. (fill with any opinion)
-  - Я не знаю, де ___. (fill with any place)
-  - Скажи мені, коли ___. (fill with any time-event)
-  Then check: Is there a comma before the conjunction in each sentence? Does the sentence make a statement, not a question? If yes to both — correct.
+- P1 (~80 words): These three words already live in your vocabulary from M20 as question words. Що це? (What is this?) — starts the sentence, ends with ?. Де ти? (Where are you?) — starts the sentence, ends with ?. Коли ти прийдеш? (When will you come?) — starts the sentence, ends with ?. Now they take on a second job: connecting two clauses inside one sentence, sitting in the middle rather than the beginning.
 
-Grand total: ~1320 words
+- P2 (~90 words): How to tell them apart — two clear signals. **Question word:** stands at the start of a sentence (or very early), the sentence ends with ?, no comma before it. **Conjunction:** sits in the middle of the sentence, connects two clauses, always preceded by a comma. Side-by-side contrast:
+  - Де ти живеш? (question — start, ?) ↔ Я знаю, де ти живеш. (conjunction — middle, comma)
+  - Що це? (question) ↔ Я знаю, що це книжка. (conjunction)
+  - Коли прийдеш? (question) ↔ Скажи, коли прийдеш. (conjunction)
+
+- Exercise: quiz — Question word or conjunction? Identify the role of the underlined word in each sentence (8 items). Uses pairs from P2 above — concept just explained.
+
+- P3 (~100 words): Common patterns with each conjunction — these are the frames learners will reach for immediately:
+  - **що**: Я знаю, що... / Я не знаю, що... / Я думаю, що... / Він каже, що... / Ми бачимо, що...
+  - **де**: Я знаю, де... / Я не знаю, де... / Скажи мені, де... / Ти знаєш, де...?
+  - **коли**: Скажи, коли... / Я не знаю, коли... / Зателефонуй, коли... / Коли я прийду,...
+  Special case: **Коли** can also open the sentence — Коли я прийду, ми поговоримо. (When I arrive, we'll talk.) The comma still appears, now after the subordinate clause.
+
+- Exercise: fill-in — Choose що, де, or коли to complete 8 sentences. Items include: Я знаю, ___ він тут. / Я не знаю, ___ вона живе. / Скажи, ___ ти прийдеш. / Він думає, ___ це легко. / Я не знаю, ___ починається фільм. / Ти знаєш, ___ кафе? Tests the patterns from P3 only.
+
+---
+
+## Підсумок (~300 words total)
+
+- P1 (~100 words): Summary table of the three subordinating conjunctions introduced in this module:
+  | Сполучник | Значення | Приклад |
+  |-----------|----------|---------|
+  | що | that | Я знаю, що він тут. |
+  | де | where | Я не знаю, де кафе. |
+  | коли | when | Скажи, коли прийдеш. |
+  Rule: Always a comma before the conjunction. These combine with the M44 conjunctions (і, але, бо, або) to give you a full set of tools for connecting ideas. The label for these new conjunctions: підрядні сполучники (subordinating conjunctions) — they make one clause depend on another.
+
+- P2 (~100 words): Rich combined sentences — now that you have both M44 and M45 conjunctions, you can build multi-layered Ukrainian. Two worked examples unpacked word by word:
+  - Я не йду, бо я не знаю, де це. — "I'm not going because I don't know where it is." Two conjunctions: бо (M44) + де (M45).
+  - Він каже, що прийде, коли закінчить. — "He says he'll come when he finishes." Two subordinate clauses: що + коли.
+  - Я думаю, що він не знає, де ми. — three-part chain, still readable and natural.
+  These are not advanced grammar — native speakers use them in every conversation.
+
+- Exercise: fill-in — Build 6 complete complex sentences by finishing the frame. Frames: Я думаю, що ___. / Він каже, що ___. / Я не знаю, де ___. / Скажи мені, коли ___. / Я знаю, що ___. / Зателефонуй, коли ___.
+
+- P3 self-check (~70 words): Self-check before the next module. Can you build these three sentences without looking back? (1) Я думаю, що... [add your own ending] (2) Я не знаю, де... [add your own ending] (3) Скажи мені, коли... [add your own ending]. If yes — you have subordinating conjunctions at A1. In M46 (Holidays), you will use all three conjunctions to describe when and where celebrations happen.
+
+---
+
+Grand total: ~1340 words
 </skeleton>
 
 ## Output Format

@@ -1,6 +1,6 @@
 # Build Summary: checkpoint-places (A1)
 
-Generated: 2026-04-01 13:43
+Generated: 2026-04-03 21:57
 
 ## Pipeline Phases
 
@@ -18,15 +18,19 @@ Generated: 2026-04-01 13:43
 | vocab | complete | 2026-03-30 19:34:26 |
 | enrich | complete | 2026-03-30 19:34:27 |
 | verify | complete | 2026-03-30 19:34:28 |
-| review | complete | 2026-04-01 11:43:12 |
-| stress | complete | 2026-04-01 11:43:12 |
-| publish | complete | 2026-04-01 11:43:18 |
+| review | complete | 2026-04-03 19:57:29 |
+| stress | complete | 2026-04-03 19:57:29 |
+| publish | complete | 2026-04-03 19:57:36 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | checkpoint-places-review-r1.md |
+| 2 | checkpoint-places-review-r2.md |
+| 3 | checkpoint-places-review-r3.md |
+| 4 | checkpoint-places-review-r4.md |
+| 5 | checkpoint-places-review-r5.md |
 
 ## Dispatch Log
 
@@ -43,6 +47,14 @@ Generated: 2026-04-01 13:43
 | review | gemini (gemini-3-flash-preview) | 1s | ❌ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 3s | ❌ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 67s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 246s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 8s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 462s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 9s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 151s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 7s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 487s | ✅ |
 
 ## Files
 
@@ -53,6 +65,11 @@ Generated: 2026-04-01 13:43
 - `quick-verify.json`
 - `research-quality.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
+- `review-structured-r4.yaml`
+- `review-structured-r5.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

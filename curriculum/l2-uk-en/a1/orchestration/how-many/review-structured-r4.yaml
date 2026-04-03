@@ -1,0 +1,52 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'The module flawlessly covers the structure and objectives, but it missed
+    mentioning the explicit plan reference: "ULP Ep9: Anna teaches numbers through
+    real prices" in the prices section.'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'The text claims to demonstrate noun endings changing with the example
+    "**одне тістечко** but **три булочки**, **п''ятнадцять гривень** but **двісті
+    гривень**." This is factually wrong: the first pair c'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent PPP flow and chunking. However, it states that phone number
+    groups are read as a "mini-number", but then dictates 321 as "**три два один**"
+    (individual digits). To reinforce the hundreds jus
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items are naturally integrated
+    into the text.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All activity markers are present, correctly ordered, and test what was
+    immediately taught prior to the marker.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Superb use of real textbooks (Golub, Kravcova), a real counting rhyme
+    by Lesia Vozniuk, and historical trivia (the origin of the word `сорок` as a bundle
+    of pelts).
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Markdown is perfectly clean. The word count is 1384 (within the acceptable
+    +15% margin of the 1200 target).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Brilliant distinction drawn between `гривня` (currency) and `гривна` (neck
+    ornament) to prevent a common learner mistake.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are practical, natural, and directly apply the memorized chunks
+    in highly realistic contexts (bakery, age questions).
+findings: []

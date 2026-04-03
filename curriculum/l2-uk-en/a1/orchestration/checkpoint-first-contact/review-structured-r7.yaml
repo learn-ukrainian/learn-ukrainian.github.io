@@ -1,0 +1,48 @@
+round: 7
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Missed exact target headers due to stress marks on H2s (e.g., `## Що ми
+    зна́ємо?`), which breaks outline mapping. Covers all other plan points.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Flawless. Uses correct vocative cases ("Привіт, Богдане!", "Звідки ти,
+    Соломіє?") and authentic phrasing.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent grammar summary with clear examples for each of the 6 points.
+    PPP flow is excellent.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All A1.1 required vocabulary is naturally integrated. Recommended words
+    (ім'я, прізвище) are used in the dialogue.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Activity markers test exactly what was just reviewed and match the plan's
+    requirements.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Assumes a male reader with the masculine past tense "Ти заверши́в A1.1."
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: 'Word count is 1406, exceeding the 1200 target by >10%. Includes a meta-commentary
+    note ("Note: This reading practice...") and a stray pipeline artifact at the very
+    end.'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Uses authentic names (Богдан, Соломія, Дарина) and cities (Львів, Харків,
+    Тернопіль, Дніпро).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogue is natural, uses appropriate questions ("А ти?", "А твоє?"),
+    and recycles A1.1 material effectively.
+findings: []

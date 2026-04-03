@@ -1,0 +1,50 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'The module effectively covers the plan''s outline but missed teaching
+    the specific phrase "два музеї" from the plan''s point: `Describing your city:
+    У моєму місті є великий парк і два музеї.`'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Factual error in a grammar rule: `This is true for all borrowed words
+    ending in **-е** or **-о**: **метро́**, **кіно́**, **кафе**.` (e.g., ''пальто''
+    is a well-known exception that does decline).'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent breakdown of 'на' vs 'в/у' prepositions. Good recycling of 'є/немає'
+    for describing the city context.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All 16 required and recommended vocabulary words from the plan are introduced
+    with their genders and locative forms.
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: 'The module includes an extra `<!-- INJECT_ACTIVITY: quiz-mixed-review
+    -->` marker at the very end which does not exist in the plan''s hints.'
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: 'Contains several fourth-wall breaking meta-commentaries quoting textbook
+    authorities directly to the learner: `this matches the textbook pattern from Заболо́тний
+    Grade 6...`, `This is confirmed by Ukr'
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: Word count is 1473, which is 22% over the target of 1200.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent inclusion of culturally relevant landmarks (Хрещатик, Майдан
+    Незалежності, площа Ринок) to explain how Ukrainians give directions.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are natural, polite, and effectively model real-world direction-giving
+    scenarios.
+findings: []

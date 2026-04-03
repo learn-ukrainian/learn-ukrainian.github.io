@@ -1,6 +1,6 @@
 # Build Summary: what-time (A1)
 
-Generated: 2026-04-01 13:40
+Generated: 2026-04-03 17:11
 
 ## Pipeline Phases
 
@@ -18,15 +18,16 @@ Generated: 2026-04-01 13:40
 | vocab | complete | 2026-03-30 04:54:18 |
 | enrich | complete | 2026-03-30 04:54:19 |
 | verify | complete | 2026-03-30 04:54:19 |
-| review | complete | 2026-04-01 11:40:52 |
-| stress | complete | 2026-04-01 11:40:52 |
-| publish | complete | 2026-04-01 11:40:58 |
+| review | complete | 2026-04-03 15:11:04 |
+| stress | complete | 2026-04-03 15:11:04 |
+| publish | complete | 2026-04-03 15:11:11 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | what-time-review-r1.md |
+| 2 | what-time-review-r2.md |
 
 ## Dispatch Log
 
@@ -43,6 +44,9 @@ Generated: 2026-04-01 13:40
 | review | gemini (gemini-3-flash-preview) | 1s | ❌ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 2s | ❌ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 44s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 600s | ❌ |
+| review | gemini-tools (auto) | 311s | ✅ |
 
 ## Files
 
@@ -53,6 +57,8 @@ Generated: 2026-04-01 13:40
 - `quick-verify.json`
 - `research-quality.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

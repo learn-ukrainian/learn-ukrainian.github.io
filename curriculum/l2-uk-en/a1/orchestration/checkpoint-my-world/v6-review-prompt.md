@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 14: Checkpoint: My World (A1, A1.2 [My World])
-**Writer:** Gemini
+**Writer:** Claude
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -113,7 +113,7 @@ references:
 <generated_module_content>
 ## Що ми зна́ємо? (What Do We Know?)
 
-You have completed A1.2 — six modules covering the building blocks of describing your world in Ukrainian. Before moving forward, take a moment to check whether the skills from M08–M13 have stuck. Work through each self-check question honestly. If any answer feels uncertain, the grammar summary and reading practice below will help you solidify it.
+You have completed A1.2 — six modules covering the building blocks of describing your world in Ukrainian. Before moving forward, check your understanding of the skills from M08–M13. If any answer feels uncertain, review the grammar summary and reading practice below.
 
 **Self-check — one question per module:**
 
@@ -139,7 +139,7 @@ Read the text below aloud — slowly, one sentence at a time. Every word comes f
 
 > **Це моя́ кімна́та.** *(This is my room.)*
 > **Мій стіл великий і кори́чневий.** *(My table is big and brown.)*
-> **На столі́ є три книги.** *(On the table there are three books.)*
+> **У мене́ є три книги.** *(I have three books.)*
 > **Ці книги нові́ й ціка́ві.** *(These books are new and interesting.)*
 > **Моя лампа мале́нька і бі́ла.** *(My lamp is small and white.)*
 > **А та лампа жо́вта.** *(And that lamp is yellow.)*
@@ -150,13 +150,13 @@ Read the text below aloud — slowly, one sentence at a time. Every word comes f
 > **У мене є чоти́ри олівці́.** *(I have four pencils.)*
 > **Олівці жо́вті й си́ні.** *(The pencils are yellow and blue.)*
 > **Це моє́ вікно.** *(This is my window.)*
-> **За вікно́м є парк.** *(Beyond the window there is a park.)*
+> **Там є парк.** *(There is a park there.)*
 > **Парк га́рний.** *(The park is nice.)*
 
 Now check your comprehension — answer these three questions mentally, in Ukrainian if you can:
 
 - **Яки́й стіл?** (What is the table like?) → **великий і коричневий** (big and brown)
-- **Скі́льки книг на столі?** (How many books on the table?) → **три** (three)
+- **Скі́льки є книг?** (How many books are there?) → **три** (three)
 - **Яка маленька лампа?** (What is the small lamp like?) → **біла** (white)
 
 The point is immediate confirmation: Ukrainian text → understanding, with no English translation step in between. If you answered all three without scrolling back up, your reading is working.
@@ -172,8 +172,6 @@ The point is immediate confirmation: Ukrainian text → understanding, with no E
 **Nominative plurals.** Masculine and feminine nouns take **-и** or **-і**: **столи** (tables), **книги** (books), **олівці** (pencils). Neuter nouns take **-а** or **-я**: **вікна** (windows), **поля́** (fields). Adjectives in the plural always end in **-і** regardless of noun gender: **великі столи**, **великі книги**, **великі вікна**.
 
 **Numbers as vocabulary.** At this stage, treat numbers as standalone words — no morphology rules needed yet. For counting objects: **оди́н зо́шит** (one notebook), **два зошити** (two notebooks), **п'ять зо́шитів** (five notebooks). For prices: **двадцять гривень** (twenty hryvnias), **сто гривень** (one hundred hryvnias), **дві́сті гривень** (two hundred hryvnias). Memorize the forms you have seen rather than trying to derive them.
-
-<!-- INJECT_ACTIVITY: fill-in-shopping-dialogue -->
 
 ## Діало́г (Connected Dialogue)
 
@@ -200,6 +198,8 @@ The point is immediate confirmation: Ukrainian text → understanding, with no E
 
 Notice how gender drives every choice in this conversation. **Вона** refers to **вишиванка** (feminine) — so the adjectives are **біла**, **гарна**. **Він** refers to **глечик** (masculine) — so the adjectives are **великий**, **маленький**. **Воно** refers to **намисто** (neuter) — so the adjective is **синє й біле**. The demonstratives **цей/ця/це** appear throughout, always matching the noun's gender. Every price uses the number vocabulary from M11. This single dialogue puts all of A1.2 into action.
 
+<!-- INJECT_ACTIVITY: fill-in-shopping-dialogue -->
+
 <!-- INJECT_ACTIVITY: group-sort-vocabulary -->
 
 ## Підсумок — Summary
@@ -208,13 +208,13 @@ You have completed A1.2 — My World. In six modules you built the grammar archi
 
 By the end of A1.2, you actively use over twenty objects with correct genders — **стіл** (m), **книга** (f), **вікно** (n), **вишиванка** (f), **глечик** (m), **намисто** (n), and many more. You know ten or more adjectives with full agreement: **великий/велика/велике**, **новий/нова́/нове́**, **червоний/червона/черво́не**, **синій/синя/синє**. You use six demonstrative forms — **цей, ця, це, той, та, те** — and their plurals **ці** and **ті**. You handle numbers from one to a thousand as vocabulary. And you form plurals for all three genders.
 
-What comes next? In A1.3 — *Actions* — you will meet Ukrainian verbs for the first time. What do you do? What do you like? The nouns and adjectives from A1.2 will combine with verbs to make real sentences about real life. The building blocks are ready — now they start to move.
+What comes next? In A1.3 — *Actions* — you will meet Ukrainian verbs for the first time. What do you do? What do you like? The nouns and adjectives from A1.2 will combine with verbs to make new sentences.
 
-Ukrainian is not built in one day. It is built in six modules at a time, then six more. You just finished the second set. The language is already yours to describe the world around you. **Молоде́ць! Продо́вжуємо.** *(Well done! We continue.)*
+You can now describe the world around you in Ukrainian. **Молоде́ць! Продо́вжуємо.** *(Well done! We continue.)*
 
 <!-- INJECT_ACTIVITY: quiz-singular-plural -->
 
-**Deterministic word count: 1578 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1516 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -350,8 +350,8 @@ If your verdict is **REVISE**, you MUST output a `<fixes>` block with exact find
 
 Rules for fixes:
 - Each fix is a YAML entry with `find:` (exact text from the module) and `replace:` (corrected text)
-- The `find` string must be an EXACT substring of the module content — copy-paste it
-- Keep fixes minimal — change only what's wrong, preserve surrounding text
+- The `find` string MUST be an EXACT copy-paste from the module content. DO NOT change quotes (« » to " "), dashes (— to -), or spacing. If you change a single character in the `find` string, the automated replacement will fail.
+- Keep fixes minimal — change only what's wrong, preserve surrounding text. Provide enough context (e.g. 5-7 words) to make the match unique.
 - Do NOT fix словник/vocabulary tables (those are generated by a downstream tool)
 - For word count issues: add content as a new `insert_after:` entry instead of find/replace
 

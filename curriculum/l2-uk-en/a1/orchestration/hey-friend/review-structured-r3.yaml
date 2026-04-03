@@ -1,0 +1,48 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Failed to cite "State Standard 2024" and "Zabolotnyi Grade 4" as required
+    by the plan references, and instead hallucinated "Avramenko's Grade 6" and "Litvinova
+    Grade 6".
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: Incorrectly stated "the back consonant softens before -е" for г→ж and
+    к→ч. Phonetically, [ж] and [ч] are hard (тверді) consonants in Ukrainian.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: 'Excellent pedagogical distinction: "Олена прийшла (talking ABOUT her)
+    vs Олено, ходи сюди! (talking TO her)".'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Successfully integrated all required (друг, подруга, брат, сестра, пан,
+    пані) and recommended words into the prose naturally.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: 4 injected activity markers matching the plan precisely in sequence.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: 'Grounded tone: "It is roughly like saying ''Hey, him!'' instead of ''Hey,
+    you!'' in English. Ukrainians immediately notice if you skip the vocative".'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Section headers match plan, word count is 1265 (within the 10% tolerance
+    for the 1200 target).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Authentic cultural context, correct use of patronymics and terms of address
+    (пан/пані).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Excellent, highly contextual multi-turn dialogue showing busy environments
+    (birthday party, leaving house).
+findings: []

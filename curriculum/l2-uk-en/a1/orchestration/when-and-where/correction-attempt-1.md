@@ -1,6 +1,7 @@
 <correction_directive>
 CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
 
+- FIX: Missing section heading: 'Підсумок — Summary'
 - FIX: Missing 3/6 required vocab: знати (to know), думати (to think), казати (to say/tell)
 </correction_directive>
 

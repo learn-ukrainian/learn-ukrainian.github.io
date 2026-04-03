@@ -1,0 +1,53 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: 'The module flawlessly executes the `content_outline`. For example, Dialogue
+    1 exactly follows the planned exchange: `— Служба порятунку, слухаю вас. — Допоможіть!
+    Тут аварія! Людина не рухається!`. It'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Impeccable. Zero errors. Correct cases are applied naturally to complex
+    chunks (e.g., `У мене алергія на... ці таблетки, горіхи, пеніцилін` correctly
+    using accusative identical to nominative for inani
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Superb framing. It focuses entirely on "survival chunks" without overwhelming
+    A1 students with deep grammar analysis (`"Do not analyze the grammar — just learn
+    them whole"`). Great scaffolding via cro
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required words (`швидка`, `поліція`, `аварія`) and recommended words
+    (`пожежа`, `алергія`, `форма`) are naturally embedded in highly realistic scenarios.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All four planned activities are represented by their injection markers,
+    logically and pedagogically distributed immediately after their respective teaching
+    blocks.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is excellent. The "survival kit" framing makes the content feel
+    immediately relevant, high-stakes, and important for a traveler.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, accurate placement of `:::tip` callouts, and the word
+    count (1291 words) is perfectly within the 1200-word target range.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Factually accurate representation of Ukraine's 112 universal system while
+    correctly noting the direct lines (101, 102, 103). The dialogue accurately reflects
+    how Ukrainian operators answer (`Служба по
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogues are punchy, realistic, and prioritize crucial information
+    (location before name), exactly simulating how real emergency calls operate.
+findings: []

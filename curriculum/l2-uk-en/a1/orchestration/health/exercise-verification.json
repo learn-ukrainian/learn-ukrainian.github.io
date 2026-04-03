@@ -1,30 +1,340 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 120,
+  "grounded_items": 55,
+  "ungrounded": [
+    {
+      "word": "випийте",
+      "exercise_type": "quiz",
+      "context": "Випийте сироп проти кашлю."
+    },
+    {
+      "word": "сироп",
+      "exercise_type": "quiz",
+      "context": "Випийте сироп проти кашлю."
+    },
+    {
+      "word": "для",
+      "exercise_type": "quiz",
+      "context": "Ось краплі для носа."
+    },
+    {
+      "word": "носа",
+      "exercise_type": "quiz",
+      "context": "Ось краплі для носа."
+    },
+    {
+      "word": "вам",
+      "exercise_type": "quiz",
+      "context": "Вам потрібні таблетки проти кашлю."
+    },
+    {
+      "word": "потрібні",
+      "exercise_type": "quiz",
+      "context": "Вам потрібні таблетки проти кашлю."
+    },
+    {
+      "word": "де",
+      "exercise_type": "quiz",
+      "context": "Де аптека?"
+    },
+    {
+      "word": "потрібен",
+      "exercise_type": "quiz",
+      "context": "Вам потрібен стоматолог."
+    },
+    {
+      "word": "стоматолог",
+      "exercise_type": "quiz",
+      "context": "Вам потрібен стоматолог."
+    },
+    {
+      "word": "воду",
+      "exercise_type": "quiz",
+      "context": "Випийте воду."
+    },
+    {
+      "word": "робити",
+      "exercise_type": "quiz",
+      "context": "Мені погано. Що робити?"
+    },
+    {
+      "word": "ока",
+      "exercise_type": "match-up",
+      "context": "ока"
+    },
+    {
+      "word": "хочу",
+      "exercise_type": "fill-in",
+      "context": "У мене болить ____. Я хочу спати."
+    },
+    {
+      "word": "спати",
+      "exercise_type": "fill-in",
+      "context": "У мене болить ____. Я хочу спати."
+    },
+    {
+      "word": "не",
+      "exercise_type": "fill-in",
+      "context": "У мене болить ____. Я не хочу їсти."
+    },
+    {
+      "word": "їсти",
+      "exercise_type": "fill-in",
+      "context": "У мене болить ____. Я не хочу їсти."
+    },
+    {
+      "word": "можу",
+      "exercise_type": "fill-in",
+      "context": "У мене болить ____ і є температура. Я не можу говорити."
+    },
+    {
+      "word": "говорити",
+      "exercise_type": "fill-in",
+      "context": "У мене болить ____ і є температура. Я не можу говорити."
+    },
+    {
+      "word": "постійно",
+      "exercise_type": "fill-in",
+      "context": "У мене ____, я постійно кашляю."
+    },
+    {
+      "word": "кашляю",
+      "exercise_type": "fill-in",
+      "context": "У мене ____, я постійно кашляю."
+    },
+    {
+      "word": "добре",
+      "exercise_type": "fill-in",
+      "context": "добре"
+    },
+    {
+      "word": "тут",
+      "exercise_type": "fill-in",
+      "context": "Де тут найближча ____? Мені потрібні ліки."
+    },
+    {
+      "word": "найближча",
+      "exercise_type": "fill-in",
+      "context": "Де тут найближча ____? Мені потрібні ліки."
+    },
+    {
+      "word": "відкриває",
+      "exercise_type": "true-false",
+      "context": "Лікар відкриває розмову словами «Що у вас болить?»"
+    },
+    {
+      "word": "розмову",
+      "exercise_type": "true-false",
+      "context": "Лікар відкриває розмову словами «Що у вас болить?»"
+    },
+    {
+      "word": "словами",
+      "exercise_type": "true-false",
+      "context": "Лікар відкриває розмову словами «Що у вас болить?»"
+    },
+    {
+      "word": "діалозі",
+      "exercise_type": "true-false",
+      "context": "Пацієнт у Діалозі 1 каже, що у нього болить живіт і спина."
+    },
+    {
+      "word": "каже",
+      "exercise_type": "true-false",
+      "context": "Пацієнт у Діалозі 1 каже, що у нього болить живіт і спина."
+    },
+    {
+      "word": "нього",
+      "exercise_type": "true-false",
+      "context": "Пацієнт у Діалозі 1 каже, що у нього болить живіт і спина."
+    },
+    {
+      "word": "пацієнта",
+      "exercise_type": "true-false",
+      "context": "У пацієнта є температура."
+    },
+    {
+      "word": "купує",
+      "exercise_type": "true-false",
+      "context": "В аптеці покупець купує тільки таблетки."
+    },
+    {
+      "word": "тільки",
+      "exercise_type": "true-false",
+      "context": "В аптеці покупець купує тільки таблетки."
+    },
+    {
+      "word": "правильно",
+      "exercise_type": "true-false",
+      "context": "Правильно казати «таблетки проти кашлю», не «таблетки від ка"
+    },
+    {
+      "word": "казати",
+      "exercise_type": "true-false",
+      "context": "Правильно казати «таблетки проти кашлю», не «таблетки від ка"
+    },
+    {
+      "word": "правильна",
+      "exercise_type": "true-false",
+      "context": "«Болять» — правильна форма, коли болить один предмет: «У мен"
+    },
+    {
+      "word": "форма",
+      "exercise_type": "true-false",
+      "context": "«Болять» — правильна форма, коли болить один предмет: «У мен"
+    },
+    {
+      "word": "коли",
+      "exercise_type": "true-false",
+      "context": "«Болять» — правильна форма, коли болить один предмет: «У мен"
+    },
+    {
+      "word": "один",
+      "exercise_type": "true-false",
+      "context": "«Болять» — правильна форма, коли болить один предмет: «У мен"
+    },
+    {
+      "word": "предмет",
+      "exercise_type": "true-false",
+      "context": "«Болять» — правильна форма, коли болить один предмет: «У мен"
+    },
+    {
+      "word": "яку",
+      "exercise_type": "quiz",
+      "context": "Яку фразу лікар каже першим у Діалозі 1?"
+    },
+    {
+      "word": "фразу",
+      "exercise_type": "quiz",
+      "context": "Яку фразу лікар каже першим у Діалозі 1?"
+    },
+    {
+      "word": "першим",
+      "exercise_type": "quiz",
+      "context": "Яку фразу лікар каже першим у Діалозі 1?"
+    },
+    {
+      "word": "живете",
+      "exercise_type": "quiz",
+      "context": "Де ви живете?"
+    },
+    {
+      "word": "звати",
+      "exercise_type": "quiz",
+      "context": "Як вас звати?"
+    },
+    {
+      "word": "формула",
+      "exercise_type": "quiz",
+      "context": "Яка правильна формула в аптеці?"
+    },
+    {
+      "word": "дівчина",
+      "exercise_type": "quiz",
+      "context": "Як дівчина каже «I'm sick»?"
+    },
+    {
+      "word": "українською",
+      "exercise_type": "quiz",
+      "context": "«Рука» українською означає..."
+    },
+    {
+      "word": "та",
+      "exercise_type": "quiz",
+      "context": "leg та foot"
+    },
+    {
+      "word": "якого",
+      "exercise_type": "quiz",
+      "context": "«Нежить» — якого роду?"
+    },
+    {
+      "word": "роду",
+      "exercise_type": "quiz",
+      "context": "«Нежить» — якого роду?"
+    },
+    {
+      "word": "жіночого",
+      "exercise_type": "quiz",
+      "context": "жіночого (feminine)"
+    },
+    {
+      "word": "чоловічого",
+      "exercise_type": "quiz",
+      "context": "чоловічого (masculine)"
+    },
+    {
+      "word": "середнього",
+      "exercise_type": "quiz",
+      "context": "середнього (neuter)"
+    },
+    {
+      "word": "має",
+      "exercise_type": "quiz",
+      "context": "не має роду"
+    },
+    {
+      "word": "частини",
+      "exercise_type": "group-sort",
+      "context": "Частини тіла (Body parts)"
+    },
+    {
+      "word": "тіла",
+      "exercise_type": "group-sort",
+      "context": "Частини тіла (Body parts)"
+    },
+    {
+      "word": "моя",
+      "exercise_type": "error-correction",
+      "context": "моя"
+    },
+    {
+      "word": "мій",
+      "exercise_type": "error-correction",
+      "context": "мій"
+    },
+    {
+      "word": "боліє",
+      "exercise_type": "error-correction",
+      "context": "боліє"
+    },
+    {
+      "word": "іван",
+      "exercise_type": "error-correction",
+      "context": "Іван хвора."
+    },
+    {
+      "word": "хворою",
+      "exercise_type": "error-correction",
+      "context": "хворою"
+    },
+    {
+      "word": "погана",
+      "exercise_type": "error-correction",
+      "context": "Мені погана сьогодні."
+    },
+    {
+      "word": "сьогодні",
+      "exercise_type": "error-correction",
+      "context": "Мені погана сьогодні."
+    },
+    {
+      "word": "поганий",
+      "exercise_type": "error-correction",
+      "context": "поганий"
+    },
+    {
+      "word": "погане",
+      "exercise_type": "error-correction",
+      "context": "погане"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 18,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 16,
     "not_tested": [
-      "аптека",
-      "болить",
-      "вухо",
-      "голова",
-      "горло",
-      "живіт",
-      "зуб",
-      "кашель",
-      "лікар",
-      "нежить",
-      "нога",
-      "ніс",
       "око",
-      "рука",
-      "спина",
-      "таблетка",
-      "температура",
-      "хворий"
+      "таблетка"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

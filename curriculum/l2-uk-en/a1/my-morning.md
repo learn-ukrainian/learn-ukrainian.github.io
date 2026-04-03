@@ -1,5 +1,5 @@
 ## Діало́ги (Dialogues)
-It's Monday morning. Лі́на and На́стя share an apartment. They're both in the kitchen — one is already dressed, the other still half-asleep. Their conversation is about to teach you one of the most useful verb patterns in Ukrainian.
+It's Monday morning. Лі́на and На́стя share an apartment. They're both in the kitchen — one is already dressed, the other still half-asleep. Notice the verbs they use for their morning routines.
 ### Діало́г 1 — Ра́нок у бу́дні (Weekday morning)
 > — **Настя:** Лі́но, коли́ ти прокида́єшся? *(Lina, when do you wake up?)*
 > — **Ліна:** Я прокида́юся о сьо́мій. *(I wake up at seven.)*
@@ -10,7 +10,7 @@ It's Monday morning. Лі́на and На́стя share an apartment. They're bot
 > — **Настя:** Я прокидаюся о шо́стій. До́вго збира́юся! *(I wake up at six. I take a long time getting ready!)*
 > — **Ліна:** О шостій? Це ра́но! *(At six? That's early!)*
 
-Look at the verbs Ліна uses to describe her morning: **прокидаюся** (I wake up), **вмиваюся** (I wash up), **одягаюся** (I get dressed), **збираюся** (I get ready). Every single one ends in **-ся**. That's not a coincidence — it's a pattern, and it's the grammar heart of this module.
+Look at the verbs Ліна uses to describe her morning: **прокидаюся** (I wake up), **вмиваюся** (I wash up), **одягаюся** (I get dressed), **збираюся** (I get ready). Every single one ends in **-ся**. These are reflexive verbs, which follow a specific pattern.
 ### Діалог 2 — Вихідни́й ранок (Weekend morning)
 > — **Ліна:** У субо́ту я не поспіша́ю. *(On Saturday I don't rush.)*
 > — **Настя:** А що ти робиш? *(And what do you do?)*
@@ -19,15 +19,15 @@ Look at the verbs Ліна uses to describe her morning: **прокидаюся*
 > — **Ліна:** Ти навча́єшся у суботу? *(You study on Saturday?)*
 > — **Настя:** Так! Я поверта́юся додо́му о дру́гій. *(Yes! I come back home at two.)*
 
-This dialogue mixes two kinds of verbs. Some end in **-ся**: **прокидаюся**, **дивлюся**, **навчаюся** (I study), **повертаюся** (I return). Others don't: **снідаю** (I have breakfast), **гуляю** (I walk), **лежу** (I lie down). Notice the difference? Verbs with **-ся** describe actions you do *to yourself* or *for yourself*. Verbs without it describe actions directed outward. The next section explains exactly how this works.
+This dialogue mixes two kinds of verbs. Some end in **-ся**: **прокидаюся**, **дивлюся**, **навчаюся** (I study), **повертаюся** (I return). Others don't: **снідаю** (I have breakfast), **гуляю** (I walk), **лежу** (I lie down). Notice the difference? Verbs with **-ся** describe actions you do *to yourself* or *for yourself*. Verbs without it describe actions directed outward. Reflexive verbs show that the action is directed at the speaker.
 ## Дієслова́ на -ся (Reflexive Verbs)
-Ukrainian textbooks call these **зворо́тні дієслова** — verbs where the action turns back onto the person doing it. The suffix **-ся** (short for the old pronoun **себе́**, meaning "oneself") attaches to the end of the verb and changes its direction.
+Ukrainian textbooks call these **зворо́тні дієслова** — verbs where the action turns back onto the person doing it. The suffix **-ся** or **-сь** (short for the old pronoun **себе́**, meaning "oneself") attaches to the end of the verb and changes its direction.
 Compare these pairs:
 - **вмива́ти** (to wash someone) → **вмива́тися** (to wash oneself)
 - **одяга́ти** (to dress someone) → **одяга́тися** (to dress oneself)
 A mother washes her child: **Ма́ма вмива́є дити́ну.** *(Mom washes the child.)* But when you wash your own face in the morning: **Я вмиваюся.** *(I wash up.)* The action loops back — that's what **-ся** signals.
 ### How to conjugate reflexive verbs
-The good news: reflexive verbs use the same endings as regular Group I verbs. You just add **-ся** after every ending. Here is **вмиватися** (to wash up) in the present tense:
+Reflexive verbs use the same endings as regular Group I verbs. You just add **-ся** after every ending. Here is **вмиватися** (to wash up) in the present tense:
 | | вмиватися |
 |---|---|
 | я | вмиваюся |
@@ -38,16 +38,16 @@ The good news: reflexive verbs use the same endings as regular Group I verbs. Yo
 | вони́ | вмива́ються |
 The pattern is identical for **прокидатися** (to wake up): **я прокидаюся, ти прокидаєшся, він прокидається**. Once you know how to conjugate one reflexive verb, you can conjugate them all.
 ### Pronunciation secret
-Here's something that trips up learners: the way you *write* these endings and the way you *say* them are different.
-- **-шся** (written) sounds like a long, soft "с" — say it quickly and your mouth naturally makes the right sound. So **вмиваєшся** sounds like "вмиваєс':а" in fast speech.
-- **-ться** (written) sounds like a long, soft "ц" — so **вмивається** sounds like "вмиваєц':а."
+The way you *write* these endings and the way you *say* them are different.
+- **-шся** (written) sounds like a long, soft [с'] — say it quickly and your mouth naturally makes the right sound. So **вмиваєшся** sounds like [вмиваєс':а] in fast speech.
+- **-ться** (written) sounds like a long, soft [ц'] — so **вмивається** sounds like [вмиваєц':а].
 :::tip
 Don't overthink the pronunciation. Spell it correctly on paper: **вмиваєшся**, **вмивається**. When you say it aloud at normal speed, the sounds merge naturally. Ukrainian children learn this the same way — Kravtsova's Grade 4 textbook has students whisper the endings quickly to discover the sound shift themselves.
 :::
 <!-- INJECT_ACTIVITY: fill-in-add-sya -->
 <!-- INJECT_ACTIVITY: quiz-reflexive-or-not -->
 ## Мій ранок (My Morning)
-Now you have the tools to describe an entire morning. Let's build your vocabulary in two groups: reflexive verbs (actions on yourself) and non-reflexive verbs (actions on the world around you).
+Here is how to describe an entire morning. Let's build your vocabulary in two groups: reflexive verbs (actions on yourself) and non-reflexive verbs (actions on the world around you).
 ### Reflexive morning verbs
 Each of these describes something you do to or for yourself:
 - **прокидатися** (to wake up) — Я прокидаюся о сьомій годи́ні. *(I wake up at seven o'clock.)*
@@ -100,7 +100,6 @@ Here's the full chain for describing a morning routine:
 **Non-reflexive:** снідати (to have breakfast), пити каву (to drink coffee), гуляти (to walk)
 **Supporting words:** вранці (in the morning), пізно (late), поспіша́ти (to hurry), навчатися (to study)
 **Sequence glue:** спочатку (first), потім (then), після цього (after this), нарешті (finally)
-### The reflexive test
 ### Self-check: Your turn
 Now it's your turn to put it all together. Can you describe your own morning routine in 3-4 sentences? Use the sequence words (**спочатку**, **потім**, **після цього**, **нарешті**) and a mix of reflexive and non-reflexive verbs.
 <!-- INJECT_ACTIVITY: fill-in-describe-morning -->

@@ -1,6 +1,6 @@
 # Build Summary: checkpoint-my-world (A1)
 
-Generated: 2026-04-01 13:35
+Generated: 2026-04-03 16:09
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-01 13:35
 | vocab | complete | 2026-03-30 13:27:12 |
 | enrich | complete | 2026-03-30 13:27:13 |
 | verify | complete | 2026-03-30 13:27:13 |
-| review | complete | 2026-04-01 11:35:38 |
-| stress | complete | 2026-04-01 11:35:38 |
-| publish | complete | 2026-04-01 11:35:45 |
+| review | complete | 2026-04-03 14:06:14 |
+| stress | complete | 2026-04-03 14:09:06 |
+| publish | complete | 2026-04-03 14:09:13 |
 
 ## Reviews
 
@@ -28,6 +28,8 @@ Generated: 2026-04-01 13:35
 |-------|------|
 | 1 | checkpoint-my-world-review-r1.md |
 | 2 | checkpoint-my-world-review-r2.md |
+| 3 | checkpoint-my-world-review-r3.md |
+| 4 | checkpoint-my-world-review-r4.md |
 
 ## Dispatch Log
 
@@ -42,6 +44,11 @@ Generated: 2026-04-01 13:35
 | review | gemini (gemini-3-flash-preview) | 2s | ❌ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 254s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 23s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 480s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 15s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 219s | ✅ |
+| section-rewrite | claude-tools (claude-opus-4-6) | 172s | ✅ |
 
 ## Files
 
@@ -52,6 +59,9 @@ Generated: 2026-04-01 13:35
 - `research-quality.json`
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
+- `review-structured-r4.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

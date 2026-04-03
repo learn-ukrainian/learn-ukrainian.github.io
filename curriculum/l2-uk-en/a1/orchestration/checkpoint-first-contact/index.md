@@ -1,14 +1,14 @@
 # Build Summary: checkpoint-first-contact (A1)
 
-Generated: 2026-04-02 20:36
+Generated: 2026-04-03 15:12
 
 ## Pipeline Phases
 
 | Phase | Status | Timestamp |
 |-------|--------|-----------|
-| review | complete | 2026-04-01 11:07:58 |
-| stress | complete | 2026-04-02 18:36:46 |
-| publish | complete | 2026-04-02 18:36:53 |
+| review | complete | 2026-04-03 13:11:57 |
+| stress | complete | 2026-04-03 13:11:57 |
+| publish | complete | 2026-04-03 13:12:04 |
 
 ## Reviews
 
@@ -18,6 +18,9 @@ Generated: 2026-04-02 20:36
 | 2 | checkpoint-first-contact-review-r2.md |
 | 3 | checkpoint-first-contact-review-r3.md |
 | 4 | checkpoint-first-contact-review-r4.md |
+| 5 | checkpoint-first-contact-review-r5.md |
+| 6 | checkpoint-first-contact-review-r6.md |
+| 7 | checkpoint-first-contact-review-r7.md |
 
 ## Dispatch Log
 
@@ -37,6 +40,14 @@ Generated: 2026-04-02 20:36
 | review | gemini (gemini-3-flash-preview) | 2s | ❌ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 219s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 32s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 14s | ❌ |
+| review | gemini-tools (auto) | 600s | ❌ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 494s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 17s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 329s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 14s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 348s | ✅ |
 
 ## Friction
 
@@ -54,6 +65,9 @@ Generated: 2026-04-02 20:36
 - `review-structured-r2.yaml`
 - `review-structured-r3.yaml`
 - `review-structured-r4.yaml`
+- `review-structured-r5.yaml`
+- `review-structured-r6.yaml`
+- `review-structured-r7.yaml`
 - `review-structured.md`
 - `skeleton.md`
 - `state.json`

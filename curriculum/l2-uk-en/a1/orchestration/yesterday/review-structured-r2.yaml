@@ -1,0 +1,48 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: All required vocabulary, grammar points, time markers, and dialogues from
+    the plan are covered extensively.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'Found one euphony error: "О одина́дцятій я лягла спати." should be "Об
+    одина́дцятій" because the following word starts with a vowel.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent PPP flow, but the absolute statement "If you are male, every
+    past verb ends in -в or -вся" is pedagogically flawed because the very next section
+    teaches "ліг", which has no suffix.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words (учора, зранку, потім, серіал, продукти,
+    etc.) are integrated naturally into the narratives.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The three injected activity markers logically follow the teaching points
+    and correspond perfectly to the plan's hints.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is engaging, and the dialogues are conversational and natural
+    ("Як файно!"). The transition to the police scene is a great, practical application.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Clean markdown and good pacing, though individual section word counts
+    vary slightly from the exact 300-word targets in the plan.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Culturally appropriate contexts and natural conversational phrasing.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are multi-turn, realistic, and effectively model the target
+    grammar.
+findings: []

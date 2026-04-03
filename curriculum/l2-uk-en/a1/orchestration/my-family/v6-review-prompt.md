@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 6: My Family (A1, A1.1 [Sounds, Letters, and First Contact])
-**Writer:** Gemini
+**Writer:** Claude
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -179,7 +179,7 @@ After class, two classmates — **Оля** and **Марк** — sit together scr
 > — **Марк:** Ко́ля. А твоя́ сестра? *(Kolya. And your sister?)*
 > — **Оля:** Її звати Да́ша. *(Her name is Dasha.)*
 
-Notice two things here. First, **чи** works like "or" inside yes-or-no questions — you'll hear it constantly in Ukrainian conversation. Second, the number "one" changes by gender: **один брат** (masculine) but **одна сестра** (feminine).
+Here, **чи** works like "or" inside yes-or-no questions — you'll hear it constantly in Ukrainian conversation. Also, the number "one" changes by gender: **один брат** (masculine) but **одна сестра** (feminine).
 
 Марк swipes to the next photo — a full family picture from a birthday celebration. He turns the screen toward Оля and starts pointing at faces. This is where the structure **«Це моя́...»** (This is my...) becomes essential: it's how you introduce people by name and role.
 
@@ -196,15 +196,8 @@ Notice two things here. First, **чи** works like "or" inside yes-or-no questio
 
 Now imagine you need to introduce your own family in a few sentences — at a language exchange, in a message to a Ukrainian friend, or in class. Here is what that sounds like when you combine all the skills from A1.1 so far: self-introduction, city, family members, and possession.
 
-> — **Оля:** Приві́т! Мене звати Оля. *(Hi! My name is Olya.)*
-> — **Оля:** Я з Ки́єва. *(I'm from Kyiv.)*
-> — **Оля:** Моя мама — вчи́телька. *(My mom is a teacher.)*
-> — **Оля:** Її звати Оле́на. *(Her name is Olena.)*
-> — **Оля:** Мій тато — інжене́р. *(My dad is an engineer.)*
-> — **Оля:** Його звати Петро́. *(His name is Petro.)*
-> — **Оля:** У мене є один брат. *(I have one brother.)*
-> — **Оля:** Його звати Коля. *(His name is Kolya.)*
-> — **Оля:** Це моя сім'я. *(This is my family.)*
+> **Оля:** Приві́т! Мене звати Оля. Я з Ки́єва. Моя мама — вчи́телька. Її звати Оле́на. Мій тато — інжене́р. Його звати Петро́. У мене є один брат. Його звати Коля. Це моя сім'я.
+> *(Hi! My name is Olya. I'm from Kyiv. My mom is a teacher. Her name is Olena. My dad is an engineer. His name is Petro. I have one brother. His name is Kolya. This is my family.)*
 
 This is a learnable template: name → city → family members → possession. You can swap in your own details and have a ready-made self-presentation.
 
@@ -222,11 +215,11 @@ A few more useful words: **батьки́** (parents) is always plural — say *
 
 ## У мене є (I Have)
 
-Ukrainian expresses possession completely differently from English. There is no verb meaning "to have" the way English uses "have." Instead, Ukrainian says literally "At me there-is" — **У мене є брат** (I have a brother). Break this structure down: **у** means "at" or "by" (indicating where the possession exists), **мене** is the form of "me" used after **у** (this is a frozen chunk — don't worry about why it changes), and **є** means "there is" or "there are." The word **є** is the present-tense form of "to be" — and it stays the same for all persons, singular and plural. Three forms to learn as ready-made chunks: **У мене є** (I have), **У тебе є** (you have — informal), **У вас є** (you have — formal or plural). Examples: **У мене є одна сестра.** **У тебе є брат?** **У вас є ді́ти?**
+Ukrainian expresses possession completely differently from English. While Ukrainian has a verb for "to have" (мати), it is very common to use a different structure. Instead, Ukrainian often says literally "At me there-is" — **У мене є брат** (I have a brother). Break this structure down: **у** means "at" or "by" (indicating where the possession exists), **мене** is the form of "me" used after **у** (this is a frozen chunk — don't worry about why it changes), and **є** means "there is" or "there are." The word **є** is the present-tense form of "to be" — and it stays the same for all persons, singular and plural. Three forms to learn as ready-made chunks: **У мене є** (I have), **У тебе є** (you have — informal), **У вас є** (you have — formal or plural). Examples: **У мене є одна сестра.** **У тебе є брат?** **У вас є ді́ти?**
 
 Asking questions is simple. In Ukrainian, you turn a statement into a question just by raising your intonation at the end — no word order changes needed. **У тебе є сестра? ↗** The answers are straightforward: **Так, у мене є сестра.** / **Так, у мене є два брати.** / **Ні.** / **Ні, у мене тільки один брат.** The word **тільки** (only) is very useful in real conversation. You'll hear it all the time: **У мене тільки одна сестра.** **У мене тільки один брат.**
 
-You might wonder: how do you say "I don't have"? The word **нема́є** means "there is not," but it requires a grammatical form called the genitive case — which changes the ending of the noun after it. You will learn this later. For now, the simplest and most natural way to say "no" is just **Ні** or **Ні, у мене тільки...** Native speakers use these short answers in casual conversation constantly.
+To say "I don't have", the word **нема́є** is used. It means "there is not," but it requires a grammatical form called the genitive case — which changes the ending of the noun after it. You will learn this later. For now, the simplest and most natural way to say "no" is just **Ні** or **Ні, у мене тільки...** Native speakers use these short answers in casual conversation constantly.
 
 A quick preview of numbers with family members. **Один** and **одна** change to match gender: **один брат** (masculine), **одна сестра** (feminine). The same pattern applies to "two": **два** and **дві** — **два брати** (masculine), **дві сестри** (feminine). You don't need to memorize a rule — just notice the pattern as it appears: **У мене є два брати і дві сестри.**
 
@@ -266,7 +259,7 @@ Use this as a template — swap in your real family, your real names, your real 
 
 **Що да́лі?** In Module 7 (Checkpoint — First Contact), you will combine everything from A1.1: alphabet, sounds, self-introduction, and family — in a full communicative checkpoint.
 
-**Deterministic word count: 1627 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1604 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -402,8 +395,8 @@ If your verdict is **REVISE**, you MUST output a `<fixes>` block with exact find
 
 Rules for fixes:
 - Each fix is a YAML entry with `find:` (exact text from the module) and `replace:` (corrected text)
-- The `find` string must be an EXACT substring of the module content — copy-paste it
-- Keep fixes minimal — change only what's wrong, preserve surrounding text
+- The `find` string MUST be an EXACT copy-paste from the module content. DO NOT change quotes (« » to " "), dashes (— to -), or spacing. If you change a single character in the `find` string, the automated replacement will fail.
+- Keep fixes minimal — change only what's wrong, preserve surrounding text. Provide enough context (e.g. 5-7 words) to make the match unique.
 - Do NOT fix словник/vocabulary tables (those are generated by a downstream tool)
 - For word count issues: add content as a new `insert_after:` entry instead of find/replace
 
@@ -444,7 +437,7 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 81 words | Not found: 48 words
+Verified: 82 words | Not found: 48 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Євге — NOT IN VESUM
@@ -496,7 +489,7 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ єва — NOT IN VESUM
   ✗ інжене — NOT IN VESUM
 
-All 81 other words are confirmed to exist in VESUM.
+All 82 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

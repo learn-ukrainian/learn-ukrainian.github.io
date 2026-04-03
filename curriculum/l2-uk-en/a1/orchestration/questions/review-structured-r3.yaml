@@ -1,0 +1,51 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Covered all theoretical points, but missed explicit plan examples like
+    "Хто це?" or "Що це?" (swapping them instead for the dialogue examples). Word
+    count (1444) exceeds the 1200 target by ~20%.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Excellent. No Russianisms, Surzhyk, or calques. Correct usage of cases
+    and highly accurate grammatical descriptions.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Very strong PPP flow. Dialogues naturally contextualize the grammar before
+    it's formally explained. Accurate and helpful comparison of "Де" vs "Куди".
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items from the plan are successfully
+    integrated in context.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 4 exercise markers from the plan are present, match the required type/focus,
+    and are injected at the correct pedagogical moments.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: Contains some meta-commentary ("The two dialogues below show...", "Notice
+    three things...", "We will also study...") that announces the structure rather
+    than showing the language.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Clean markdown and correct section headers. Only minor deduction for the
+    word count exceeding the +/- 10% target range.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Decolonized approach. Excellent integration of native textbook references
+    (Варзацька, Кравцова, Литвинова) to ground the pedagogy in authentic Ukrainian
+    schooling.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are natural, realistic ("Де моя книга?"), and perfectly illustrate
+    the target grammar without feeling robotic.
+findings: []

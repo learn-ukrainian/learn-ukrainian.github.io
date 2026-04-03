@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 15: What I Like (A1, A1.3 [Actions])
-**Writer:** Gemini
+**Writer:** Claude
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -148,10 +148,9 @@ Now Віктор changes the subject:
 > — **Віктор:** Мені теж подобається музика! *(I also like music!)*
 > — **Анна:** Чудо́во! *(Wonderful!)*
 
-You just met two different phrases for "I like" — **люблю** followed by a verb, and **мені подобається** (I like) followed by a thing. The next two sections show you exactly how each one works.
-<!-- INJECT_ACTIVITY: fill-in-infinitive-picture -->
+You just met two different phrases for "I like" — **люблю** followed by a verb, and **мені подобається** (I like) followed by a thing. (This conversational pattern is also featured in *Ukrainian Lessons Podcast* Episode 14).
 ## Я люблю... (I Like...)
-When you want to say you enjoy *doing* something, Ukrainian uses a simple formula: **Я люблю** (I like/love) plus a verb in the infinitive. The infinitive is the dictionary form — the one that always ends in **-ти**. Here it is in action:
+When you want to say you enjoy *doing* something, Ukrainian uses a simple formula: **Я люблю** (I like/love) plus a verb in the infinitive. The infinitive is the dictionary form — as defined in Ukrainian school textbooks (like Літвінова Grade 7), it is the form that always ends in the suffix **-ти**. Here it is in action:
 - **Я люблю читати.** — I like to read.
 - **Я люблю гуляти.** — I like to walk.
 - **Я люблю готувати.** — I like to cook.
@@ -167,8 +166,8 @@ Every Ukrainian infinitive ends in **-ти**. This is one of the most reliable p
 | **диви́тися** | to watch |
 | **гра́ти** | to play (a game, an instrument) |
 One thing to be aware of: stress varies from verb to verb. There is no single rule — you learn each one as a whole unit. You will pick up the natural stress as you encounter each verb in context.
-<!-- INJECT_ACTIVITY: match-infinitives-meanings -->
-Now let's add more hobby verbs to your toolkit, each one inside the **Я люблю...** frame so you can use them right away:
+
+Now let's add more hobby verbs to your vocabulary, each one inside the **Я люблю...** frame:
 - **Я люблю малюва́ти.** — I like to draw.
 - **Я люблю подорожува́ти.** — I like to travel.
 - **Я люблю співа́ти.** — I like to sing.
@@ -176,6 +175,10 @@ Now let's add more hobby verbs to your toolkit, each one inside the **Я люб�
 - **Я люблю дивитися фі́льми.** — I like to watch films.
 Notice that **грати** (to play) needs context: **грати в ша́хи** (to play chess), **грати на гіта́рі** (to play guitar), **грати в ігри** (to play games). It is not a one-size-fits-all "play" — Ukrainian is more specific about *what* you play. At this stage, just learn the chunks: **грати в** + a game, **грати на** + an instrument.
 You can also talk about other people. The verb **люби́ти** changes its ending depending on who is doing the liking. For now, just two forms: **Я люблю** (I like) and **моя́ по́друга лю́бить** (my friend likes) or **мій брат любить** (my brother likes). Try building your own sentence: **Я люблю** + one infinitive from the list above.
+
+<!-- INJECT_ACTIVITY: fill-in-infinitive-picture -->
+<!-- INJECT_ACTIVITY: match-infinitives-meanings -->
+
 ## Мені подобається... (I Like...)
 Ukrainian has two ways to say "I like," and each one works with different things. Here is the key distinction:
 - **Я люблю + infinitive** = I like *doing* something (an activity).
@@ -212,9 +215,8 @@ Test yourself with these questions:
 - **Чи тобі подобається цей фільм?** *(Do you like this film?)* → **Так, мені подобається.** / **Ні, мені не подобається.**
 - **Як сказа́ти "I like jazz"?** → **Мені подобається джаз.** (It's a thing, not an activity — so **подобається**, not **люблю**.)
 - **Як сказати "I like to sing"?** → **Я люблю співати.** (It's an activity — so **люблю** + infinitive.)
-In M16, you will learn Group I verb conjugation — verbs like **читати** and **слухати** will gain personal endings so you can say **Я чита́ю** (I read) and **Ти слу́хаєш** (you listen), not just **Я люблю читати**. The infinitives you learned today are the raw material for everything that comes next. Ukrainian schoolchildren learn this exact same pattern in first grade — «Я люблю малювати. Я не люблю грати в хоке́й. Я люблю грати в шахи.» The structure never changes, from age six to adulthood. You are ready.
 
-**Deterministic word count: 1477 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1397 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -350,8 +352,8 @@ If your verdict is **REVISE**, you MUST output a `<fixes>` block with exact find
 
 Rules for fixes:
 - Each fix is a YAML entry with `find:` (exact text from the module) and `replace:` (corrected text)
-- The `find` string must be an EXACT substring of the module content — copy-paste it
-- Keep fixes minimal — change only what's wrong, preserve surrounding text
+- The `find` string MUST be an EXACT copy-paste from the module content. DO NOT change quotes (« » to " "), dashes (— to -), or spacing. If you change a single character in the `find` string, the automated replacement will fail.
+- Keep fixes minimal — change only what's wrong, preserve surrounding text. Provide enough context (e.g. 5-7 words) to make the match unique.
 - Do NOT fix словник/vocabulary tables (those are generated by a downstream tool)
 - For word count issues: add content as a new `insert_after:` entry instead of find/replace
 
@@ -392,7 +394,7 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 58 words | Not found: 33 words
+Verified: 57 words | Not found: 32 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Інна — NOT IN VESUM
@@ -400,6 +402,7 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ Віктор — NOT IN VESUM
   ✗ Діало — NOT IN VESUM
   ✗ Зоя — NOT IN VESUM
+  ✗ Літвінова — NOT IN VESUM
   ✗ Пра — NOT IN VESUM
   ✗ Приві — NOT IN VESUM
   ✗ Сма — NOT IN VESUM
@@ -423,13 +426,11 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ слу — NOT IN VESUM
   ✗ стра — NOT IN VESUM
   ✗ тися — NOT IN VESUM
-  ✗ хаєш — NOT IN VESUM
-  ✗ хоке — NOT IN VESUM
   ✗ ціка — NOT IN VESUM
   ✗ чна — NOT IN VESUM
   ✗ чно — NOT IN VESUM
 
-All 58 other words are confirmed to exist in VESUM.
+All 57 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

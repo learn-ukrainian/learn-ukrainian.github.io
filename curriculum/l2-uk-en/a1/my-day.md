@@ -1,11 +1,11 @@
 ## Діало́ги (Dialogues)
 
-You already know how to tell time, name the days of the week, and describe the weather outside. Now it's time to put it all together — telling someone about your whole day. Below are two conversations: one about yesterday, one about tomorrow. The past-tense and future forms here are frozen phrases — just memorize them as chunks for now. The full grammar comes later.
+Olenka is writing a blog post about her day and reading it to her friend Marko. Notice how she connects events using sequence words. The past-tense and future forms here are frozen phrases — just memorize them as chunks for now.
 
 **(Як пройшо́в твій день? / How was your day?)**
 
 > — **Марко́:** Приві́т! Як пройшов твій день? *(Hi! How was your day?)*
-> — **Оле́нка:** До́бре! Вра́нці я працюва́ла в о́фісі. *(Good! In the morning I worked at the office.)*
+> — **Оле́нка:** До́бре! Я якра́з пишу́ про це в блог. Вра́нці я працюва́ла в о́фісі. *(Good! I'm just writing about it in my blog. In the morning I worked at the office.)*
 > — **Марко:** А **по́тім**? *(And then?)*
 > — **Оленка:** **Потім** обі́дала о пе́ршій. **Пі́сля обі́ду** гуля́ла у парку. *(Then I had lunch at one. After lunch I walked in the park.)*
 > — **Марко:** А вве́чері що роби́ла? *(And in the evening, what did you do?)*
@@ -35,7 +35,7 @@ Same structure, two timelines — yesterday Olenka **працювала** *(work
 
 ## Мій типовий день (My Typical Day)
 
-Below is a complete model day — a narrative using the present tense you already know from A1.3, combined with time expressions from M22 and the parts-of-day adverbs you'll master in this module. Read it through like a short story, then study how it's built.
+Here is a complete model day. Read it through like a short story, then notice how the sequence words connect the actions.
 
 > **Я прокида́юся о сьо́мій. Споча́тку вмива́юся і одяга́юся. Потім сні́даю о во́сьмій. О дев'я́тій почина́ю працювати. Вдень я працю́ю до пе́ршої. О першій обі́даю. Після обіду ще працюю до п'я́тої. Ввечері готу́ю вече́рю і відпочива́ю. О дев'ятій дивлю́ся фільм або́ чита́ю книгу. Нарешті о дванадцятій ляга́ю спати.**
 
@@ -76,7 +76,7 @@ Now let's expand your daily activity verbs. You already know **сні́дати*
 
 All three are Group I verbs, conjugated exactly like **чита́ти**: **я снідаю**, **ти сні́даєш**, **він/вона́ сні́дає**. The pattern is identical for **обідати** *(я обідаю)* and **вечеряти** *(я вече́ряю)*.
 
-Two more useful verbs: **відпочива́ти** *(to rest)* — also Group I: **я відпочиваю**, **ти відпочива́єш**. And the chunk **ляга́ти спати** *(to go to bed)* — treat it as one unit at A1. Full reflexive verb grammar comes in M38.
+Two more useful verbs: **відпочива́ти** *(to rest)* — also Group I: **я відпочиваю**, **ти відпочива́єш**. And the chunk **ляга́ти спати** *(to go to bed)* — treat it as one unit at A1.
 
 Combine any verb with a time expression and you have a sentence about your day:
 
@@ -105,7 +105,7 @@ Time expressions and sequence words both sit at the start of the sentence. You c
 
 Here is a longer model day that weaves everything from this module together. Read it, then write your own version below:
 
-> **Мій типовий понеді́лок почина́ється о шо́стій. Спочатку я вмиваюся і одягаюся. Потім снідаю — п'ю ка́ву і їм бутербро́д. О дев'ятій починаю працювати. Вдень я ду́же за́йнятий. О першій обідаю в кафе́. Після обіду ще працюю до шо́стої. Ввечері відпочиваю — готую вечерю і дивлюся серіа́л. Також читаю пе́ред сном. Нарешті о дванадцятій лягаю спати. Завтра — те са́ме!**
+> **Мій типовий понеді́лок почина́ється о шо́стій. Спочатку я вмиваюся і одягаюся. Потім снідаю — п'ю ка́ву і їм бутербро́д. О дев'ятій починаю працювати. Вдень я ду́же за́йнятий. О першій обідаю в кафе́. Після обіду ще працюю до шо́стої. Ввечері я ві́льний і відпочиваю — готую вечерю і дивлюся серіа́л. Також читаю пе́ред сном. Нарешті о дванадцятій лягаю спати. Завтра — те са́ме!**
 
 *(My typical Monday starts at six. First I wash up and get dressed. Then I have breakfast — I drink coffee and eat a sandwich. At nine I start working. During the day I'm very busy. At one I have lunch at a café. After lunch I work until six. In the evening I rest — I cook dinner and watch a series. I also read before bed. Finally at twelve I go to bed. Tomorrow — the same!)*
 

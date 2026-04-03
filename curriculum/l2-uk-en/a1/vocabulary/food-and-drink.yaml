@@ -6,7 +6,13 @@ vocabulary:
   gender: ж.
   verified: true
 - word: напі́й
-  translation: drink
+  translation: drink (noun, masculine)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: напо́ї
+  translation: drinks (plural)
   expression: false
   pos: ім.
   gender: ч.
@@ -66,10 +72,16 @@ vocabulary:
   gender: ж.
   verified: true
 - word: варе́ник
-  translation: filled dumpling
+  translation: dumpling (half-moon shaped, with savoury or sweet filling)
   expression: false
   pos: ім.
   gender: ч.
+  verified: true
+- word: варе́ники
+  translation: dumplings (plural)
+  expression: false
+  pos: ім.
+  gender: ''
   verified: true
 - word: ка́ша
   translation: porridge
@@ -77,14 +89,26 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
+- word: гречана каша
+  translation: buckwheat porridge
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
 - word: сир
-  translation: cheese
+  translation: cheese (also cottage cheese; hard cheese = твердий сир)
   expression: false
   pos: ім.
   gender: ч.
   verified: true
+- word: твердий сир
+  translation: hard cheese
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
 - word: ма́сло
-  translation: butter
+  translation: butter (also oil, depending on context)
   expression: false
   pos: ім.
   gender: с.
@@ -114,7 +138,7 @@ vocabulary:
   gender: ж.
   verified: true
 - word: компо́т
-  translation: compote (homemade stewed fruit drink)
+  translation: compote (traditional drink of fruit boiled with water and sugar)
   expression: false
   pos: ім.
   gender: ч.
@@ -167,8 +191,26 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
+- word: рис
+  translation: rice
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
 - word: макаро́ни
   translation: pasta
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: о́вочі
+  translation: vegetables
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: фру́кти
+  translation: fruit
   expression: false
   pos: ім.
   gender: ''
@@ -191,17 +233,29 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
+- word: моло́чне
+  translation: dairy (category noun)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
 - word: йо́гурт
-  translation: yoghurt
+  translation: yogurt
   expression: false
   pos: ім.
   gender: ч.
   verified: true
 - word: олі́я
-  translation: oil
+  translation: vegetable oil
   expression: false
   pos: ім.
   gender: ж.
+  verified: true
+- word: соняшникова олія
+  translation: sunflower oil
+  expression: true
+  pos: ''
+  gender: ''
   verified: true
 - word: буря́к
   translation: beetroot
@@ -221,11 +275,11 @@ vocabulary:
   pos: прикм.
   gender: ''
   verified: true
-- word: сли́ва
-  translation: plum
+- word: са́ло
+  translation: cured pork fat (Ukrainian cultural staple)
   expression: false
   pos: ім.
-  gender: ж.
+  gender: с.
   verified: true
 - word: часни́к
   translation: garlic
@@ -233,14 +287,8 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: са́ло
-  translation: cured pork fat
-  expression: false
-  pos: ім.
-  gender: с.
-  verified: true
 - word: галушки́
-  translation: boiled dumplings
+  translation: soft dumplings (from Poltava region)
   expression: false
   pos: ім.
   gender: ж.
@@ -251,14 +299,20 @@ vocabulary:
   pos: ім.
   gender: ''
   verified: true
-- word: лимона́д
-  translation: lemonade
+- word: мед
+  translation: honey
   expression: false
   pos: ім.
   gender: ч.
   verified: true
 - word: кефі́р
-  translation: kefir (fermented milk drink)
+  translation: fermented milk (kefir)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лимона́д
+  translation: lemonade / soft drink
   expression: false
   pos: ім.
   gender: ч.
@@ -275,68 +329,104 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
-- word: стра́ва
-  translation: dish, meal
+- word: плита́
+  translation: stove, cooker
   expression: false
   pos: ім.
   gender: ж.
   verified: true
-- word: бабу́ся
-  translation: grandma
+- word: зазвича́й
+  translation: usually
   expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: ма́ма
-  translation: mom, mother
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: дома́шнє
-  translation: homemade
-  expression: false
-  pos: прикм.
+  pos: присл.
   gender: ''
   verified: true
-- word: ї́сти
-  translation: to eat
+- word: і́ноді
+  translation: sometimes
   expression: false
-  pos: дієсл.
+  pos: присл.
   gender: ''
   verified: true
-- word: пи́ти
-  translation: to drink
+- word: сма́чно
+  translation: delicious, tasty
   expression: false
-  pos: дієсл.
+  pos: присл.
   gender: ''
   verified: true
-- word: люби́ти
-  translation: to like, to love
+- word: вра́нці
+  translation: in the morning
   expression: false
-  pos: дієсл.
+  pos: присл.
   gender: ''
   verified: true
-- word: хоті́ти
-  translation: to want
+- word: вве́чері
+  translation: in the evening
   expression: false
-  pos: дієсл.
+  pos: присл.
   gender: ''
   verified: true
-- word: Смачного!
-  translation: Enjoy your meal! (bon appétit)
+- word: гарячі напої
+  translation: hot drinks
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Чудово!
-  translation: Wonderful!
+- word: холодні напої
+  translation: cold drinks
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: будь ласка
-  translation: please
+- word: чорний чай
+  translation: black tea
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зелений чай
+  translation: green tea
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: еспре́со
+  translation: espresso
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: турецька кава
+  translation: Turkish-style coffee
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вода без газу
+  translation: still water
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вода з газом
+  translation: sparkling water
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: апельсиновий сік
+  translation: orange juice
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: яблучний сік
+  translation: apple juice
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: томатний сік
+  translation: tomato juice
   expression: true
   pos: ''
   gender: ''
@@ -359,8 +449,8 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: вода з газом
-  translation: sparkling water
+- word: чай з медом
+  translation: tea with honey
   expression: true
   pos: ''
   gender: ''
@@ -372,19 +462,61 @@ vocabulary:
   gender: ''
   verified: true
 - word: м'ясо з картоплею
-  translation: meat with potatoes
+  translation: meat with potato
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: вареники зі сметаною
-  translation: dumplings with sour cream
+- word: рибу з рисом
+  translation: fish with rice
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: улюблена страва
-  translation: favourite dish
+- word: Що ти хочеш?
+  translation: What do you want?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Що ти їси на сніданок?
+  translation: What do you eat for breakfast?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Що ти їси на обід?
+  translation: What do you eat for lunch?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Що ти їси на вечерю?
+  translation: What do you eat for dinner?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Будь ласка, каву з молоком.
+  translation: Coffee with milk, please.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дайте, будь ласка, чай з лимоном.
+  translation: Give me tea with lemon, please.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Мені воду з газом.
+  translation: Sparkling water for me.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: як мамин борщ
+  translation: like mom's borscht (meaning something irreplaceable and deeply personal)
   expression: true
   pos: ''
   gender: ''

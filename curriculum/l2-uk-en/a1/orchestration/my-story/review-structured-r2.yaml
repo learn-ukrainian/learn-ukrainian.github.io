@@ -1,0 +1,49 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Missed the required date in Taras's story (`у тисяча дев'ятсот дев'яносто
+    п'ятому році`). Omitted the required past signal phrase `коли я був / була маленьким
+    / маленькою` (substituted with "тоді"). M
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: A word cannot have two primary stress marks, but the text includes `закі́нчи́ла`,
+    `закі́нчи́ти`, and `закі́нчи́в`. Otherwise, the Ukrainian is natural and accurate.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent pedagogical scaffolding. Explaining signal words as a "roadmap"
+    and grouping gender/person endings by tense provides a very clear PPP structure.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Included all required vocabulary naturally in the dialogue and summary.
+    Only missed the recommended word `мрія`.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All inject markers match the plan, and their placement directly after
+    the relevant instructional blocks is optimal for learner retention.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Tone is encouraging and shows rather than tells ("Notice how Anna's story
+    flows..."). The transitions are smooth and professional.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, precise sections. Word count is 1208, which is exactly
+    on target for the 1200 goal.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Accurate names and locations. The context of learning Ukrainian to connect
+    with grandparents is authentic and respectful.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are natural and move beyond purely transactional exchanges into
+    personal narratives.
+findings: []

@@ -9,16 +9,16 @@ Three conversations. Three situations. One goal: introduce yourself in Ukrainian
 > — **Олена:** Мене звати Олена. Зві́дки ти? *(My name is Olena. Where are you from?)*
 > — **Марко:** Я з Кана́ди. А ти? *(I'm from Canada. And you?)*
 > — **Олена:** Я з Украї́ни. Ду́же приє́мно! *(I'm from Ukraine. Pleased to meet you!)*
-> — **Марко:** Ме́ні та́ко́ж! *(Me too!)*
+> — **Марко:** Навза́єм! *(Likewise!)*
 
 
-A few things to absorb before moving on. **Тебе** is the object form of the informal "you" (**ти**) — used between friends, peers, and people of similar age. **Звати** means "to call." **Звідки** means "where from." And **Мені також** means "me too" or "likewise" — a natural response after someone says **Дуже приємно!** Don't analyze the grammar yet. Just notice the rhythm of the exchange: name → name → origin → origin → pleasure.
+A few things to absorb before moving on. **Тебе** is the object form of the informal "you" (**ти**) — used between friends, peers, and people of similar age. **Звати** means "to call." **Звідки** means "where from." And **Навзаєм** means "likewise" or "mutually" — a natural response after someone says **Дуже приємно!** Don't analyze the grammar yet. Just notice the rhythm of the exchange: name → name → origin → origin → pleasure.
 
 ### Dialogue 2 — At a Conference (Formal)
 
 > — **Окса́на:** До́брий день! Як вас звати? *(Good day! What is your name?)*
 > — **Петро́:** Мене звати Петро Ковале́нко. Дуже приємно! *(My name is Petro Kovalenko. Pleased to meet you!)*
-> — **Оксана:** Мені також! Я — Оксана Ме́льник. Ви з України? *(Likewise! I'm Oksana Melnyk. Are you from Ukraine?)*
+> — **Оксана:** Навзаєм! Я — Оксана Ме́льник. Ви з України? *(Likewise! I'm Oksana Melnyk. Are you from Ukraine?)*
 > — **Петро:** Так, я з Ки́єва. А ви? *(Yes, I'm from Kyiv. And you?)*
 > — **Оксана:** Я з Канади, але́ я вчу украї́нську. *(I'm from Canada, but I'm learning Ukrainian.)*
 
@@ -27,8 +27,7 @@ One word changed: **вас** (you, formal) replaced **тебе**. That single sw
 
 ### Dialogue 3 — Introducing Someone Else
 
-> — **Ма́рта:** Це Андрі́й. Він зі Льво́ва. Він — інжене́р. *(This is Andriy. He's from Lviv. He's an engineer.)*
-> — **Марта:** А це Оксана. Вона́ з Оде́си. Вона — лі́карка. *(And this is Oksana. She's from Odesa. She's a doctor.)*
+> — **Ма́рта:** Це Андрі́й. Він зі Льво́ва. Він — інжене́р. А це Оксана. Вона́ з Оде́си. Вона — лі́карка. *(This is Andriy. He's from Lviv. He's an engineer. And this is Oksana. She's from Odesa. She's a doctor.)*
 > — **Андрій:** Дуже приємно познайо́митись! *(Very pleased to meet you!)*
 
 
@@ -47,11 +46,11 @@ About a third person: **Як йо́го звати?** (asking about a man — **
 
 One note: you will also hear **Мене звуть** — this is an equally correct variant using a different verb form. Both **мене звати** and **мене звуть** are standard Ukrainian. This curriculum teaches **мене звати** as the primary A1 form.
 
-After both people exchange names, the standard reaction is **Дуже приємно!** — literally "very pleasant," meaning "pleased to meet you." The response is **Мені також!** meaning "me too" or "likewise." A slightly more formal variant of the initial greeting is **Приємно познайомитись!** — "pleasant to get acquainted." The key cultural point: say **Дуже приємно** *after* names are exchanged — it is not a greeting, it is a reaction to learning someone's name.
+After both people exchange names, the standard reaction is **Дуже приємно!** — literally "very pleasant," meaning "pleased to meet you." The response is **Ме́ні та́ко́ж!** meaning "me too" or "likewise." A slightly more formal variant of the initial greeting is **Приємно познайомитись!** — "pleasant to get acquainted." The key cultural point: say **Дуже приємно** *after* names are exchanged — it is not a greeting, it is a reaction to learning someone's name.
 
 > — **Марта:** Мене звати Марта. *(My name is Marta.)*
 > — **Іва́н:** Мене звати Іван. Дуже приємно! *(My name is Ivan. Pleased to meet you!)*
-> — **Марта:** Мені також! *(Likewise!)*
+> — **Марта:** Навзаєм! *(Likewise!)*
 
 
 <!-- INJECT_ACTIVITY: quiz-formal-informal -->
@@ -130,8 +129,6 @@ The question **Звідки ти?** (informal) or **Звідки ви?** (formal
 **Я з Канади.** (I'm from Canada.)
 **Я зі Шта́тів.** (I'm from the States.)
 **Я з Німе́ччини.** (I'm from Germany.)
-**Я з Вели́кої Брита́нії.** (I'm from Great Britain.)
-**Я з Австра́лії.** (I'm from Australia.)
 
 Notice that the country names look slightly different from their base forms — **Украї́на** becomes **України**, **Кана́да** becomes **Канади**. These are genitive case forms, but you do NOT need to understand genitive grammar yet. Treat **Я з України** as a single memorized chunk, the same way you memorized **Мене звати**. Genitive case is A2 grammar.
 

@@ -1,0 +1,48 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: Covers all grammar points and vocabulary, but the word count (1828 words)
+    is over 50% larger than the plan's strict 1200 target.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 5
+  evidence: 'Contains critical stress errors. Example: "Ме́не звати Марко", "Ме́ні
+    та́ко́ж", "йо́го". "йо́го" specifically teaches Russian stress for a Ukrainian
+    word.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent breakdown of zero copula ("The dash IS the grammar signal"),
+    clear distinction between formal/informal 'you'.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words from the plan are introduced naturally
+    in context.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All four exercises are present, logically placed, and match the plan's
+    exact requirements.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'Strong cultural notes. Opener is slightly sales-pitchy ("Three conversations.
+    Three situations. One goal: ...") but acceptable.'
+- dimension: 7
+  name: Structural integrity
+  score: 4
+  evidence: The H2 markdown headers contain manual stress marks (e.g., "## Діало́ги
+    (Dialogues)"), which break the strict string-matching of the pipeline's audit
+    script against `meta.yaml` outline. Word count hea
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Good explanation of naming conventions and the dual function of "ви".
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Highly natural, textbook-authentic dialogues matching the specified situations.
+findings: []

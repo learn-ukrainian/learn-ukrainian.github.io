@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 33: Around the City (A1, A1.5 [Places])
-**Writer:** Gemini
+**Writer:** Claude
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -146,7 +146,7 @@ references:
 <generated_module_content>
 ## Діало́ги (Dialogues)
 
-Navigating a Ukrainian city means juggling two questions at once: **де?** (where?) for your current location and **куди́?** (where to?) for your destination. You also need to ask for directions and describe how you travel. Two real situations show this in action — a stranger asking for help on a Lviv street, and a friend describing their morning commute.
+Navigating a Ukrainian city means juggling two questions at once: **де?** (where?) for your current location and **куди́?** (where to?) for your destination. You also need to ask for directions and describe how you travel. Two real situations show this in action — a stranger asking for help on a Kyiv street, and a friend describing their morning commute.
 
 ### Діало́г 1 — Asking for Directions
 
@@ -167,7 +167,7 @@ Notice the two commands: **ідіть** (go — on foot) and **їдьте** (go 
 > — **Олена:** А потім? *(And then?)*
 > — **Тарас:** Потім іду́ пі́шки п'ять хвили́н. Робо́та в о́фісі на пло́щі. *(Then I walk five minutes. Work is in an office on the square.)*
 
-Tарас uses sequence words to structure his route: **спочатку** (first) → **потім** (then) → **а потім** (and then). This is how Ukrainians naturally describe any multi-step journey. Notice the transport contrast: **їду автобусом** (I ride by bus — instrumental case, taught as a chunk) versus **іду пішки** (I walk — literally "go on foot"). The destination uses accusative: **на зупинку** (to the stop), **до центру** (to the center). His current location uses locative: **в офісі** (in the office), **на площі** (on the square).
+Tарас uses sequence words to structure his route: **спочатку** (first) → **потім** (then) → **а потім** (and then). This is how Ukrainians naturally describe any multi-step journey. Notice the transport contrast: **їду автобусом** (I ride by bus — instrumental case, taught as a chunk) versus **іду пішки** (I walk — literally "go on foot"). The destination uses accusative (**на зупинку** — to the stop) or genitive with **до** (**до центру** — to the center). His current location uses locative: **в офісі** (in the office), **на площі** (on the square).
 
 <!-- INJECT_ACTIVITY: fill-in-directions -->
 
@@ -192,12 +192,12 @@ Here is the full navigation toolkit in one table:
 | Distance | Далеко? | далеко / бли́зько / хвилин пішки | П'ять хвилин пішки. |
 
 :::tip
-Streets, avenues, and squares always use **на**: **на вулиці Франка́**, **на площі**, **на проспе́кті**. Buildings you enter use **в/у**: **в магази́ні**, **в офісі**, **у теа́трі**. Metro always stays with **на**: **на метро** — both for location and transport.
+Streets, avenues, and squares always use **на**: **на вулиці Франка́**, **на площі**, **на проспе́кті**. Buildings you enter use **в/у**: **в магази́ні**, **в офісі**, **у теа́трі**. Metro uses **в/у** for location (**в метро**) and **на** for transport (**на метро**).
 :::
 
-Now see how all four rows work together in connected speech. **Марі́я** lives in Lviv and is heading to the theater:
+Now see how all four rows work together in connected speech. **Марі́я** lives in Kyiv and is heading to the theater:
 
-**Марія живе́ у Льво́ві** (де? — locative). **Сього́дні вона́ йде в театр** (куди? — accusative). **Театр на площі** (де? — locative). **Потім вона ї́де на метро до центру** (куди? — accusative). **Центр далеко** — п'ять хвилин на метро, а потім **іде́ пішки** три хвили́ни. The question type shifts six times in this short passage — and that is completely natural.
+**Марія живе́ у Киє́ві** (де? — locative). **Сього́дні вона́ йде в театр** (куди? — accusative). **Театр на площі** (де? — locative). **Потім вона ї́де на метро до центру** (куди? — accusative). **Центр далеко** — п'ять хвилин на метро, а потім **іде́ пішки** три хвили́ни. The question type shifts four times in this short passage — and that is completely natural.
 
 <!-- INJECT_ACTIVITY: quiz-de-kudy -->
 
@@ -213,12 +213,12 @@ Now put the required vocabulary into full sentences:
 
 - **пішки** (on foot) → Аптека близько — іду **пішки**.
 - **хвили́на** (minute) → П'ять **хвилин** пішки від зупи́нки.
-- **далеко від** / **близько від** (far from / near) → Школа **далеко від** дому. Парк **близько від** робо́ти.
+- **далеко від** / **близько до** (far from / near to) → Школа **далеко від** дому. Парк **близько до** робо́ти.
 - **у це́нтрі мі́ста** (in the city center) → Готе́ль **у центрі міста**.
 - **на око́лиці** (on the outskirts) → Я живу **на околиці**, не в центрі.
 
 :::note
-The chunks **далеко від** and **близько від** are followed by genitive case. At this stage, memorize them as fixed phrases with common nouns: далеко від дому, близько від роботи, далеко від зупинки.
+The chunks **далеко від** and **близько до** are followed by genitive case. At this stage, memorize them as fixed phrases with common nouns: далеко від дому, близько до роботи, далеко від зупинки.
 :::
 
 Now try building your own description using these sentence frames:
@@ -231,7 +231,7 @@ Three example outputs for different situations:
 
 - City center: **Я живу на вулиці Хреща́тик. Біля мого дому є метро. Парк близько — п'ять хвилин пішки. У моєму районі є театр, музей і кафе.**
 - Suburb: **Я живу на околиці. Біля мого дому є зупи́нка. Центр далеко — треба їхати автобусом. У моєму районі є школа, магазин і аптека.**
-- Small town: **Я живу у мале́нькому мі́сті. Біля мого дому є парк. Магазин близько — три хвилини пішки. У моєму районі є бібліотека, кафе і школа.**
+- Lviv Old Town: **Я живу у Львові. Біля мого дому Площа Ринок. Оперний театр поруч — три хвилини пішки. Високий замок далеко — треба їхати автобусом.**
 
 The sentence frames stay identical — only the details change.
 
@@ -273,7 +273,7 @@ Answer these five prompts mentally or aloud, then check your answers:
 
 <!-- INJECT_ACTIVITY: match-navigation -->
 
-**Deterministic word count: 1281 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1288 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -409,8 +409,8 @@ If your verdict is **REVISE**, you MUST output a `<fixes>` block with exact find
 
 Rules for fixes:
 - Each fix is a YAML entry with `find:` (exact text from the module) and `replace:` (corrected text)
-- The `find` string must be an EXACT substring of the module content — copy-paste it
-- Keep fixes minimal — change only what's wrong, preserve surrounding text
+- The `find` string MUST be an EXACT copy-paste from the module content. DO NOT change quotes (« » to " "), dashes (— to -), or spacing. If you change a single character in the `find` string, the automated replacement will fail.
+- Keep fixes minimal — change only what's wrong, preserve surrounding text. Provide enough context (e.g. 5-7 words) to make the match unique.
 - Do NOT fix словник/vocabulary tables (those are generated by a downstream tool)
 - For word count issues: add content as a new `insert_after:` entry instead of find/replace
 
@@ -451,14 +451,15 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 125 words | Not found: 54 words
+Verified: 131 words | Not found: 53 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Іді — NOT IN VESUM
   ✗ Апте — NOT IN VESUM
   ✗ Бібліоте — NOT IN VESUM
   ✗ Діало — NOT IN VESUM
-  ✗ Льво — NOT IN VESUM
+  ✗ Киє — NOT IN VESUM
+  ✗ Львові — NOT IN VESUM
   ✗ Марія — NOT IN VESUM
   ✗ Оле — NOT IN VESUM
   ✗ Олена — NOT IN VESUM
@@ -489,14 +490,12 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ нтру — NOT IN VESUM
   ✗ нтрі — NOT IN VESUM
   ✗ нький — NOT IN VESUM
-  ✗ нькому — NOT IN VESUM
   ✗ пло — NOT IN VESUM
   ✗ проспе — NOT IN VESUM
   ✗ прямок — NOT IN VESUM
   ✗ райо — NOT IN VESUM
   ✗ рестора — NOT IN VESUM
   ✗ рма — NOT IN VESUM
-  ✗ сті — NOT IN VESUM
   ✗ сце — NOT IN VESUM
   ✗ сять — NOT IN VESUM
   ✗ теа — NOT IN VESUM
@@ -504,8 +503,9 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ тку — NOT IN VESUM
   ✗ трі — NOT IN VESUM
   ✗ фісі — NOT IN VESUM
+  ✗ хвили — NOT IN VESUM
 
-All 125 other words are confirmed to exist in VESUM.
+All 131 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

@@ -1,0 +1,52 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Missed the specific phrase "Ми їли торт і пили каву" from the second dialogue
+    prompt, and the total word count is over target. Otherwise follows the pedagogical
+    sequence faithfully.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No Russianisms, Surzhyk, or calques. Excellent handling of past tense
+    irregulars ("провів" / "провела") and gender alignment in first-person speech.
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Great PPP flow (Situation → Pattern → Practice) and clear structural explanations
+    ("The ending shows gender, not person"), but an activity marker was placed prematurely
+    before the grammar section.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required words ("учора", "дивитися", "працювати") and recommended
+    words ("вихідні", "разом", "фільм") are integrated naturally into dialogues and
+    examples.
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: Inserted 4 `INJECT_ACTIVITY` markers for only 3 planned activities. The
+    first marker was placed before the learner receives the grammatical rules.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: Dialogues are highly engaging, but contains some meta-commentary directed
+    at the learner ("and that is exactly what you will learn now", "you have used
+    these verbs in present tense throughout A1").
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: Word count (1511 words) is >25% higher than the plan target (1200 words).
+    The Markdown structure itself is pristine.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Culturally appropriate conversational flow, name usage (Оксана, Дмитро,
+    Тарас), and typical weekend contexts.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Natural multi-turn conversations with excellent conversational filler
+    ("Чудово!", "Як приємно!") and logical progression.
+findings: []

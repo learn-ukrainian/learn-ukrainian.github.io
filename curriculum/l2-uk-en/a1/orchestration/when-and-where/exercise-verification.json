@@ -1,24 +1,95 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 62,
+  "grounded_items": 47,
+  "ungrounded": [
+    {
+      "word": "яке",
+      "exercise_type": "quiz",
+      "context": "Яке речення правильне? (Which is correct?)"
+    },
+    {
+      "word": "правильне",
+      "exercise_type": "quiz",
+      "context": "Яке речення правильне? (Which is correct?)"
+    },
+    {
+      "word": "питальне",
+      "exercise_type": "group-sort",
+      "context": "Питальне слово (Question word)"
+    },
+    {
+      "word": "слово",
+      "exercise_type": "group-sort",
+      "context": "Питальне слово (Question word)"
+    },
+    {
+      "word": "питає",
+      "exercise_type": "quiz",
+      "context": "Питальне слово — питає де (question word — asks where)"
+    },
+    {
+      "word": "з'єднує",
+      "exercise_type": "quiz",
+      "context": "Сполучник — з'єднує частини речення (conjunction — connects "
+    },
+    {
+      "word": "частини",
+      "exercise_type": "quiz",
+      "context": "Сполучник — з'єднує частини речення (conjunction — connects "
+    },
+    {
+      "word": "прислівник",
+      "exercise_type": "quiz",
+      "context": "Прислівник часу (time adverb)"
+    },
+    {
+      "word": "часу",
+      "exercise_type": "quiz",
+      "context": "Прислівник часу (time adverb)"
+    },
+    {
+      "word": "вигук",
+      "exercise_type": "quiz",
+      "context": "Вигук (exclamation)"
+    },
+    {
+      "word": "прийменник",
+      "exercise_type": "quiz",
+      "context": "Прийменник місця (place preposition)"
+    },
+    {
+      "word": "місця",
+      "exercise_type": "quiz",
+      "context": "Прийменник місця (place preposition)"
+    },
+    {
+      "word": "іменник",
+      "exercise_type": "quiz",
+      "context": "Іменник (noun)"
+    },
+    {
+      "word": "частка",
+      "exercise_type": "quiz",
+      "context": "Частка (particle)"
+    },
+    {
+      "word": "займенник",
+      "exercise_type": "quiz",
+      "context": "Займенник (pronoun)"
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 12,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 5,
     "not_tested": [
       "бачити",
       "головне",
-      "де",
-      "думати",
       "знати",
       "казати",
-      "коли",
-      "речення",
       "розуміти",
       "сказати",
-      "чути",
-      "що"
+      "чути"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

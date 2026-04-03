@@ -23,7 +23,7 @@ Now, let's look at another situation. Anna is telling her friend about her very 
 
 Here, Anna maps out her complete schedule while Dmytro asks follow-up questions. The key pattern is the auxiliary verb **буду** (I will) followed by an infinitive verb. They also use the days of the week as fixed time anchors, such as **у понеділок** (on Monday) and **у вівторок** (on Tuesday). Think about what Anna is doing on Thursday. She is preparing for a **вечірка** (party). Anna also mentions she will work **допізна** (until late), and Dmytro responds enthusiastically with **звичайно** (of course). They also schedule a **зустріч** (meeting).
 ## Планува́ння (Planning)
-When you want to schedule an event or talk about a **план** (plan), you need a reliable formula. In Ukrainian, planning involves combining the day, the time, the auxiliary verb, and the main action. The core pattern looks like this: **У** (On) + day + time + **буду** (I will) + infinitive verb.
+When you want to schedule an event or talk about a **план** (plan), you can use this simple structure. In Ukrainian, planning involves combining the day, the time, the auxiliary verb, and the main action. The core pattern looks like this: **У** (On) + day + time + **буду** (I will) + infinitive verb.
 To use this formula, you first need to know the days of the week. Notice how we use the preposition **у** (in/on) or **в** (in/on) before the day to say "on [Day]".
 *   **у понеділок** (on Monday)
 *   **у вівторок** (on Tuesday)
@@ -50,7 +50,7 @@ When someone invites you, you need to know how to respond. You can accept enthus
 <!-- INJECT_ACTIVITY: quiz-days-of-week -->
 <!-- INJECT_ACTIVITY: fill-in-invitations -->
 You might have noticed that Ukrainian uses both **у** and **в** before the days of the week. For example: **у суботу** but **в неділю**. Which one you choose depends on the sounds around the preposition — specifically, the sound at the end of the previous word and the sound at the start of the next word. The basic pattern: use **у** between consonant sounds (він **у** до́мі), and **в** after a vowel sound before a consonant (вона́ **в** домі). At the start of a sentence, use **у** before a consonant: **У** понеділок я буду працювати. This is the same euphony rule (милозву́чність) you saw in earlier modules — Ukrainian avoids awkward clusters of similar sounds. Here are some examples of how this works:
-*   **Він** бу́де працювати **у** понеділок. (consonant + у + consonant)
+*   **Він** **у** понеділок бу́де працювати. (consonant + у + consonant)
 *   Я буду працювати **в** понеділок. (vowel + в + consonant)
 *   **У** суботу я буду відпочивати. (sentence start + у + consonant)
 
@@ -80,7 +80,7 @@ Now, try a mini-writing task. Plan your ideal weekend in four to six sentences u
 Here is a sample answer to guide you:
 **У суботу зранку я буду спати довго. Вдень я буду гуляти в парку. Ввечері ми бу́демо дивитися фільм. В неділю я буду готувати сніда́нок для родини.** (On Saturday morning I will sleep long. In the afternoon I will walk in the park. In the evening we will watch a movie. On Sunday I will cook breakfast for the family.)
 ## Summary
-When you want to organize your schedule and invite friends, you now have a complete planning toolkit. The future tense for planning is built on a straightforward formula that you can adapt to any situation. 
+When you want to organize your schedule and invite friends, you can use these phrases. The future tense for planning is built on a straightforward formula that you can adapt to any situation. 
 The core formula is: **У** [day] **о** [time] **я буду** [infinitive verb].
 For example: **У суботу о третій я буду готувати обід.** (On Saturday at three I will cook lunch.)
 You can modify the time of day using these adverbs:
@@ -104,4 +104,4 @@ Your days of the week review:
 *   **п'я́тниця** (Friday)
 *   **субота** (Saturday)
 *   **неділя** (Sunday)
-Remember the euphony rule when attaching prepositions: we say **у суботу** but **в неділю** depending on the preceding sounds. The Ukrainian language naturally avoids awkward clusters of consonants or vowels. This makes your sentences flow beautifully.
+Remember the euphony rule when attaching prepositions: we say **у суботу** but **в неділю** depending on the preceding sounds. Ukrainian naturally avoids awkward clusters of consonants or vowels to make pronunciation easier.

@@ -1,44 +1,92 @@
-## Діалоги (Dialogues) (~330 words total)
+## Діалоги (~390 words total)
 
-- P1 (~25 words): Brief framing sentence — today's dialogues show що, де, коли doing a new job: connecting two clauses inside one sentence, not asking a question.
-- Dialogue 1 (~110 words): Two friends planning to meet. Олексій asks Марія where the new café is; she confirms she knows where it is. He asks her to tell him when she's free. She says she's free when she finishes work. He thinks that six o'clock will be good. She agrees she also thinks it's a good time. Lines: — Ти знаєш, де нове кафе? — Так, я знаю, де воно. — Скажи, коли ти вільна. — Я вільна, коли закінчу роботу. — Добре. Я думаю, що о шостій буде добре. — Так, я теж думаю, що це гарний час. Each conjunction bold-marked in the printed version.
-- P2 (~15 words): Transition — a second situation: talking about a mutual friend who's arrived.
-- Dialogue 2 (~110 words): Bohdan tells Natalya that Olena is already in Kyiv. Natalya didn't know. She asks where exactly Olena lives. Bohdan doesn't know where exactly, but knows it's near the centre. She asks him to tell Olena, when he sees her, that she wants to meet. He agrees he'll tell her when he sees her. Lines: — Ти знаєш, що Олена вже в Києві? — Ні, я не знав! А де вона живе? — Я не знаю, де саме. Але я знаю, що біля центру. — Скажи їй, коли побачиш, що я хочу зустрітися. — Добре, скажу, коли побачу. Each conjunction bold-marked.
-- P3 (~70 words): Post-dialogue observation — count the conjunctions. Dialogue 1 uses що twice, де twice, коли twice. Dialogue 2 uses що twice, де twice, коли twice. All six connect two halves of one sentence, not ask a question. That's the pattern this module teaches. Keep these dialogues open; every grammar point below ties back to a line from them.
+- P1 (~30 words): Brief scene-setter — two friends connecting by phone. Олексій cannot find the café; Марта guides him. Introduces all three conjunctions in authentic context before any explanation.
+
+- Dialogue 1 (~120 words): Full 8-turn exchange between Марта and Олексій about finding a café and setting a meeting time.
+  — Марто, ти знаєш, де нове кафе «Вітер»?
+  — Так, я знаю, де воно. Іди прямо, де побачиш фонтан — поверни ліворуч.
+  — Добре. А коли ти там будеш?
+  — Я не знаю точно, коли зможу. Скажи, коли ти вільний.
+  — Я вільний, коли закінчу роботу. Думаю, о шостій.
+  — Я теж думаю, що о шостій — добрий час.
+  — Чудово. А де саме сісти — ти знаєш?
+  — Знаю. Будинок, що стоїть біля великого дерева — там і вхід.
+
+- P2 (~60 words): Observation: Point to three bolded conjunctions from Dialogue 1 — що, де, коли. Each connects two parts of a sentence: Я знаю, [що воно там]. / Я не знаю, [коли зможу]. / [Де побачиш фонтан] — поверни ліворуч. Note comma before each. Learner can already use them receptively.
+
+- Dialogue 2 (~120 words): Full 8-turn exchange — Тарас and Ніна discussing Олена's return to Kyiv.
+  — Ти знаєш, що Олена вже в Києві?
+  — Ні, я не знав! А де вона живе?
+  — Я не знаю, де саме. Але я думаю, що десь біля центру.
+  — А коли вона приїхала?
+  — Я не знаю точно, коли. Вона казала, що приїде в березні.
+  — Скажи їй, коли побачиш, що я хочу зустрітися.
+  — Добре, скажу. Але ти знаєш, що вона дуже зайнята?
+  — Знаю. Але я думаю, що вона знайде час.
+
+- P3 (~60 words): Observation: Point out the chain of complex sentences in Dialogue 2. Notice: Я не знаю, де саме — де саме (exactly where) makes the meaning more natural; я думаю, що... used twice; Скажи їй, коли побачиш connects two time-related actions. These are not just phrases — they are a new sentence architecture.
 
 ---
 
-## Складне речення (Complex Sentences) (~330 words total)
+## Складне речення (~340 words total)
 
-- P1 (~80 words): Connect to M44 — in М44 learners joined EQUAL ideas: Я читаю, і він пише. Він прийшов, але вона пішла. Those conjunctions (і, але, бо) link two clauses that could each stand alone. Today: a MAIN clause + a DEPENDENT clause. The dependent clause can't stand alone — Що він тут doesn't mean anything by itself. It needs a main clause: Я знаю, що він тут. The dependent clause adds detail to the main idea. Ukrainian grammarians call this складнопідрядне речення (a subordinate complex sentence — Grade 5, Заболотний).
-- P2 (~80 words): The three structures, each shown with a full sentence and literal gloss. (1) Я знаю, що він тут. — main clause: Я знаю / conjunction: що / subordinate: він тут. (2) Я не знаю, де вона живе. — main clause: Я не знаю / conjunction: де / subordinate: вона живе. (3) Скажи мені, коли ти прийдеш. — main clause: Скажи мені / conjunction: коли / subordinate: ти прийдеш. Pattern: main clause + comma + conjunction + subordinate clause. Order is always this way when що/де/коли sit in the middle.
-- P3 (~80 words): The comma rule — Ukrainian ALWAYS places a comma before що, де, коли when they act as conjunctions. No exceptions. This differs from English where "I know that he's here" is written without a comma. Show three minimal pairs: Я думаю, що це правильно. / Він не знає, де магазин. / Зателефонуй, коли прийдеш. Point back to Dialogue 1: every line with що, де, or коли in the middle has a comma immediately before it — learners can verify this now.
-- P4 (~30 words): Micro-note — when коли opens the WHOLE sentence (time-clause first), the comma comes after the subordinate clause: Коли я прийду, ми поговоримо. Same comma, different position. One example is enough at A1.
-- Exercise (~60 words of instruction/items): **Fill-in, 8 items** — Choose що, де, or коли to complete each sentence. Items: 1. Я знаю, ___ він тут. 2. Я не знаю, ___ вона живе. 3. Скажи, ___ ти прийдеш. 4. Він думає, ___ це добре. 5. Я чую, ___ вона співає. 6. Ти знаєш, ___ новий ринок? 7. Вона не знає, ___ він повернеться. 8. Я розумію, ___ ти хочеш.
+- P1 (~90 words): Bridge from M44. In M44 you connected EQUAL ideas: Я читаю, і він пише. / Вона хоче піти, але він не хоче. Both clauses could stand alone. Now: a MAIN idea carries a DEPENDENT idea attached to it — the dependent clause cannot stand alone. Я знаю → знаєш WHAT? → Я знаю, що він тут. / Я не знаю → не знаєш WHERE? → Я не знаю, де він живе. / Скажи → скажи WHEN? → Скажи мені, коли ти прийдеш. Grade 5 term: складнопідрядне речення (complex sentence with a subordinate clause).
 
----
+- P2 (~110 words): The three subordinating conjunctions laid out with parallel examples:
+  - **що** (that): Я знаю, що він тут. / Я думаю, що це правильно. / Він каже, що вона в Києві. / Ми бачимо, що ти стараєшся.
+  - **де** (where): Я не знаю, де він живе. / Скажи мені, де кафе. / Я знаю, де це. / Вони не знають, де ми.
+  - **коли** (when): Зателефонуй, коли прийдеш. / Я не знаю, коли він прийде. / Скажи, коли ти вільний. / Коли я прийду, ми поговоримо.
+  Each conjunction answers a different question: що → what/that; де → where; коли → when.
 
-## Що, де, коли — двоє облич (Two Faces) (~330 words total)
+- P3 (~80 words): Comma rule. Ukrainian ALWAYS places a comma before що, де, коли when they serve as conjunctions — no exceptions. English sometimes drops "that" and makes the comma optional: "I think this is right" (no comma, no "that"). Ukrainian never does: Я думаю, що це правильно. (comma + що always). Similarly: Він не знає, де магазин. / Зателефонуй, коли прийдеш. Write this rule in your notebook: comma + conjunction = always paired in Ukrainian.
 
-- P1 (~70 words): Introduce the "two jobs" concept — these three words already appeared in М20 as question words. Learners know them in that role. Now they have a second job. The key: same word, two completely different positions and functions. Don't treat them as new words — treat them as familiar words that learned a new trick. Ukrainian children learn the same distinction in Grade 5 (Заболотний, Chapter: Сполучники).
-- P2 (~80 words): Job 1 — question words. They sit at the START of a sentence or clause. The sentence ends with a question mark. Examples from М20 reactivated: Що це? / Що ти робиш? / Де ти? / Де магазин? / Коли ти прийдеш? / Коли починається фільм? The listener is expected to answer. These sentences have only ONE clause.
-- P3 (~80 words): Job 2 — conjunctions. They sit IN THE MIDDLE of a sentence, after a comma. The sentence does NOT end with a question mark — it makes a statement or gives a command. Examples: Я знаю, що це книжка. / Я знаю, де ти. / Скажи, коли прийдеш. The difference is grammatical position: start of sentence = question word. After comma in middle = conjunction. Show side-by-side: Де ти? (question) vs Я знаю, де ти. (conjunction). Де ти живеш? (question) vs Я знаю, де ти живеш. (conjunction).
-- Exercise (~40 words): **Quiz, 8 items** — Question word or conjunction? Items include: 1. Де ти живеш? 2. Я знаю, де ти живеш. 3. Коли починається урок? 4. Скажи, коли починається урок. 5. Що він хоче? 6. Вона думає, що він хоче чаю. 7. Де знаходиться бібліотека? 8. Він питає, де знаходиться бібліотека.
-- P4 (~60 words): Common що/де/коли patterns worth memorising as chunks — Я знаю, що... / Я не знаю, що... / Я думаю, що... / Він каже, що... (all with що as "that"). Я знаю, де... / Я не знаю, де... (де as "where"). Скажи, коли... / Я не знаю, коли... / Коли я прийду, ми поговоримо. (коли as "when"). Note that Він каже, що... appeared in Dialogue 2 — Скажи їй, коли побачиш, що я хочу зустрітися is two conjunctions in one sentence.
-- Exercise (~40 words): **Fill-in, 6 items** — Complete with a logical subordinate clause. Items: 1. Я думаю, що ___. 2. Він каже, що ___. 3. Я не знаю, де ___. 4. Скажи мені, коли ___. 5. Вона знає, що ___. 6. Ми не знаємо, де ___.
+- Exercise: quiz — Where is the comma? Choose the correctly punctuated sentence from two options (8 items). Examples: "Я знаю що він там" vs "Я знаю, що він там." / "Скажи коли ти прийдеш" vs "Скажи, коли ти прийдеш." Tests comma placement with що, де, коли only — concepts taught in P3 above.
+
+- P4 (~60 words): Practical reinforcement — now you can answer questions more completely. Instead of Я не знаю (I don't know — full stop), you can say Я не знаю, де він. / Я не знаю, коли. / Я не знаю, що це. The subordinate clause turns a dead end into a real answer. Compare: Він тут? → Я думаю, що так. / Де Олена? → Я не знаю, де вона.
 
 ---
 
-## Підсумок — Summary (~330 words total)
+## Що, де, коли — двоє облич (~310 words total)
 
-- P1 (~80 words): Recap the core insight — що, де, коли are conjunctions when they connect a main clause to a subordinate clause in the middle of a sentence, with a comma before them. Compare with М44's coordinate conjunctions: і, але, бо join EQUAL parts; що/де/коли join a MAIN part to a DEPENDENT part. This distinction is the foundation of complex sentence-building in Ukrainian through B2 and beyond.
-- P2 — Reference table (~60 words): Three-column table: Сполучник | Значення | Приклад. Row 1: що | that | Я знаю, що він тут. Row 2: де | where | Я не знаю, де кафе. Row 3: коли | when | Скажи, коли прийдеш. Below table: comma rule reminder — завжди кома перед сполучником.
-- P3 (~70 words): Combining conjunctions — show two advanced A1 sentences that combine what was learned in М44 with today's conjunctions. Sentence 1: Я не йду, бо я не знаю, де це. (бо from М44 + де from today). Sentence 2: Він каже, що прийде, коли закінчить. (що + коли, two subordinate clauses). These sentences feel sophisticated but use only words and structures already taught. Learners should feel the progress.
-- Exercise (~40 words): **Quiz, 8 items** — Where does the comma go? Choose the correctly punctuated version. Items cover: що sentence with comma, що sentence without comma (wrong), де in middle, коли opening the sentence, коли in the middle, two-conjunction sentence, і vs що comma placement, statement vs question.
-- Self-check bullets (~80 words): Build three sentences using the templates below. No answer given — learner produces their own.
-  - Я думаю, що ___. (fill with any opinion)
-  - Я не знаю, де ___. (fill with any place)
-  - Скажи мені, коли ___. (fill with any time-event)
-  Then check: Is there a comma before the conjunction in each sentence? Does the sentence make a statement, not a question? If yes to both — correct.
+- P1 (~80 words): These three words already live in your vocabulary from M20 as question words. Що це? (What is this?) — starts the sentence, ends with ?. Де ти? (Where are you?) — starts the sentence, ends with ?. Коли ти прийдеш? (When will you come?) — starts the sentence, ends with ?. Now they take on a second job: connecting two clauses inside one sentence, sitting in the middle rather than the beginning.
 
-Grand total: ~1320 words
+- P2 (~90 words): How to tell them apart — two clear signals. **Question word:** stands at the start of a sentence (or very early), the sentence ends with ?, no comma before it. **Conjunction:** sits in the middle of the sentence, connects two clauses, always preceded by a comma. Side-by-side contrast:
+  - Де ти живеш? (question — start, ?) ↔ Я знаю, де ти живеш. (conjunction — middle, comma)
+  - Що це? (question) ↔ Я знаю, що це книжка. (conjunction)
+  - Коли прийдеш? (question) ↔ Скажи, коли прийдеш. (conjunction)
+
+- Exercise: quiz — Question word or conjunction? Identify the role of the underlined word in each sentence (8 items). Uses pairs from P2 above — concept just explained.
+
+- P3 (~100 words): Common patterns with each conjunction — these are the frames learners will reach for immediately:
+  - **що**: Я знаю, що... / Я не знаю, що... / Я думаю, що... / Він каже, що... / Ми бачимо, що...
+  - **де**: Я знаю, де... / Я не знаю, де... / Скажи мені, де... / Ти знаєш, де...?
+  - **коли**: Скажи, коли... / Я не знаю, коли... / Зателефонуй, коли... / Коли я прийду,...
+  Special case: **Коли** can also open the sentence — Коли я прийду, ми поговоримо. (When I arrive, we'll talk.) The comma still appears, now after the subordinate clause.
+
+- Exercise: fill-in — Choose що, де, or коли to complete 8 sentences. Items include: Я знаю, ___ він тут. / Я не знаю, ___ вона живе. / Скажи, ___ ти прийдеш. / Він думає, ___ це легко. / Я не знаю, ___ починається фільм. / Ти знаєш, ___ кафе? Tests the patterns from P3 only.
+
+---
+
+## Підсумок (~300 words total)
+
+- P1 (~100 words): Summary table of the three subordinating conjunctions introduced in this module:
+  | Сполучник | Значення | Приклад |
+  |-----------|----------|---------|
+  | що | that | Я знаю, що він тут. |
+  | де | where | Я не знаю, де кафе. |
+  | коли | when | Скажи, коли прийдеш. |
+  Rule: Always a comma before the conjunction. These combine with the M44 conjunctions (і, але, бо, або) to give you a full set of tools for connecting ideas. The label for these new conjunctions: підрядні сполучники (subordinating conjunctions) — they make one clause depend on another.
+
+- P2 (~100 words): Rich combined sentences — now that you have both M44 and M45 conjunctions, you can build multi-layered Ukrainian. Two worked examples unpacked word by word:
+  - Я не йду, бо я не знаю, де це. — "I'm not going because I don't know where it is." Two conjunctions: бо (M44) + де (M45).
+  - Він каже, що прийде, коли закінчить. — "He says he'll come when he finishes." Two subordinate clauses: що + коли.
+  - Я думаю, що він не знає, де ми. — three-part chain, still readable and natural.
+  These are not advanced grammar — native speakers use them in every conversation.
+
+- Exercise: fill-in — Build 6 complete complex sentences by finishing the frame. Frames: Я думаю, що ___. / Він каже, що ___. / Я не знаю, де ___. / Скажи мені, коли ___. / Я знаю, що ___. / Зателефонуй, коли ___.
+
+- P3 self-check (~70 words): Self-check before the next module. Can you build these three sentences without looking back? (1) Я думаю, що... [add your own ending] (2) Я не знаю, де... [add your own ending] (3) Скажи мені, коли... [add your own ending]. If yes — you have subordinating conjunctions at A1. In M46 (Holidays), you will use all three conjunctions to describe when and where celebrations happen.
+
+---
+
+Grand total: ~1340 words

@@ -1,0 +1,50 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 6
+  evidence: 'The module missed points 5 and 6 (7 questions and double negation) in
+    the "Граматика" section. The dialogue failed to use negation. The "Підсумок" section
+    completely omitted the required "Next: A1.4 —'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 4
+  evidence: 'CRITICAL factual error: The text explicitly tells learners that `починається`
+    is Group II (it is Group I), and `люблю` is Group I (it is Group II). Additionally,
+    Оля (a female) uses the masculine "Я в'
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: 'The PPP structure is violated by placing the `group-sort-verb-groups`
+    exercise immediately after the "Читання" section, meaning learners are tested
+    on explicitly sorting verbs into conjugation groups '
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Excellent coverage of target vocabulary from M15-M20 without introducing
+    overwhelming new words.
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: The injected markers align perfectly with the plan's `activity_hints`.
+    Deductions covered in Pedagogical quality for placement.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Very natural, encouraging tone ("This is not a test. It is a mirror...").
+    Doesn't rely on cheap cheerleading.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, precise headers, and well-organized flow.
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: Good use of authentic names. Slight deduction for missing the feminitive
+    for a female professional, which is a key part of decolonized Ukrainian standard.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The dialogue is a great multi-turn conversation ("Я теж хочу гуляти. Можна
+    разом?"). Only deduction is for missing the required negation.
+findings: []

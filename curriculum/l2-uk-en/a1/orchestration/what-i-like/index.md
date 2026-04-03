@@ -1,6 +1,6 @@
 # Build Summary: what-i-like (A1)
 
-Generated: 2026-04-01 13:39
+Generated: 2026-04-03 16:18
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-01 13:39
 | vocab | complete | 2026-03-30 19:01:14 |
 | enrich | complete | 2026-03-30 19:01:15 |
 | verify | complete | 2026-03-30 19:01:15 |
-| review | complete | 2026-04-01 11:39:34 |
-| stress | complete | 2026-04-01 11:39:41 |
-| publish | complete | 2026-04-01 11:39:42 |
+| review | complete | 2026-04-03 14:17:59 |
+| stress | complete | 2026-04-03 14:18:07 |
+| publish | complete | 2026-04-03 14:18:08 |
 
 ## Reviews
 
@@ -29,6 +29,8 @@ Generated: 2026-04-01 13:39
 | 1 | what-i-like-review-r1.md |
 | 2 | what-i-like-review-r2.md |
 | 3 | what-i-like-review-r3.md |
+| 4 | what-i-like-review-r4.md |
+| 5 | what-i-like-review-r5.md |
 
 ## Dispatch Log
 
@@ -43,6 +45,10 @@ Generated: 2026-04-01 13:39
 | review | claude-tools (claude-opus-4-6) | 166s | ✅ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 226s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 8s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 146s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 9s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 362s | ✅ |
 
 ## Files
 
@@ -54,6 +60,9 @@ Generated: 2026-04-01 13:39
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
 - `review-structured-r3.yaml`
+- `review-structured-r4.yaml`
+- `review-structured-r5.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

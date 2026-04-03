@@ -1,0 +1,49 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Missed the required transitive use of `зустріти` (used the reflexive `зустрінемося`
+    later). Global word count is 1594, exceeding the 1200 target by ~33%.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All Ukrainian is natural and correct. "Я теж борщ", "Я беру", and "Смачного"
+    are all used authentically in conversation.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent recaps of A1 grammar concepts (gender in past tense, demonstrative
+    pronouns, three tenses combined) integrated perfectly into the narrative reflection.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Included all recommended words (круасан, лінія, фільм, Лавра) and required
+    words (готовий, вітаю), but missed exact usage of `зустріти` (used `познайомитися`
+    instead).
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: '`order-day-events` and `fill-in-tenses` markers are placed before the
+    story events they test have been read by the user.'
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Highly motivating tone for a finale ("Ukrainian on screen is no longer
+    just noise", "Ці слова більше не просто слова — це твій досвід").
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: All sections and headers are present, but word count (1594) is significantly
+    outside the 10% variance for the 1200 word target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Accurate references to Kyiv locations (Хрещатик, лінія метро, Лавра),
+    vyshyvanka as modern fashion, and the growth of Ukrainian cinema.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are natural, utilizing authentic casual phrasing ("Ходімо!",
+    "Ідемо!", "Я теж борщ!", "за рогом").
+findings: []

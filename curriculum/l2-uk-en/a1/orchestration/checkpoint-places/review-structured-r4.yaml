@@ -1,0 +1,50 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Covers all 7 patterns and sections of the plan outline, but the generated
+    word count (1568 words) exceeds the target (1200 words) by >30%.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Excellent, natural Ukrainian phrases ("на метро", "попереду", "головна
+    вулиця", "за рогом"). Correct pairings of prepositions for specific questions
+    (на vs. в/у; з/із/зі).
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Strong PPP flow. The grammar section effectively serves as a review summary,
+    showing contrasting examples (у школі vs. у школу) without over-explaining.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Perfectly integrates the required city vocabulary (музей, площа, вокзал,
+    etc.) into the narrative reading and the dialogue.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Placeholders match the plan's `activity_hints` directly and are placed
+    after the concepts are demonstrated in action.
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: 'DEDUCT for meta-commentary outlining the curriculum structure. The text
+    points out module numbers ("M28-M34", "A1.5", "A1.6") and "tells instead of showing"
+    ("Томас uses every A1.5 skill in one short '
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: The module is structurally sound, but the word count is inflated by the
+    meta-commentary wrapping the lesson content.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Culturally and geographically accurate examples (metro to Khreshchatyk,
+    Arsenalna being a 5-minute walk to Lavra, Potemkin stairs in Odesa).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Highly realistic multi-turn conversation (Марко asking Оксана for directions
+    and transit advice).
+findings: []

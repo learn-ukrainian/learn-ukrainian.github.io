@@ -36,12 +36,12 @@ Now the other five essential Group II verbs. Pay close attention to the **я**-f
 - **вчити** (to study): вчу, вчиш, вчить, вчимо́, вчите́, вчать
 - **просити** (to request): **прошу**, про́сиш, про́сить, про́симо, про́сите, про́сять
 - **ходити** (to walk): **ходжу́**, хо́диш, хо́дить, хо́димо, хо́дите, хо́дять
-Why do some **я**-forms look unexpected? Group II has consonant changes — but only in the **я**-form. Here are the four key shifts:
-- **б → бл**: робити → **роблю**
+Why do some **я**-forms look unexpected? Group II has consonant changes in the **я**-form. Here are the four key shifts:
+- **б → бл**: робити → **роблю** (also in вони-form: **ро́блять**)
 - **д → дж**: ходити → **ходжу**
 - **с → ш**: просити → **прошу**
-- **ч → ч** (no change): бачити → **бачу**
-This is the most important thing to remember: these consonant changes happen ONLY in the **я**-form. Every other form — **ти**, **він/вона**, **ми**, **ви**, **вони** — follows the regular pattern perfectly. Practical tip: learn the **я**-form as a separate vocabulary item for each new verb. Once you know it, the rest is automatic.
+- **т → ч**: плати́ти (to pay) → **плачу́**
+Except for the **-бл-** shift which also appears in the **вони**-form, these changes happen ONLY in the **я**-form. The forms for **ти**, **він/вона**, **ми**, and **ви** follow the regular pattern perfectly. Practical tip: learn the **я**-form as a separate vocabulary item for each new verb. Once you know it, the rest is automatic.
 As a warm-up before the activity: say the **я**, **ти**, and **він** forms of **вчити** and **ходити** out loud. Check your answers: вчу/вчиш/вчить and ходжу/ходиш/ходить.
 <!-- INJECT_ACTIVITY: fill-in-conjugate -->
 ## Гру́па I чи II? (Which Group?)
@@ -74,7 +74,7 @@ Two verb groups, two ending patterns. Here is everything in one place:
 - -ю, -єш, -є, -ємо, -єте, -ють
 **Group II** (infinitive in **-ити/-іти**): endings carry **-и-**
 - -ю/-у, -иш, -ить, -имо, -ите, -ять/-ать
-Consonant changes in Group II appear only in the **я**-form: **роблю** (б→бл), **ходжу** (д→дж), **прошу** (с→ш), **бачу** (ч stays ч). The sibilant rule: after **ч/ш/ж/щ**, the **вони**-form takes **-ать** (бачать, кричать). After everything else → **-ять** (говорять, ходять). The single most useful test: look at the **ти**-form — **-єш** means Group I, **-иш** means Group II.
+Consonant changes in Group II mostly appear in the **я**-form: **роблю** (б→бл, also **ро́блять**), **ходжу** (д→дж), **прошу** (с→ш), **плачу** (т→ч). The sibilant rule: after **ч/ш/ж/щ**, the **вони**-form takes **-ать** (бачать, кричать). After everything else → **-ять** (говорять, ходять). The single most useful test: look at the **ти**-form — **-єш** means Group I, **-иш** means Group II.
 Now go back and look at both dialogues with fresh eyes. Label every verb: **говориш** (II), **говорю** (II), **бачу** (II), **вчу** (II), **робиш** (II), **дивлюся** (II), **прошу** (II), **говорить** (II). Every single verb in today's dialogues was Group II (just like **люби́ти** — to love, which you might remember!). These verbs are central to everyday spoken Ukrainian. Group II is the pattern for many essential action verbs.
 :::tip
 **Самопере́ві́рка (Self-check)**

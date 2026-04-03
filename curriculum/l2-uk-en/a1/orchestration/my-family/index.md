@@ -1,6 +1,6 @@
 # Build Summary: my-family (A1)
 
-Generated: 2026-04-01 13:00
+Generated: 2026-04-03 15:05
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-01 13:00
 | vocab | complete | 2026-03-29 21:28:35 |
 | enrich | complete | 2026-03-29 21:28:37 |
 | verify | complete | 2026-03-29 21:28:37 |
-| review | complete | 2026-04-01 11:00:37 |
-| stress | complete | 2026-04-01 11:00:45 |
-| publish | complete | 2026-04-01 11:00:46 |
+| review | complete | 2026-04-03 13:05:46 |
+| stress | complete | 2026-04-03 13:05:53 |
+| publish | complete | 2026-04-03 13:05:55 |
 
 ## Reviews
 
@@ -28,6 +28,8 @@ Generated: 2026-04-01 13:00
 |-------|------|
 | 1 | my-family-review-r1.md |
 | 2 | my-family-review-r2.md |
+| 3 | my-family-review-r3.md |
+| 4 | my-family-review-r4.md |
 
 ## Dispatch Log
 
@@ -42,6 +44,10 @@ Generated: 2026-04-01 13:00
 | review | gemini (gemini-3-flash-preview) | 2s | ❌ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 210s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 10s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 104s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 8s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 270s | ✅ |
 
 ## Files
 
@@ -52,6 +58,9 @@ Generated: 2026-04-01 13:00
 - `research-quality.json`
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
+- `review-structured-r4.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

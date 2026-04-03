@@ -1,6 +1,6 @@
 # Build Summary: things-have-gender (A1)
 
-Generated: 2026-04-01 13:11
+Generated: 2026-04-03 15:15
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-01 13:11
 | vocab | complete | 2026-03-30 09:38:01 |
 | enrich | complete | 2026-03-30 09:38:02 |
 | verify | complete | 2026-03-30 09:38:02 |
-| review | complete | 2026-04-01 11:11:33 |
-| stress | complete | 2026-04-01 11:11:40 |
-| publish | complete | 2026-04-01 11:11:41 |
+| review | complete | 2026-04-03 13:15:30 |
+| stress | complete | 2026-04-03 13:15:37 |
+| publish | complete | 2026-04-03 13:15:38 |
 
 ## Reviews
 
@@ -30,6 +30,7 @@ Generated: 2026-04-01 13:11
 | 2 | things-have-gender-review-r2.md |
 | 3 | things-have-gender-review-r3.md |
 | 4 | things-have-gender-review-r4.md |
+| 5 | things-have-gender-review-r5.md |
 
 ## Dispatch Log
 
@@ -51,6 +52,8 @@ Generated: 2026-04-01 13:11
 | review | gemini (gemini-3-flash-preview) | 2s | ❌ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 206s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 9s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 198s | ✅ |
 
 ## Files
 
@@ -63,6 +66,8 @@ Generated: 2026-04-01 13:11
 - `review-structured-r2.yaml`
 - `review-structured-r3.yaml`
 - `review-structured-r4.yaml`
+- `review-structured-r5.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

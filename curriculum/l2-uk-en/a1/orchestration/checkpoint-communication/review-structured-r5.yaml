@@ -1,0 +1,50 @@
+round: 5
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: All outline sections and vocabulary words (плакат, квиток, напій, кутя,
+    колядки) are included. The dialogue scenarios from the plan are utilized effectively.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Text is free of Russianisms, Surzhyk, and calques. Gender, case, and complex
+    sentence structures are correct.
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Provides clear grammar tables and translations, but incorrectly teaches
+    that the vocative of "друг" is formed just by changing a hard consonant to "-е",
+    ignoring the required consonant mutation.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary is used naturally in the reading and dialogue
+    sections.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Activity markers are perfectly placed immediately after the relevant grammar
+    instructions.
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: Contains excessive meta-commentary ("Notice how all five A1.7 communication
+    tools appear naturally together..."). Treats the dialogue like a grammar-hunting
+    exercise, which breaks immersion.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All required H2 headings are present, ordered correctly, and formatted
+    cleanly.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Correctly uses "З Різдвом!" and references authentic holiday items like
+    "кутя" and "колядки".
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogues are clear and realistic, effectively demonstrating the grammar
+    points in context.
+findings: []

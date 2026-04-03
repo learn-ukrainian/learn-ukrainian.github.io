@@ -1,0 +1,51 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: 'Covers all outline points perfectly, including the ULP Ep17 pattern and
+    the Grade 4 helper word method ("you can always use the Grade 4 helper-word test:
+    can you ask на кому? or на чому?").'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Good overall, but contains a harsh euphony violation ("зараз в школі")
+    and teaches a factually incorrect euphony rule ("Use в before a vowel, and use
+    у before a consonant").
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: The PPP flow is excellent, but teaching learners to "use у before a consonant"
+    and then immediately giving them examples like "в школі" and "в Києві" creates
+    a massive pedagogical contradiction that w
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary from the plan is naturally integrated
+    into the dialogues and examples (школа, робота, банк, магазин, кафе, вокзал, etc.).
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All four planned activity markers are present and placed logically after
+    the concepts are taught.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Tone is encouraging and grounded. The cultural note on "в Україні" is
+    powerful and clear. No corporate speak or forced enthusiasm.
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: All H2 headings match the plan exactly, but the word count is 1581 words,
+    which is significantly over (>31%) the strict 1200-word budget.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The module explicitly and correctly addresses the decolonized "в Україні"
+    vs imperial "на Україні" distinction.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues feel natural, feature named speakers, and provide excellent
+    contextualized examples of the locative case in use.
+findings: []

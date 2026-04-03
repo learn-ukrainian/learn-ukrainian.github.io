@@ -14,16 +14,15 @@ Notice the four words doing all the heavy lifting here: **і** (and), **а** (an
 
 Now an evening text exchange. Дани́ло and Со́ня are catching up about their day.
 
+> — **Соня:** Що ти роби́в сього́дні? *(What did you do today?)*
 > — **Данило:** Я працюва́в, а по́тім ходи́в у магази́н. *(I worked, and then went to the store.)*
 > — **Соня:** Я хоті́ла зателефонува́ти, але ти не відпові́в. *(I wanted to call, but you didn't answer.)*
-> — **Данило:** Ви́бач, бо телефо́н був без зву́ку. *(Sorry, because my phone was on silent.)*
+> — **Данило:** Ви́бач, я не чув, бо телефо́н був без зву́ку. *(Sorry, I didn't hear it, because my phone was on silent.)*
 > — **Соня:** Нічого! *(No problem!)*
 > — **Данило:** За́втра я ві́льний, і ми мо́жемо зустрі́тися. *(Tomorrow I'm free, and we can meet up.)*
 
 
 **Бо** explains a reason. **А** and **але** show contrast. **І** adds information. All four are natural, everyday Ukrainian — you'll hear them in every conversation.
-
-<!-- INJECT_ACTIVITY: group-sort-conjunctions -->
 
 These four **сполучники** (conjunctions) are among the most common words in Ukrainian. Let's look at each one in detail.
 
@@ -41,12 +40,15 @@ Or:
 
 One conjunction replaces an entire sentence. That's efficient.
 
+In Ukrainian schools, the first group we learn are called **сполу́чники суря́дності** (coordinating conjunctions) because they connect equal parts.
+
 ### І / Та — "and" (addition)
 
-**Та** is a full synonym of **і** — same meaning, same grammar. **Та** appears more in writing and literary style, while **і** dominates in speech. Both are correct everywhere: **мама і тато**, **хліб та масло**. Four examples:
+**Та** is a full synonym of **і** — same meaning, same grammar. **Та** appears more in writing and literary style, while **і** dominates in speech. Both are correct everywhere: **мама і тато**, **хліб та масло**. (For "or", Ukrainians use **або** in statements and **чи** in questions, but here we focus on "and"). Four examples:
 
 - **Я чита́ю і пишу́.** *(I read and write.)*
 - **Він гра́є на гіта́рі та співа́є.** *(He plays guitar and sings.)*
+- **Він тако́ж пи́ше пісні́.** *(He also writes songs.)*
 - **Київ і Львів — краси́ві міста́.** *(Kyiv and Lviv are beautiful cities.)*
 - **Ми купи́ли хліб та молоко́.** *(We bought bread and milk.)*
 
@@ -70,9 +72,7 @@ When one part contradicts or limits the other, use **але**:
 - **Він молоди́й, але дуже розу́мний.** *(He's young, but very smart.)*
 - **Погода га́рна, але хо́лодно.** *(The weather is nice, but it's cold.)*
 
-Comma rule: **always put a comma before але.** The same applies before **а** when it connects two full clauses with different subjects.
-
-<!-- INJECT_ACTIVITY: fill-in-choose-conjunction -->
+Comma rule: **always put a comma before але** and **а**.
 
 Quick recap: **і/та** = addition. **А** = soft contrast or subject switch. **Але** = strong contrast or limitation.
 
@@ -87,7 +87,7 @@ The meaning is identical. The only difference is register: **бо** sounds more 
 
 ### Comma rule
 
-Always put a comma before both **бо** and **тому що**. The reason clause always comes second:
+Always put a comma before both **бо** and **тому що**:
 
 - **Я втомлений, бо бага́то працював.** *(I'm tired, because I worked a lot.)*
 - **Ми не гуля́ємо, бо йде дощ.** *(We're not going for a walk, because it's raining.)*
@@ -97,7 +97,6 @@ With **тому що**:
 
 - **Ми не гуляємо, тому що йде дощ.** *(We're not going for a walk, because it's raining.)*
 - **Я вчу украї́нську, тому що люблю Украї́ну.** *(I'm learning Ukrainian, because I love Ukraine.)*
-- **Він не прийшов, тому що забув.** *(He didn't come, because he forgot.)*
 
 ### Чо́му? → Бо / Тому що…
 
@@ -106,10 +105,7 @@ The question **Чому?** (Why?) gets answered with **бо** or **тому що
 - **— Чому ти вчиш українську?** — *Бо я люблю Україну.*
 - **— Чому ти не їси́?** — *Тому що я не голо́дний.*
 - **— Чому ви тут?** — *Бо ми чека́ємо дру́га.*
-- **— Чому ти не спиш?** — *Бо я читаю ціка́ву кни́жку.*
-- **— Чому він не прийшов?** — *Тому що він хворий.*
-
-**Чому?** always gets **бо** or **тому що** as the answer opener.
+**Чому?** always gets **бо** or **тому що** as the answer opener. (If you want to say "therefore" or "that's why", use **тому** on its own: *Я хворий, тому не йду*).
 
 <!-- INJECT_ACTIVITY: fill-in-bo-tomu-shcho -->
 
@@ -123,7 +119,11 @@ Now let's see all five conjunctions working together. A couple is debating their
 
 Four lines, four conjunctions: **але**, **бо**, **а**, **бо** — same words you already know, different functions, natural flow.
 
+<!-- INJECT_ACTIVITY: fill-in-choose-conjunction -->
+
 <!-- INJECT_ACTIVITY: quiz-which-conjunction -->
+
+<!-- INJECT_ACTIVITY: group-sort-conjunctions -->
 
 ## Підсумок — Summary
 

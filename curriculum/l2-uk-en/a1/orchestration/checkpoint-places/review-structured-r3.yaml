@@ -1,0 +1,49 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: The text misses the plan point requiring `Потьомкінські сходи` in the
+    final Odesa description.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: 'CRITICAL euphony errors: "> **Метро у Києві ду́же зру́чне.**" (after
+    vowel, before consonant -> should be ''в''). "> **Я іду в музе́й.**" (after vowel
+    -> should be ''йду''). "> **Увечері я у готе́лі.**" ('
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Contradicting its own taught euphony rules undermines the pedagogy. Otherwise,
+    the PPP structure is excellent.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Misses `сходи` (Potemkin Stairs) which was explicitly requested in the
+    plan for the final section.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Activities perfectly match the plan and test what was just taught.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Natural dialogue, good situational framing. The introductory paragraph
+    is slightly meta.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Word count (1561) is over 30% higher than the plan target (1200), though
+    markdown is clean and H2 headers are correct.
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: '"> — **Оксана:** Кафе на площі Незале́жності. Це одна́ зупинка на метро."
+    - Independence Square is not one stop from Arsenalna on the same line (requires
+    transfer or walking from Khreshchatyk).'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The conversation with the local in Kyiv is realistic, natural, and integrates
+    all cases smoothly.
+findings: []

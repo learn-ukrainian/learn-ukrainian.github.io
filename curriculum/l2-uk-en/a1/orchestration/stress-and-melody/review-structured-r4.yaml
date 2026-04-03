@@ -1,0 +1,53 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'Excellent adherence to the plan, including overriding a linguistic mistake
+    in the plan (the plan incorrectly stated "Як справи?" should have a rising yes/no
+    intonation). DEDUCT: The text deviated from'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'Outstanding explanation of Ukrainian phonetics and intonation, but DEDUCT
+    for a calque: "**Крок 3: Чита́й ра́зом** (Read together)" is a direct translation
+    of the English instruction.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Brilliant pacing and practical advice. The tip "Tap the table once for
+    each syllable as you read... your hand knows the rhythm before your mouth does"
+    is an exceptional pedagogical technique.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items (наголос, замок, кава, вода,
+    столиця, мука, ранок, метро, фотографія) are integrated naturally into the explanations
+    and examples.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers perfectly align with the plan's requirements and are strategically
+    placed to test the concepts immediately after they are introduced.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is highly engaging and culturally respectful. Highlighting that
+    "Getting pronunciation right is not just grammar — it is an act of respect for
+    the language" sets the perfect attitude for an A
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: 'All required headings are present. DEDUCT: The final word count (1791
+    words) is significantly above the target budget of 1200 words (>10% off).'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Flawless cultural context regarding the pronunciation of "Київ" vs its
+    Russian counterpart, and accurate use of names (Кирилко, Соломійка).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Natural, multi-turn dialogues that practically model the intonation contours
+    (statement ↘, question ↗, exclamation ↘↘) perfectly.
+findings: []

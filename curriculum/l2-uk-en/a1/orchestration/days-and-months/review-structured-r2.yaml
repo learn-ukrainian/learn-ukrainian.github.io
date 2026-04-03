@@ -1,0 +1,46 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: Deducted for completely missing the "At a doctor's reception" dialogue
+    required in the `dialogue_situations`.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No Russianisms, Surzhyk, or calques. Correct cases for time expressions.
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Excellent PPP flow, but missed the objective to "Say dates using ordinal
+    numbers". It introduces "Якого числа? — П'ятнадцятого березня" in the dialogue
+    but skips teaching it in the prose.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary included naturally.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Activity markers correctly match plan and are logically placed after the
+    relevant sections.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Highly engaging. Explanations of month names (nature calendar) are very
+    natural and culturally rich.
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: Deducted because the deterministic word count is 1455, exceeding the 1200
+    target by 21% (outside the acceptable 10% range).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Correctly identifies Ukrainian months as nature-based and distinct from
+    Roman naming conventions.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Personal dialogues are natural, but missed the required setting.
+findings: []

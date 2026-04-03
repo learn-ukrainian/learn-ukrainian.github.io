@@ -1,0 +1,53 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: The module uses the school fair scenario from `dialogue_situations` for
+    the `Діалог` section instead of the specific holiday gathering dialogue in the
+    `content_outline`. However, it successfully cover
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Uses the colloquial/Surzhyk "де покласти їх" instead of "куди їх покласти"
+    or a natural "де" phrasing. The rest of the Ukrainian text is very accurate and
+    natural.
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: 'CRITICAL ERROR: The grammar section incorrectly classifies "**бо**" and
+    "**тому́ що**" as coordinating conjunctions. In Ukrainian grammar, they are subordinating
+    conjunctions of cause (підрядні сполуч'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required A1.7 vocabulary elements (holidays, greetings, conjunctions)
+    are integrated naturally.
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: Markers `activity-2` and `activity-3` are placed back-to-back without
+    intervening text.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: Contains gamified meta-commentary ("You have five communication tools
+    now", "That is what A1.7 communication looks like.", "You have worked hard through
+    this checkpoint phase").
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: 'Clean markdown structure. Note: The prose contains hardcoded stress marks
+    which are usually handled by a downstream deterministic tool (not penalized per
+    instructions, but noted).'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Natural representation of holiday greetings (кутя, колядки) and school
+    fair volunteering.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The dialogues are realistic, multi-turn, and effectively demonstrate the
+    target grammar in action.
+findings: []

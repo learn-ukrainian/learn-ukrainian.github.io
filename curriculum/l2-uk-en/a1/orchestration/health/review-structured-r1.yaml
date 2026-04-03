@@ -2,56 +2,51 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: 'All 4 content_outline sections present with all sub-points covered. All
-    10 body parts listed. Both dialogues follow plan structure closely. "проти" deviation
-    from plan''s "від" is a CORRECT linguistic '
+  score: 10
+  evidence: Flawlessly adhered to the `content_outline`. The writer effectively bypassed
+    errors in the plan, such as correcting the claim that `нежить` is feminine (plan
+    had `нежиті (for runny nose, f)`), and ins
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: All Ukrainian forms VESUM-verified (82/82). "Проти" correctly used for
-    medicines. Genitive "нежитю" correct. **Error:** "that's a dative construction"
-    is wrong — "у мене" uses genitive (мене = v_rod p
+  score: 9
+  evidence: Almost perfect, but uses the rare/non-standard adjective form `болячий`
+    ("болячий зуб") instead of the standard `болючий`. The writer's correction of
+    the Russianism "від кашлю/нежиті" to "проти кашлю/
 - dimension: 3
   name: Pedagogical quality
   score: 10
-  evidence: 'Clean PPP flow: dialogues (Presentation) → body parts with context (Practice
-    via Михайлик labelling scene + Grade 1 textbook reference) → symptom chunks with
-    combinations → self-check (Production). Ex'
+  evidence: Exceptional. The note explaining that `рука` and `нога` encompass the
+    whole limb is a brilliant pedagogical insight for English speakers. Furthermore,
+    the writer correctly ignored the plan's instructi
 - dimension: 4
   name: Vocabulary coverage
   score: 10
-  evidence: 'All 8 required words used naturally in prose: голова, горло, живіт, рука,
-    нога, болить, лікар, аптека. All 10 recommended words present: спина, око, вухо,
-    зуб, ніс, температура, кашель, нежить, таблет'
+  evidence: All required and recommended vocabulary items are naturally embedded into
+    the dialogues and phrases without reading like a dictionary.
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: '5 markers covering all 4 plan hints. Well-placed after teaching material.
-    The plan''s activity items are well-designed: match-up has 8 pairs, fill-ins have
-    plausible distractors (болить vs хворий vs лі'
+  score: 10
+  evidence: Activity markers match the plan's hints perfectly and are positioned precisely
+    after the concepts are taught.
 - dimension: 6
   name: Engagement & tone
   score: 10
-  evidence: Named character Оленка with a mini-narrative arc (feels sick → doctor
-    → pharmacy). Михайлик drawing exercise is charming and mirrors Grade 1 pedagogy.
-    No LLM filler, no "magic of Ukrainian," no motiva
+  evidence: Professional, direct, and authoritative. The writer avoids fluff and focuses
+    purely on high-signal explanations and cultural norms.
 - dimension: 7
   name: Structural integrity
   score: 10
-  evidence: All 4 H2 sections from plan present in correct order. Word count 1341
-    > 1200 target. Clean markdown with proper dialogue formatting. No stray tags,
-    no duplicate summaries, no meta-commentary.
+  evidence: Headers exactly match the plan's `content_outline`. The deterministic
+    word count is safely within bounds.
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Decolonized — no "like Russian" comparisons. Гривні used as currency.
-    Vocative "лікарю" correctly used. Named characters with Ukrainian names. Pharmacy
-    interaction culturally appropriate for Ukraine.
+  evidence: The writer explicitly catches a Russianism/calque ("від нежиті" -> "проти
+    нежитю") and explains why `проти` is the authentic Ukrainian pattern. This is
+    elite decolonized teaching.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: 'Two natural multi-turn dialogues with named speakers. Doctor visit flows
-    naturally (symptom → duration → follow-up → diagnosis → prescription). Pharmacy
-    visit includes polite forms and price inquiry. '
+  score: 10
+  evidence: The two dialogues are highly realistic, capturing exact exchanges a learner
+    would have in a Ukrainian pharmacy or clinic without sounding robotic.
 findings: []

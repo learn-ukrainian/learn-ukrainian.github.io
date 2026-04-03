@@ -1,6 +1,6 @@
 # Build Summary: colors (A1)
 
-Generated: 2026-04-01 13:20
+Generated: 2026-04-03 15:36
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-01 13:20
 | vocab | complete | 2026-03-30 12:17:07 |
 | enrich | complete | 2026-03-30 12:17:08 |
 | verify | complete | 2026-03-30 12:17:08 |
-| review | complete | 2026-04-01 11:20:14 |
-| stress | complete | 2026-04-01 11:20:14 |
-| publish | complete | 2026-04-01 11:20:20 |
+| review | complete | 2026-04-03 13:36:41 |
+| stress | complete | 2026-04-03 13:36:41 |
+| publish | complete | 2026-04-03 13:36:48 |
 
 ## Reviews
 
@@ -28,6 +28,7 @@ Generated: 2026-04-01 13:20
 |-------|------|
 | 1 | colors-review-r1.md |
 | 2 | colors-review-r2.md |
+| 3 | colors-review-r3.md |
 
 ## Dispatch Log
 
@@ -43,6 +44,8 @@ Generated: 2026-04-01 13:20
 | review | gemini (gemini-3-flash-preview) | 2s | ❌ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 276s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 23s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 214s | ✅ |
 
 ## Files
 
@@ -53,6 +56,8 @@ Generated: 2026-04-01 13:20
 - `research-quality.json`
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

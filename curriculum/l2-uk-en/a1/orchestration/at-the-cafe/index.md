@@ -1,6 +1,6 @@
 # Build Summary: at-the-cafe (A1)
 
-Generated: 2026-04-01 13:43
+Generated: 2026-04-03 23:29
 
 ## Pipeline Phases
 
@@ -18,15 +18,17 @@ Generated: 2026-04-01 13:43
 | vocab | complete | 2026-03-30 14:18:42 |
 | enrich | complete | 2026-03-30 14:18:43 |
 | verify | complete | 2026-03-30 14:18:43 |
-| review | complete | 2026-04-01 11:43:44 |
-| stress | complete | 2026-04-01 11:43:44 |
-| publish | complete | 2026-04-01 11:43:50 |
+| review | complete | 2026-04-03 21:29:53 |
+| stress | complete | 2026-04-03 21:29:53 |
+| publish | complete | 2026-04-03 21:29:59 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | at-the-cafe-review-r1.md |
+| 2 | at-the-cafe-review-r2.md |
+| 3 | at-the-cafe-review-r3.md |
 
 ## Dispatch Log
 
@@ -43,6 +45,10 @@ Generated: 2026-04-01 13:43
 | review | gemini (gemini-3-flash-preview) | 1s | ❌ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 2s | ❌ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 7s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 92s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 7s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 128s | ✅ |
 
 ## Files
 
@@ -52,6 +58,9 @@ Generated: 2026-04-01 13:43
 - `quick-verify.json`
 - `research-quality.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

@@ -1,6 +1,6 @@
 ## Діало́ги (Dialogues)
 
-Navigating a Ukrainian city means juggling two questions at once: **де?** (where?) for your current location and **куди́?** (where to?) for your destination. You also need to ask for directions and describe how you travel. Two real situations show this in action — a stranger asking for help on a Lviv street, and a friend describing their morning commute.
+Navigating a Ukrainian city means juggling two questions at once: **де?** (where?) for your current location and **куди́?** (where to?) for your destination. You also need to ask for directions and describe how you travel. Two real situations show this in action — a stranger asking for help on a Kyiv street, and a friend describing their morning commute.
 
 ### Діало́г 1 — Asking for Directions
 
@@ -13,7 +13,7 @@ Navigating a Ukrainian city means juggling two questions at once: **де?** (whe
 
 The tourist opens with **вибачте** (excuse me) — the standard polite formula for addressing a stranger. The full question **як дістатися до...?** (how to get to...?) is a survival phrase — memorize it as one chunk. You will study the verb **дістатися** (to get to) properly at B1; for now, just use the whole phrase.
 
-Notice the two commands: **ідіть** (go — on foot) and **їдьте** (go — by vehicle). Both are formal imperatives, a preview of grammar you will learn later. The difference is simple: **ідіть** means walking, **їдьте** means riding. The phrase **на розі** (at the corner) is a locative chunk — learn it as a fixed unit.
+Notice the two commands: **ідіть** (go — on foot) and **їдьте** (go — by vehicle). Both are formal imperatives, a preview of grammar you will learn later. The difference is simple: **ідіть** means walking, **їдьте** means riding. The direction words are **прямо** (straight), **направо** (right), and **наліво** (left). The phrase **на розі** (at the corner) is a locative chunk — learn it as a fixed unit.
 
 ### Діалог 2 — Describing Your Route
 
@@ -23,7 +23,7 @@ Notice the two commands: **ідіть** (go — on foot) and **їдьте** (go 
 > — **Тарас:** Потім іду́ пі́шки п'ять хвили́н. Робо́та в о́фісі на пло́щі. *(Then I walk five minutes. Work is in an office on the square.)*
 
 
-Tарас uses sequence words to structure his route: **спочатку** (first) → **потім** (then) → **а потім** (and then). This is how Ukrainians naturally describe any multi-step journey. Notice the transport contrast: **їду автобусом** (I ride by bus — instrumental case, taught as a chunk) versus **іду пішки** (I walk — literally "go on foot"). The destination uses accusative: **на зупинку** (to the stop), **до центру** (to the center). His current location uses locative: **в офісі** (in the office), **на площі** (on the square).
+Tарас uses sequence words to structure his route: **спочатку** (first) → **потім** (then) → **а потім** (and then). This is how Ukrainians naturally describe any multi-step journey. Notice the transport contrast: **їду автобусом** (I ride by bus — instrumental case, taught as a chunk) versus **іду пішки** (I walk — literally "go on foot"). The destination uses accusative (**на зупинку** — to the stop) or genitive with **до** (**до центру** — to the center). His current location uses locative: **в офісі** (in the office), **на площі** (on the square).
 
 <!-- INJECT_ACTIVITY: fill-in-directions -->
 
@@ -48,33 +48,33 @@ Here is the full navigation toolkit in one table:
 | Distance | Далеко? | далеко / бли́зько / хвилин пішки | П'ять хвилин пішки. |
 
 :::tip
-Streets, avenues, and squares always use **на**: **на вулиці Франка́**, **на площі**, **на проспе́кті**. Buildings you enter use **в/у**: **в магази́ні**, **в офісі**, **у теа́трі**. Metro always stays with **на**: **на метро** — both for location and transport.
+Streets, avenues, and squares always use **на**: **на вулиці Франка́**, **на площі**, **на проспе́кті**. Buildings you enter use **в/у**: **в магази́ні**, **в офісі**, **у теа́трі**. Metro uses **в/у** for location (**в метро**) and **на** for transport (**на метро**).
 :::
 
-Now see how all four rows work together in connected speech. **Марі́я** lives in Lviv and is heading to the theater:
+Now see how all four rows work together in connected speech. **Марі́я** lives in Kyiv and is heading to the theater:
 
-**Марія живе́ у Льво́ві** (де? — locative). **Сього́дні вона́ йде в театр** (куди? — accusative). **Театр на площі** (де? — locative). **Потім вона ї́де на метро до центру** (куди? — accusative). **Центр далеко** — п'ять хвилин на метро, а потім **іде́ пішки** три хвили́ни. The question type shifts six times in this short passage — and that is completely natural.
+**Марія живе́ у Киє́ві** (де? — locative). **Сього́дні вона́ йде в театр** (куди? — accusative). **Театр на площі** (де? — locative). **Потім вона ї́де на метро до центру** (куди? — accusative). **Центр далеко** — п'ять хвилин на метро, а потім **іде́ пішки** три хвили́ни. The question type shifts four times in this short passage — and that is completely natural.
 
 <!-- INJECT_ACTIVITY: quiz-de-kudy -->
 
 ## Мій райо́н (My Neighborhood)
 
-Every learner needs to describe where they live. Here is a model paragraph you can adapt with your own details:
+When describing your own neighborhood, you can adapt a simple paragraph like this:
 
 **Я живу́ на вулиці Франка.** **Бі́ля мого до́му є парк і мале́нький магазин.** **Шко́ла далеко** — тре́ба ї́хати автобусом де́сять хвилин. **Апте́ка близько**, мо́жна піти **пішки**. **У моє́му райо́ні є кафе́, два рестора́ни і бібліотека.**
 
 Key structures to notice: **біля мого дому** (near my house) is a genitive chunk — learn it as a fixed unit. The construction **є** + noun list means "there is / there are." Two modal chunks appear: **треба їхати** (must go by vehicle) and **можна піти** (can go on foot).
 
-Now put the required vocabulary into full sentences:
+Notice how these useful phrases work in full sentences:
 
 - **пішки** (on foot) → Аптека близько — іду **пішки**.
 - **хвили́на** (minute) → П'ять **хвилин** пішки від зупи́нки.
-- **далеко від** / **близько від** (far from / near) → Школа **далеко від** дому. Парк **близько від** робо́ти.
+- **далеко від** / **близько до** (far from / near to) → Школа **далеко від** дому. Парк **близько до** робо́ти.
 - **у це́нтрі мі́ста** (in the city center) → Готе́ль **у центрі міста**.
 - **на око́лиці** (on the outskirts) → Я живу **на околиці**, не в центрі.
 
 :::note
-The chunks **далеко від** and **близько від** are followed by genitive case. At this stage, memorize them as fixed phrases with common nouns: далеко від дому, близько від роботи, далеко від зупинки.
+The chunks **далеко від** and **близько до** are followed by genitive case. At this stage, memorize them as fixed phrases with common nouns: далеко від дому, близько до роботи, далеко від зупинки.
 :::
 
 Now try building your own description using these sentence frames:
@@ -87,7 +87,7 @@ Three example outputs for different situations:
 
 - City center: **Я живу на вулиці Хреща́тик. Біля мого дому є метро. Парк близько — п'ять хвилин пішки. У моєму районі є театр, музей і кафе.**
 - Suburb: **Я живу на околиці. Біля мого дому є зупи́нка. Центр далеко — треба їхати автобусом. У моєму районі є школа, магазин і аптека.**
-- Small town: **Я живу у мале́нькому мі́сті. Біля мого дому є парк. Магазин близько — три хвилини пішки. У моєму районі є бібліотека, кафе і школа.**
+- Lviv Old Town: **Я живу у Львові. Біля мого дому Площа Ринок. Оперний театр поруч — три хвилини пішки. Високий замок далеко — треба їхати автобусом.**
 
 The sentence frames stay identical — only the details change.
 

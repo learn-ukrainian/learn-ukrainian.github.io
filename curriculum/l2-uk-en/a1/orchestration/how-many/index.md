@@ -1,6 +1,6 @@
 # Build Summary: how-many (A1)
 
-Generated: 2026-04-01 13:25
+Generated: 2026-04-03 15:41
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-01 13:25
 | vocab | complete | 2026-03-30 12:36:09 |
 | enrich | complete | 2026-03-30 12:36:10 |
 | verify | complete | 2026-03-30 12:36:10 |
-| review | complete | 2026-04-01 11:25:21 |
-| stress | complete | 2026-04-01 11:25:21 |
-| publish | complete | 2026-04-01 11:25:28 |
+| review | complete | 2026-04-03 13:40:59 |
+| stress | complete | 2026-04-03 13:40:59 |
+| publish | complete | 2026-04-03 13:41:06 |
 
 ## Reviews
 
@@ -29,6 +29,7 @@ Generated: 2026-04-01 13:25
 | 1 | how-many-review-r1.md |
 | 2 | how-many-review-r2.md |
 | 3 | how-many-review-r3.md |
+| 4 | how-many-review-r4.md |
 
 ## Dispatch Log
 
@@ -45,6 +46,8 @@ Generated: 2026-04-01 13:25
 | review | gemini (gemini-3-flash-preview) | 2s | ❌ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 298s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 8s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 242s | ✅ |
 
 ## Files
 
@@ -57,6 +60,8 @@ Generated: 2026-04-01 13:25
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
 - `review-structured-r3.yaml`
+- `review-structured-r4.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

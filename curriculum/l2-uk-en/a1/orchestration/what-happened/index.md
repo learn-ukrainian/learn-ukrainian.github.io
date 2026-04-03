@@ -1,6 +1,6 @@
 # Build Summary: what-happened (A1)
 
-Generated: 2026-04-01 13:45
+Generated: 2026-04-04 00:00
 
 ## Pipeline Phases
 
@@ -18,15 +18,17 @@ Generated: 2026-04-01 13:45
 | vocab | complete | 2026-03-30 21:50:27 |
 | enrich | complete | 2026-03-30 21:50:28 |
 | verify | complete | 2026-03-30 21:50:28 |
-| review | complete | 2026-04-01 11:45:31 |
-| stress | complete | 2026-04-01 11:45:38 |
-| publish | complete | 2026-04-01 11:45:39 |
+| review | complete | 2026-04-03 22:00:26 |
+| stress | complete | 2026-04-03 22:00:33 |
+| publish | complete | 2026-04-03 22:00:34 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | what-happened-review-r1.md |
+| 2 | what-happened-review-r2.md |
+| 3 | what-happened-review-r3.md |
 
 ## Dispatch Log
 
@@ -40,6 +42,10 @@ Generated: 2026-04-01 13:45
 | review | claude-tools (claude-opus-4-6) | 208s | ✅ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 3s | ❌ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 7s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 96s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 7s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 121s | ✅ |
 
 ## Files
 
@@ -49,6 +55,9 @@ Generated: 2026-04-01 13:45
 - `quick-verify.json`
 - `research-quality.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

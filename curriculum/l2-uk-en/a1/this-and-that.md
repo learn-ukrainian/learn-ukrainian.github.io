@@ -56,11 +56,7 @@ Demonstratives combine naturally with adjectives and colors. The word order is t
 - **Ця нова́ синя сумка.** — This new blue bag.
 - **Це мале́ньке бі́ле вікно.** — This small white window.
 
-Ukrainian word order is more flexible than English in general, but demonstrative + adjective + noun is the most natural, unmarked order. At A1, stick with this pattern and it will always sound right.
-
 <!-- INJECT_ACTIVITY: quiz-demonstratives-this -->
-
-<!-- INJECT_ACTIVITY: fill-in-demonstratives-this -->
 
 ## Той, та, те (That)
 
@@ -89,7 +85,7 @@ Demonstratives pair naturally with question words to help you choose between obj
 - **Яка сумка? — Ця червона чи та синя?** — Which bag? This red one or that blue one?
 - **Яке вікно? — Це вели́ке чи те маленьке?** — Which window? This big one or that small one?
 
-The pointing word **ось** (here is / look) and the adverb **там** (there) pair naturally with demonstratives: **Ось цей телефон — дороги́й.** (Here, this phone — expensive.) **А той, там, — ні.** (And that one, over there — no.)
+The pointing words **ось** (look) and **тут** (here), along with **там** (there), pair naturally with demonstratives: **Ось цей телефон тут — дороги́й.** (Look, this phone here — expensive.) **А той, там, — ні.** (And that one, over there — no.) You can also use **він, вона́, воно́** to refer back to them.
 
 One more thing worth noting. **Це** can stand alone to introduce or name something — **Це вікно.** means "This is a window." But **це** can also modify a noun directly — **Це вікно велике.** means "This window is big." Context always makes the meaning clear. You have been using **Це...** as "This is..." since Module 3, and now you are adding **це** as "this" before neuter nouns. Both uses are completely natural.
 
@@ -122,6 +118,6 @@ Try this self-check to practise what you have learned:
 - Point at something and ask: **Яка сумка? — Ця чи та?** Now do the same for a masculine and a neuter noun.
 - Translate into Ukrainian: "That old chair." / "This new blue bag." / "Is this a window or a door?" / "This red pen or that blue pencil?"
 
-If you can point at objects around you and name them with the right demonstrative and gender — congratulations, you are thinking in Ukrainian. The gender system that seemed like three separate sets of words in Modules 6, 9, and now 12 is really one pattern repeated. Every new word you learn simply plugs into this system.
+The gender system that seemed like three separate sets of words in Modules 6, 9, and now 12 is really one consistent pattern repeated.
 
 <!-- INJECT_ACTIVITY: fill-in-demonstratives-contrast -->

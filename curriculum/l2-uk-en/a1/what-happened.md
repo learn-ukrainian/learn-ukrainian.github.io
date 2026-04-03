@@ -29,9 +29,7 @@ The next day, Богдан and Марі́я compare how they spent the full week
 
 Марія uses feminine forms: **ходила**, **провела**, **дивилася**. Богдан uses masculine forms: **провів**, **готував**. When Богдан says **ми гуляли** (we walked), the ending is **-ли** — the plural form, which is the same regardless of gender.
 
-Every verb in these dialogues changed its ending depending on who was speaking — and that is exactly what you will learn now.
-
-<!-- INJECT_ACTIVITY: fill-in-past-tense -->
+Notice how every verb in these dialogues changes its ending depending on who is speaking.
 
 ## Мину́лий час (Past Tense)
 
@@ -41,7 +39,7 @@ Here is the core insight: Ukrainian past tense does not mark **person** — it m
 |---|---|---|
 | я | чита́ю | читав (♂) / чита́ла (♀) |
 | ти | чита́єш | читав (♂) / читала (♀) |
-| він / вона | чита́є / читає | читав (♂) / читала (♀) |
+| він / вона | чита́є | читав (♂) / читала (♀) |
 
 In present tense, **я читаю** and **ти читаєш** have different endings — the ending shows the person. In past tense, **я читав** and **він читав** are identical — both masculine. The ending shows gender, not person.
 
@@ -102,7 +100,7 @@ Here are the six core verbs you already know from earlier modules — now in the
 | дивитися | дивився | дивилася | дивилося | дивилися |
 | говори́ти | говори́в | говори́ла | говори́ло | говори́ли |
 
-The stems are familiar — you have used these verbs in present tense throughout A1. The only new piece is the ending: **-в**, **-ла**, **-ло**, **-ли** (and **-ся** sticking to reflexive verbs).
+The stems are familiar from the present tense. The only new piece is the ending: **-в**, **-ла**, **-ло**, **-ли** (and **-ся** sticking to reflexive verbs).
 
 <!-- INJECT_ACTIVITY: fill-in-past-tense-core -->
 
@@ -172,3 +170,7 @@ Four ready-made conversation starters you can use right away:
 - **Ми гуляли разом.** — We walked together. (plural = always **-ли**)
 
 Each question comes in a pair — one masculine form, one feminine form. Choose the one that matches the person you are speaking to.
+
+### Self-check
+
+Tell your partner what you did yesterday using 3 different verbs.

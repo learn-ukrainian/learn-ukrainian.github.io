@@ -1,6 +1,6 @@
 # Build Summary: holidays (A1)
 
-Generated: 2026-04-01 13:45
+Generated: 2026-04-03 23:49
 
 ## Pipeline Phases
 
@@ -18,15 +18,16 @@ Generated: 2026-04-01 13:45
 | vocab | complete | 2026-03-30 21:17:13 |
 | enrich | complete | 2026-03-30 21:17:14 |
 | verify | complete | 2026-03-30 21:17:14 |
-| review | complete | 2026-04-01 11:45:11 |
-| stress | complete | 2026-04-01 11:45:11 |
-| publish | complete | 2026-04-01 11:45:17 |
+| review | complete | 2026-04-03 21:49:18 |
+| stress | complete | 2026-04-03 21:49:18 |
+| publish | complete | 2026-04-03 21:49:25 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | holidays-review-r1.md |
+| 2 | holidays-review-r2.md |
 
 ## Dispatch Log
 
@@ -41,6 +42,8 @@ Generated: 2026-04-01 13:45
 | review | gemini (gemini-3-flash-preview) | 1s | ❌ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 2s | ❌ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 7s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 117s | ✅ |
 
 ## Files
 
@@ -50,6 +53,8 @@ Generated: 2026-04-01 13:45
 - `quick-verify.json`
 - `research-quality.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

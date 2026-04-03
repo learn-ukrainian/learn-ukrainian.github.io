@@ -1,6 +1,6 @@
 # Build Summary: weather (A1)
 
-Generated: 2026-04-01 13:41
+Generated: 2026-04-03 17:24
 
 ## Pipeline Phases
 
@@ -18,15 +18,16 @@ Generated: 2026-04-01 13:41
 | vocab | complete | 2026-03-30 05:29:56 |
 | enrich | complete | 2026-03-30 05:29:57 |
 | verify | complete | 2026-03-30 05:29:57 |
-| review | complete | 2026-04-01 11:41:13 |
-| stress | complete | 2026-04-01 11:41:13 |
-| publish | complete | 2026-04-01 11:41:19 |
+| review | complete | 2026-04-03 15:24:42 |
+| stress | complete | 2026-04-03 15:24:53 |
+| publish | complete | 2026-04-03 15:24:54 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | weather-review-r1.md |
+| 2 | weather-review-r2.md |
 
 ## Dispatch Log
 
@@ -40,6 +41,8 @@ Generated: 2026-04-01 13:41
 | review | gemini-tools (gemini-3.1-pro-preview) | 165s | ✅ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 2s | ❌ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 33s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 390s | ✅ |
 
 ## Files
 
@@ -49,6 +52,8 @@ Generated: 2026-04-01 13:41
 - `quick-verify.json`
 - `research-quality.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

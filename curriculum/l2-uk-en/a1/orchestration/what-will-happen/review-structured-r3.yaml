@@ -1,0 +1,53 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: All outline points are meticulously covered. The writer brilliantly identified
+    and corrected a linguistic error in the plan (the plan erroneously called the
+    simple perfective `прочитаю` the "synthetic
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All Ukrainian is perfectly correct. Future tense forms, gender/case endings,
+    and vocabulary are flawless. No Russianisms or Surzhyk detected.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Clear, simple explanations without academic overload. Follows the PPP
+    (Presentation, Practice, Production) flow effectively and explains the mechanics
+    of the analytic future in a highly accessible way
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required vocabulary is used naturally in context. Recommended words
+    `план` and `звучати` were omitted, but the writer smartly replaced the somewhat
+    calqued plan suggestion "Звучить добре!" with th
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 3 expected activity markers are present, logically named, and perfectly
+    placed after their corresponding teaching blocks.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The dialogues (especially the fortune teller setting) are highly engaging.
+    The tone is encouraging and instructive without resorting to generic corporate-speak
+    or exaggerated enthusiasm.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All H2 headings match the plan exactly. The deterministic word count is
+    1239, which is perfectly aligned with the 1200 target. No stray formatting artifacts.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Appropriate cultural context and accurate Ukrainian textbook terminology
+    for grammar ("складений майбутній").
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Natural planning conversations. The playful teasing at the end of the
+    second dialogue ("Ти завжди будеш дивитися футбол!") is an excellent, authentic
+    touch.
+findings: []

@@ -1,0 +1,49 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Plan references (Літвінова Grade 7 and ULP Season 1, Episode 14) were
+    not cited in the text.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All Ukrainian text, grammar structures, and vocabulary use are accurate
+    and natural.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Clear PPP flow. Distinguishes well between "люблю + infinitive" and "мені
+    подобається + noun" without overcomplicating the dative case.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items (читати, гуляти, малювати,
+    фільм, etc.) are successfully integrated into the prose and examples.
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: Activity markers `fill-in-infinitive-picture` and `match-infinitives-meanings`
+    are placed before the concepts and full vocabulary lists are fully taught.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: Contains some meta-commentary ("The next two sections show you exactly
+    how each one works") and somewhat gamified phrasing ("add more hobby verbs to
+    your toolkit").
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: Word count is 1477 words, which is outside the target range of 1200 words
+    (more than 20% over target).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Appropriate and culturally neutral contexts (Kyiv language cafe, borshch,
+    varenyky).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogues are natural, use named speakers (Анна, Віктор), and incorporate
+    the target grammar well.
+findings: []

@@ -1,0 +1,51 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The module covers all planned topics, but the word count (1561 words)
+    is significantly higher than the 1200-word target (>30% off).
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No Russianisms, Surzhyk, or calques. Euphony rules are applied correctly
+    (`у Львові`, `й Андрій`, `зі станції`).
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: 'DEDUCT: In Pattern 6, it misclassifies adverbs (`направо`, `наліво`)
+    as "imperative forms". Also, the reading text introduces `до + genitive` for direction
+    (`Я іду до музею`, `хочу їхати до Лаври`) wh'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary topics (directions, places, euphony, transport)
+    are integrated naturally in the text and dialogue.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The activity markers are placed logically and align perfectly with the
+    `activity_hints` in the plan.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: 'DEDUCT: The introduction contains some meta-commentary and generic enthusiasm
+    instead of immediately engaging the learner ("Seven modules of A1.5 are behind
+    you...", "By the end, you''ll see how these '
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: 'DEDUCT: The writer used Ukrainian guillemets (« ») for the English translations
+    inside parentheses. English typography requires standard double quotes. Word count
+    is out of bounds.'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Accurate representation of navigating Kyiv (Khreshchatyk, Arsenalna station,
+    Independence Square).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogue between Marko and Oksana is natural, multi-turn, and effectively
+    uses all seven grammatical patterns in a realistic scenario.
+findings: []

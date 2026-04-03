@@ -1,0 +1,49 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'The module is missing the "Next: A1.8..." teaser from the Summary outline.
+    It also misses `тому що` which was specified in the objectives block. The writer
+    correctly mapped `dialogue_situations` to th'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'One Russian calque detected: "звертатися по імені" (should be "на ім''я").
+    Otherwise, excellent grammar and formatting.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: 'DEDUCT: Marker placement breaks pedagogical flow completely. The text
+    asks students to "Answer these questions" but injects a grammar fill-in.'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Uses all required A1.7 vocabulary naturally across both reading and dialogue
+    sections.
+- dimension: 5
+  name: Exercise quality
+  score: 5
+  evidence: 'DEDUCT: Total mismatch between prose setup, marker placement, and the
+    plan''s `activity_hints`.'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Good checkpoint tone. Avoids being overly robotic while still clearly
+    summarizing the phase's skills.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean Markdown. All expected H2 headings are present and the word count
+    is safely within the target range.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Accurately teaches Ukrainian holiday greetings (З Різдвом, З Великоднем)
+    and traditional foods (кутя) without relying on stereotypes.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The dialogue is instructional but functions perfectly as an end-of-phase
+    checkpoint to show vocative and imperative in action.
+findings: []

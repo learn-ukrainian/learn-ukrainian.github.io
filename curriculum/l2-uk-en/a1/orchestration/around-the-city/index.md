@@ -1,6 +1,6 @@
 # Build Summary: around-the-city (A1)
 
-Generated: 2026-04-01 13:42
+Generated: 2026-04-03 21:26
 
 ## Pipeline Phases
 
@@ -18,15 +18,18 @@ Generated: 2026-04-01 13:42
 | vocab | complete | 2026-03-30 13:12:10 |
 | enrich | complete | 2026-03-30 13:12:12 |
 | verify | complete | 2026-03-30 13:12:12 |
-| review | complete | 2026-04-01 11:42:51 |
-| stress | complete | 2026-04-01 11:42:51 |
-| publish | complete | 2026-04-01 11:42:57 |
+| review | complete | 2026-04-03 19:26:25 |
+| stress | complete | 2026-04-03 19:26:25 |
+| publish | complete | 2026-04-03 19:26:34 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | around-the-city-review-r1.md |
+| 2 | around-the-city-review-r2.md |
+| 3 | around-the-city-review-r3.md |
+| 4 | around-the-city-review-r4.md |
 
 ## Dispatch Log
 
@@ -41,6 +44,12 @@ Generated: 2026-04-01 13:42
 | review | gemini (gemini-3-flash-preview) | 1s | ❌ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 2s | ❌ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 8s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 222s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 20s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 239s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 9s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 426s | ✅ |
 
 ## Files
 
@@ -50,6 +59,10 @@ Generated: 2026-04-01 13:42
 - `quick-verify.json`
 - `research-quality.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
+- `review-structured-r4.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

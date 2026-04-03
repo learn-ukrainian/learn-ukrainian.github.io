@@ -97,7 +97,7 @@ Each one in a sentence:
 
 A note on **іноді**: you may also hear **і́нколи**, which means the same thing. Use **іноді** as your main word — it's more common at this level.
 
-Word order is straightforward: the frequency adverb goes **before the verb** in a neutral statement. **Я часто гуляю.** **Він іноді малює.** One special rule: **ніколи** always requires **не** directly before the verb. This is Ukrainian double negation — you saw it in M19. The two words are inseparable:
+Word order is straightforward: the frequency adverb goes **before the verb** in a neutral statement. **Я часто гуляю.** **Він іноді малює.** One special rule: **ніколи** always requires **не** before the verb. This is Ukrainian double negation — you saw it in M19. They usually go together in this order:
 
 - Я **ніколи не** працю́ю у неді́лю. *(I never work on Sunday.)*
 - Він **ніколи не** ходить у театр. *(He never goes to the theater.)*
@@ -108,7 +108,7 @@ Word order is straightforward: the frequency adverb goes **before the verb** in 
 
 <!-- INJECT_ACTIVITY: fill-in-frequency -->
 
-Beyond single-word adverbs, Ukrainian uses numeric frequency expressions. These go **after the verb** — the opposite position from single-word adverbs:
+Beyond single-word adverbs, Ukrainian uses numeric frequency expressions. These often go **after the verb** or at the end of the sentence:
 
 - **раз на тиждень** (once a week)
 - **двічі на тиждень** (twice a week)

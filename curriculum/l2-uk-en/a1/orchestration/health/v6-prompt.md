@@ -41,7 +41,7 @@ Then begin writing the module content. Follow your own pacing plan — each sect
 
 ## 9 Hard Rules
 
-1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if you exceed it. For early modules, the learner CANNOT READ CYRILLIC — English must dominate. Ukrainian appears only as bolded inline words/phrases. Do NOT write long Ukrainian passages, Ukrainian-only paragraphs, or Ukrainian text without English translation.
+1. **IMMERSION TARGET: 20-35% Ukrainian** — this is the percentage of Ukrainian text in your output. The audit will REJECT the module if immersion is outside this range. For A1 early modules, the learner cannot read Cyrillic — English must dominate. For A2+, Ukrainian must carry a significant share — add Ukrainian Reading Practice blocks, dialogues, and example paragraphs to reach the target. Too little Ukrainian fails audit just as much as too much.
 2. **EVERY plan point MUST appear in your output.** The plan's `content_outline` lists specific points for each section. You MUST cover ALL of them — every textbook reference, every notation, every example. If the plan says "Захарійчук Grade 1: [•] for vowels, [–] for consonants", you MUST include that notation. Skipping plan points is the #1 reason modules get rejected. Before submitting, mentally check each plan point against your output.
 3. **NO IPA, NO Latin transliteration** — never write [mɑmɑ], (khlib), or phonetic brackets. Describe sounds by comparison: "Х sounds like «ch» in Scottish «loch»."
 4. **NO "In this lesson we will..."** — never use formulaic openers. Start with a dialogue, a question, or a situation.
@@ -286,112 +286,95 @@ You do NOT need to call tools yourself — the facts are already verified.
 <pre_verified_facts>
 ## VESUM Verification
 
-**Confirmed (18/18):**
-- ✅ голова (noun) — lemma: голова
-- ✅ горло (noun) — lemma: горло
-- ✅ живіт (noun) — lemma: живіт
-- ✅ рука (noun) — lemma: рука
-- ✅ нога (noun) — lemma: нога
-- ✅ болить (verb) — lemma: боліти
-- ✅ лікар (noun) — lemma: лікар
-- ✅ аптека (noun) — lemma: аптека
-- ✅ спина (noun) — lemma: спина
-- ✅ око (noun) — lemma: око
-- ✅ вухо (noun) — lemma: вухо
-- ✅ зуб (noun) — lemma: зуб
-- ✅ ніс (noun) — lemma: ніс *(note: VESUM also returns нести as a verb match — not a problem, these are homographs distinguished by context)*
-- ✅ температура (noun) — lemma: температура
-- ✅ кашель (noun) — lemma: кашель
-- ✅ нежить (noun) — lemma: нежить *(see gender note below)*
-- ✅ таблетка (noun) — lemma: таблетка
-- ✅ хворий (adj) — lemma: хворий
+### Batch 1 (голова → око)
+- ✅ голова — noun (3 lemma entries)
+- ✅ горло — noun (3 lemma entries)
+- ✅ живіт — noun (2 lemma entries)
+- ✅ рука — noun
+- ✅ нога — noun
+- ✅ болить — verb (lemma: боліти)
+- ✅ лікар — noun
+- ✅ аптека — noun
+- ✅ спина — noun
+- ✅ око — noun (3 lemma entries)
 
-**Not found: none.**
+### Batch 2 (вухо → випишу) — also verified plan dialogue words
+- ✅ вухо — noun (3 lemma entries)
+- ✅ зуб — noun (2 lemma entries)
+- ✅ ніс — noun (confirmed noun, not verb ніс < нести)
+- ✅ температура — noun
+- ✅ кашель — noun (2 lemma entries)
+- ✅ нежить — noun — ⚠️ **GENDER ERROR IN PLAN**: VESUM confirms `noun:inanim:m` (MASCULINE), plan labels it feminine (f). Fix: нежить (m).
+- ✅ таблетка — noun
+- ✅ хворий — adj (5 forms across adj lemma)
+- ✅ болять — verb (lemma: боліти) — plural form confirmed
+- ✅ застуда — noun
+- ✅ ліки — noun (3 entries)
+- ✅ краплі — noun (6 entries, lemma: крапля)
+- ✅ випишу — verb (lemma: виписати) ✅
 
-> ⚠️ **Gender note — нежить:** The plan labels нежить as feminine (f). VESUM confirms both **нежитю** (masculine gen/dat) and **нежиті** (feminine gen/dat) are valid forms — both return 4 matches. In standard literary Ukrainian, нежить is **masculine**. Both genders are attested in VESUM, but the masculine form is preferred in formal Ukrainian. Correct the plan label: `нежить (runny nose, m)`. In content, use `нежитю` (genitive: *немає нежитю*) OR `проти нежитю` — not `нежиті`.
-
-> ⚠️ **Gender note — біль:** Антоненко-Давидович (ad-011) explicitly states: *"іменник біль в українській мові – чоловічого роду"* (masculine). The phrase **головний біль** is therefore masculine, genitive: **головного болю**. This is correct in the plan. Note this to writers so they don't feminize it under Russian influence (*"зубна біль"* ← Russian calque — WRONG).
+**Confirmed**: ALL 18 plan vocabulary words verified ✅
+**Not found**: none
+**Action required**: Fix нежить gender tag in plan from `f` → `m`
 
 ---
 
 ## Textbook Excerpts
 
-### Section: Тіло (The Body)
-> *"Обруч крутять навколо тіла, на руці, нозі. Обруч — прикраса... Обручі носять на голові."*
-> Source: **Большакова, Grade 1** (1-klas-bukvar-bolshakova-2018-2, p.8) — natural use of рука (руці), нога (нозі), голова (голові) in locative case in a running Grade 1 text. Strong pedagogical precedent for these as the first body parts.
+### Section: Тіло (The Body) — частини тіла
+> "Обруч крутять навколо тіла, на **руці**, **нозі**. Обручі носять на **голові**."
+> Source: Большакова, Grade 1 (Буквар 2018), p. 8 — body parts appear naturally in Grade 1 context with locative case
 
-> *"нога / глина / голова / гараж / голівонька"* — word list alongside a dragon story with "дві голови"
-> Source: **Большакова, Grade 1** (p.58) — голова and нога both appear in Grade 1 vocabulary-introduction pages as canonical body part terms.
+### Section: У мене болить... (symptoms + doctor)
+> "Голов­ний **біль** – ознака недуги. Отже, при виникненні головного болю треба не займатися самолікуванням, а звертатися за порадою до **лікаря**."
+> Source: Заболотний, Grade 10 (2018), p. 177 — confirms "головний біль" (masc.) and "звертатися до лікаря" as natural Ukrainian
 
-### Section: У мене болить...
-> *"Голівний біль – ознака недуги. Отже, при виникненні головного болю треба не займатися самолікуванням, а звертатися за порадою до лікаря."*
-> Source: **Заболотний, Grade 10** (10-klas-ukrmova-zabolotnyi-2018, p.177) — the phrase "головний біль" and "звертатися до лікаря" appear in an argumentative text about health. Confirms **лікар** as the standard term, and **головний біль** (masculine) as the standard compound.
+### Section: У мене болить... (sickbed scene — температура, болить)
+> "Після такої **температури** це навіть забагато зразу. [...] І **голова** крутиться від довгого лежання."
+> Source: Авраменко, Grade 6 (Ukrainian Literature, 2023), p. 124 — authentic illness vocabulary in literary context
 
-> *"Послухавши пульс, вона підняла мені сорочку... Організм не приймає. І голова крутиться, підвестися несила."*
-> Source: **Авраменко, Grade 6 literature** (6-klas-ukrlit-avramenko-2023, p.123) — natural scene of a doctor examining a sick child, with symptoms described colloquially. Confirms the register for A1 health dialogues.
-
-### Section: Діалоги (At the doctor / pharmacy)
-> *"Шовкові китиці на поясі теж двигтіли, йому тут-таки просто посеред базару скаржилися на всілякі немочі, і він одказував поважно: «Авспіріні, авспіріні пийте, моя ласко. Тричі на день по одній пігулці.»"*
-> Source: **Авраменко, Grade 7 literature** (7-klas-ukrlit-zabolotnyi-2024, p.157) — pharmacist character, confirms **пігулка** (= таблетка) as authentic Ukrainian term, and the "trice daily" prescription pattern. Note: "скаржилися на немочі" = "complained about ailments" — strong model for doctor visit dialogue.
-
-> *"Лікар спокійно, з упевненістю в голосі розказував про свої спостереження, від чого самопочуття хворого поліпшилося."*
-> Source: **Заболотний, Grade 10** (p.19) — confirms **лікар/хворий** as standard vocabulary pair, and the doctor-patient interaction register.
+### Section: Dialogues — At the doctor's (лікар + хворий)
+> "В очах пацієнта відчувалася тривога [...] Після кількох запитань й огляду **лікар** зазначив, що, імовірно, **біль** є симптомом загострення."
+> Source: Заболотний, Grade 10 (2018), p. 19 — doctor-patient communication text; confirms лікар vocabulary register
 
 ---
 
 ## Grammar Rules
 
-- **болить / болять (verb agreement with body parts):** The verb боліти uses singular **болить** with a single body part as subject (*у мене болить голова*) and plural **болять** when the subject is plural (*у мене болять зуби*). This is standard third-person verb agreement. The plan correctly notes this distinction with "болять зуби (plural form болять) — just recognize it." ✅ Правопис §33–34 covers verb conjugation classes; this specific agreement rule follows standard predicate-subject number agreement.
-
-- **biль — masculine gender:** Правопис §54 covers noun gender. Confirmed by Антоненко-Давидович (ad-011): *"іменник біль в українській мові – чоловічого роду."* → **головний біль** ✅, genitive **головного болю** ✅.
-
-- **У мене болить (dative possession construction):** The plan correctly labels this as dative (A2+) and instructs writers to teach it as a chunk. This is the pedagogically sound approach for A1. No Правопис issue — this is a syntactic chunk, not an orthographic rule.
+- **"У мене болить" construction** (dative possessive): Plan correctly notes this is dative (A2+ analysis) and instructs teaching it as a CHUNK at A1. ✅ No Правопис rule needed — chunk approach is pedagogically sound.
+- **біль is MASCULINE**: Антоненко-Давидович §ІМЕННИКИ confirms "іменник біль в українській мові – чоловічого роду" (contrast Russian feminine "боль"). Plan's use of "від головного болю" (genitive masculine) is grammatically correct ✅.
+- **Правопис query** on dative case returned §15 (Д→ДЖ alternation) — dative case rules are not a Правопис 2019 concern (spelling-only document); grammar is covered by the Ukrainian grammar reference, not Правопис.
 
 ---
 
 ## Calque Warnings
 
-### 🔴 CRITICAL — "від" with medicines (confirmed calque)
+- **"ліки від [хвороби]"** — ⚠️ **CALQUE** (Russicism). Антоненко-Давидович (§ПРИЙМЕННИКИ) explicitly: *"Це ліки від усяких хвороб" — так сказати по-українську не можна. Треба: "ліки **проти** ревматизму."*
+  - Plan dialogue: "Від головного болю? — Так. І від кашлю, будь ласка." and "А є щось від нежиті?"
+  - **Correct form**: таблетки **проти** головного болю / краплі **проти** нежиті / щось **проти** кашлю
+  - **Action**: Replace all `від [symptom]` in pharmacy dialogue with `проти [symptom]`
+  - Note: "головний біль" standalone phrase ✅ is correct; only the preposition + ліки combination triggers the calque rule.
 
-**All three instances in the plan are WRONG:**
+- **"випишу ліки"** — ✅ OK. Виписати ліки / рецепт is natural Ukrainian. No calque issue found.
 
-| Plan text | Status | Correct Ukrainian |
-|-----------|--------|-------------------|
-| `Від головного болю?` | ❌ Calque | `Проти головного болю?` |
-| `від кашлю, будь ласка` | ❌ Calque | `проти кашлю, будь ласка` |
-| `А є щось від нежиті?` | ❌ Calque | `А є щось проти нежитю?` |
-| Summary: `від головного болю (for headache)` | ❌ Calque | `проти головного болю` |
-| Summary: `від кашлю (for cough)` | ❌ Calque | `проти кашлю` |
-| Summary: `від нежиті (for runny nose)` | ❌ Calque | `проти нежитю` |
-
-**Authority:** Антоненко-Давидович (ad-220): *"Це ліки від усяких хвороб" — Так сказати по–українському не можна; коли йдеться про ліки, треба ставити прийменник проти: "Ліки проти ревматизму" (Українсько–російський словник АН УРСР)."*
-
-This is a Russian calque (Russian: *лекарство от + gen* → Ukrainian: *ліки проти + gen*). The plan must be updated before writing begins.
-
-### ✅ "виписати ліки" (prescribe medicine)
-The plan dialogue says *"Я випишу ліки."* — **Acceptable.** Антоненко-Давидович does not flag "виписати" in the prescriptions sense. The style guide notes "привести vs призвести" and "лікарський" adjective usage, but "виписати ліки / рецепт" is the standard Ukrainian expression.
-
-### ✅ "Мені погано" (I feel bad)
-No calque flagged by style guide. "Мені погано" is natural Ukrainian. Compare authentic Grade 6 Avramenko: *"підвестися несила"* — same colloquial register.
+- **"від головного болю" (standalone genitive phrase without ліки)** — ✅ OK as standalone phrase / label (e.g., section heading or category label without ліки).
 
 ---
 
 ## CEFR Check
 
-| Word | PULS Level | Assessment |
-|------|------------|------------|
-| голова | **A1** | ✅ On target |
-| рука | **A1** | ✅ On target |
-| нога | **A1** | ✅ On target |
-| лікар | **A1** | ✅ On target — note: доктор = B1, медик = B1; use лікар only |
-| аптека | **A1** | ✅ On target |
-| хворий (adj) | **A1** | ✅ On target |
-| температура | **A1** | ✅ On target |
-| таблетка | **A2** | ⚠️ One level above A1 — acceptable at A1.8 (late A1, approaching A2) |
-| кашель | **A2** | ⚠️ One level above A1 — acceptable at A1.8 |
-| нежить | **A2** | ⚠️ One level above A1 — acceptable at A1.8 |
+| Word | PULS Level | Status |
+|------|-----------|--------|
+| голова | A1 | ✅ On target |
+| лікар | A1 | ✅ On target |
+| аптека | A1 | ✅ On target |
+| температура | A1 | ✅ On target |
+| хворий (adj) | A1 | ✅ On target |
+| таблетка | **A2** | ⚠️ One level above A1 — acceptable as situational health vocab, flag in plan |
+| кашель | **A2** | ⚠️ One level above A1 — acceptable as situational health vocab |
+| нежить | **A2** | ⚠️ One level above A1 — acceptable as situational health vocab |
 
-> **Note on A2 vocabulary at A1.8:** таблетка, кашель, нежить are all PULS A2 but appear in an A1.8 health module, which is the final phase of A1 and a natural transition point. These are high-frequency, real-world words a learner will encounter immediately. Teaching them here is pedagogically sound — they are **introduced as vocabulary** rather than assumed knowledge. No words are above A2.
+**Note on A2 words at A1**: таблетка, кашель, нежить are PULS A2 but situationally essential for a health module. Ukrainian textbooks (Grade 1-2) regularly introduce situational vocabulary above the learner's current level when the context demands it. These are appropriate to include — but the plan should note they are "productive A1 situational vocabulary" or taught as chunks.
 </pre_verified_facts>
 
 
@@ -629,7 +612,6 @@ Write these sections as H2 headings, in this exact order:
 - `## Тіло (The Body)` (~300 words)
 - `## У мене болить... (It Hurts...)` (~300 words)
 - `## Summary` (~300 words)
-- `## Підсумок` (~150 words)
 
 Each section should follow the word budget specified. The total must reach 1200 words minimum.
 
@@ -685,7 +667,7 @@ VESUM (does word exist?) → Правопис 2019 (spelling) → Горох (st
 ### Writing Quality
 - Every paragraph: ONE clear point, logical flow to the next
 - Vary sentence length (short for emphasis, medium for explanation, long for examples)
-- Use callout boxes (:::tip, :::caution, :::note) sparingly — max 3 per module
+- Use callout boxes (:::tip, :::caution, :::note) — at least 3 per module (mnemonics, common mistakes, cultural notes). Space them throughout the module, not clustered.
 - **Dialogue formatting** — use blockquote `>` with speaker names in bold. Each turn on its own line. At A1 level, add English translation in italics after each line so learners understand what is being said. At A2, translate only new vocabulary. At B1+, no dialogue translations. Example:
 
 > **Оленка:** Привіт! Як справи? *(Hi! How are you?)*
@@ -785,44 +767,42 @@ The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> blo
 
 <skeleton>
 ## Dialogues (~330 words total)
-
-- P1 (~20 words): Scene-setter — Оленка feels sick, goes to the clinic. One sentence of context.
-- Dialogue 1 (~120 words): Doctor's office exchange (8–10 turns). Лікар: — Добрий день! Що у вас болить? Пацієнтка: — У мене болить голова і горло. Лікар: — Давно? Пацієнтка: — З учора. І в мене температура. Лікар: — Ви кашляєте? Пацієнтка: — Так, трохи. І є нежить. Лікар: — Зрозуміло. Це застуда. Я випишу ліки. Відпочивайте і пийте багато чаю! Пацієнтка: — Дякую, лікарю!
-- P2 (~20 words): Scene-setter — Оленка goes to the pharmacy next door. One sentence of transition.
-- Dialogue 2 (~120 words): Pharmacy exchange (8–10 turns). Оленка: — Добрий день! У мене болить голова. Дайте, будь ласка, таблетки. Фармацевт: — Від головного болю? Оленка: — Так. І від кашлю, будь ласка. Фармацевт: — Ось, будь ласка. Ще щось? Оленка: — А є щось від нежиті? Фармацевт: — Так, ось краплі. Оленка: — Дякую! Скільки це коштує? Фармацевт: — Сто двадцять гривень. Оленка: — Будь ласка.
-- P3 (~50 words): Post-dialogue note — point out the key phrases used: "У мене болить...", "Дайте, будь ласка...", "від головного болю / від кашлю / від нежиті". Tell learners: these chunks are all they need — they'll analyse the grammar at A2.
+- P1 (~35 words): Scene-setter — two situations every learner will face in Ukraine: a visit to the лікар and a stop at the аптека. Both dialogues use vocabulary introduced in this module; read them now for the full picture, then study the pieces.
+- Dialogue 1 (~115 words): At the doctor's office — 8-turn exchange. Лікар opens: «Що у вас болить?» Пацієнт: «У мене болить голова і горло.» Лікар: «Давно?» Пацієнт: «З учора. І в мене температура.» Лікар: «Ви кашляєте?» Пацієнт: «Так, трохи. І в мене нежить.» Лікар: «Зрозуміло. Це застуда. Я випишу ліки. Відпочивайте!» Пацієнт: «Дякую, лікарю!» — establishes key question «Що у вас болить?» and the three-symptom stack (болить голова/горло + температура + нежить + кашель).
+- P2 (~30 words): Callout box — two phrases to memorise from Dialogue 1: «Що у вас болить?» (What hurts you? — doctor's standard opening) and «З учора» (Since yesterday — useful time anchor at A1).
+- Dialogue 2 (~115 words): At the pharmacy — 7-turn exchange. Покупець: «Добрий день! У мене болить голова. Дайте, будь ласка, таблетки.» Фармацевт: «Від головного болю?» Покупець: «Так. І від кашлю, будь ласка.» Фармацевт: «Ось, будь ласка. Ще щось?» Покупець: «А є щось від нежиті?» Фармацевт: «Так, ось краплі.» Покупець: «Дякую! Скільки це коштує?» — introduces the pharmacy formula «Дайте, будь ласка, [ліки] від [symptom]» and shows три genitive chunks: від головного болю, від кашлю, від нежиті (treat as frozen phrases, no grammar analysis).
+- P3 (~35 words): Brief closing note — notice how both dialogues stay simple: one phrase to describe the problem (У мене болить…), one formula to ask for help (Дайте будь ласка…). That is the complete A1 toolkit.
+- Exercise: **quiz** — «Choose the logical response» (4 items from activity_hints: У мене болить голова / У мене сильний кашель / Що у вас болить? / Дайте щось від нежиті). Tests comprehension of the two dialogues just read; only concepts already introduced above.
 
 ---
 
 ## Тіло (The Body) (~330 words total)
-
-- P1 (~80 words): Introduce the 10 core body parts with gender labels: голова (head, f), горло (throat, n), спина (back, f), живіт (stomach, m), рука (hand/arm, f), нога (leg/foot, f), око (eye, n), вухо (ear, n), зуб (tooth, m), ніс (nose, m). Present as a labelled list. Note: рука = the whole arm including hand; нога = the whole leg including foot — Ukrainian doesn't split them at A1.
-- P2 (~60 words): Brief cultural note — body part genders matter for adjective agreement (велике око, великий ніс, велика рука) but at A1 learners mainly need gender for recognition. They'll use these nouns almost exclusively in the chunk "У мене болить..." — so memorise the word first, worry about full agreement at A2.
-- Exercise (match-up, ~30 words instruction): Match 8 body parts to English translations: голова == head, живіт == stomach, горло == throat, спина == back, рука == hand/arm, нога == leg/foot, зуб == tooth, око == eye.
-- P3 (~80 words): A short illustrated mini-scene to fix the words in context — Михайлик малює людину і підписує: ось голова, ось рука, ось нога... Use 6–8 body parts in short labelling sentences. Keeps vocabulary concrete and visual rather than abstract list-memorisation.
-- P4 (~80 words): Pronunciation spotlight — three tricky ones: горло (the г is voiced, not like English h), живіт (ж = the zh-sound from "measure"), вухо (в + у — two sounds, not one). Give one example word each. Remind learners: stress is marked in the словник tab; listen to it there.
+- P1 (~130 words): Core body-part inventory — introduce 10 words with gender label and brief real-world note. Present in a short enumerated list: голова (f) — head; горло (n) — throat; спина (f) — back; живіт (m) — stomach; рука (f) — hand/arm; нога (f) — leg/foot; око (n) — eye; вухо (n) — ear; зуб (m) — tooth; ніс (m) — nose. Scope note for рука and нога: Ukrainian has one word where English has two — рука covers everything from shoulder to fingertip; нога covers hip to toe. These are the ten most useful for an A1 learner at a clinic; this is not a complete anatomy list.
+- P2 (~100 words): Gender in practice — at A1 you will mainly use these words after болить, but gender matters when you add an adjective (review from M09). Three contrast examples: велике о́ко (neuter -е), вели́кий ніс (masculine -ий), вели́ка рука́ (feminine -а). One more: боля́чий зуб (masculine), хво́ре го́рло (neuter). The takeaway: learn each body part with its gender tag now so adjective agreement is automatic later.
+- P3 (~100 words): Connecting body parts to the coming chunk — every word on the list above slots straight into the pattern you will learn next: У мене болить + [body part]. Walk through three quick examples to preview: У мене болить голова. / У мене болить живіт. / У мене болить спина. The body-part list is the input; the chunk is the output. Memorise the list now, and the next section gives you the grammar-free way to use it immediately.
+- Exercise: **match-up** — 8 pairs: голова ↔ head, живіт ↔ stomach, горло ↔ throat, спина ↔ back, рука ↔ hand/arm, нога ↔ leg/foot, зуб ↔ tooth, око ↔ eye. Tests the body-part vocabulary just taught.
 
 ---
 
 ## У мене болить... (It Hurts...) (~330 words total)
-
-- P1 (~80 words): Introduce the chunk "У мене болить + body part" as a single unit. Present all 5 core examples in a numbered list: (1) У мене болить голова. (2) У мене болить живіт. (3) У мене болить горло. (4) У мене болить спина. (5) У мене болить зуб. Explicitly tell learners: treat this as a chunk — the grammar (dative "у мене") is A2 material; for now, just learn the pattern.
-- P2 (~70 words): Plural note — when more than one body part hurts, болить changes to болять: У мене болять зуби (teeth). У мене болять ноги (legs). У мене болять очі (eyes). Keep it to recognition only — learners just need to understand it when they hear it. Three examples maximum.
-- Exercise (fill-in set 1, ~20 words instruction): Complete 5 sentences with the correct body part from the bracket choices: e.g. У мене болить {голова|рука|нога}. Я хочу спати. Items from activity_hints.
-- P3 (~90 words): Common symptom chunks beyond "болить": У мене температура. (I have a fever.) У мене кашель. (I have a cough.) У мене нежить. (I have a runny nose.) Мені холодно. (I'm cold.) Мені погано. (I feel unwell.) Я хворий. / Я хвора. (I'm sick. — masc/fem.) Note: "У мене температура" is a noun chunk, not "болить" — the fever "is with me." Мені погано uses мені (dative again) — just learn it as a chunk.
-- P4 (~70 words): Usage note — at the doctor or pharmacy, combine chunks naturally: У мене болить горло і є температура. / Я хвора. У мене кашель і нежить. Two or three model combinations. Show learners they already have enough to describe a full set of symptoms. Positive reinforcement: this is real Ukrainian you'd use on day one in Kyiv.
-- Exercise (fill-in set 2, ~20 words instruction): Complete 4 sentences using symptom/role chunks: Що у вас {болить}? / У мене {температура} і болить горло. / Мені {погано}. Items from activity_hints fill-in #2.
+- P1 (~120 words): The magic chunk — «У мене болить» is the single most useful health phrase in Ukrainian. Literally it means «at me hurts», but learn it as an unanalysed block, the same way a child does. You do not need to know it uses the dative case (that is A2 grammar). Just attach any body part from the previous section: У мене болить голова. (I have a headache.) У мене болить живіт. (My stomach hurts.) У мене болить горло. (My throat hurts.) У мене болить спина. (My back hurts.) У мене болить зуб. (I have a toothache.) Five sentences, five body parts — that covers most clinic visits. Stress: у мене́ боли́ть.
+- P2 (~130 words): Beyond болить — five more symptom chunks you need. These also follow the «У мене + noun» pattern: У мене температура. (I have a fever.) У мене кашель. (I have a cough.) У мене нежить. (I have a runny nose — нежить is feminine despite looking masculine.) Two Мені phrases for general state: Мені холодно. (I'm cold / I feel cold.) Мені погано. (I feel bad / I'm not well.) And the direct statement: Я хворий. (I'm sick. — masculine) / Я хвора. (I'm sick. — feminine). Gender agreement here works exactly like M09 adjectives: male speaker says хворий, female speaker says хвора. Quick note: when multiple teeth hurt, the verb changes — У мене болять зуби. (болять = plural form of болить.) Just recognise this form; do not memorise it yet.
+- P3 (~80 words): Combining symptoms — real conversations stack symptoms. Two models from the doctor's dialogue: «У мене болить голова і горло» (head and throat, both with болить). «У мене нежить і кашель» (two noun symptoms, no verb needed). Try building: «Я хвора. У мене болить горло і є температура.» This is full A1 communication — no grammar analysis required, only chunk combination.
+- Exercise: **fill-in** — «Complete with the correct body part or symptom» (6 items from activity_hints): У мене болить ___ . Я хочу спати. / У мене болить ___ . Я не хочу їсти. / У мене болить ___ і є температура. / У мене ___, я постійно кашляю. / У мене болить ___, мені потрібен стоматолог. / Я ___. У мене болить голова і спина. Tests only vocabulary from this section and the Тіло section above.
 
 ---
 
 ## Summary (~330 words total)
-
-- P1 (~80 words): Recap toolkit in two visual blocks. Block 1 — Body parts: голова, горло, живіт, спина, рука, нога, око, вухо, зуб, ніс. Block 2 — Symptom chunks: У мене болить [частина тіла]. У мене температура / кашель / нежить. Мені погано. Я хворий/хвора.
-- P2 (~60 words): Situational phrases recap. At the doctor: Що у вас болить? → У мене болить... At the pharmacy: Дайте, будь ласка, таблетки від головного болю / краплі від нежиті / сироп від кашлю. These are the two situations learners will actually encounter. Present as a short two-column table or two bullet groups.
-- Exercise (quiz, ~30 words instruction): 4-item situational quiz — choose the logical response. Items from activity_hints quiz: e.g. stimulus "У мене болить голова" → learner picks "Ось таблетки від головного болю" vs two distractors.
-- P3 (~60 words): Self-check questions (bulleted Q&A format as specified in plan): • How do you say "My throat hurts and I have a fever"? → У мене болить горло і є температура. • You're at the pharmacy. You need something for a cough. What do you say? → Дайте, будь ласка, щось від кашлю. • How do you say "I feel unwell"? → Мені погано.
-- P4 (~60 words): Looking ahead — M54 (Emergencies) builds directly on this vocabulary. Learners will add виклик швидкої (calling an ambulance), describe urgent situations, and use a few past-tense forms they've just met in M52. The health chunk "У мене болить..." will reappear constantly — treat it as a friend, not a formula.
-- Exercise (fill-in set 3 — pharmacy/doctor context, ~40 words instruction): 5 items practising полite request forms and situational vocabulary: Дайте, {будь ласка}, таблетки від головного болю. / Де тут найближча {аптека}? Items from activity_hints fill-in #3 (pharmacy/doctor block).
+- P1 (~120 words): Health toolkit recap — prose paragraph pulling together everything from the module. Three registers: talking about your body (голова, горло, живіт, спина, рука, нога, oko, вухо, зуб, ніс), describing what hurts (У мене болить [body part]), describing your general state (Я хворий/хвора, Мені погано, Мені холодно). Two situation-specific formulas: at the doctor — answer «Що у вас болить?» with «У мене болить…»; at the pharmacy — ask «Дайте, будь ласка, таблетки від головного болю / від кашлю / від нежиті». Treat the від-phrases as fixed chunks for now.
+- Self-check Q&A list (~120 words): Bulleted prompt-and-answer pairs:
+  - Як сказати «My throat hurts and I have a fever»? → У мене болить горло і є температура.
+  - Як сказати «I'm sick» (you are female)? → Я хвора.
+  - Що означає «Мені погано»? → I feel bad / I'm not well.
+  - Як попросити таблетки від кашлю в аптеці? → Дайте, будь ласка, таблетки від кашлю.
+  - Як лікар питає про симптоми? → Що у вас болить?
+  - Яка різниця між «болить» і «болять»? → болить = one thing hurts (зуб, голова); болять = several things hurt (зуби, очі).
+- P2 (~90 words): Looking ahead — M54 (Emergencies) builds directly on this module. You will use «Мені погано» and «У мене болить» in urgent situations and add phrases like «Викличте швидку!» (Call an ambulance!). Everything in this module travels forward intact: the chunk У мене болить…, the symptom nouns, Я хворий/хвора. Health vocabulary you learn now is vocabulary you keep forever.
+- Exercise: **fill-in** — «At the pharmacy or doctor» (5 items from activity_hints): Дайте, ___ , таблетки від головного болю. / Що у вас ___? / У мене ___ і болить горло. / Мені ___. Викличте лікаря! / Де тут найближча ___? Мені потрібні ліки. Tests pharmacy/doctor formula chunks introduced across the full module.
 
 Grand total: ~1320 words
 </skeleton>

@@ -1,6 +1,6 @@
 # Build Summary: where-is-it (A1)
 
-Generated: 2026-04-01 13:42
+Generated: 2026-04-03 18:10
 
 ## Pipeline Phases
 
@@ -18,15 +18,17 @@ Generated: 2026-04-01 13:42
 | vocab | complete | 2026-03-30 19:22:57 |
 | enrich | complete | 2026-03-30 19:22:57 |
 | verify | complete | 2026-03-30 19:22:58 |
-| review | complete | 2026-04-01 11:42:07 |
-| stress | complete | 2026-04-01 11:42:13 |
-| publish | complete | 2026-04-01 11:42:14 |
+| review | complete | 2026-04-03 16:09:55 |
+| stress | complete | 2026-04-03 16:10:05 |
+| publish | complete | 2026-04-03 16:10:06 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | where-is-it-review-r1.md |
+| 2 | where-is-it-review-r2.md |
+| 3 | where-is-it-review-r3.md |
 
 ## Dispatch Log
 
@@ -43,6 +45,10 @@ Generated: 2026-04-01 13:42
 | review | gemini (gemini-3-flash-preview) | 1s | ❌ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 2s | ❌ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 28s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 416s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 14s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 210s | ✅ |
 
 ## Friction
 
@@ -59,6 +65,9 @@ Generated: 2026-04-01 13:42
 - `quick-verify.json`
 - `research-quality.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

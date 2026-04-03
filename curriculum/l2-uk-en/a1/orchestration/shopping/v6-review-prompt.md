@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 39: Shopping (A1, A1.6 [Food and Shopping])
-**Writer:** Gemini
+**Writer:** Claude
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -197,7 +197,7 @@ Taras is at a busy outdoor **ри́нок** (market) in Kyiv. He needs **я́б�
 
 > — **Тара́с:** До́брий день! *(Good day!)*
 > — **Продаве́ць:** Добрий день! *(Good day!)*
-> — **Тарас:** Скі́льки ко́шту́є кілогра́м я́блук? *(How much does a kilogram of apples cost?)*
+> — **Тарас:** Скі́льки ко́штує кілогра́м я́блук? *(How much does a kilogram of apples cost?)*
 > — **Продавець:** Соро́к гри́вень. *(Forty hryvnias.)*
 > — **Тарас:** А помідори? *(And tomatoes?)*
 > — **Продавець:** Три́дцять п'ять гривень за кілограм. *(Thirty-five hryvnias per kilogram.)*
@@ -230,7 +230,7 @@ Four phrases from this dialogue to memorize now: **Дорого!** (Expensive!),
 
 ## Скільки коштує? (How Much?)
 
-The question **Скільки коштує?** (How much does it cost?) uses the verb **ко́штува́ти** (to cost) in third person singular. When the item is plural, the verb changes: **Скільки ко́шту́ють?** (How much do they cost?). The verb agrees with the item — singular item, singular verb; plural item, plural verb. Compare:
+The question **Скільки коштує?** (How much does it cost?) uses the verb **ко́штувати** (to cost) in third person singular. When the item is plural, the verb changes: **Скільки ко́штують?** (How much do they cost?). The verb agrees with the item — singular item, singular verb; plural item, plural verb. Compare:
 
 - **Скільки коштує хліб?** — How much does the bread cost?
 - **Скільки коштує молоко?** — How much does the milk cost?
@@ -248,7 +248,7 @@ The word **гри́вня** (hryvnia — Ukraine's currency) changes form depend
 - **32 гривні** — thirty-two hryvnias (ends in 2 → гривні)
 - **100 гривень** — one hundred hryvnias
 
-The smaller unit, **копі́йка** (kopeck), follows a similar pattern: 1 **копійка**, 2 **копійки́**, 5 **копійо́к**. In everyday speech, prices are usually rounded to whole **гривні**, so you will hear **копійки** mostly on receipts.
+The smaller unit, **копі́йка** (kopeck), follows a similar pattern: 1 **копійка**, 2 **копі́йки**, 5 **копі́йок**. In everyday speech, prices are usually rounded to whole **гривні**, so you will hear **копійки** mostly on receipts.
 
 <!-- INJECT_ACTIVITY: quiz-currency-forms -->
 
@@ -281,7 +281,7 @@ Ukraine has several types of shopping locations, each with its own character. He
 - **Супермаркет** (supermarket) — a large self-service store. **У суперма́ркеті є все.** (The supermarket has everything.)
 - **Ринок** (market) — an open-air market where prices are often lower. **На ри́нку ча́сто деше́вше.** (At the market it's often cheaper.)
 - **Крамни́ця** (store) — a distinctly Ukrainian word, synonym for **магазин**. Common in western Ukraine and literary language. **У на́шій крамни́ці га́рний ви́бір.** (Our store has a good selection.)
-- **Апте́ка** (pharmacy) — for medicines and cosmetics, not food. **Лі́ки купу́ють в апте́ці.** (Medicine is bought at the pharmacy.) You can also hear: **У мене́ нема́є грошей** (I don't have money) — a phrase you'll need if you've spent too much at the **ринок**!
+- **Апте́ка** (pharmacy) — for medicines and cosmetics, not food. **Лі́ки купу́ють в апте́ці.** (Medicine is bought at the pharmacy.) You can also hear: **У ме́не нема́є грошей** (I don't have money) — a phrase you'll need if you've spent too much at the **ринок**!
 
 Inside a **супермаркет**, products are organized into sections called **відділ** (section/department):
 
@@ -296,7 +296,7 @@ When you buy food, you need quantity words. Learn these as ready-made chunks —
 
 - **Кілограм** (kilogram): **кілограм яблук**, **два кілограми помідорів** — **Дайте, будь ласка, кілограм яблук.** (Please give me a kilogram of apples.)
 - **Літр** (liter): **літр молока́**, **два лі́три со́ку** — **Дайте, будь ласка, літр молока.** (Please give me a liter of milk.)
-- **Па́чка** (pack): **пачка ма́сла**, **пачка ча́ю** — **Дайте, будь ласка, дві пачки́ ка́ви.** (Please give me two packs of coffee.)
+- **Па́чка** (pack): **пачка ма́сла**, **пачка ча́ю** — **Дайте, будь ласка, дві па́чки ка́ви.** (Please give me two packs of coffee.)
 - **Пля́шка** (bottle): **пляшка во́ди**, **пляшка соку** — **Дайте, будь ласка, пля́шку води.** (Please give me a bottle of water.)
 - **Буха́нка** (loaf — used only for bread): **буханка хлі́ба** — **Дайте, будь ласка, буха́нку хліба.** (Please give me a loaf of bread.)
 
@@ -307,8 +307,6 @@ The buying formula is always the same: **Дайте, будь ласка,** + qu
 - **Дайте, будь ласка, два кілограми помідорів.** (Please give me two kilograms of tomatoes.)
 - **Дайте, будь ласка, літр молока.** (Please give me a liter of milk.)
 - **Дайте, будь ласка, буханку хліба.** (Please give me a loaf of bread.)
-
-The quantity word changes form with the number (**кілограм** → **два кілограми**), and the item after the quantity also has a special form (you will learn why in A2). For now, just copy these chunks as whole units.
 
 <!-- INJECT_ACTIVITY: fill-in-quantities -->
 
@@ -357,7 +355,7 @@ Test yourself. You are at a Kyiv market and need three things: 2 kg of tomatoes 
 
 Can you do this without looking at the toolkit above? That is your goal.
 
-**Deterministic word count: 1593 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1555 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -493,8 +491,8 @@ If your verdict is **REVISE**, you MUST output a `<fixes>` block with exact find
 
 Rules for fixes:
 - Each fix is a YAML entry with `find:` (exact text from the module) and `replace:` (corrected text)
-- The `find` string must be an EXACT substring of the module content — copy-paste it
-- Keep fixes minimal — change only what's wrong, preserve surrounding text
+- The `find` string MUST be an EXACT copy-paste from the module content. DO NOT change quotes (« » to " "), dashes (— to -), or spacing. If you change a single character in the `find` string, the automated replacement will fail.
+- Keep fixes minimal — change only what's wrong, preserve surrounding text. Provide enough context (e.g. 5-7 words) to make the match unique.
 - Do NOT fix словник/vocabulary tables (those are generated by a downstream tool)
 - For word count issues: add content as a new `insert_after:` entry instead of find/replace
 
@@ -535,7 +533,7 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 120 words | Not found: 69 words
+Verified: 118 words | Not found: 72 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Апте — NOT IN VESUM
@@ -566,8 +564,9 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ звича — NOT IN VESUM
   ✗ зни — NOT IN VESUM
   ✗ йка — NOT IN VESUM
+  ✗ йки — NOT IN VESUM
+  ✗ йок — NOT IN VESUM
   ✗ йте — NOT IN VESUM
-  ✗ копійо — NOT IN VESUM
   ✗ крамни — NOT IN VESUM
   ✗ кілогра — NOT IN VESUM
   ✗ льки — NOT IN VESUM
@@ -587,9 +586,8 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ ркет — NOT IN VESUM
   ✗ ркеті — NOT IN VESUM
   ✗ рний — NOT IN VESUM
-  ✗ рого — NOT IN VESUM
 
-All 120 other words are confirmed to exist in VESUM.
+All 118 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

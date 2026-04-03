@@ -1,108 +1,91 @@
 ## VESUM Verification
 
-**Confirmed (18/18):**
-- ✅ голова (noun) — lemma: голова
-- ✅ горло (noun) — lemma: горло
-- ✅ живіт (noun) — lemma: живіт
-- ✅ рука (noun) — lemma: рука
-- ✅ нога (noun) — lemma: нога
-- ✅ болить (verb) — lemma: боліти
-- ✅ лікар (noun) — lemma: лікар
-- ✅ аптека (noun) — lemma: аптека
-- ✅ спина (noun) — lemma: спина
-- ✅ око (noun) — lemma: око
-- ✅ вухо (noun) — lemma: вухо
-- ✅ зуб (noun) — lemma: зуб
-- ✅ ніс (noun) — lemma: ніс *(note: VESUM also returns нести as a verb match — not a problem, these are homographs distinguished by context)*
-- ✅ температура (noun) — lemma: температура
-- ✅ кашель (noun) — lemma: кашель
-- ✅ нежить (noun) — lemma: нежить *(see gender note below)*
-- ✅ таблетка (noun) — lemma: таблетка
-- ✅ хворий (adj) — lemma: хворий
+### Batch 1 (голова → око)
+- ✅ голова — noun (3 lemma entries)
+- ✅ горло — noun (3 lemma entries)
+- ✅ живіт — noun (2 lemma entries)
+- ✅ рука — noun
+- ✅ нога — noun
+- ✅ болить — verb (lemma: боліти)
+- ✅ лікар — noun
+- ✅ аптека — noun
+- ✅ спина — noun
+- ✅ око — noun (3 lemma entries)
 
-**Not found: none.**
+### Batch 2 (вухо → випишу) — also verified plan dialogue words
+- ✅ вухо — noun (3 lemma entries)
+- ✅ зуб — noun (2 lemma entries)
+- ✅ ніс — noun (confirmed noun, not verb ніс < нести)
+- ✅ температура — noun
+- ✅ кашель — noun (2 lemma entries)
+- ✅ нежить — noun — ⚠️ **GENDER ERROR IN PLAN**: VESUM confirms `noun:inanim:m` (MASCULINE), plan labels it feminine (f). Fix: нежить (m).
+- ✅ таблетка — noun
+- ✅ хворий — adj (5 forms across adj lemma)
+- ✅ болять — verb (lemma: боліти) — plural form confirmed
+- ✅ застуда — noun
+- ✅ ліки — noun (3 entries)
+- ✅ краплі — noun (6 entries, lemma: крапля)
+- ✅ випишу — verb (lemma: виписати) ✅
 
-> ⚠️ **Gender note — нежить:** The plan labels нежить as feminine (f). VESUM confirms both **нежитю** (masculine gen/dat) and **нежиті** (feminine gen/dat) are valid forms — both return 4 matches. In standard literary Ukrainian, нежить is **masculine**. Both genders are attested in VESUM, but the masculine form is preferred in formal Ukrainian. Correct the plan label: `нежить (runny nose, m)`. In content, use `нежитю` (genitive: *немає нежитю*) OR `проти нежитю` — not `нежиті`.
-
-> ⚠️ **Gender note — біль:** Антоненко-Давидович (ad-011) explicitly states: *"іменник біль в українській мові – чоловічого роду"* (masculine). The phrase **головний біль** is therefore masculine, genitive: **головного болю**. This is correct in the plan. Note this to writers so they don't feminize it under Russian influence (*"зубна біль"* ← Russian calque — WRONG).
+**Confirmed**: ALL 18 plan vocabulary words verified ✅
+**Not found**: none
+**Action required**: Fix нежить gender tag in plan from `f` → `m`
 
 ---
 
 ## Textbook Excerpts
 
-### Section: Тіло (The Body)
-> *"Обруч крутять навколо тіла, на руці, нозі. Обруч — прикраса... Обручі носять на голові."*
-> Source: **Большакова, Grade 1** (1-klas-bukvar-bolshakova-2018-2, p.8) — natural use of рука (руці), нога (нозі), голова (голові) in locative case in a running Grade 1 text. Strong pedagogical precedent for these as the first body parts.
+### Section: Тіло (The Body) — частини тіла
+> "Обруч крутять навколо тіла, на **руці**, **нозі**. Обручі носять на **голові**."
+> Source: Большакова, Grade 1 (Буквар 2018), p. 8 — body parts appear naturally in Grade 1 context with locative case
 
-> *"нога / глина / голова / гараж / голівонька"* — word list alongside a dragon story with "дві голови"
-> Source: **Большакова, Grade 1** (p.58) — голова and нога both appear in Grade 1 vocabulary-introduction pages as canonical body part terms.
+### Section: У мене болить... (symptoms + doctor)
+> "Голов­ний **біль** – ознака недуги. Отже, при виникненні головного болю треба не займатися самолікуванням, а звертатися за порадою до **лікаря**."
+> Source: Заболотний, Grade 10 (2018), p. 177 — confirms "головний біль" (masc.) and "звертатися до лікаря" as natural Ukrainian
 
-### Section: У мене болить...
-> *"Голівний біль – ознака недуги. Отже, при виникненні головного болю треба не займатися самолікуванням, а звертатися за порадою до лікаря."*
-> Source: **Заболотний, Grade 10** (10-klas-ukrmova-zabolotnyi-2018, p.177) — the phrase "головний біль" and "звертатися до лікаря" appear in an argumentative text about health. Confirms **лікар** as the standard term, and **головний біль** (masculine) as the standard compound.
+### Section: У мене болить... (sickbed scene — температура, болить)
+> "Після такої **температури** це навіть забагато зразу. [...] І **голова** крутиться від довгого лежання."
+> Source: Авраменко, Grade 6 (Ukrainian Literature, 2023), p. 124 — authentic illness vocabulary in literary context
 
-> *"Послухавши пульс, вона підняла мені сорочку... Організм не приймає. І голова крутиться, підвестися несила."*
-> Source: **Авраменко, Grade 6 literature** (6-klas-ukrlit-avramenko-2023, p.123) — natural scene of a doctor examining a sick child, with symptoms described colloquially. Confirms the register for A1 health dialogues.
-
-### Section: Діалоги (At the doctor / pharmacy)
-> *"Шовкові китиці на поясі теж двигтіли, йому тут-таки просто посеред базару скаржилися на всілякі немочі, і він одказував поважно: «Авспіріні, авспіріні пийте, моя ласко. Тричі на день по одній пігулці.»"*
-> Source: **Авраменко, Grade 7 literature** (7-klas-ukrlit-zabolotnyi-2024, p.157) — pharmacist character, confirms **пігулка** (= таблетка) as authentic Ukrainian term, and the "trice daily" prescription pattern. Note: "скаржилися на немочі" = "complained about ailments" — strong model for doctor visit dialogue.
-
-> *"Лікар спокійно, з упевненістю в голосі розказував про свої спостереження, від чого самопочуття хворого поліпшилося."*
-> Source: **Заболотний, Grade 10** (p.19) — confirms **лікар/хворий** as standard vocabulary pair, and the doctor-patient interaction register.
+### Section: Dialogues — At the doctor's (лікар + хворий)
+> "В очах пацієнта відчувалася тривога [...] Після кількох запитань й огляду **лікар** зазначив, що, імовірно, **біль** є симптомом загострення."
+> Source: Заболотний, Grade 10 (2018), p. 19 — doctor-patient communication text; confirms лікар vocabulary register
 
 ---
 
 ## Grammar Rules
 
-- **болить / болять (verb agreement with body parts):** The verb боліти uses singular **болить** with a single body part as subject (*у мене болить голова*) and plural **болять** when the subject is plural (*у мене болять зуби*). This is standard third-person verb agreement. The plan correctly notes this distinction with "болять зуби (plural form болять) — just recognize it." ✅ Правопис §33–34 covers verb conjugation classes; this specific agreement rule follows standard predicate-subject number agreement.
-
-- **biль — masculine gender:** Правопис §54 covers noun gender. Confirmed by Антоненко-Давидович (ad-011): *"іменник біль в українській мові – чоловічого роду."* → **головний біль** ✅, genitive **головного болю** ✅.
-
-- **У мене болить (dative possession construction):** The plan correctly labels this as dative (A2+) and instructs writers to teach it as a chunk. This is the pedagogically sound approach for A1. No Правопис issue — this is a syntactic chunk, not an orthographic rule.
+- **"У мене болить" construction** (dative possessive): Plan correctly notes this is dative (A2+ analysis) and instructs teaching it as a CHUNK at A1. ✅ No Правопис rule needed — chunk approach is pedagogically sound.
+- **біль is MASCULINE**: Антоненко-Давидович §ІМЕННИКИ confirms "іменник біль в українській мові – чоловічого роду" (contrast Russian feminine "боль"). Plan's use of "від головного болю" (genitive masculine) is grammatically correct ✅.
+- **Правопис query** on dative case returned §15 (Д→ДЖ alternation) — dative case rules are not a Правопис 2019 concern (spelling-only document); grammar is covered by the Ukrainian grammar reference, not Правопис.
 
 ---
 
 ## Calque Warnings
 
-### 🔴 CRITICAL — "від" with medicines (confirmed calque)
+- **"ліки від [хвороби]"** — ⚠️ **CALQUE** (Russicism). Антоненко-Давидович (§ПРИЙМЕННИКИ) explicitly: *"Це ліки від усяких хвороб" — так сказати по-українську не можна. Треба: "ліки **проти** ревматизму."*
+  - Plan dialogue: "Від головного болю? — Так. І від кашлю, будь ласка." and "А є щось від нежиті?"
+  - **Correct form**: таблетки **проти** головного болю / краплі **проти** нежиті / щось **проти** кашлю
+  - **Action**: Replace all `від [symptom]` in pharmacy dialogue with `проти [symptom]`
+  - Note: "головний біль" standalone phrase ✅ is correct; only the preposition + ліки combination triggers the calque rule.
 
-**All three instances in the plan are WRONG:**
+- **"випишу ліки"** — ✅ OK. Виписати ліки / рецепт is natural Ukrainian. No calque issue found.
 
-| Plan text | Status | Correct Ukrainian |
-|-----------|--------|-------------------|
-| `Від головного болю?` | ❌ Calque | `Проти головного болю?` |
-| `від кашлю, будь ласка` | ❌ Calque | `проти кашлю, будь ласка` |
-| `А є щось від нежиті?` | ❌ Calque | `А є щось проти нежитю?` |
-| Summary: `від головного болю (for headache)` | ❌ Calque | `проти головного болю` |
-| Summary: `від кашлю (for cough)` | ❌ Calque | `проти кашлю` |
-| Summary: `від нежиті (for runny nose)` | ❌ Calque | `проти нежитю` |
-
-**Authority:** Антоненко-Давидович (ad-220): *"Це ліки від усяких хвороб" — Так сказати по–українському не можна; коли йдеться про ліки, треба ставити прийменник проти: "Ліки проти ревматизму" (Українсько–російський словник АН УРСР)."*
-
-This is a Russian calque (Russian: *лекарство от + gen* → Ukrainian: *ліки проти + gen*). The plan must be updated before writing begins.
-
-### ✅ "виписати ліки" (prescribe medicine)
-The plan dialogue says *"Я випишу ліки."* — **Acceptable.** Антоненко-Давидович does not flag "виписати" in the prescriptions sense. The style guide notes "привести vs призвести" and "лікарський" adjective usage, but "виписати ліки / рецепт" is the standard Ukrainian expression.
-
-### ✅ "Мені погано" (I feel bad)
-No calque flagged by style guide. "Мені погано" is natural Ukrainian. Compare authentic Grade 6 Avramenko: *"підвестися несила"* — same colloquial register.
+- **"від головного болю" (standalone genitive phrase without ліки)** — ✅ OK as standalone phrase / label (e.g., section heading or category label without ліки).
 
 ---
 
 ## CEFR Check
 
-| Word | PULS Level | Assessment |
-|------|------------|------------|
-| голова | **A1** | ✅ On target |
-| рука | **A1** | ✅ On target |
-| нога | **A1** | ✅ On target |
-| лікар | **A1** | ✅ On target — note: доктор = B1, медик = B1; use лікар only |
-| аптека | **A1** | ✅ On target |
-| хворий (adj) | **A1** | ✅ On target |
-| температура | **A1** | ✅ On target |
-| таблетка | **A2** | ⚠️ One level above A1 — acceptable at A1.8 (late A1, approaching A2) |
-| кашель | **A2** | ⚠️ One level above A1 — acceptable at A1.8 |
-| нежить | **A2** | ⚠️ One level above A1 — acceptable at A1.8 |
+| Word | PULS Level | Status |
+|------|-----------|--------|
+| голова | A1 | ✅ On target |
+| лікар | A1 | ✅ On target |
+| аптека | A1 | ✅ On target |
+| температура | A1 | ✅ On target |
+| хворий (adj) | A1 | ✅ On target |
+| таблетка | **A2** | ⚠️ One level above A1 — acceptable as situational health vocab, flag in plan |
+| кашель | **A2** | ⚠️ One level above A1 — acceptable as situational health vocab |
+| нежить | **A2** | ⚠️ One level above A1 — acceptable as situational health vocab |
 
-> **Note on A2 vocabulary at A1.8:** таблетка, кашель, нежить are all PULS A2 but appear in an A1.8 health module, which is the final phase of A1 and a natural transition point. These are high-frequency, real-world words a learner will encounter immediately. Teaching them here is pedagogically sound — they are **introduced as vocabulary** rather than assumed knowledge. No words are above A2.
+**Note on A2 words at A1**: таблетка, кашель, нежить are PULS A2 but situationally essential for a health module. Ukrainian textbooks (Grade 1-2) regularly introduce situational vocabulary above the learner's current level when the context demands it. These are appropriate to include — but the plan should note they are "productive A1 situational vocabulary" or taught as chunks.

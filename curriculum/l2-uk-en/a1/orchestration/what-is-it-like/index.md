@@ -1,6 +1,6 @@
 # Build Summary: what-is-it-like (A1)
 
-Generated: 2026-04-01 13:15
+Generated: 2026-04-03 15:32
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-01 13:15
 | vocab | complete | 2026-03-30 11:52:04 |
 | enrich | complete | 2026-03-30 11:52:05 |
 | verify | complete | 2026-03-30 11:52:05 |
-| review | complete | 2026-04-01 11:15:25 |
-| stress | complete | 2026-04-01 11:15:33 |
-| publish | complete | 2026-04-01 11:15:34 |
+| review | complete | 2026-04-03 13:32:34 |
+| stress | complete | 2026-04-03 13:32:41 |
+| publish | complete | 2026-04-03 13:32:43 |
 
 ## Reviews
 
@@ -28,6 +28,7 @@ Generated: 2026-04-01 13:15
 |-------|------|
 | 1 | what-is-it-like-review-r1.md |
 | 2 | what-is-it-like-review-r2.md |
+| 3 | what-is-it-like-review-r3.md |
 
 ## Dispatch Log
 
@@ -43,6 +44,9 @@ Generated: 2026-04-01 13:15
 | review | gemini (gemini-3-flash-preview) | 2s | ❌ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 221s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 40s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 600s | ❌ |
+| review | gemini-tools (auto) | 374s | ✅ |
 
 ## Files
 
@@ -54,6 +58,8 @@ Generated: 2026-04-01 13:15
 - `research-quality.json`
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

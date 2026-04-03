@@ -1,0 +1,48 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Covers all outline points exactly, including the specific `Anna Ep6-7`
+    dialogues and the "NO single word for grandparents" rule.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: 'Critical phonetic errors due to incorrect manual stress marks: `«У мене́
+    є...»`, `Як йо́го зва́ти?`, `**Дру́жина**`, `Катя́`, and `На́зви` (imperative).'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Exceptional integration of authentic textbook references (Grade 1 Захарійчук,
+    Grade 3 Вашуленко) to explain grammar simply and naturally.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items are naturally embedded in
+    the text.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Inject markers are present, correctly named, and sequentially logical.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'Highly engaging, but contains a slightly dramatic/corporate-speak meta-comment
+    at the end: "This is yours now."'
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: 'The text is beautifully formatted but significantly exceeds the 1200
+    word target (1604 words is >30% over budget). Additionally, the manual generation
+    of stress marks violates the pipeline formatting '
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Perfectly explains the cultural nuance of `сім'я` vs `родина` and the
+    lack of a generic "grandparents" word.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are natural, communicative, and highly authentic for the A1
+    level.
+findings: []

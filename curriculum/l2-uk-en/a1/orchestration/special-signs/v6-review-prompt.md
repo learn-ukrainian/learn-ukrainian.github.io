@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 3: Special Signs (A1, A1.1 [Sounds, Letters, and First Contact])
-**Writer:** Gemini
+**Writer:** Claude
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -157,11 +157,11 @@ references:
 <generated_module_content>
 ## М'яки́й знак (The Soft Sign — Ь)
 
-Every Ukrainian word you have read so far has been built from letters that represent sounds. Now meet a letter that breaks that rule: **Ь** — the soft sign, or **знак м'я́кшення**. It has no sound of its own. Zero. Its only job is to change how the consonant before it is pronounced — making it soft. Consider the difference: **лук** (onion) and **люк** (hatch) are two completely different words, and the only difference is softness. The letter **Ь** marks that softness in writing. One letter, one job, zero sounds. Look at **сіль** (salt) — the **Л** is soft because of the **Ь**. Look at **день** (day) — the **Н** is soft. The consonant changes; the **Ь** itself stays silent.
+Every Ukrainian word you have read so far has been built from letters that represent sounds. Now meet a letter that breaks that rule: **Ь** — the soft sign, or **знак м'я́кшення**. It has no sound of its own. Zero. Its only job is to change how the consonant before it is pronounced — making it soft. Consider the difference: **рис** (rice) and **рись** (lynx) are two completely different words, and the only difference is the softness of the final sound. The letter **Ь** marks that softness in writing. One letter, one job, zero sounds. Look at **сіль** (salt) — the **Л** is soft because of the **Ь**. Look at **день** (day) — the **Н** is soft. The consonant changes; the **Ь** itself stays silent.
 
 Ukrainian textbooks teach a three-way system for consonants. Not every consonant can be softened with **Ь** — only a specific group. Here is the full picture from Авра́менко (Grade 5) and Большако́ва (Grade 2):
 
-1. **М'які́ при́голосні** (truly soft consonants) — exactly 9 consonants can take **Ь** to become fully soft: **Д**, **Т**, **З**, **С**, **Ц**, **Л**, **Н**, **Р**, **ДЗ**. The letter **Й** is inherently soft — it never needs **Ь**. For most of these, **Ь** appears at the end of a word or syllable. For **Р**, **Ь** appears in the middle of a word before **О**: **трьох** (three, genitive), **ларьо́к** (kiosk), **чотирьо́х** (four, genitive). These are the consonants you will see **Ь** after in standard Ukrainian spelling.
+1. **М'які́ при́голосні** (truly soft consonants) — exactly 9 consonants can take **Ь** to become fully soft: **Д**, **Т**, **З**, **С**, **Ц**, **Л**, **Н**, **Р**, **ДЗ**. The letter **Й** is inherently soft — it never needs **Ь**. For most of these, **Ь** appears at the end of a word or syllable. For **Р**, **Ь** appears in the middle of a word before **О**: **трьох** (three, genitive) and **чотирьо́х** (four, genitive). These are the consonants you will see **Ь** after in standard Ukrainian spelling.
 
 2. **Пом'я́кшені приголосні** (partially softened consonants) — the labials (**Б**, **П**, **В**, **М**, **Ф**), the hushing consonants (**Ж**, **Ш**, **Ч**, **ДЖ**), and the back-tongue consonants (**К**, **Ґ**, **Г**, **Х**) can only be softened by following soft vowels like **і**, **я**, **ю**, **є**. You will **never** see **Ь** after these letters.
 
@@ -190,13 +190,13 @@ Compare what happens with and without an apostrophe. In **пі́сня** (song),
 - **п'ять** (five) — **П** hard, then й + а
 - **комп'ю́тер** (computer) — **П** hard, then й + у. A familiar cognate that anchors the rule perfectly.
 
-Two more: **де́в'ять** (nine) — **В** hard, then й + а. And **м'який** (soft) — this word has an apostrophe only, with no **Ь**, because **Й** is inherently soft and never needs a soft sign.
+Two more: **де́в'ять** (nine) — **В** hard, then й + а. And **м'який** (soft) — this word has an apostrophe, but ironically, the word for "soft" contains no soft sign (**Ь**) at all!
 
 :::note Scope
 Words like **під'ї́зд** and **з'їзд** also have apostrophes, but they follow a different rule — the prefix rule, where a prefix ending in a consonant separates from **ї**. That rule comes at A2. For now, focus only on the labial rule: **б**, **п**, **в**, **м**, **ф**, **р** + **я**, **ю**, **є**, **ї**.
 :::
 
-Reading practice from the textbooks (Кравцо́ва Grade 2, Большакова Grade 1): **п'ять**, **дев'ять**, **м'яч** (ball), **м'який**, **сім'я**, **м'ясо**, **комп'ютер**, **ім'я́** (name), **здоро́в'я** (health), **пі́р'я** (feathers).
+Reading practice from the textbooks (Кравцо́ва Grade 2, Большакова Grade 1): **п'ять**, **дев'ять**, **м'яч** (ball), **м'який**, **сім'я**, **м'ясо**, **комп'ютер**, **ім'я́** (name), **здоро́в'я** (health), **пі́р'я** (feathers), **об'є́кт** (object).
 
 <!-- INJECT_ACTIVITY: fill-in-soft-or-apostrophe -->
 
@@ -239,7 +239,7 @@ Ukrainian has a vowel that exists on its own terms: **И**. It is not the same a
 - **лист** (leaf, letter) vs **ліс** (forest)
 - **кит** (whale) vs **кіт** (cat)
 
-These are not subtle differences — **кит** and **кіт** are completely different words. **И** sits in a mid-tongue position, between **І** and **Е**. It is a distinctly Ukrainian sound. Drill these pairs aloud: **дим** — **дім** — **бик** — **бік** — **кит** — **кіт**. Watch the pronunciation video for **И** and let your ear learn the distinction directly.
+These are not subtle differences — **кит** and **кіт** are completely different words. **И** sits in a mid-tongue position, between **І** and **Е**. It is a distinctly Ukrainian sound. Drill these pairs aloud: **дим** — **дім** — **бик** — **бік** — **кит** — **кіт**. Practice with Anna Ohoiko's pronunciation video for **И** and let your ear learn the distinction directly.
 
 ### Г vs Ґ
 
@@ -255,7 +255,7 @@ An interesting pair: **ґра́ти** (iron bars, noun) vs **гра́ти** (to 
 
 ### Р
 
-The Ukrainian **Р** is trilled — the tongue tip vibrates against the ridge behind the upper teeth. Practice words: **рука́** (hand), **робо́та** (work), **ра́нок** (morning), **ри́ба** (fish). Watch the pronunciation video for **Р**. An imperfect **Р** is always understood by native speakers — focus on getting comfortable, not perfect.
+The Ukrainian **Р** is trilled — the tongue tip vibrates against the ridge behind the upper teeth. Practice words: **рука́** (hand), **робо́та** (work), **ра́нок** (morning), **ри́ба** (fish). Practice with Anna Ohoiko's pronunciation video for **Р**. An imperfect **Р** is always understood by native speakers — focus on getting comfortable, not perfect.
 
 <!-- INJECT_ACTIVITY: quiz-g-vs-gx -->
 
@@ -273,7 +273,7 @@ Four new pieces of the Ukrainian sound system, each with a clear function: **Ь*
 - **How is Г different from Ґ?** → **Г** is a voiced fricative (air flows through, like **Х** with voice). **Ґ** is a voiced stop (full closure then release, like **К** with voice).
 - **Read these words aloud:** **сім'я**, **день**, **п'ять**, **гарно**, **риба**, **ґудзик**.
 
-**Deterministic word count: 1472 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1480 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -409,8 +409,8 @@ If your verdict is **REVISE**, you MUST output a `<fixes>` block with exact find
 
 Rules for fixes:
 - Each fix is a YAML entry with `find:` (exact text from the module) and `replace:` (corrected text)
-- The `find` string must be an EXACT substring of the module content — copy-paste it
-- Keep fixes minimal — change only what's wrong, preserve surrounding text
+- The `find` string MUST be an EXACT copy-paste from the module content. DO NOT change quotes (« » to " "), dashes (— to -), or spacing. If you change a single character in the `find` string, the automated replacement will fail.
+- Keep fixes minimal — change only what's wrong, preserve surrounding text. Provide enough context (e.g. 5-7 words) to make the match unique.
 - Do NOT fix словник/vocabulary tables (those are generated by a downstream tool)
 - For word count issues: add content as a new `insert_after:` entry instead of find/replace
 
@@ -475,7 +475,6 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ кшення — NOT IN VESUM
   ✗ кшені — NOT IN VESUM
   ✗ ків — NOT IN VESUM
-  ✗ ларьо — NOT IN VESUM
   ✗ ларьок — NOT IN VESUM
   ✗ лехко — NOT IN VESUM
   ✗ лка — NOT IN VESUM
@@ -487,6 +486,7 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ нок — NOT IN VESUM
   ✗ нських — NOT IN VESUM
   ✗ нький — NOT IN VESUM
+  ✗ об'є — NOT IN VESUM
   ✗ пка — NOT IN VESUM
   ✗ під'ї — NOT IN VESUM
   ✗ р'я — NOT IN VESUM

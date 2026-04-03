@@ -1,130 +1,160 @@
 ## Dialogues
 
-Оле́нка wakes up feeling terrible — her head is pounding and her throat is on fire. Time to visit the **лі́кар** (doctor).
+Two situations every learner will face in Ukraine: a visit to the **лі́кар** (doctor) and a stop at the **апте́ка** (pharmacy). Both dialogues below use the vocabulary you will study in this module. Read them now for the full picture, then we will break down the pieces.
 
-> — **Лікар:** До́брий день! Що у вас боли́ть? *(Good day! What hurts?)*
-> — **Паціє́нтка:** У мене́ болить голова́ і го́рло. *(My head and throat hurt.)*
-> — **Лікар:** Давно́? *(For long?)*
-> — **Пацієнтка:** З учо́ра. І в мене температу́ра. *(Since yesterday. And I have a fever.)*
-> — **Лікар:** Ви ка́шляєте? *(Are you coughing?)*
-> — **Пацієнтка:** Так, тро́хи. І в мене не́жить. *(Yes, a little. And I have a runny nose.)*
-> — **Лікар:** Зрозумі́ло. Це засту́да. *(Understood. It's a cold.)*
-> — **Пацієнтка:** Що мені́ роби́ти? *(What should I do?)*
-> — **Лікар:** Я ви́пишу лі́ки. Відпочива́йте! *(I'll prescribe medicine. Rest!)*
-> — **Пацієнтка:** Дякую, лі́карю! *(Thank you, doctor!)*
+### Діало́г 1 — У лі́каря (At the doctor's)
 
+> **Лікар:** До́брий день. Що у вас боли́ть? *(Good day. What hurts you?)*
+> **Паціє́нт:** У мене́ болить голова́ і го́рло. *(My head and throat hurt.)*
+> **Лікар:** Давно́? *(For long?)*
+> **Пацієнт:** З учо́ра. І в мене температу́ра. *(Since yesterday. And I have a fever.)*
+> **Лікар:** Ви ка́шляєте? *(Do you cough?)*
+> **Пацієнт:** Так, тро́хи. І в мене не́жить. *(Yes, a little. And I have a runny nose.)*
+> **Лікар:** Зрозумі́ло. Це засту́да. *(Understood. It's a cold.)*
+> **Лікар:** Я ви́пишу лі́ки. Відпочива́йте! *(I'll prescribe medicine. Rest!)*
+> **Пацієнт:** Дякую, лі́карю! *(Thank you, doctor!)*
 
-With her prescription in hand, Оленка walks to the **апте́ка** (pharmacy) next door.
+The doctor opens with one question: **«Що у вас болить?»** — and the patient answers with a simple stack of symptoms. That is the entire pattern for a clinic visit.
 
-> — **Оленка:** Добрий день! У мене болить голова. Да́йте, будь ла́ска, табле́тки. *(Good day! My head hurts. Give me pills, please.)*
-> — **Фармаце́вт:** Про́ти головно́го бо́лю? *(For a headache?)*
-> — **Оленка:** Так. І проти ка́шлю, будь ласка. *(Yes. And for a cough, please.)*
-> — **Фармацевт:** Ось, будь ласка. Ще щось? *(Here you go. Anything else?)*
-> — **Оленка:** А є щось проти не́житю? *(Do you have something for a runny nose?)*
-> — **Фармацевт:** Так, ось кра́плі. *(Yes, here are drops.)*
-> — **Оленка:** Дякую! Скі́льки це ко́шту́є? *(Thanks! How much does this cost?)*
-> — **Фармацевт:** Сто два́дцять гри́вень. *(One hundred twenty hryvnias.)*
-> — **Оленка:** Будь ласка. *(Here you go.)*
+:::tip Key phrases from Dialogue 1
+**«Що у вас болить?»** — the doctor's standard opening question ("What hurts you?"). Memorise this — you will hear it in every Ukrainian clinic.
 
+**«З учора»** — "Since yesterday." A useful time anchor when describing symptoms at A1.
+:::
 
-Notice three key chunks from these dialogues. First: **У мене болить...** (I have a pain in...) — the essential phrase for telling anyone what hurts. Second: **Дайте, будь ласка...** (Give me... please) — the polite request form you already know from shopping modules. Third: **проти головного болю** (for a headache), **проти кашлю** (for a cough), **проти нежитю** (for a runny nose) — these are how you ask for specific medicine. You don't need to analyse the grammar behind these yet — that comes at A2. For now, treat them as ready-made chunks.
+### Діалог 2 — В апте́ці (At the pharmacy)
 
-## Ті́ло (The Body)
+> **Покупе́ць:** Добрий день! У мене болить голова. Да́йте, будь ла́ска, табле́тки. *(Good day! I have a headache. Give me pills, please.)*
+> **Фармаце́вт:** Про́ти головно́го бо́лю? *(For a headache?)*
+> **Покупець:** Так. І проти ка́шлю, будь ласка. *(Yes. And for a cough, please.)*
+> **Фармацевт:** Ось, будь ласка. Ще щось? *(Here you go. Anything else?)*
+> **Покупець:** А є щось проти не́житю? *(Is there something for a runny nose?)*
+> **Фармацевт:** Так, ось кра́плі. *(Yes, here are drops.)*
+> **Покупець:** Дякую! Скі́льки це ко́шту́є? *(Thanks! How much does this cost?)*
 
-Here are the ten body parts you need at A1. Each one has a grammatical gender — this matters for adjective agreement, but right now your main job is simply learning the words:
+This dialogue introduces the pharmacy formula: **«Дайте, будь ласка, таблетки проти...»** (Give me pills for...). Notice the three symptom chunks: **проти головного болю** (for a headache), **проти кашлю** (for a cough), **проти нежитю** (for a runny nose). Treat these as frozen phrases — no grammar analysis needed.
 
-- **голова** (head, f)
-- **горло** (throat, n)
-- **спи́на** (back, f)
-- **живі́т** (stomach, m)
-- **рука́** (hand/arm, f)
-- **нога́** (leg/foot, f)
-- **о́ко** (eye, n)
-- **ву́хо** (ear, n)
-- **зуб** (tooth, m)
-- **ніс** (nose, m)
+:::note «Проти» not «від»
+When asking for medicine, Ukrainian uses **проти** (against), not **від** (from): **таблетки проти кашлю**, **краплі проти нежитю**. This is a common mistake even among native speakers influenced by Russian patterns.
+:::
 
-Two important notes: **рука** covers the entire arm including the hand — Ukrainian doesn't split them at A1. The same goes for **нога**, which means the whole leg including the foot. If you stub your toe or twist your ankle, it's still **нога**.
-
-Why do genders matter here? Because adjectives must agree: **вели́ке око** (big eye — neuter), **вели́кий ніс** (big nose — masculine), **вели́ка рука** (big hand — feminine). But at this stage, you'll mostly use these words in the chunk **У мене болить...**, where gender doesn't change anything. Memorise the words first — full adjective agreement practice comes at A2.
-
-<!-- INJECT_ACTIVITY: match-body-parts -->
-
-Imagine Миха́йлик is drawing a person and labelling the parts: «Ось **голова**!» *(Here's the head!)* He draws two arms: «А це **рука** і **рука**.» *(And this is an arm and an arm.)* Then the legs: «Це **нога**.» *(This is a leg.)* He adds a face: «Ось **ніс**, **око** і **вухо**.» *(Here's the nose, eye, and ear.)* He points to the middle: «А тут **живіт**!» *(And here's the stomach!)* Finally he writes across the back: «І **спина**!» *(And the back!)* Simple labelling like this — pointing and naming — is exactly how Ukrainian Grade 1 textbooks introduce body parts.
-
-A few pronunciation tips for tricky words. **Горло** — the «г» is a voiced sound, softer than English "g." Think of a gentle vibration in the throat, not a hard stop. **Живіт** — the «ж» sounds like the "s" in English "measure" or "pleasure." **Вухо** starts with two distinct sounds: «в» then «у» — don't blend them into an English "w." When in doubt about stress or exact pronunciation, check the словни́к tab where every word has audio.
-
-## У мене болить... (It Hurts...)
-
-The single most useful health phrase in Ukrainian is **У мене болить** + a body part. Learn it as one chunk — a ready-made sentence starter. Here are the five core combinations:
-
-1. **У мене болить голова.** (My head hurts.)
-2. **У мене болить живіт.** (My stomach hurts.)
-3. **У мене болить горло.** (My throat hurts.)
-4. **У мене болить спина.** (My back hurts.)
-5. **У мене болить зуб.** (My tooth hurts.)
-
-The literal structure is "at me hurts head" — the grammar behind this pattern is something you'll study properly at A2. For now, just memorise the pattern: **У мене болить** + whatever hurts.
-
-When more than one thing hurts — or when the body part is naturally plural — **болить** changes to **боля́ть**:
-
-- **У мене болять зу́би.** (My teeth hurt.)
-- **У мене болять но́ги.** (My legs hurt.)
-- **У мене болять о́чі.** (My eyes hurt.)
-
-You don't need to produce these forms yet. Just recognise them when you hear a doctor or friend say **болять** — it means multiple things hurt.
-
-<!-- INJECT_ACTIVITY: fill-in-symptoms -->
-
-Beyond **болить**, there are several common symptom chunks. Each one is a complete statement you can use as-is:
-
-- **У мене температура.** (I have a fever. — literally "I have temperature")
-- **У мене ка́шель.** (I have a cough.)
-- **У мене нежить.** (I have a runny nose.)
-- **Мені хо́лодно.** (I'm cold.)
-- **Мені пога́но.** (I feel unwell.)
-- **Я хво́рий.** (I'm sick. — if you're male)
-- **Я хво́ра.** (I'm sick. — if you're female)
-
-Notice that **У мене температура** doesn't use **болить** — the fever doesn't "hurt," it "is with you." And **Мені погано** uses a different grammatical form (**мені**) — again, just learn it as a chunk for now.
-
-At the doctor or pharmacy, combine these chunks naturally. A sick person might say: **У мене болить горло і є температура.** (My throat hurts and I have a fever.) Or: **Я хвора. У мене кашель і нежить.** (I'm sick. I have a cough and a runny nose.) You already have enough vocabulary to describe a full set of symptoms — real Ukrainian you'd use on day one in Kyiv.
-
-<!-- INJECT_ACTIVITY: fill-in-pharmacy -->
-
-## Summary
-
-Here is your complete health toolkit from this module.
-
-**Body parts:**
-**голова**, **горло**, **живіт**, **спина**, **рука**, **нога**, **око**, **вухо**, **зуб**, **ніс**
-
-**Symptom chunks:**
-- **У мене болить** [body part].
-- **У мене температура / кашель / нежить.**
-- **Мені погано.**
-- **Я хворий / хвора.**
-
-Two real situations where you'll use all of this:
-
-**At the doctor (у лі́каря):**
-- Doctor asks: **Що у вас болить?** → You answer: **У мене болить...**
-
-**At the pharmacy (в апте́ці):**
-- **Дайте, будь ласка, таблетки проти головного болю.** (Give me pills for a headache, please.)
-- **Дайте краплі проти нежитю.** (Give me drops for a runny nose.)
-- **Дайте сиро́п проти кашлю.** (Give me syrup for a cough.)
+Both dialogues stay simple: one phrase to describe the problem (**«У мене болить...»**), one formula to ask for help (**«Дайте, будь ласка...»**). That is the complete A1 health toolkit.
 
 <!-- INJECT_ACTIVITY: quiz-health-response -->
 
-Test yourself with these three questions:
+## Ті́ло (The Body)
 
-- How do you say "My throat hurts and I have a fever"? → **У мене болить горло і є температура.**
-- You're at the pharmacy. You need something for a cough. What do you say? → **Дайте, будь ласка, щось проти кашлю.**
-- How do you say "I feel unwell"? → **Мені погано.**
+Here are ten body parts you need for a clinic visit. Learn each one with its gender — you will need it later for adjectives.
 
-If you got all three, you're ready for real-world health situations.
+- **голова** (f) — head
+- **горло** (n) — throat
+- **спи́на** (f) — back
+- **живі́т** (m) — stomach
+- **рука́** (f) — hand/arm
+- **нога́** (f) — leg/foot
+- **о́ко** (n) — eye
+- **ву́хо** (n) — ear
+- **зуб** (m) — tooth
+- **ніс** (m) — nose
 
-Looking ahead: module 54 (Emergencies) builds directly on this vocabulary. You'll learn phrases like **ви́клик швидко́ї** (calling an ambulance), describe urgent situations, and use past-tense forms from module 52. The chunk **У мене болить...** will reappear constantly across future modules — it's one of those patterns that, once learned, never stops being useful.
+Two scope notes: **рука** covers everything from shoulder to fingertip — Ukrainian uses one word where English has "arm" and "hand." The same applies to **нога**, which covers hip to toe — both "leg" and "foot." These ten words are the most useful for an A1 learner at a clinic. This is not a complete anatomy lesson — just the essentials.
 
-<!-- INJECT_ACTIVITY: fill-in-pharmacy-doctor -->
+### Gender in practice
+
+At A1 you will mainly use these words after **болить**, but gender matters when you add an adjective (review from M09). Three contrast examples show the pattern:
+
+- **вели́ке око** — big eye (neuter: adjective ends in **-е**)
+- **вели́кий ніс** — big nose (masculine: adjective ends in **-ий**)
+- **вели́ка рука** — big hand (feminine: adjective ends in **-а**)
+
+Two more from the health context:
+
+- **хво́ре горло** — sore throat (neuter)
+- **боля́чий зуб** — aching tooth (masculine)
+
+The takeaway: learn each body part with its gender tag now, and adjective agreement will be automatic later.
+
+### From list to phrase
+
+Every word on the list above slots straight into the pattern you will learn next: **«У мене болить»** + body part. Three quick previews:
+
+- **У мене болить голова.** *(I have a headache.)*
+- **У мене болить живіт.** *(My stomach hurts.)*
+- **У мене болить спина.** *(My back hurts.)*
+
+The body-part list is the input; the chunk is the output. Memorise the list now, and the next section gives you the grammar-free way to use it immediately.
+
+<!-- INJECT_ACTIVITY: match-body-parts -->
+
+## У мене болить... (It Hurts...)
+
+**«У мене болить»** is the single most useful health phrase in Ukrainian. Literally it means "at me hurts," but learn it as an unanalysed block — the same way a Ukrainian child does. You do not need to know that it uses the dative case (that is A2 grammar). Just attach any body part from the previous section:
+
+- **У мене болить голова.** *(I have a headache.)*
+- **У мене болить живіт.** *(My stomach hurts.)*
+- **У мене болить горло.** *(My throat hurts.)*
+- **У мене болить спина.** *(My back hurts.)*
+- **У мене болить зуб.** *(I have a toothache.)*
+
+Five sentences, five body parts — that covers most clinic visits.
+
+### Beyond болить
+
+Five more symptom chunks follow the **«У мене + noun»** pattern:
+
+- **У мене температура.** *(I have a fever.)*
+- **У мене ка́шель.** *(I have a cough.)*
+- **У мене нежить.** *(I have a runny nose.)* — **нежить** is masculine: **си́льний нежить**.
+
+Two phrases for your general state (learn as fixed chunks):
+
+- **Ме́ні хо́лодно.** *(I feel cold.)*
+- **Мені пога́но.** *(I feel bad / I'm not well.)*
+
+And the direct statement — gender agreement works exactly like M09 adjectives:
+
+- **Я хво́рий.** *(I'm sick — male speaker.)*
+- **Я хво́ра.** *(I'm sick — female speaker.)*
+
+:::caution болить vs. боля́ть
+When one thing hurts: **У мене болить зуб.** When multiple things hurt, the verb changes: **У мене болять зу́би.** (**болять** = plural form of **болить**.) Just recognise this form for now — do not memorise it.
+:::
+
+### Combining symptoms
+
+Real conversations stack symptoms. Two models from the doctor's dialogue:
+
+- **У мене болить голова і горло.** *(My head and throat hurt — both with болить.)*
+- **У мене нежить і кашель.** *(I have a runny nose and a cough — two noun symptoms, no verb needed.)*
+
+Try building your own combination:
+
+- **Я хвора. У мене болить горло.** *(I'm sick. My throat hurts.)*
+- **У мене температура і кашель.** *(I have a fever and a cough.)*
+
+This is full A1 communication — no grammar analysis required, only chunk combination.
+
+<!-- INJECT_ACTIVITY: fill-in-symptoms -->
+
+## Summary
+
+### Your health toolkit
+
+This module gave you three registers of health communication. First, talking about your body: **голова**, **горло**, **живіт**, **спина**, **рука**, **нога**, **око**, **вухо**, **зуб**, **ніс** — ten essential body parts with gender. Second, describing what hurts: **«У мене болить»** + any body part, plus noun symptoms like **температура**, **кашель**, **нежить**. Third, describing your general state: **«Я хворий»** / **«Я хвора»**, **«Мені погано»**, **«Мені холодно»**.
+
+Two situation-specific formulas tie it all together. At the doctor, answer **«Що у вас болить?»** with **«У мене болить...»**. At the pharmacy, ask **«Дайте, будь ласка, таблетки проти головного болю»** or **«краплі проти нежитю»**. Treat the **проти**-phrases as fixed chunks for now.
+
+### Переві́р себе́ (Self-check)
+
+- Як сказа́ти "My throat hurts and I have a fever"? → **У мене болить горло. У мене температура.**
+- Як сказати "I'm sick" (you are female)? → **Я хвора.**
+- Що означа́є **«Мені погано»**? → I feel bad / I'm not well.
+- Як попроси́ти таблетки проти кашлю в аптеці? → **Дайте, будь ласка, таблетки проти кашлю.**
+- Як лікар пита́є про симпто́ми? → **Що у вас болить?**
+- Яка різни́ця між **болить** і **болять**? → **болить** = one thing hurts (**зуб**, **голова**); **болять** = several things hurt (**зуби**, **о́чі**).
+
+### What's next
+
+M54 (Emergencies) builds directly on this module. You will use **«Мені погано»** and **«У мене болить»** in urgent situations and add phrases like **«Ви́кличте швидку́!»** (Call an ambulance!). Everything in this module travels forward intact: the chunk **«У мене болить...»**, the symptom nouns, **«Я хворий/хвора»**. Health vocabulary you learn now is vocabulary you keep forever.
+
+<!-- INJECT_ACTIVITY: fill-in-pharmacy -->

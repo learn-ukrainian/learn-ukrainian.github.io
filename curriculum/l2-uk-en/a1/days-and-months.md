@@ -2,6 +2,14 @@
 
 **Що ти ро́биш у понеді́лок?** Your friend wants to make plans for the week. How do you answer? You need the days of the week — and in Ukrainian, they carry stories inside their names. But first, listen to two conversations that show how Ukrainians talk about time.
 
+**(У лі́каря / At the doctor's reception)**
+
+> — **Паціє́нт:** Я хочу́ записа́тися до лі́каря. *(I want to make an appointment with the doctor.)*
+> — **Реєстра́тор:** У понеді́лок? *(On Monday?)*
+> — **Паціє́нт:** Ні, у се́реду. *(No, on Wednesday.)*
+> — **Реєстра́тор:** Добре. В яко́му мі́сяці? *(Good. In which month?)*
+> — **Паціє́нт:** У бе́резні. *(In March.)*
+
 **(Планува́ння ти́жня / Planning the week)**
 
 > — **Тара́с:** Що ти робиш у понеділок? *(What are you doing on Monday?)*
@@ -25,7 +33,7 @@ Taras uses **у понеділок** (on Monday), **у вівторок** (on Tu
 > — **Андрій:** О, це лі́то! Тепло́ і со́нячно. *(Oh, that's summer! Warm and sunny.)*
 
 
-Here you see the same pattern with months: **у березні** (in March), **в серпні** (in August). The phrase **день народження** (birthday, literally "day of birth") is a fixed expression — memorize it as one unit. Андрій also connects the month to a season: **се́рпень** (August) belongs to **літо** (summer).
+Here you see the same pattern with months: **у березні** (in March), **в серпні** (in August). The phrase **день народження** (birthday, literally "day of birth") is a fixed expression — memorize it as one unit. To answer **яко́го чи́сла?** (what date?), use the "-ого" ending for the number chunk: **п'ятна́дцятого** (the fifteenth). Андрій also connects the month to a season: **се́рпень** (August) belongs to **літо** (summer).
 
 Notice how **у** or **в** keeps appearing before time words — **у понеділок**, **у вівторок**, **у березні**, **в серпні**. This is the core pattern of this module. Ukrainian uses **у/в** before days, months, and some seasons. You will see it again and again as we go deeper.
 
@@ -44,8 +52,6 @@ Here are all seven, starting from the beginning of the Ukrainian week:
 - **неділя** (Sunday)
 
 Ukrainian calendars start the week on **понеділок**, not on Sunday as in some English-speaking countries. One important note: **неділя** means "Sunday," but the word for "week" is **ти́ждень**. In some dialects and older texts, **неділя** can mean "week," but in standard modern Ukrainian, a week is always a **тиждень**.
-
-These names are not random sounds — they tell a story. **Четвер** comes from **четве́ртий** (fourth) — it is the fourth day. **П'ятниця** comes from **п'ять** (five) — the fifth day. **Середа** means "middle" — it sits in the middle of the working week. **Субота** has ancient roots shared with the word "Sabbath," borrowed long ago through Greek. Knowing these connections makes the days easier to remember: four, five, middle — **четвер, п'ятниця, середа**.
 
 <!-- INJECT_ACTIVITY: fill-in-days-order -->
 

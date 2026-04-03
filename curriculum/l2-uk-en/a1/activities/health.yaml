@@ -2,26 +2,66 @@ version: '1.0'
 module: health
 level: a1
 inline:
+- id: quiz-health-response
+  type: quiz
+  instruction: Оберіть правильну відповідь (Choose the correct response)
+  items:
+  - question: У мене болить голова.
+    options:
+    - Ось таблетки проти головного болю.
+    - Ось краплі проти нежитю.
+    - Випийте сироп проти кашлю.
+    correct: 0
+  - question: У мене сильний кашель.
+    options:
+    - Ось краплі для носа.
+    - Вам потрібні таблетки проти кашлю.
+    - У мене болить зуб.
+    correct: 1
+  - question: Що у вас болить?
+    options:
+    - У мене болить горло.
+    - Я лікар.
+    - Де аптека?
+    correct: 0
+  - question: Добрий день. Дайте, будь ласка, щось проти нежитю.
+    options:
+    - У мене болить спина.
+    - Це таблетки проти головного болю.
+    - Ось краплі, будь ласка.
+    correct: 2
+  - question: У мене болить зуб.
+    options:
+    - Вам потрібен стоматолог.
+    - Випийте воду.
+    - Ось краплі проти нежитю.
+    correct: 0
+  - question: Мені погано. Що робити?
+    options:
+    - Дайте таблетки.
+    - Де аптека?
+    - Викличте лікаря!
+    correct: 2
 - id: match-body-parts
   type: match-up
-  instruction: З'єднайте слова з перекладом (Match the body parts to their English
-    translations)
+  instruction: З'єднайте слова з перекладом (Match the body parts with their English
+    translation)
   pairs:
   - left: голова
     right: head
-  - left: живіт
-    right: stomach
   - left: горло
     right: throat
   - left: спина
     right: back
+  - left: живіт
+    right: stomach
   - left: рука
-    right: hand/arm
+    right: hand / arm
   - left: нога
-    right: leg/foot
+    right: leg / foot
   - left: зуб
     right: tooth
-  - left: око
+  - left: ока
     right: eye
   - left: вухо
     right: ear
@@ -29,7 +69,7 @@ inline:
     right: nose
 - id: fill-in-symptoms
   type: fill-in
-  instruction: Вставте правильне слово (Fill in the correct word)
+  instruction: Оберіть правильне слово (Choose the correct word)
   items:
   - sentence: У мене болить ____. Я хочу спати.
     answer: голова
@@ -42,7 +82,7 @@ inline:
     options:
     - живіт
     - вухо
-    - око
+    - ока
   - sentence: У мене болить ____ і є температура. Я не можу говорити.
     answer: горло
     options:
@@ -55,7 +95,7 @@ inline:
     - кашель
     - нежить
     - зуб
-  - sentence: У мене болить ____, мені потрібен стоматолог.
+  - sentence: У мене болить ____. Мені потрібен стоматолог.
     answer: зуб
     options:
     - зуб
@@ -69,89 +109,9 @@ inline:
     - аптека
 - id: fill-in-pharmacy
   type: fill-in
-  instruction: Вставте правильне слово (Fill in the correct word)
+  instruction: Оберіть правильне слово (Choose the correct word)
   items:
-  - sentence: Добрий день! У мене болить ____. Дайте таблетки.
-    answer: голова
-    options:
-    - голова
-    - аптека
-    - лікар
-  - sentence: Дайте, будь ласка, щось проти ____.
-    answer: кашлю
-    options:
-    - кашлю
-    - нежитю
-    - болю
-  - sentence: А є щось проти ____?
-    answer: нежитю
-    options:
-    - нежитю
-    - кашлю
-    - болю
-  - sentence: Дайте ____ від кашлю, будь ласка.
-    answer: сироп
-    options:
-    - сироп
-    - лікар
-    - нога
-  - sentence: Дайте таблетки від головного ____.
-    answer: болю
-    options:
-    - болю
-    - кашлю
-    - нежитю
-  - sentence: Так, ось ____. Ще щось?
-    answer: краплі
-    options:
-    - краплі
-    - лікар
-    - горло
-- id: quiz-health-response
-  type: quiz
-  instruction: Оберіть правильну відповідь (Choose the correct response)
-  items:
-  - question: У мене болить голова.
-    options:
-    - Ось таблетки від головного болю.
-    - Ось краплі від нежиті.
-    - Випийте сироп від кашлю.
-    correct: 0
-  - question: У мене сильний кашель.
-    options:
-    - Вам потрібні таблетки від кашлю.
-    - Ось краплі для носа.
-    - У мене болить зуб.
-    correct: 0
-  - question: Що у вас болить?
-    options:
-    - У мене болить горло.
-    - Я лікар.
-    - Де аптека?
-    correct: 0
-  - question: Добрий день. Дайте, будь ласка, щось від нежиті.
-    options:
-    - Ось краплі, будь ласка.
-    - У мене болить спина.
-    - Це таблетки від головного болю.
-    correct: 0
-  - question: Мені погано. Що мені робити?
-    options:
-    - Зверніться до лікаря!
-    - Ось таблетки від кашлю.
-    - Де аптека?
-    correct: 0
-  - question: У мене є нежить і температура.
-    options:
-    - Вам потрібні краплі і ліки від температури.
-    - Дайте, будь ласка, сироп.
-    - У мене болить зуб.
-    correct: 0
-- id: fill-in-pharmacy-doctor
-  type: fill-in
-  instruction: Вставте правильне слово (Fill in the correct word)
-  items:
-  - sentence: Дайте, ____, таблетки від головного болю.
+  - sentence: Дайте, ____, таблетки проти головного болю.
     answer: будь ласка
     options:
     - будь ласка
@@ -181,59 +141,86 @@ inline:
     - аптека
     - голова
     - спина
-  - sentence: У мене ____. Дайте, будь ласка, сироп.
-    answer: кашель
+  - sentence: Ось краплі ____ нежитю.
+    answer: проти
     options:
-    - кашель
-    - нога
-    - лікар
+    - проти
+    - від
+    - для
 workbook:
-- type: true-false
+- id: true-false-dialogue
+  type: true-false
   instruction: Правда чи ні? (True or false?)
   items:
-  - statement: Рука — це частина тіла.
+  - statement: Лікар відкриває розмову словами «Що у вас болить?»
     correct: true
-    explanation: Так, рука — це частина тіла (hand/arm).
-  - statement: Аптека — це те саме, що лікар.
+    explanation: 'Так — Діалог 1 починається: «Добрий день. Що у вас болить?»'
+  - statement: Пацієнт у Діалозі 1 каже, що у нього болить живіт і спина.
     correct: false
-    explanation: Ні. Аптека — це pharmacy (де купують ліки). Лікар — це doctor (хто
-      лікує).
-  - statement: «У мене болить голова» означає «My head hurts».
+    explanation: 'Пацієнт каже: «У мене болить голова і горло» — не живіт і не спина.'
+  - statement: У пацієнта є температура.
     correct: true
-    explanation: Так. У мене болить + частина тіла = that part hurts.
-  - statement: Кашель і нежить — це симптоми застуди.
+    explanation: 'Пацієнт відповідає: «З учора. І в мене температура.»'
+  - statement: В аптеці покупець купує тільки таблетки.
+    correct: false
+    explanation: 'Покупець також просить краплі: «А є щось проти нежитю? — Так, ось
+      краплі.»'
+  - statement: Правильно казати «таблетки проти кашлю», не «таблетки від кашлю».
     correct: true
-    explanation: Так, кашель (cough) і нежить (runny nose) — типові симптоми застуди.
-  - statement: «Мені погано» означає «I am a doctor».
+    explanation: 'Модуль пояснює: в аптеці використовують «проти», не «від».'
+  - statement: '«Болять» — правильна форма, коли болить один предмет: «У мене болять
+      зуб».'
     correct: false
-    explanation: Ні. Мені погано = I feel unwell. Я лікар = I am a doctor.
-  - statement: Зуб — це те саме, що вухо.
-    correct: false
-    explanation: Ні. Зуб — це tooth. Вухо — це ear.
-  - statement: «Дайте, будь ласка» — це ввічливе прохання.
-    correct: true
-    explanation: Так. «Дайте, будь ласка» = «Give me, please» — ввічлива форма прохання.
-  - statement: «У мене температура» і «У мене болить голова» означають те саме.
-    correct: false
-    explanation: Ні. Температура = fever. У мене болить голова = my head hurts. Це
-      різні симптоми.
-- type: match-up
-  instruction: З'єднайте симптом з відповідними ліками (Match the symptom to the right
-    medicine)
-  pairs:
-  - left: У мене болить голова.
-    right: таблетки від головного болю
-  - left: У мене кашель.
-    right: сироп від кашлю
-  - left: У мене нежить.
-    right: краплі від нежиті
-  - left: У мене болить горло.
-    right: таблетки від болю
-  - left: Мені потрібні ліки.
-    right: Ось, будь ласка.
-  - left: Що у вас болить?
-    right: У мене болить спина.
-- type: group-sort
+    explanation: 'Один предмет → болить: «У мене болить зуб». Болять — для кількох:
+      «болять зуби».'
+- id: quiz-comprehension
+  type: quiz
+  instruction: Оберіть правильний варіант (Choose the correct option)
+  items:
+  - question: Яку фразу лікар каже першим у Діалозі 1?
+    options:
+    - Де ви живете?
+    - Як вас звати?
+    - Що у вас болить?
+    - Ви кашляєте?
+    correct: 2
+  - question: Що означає «У мене болить голова»?
+    options:
+    - I see a doctor.
+    - My head hurts.
+    - I need medicine.
+    - I'm at the pharmacy.
+    correct: 1
+  - question: Яка правильна формула в аптеці?
+    options:
+    - таблетки від кашлю
+    - таблетки для кашлю
+    - таблетки з кашлю
+    - таблетки проти кашлю
+    correct: 3
+  - question: Як дівчина каже «I'm sick»?
+    options:
+    - Я хворий.
+    - Я хворе.
+    - Я хвора.
+    - Мені хвора.
+    correct: 2
+  - question: «Рука» українською означає...
+    options:
+    - тільки arm
+    - тільки hand
+    - і arm, і hand
+    - leg та foot
+    correct: 2
+  - question: «Нежить» — якого роду?
+    options:
+    - жіночого (feminine)
+    - чоловічого (masculine)
+    - середнього (neuter)
+    - не має роду
+    correct: 1
+- id: group-sort-health
+  type: group-sort
   instruction: Розподіліть слова за категоріями (Sort the words into categories)
   groups:
   - label: Частини тіла (Body parts)
@@ -242,183 +229,190 @@ workbook:
     - горло
     - спина
     - живіт
-    - рука
-    - нога
     - зуб
-    - ніс
-    - вухо
-    - око
-  - label: Симптоми та стан (Symptoms and condition)
+    - нога
+    - рука
+    - ока
+  - label: Симптоми (Symptoms)
     items:
     - температура
     - кашель
     - нежить
-    - хворий
-    - хвора
-    - погано
-- type: quiz
-  instruction: Оберіть правильний варіант (Choose the correct option)
+- id: unjumble-sentences
+  type: unjumble
+  instruction: Складіть правильне речення зі слів (Build the sentence from the words)
   items:
-  - question: Як сказати «My stomach hurts»?
-    options:
-    - У мене болить живіт.
-    - У мене болить спина.
-    - У мене болить рука.
-    - У мене температура.
-    correct: 0
-  - question: Як сказати «I have a runny nose»?
-    options:
-    - У мене нежить.
-    - У мене кашель.
-    - У мене температура.
-    - Мені погано.
-    correct: 0
-  - question: Як ввічливо попросити ліки в аптеці?
-    options:
-    - Дайте, будь ласка, таблетки.
-    - Хочу таблетки!
-    - Таблетки!
-    - У мене болить голова.
-    correct: 0
-  - question: Яке слово означає «pharmacy»?
-    options:
-    - аптека
-    - лікар
-    - таблетка
-    - кашель
-    correct: 0
-  - question: Як сказати «I feel unwell»?
-    options:
-    - Мені погано.
-    - Я хворий.
-    - У мене температура.
-    - У мене кашель.
-    correct: 0
-  - question: Що означає «нежить»?
-    options:
-    - runny nose
-    - cough
-    - fever
-    - headache
-    correct: 0
-  - question: Як сказати «My eyes hurt» (множина)?
-    options:
-    - У мене болять очі.
-    - У мене болить очі.
-    - У мене болить вухо.
-    - У мене болять нога.
-    correct: 0
-- type: translate
-  instruction: Оберіть правильний переклад (Choose the correct translation)
-  items:
-  - source: My throat hurts and I have a fever.
-    options:
-    - text: У мене болить горло і є температура.
-      correct: true
-    - text: У мене болить голова і є нежить.
-      correct: false
-    - text: У мене болить спина і є кашель.
-      correct: false
-  - source: I have a cough.
-    options:
-    - text: У мене кашель.
-      correct: true
-    - text: У мене нежить.
-      correct: false
-    - text: Мені погано.
-      correct: false
-  - source: Give me pills for a headache, please.
-    options:
-    - text: Дайте, будь ласка, таблетки від головного болю.
-      correct: true
-    - text: Дайте, будь ласка, краплі від нежиті.
-      correct: false
-    - text: У мене болить голова.
-      correct: false
-  - source: Where is the pharmacy?
-    options:
-    - text: Де аптека?
-      correct: true
-    - text: Де лікар?
-      correct: false
-    - text: Де ліки?
-      correct: false
-  - source: I'm sick. (female speaker)
-    options:
-    - text: Я хвора.
-      correct: true
-    - text: Я хворий.
-      correct: false
-    - text: Мені погано.
-      correct: false
-  - source: My back hurts.
-    options:
-    - text: У мене болить спина.
-      correct: true
-    - text: У мене болить нога.
-      correct: false
-    - text: У мене болить рука.
-      correct: false
-- type: error-correction
-  instruction: Знайдіть і виправте помилку (Find and correct the error)
-  items:
-  - sentence: У мене болить аптека.
-    error: аптека
-    correction: голова
-    error_type: word
-    options:
-    - голова
-    - температура
-    - кашель
-    explanation: 'Аптека — це pharmacy (місце), а не частина тіла. Правильно: У мене
-      болить голова.'
-  - sentence: Дайте, лікар, таблетки від кашлю.
-    error: лікар
-    correction: будь ласка
-    error_type: word
-    options:
-    - будь ласка
-    - дякую
-    - добре
-    explanation: У проханні треба «будь ласка» (please). Лікар — це doctor, а не ввічлива
-      частка.
-  - sentence: У мене нога і болить горло.
-    error: нога
-    correction: температура
-    error_type: word
-    options:
-    - температура
-    - кашель
+  - words:
+    - болить
+    - мене
+    - У
+    - голова.
+    correct_order:
+    - У
+    - мене
+    - болить
+    - голова.
+    hint: starts with У
+  - words:
+    - вас
+    - Що
+    - болить?
+    - у
+    correct_order:
+    - Що
+    - у
+    - вас
+    - болить?
+  - words:
+    - будь
+    - Дайте,
+    - таблетки.
+    - ласка,
+    correct_order:
+    - Дайте,
+    - будь
+    - ласка,
+    - таблетки.
+  - words:
+    - мене
+    - кашель.
+    - У
     - нежить
-    explanation: 'Нога — це leg (частина тіла), а не симптом. Правильно: У мене температура
-      і болить горло.'
-  - sentence: Я хворий. У мене спина.
-    error: спина
-    correction: кашель
-    error_type: word
-    options:
-    - кашель
+    - і
+    correct_order:
+    - У
+    - мене
     - нежить
-    - температура
-    explanation: 'Спина — це back (частина тіла), а не симптом. Симптоми: кашель,
-      нежить, температура.'
-  - sentence: Де тут найближчий лікар? Мені потрібні таблетки.
-    error: лікар
-    correction: аптека
-    error_type: word
-    options:
-    - аптека
-    - сироп
+    - і
+    - кашель.
+  - words:
+    - нежитю.
+    - проти
     - краплі
-    explanation: Таблетки купують в аптеці (pharmacy), а до лікаря (doctor) йдуть
-      за рецептом.
-  - sentence: У мене болять голова.
+    - Ось
+    correct_order:
+    - Ось
+    - краплі
+    - проти
+    - нежитю.
+  - words:
+    - аптека?
+    - тут
+    - Де
+    - найближча
+    correct_order:
+    - Де
+    - тут
+    - найближча
+    - аптека?
+- id: error-correction-health
+  type: error-correction
+  instruction: Знайдіть і виправте помилку (Find and fix the mistake)
+  items:
+  - sentence: У мені болить голова.
+    error: мені
+    correction: мене
+    error_type: word
+    options:
+    - мене
+    - моя
+    - мій
+    explanation: 'Фіксований вираз: «У мене болить» — не «У мені». Мені — інша форма.'
+  - sentence: У мене болять зуб.
     error: болять
     correction: болить
     error_type: word
     options:
     - болить
-    - болять
-    - болів
-    explanation: 'Голова — це одна річ, тому: У мене болить голова. Болять — для множини:
-      болять зуби, болять ноги.'
+    - болю
+    - боліє
+    explanation: 'Один зуб → болить (однина). Болять — для кількох: «У мене болять
+      зуби».'
+  - sentence: Дайте, будь ласка, таблетки від кашлю.
+    error: від
+    correction: проти
+    error_type: word
+    options:
+    - проти
+    - для
+    - з
+    explanation: В аптеці кажуть «таблетки проти кашлю» — не «від кашлю».
+  - sentence: Іван хвора.
+    error: хвора
+    correction: хворий
+    error_type: word
+    options:
+    - хворий
+    - хворе
+    - хворою
+    explanation: 'Іван — чоловічого роду: хворий. Хвора — тільки для жінки.'
+  - sentence: Мені погана сьогодні.
+    error: погана
+    correction: погано
+    error_type: word
+    options:
+    - погано
+    - поганий
+    - погане
+    explanation: «Мені погано» — незмінний прислівник. Не кажуть «погана/поганий».
+  - sentence: У мене болять голова і горло.
+    error: болять
+    correction: болить
+    error_type: word
+    options:
+    - болить
+    - болю
+    - болячий
+    explanation: 'Модуль вчить: «У мене болить голова і горло» — болить навіть з «і».'
+- id: translate-health
+  type: translate
+  instruction: Оберіть правильний переклад (Choose the correct translation)
+  items:
+  - source: My head hurts.
+    options:
+    - text: У мене болить голова.
+      correct: true
+    - text: У мене болять голова.
+      correct: false
+    - text: У мені болить голова.
+      correct: false
+  - source: I have a cough.
+    options:
+    - text: У мене кашель.
+      correct: true
+    - text: У мені кашель.
+      correct: false
+    - text: Я є кашель.
+      correct: false
+  - source: Give me something for a cough, please.
+    options:
+    - text: Дайте, будь ласка, щось від кашлю.
+      correct: false
+    - text: Дайте, будь ласка, щось проти кашлю.
+      correct: true
+    - text: Дайте, будь ласка, щось для кашлю.
+      correct: false
+  - source: What hurts you? (formal)
+    options:
+    - text: Що у тебе болить?
+      correct: false
+    - text: Що болить у вас?
+      correct: false
+    - text: Що у вас болить?
+      correct: true
+  - source: I'm sick. (female speaker)
+    options:
+    - text: Я хворий.
+      correct: false
+    - text: Я хвора.
+      correct: true
+    - text: Я хворе.
+      correct: false
+  - source: I feel bad.
+    options:
+    - text: Мені погана.
+      correct: false
+    - text: Мені погано.
+      correct: true
+    - text: Я погано.
+      correct: false

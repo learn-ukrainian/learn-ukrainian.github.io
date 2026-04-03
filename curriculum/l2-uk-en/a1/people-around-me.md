@@ -27,6 +27,8 @@ Again: **вчительку** (not вчи́телька), **Олену** (not О
 
 The pattern comes down to two question words: **що?** (what?) for things and **кого?** (whom?) for people. When you see or know a *person*, Ukrainian asks **кого?** — and that question triggers a special ending. This is the **знахі́дний відмі́нок** (accusative case) with animate nouns — **кого?**
 
+<!-- INJECT_ACTIVITY: fill-in-family-friends -->
+
 ## Кого? (Whom?)
 
 When a verb takes a direct object, Ukrainian asks one of two questions. For things, you ask **що?** (what?). For people and animals, you ask **кого?** (whom?). The answer to each question follows a different pattern.
@@ -51,8 +53,6 @@ This is exactly how Ukrainian schoolchildren learn it in Grade 4 (Заболо́
 
 Why does Ukrainian make this distinction? Ukrainian grammar separates all nouns into two categories: **живі́** (animate — living beings) and **неживі́** (inanimate — things). Animate nouns answer **кого?**; inanimate nouns answer **що?**. This is a deep grammatical logic — Ukrainian treats *seeing a person* differently from *seeing a thing*, not just in meaning, but in form. And the animate masculine accusative isn't random: it uses the same ending as the **родо́ви́й відмінок** (genitive case) you already learned. The accusative of **брат** is **брата** — exactly like **нема́ брата** (there is no brother). The next section shows this pattern in full.
 
-<!-- INJECT_ACTIVITY: fill-in-animate-accusative -->
-
 ## Знахідний відмінок — живе́ (Accusative Animate)
 
 Feminine animate nouns hold no surprises. They follow the exact same ending as inanimate feminine nouns: **-а → -у**, **-я → -ю**. You already know this from Module 37 (ка́ва → ка́ву). The same pattern applies to people:
@@ -65,8 +65,6 @@ Feminine animate nouns hold no surprises. They follow the exact same ending as i
 - **наречена** → **нарече́ну** (Я знаю наречену) — I know the bride
 
 Compare: **кава → каву**, **мама → маму** — identical ending. Feminine animate accusative requires no new rule at all.
-
-<!-- INJECT_ACTIVITY: fill-in-family-friends -->
 
 Now the rule that matters most in this module. Masculine animate accusative equals genitive. The textbook (Карама́н, Grade 10) states it directly: *«Фо́рма знахі́дного відмі́нка однини́ чолові́чого ро́ду назв істо́т збігається з родо́ви́м однини.»* In plain terms: to form the accusative of a masculine animate noun, use its genitive form.
 
@@ -82,6 +80,8 @@ Here are six masculine animate nouns with their accusative (= genitive) forms:
 The connection to prior learning: **бачу брата** uses the same form as **нема брата** — the genitive ending you already know.
 
 Now the critical contrast — animate versus inanimate masculine, side by side. **Що?** (inanimate) — no change: Я бачу **хліб**, Я бачу **стіл**, Я бачу **борщ**. **Кого?** (animate) — genitive form: Я бачу **брата**, Я бачу **тата**, Я бачу **друга**. The test you should apply every time: before writing the form, ask the question. **Кого?** → take the genitive form. **Що?** → leave masculine as is.
+
+<!-- INJECT_ACTIVITY: fill-in-animate-accusative -->
 
 <!-- INJECT_ACTIVITY: group-sort-animate-inanimate -->
 

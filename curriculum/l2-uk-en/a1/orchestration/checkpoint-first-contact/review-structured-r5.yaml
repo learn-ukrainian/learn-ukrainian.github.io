@@ -1,0 +1,52 @@
+round: 5
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The module covers all required content outline points perfectly. However,
+    the deterministic word count is 1469 words, which exceeds the 1200-word target
+    by >10%. Additionally, the plan's required refe
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'The Ukrainian text is natural and accurate. Found one typo where a word
+    was generated with two acute stress marks: "- **Як звати ді́вчи́ну?**"'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent consolidation of A1.1 grammar. The grammar summary acts effectively
+    as a pattern map, linking isolated rules into a cohesive whole without introducing
+    new concepts.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All recycled vocabulary is used naturally. Both recommended words (`ім'я`,
+    `прізвище`) are included in context.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All three exercise markers are placed perfectly to test what was just
+    reviewed, mapping exactly to the plan's activity hints.
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: The text relies heavily on English meta-commentary ("This module is not
+    a test. It is a mirror.", "This is not new grammar. It is a pattern map", "not
+    a classroom drill") and gamified motivational lan
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: All headers match the plan. The primary deduction is for the word count
+    (1469) falling outside the target budget range (1200).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Authentic and natural presentation of Ukrainian names, cities, and family
+    dynamics.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: 'The capstone dialogue is generally excellent, but features one abrupt,
+    transactional transition where Bohdan pivots immediately from his surname to his
+    mother''s profession: "— **Богдан:** Шевче́нко. М'
+findings: []

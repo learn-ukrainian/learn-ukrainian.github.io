@@ -1,6 +1,6 @@
 # Build Summary: special-signs (A1)
 
-Generated: 2026-04-01 12:40
+Generated: 2026-04-03 14:39
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-01 12:40
 | vocab | complete | 2026-03-31 14:19:13 |
 | enrich | complete | 2026-03-31 14:19:14 |
 | verify | complete | 2026-03-31 14:19:14 |
-| review | complete | 2026-04-01 10:40:13 |
-| stress | complete | 2026-04-01 10:40:20 |
-| publish | complete | 2026-04-01 10:40:21 |
+| review | complete | 2026-04-03 12:39:31 |
+| stress | complete | 2026-04-03 12:39:39 |
+| publish | complete | 2026-04-03 12:39:40 |
 
 ## Reviews
 
@@ -29,6 +29,8 @@ Generated: 2026-04-01 12:40
 | 1 | special-signs-review-r1.md |
 | 2 | special-signs-review-r2.md |
 | 3 | special-signs-review-r3.md |
+| 4 | special-signs-review-r4.md |
+| 5 | special-signs-review-r5.md |
 
 ## Dispatch Log
 
@@ -47,6 +49,10 @@ Generated: 2026-04-01 12:40
 | review | claude-tools (claude-opus-4-6) | 289s | ✅ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 385s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 22s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 266s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 109s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 247s | ✅ |
 
 ## Friction
 
@@ -63,6 +69,9 @@ Generated: 2026-04-01 12:40
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
 - `review-structured-r3.yaml`
+- `review-structured-r4.yaml`
+- `review-structured-r5.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

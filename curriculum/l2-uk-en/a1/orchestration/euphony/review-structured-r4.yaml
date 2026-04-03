@@ -1,0 +1,51 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: The writer merged Dialogue 1 and Dialogue 2 into a single proofreading
+    scene, which improved flow but caused them to miss the specific motivational vocabulary
+    (`город`, `яблуко`) and recommended vocab
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'Ukrainian grammar and phonetics are explained perfectly. There is a minor
+    orthographic issue: using English-style punctuation (periods inside guillemets
+    `«... .»`) instead of Ukrainian style (`«...».`'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow. The "listen-and-feel" advice is great pedagogical
+    practice for euphony. Plentiful examples for each rule.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: Required grammar words (у/в, і/й, з/із/зі) and most recommended words
+    (Київ, Львів, офіс, парк) are used well. However, `театр`, `яблуко`, and `город`
+    are completely missing from the text.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Placeholders match the plan exactly and are positioned perfectly to test
+    the preceding sections.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Engaging dialogue setting ("Дарина... has sharper ears for how Ukrainian
+    flows"). Culturally enriching mention of "солов'їна мова".
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Markdown structure is clean, all sections from the outline are present,
+    word count is within an acceptable range.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Correct presentation of Ukrainian euphony not as an arbitrary rule but
+    as a natural flow. Accurate representation of the language.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogue is natural and serves the pedagogical purpose well, though it
+    deviated structurally from the planned scenes.
+findings: []

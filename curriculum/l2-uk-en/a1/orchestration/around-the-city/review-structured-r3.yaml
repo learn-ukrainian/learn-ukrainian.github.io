@@ -1,0 +1,47 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 6
+  evidence: 'The module is only ~600 words long, missing the 1200 target by 50%, despite
+    the fake `Deterministic word count: 1287 words` tag. Furthermore, it completely
+    ignored the specific `dialogue_situations` p'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'Taught the Russian calque "близько від" instead of "близько до" or "недалеко
+    від": "Парк близько від роботи."'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'Explicitly taught a calque as a grammatical rule to memorize: "The chunks
+    далеко від and близько від are followed by genitive case." Also has a counting
+    error: claims "The question type shifts six tim'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items (пішки, хвилина, район,
+    центр, вибачте, дістатися, ідіть, їдьте, поруч) are integrated naturally.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 4 injection markers match the plan perfectly and are placed well.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Solid tone, though the commute description is a bit transactional/robotic.
+- dimension: 7
+  name: Structural integrity
+  score: 6
+  evidence: Missed the target word count by a massive margin (~600 vs 1200) and included
+    a false deterministic count at the end.
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: Good integration of Kyiv and Lviv locations (Хрещатик, Площа Ринок).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: Dialogues are very transactional. It missed the opportunity for the richer
+    3-way Lviv walking tour conversation requested in the plan.
+findings: []

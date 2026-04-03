@@ -1,0 +1,51 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The plan explicitly required teaching the "т→ч" consonant shift in the
+    outline. The generated text missed it entirely and hallucinated a "ч→ч" (no change)
+    item to fill the list of four shifts.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'The text falsely claims that consonant shifts happen ONLY in the я-form
+    (`Every other form — ти, він/вона, ми, ви, вони — follows the regular pattern
+    perfectly`). This ignores the labial shift (б→бл) '
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Teaching that "no change" (`бачити → бачу`) is a "key shift" is pedagogically
+    confusing and factually nonsensical. The false generalization about `вони` forms
+    avoiding all shifts is also a poor instru
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required verbs (`говорити`, `бачити`, `робити`, `вчити`, `просити`,
+    `ходити`) are introduced smoothly in context with full conjugations.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 4 activity markers match the `activity_hints` exactly in type and
+    focus, and are injected at the correct pedagogical moments.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The module uses excellent, realistic scenarios (language cafe, relaxing
+    at home) to demonstrate the verbs in action without relying on generic enthusiasm
+    or meta-commentary.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean Markdown. All H2 headings perfectly match the `content_outline`
+    sections. Word count (1360) is well within acceptable range of the 1200 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Contexts are natural and culturally appropriate (e.g., "мовне кафе").
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are multi-turn, realistic, and employ the target grammar effectively
+    and organically (e.g., the quick exchange "Сама? — Ні, я прошу друга...").
+findings: []

@@ -1,0 +1,52 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Covers all sections from the plan perfectly. The grammar summary explicitly
+    lists all 7 requested patterns ("Pattern 1 — Time... Pattern 7 — Frequency"),
+    and the dialogue strictly follows the requeste
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Flawless Ukrainian. No Russianisms, Surzhyk, or calques. Uses natural
+    phrasing ("о десятій ранку біля метро", "тепло і сонячно, без дощу").
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Exceptional pedagogical flow. Moves from self-assessment to reading comprehension
+    in context, then explicitly summarizes the grammar patterns, and finally models
+    them in a connected dialogue. Explicit
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Successfully integrates time, days, months, weather, frequency, sequence,
+    and hobbies into a cohesive checkpoint.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Exercise markers are placed perfectly after the sections that model the
+    target skills.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Engaging and encouraging without being overly effusive. The final paragraph
+    ("When you say навесні, взимку, іде дощ — you're thinking in Ukrainian") is highly
+    motivating and grounds the achievement in
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Markdown is clean, word count is within target (1270 words vs 1200 target),
+    and headers exactly match the plan.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Natural conversational models, avoiding any awkward literal translations
+    from English.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogue between Olya and Dmytro is highly natural for A1. It plausibly
+    weaves together weather ("Тепло і сонячно"), time ("О десятій ранку"), days ("в
+    суботу"), and frequency ("Я завжди гуляю в с
+findings: []

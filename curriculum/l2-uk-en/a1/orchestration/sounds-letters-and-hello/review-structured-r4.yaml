@@ -1,0 +1,51 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'Covers all required concepts beautifully, but introduces a minor factual
+    distortion regarding the plan: "Every Ukrainian student learns a golden rule in
+    their first year of school, from the textbook o'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Flawless Ukrainian with correct stress mark usage (`голосні́`, `м'яки́й
+    знак`, `ґа́нок`).
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Exceptional PPP flow. It uses the physical reality of the page ("Look
+    at this page. What you see are letters — shapes printed in ink...") to explain
+    a core phonetic concept intuitively.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Integrated all required vocabulary very naturally into the prose. Used
+    recommended words `о́ко`, `дім`, `ніс`, `Норма́льно`. Missed `тато` and `сон`.
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: Markers are generally well placed, but the duplication of the `watch-and-repeat`
+    marker breaks sequence logic by testing untaught material.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Superb. Sentences like "You can sing every vowel. That singability is
+    the definition" and "they don't want to sing" make the phonetics lesson vivid
+    and engaging without relying on generic hype.
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: 'Contains a trailing hallucinated artifact from the system prompt: `**Deterministic
+    word count: 1779 words** (calculated by pipeline, do NOT estimate manually)`.'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Firmly grounded in authentic Ukrainian pedagogy. Integrating real textbooks
+    (Вашуленко, Большакова, Захарійчук) gives the module immediate decolonized authority.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The greeting dialogue is natural, and seamlessly introduces the concept
+    of gendered adjectives (`рада` vs `радий`) in a practical context.
+findings: []

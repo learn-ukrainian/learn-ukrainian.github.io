@@ -3,55 +3,47 @@ scores:
 - dimension: 1
   name: Plan adherence
   score: 9
-  evidence: All 4 content_outline sections present and ordered correctly. Both dialogues
-    from plan reproduced faithfully with correct speakers and conjunctions. Складне
-    речення section covers M44 connection, main
+  evidence: Covered all sections and dialog structures from the plan. Minor deduction
+    for skipping some recommended vocabulary (`чути`, `розуміти`, `головне`).
 - dimension: 2
   name: Linguistic accuracy
-  score: 7
-  evidence: 'Two critical errors: (1) Gender agreement — Наталя says "я не знав" instead
-    of "я не знала." This is a basic gender agreement error that will teach learners
-    wrong Ukrainian. (2) "скажи is the imperati'
+  score: 8
+  evidence: Included a factually incorrect absolute rule (`Ukrainian ALWAYS places
+    a comma before що, де, коли when they serve as conjunctions — no exceptions.`).
+    Used a slightly unnatural calque (`добрий час`) a
 - dimension: 3
   name: Pedagogical quality
   score: 9
-  evidence: 'Excellent PPP flow: dialogues present the pattern in context → grammar
-    section extracts the rule → "Two Faces" deepens understanding → Summary consolidates.
-    3+ examples per grammar point consistently '
+  evidence: Excellent breakdown of the difference between question words and conjunctions,
+    with very clear examples. Minor deduction for grouping "Скажи" under "Казати"
+    without noting it's a perfective pair, whic
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: 'All required vocab used naturally: що/де/коли as conjunctions throughout,
-    знати (знаєш, знаю, не знаю, знає — 10+ occurrences), думати (думаю — 4 occurrences),
-    казати (каже — 2 occurrences). Recommend'
+  score: 9
+  evidence: All required vocabulary (`що, де, коли, знати, думати, казати`) used naturally
+    and repeatedly in context.
 - dimension: 5
   name: Exercise quality
-  score: 9
-  evidence: 4 markers matching plan's 4 activity_hints in type (fill-in ×2, quiz ×2)
-    and focus (conjunction choice, question-vs-conjunction, clause completion, comma
-    placement). Each placed after relevant teachin
+  score: 10
+  evidence: Markers perfectly match the plan's `activity_hints` and are placed correctly
+    after the relevant explanations.
 - dimension: 6
   name: Engagement & tone
   score: 10
-  evidence: 'No motivational openers, no "magic of," no meta-commentary. Tone is direct
-    and teacher-like: "Count the conjunctions," "You can verify this yourself now,"
-    "Keep these dialogues in mind." The cross-ref'
+  evidence: The dialogues are highly engaging, featuring named speakers in realistic,
+    highly communicative situations. The tone is encouraging but focused.
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: All 4 H2 headings from plan present in correct order. Clean markdown throughout.
-    No duplicate summaries, no stray tags, no meta-commentary sections. Word count
-    (1530) well within range (target 1200, +
+  score: 9
+  evidence: Clean structure, but leaked a generated AI artifact at the bottom of the
+    file (`**Deterministic word count...`).
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: 'Ukrainian presented on its own terms. The comma rule is explicitly contrasted
-    with English ("This differs from English, where ''I know that he''s here'' has
-    no comma") without subordinating Ukrainian to '
+  evidence: Culturally neutral and accurate.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: 'Two natural multi-turn dialogues with named speakers. Dialogue 1 (planning
-    to meet at a café) is natural and purposeful. Dialogue 2 (sharing news about a
-    mutual friend arriving in Kyiv) is culturally '
+  score: 10
+  evidence: Dialogues are expanded beyond the plan beautifully, creating very natural
+    multi-turn conversations that seamlessly integrate the target grammar.
 findings: []

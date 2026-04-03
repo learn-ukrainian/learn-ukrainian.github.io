@@ -1,0 +1,50 @@
+round: 5
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: All required plan points are covered comprehensively. Word count is 1377
+    (within target). Adapts the Odesa/Kyiv dialogue constraints brilliantly by using
+    Kyiv as the main dialogue and Odesa as the "tr
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'Excellent grammar and natural phrasing throughout, but one critical euphony
+    violation in the reading section: `**«Я зараз в Києві! Хочу їхати у Львів!»**`
+    (must be `у Києві` since `зараз` ends in a co'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: 'Exceptional PPP flow. Connects the 7 patterns seamlessly, provides clear
+    and concise explanations ("Compare: у школі vs. у школу... Same preposition, different
+    case ending.").'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Integrates all previous M28-M34 city vocabulary effectively and naturally
+    into the reading and dialogue sections.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 4 requested activities are present, properly focused, and strategically
+    placed after their relevant teaching blocks.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Excellent tone. The dialogue is highly natural and realistic ("Скільки
+    їхати? — Хвилин двадцять. Вокзал біля станції.").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, all required H2 headings present and ordered correctly.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Geographically accurate route planning for Kyiv (Khreshchatyk to European
+    Square, Arsenalna to Lavra, Metro red line stops).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The interaction between Marko and Oksana sounds completely native, using
+    natural approximations ("хвилин двадцять") and conversational flow.
+findings: []

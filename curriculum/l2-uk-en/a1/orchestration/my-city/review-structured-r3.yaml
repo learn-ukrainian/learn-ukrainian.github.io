@@ -1,0 +1,50 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 5
+  evidence: Missed the explicit setting "Drawing a map of your Kyiv neighborhood for
+    a pen pal", turning it into a generic chat. Completely omitted the required vocabulary
+    words "озеро" and "поруч з".
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: '"А́ліна" has incorrect stress (should be "Алі́на"). "У тебе́ є стадіо́н?"
+    literally means "Do you possess a stadium?" which is an unnatural calque for asking
+    about neighborhood locations.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: 'The plan stated Dialogue 2 should "Review: в/на + locative for all places",
+    but the dialogue only contains `біля дому`, `далеко від центру` (genitive), and
+    `на вулиці` (locative for street), failing t'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: Covered most required/recommended words, but completely missed "озеро"
+    and "поруч з" from the dialogue setup hints.
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: Added an extraneous 5th activity marker (`quiz-mixed-review`) that was
+    not requested in the plan.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: Dialogues are okay, but the stranger exchange is highly transactional.
+- dimension: 7
+  name: Structural integrity
+  score: 6
+  evidence: The word count (1567) is nearly 30% over the target (1200). The "Підсумок
+    — Summary" section exacerbates this by copying 150 words verbatim from earlier
+    sections.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Good integration of culturally relevant landmarks like Khreshchatyk, Maidan
+    Nezalezhnosti, and Ploshcha Rynok.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: '"У тебе є стадіон?" is stilted and robotic in the context of neighborhoods.'
+findings: []

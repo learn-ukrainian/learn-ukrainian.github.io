@@ -6,7 +6,7 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 ## Module Under Review
 
 **Module:** 35: Checkpoint: Places (A1, A1.5 [Places])
-**Writer:** Gemini
+**Writer:** Claude
 **Word target:** 1200
 
 ## Plan (source of truth)
@@ -153,7 +153,7 @@ references:
 
 <generated_module_content>
 ## Що ми зна́ємо? (What Do We Know?)
-Seven modules of A1.5 are behind you — euphony, locative case, city vocabulary, accusative for direction, transport, giving directions, and saying where you're from. Before moving to the next phase, test yourself. Can you apply euphony rules (**у/в**, **і/й**, **з/із/зі**)? Can you say where something is? Where you're going? Where you're from? Can you name city places and use transport words?
+Let's review the key patterns for navigating a Ukrainian city.
 Try answering these questions out loud:
 - **Де ти живе́ш?** (Where do you live?) — **У Ки́єві.** (In Kyiv.)
 - **Куди ти йдеш?** (Where are you going?) — **У магази́н.** (To the store.)
@@ -162,24 +162,24 @@ Try answering these questions out loud:
 - **Де музе́й?** (Where is the museum?) — **Музей у це́нтрі.** (The museum is in the centre.)
 - Choose **і** or **й**: **Брат ___ сестра́.**
 - Choose **у** or **в**: **Я живу́ ___ Льво́ві.**
-If those answers came quickly, you're ready for this checkpoint. If some felt tricky, that's exactly what this module is for. We'll bring all seven patterns together — euphony (M28), location (M29), city vocabulary (M30), direction (M31), transport (M32), directions (M33), and origin (M34) — into one connected practice. By the end, you'll see how these pieces form a complete toolkit for navigating a Ukrainian city.
+This checkpoint brings together euphony, location, direction, transport, and origin into one connected practice.
 ## Чита́ння (Reading Practice)
-Read this short text about a tourist in Kyiv. Every sentence uses patterns from M28–M34. See how many you can spot — euphony choices, locative for location, accusative for direction, genitive for origin, transport, and directions.
-> **Мене зва́ти То́мас.** *(My name is Tomas.)* **Я з Канади.** *(I'm from Canada.)* **Зараз я у Києві.** *(Right now I'm in Kyiv.)*
-> **Сьогодні я гуля́ю по мі́сту.** *(Today I'm walking around the city.)* **Вранці я ї́ду на метро́ до ста́нції Хреща́тик.** *(In the morning I take the metro to Khreshchatyk station.)* **Метро у Києві ду́же зру́чне.** *(The metro in Kyiv is very convenient.)*
+Read this short text about a tourist in Kyiv. Pay attention to how euphony choices, locations, directions, and transport naturally combine in a real scenario.
+> **Мене зва́ти То́мас.** *(My name is Tomas.)* **Я з Канади.** *(I'm from Canada.)* **Зараз я в Києві.** *(Right now I'm in Kyiv.)*
+> **Сьогодні я гуля́ю по мі́сту.** *(Today I'm walking around the city.)* **Вранці я ї́ду на метро́ до ста́нції Хреща́тик.** *(In the morning I take the metro to Khreshchatyk station.)* **Метро в Києві ду́же зру́чне.** *(The metro in Kyiv is very convenient.)*
 > **Я виходжу зі станції.** *(I exit the station.)* **Іду напра́во.** *(I go right.)* **Попереду — Хрещатик, головна́ ву́лиця мі́ста.** *(Ahead is Khreshchatyk, the main street of the city.)* **Я йду пря́мо.** *(I walk straight.)* **Бачу краси́вий парк.** *(I see a beautiful park.)* **У парку є фонта́ни й лавки́.** *(In the park there are fountains and benches.)*
-> — **Потім я пита́ю перехо́жого:** *(Then I ask a passerby:)* **«Ви́бачте, де Націона́льний музей?»** *(«Excuse me, where is the National Museum?»)* **Він відповіда́є:** *(He answers:)* **«Музей на пло́щі. Іді́ть прямо, потім налі́во.»** *(«The museum is on the square. Go straight, then left.»)*
+> — **Потім я пита́ю перехо́жого:** *(Then I ask a passerby:)* **«Ви́бачте, де Націона́льний музей?»** *("Excuse me, where is the National Museum?")* **Він відповіда́є:** *(He answers:)* **«Музей на пло́щі. Іді́ть прямо, потім налі́во.»** *("The museum is on the square. Go straight, then left.")*
 
-> **Я іду до музе́ю.** *(I go to the museum.)* **Потім хо́чу ї́хати до Лаври.** *(Then I want to go to the Lavra.)* **Сідаю в авто́бус.** *(I get on a bus.)* **Їду до зупи́нки Арсена́льна.** *(I ride to Arsenalna stop.)* **Від зупинки до Лаври пі́шки — п'ять хвили́н.** *(From the stop to the Lavra on foot — five minutes.)*
-> **Увечері я у готе́лі.** *(In the evening I'm at the hotel.)* **Телефоную в Кана́ду:** *(I call Canada:)* **«Я зараз у Києві! Хочу їхати у Львів!»** *(«I'm in Kyiv now! I want to go to Lviv!»)*
+> **Я йду в музе́й.** *(I go to the museum.)* **Потім хо́чу ї́хати в Лавру.** *(Then I want to go to the Lavra.)* **Сідаю в авто́бус.** *(I get on a bus.)* **Їду до зупи́нки Арсена́льна.** *(I ride to Arsenalna stop.)* **Від зупинки до Лаври пі́шки — п'ять хвили́н.** *(From the stop to the Lavra on foot — five minutes.)*
+> **Увечері я в готе́лі.** *(In the evening I'm at the hotel.)* **Телефоную в Кана́ду:** *(I call Canada:)* **«Я зараз в Києві! Хочу їхати у Львів!»** *("I'm in Kyiv now! I want to go to Lviv!")*
 Now check your understanding:
 1. **Звідки Томас?** (Where is Tomas from?) — **З Канади.** (From Canada.)
 2. **Куди він ї́де вранці?** (Where does he go in the morning?) — **На метро до станції Хрещатик.** (By metro to Khreshchatyk station.)
 3. **Де музей?** (Where is the museum?) — **На площі.** (On the square.)
-Notice the patterns at work: **з Канади** (genitive — where from), **у Києві** (locative — where), **на метро** (transport), **зі станції** (euphony — **зі** before **ст-**), **направо** and **прямо** (directions), **до Лаври** (direction — where to), **в автобус** (onto transport). Томас uses every A1.5 skill in one short story — combining patterns naturally rather than thinking about grammar rules one at a time.
+Notice the patterns at work: **з Канади** (where from), **у Києві** (where), **на метро** (transport), **зі станції** (euphony before **ст-**), **направо** and **прямо** (directions), **до Лаври** (direction), **в автобус** (onto transport).
 <!-- INJECT_ACTIVITY: quiz-de-kudy-zvidky -->
 ## Грама́тика (Grammar Summary)
-Here are the seven key patterns from A1.5 — your personal grammar card for navigating Ukrainian cities. Each pattern answers a different question.
+Here are the key patterns for navigating Ukrainian cities. Each pattern answers a different question.
 **Pattern 1: Euphony (M28)** — Ukrainian alternates certain sounds for smooth speech.
 - **у/в**: **Він у шко́лі.** (He's at school.) / **Я в о́фісі.** (I'm in the office.)
 - **і/й**: **Брат і сестра.** (Brother and sister.) / **Ольга й Андрі́й.** (Olha and Andriy.)
@@ -197,13 +197,13 @@ Compare: **у школі** (at school — you're there) vs. **у школу** (t
 :::tip
 Transport hubs (**станція**, **вокзал**, **зупинка**) always take **на**: **на станції**, **на вокзалі**, **на зупинці** — never **в станції**.
 :::
-**Pattern 6: Directions (M33)** — imperative forms for giving directions.
+**Pattern 6: Directions (M33)** — imperative verbs and direction words.
 - **Ідіть прямо.** (Go straight.) **Направо.** (To the right.) **Наліво.** (To the left.) **Вийдіть тут.** (Exit here.)
 **Pattern 7: City places with prepositions (M30)** — each noun pairs with its own preposition.
-- **У музе́ї.** (In the museum.) **На вокзалі.** (At the train station.) **В парку.** (In the park.) **На площі.** (On the square.) **У готелі.** (In the hotel.) **У бібліоте́ці.** (In the library.)
+- **У музе́ї.** (In the museum.) **На вокзалі.** (At the train station.) **У парку.** (In the park.) **На площі.** (On the square.) **У готелі.** (In the hotel.) **У бібліоте́ці.** (In the library.)
 <!-- INJECT_ACTIVITY: group-sort-cases -->
 ## Діало́г (Connected Dialogue)
-Марко́ is visiting Kyiv for the first time. He stops a local, Окса́на, near a metro entrance to ask for help. Watch how all seven A1.5 patterns appear in one real conversation.
+Марко́ is visiting Kyiv for the first time. He stops a local, Окса́на, near a metro entrance to ask for help. Watch how these patterns appear in a real conversation.
 > — **Марко:** Вибачте! Ви місце́ва? *(Excuse me! Are you local?)*
 > — **Оксана:** Так, я з Ки́єва. Що шука́єте? *(Yes, I'm from Kyiv. What are you looking for?)*
 > — **Марко:** Я з Канади. Я тут упе́рше. Де Національний музей? *(I'm from Canada. This is my first time here. Where is the National Museum?)*
@@ -215,20 +215,21 @@ Transport hubs (**станція**, **вокзал**, **зупинка**) always
 > — **Марко:** Скі́льки їхати? *(How long is the ride?)*
 > — **Оксана:** Хвилин два́дцять. Вокзал бі́ля станції. *(About twenty minutes. The station is right by the stop.)*
 > — **Марко:** А де тут кафе́? *(Where is a café around here?)*
-> — **Оксана:** Кафе на площі Незале́жності. Це одна́ зупинка на метро. *(There's a café at Independence Square. It's one metro stop.)*
+> — **Оксана:** Кафе на Хреща́тику. Це одна́ зупинка на метро. *(There's a café on Khreshchatyk. It's one metro stop.)*
 > — **Марко:** Дякую! *(Thanks!)*
 > — **Оксана:** Будь ла́ска! Га́рної по́дорожі! *(You're welcome! Have a good trip!)*
 
-Every A1.5 pattern appeared naturally. **Де музей?** — locative: **у центрі**. Where to? — **у Львів** (accusative). Where from? — **з Канади**, **з Києва** (genitive). Transport — **на метро до станції**. Directions — **прямо**, **направо**. City places — **на площі**, **біля станції**, **за рогом**. Seven patterns, one conversation.
+Notice the patterns: **Де музей?** — locative: **у центрі**. Where to? — **у Львів** (accusative). Where from? — **з Канади**, **з Києва** (genitive). Transport — **на метро до станції**. Directions — **прямо**, **направо**. City places — **на площі**, **біля станції**, **за рогом**.
 Now try it yourself. Imagine you're video-calling a friend while walking through **Одеса** (Odesa). Describe what you see:
 - **Я зараз на Дерибасівській вулиці.** (I'm on Derybasivska Street now.)
 - **Іду до по́рту.** (I'm heading to the port.)
+- **Бачу Потьо́мкінські схо́ди.** (I see the Potemkin Stairs.)
 - **Потім хочу на пляж.** (Then I want to go to the beach.)
 - **Я з [your city].** (I'm from [your city].)
 Use at least five of the seven patterns from this module.
 <!-- INJECT_ACTIVITY: fill-in-dialogue -->
 ## Підсумок — Summary
-You've completed A1.5 — Places. Here's what you can now do in Ukrainian:
+Here is a summary of the patterns you can now use in Ukrainian:
 - ✅ **Euphony (M28)** — You choose **у/в**, **і/й**, **з/із/зі** automatically based on surrounding sounds
 - ✅ **Location (M29)** — **Де?** → в/на + locative: **у школі**, **на роботі**, **в центрі**
 - ✅ **City vocabulary (M30)** — **вулиця**, **площа**, **парк**, **музей**, **вокзал**, **аптека**, **бібліотека**
@@ -236,9 +237,9 @@ You've completed A1.5 — Places. Here's what you can now do in Ukrainian:
 - ✅ **Transport (M32)** — **їхати автобусом**; **на метро до станції Хрещатик**
 - ✅ **Giving directions (M33)** — **ідіть прямо**, **направо**, **наліво**, **вийдіть**
 - ✅ **Origin (M34)** — **Звідки?** → з/із/зі + genitive: **з України**, **зі США**, **з Канади**
-In A1.6 — Food and Shopping, you'll learn how to order food, buy things at a market, and use the accusative case for objects — not just directions. You'll say things like **Я хочу каву** (I want coffee), **Дайте хліб** (Give me bread), and **Скільки ко́шту́є?** (How much does it cost?). The accusative you practiced for direction (**у школу**) now works for objects too — a natural extension of what you already know.
+Next, you will learn how to order food, buy things at a market, and use the accusative case for objects. You will say things like **Я хочу каву** (I want coffee), **Дайте хліб** (Give me bread), and **Скільки ко́шту́є?** (How much does it cost?).
 
-**Deterministic word count: 1561 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1377 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 
@@ -374,8 +375,8 @@ If your verdict is **REVISE**, you MUST output a `<fixes>` block with exact find
 
 Rules for fixes:
 - Each fix is a YAML entry with `find:` (exact text from the module) and `replace:` (corrected text)
-- The `find` string must be an EXACT substring of the module content — copy-paste it
-- Keep fixes minimal — change only what's wrong, preserve surrounding text
+- The `find` string MUST be an EXACT copy-paste from the module content. DO NOT change quotes (« » to " "), dashes (— to -), or spacing. If you change a single character in the `find` string, the automated replacement will fail.
+- Keep fixes minimal — change only what's wrong, preserve surrounding text. Provide enough context (e.g. 5-7 words) to make the match unique.
 - Do NOT fix словник/vocabulary tables (those are generated by a downstream tool)
 - For word count issues: add content as a new `insert_after:` entry instead of find/replace
 
@@ -416,7 +417,7 @@ Rules for fixes:
 <vesum_verification>
 The following Ukrainian words from the content were verified against VESUM (415K lemmas). Use this data to check linguistic claims — do NOT guess about words.
 
-Verified: 131 words | Not found: 64 words
+Verified: 132 words | Not found: 65 words
 
 Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dict):
   ✗ Іді — NOT IN VESUM
@@ -431,11 +432,11 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ Льво — NOT IN VESUM
   ✗ Львів — NOT IN VESUM
   ✗ Націона — NOT IN VESUM
-  ✗ Незале — NOT IN VESUM
   ✗ Одеса — NOT IN VESUM
   ✗ Окса — NOT IN VESUM
   ✗ Оксана — NOT IN VESUM
   ✗ Ольга — NOT IN VESUM
+  ✗ Потьо — NOT IN VESUM
   ✗ Скі — NOT IN VESUM
   ✗ Томас — NOT IN VESUM
   ✗ Украї — NOT IN VESUM
@@ -449,7 +450,6 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ дорожі — NOT IN VESUM
   ✗ дцять — NOT IN VESUM
   ✗ дьте — NOT IN VESUM
-  ✗ жності — NOT IN VESUM
   ✗ жого — NOT IN VESUM
   ✗ зва — NOT IN VESUM
   ✗ зру — NOT IN VESUM
@@ -457,6 +457,7 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ льна — NOT IN VESUM
   ✗ льний — NOT IN VESUM
   ✗ магази — NOT IN VESUM
+  ✗ мкінські — NOT IN VESUM
   ✗ музе — NOT IN VESUM
   ✗ налі — NOT IN VESUM
   ✗ напра — NOT IN VESUM
@@ -470,7 +471,7 @@ Words NOT in VESUM (may be errors, proper nouns, or valid words missing from dic
   ✗ рту — NOT IN VESUM
   ✗ рше — NOT IN VESUM
 
-All 131 other words are confirmed to exist in VESUM.
+All 132 other words are confirmed to exist in VESUM.
 
 </vesum_verification>
 

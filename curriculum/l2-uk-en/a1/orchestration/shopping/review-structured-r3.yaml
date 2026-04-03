@@ -1,0 +1,48 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: All outline points are covered with specific examples. Textbook references
+    are integrated naturally into the pedagogical flow.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All Ukrainian text is correct. Case endings for quantities (буханку хліба,
+    пляшку води) and currency agreement (сорок дві гривні) are flawless.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent breakdown of the "ends in 1/2-4/5+" rule for absolute beginners.
+    Good PPP flow and clear explanations.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items from the plan are introduced
+    naturally in the dialogues and examples.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers are placed strategically after each concept is introduced, matching
+    the plan's hints perfectly.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Direct, instructional tone without fluff or meta-commentary. Concrete
+    examples and clear takeaways.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Markdown is clean, all sections are present and ordered correctly.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Authentic shopping locations mentioned, including the distinct Ukrainian
+    word "крамниця".
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 5
+  evidence: Dialogues are natural, but there is a major logic/math error in Dialogue
+    1. The vendor asks for 75 UAH for items that cost 110 UAH, which will confuse
+    learners trying to follow the math.
+findings: []

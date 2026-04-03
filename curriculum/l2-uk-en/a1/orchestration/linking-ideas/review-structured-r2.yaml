@@ -1,0 +1,47 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: Missed the opening question "Що ти робив сьогодні?" from Dialogue 2. Missed
+    the required Ukrainian grammar term "сполучники сурядності" from the Grade 4-5
+    approach.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: Contained two false prescriptive rules regarding comma usage before "а"
+    and the mandatory positioning of reason clauses.
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Clear examples and PPP structure, though marred slightly by the inaccurate
+    syntax rules being taught as facts.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required conjunctions (`і`, `та`, `а`, `але`, `бо`, `тому що`) and
+    question word `чому` are well integrated.
+- dimension: 5
+  name: Exercise quality
+  score: 6
+  evidence: Exercises 1 and 4 are placed prematurely, requiring students to answer
+    using untaught vocabulary.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Engaging conversational tone, though transitions are slightly meta ("Let's
+    look at each one in detail").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All sections align with the plan; clear markdown headings.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Dialogues sound like real modern Ukrainians; no Russianisms or calques.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Very natural exchanges, but Dialogue 2 starts abruptly without its contextual
+    question.
+findings: []

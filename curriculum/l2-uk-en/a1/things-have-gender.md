@@ -14,7 +14,7 @@ Every Ukrainian noun belongs to one of three gender families: **він** (he), *
 Did you notice? **Стіл** gets **мій**, **кімната** gets **моя**, **ліжко** gets **моє**. Every noun belongs to a gender family. That family decides which form of "my" goes with it.
 
 > — **Оленка:** Що у тебе в су́мці? *(What do you have in your bag?)*
-> — **Марія:** У мене́ є кни́га, телефо́н і фо́то. *(I have a book, a phone, and a photo.)*
+> — **Марія:** У ме́не є кни́га, телефо́н і фо́то. *(I have a book, a phone, and a photo.)*
 > — **Оленка:** А у мене є ру́чка і зо́шит. *(And I have a pen and a notebook.)*
 > — **Марія:** Кни́га — це ціка́во! Яка́ кни́га? *(A book — that's interesting! What book?)*
 > — **Оленка:** Це моя́ кни́га. Вона́ украї́нська! *(This is my book. It's Ukrainian!)*
@@ -27,7 +27,7 @@ These nouns fall into **три гру́пи** (three groups) — three families.
 
 Ukrainian has three grammatical genders, taught to every Ukrainian student starting in Grade 3 (Vashulenko p. 110, Ponomarova p. 86). **Чолові́чий рід** (masculine) — use **він** and **мій**. **Жіно́чий рід** (feminine) — use **вона** and **моя**. **Сере́дній рід** (neuter) — use **воно** and **моє**. Every Ukrainian noun belongs to exactly one of these three families — permanently. A noun's gender never changes.
 
-Here is the test, step by step. Take **стіл** (table). Ask yourself: **він стіл**? Yes — that feels right. **Вона стіл**? No — sounds wrong. **Воно стіл**? Also wrong. Result: **стіл** is **чоловічий рід** (masculine). Now try **книга** (book): **вона книга**? Yes — **жіночий рід** (feminine). Try **вікно́** (window): **воно вікно**? Yes — **середній рід** (neuter). Now confirm with possessives: **мій стіл** (m) → **моя книга** (f) → **моє вікно** (n). The він/вона/воно test and the possessive test always agree.
+Here is the test, step by step. Take **стіл** (table). Ask yourself: **стіл — він**? Yes — that feels right. **Стіл — вона**? No — sounds wrong. Result: **стіл** is **чоловічий рід** (masculine). Now try **книга** (book): **книга — вона**? Yes — **жіночий рід** (feminine). Try **вікно́** (window): **вікно — воно**? Yes — **середній рід** (neuter). Now confirm with possessives: **мій стіл** (m) → **моя книга** (f) → **моє вікно** (n). The він/вона/воно test and the possessive test always agree.
 
 In M06 you learned **У мене є** (I have) with family members. The same structure works for objects. **У мене є стіл.** **У мене є книга.** **У мене є вікно.** Now you know each of those nouns carries a gender, which matters the moment you say **мій**, **моя**, or **моє**.
 

@@ -1,0 +1,45 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Missed the "visa application" setting entirely from `dialogue_situations`.
+    Word count is 1627 (target 1200).
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Falsely claims "There is no verb meaning 'to have' the way English uses
+    'have.'" (ignores the verb "мати").
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Clear PPP flow; introduces structures before explaining them. Good textbook
+    references.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words are included naturally.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All markers perfectly match the `activity_hints` in type and placement.
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: 'Uses meta-commentary: "Notice two things here", "You might wonder: how
+    do you say..."'
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: Deterministic word count of 1627 is >35% over the 1200 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Accurately explains the absence of a single word for "grandparents" and
+    references authentic textbooks.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: Dialogue 3 is a continuous monologue by one person but is awkwardly formatted
+    as 9 separate dialogue turns.
+findings: []

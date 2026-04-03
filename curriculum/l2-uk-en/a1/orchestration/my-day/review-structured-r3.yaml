@@ -1,0 +1,44 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Covers all 4 plan sections, but missed recommended word "вільний" and
+    missed word count targets.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Flawless Ukrainian. No Russianisms or Surzhyk.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow. Grammar is presented with clear, natural examples
+    before rules.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required vocabulary is present. Missing recommended word "вільний".
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All markers are present, logically placed, and match the plan's hints.
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: 'DEDUCTIONS: Heavy meta-commentary in transitions and breaking the fourth
+    wall ("using the present tense you already know from A1.3", "time expressions
+    from M22", "You already know how to tell time..."'
+- dimension: 7
+  name: Structural integrity
+  score: 7
+  evidence: 'DEDUCTIONS: Deterministic word count is 1546 words, which is significantly
+    over the 1200 word target (>28% deviation).'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Natural and culturally appropriate daily routine descriptions.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues feel natural and contextualized ("Я якраз пишу про це в блог").
+findings: []

@@ -1,6 +1,6 @@
 # Build Summary: checkpoint-time-nature (A1)
 
-Generated: 2026-04-01 13:41
+Generated: 2026-04-03 17:44
 
 ## Pipeline Phases
 
@@ -18,15 +18,16 @@ Generated: 2026-04-01 13:41
 | vocab | complete | 2026-03-30 06:44:12 |
 | enrich | complete | 2026-03-30 06:44:13 |
 | verify | complete | 2026-03-30 06:44:13 |
-| review | complete | 2026-04-01 11:41:45 |
-| stress | complete | 2026-04-01 11:41:45 |
-| publish | complete | 2026-04-01 11:41:51 |
+| review | complete | 2026-04-03 15:44:17 |
+| stress | complete | 2026-04-03 15:44:17 |
+| publish | complete | 2026-04-03 15:44:25 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | checkpoint-time-nature-review-r1.md |
+| 2 | checkpoint-time-nature-review-r2.md |
 
 ## Dispatch Log
 
@@ -42,6 +43,8 @@ Generated: 2026-04-01 13:41
 | review | gemini (gemini-3-flash-preview) | 1s | ❌ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 3s | ❌ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 16s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 309s | ✅ |
 
 ## Files
 
@@ -51,6 +54,8 @@ Generated: 2026-04-01 13:41
 - `quick-verify.json`
 - `research-quality.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

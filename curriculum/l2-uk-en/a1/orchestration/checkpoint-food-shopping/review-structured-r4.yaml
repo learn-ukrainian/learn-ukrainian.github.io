@@ -1,0 +1,50 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: The module follows the plan closely, though in the Reading section Anna
+    orders water instead of "каву з молоком" as specifically requested in the plan
+    ("She orders борщ and каву з молоком").
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All Ukrainian text, including case endings for animate and inanimate objects,
+    is factually correct. Vocative forms (Олено, Дмитре) and chunked phrases are flawlessly
+    executed.
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: The module uses a strong PPP flow and clear grammar summaries. However,
+    it prematurely names the "instrumental case" ("Notice how we group words using
+    the instrumental case") rather than just presenti
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All A1.6 review vocabulary (foods, drinks, café phrases) is integrated
+    naturally into the text.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Activity markers are distributed correctly throughout the module and perfectly
+    match the plan's focus areas.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is encouraging. The reading and dialogue sections provide practical,
+    engaging context that demonstrates the language in use.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All planned sections are present and follow the target structure flawlessly.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Realistic and culturally authentic representation of ordering at a café
+    and asking prices at a market.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are natural, multi-turn, and effectively consolidate the chapter's
+    grammar rules into a cohesive narrative.
+findings: []

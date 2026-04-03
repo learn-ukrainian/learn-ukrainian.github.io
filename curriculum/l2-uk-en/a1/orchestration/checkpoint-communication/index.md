@@ -1,6 +1,6 @@
 # Build Summary: checkpoint-communication (A1)
 
-Generated: 2026-04-01 13:45
+Generated: 2026-04-03 23:56
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-01 13:45
 | vocab | complete | 2026-03-30 21:36:41 |
 | enrich | complete | 2026-03-30 21:36:42 |
 | verify | complete | 2026-03-30 21:36:42 |
-| review | complete | 2026-04-01 11:45:21 |
-| stress | complete | 2026-04-01 11:45:21 |
-| publish | complete | 2026-04-01 11:45:26 |
+| review | complete | 2026-04-03 21:56:28 |
+| stress | complete | 2026-04-03 21:56:28 |
+| publish | complete | 2026-04-03 21:56:35 |
 
 ## Reviews
 
@@ -28,6 +28,9 @@ Generated: 2026-04-01 13:45
 |-------|------|
 | 1 | checkpoint-communication-review-r1.md |
 | 2 | checkpoint-communication-review-r2.md |
+| 3 | checkpoint-communication-review-r3.md |
+| 4 | checkpoint-communication-review-r4.md |
+| 5 | checkpoint-communication-review-r5.md |
 
 ## Dispatch Log
 
@@ -44,6 +47,12 @@ Generated: 2026-04-01 13:45
 | review | claude-tools (claude-opus-4-6) | 123s | ✅ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 2s | ❌ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 7s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 103s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 7s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 180s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 15s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 111s | ✅ |
 
 ## Files
 
@@ -56,6 +65,10 @@ Generated: 2026-04-01 13:45
 - `research-quality.json`
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
+- `review-structured-r4.yaml`
+- `review-structured-r5.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

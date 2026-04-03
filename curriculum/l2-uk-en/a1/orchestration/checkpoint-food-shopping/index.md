@@ -1,6 +1,6 @@
 # Build Summary: checkpoint-food-shopping (A1)
 
-Generated: 2026-04-01 13:44
+Generated: 2026-04-03 23:38
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-01 13:44
 | vocab | complete | 2026-03-30 23:28:09 |
 | enrich | complete | 2026-03-30 23:22:09 |
 | verify | complete | 2026-03-30 23:22:09 |
-| review | complete | 2026-04-01 11:44:16 |
-| stress | complete | 2026-04-01 11:44:16 |
-| publish | complete | 2026-04-01 11:44:22 |
+| review | complete | 2026-04-03 21:38:47 |
+| stress | complete | 2026-04-03 21:38:48 |
+| publish | complete | 2026-04-03 21:38:54 |
 
 ## Reviews
 
@@ -29,6 +29,7 @@ Generated: 2026-04-01 13:44
 | 1 | checkpoint-food-shopping-review-r1.md |
 | 2 | checkpoint-food-shopping-review-r2.md |
 | 3 | checkpoint-food-shopping-review-r3.md |
+| 4 | checkpoint-food-shopping-review-r4.md |
 
 ## Dispatch Log
 
@@ -55,6 +56,8 @@ Generated: 2026-04-01 13:44
 | review | gemini (gemini-3-flash-preview) | 1s | ❌ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 3s | ❌ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 5s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 100s | ✅ |
 
 ## Files
 
@@ -68,6 +71,8 @@ Generated: 2026-04-01 13:44
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
 - `review-structured-r3.yaml`
+- `review-structured-r4.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

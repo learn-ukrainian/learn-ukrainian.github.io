@@ -1,0 +1,49 @@
+round: 6
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: All sections from the `content_outline` are present and ordered correctly.
+    Word counts are well-managed.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Found double stress marks ("алфа́ві́ті" and "апо́стро́ф"). Found calques/unnatural
+    phrasing ("А яка твоя сім'я?", "предста́вити себе").
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent pedagogical simplification, specifically explicitly teaching
+    the dash (—) as the replacement for "to be" ("If you feel the urge to add є, resist
+    it").
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Successfully recycled M01-M06 vocabulary and integrated recommended words
+    (`ім'я`, `прізвище`) naturally into the dialogue.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Activity markers correspond to the `activity_hints` perfectly in both
+    number and focus.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'Broke the fourth wall with unnecessary meta-commentary: "just as Ukrainian
+    textbooks teach:".'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, appropriate H2 and H3 headers. Deterministic word count
+    of 1410 is within an acceptable margin of the 1200 target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Authentic use of Ukrainian cities (Харків, Львів, Тернопіль, Дніпро) and
+    common names.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Natural flow overall, but slightly marred by the awkward transition "Шевче́нко.
+    А яка твоя сім'я?".
+findings: []

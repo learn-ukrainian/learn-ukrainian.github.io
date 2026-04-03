@@ -1,6 +1,6 @@
 # Build Summary: my-plans (A1)
 
-Generated: 2026-04-02 20:38
+Generated: 2026-04-04 00:07
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-02 20:38
 | vocab | complete | 2026-03-30 21:34:35 |
 | enrich | complete | 2026-03-30 21:34:36 |
 | verify | complete | 2026-03-30 21:34:36 |
-| review | complete | 2026-04-01 11:46:04 |
-| stress | complete | 2026-04-02 18:38:39 |
-| publish | complete | 2026-04-02 18:38:40 |
+| review | complete | 2026-04-03 22:07:31 |
+| stress | complete | 2026-04-03 22:07:38 |
+| publish | complete | 2026-04-03 22:07:39 |
 
 ## Reviews
 
@@ -28,6 +28,7 @@ Generated: 2026-04-02 20:38
 |-------|------|
 | 1 | my-plans-review-r1.md |
 | 2 | my-plans-review-r2.md |
+| 3 | my-plans-review-r3.md |
 
 ## Dispatch Log
 
@@ -45,6 +46,8 @@ Generated: 2026-04-02 20:38
 | review | claude-tools (claude-opus-4-6) | 189s | ✅ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 2s | ❌ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 8s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 111s | ✅ |
 | section-rewrite | claude-tools (claude-opus-4-6) | 103s | ✅ |
 
 ## Files
@@ -58,6 +61,7 @@ Generated: 2026-04-02 20:38
 - `research-quality.json`
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
 - `review-structured.md`
 - `skeleton.md`
 - `state.json`

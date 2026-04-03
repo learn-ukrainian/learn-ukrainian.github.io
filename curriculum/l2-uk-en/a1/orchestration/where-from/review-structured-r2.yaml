@@ -1,0 +1,53 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: The writer modified the second dialogue from the plan ("Вона йде зі школи"
+    -> "Вона ще в магазині"), which inadvertently introduced an unnatural grammatical
+    structure, but otherwise covered all outlin
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: The phrase `Але́ ско́ро йде з магази́ну додому` uses present tense for
+    a future action in an unnatural way, mimicking English continuous tense rather
+    than the natural Ukrainian perfective future (`під
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent PPP flow and clear explanations of the "з/із/зі" euphony rules
+    for the A1 level. Deducted 1 point for presenting the unnatural "скоро йде" as
+    a target phrase in a dialogue.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary from the plan is naturally integrated
+    into the prose and dialogues.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers are logically placed immediately after the relevant teaching blocks
+    to test what was just taught.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is engaging and sets natural, contextual scenes (e.g., "At a
+    student mixer") without relying on corporate-speak or meta-commentary.
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: 'The writer added manual stress marks to H2 headers (`## Діало́ги`, `##
+    Краї́ни і міста́`), which breaks the audit script''s exact-string mapping to the
+    `content_outline`. The word count (1374) is also '
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Correctly emphasizes Ukrainian names for countries (Німеччина instead
+    of Германія) and includes brief, accurate historical context for the names of
+    Kyiv and Lviv.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogues are multi-turn and contextual, though Dialogue 2 suffers slightly
+    from the unnatural phrasing mentioned above.
+findings: []

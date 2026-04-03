@@ -1,0 +1,49 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: The module covers all plan points but mechanically copied the plan's shorthand
+    "грудень 25" into the final summary table instead of adapting it to natural Ukrainian
+    date formatting ("25 грудня").
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Excellent. Uses accurate terminology like "пісні", correct instrumental
+    forms ("З Різдвом", "З Великоднем"). No Surzhyk or calques found.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent flow. The breakdown of "незалежність" (не + залежати) is a brilliant
+    teaching moment.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All vocabulary is present EXCEPT the required verb `святкувати` in Ukrainian.
+    The writer translated it to English ("Ukraine celebrates") and changed the plan's
+    `Раніше святкували...` to `Раніше було..
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: The `quiz-holiday-dates` activity marker is placed immediately after the
+    Dialogues, testing dates for holidays (like Easter and New Year) that have not
+    been introduced yet.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Perfect. Connects grammar to prior knowledge seamlessly ("You already
+    know the instrumental case from з + noun").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, all sections are present and appropriately sized.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Highly accurate. Correctly explains the Dec 25 date shift as a break from
+    Russian influence and accurately represents traditions.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are natural, polite, and realistic for language learners.
+findings: []

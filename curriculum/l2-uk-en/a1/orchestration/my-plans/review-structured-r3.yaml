@@ -1,0 +1,49 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: All dialogues, vocabulary, grammar patterns, and sections from the plan
+    are fully present.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'The text incorrectly labels the ''и'' in "працювати" as a consonant in
+    the euphony example: `* **Він** бу́де працювати **у** понеділок. (consonant +
+    у + consonant)`.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent PPP flow and clear grammar explanations, but the euphony example
+    contradicts its own rule.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words (e.g., тиждень, прибирати, допізна,
+    задоволення) are used naturally in context.
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: Markers are placed well, though `quiz-days-of-week` uses a different activity
+    type name than the plan's specified `fill-in`.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: Some sentences use corporate-speak ("reliable formula", "planning toolkit")
+    and tell instead of show ("This makes your sentences flow beautifully").
+- dimension: 7
+  name: Structural integrity
+  score: 7
+  evidence: The deterministic word count is 1902 words, which exceeds the target of
+    1200 by nearly 60%, resulting in structural bloat.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Authentic and culturally appropriate ways of interacting and planning
+    are presented.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are multi-turn, natural, and use appropriate colloquialisms
+    like "Ти будеш?".
+findings: []

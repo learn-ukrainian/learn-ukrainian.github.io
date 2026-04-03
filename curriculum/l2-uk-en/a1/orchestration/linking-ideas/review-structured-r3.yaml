@@ -1,0 +1,47 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Covers all outline points perfectly and integrates textbook references
+    well, but misses recommended vocabulary (`також`, `або`, `тому`).
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Excellent. Grammar rules are precise, cases and genders are flawless.
+    No Surzhyk or calques.
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Strong PPP flow with clear 3+ examples per point, but an exercise marker
+    was placed before its prerequisite concept was taught.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'Required vocabulary is fully integrated. Missed recommended items: `також`,
+    `або`, `тому`.'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: Activities match plan hints perfectly in logic, but one marker is duplicated.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Natural dialogues, highly contextualized examples, engaging and clear
+    explanations without corporate-speak.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Markdown is clean, but the word count (1393 words) is ~16% over the 1200
+    target, exceeding the +10% tolerance.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Decolonized approach (teaches Ukrainian natively without Russian reference
+    points).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Great character dialogues overall, but the forced line "Вибач, бо телефон
+    був без звуку" feels slightly unnatural.
+findings: []

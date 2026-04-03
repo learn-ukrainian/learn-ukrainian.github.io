@@ -1,0 +1,45 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'The text missed the dialogue setting from the plan: "Writing a blog post
+    / diary entry about your day — reading it to a friend". The generated dialogue
+    is introduced merely as "Below are two conversat'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: 'Factual grammar error: The text states "Full reflexive verb grammar comes
+    in M38" immediately after introducing "лягати спати". The verb `лягати` is not
+    a reflexive verb.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: The factual grammar error misinforms the learner about verb categorization.
+    Otherwise, the PPP flow is excellent.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary is present and used naturally in context.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All markers are present and correctly correspond to the plan's `activity_hints`.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The text is engaging, uses natural examples, and avoids meta-commentary.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All sections are present, well-ordered, and the markdown is clean.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Culturally appropriate and natural routine described.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The dialogue is natural but fails to incorporate the specific "blog post"
+    narrative device requested in the plan.
+findings: []

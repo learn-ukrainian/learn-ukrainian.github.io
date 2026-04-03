@@ -1,0 +1,50 @@
+round: 5
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: All sections and points are covered. However, H2 headers include stress
+    marks (`## Діало́ги (Dialogues)`), which breaks the exact string matching required
+    by the pipeline against the `meta.yaml` outli
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Good overall, but "**він стіл**?" is incorrect grammatical usage, and
+    "У **мене́**" has a stress error.
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Excellent PPP flow. Deducted because teaching students to literally say
+    "він стіл?" to test gender teaches them a broken grammatical structure from the
+    start.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items are naturally integrated
+    into the text and examples.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Activity markers match the plan's hints perfectly and are placed at the
+    correct pedagogical moments.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Dialogues are natural and effective. Slight meta-commentary ("A few short
+    sentences to make each word stick:").
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: Markdown structure is clean, but the inclusion of stress marks in H2 headings
+    violates the exact-match requirement for the audit script.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Correctly references the Ukrainian Grade 3 textbook approach to teaching
+    gender.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues feel natural, contextualize the grammar perfectly, and feature
+    distinct speakers.
+findings: []

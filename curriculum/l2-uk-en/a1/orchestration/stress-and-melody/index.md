@@ -1,6 +1,6 @@
 # Build Summary: stress-and-melody (A1)
 
-Generated: 2026-04-01 12:52
+Generated: 2026-04-03 14:45
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-01 12:52
 | vocab | complete | 2026-03-29 20:30:01 |
 | enrich | complete | 2026-03-29 20:30:03 |
 | verify | complete | 2026-03-29 20:30:03 |
-| review | complete | 2026-04-01 10:52:30 |
-| stress | complete | 2026-04-01 10:52:37 |
-| publish | complete | 2026-04-01 10:52:38 |
+| review | complete | 2026-04-03 12:45:27 |
+| stress | complete | 2026-04-03 12:45:35 |
+| publish | complete | 2026-04-03 12:45:36 |
 
 ## Reviews
 
@@ -29,6 +29,7 @@ Generated: 2026-04-01 12:52
 | 1 | stress-and-melody-review-r1.md |
 | 2 | stress-and-melody-review-r2.md |
 | 3 | stress-and-melody-review-r3.md |
+| 4 | stress-and-melody-review-r4.md |
 
 ## Dispatch Log
 
@@ -47,6 +48,8 @@ Generated: 2026-04-01 12:52
 | review | gemini (gemini-3-flash-preview) | 2s | ❌ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 452s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 21s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 325s | ✅ |
 
 ## Files
 
@@ -58,6 +61,8 @@ Generated: 2026-04-01 12:52
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
 - `review-structured-r3.yaml`
+- `review-structured-r4.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

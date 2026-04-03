@@ -1,0 +1,51 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Missed the word count target (1366 words is 13.8% over the 1200 target,
+    max allowed is 1320). Added an extra activity marker that was not in the plan.
+    Covered all outline points well.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: Ukrainian sentences are perfectly natural and grammatically correct. Deducted
+    1 point for the typo created by a double manual stress mark in `ко́шту́є`.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow. Clear contrast between "this" and "that", properly
+    integrated Заболотний textbook reference, and highly effective explanations linking
+    new demonstratives to previously learned gend
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: 'Covered required vocabulary well, but missed two recommended plan items:
+    `тут` and `він, вона, воно`.'
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: Injected a 5th activity marker (`fill-in-demonstratives-this`) that does
+    not exist in the plan's 4 `activity_hints`.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Great teacher tone, highly specific situational context, no generic fluff.
+    The showroom and store scenarios work perfectly.
+- dimension: 7
+  name: Structural integrity
+  score: 7
+  evidence: The text is littered with manual acute accents (stress marks) despite
+    the prompt rule that "their absence is correct" as stress is handled downstream.
+    Also exceeds the strict +10% word count ceiling.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Natural interactions, culturally appropriate use of the Hryvnia, and solid
+    equative sentence patterns.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Conversations between Iryna and the shop assistant are natural, utilizing
+    the target grammar effectively and efficiently.
+findings: []

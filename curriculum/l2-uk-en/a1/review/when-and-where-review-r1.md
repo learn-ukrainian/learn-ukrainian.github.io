@@ -1,98 +1,75 @@
-VESUM confirms: **скажи** is `verb:perf:impr:s:2` of **сказати** (perfective), NOT казати. The imperative of казати (imperfective) is **кажи**. This is a factual linguistic error in the module. Now let me compile the full review.
-
----
-
 ## Linguistic Scan
-
-**Two errors found:**
-
-### Error 1 — Gender agreement (CRITICAL)
-**Location:** Dialogue 2, Наталя's first line
-**Text:** `Ні, я не знав!`
-**Issue:** Наталя is a female speaker. The past tense of знати must agree in gender: masculine = знав, feminine = знала. A woman says **я не знала**, never **я не знав**.
-**Evidence:** VESUM confirms both forms exist: знав (verb:imperf:past:m), знала (verb:imperf:past:f).
-
-### Error 2 — Wrong imperative attribution (CRITICAL)
-**Location:** Paragraph after Dialogue 1
-**Text:** `The word скажи is the imperative of казати (to say/tell)`
-**Issue:** **скажи** is the imperative of **сказати** (perfective), not казати (imperfective). VESUM confirms: скажи = `verb:perf:impr:s:2` of сказати. The imperative of казати is **кажи** (`verb:imperf:impr:s:2`). This module teaches the aspect pair казати/сказати — conflating them is a factual error that will confuse learners who later encounter aspect.
-**Evidence:** VESUM verify_lemma for казати shows imperative = кажи; for сказати shows imperative = скажи.
-
-### Minor inaccuracy
-**Location:** End of Dialogue section
-**Text:** `And думати (to think) drives the opinion patterns throughout.`
-**Issue:** думати appears only in Dialogue 1 (twice). It does NOT appear in Dialogue 2 at all. The word "throughout" implies both dialogues, which is false.
-
-**No Russianisms, Surzhyk, calques, or paronyms found.** All other Ukrainian forms verified correct against VESUM. No Russian characters (ы, э, ё, ъ) present.
-
----
+Errors and minor stylistic issues found:
+- **Factual grammatical error:** Stating that there are "no exceptions" to the comma before *що/де/коли* is wrong (e.g., elliptical single-word clauses like "Я не знаю де." do not take a comma).
+- **Style/Calque:** "добрий час" is a slight calque for "good time" instead of the more idiomatic "гарний час" or "зручний час".
+- **Usage/Idiom:** "Де побачиш фонтан" is slightly awkward for temporal/spatial directions; "Коли побачиш" is more standard.
+- **Pedagogical clarity:** Grouping the perfective imperative "Скажи" directly under the imperfective lemma "казати" without noting the pair may cause morphological confusion later.
 
 ## Exercise Check
-
-**4 activity markers found:**
-1. `<!-- INJECT_ACTIVITY: fill-in-conjunction-choice -->` — after Складне речення section ✅ (tests conjunction choice after teaching the structure)
-2. `<!-- INJECT_ACTIVITY: quiz-question-or-conjunction -->` — after "Two Faces" Job 1 vs Job 2 explanation ✅ (tests the distinction just taught)
-3. `<!-- INJECT_ACTIVITY: fill-in-complete-clause -->` — after common patterns list ✅ (tests clause completion after patterns taught)
-4. `<!-- INJECT_ACTIVITY: quiz-comma-placement -->` — in Підсумок ✅ (tests comma rule after full review)
-
-**Plan activity_hints:** 4 activities (fill-in ×2, quiz ×2). Module markers: fill-in ×2, quiz ×2. ✅ Match.
-
-**Placement:** Well-distributed across sections (one per section). Each marker follows the relevant teaching content. ✅
-
-**No issues with exercise logic or placement.**
-
----
+- `<!-- INJECT_ACTIVITY: quiz-comma-placement -->` (Matches hint 4: Where is the comma?)
+- `<!-- INJECT_ACTIVITY: quiz-question-or-conjunction -->` (Matches hint 2: Question word or conjunction?)
+- `<!-- INJECT_ACTIVITY: fill-in-conjunction-choice -->` (Matches hint 1: Complete with що/де/коли)
+- `<!-- INJECT_ACTIVITY: fill-in-build-sentences -->` (Matches hint 3: Build complex sentences)
+All 4 requested activity markers are present, logically placed after their respective teaching sections, and appropriately test the material just taught.
 
 ## Scores
-
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | All 4 content_outline sections present and ordered correctly. Both dialogues from plan reproduced faithfully with correct speakers and conjunctions. Складне речення section covers M44 connection, main+dependent structure, comma rule, Grade 5 term. "Two Faces" covers question vs conjunction distinction with side-by-side examples. Summary includes the table and combined-conjunction sentences. Word count (1530) exceeds 1200 target. Minor: plan specifies exactly "Скажи мені, коли ти прийдеш" — module has this. All vocabulary_hints required words (що, де, коли, знати, думати, казати) used naturally in prose. Recommended words (сказати, бачити, розуміти, речення) also present. Only slight miss: section word budgets were 300 each but the distribution skews heavier toward sections 2-3 vs section 1; within tolerance. |
-| 2. Linguistic accuracy | 7/10 | Two critical errors: (1) Gender agreement — Наталя says "я не знав" instead of "я не знала." This is a basic gender agreement error that will teach learners wrong Ukrainian. (2) "скажи is the imperative of казати" — factually wrong; скажи is from сказати (perfective). VESUM confirms кажи is the imperative of казати. Both errors are the kind learners will memorize and repeat. All other forms correct: складнопідрядне, сполучники, verb conjugations (кажу, кажеш, каже), case endings all verified. |
-| 3. Pedagogical quality | 9/10 | Excellent PPP flow: dialogues present the pattern in context → grammar section extracts the rule → "Two Faces" deepens understanding → Summary consolidates. 3+ examples per grammar point consistently (comma rule has 6 examples, conjunction patterns have 6+ each). Grade 5 textbook reference (Заболотний) integrated naturally. M44 prerequisite explicitly connected. The progression from coordinating (M44) to subordinating conjunctions is well-scaffolded. "How to tell?" diagnostic (position + punctuation) matches textbook approach (Avramenko Grade 5: "Роль сполучників можуть відігравати сполучні слова"). |
-| 4. Vocabulary coverage | 10/10 | All required vocab used naturally: що/де/коли as conjunctions throughout, знати (знаєш, знаю, не знаю, знає — 10+ occurrences), думати (думаю — 4 occurrences), казати (каже — 2 occurrences). Recommended vocab present: сказати (скажи, скажу), бачити (побачиш, побачу), речення (used in grammar explanation). розуміти not found in prose but not required. Words introduced in context within dialogues, never as bare lists. |
-| 5. Exercise quality | 9/10 | 4 markers matching plan's 4 activity_hints in type (fill-in ×2, quiz ×2) and focus (conjunction choice, question-vs-conjunction, clause completion, comma placement). Each placed after relevant teaching. No inline exercises to check logic on, but markers are well-positioned and correctly named for their pedagogical targets. |
-| 6. Engagement & tone | 10/10 | No motivational openers, no "magic of," no meta-commentary. Tone is direct and teacher-like: "Count the conjunctions," "You can verify this yourself now," "Keep these dialogues in mind." The cross-referencing between dialogues and grammar ("Look back at Dialogue 1") creates genuine engagement. Named speakers with distinct voices (Олексій/Марія planning, Богдан/Наталя gossiping about a friend). No generic enthusiasm. |
-| 7. Structural integrity | 10/10 | All 4 H2 headings from plan present in correct order. Clean markdown throughout. No duplicate summaries, no stray tags, no meta-commentary sections. Word count (1530) well within range (target 1200, +27.5%). Activity markers correctly formatted. |
-| 8. Cultural accuracy | 10/10 | Ukrainian presented on its own terms. The comma rule is explicitly contrasted with English ("This differs from English, where 'I know that he's here' has no comma") without subordinating Ukrainian to English. Ukrainian grammatical terminology used (складнопідрядне речення, сполучники). Dialogue settings are natural Ukrainian urban life (meeting at a café, a friend moving to Kyiv). No "like Russian but..." framing. |
-| 9. Dialogue & conversation quality | 9/10 | Two natural multi-turn dialogues with named speakers. Dialogue 1 (planning to meet at a café) is natural and purposeful. Dialogue 2 (sharing news about a mutual friend arriving in Kyiv) is culturally authentic — the request "скажи їй, що я хочу зустрітися" is exactly how Ukrainians coordinate through mutual friends. Both dialogues avoid interrogation patterns. One deduction: Dialogue 2 has the gender error (Наталя/знав) which slightly undermines naturalness. |
-
----
+| 1. Plan adherence | 9/10 | Covered all sections and dialog structures from the plan. Minor deduction for skipping some recommended vocabulary (`чути`, `розуміти`, `головне`). |
+| 2. Linguistic accuracy | 8/10 | Included a factually incorrect absolute rule (`Ukrainian ALWAYS places a comma before що, де, коли when they serve as conjunctions — no exceptions.`). Used a slightly unnatural calque (`добрий час`) and spatial phrasing (`Де побачиш фонтан`). |
+| 3. Pedagogical quality | 9/10 | Excellent breakdown of the difference between question words and conjunctions, with very clear examples. Minor deduction for grouping "Скажи" under "Казати" without noting it's a perfective pair, which could cause morphological confusion for learners trying to construct it. |
+| 4. Vocabulary coverage | 9/10 | All required vocabulary (`що, де, коли, знати, думати, казати`) used naturally and repeatedly in context. |
+| 5. Exercise quality | 10/10 | Markers perfectly match the plan's `activity_hints` and are placed correctly after the relevant explanations. |
+| 6. Engagement & tone | 10/10 | The dialogues are highly engaging, featuring named speakers in realistic, highly communicative situations. The tone is encouraging but focused. |
+| 7. Structural integrity | 9/10 | Clean structure, but leaked a generated AI artifact at the bottom of the file (`**Deterministic word count...`). |
+| 8. Cultural accuracy | 10/10 | Culturally neutral and accurate. |
+| 9. Dialogue & conversation quality | 10/10 | Dialogues are expanded beyond the plan beautifully, creating very natural multi-turn conversations that seamlessly integrate the target grammar. |
 
 ## Findings
+[2. Linguistic accuracy] [Major]
+Location: `Ukrainian ALWAYS places a comma before **що**, **де**, **коли** when they serve as conjunctions — no exceptions.`
+Issue: The "no exceptions" claim is factually incorrect. In Ukrainian, a comma is NOT placed if the subordinate clause consists of a single relative word/conjunction (e.g., "Я не знаю де."). While the comma is almost always used in A1 contexts, teaching an absolute "no exceptions" rule is dangerous and creates unlearning debt.
+Fix: Soften the rule to state it applies when connecting two parts of a sentence.
 
-```
-[LINGUISTIC ACCURACY] [SEVERITY: critical]
-Location: Dialogue 2, Наталя's line — "Ні, я не знав! А де вона живе?"
-Issue: Наталя is female. Past tense "знав" is masculine. Must be "знала".
-Fix: Change "знав" to "знала" in Наталя's dialogue line.
-```
+[2. Linguistic accuracy] [Major]
+Location: `Write this rule in your notebook: comma + conjunction = always paired in Ukrainian.`
+Issue: Same as above. The absolutism "always paired" is grammatically incorrect.
+Fix: Change to "the standard pair".
 
-```
-[LINGUISTIC ACCURACY] [SEVERITY: critical]
-Location: Paragraph after Dialogue 1 — "The word скажи is the imperative of казати (to say/tell)"
-Issue: скажи is the imperative of сказати (perfective), not казати (imperfective). VESUM confirms: казати → кажи, сказати → скажи. Conflating the two aspect partners teaches wrong morphology.
-Fix: Change to "скажи is the imperative of сказати (to say/tell — perfective of казати)"
-```
+[2. Linguistic accuracy] [Minor]
+Location: `Я теж думаю, що о шостій — добрий час.`
+Issue: "Добрий час" is a slight calque of "good time". In Ukrainian, "зручний час", "вдалий час", or "гарний час" (as written in the original plan) is more natural in this context.
+Fix: Change "добрий час" to "гарний час".
 
-```
-[ENGAGEMENT & TONE] [SEVERITY: minor]
-Location: End of Dialogues section — "And думати (to think) drives the opinion patterns throughout."
-Issue: думати appears only in Dialogue 1, not in Dialogue 2. "Throughout" is inaccurate.
-Fix: Remove or rephrase to scope correctly.
-```
+[2. Linguistic accuracy] [Minor]
+Location: `Де побачиш фонтан — поверни ліворуч.`
+Issue: While understandable, "Де побачиш" (Where you see) is slightly awkward for temporal/spatial directions compared to "Коли побачиш" (When you see). The original plan separated these more cleanly.
+Fix: Change "Де" to "Коли".
 
----
+[3. Pedagogical quality] [Minor]
+Location: `«Казати» works with all three conjunctions: «Він каже, що вона в Києві», «Вона казала, де магазин», «Скажи, коли прийдеш».`
+Issue: Grouping "Скажи" directly under the imperfective "казати" without mentioning it is a different verb ("сказати") can cause morphological confusion, as learners might assume "скажи" is formed directly from the "каз-" stem.
+Fix: Add a brief parenthetical mention of its perfective pair.
+
+[7. Structural integrity] [Minor]
+Location: `**Deterministic word count: 1946 words** (calculated by pipeline, do NOT estimate manually)`
+Issue: AI artifact/meta-commentary leaked into the final text.
+Fix: Remove the artifact.
 
 ## Verdict: REVISE
-
-Two critical linguistic errors must be fixed before shipping: (1) gender agreement error that teaches learners wrong past-tense formation, and (2) incorrect imperative-to-infinitive mapping that teaches wrong aspect morphology. Both are the kind of errors learners memorize on first encounter. The module is otherwise excellent — strong pedagogy, natural dialogues, clean structure. Fixes are surgical.
+The module is extremely well-written with great dialogues and clear explanations, but it requires revision to fix the factual error regarding the "no exceptions" comma rule, a minor calque, and the AI artifact at the bottom of the file.
 
 <fixes>
-- find: "Ні, я не знав! А де вона живе? *(No, I didn't know! And where does she live?)*"
-  replace: "Ні, я не знала! А де вона живе? *(No, I didn't know! And where does she live?)*"
-- find: "The word **скажи** is the imperative of **казати** (to say/tell) — Олексій literally says \"tell me when.\""
-  replace: "The word **скажи** is the imperative of **сказати** (to say/tell — the perfective partner of **казати**) — Олексій literally says \"tell me when.\""
-- find: "And **думати** (to think) drives the opinion patterns throughout."
-  replace: "And **думати** (to think) drives the opinion patterns in the first dialogue — **я думаю, що...** is the most natural way to share your view."
+- find: "Ukrainian ALWAYS places a comma before **що**, **де**, **коли** when they serve as conjunctions — no exceptions."
+  replace: "Ukrainian ALWAYS places a comma before **що**, **де**, **коли** when they connect two parts of a sentence."
+- find: "Write this rule in your notebook: comma + conjunction = always paired in Ukrainian."
+  replace: "Write this rule in your notebook: comma + conjunction = the standard pair in Ukrainian."
+- find: "Я теж думаю, що о шостій — добрий час."
+  replace: "Я теж думаю, що о шостій — гарний час."
+- find: "Де побачиш фонтан — поверни ліворуч."
+  replace: "Коли побачиш фонтан — поверни ліворуч."
+- find: "«Казати» works with all three conjunctions: «Він каже, що вона в Києві», «Вона казала, де магазин», «Скажи, коли прийдеш»."
+  replace: "«Казати» (and its pair **сказати**) works with all three conjunctions: «Він каже, що вона в Києві», «Вона казала, де магазин», «Скажи, коли прийдеш»."
+- find: "**Deterministic word count: 1946 words** (calculated by pipeline, do NOT estimate manually)"
+  replace: " "
 </fixes>

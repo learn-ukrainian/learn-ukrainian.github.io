@@ -1,6 +1,6 @@
 # Build Summary: linking-ideas (A1)
 
-Generated: 2026-04-01 13:44
+Generated: 2026-04-03 23:47
 
 ## Pipeline Phases
 
@@ -18,15 +18,17 @@ Generated: 2026-04-01 13:44
 | vocab | complete | 2026-03-30 20:46:58 |
 | enrich | complete | 2026-03-30 20:46:59 |
 | verify | complete | 2026-03-30 20:46:59 |
-| review | complete | 2026-04-01 11:44:49 |
-| stress | complete | 2026-04-01 11:44:49 |
-| publish | complete | 2026-04-01 11:44:55 |
+| review | complete | 2026-04-03 21:47:07 |
+| stress | complete | 2026-04-03 21:47:07 |
+| publish | complete | 2026-04-03 21:47:13 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | linking-ideas-review-r1.md |
+| 2 | linking-ideas-review-r2.md |
+| 3 | linking-ideas-review-r3.md |
 
 ## Dispatch Log
 
@@ -41,6 +43,10 @@ Generated: 2026-04-01 13:44
 | review | gemini (gemini-3-flash-preview) | 1s | ❌ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 3s | ❌ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 10s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 107s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 7s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 105s | ✅ |
 
 ## Files
 
@@ -50,6 +56,9 @@ Generated: 2026-04-01 13:44
 - `quick-verify.json`
 - `research-quality.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

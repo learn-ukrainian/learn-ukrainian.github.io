@@ -11,6 +11,24 @@ vocabulary:
   pos: ім.
   gender: ж.
   verified: true
+- word: паціє́нт
+  translation: patient
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: покупе́ць
+  translation: customer/buyer
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: фармаце́вт
+  translation: pharmacist
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
 - word: голова́
   translation: head
   expression: false
@@ -59,12 +77,6 @@ vocabulary:
   pos: ім.
   gender: с.
   verified: true
-- word: зуб
-  translation: tooth
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
 - word: температу́ра
   translation: fever/temperature
   expression: false
@@ -83,8 +95,26 @@ vocabulary:
   pos: ім.
   gender: ч.
   verified: true
-- word: табле́тка
-  translation: pill/tablet
+- word: табле́тки
+  translation: pills/tablets
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: кра́плі
+  translation: drops
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: лі́ки
+  translation: medicine
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: засту́да
+  translation: cold (illness)
   expression: false
   pos: ім.
   gender: ж.
@@ -108,121 +138,151 @@ vocabulary:
   gender: ''
   verified: true
 - word: боля́ть
-  translation: hurt (plural)
+  translation: hurts (plural)
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: засту́да
-  translation: a cold (illness)
+- word: ка́шляєте
+  translation: you cough
   expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: кра́плі
-  translation: drops (medicine)
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: сиро́п
-  translation: syrup
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: лі́ки
-  translation: medicine/medications
-  expression: false
-  pos: ім.
+  pos: дієсл.
   gender: ''
   verified: true
-- word: паціє́нтка
-  translation: patient (female)
+- word: про́ти
+  translation: against/for (medicine context)
   expression: false
-  pos: ім.
-  gender: ж.
+  pos: присл.
+  gender: ''
   verified: true
-- word: фармаце́вт
-  translation: pharmacist
+- word: ви́пишу
+  translation: I will prescribe
   expression: false
-  pos: ім.
-  gender: ч.
+  pos: дієсл.
+  gender: ''
   verified: true
-- word: У мене болить...
-  translation: My ... hurts / I have pain in...
+- word: відпочива́йте
+  translation: rest! (imperative)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зрозумі́ло
+  translation: understood
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: давно́
+  translation: for long / long ago
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: тро́хи
+  translation: a little
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: учо́ра
+  translation: yesterday
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: У мене болить
+  translation: I have a pain / it hurts me (+ body part)
   expression: true
   pos: ''
   gender: ''
   verified: true
 - word: Що у вас болить?
-  translation: What hurts? / What's the matter?
+  translation: What hurts you? / What's the matter?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: У мене температура.
-  translation: I have a fever.
+- word: З учора
+  translation: Since yesterday
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: У мене кашель.
-  translation: I have a cough.
+- word: У мене температура
+  translation: I have a fever
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: У мене нежить.
-  translation: I have a runny nose.
+- word: У мене кашель
+  translation: I have a cough
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Мені погано.
-  translation: I feel unwell.
+- word: У мене нежить
+  translation: I have a runny nose
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Мені холодно.
-  translation: I'm cold.
+- word: Мені холодно
+  translation: I feel cold
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Мені погано
+  translation: I feel bad / I'm not well
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я хворий
+  translation: I'm sick (male speaker)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я хвора
+  translation: I'm sick (female speaker)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дайте, будь ласка, таблетки проти...
+  translation: Give me pills for... (pharmacy formula)
   expression: true
   pos: ''
   gender: ''
   verified: true
 - word: проти головного болю
-  translation: for a headache (medicine)
+  translation: for a headache
   expression: true
   pos: ''
   gender: ''
   verified: true
 - word: проти кашлю
-  translation: for a cough (medicine)
+  translation: for a cough
   expression: true
   pos: ''
   gender: ''
   verified: true
 - word: проти нежитю
-  translation: for a runny nose (medicine)
+  translation: for a runny nose
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: Я випишу ліки.
-  translation: I'll prescribe medicine.
+- word: Ще щось?
+  translation: Anything else?
   expression: true
   pos: ''
   gender: ''
   verified: true
-- word: у лікаря
-  translation: at the doctor's
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: в аптеці
-  translation: at the pharmacy
+- word: Ось, будь ласка
+  translation: Here you go
   expression: true
   pos: ''
   gender: ''

@@ -54,13 +54,13 @@ Reading Ukrainian aloud — **вголос** (aloud) — is where stress and int
 
 **Крок 1: Поді́л на скла́ди** (Divide into syllables) — say each syllable slowly, separately.
 **Крок 2: Знайди́ на́голос** (Find the stress) — say the stressed syllable louder and slightly longer.
-**Крок 3: Чита́й ра́зом** (Read together) — blend at natural speed, letting the stress land naturally.
+**Крок 3: Чита́й ці́ле сло́во** (Read the whole word) — blend at natural speed, letting the stress land naturally.
 
 Apply this to three longer words:
 
 - **у-кра-їн-ська** (Ukrainian) — stress on **ї**. Slow: у... кра... їн... ська. Now together: **украї́нська**.
 - **фо-то-гра-фі-я** (photograph) — stress on the **а** (third syllable). Slow: фо... то... гра... фі... я. Now together: **фотогра́фія**.
-- **від-по-чи-нок** (rest/vacation) — stress on **чи**. Slow: від... по... чи... нок. Now together: **відпочи́нок**.
+- **ві-дпо-чи-нок** (rest/vacation) — stress on **чи**. Slow: ві... дпо... чи... нок. Now together: **відпочи́нок**.
 
 Break first, find the stress, then read smoothly. This is how Ukrainian Grade 1 textbooks teach reading, and it works just as well for adult learners.
 

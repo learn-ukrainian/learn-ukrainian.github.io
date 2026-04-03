@@ -1,6 +1,6 @@
 # Build Summary: who-am-i (A1)
 
-Generated: 2026-04-01 12:57
+Generated: 2026-04-03 14:59
 
 ## Pipeline Phases
 
@@ -18,9 +18,9 @@ Generated: 2026-04-01 12:57
 | vocab | complete | 2026-03-29 21:14:10 |
 | enrich | complete | 2026-03-29 21:14:12 |
 | verify | complete | 2026-03-29 21:14:12 |
-| review | complete | 2026-04-01 10:56:56 |
-| stress | complete | 2026-04-01 10:57:03 |
-| publish | complete | 2026-04-01 10:57:05 |
+| review | complete | 2026-04-03 12:59:03 |
+| stress | complete | 2026-04-03 12:59:12 |
+| publish | complete | 2026-04-03 12:59:14 |
 
 ## Reviews
 
@@ -29,6 +29,10 @@ Generated: 2026-04-01 12:57
 | 1 | who-am-i-review-r1.md |
 | 2 | who-am-i-review-r2.md |
 | 3 | who-am-i-review-r3.md |
+| 4 | who-am-i-review-r4.md |
+| 5 | who-am-i-review-r5.md |
+| 6 | who-am-i-review-r6.md |
+| 7 | who-am-i-review-r7.md |
 
 ## Dispatch Log
 
@@ -45,6 +49,14 @@ Generated: 2026-04-01 12:57
 | review | gemini (gemini-3-flash-preview) | 2s | ❌ |
 | review | gemini (auto) | 1s | ❌ |
 | review | claude-tools (claude-opus-4-6) | 255s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 12s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 223s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 22s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 197s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 7s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 225s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 9s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 111s | ✅ |
 
 ## Files
 
@@ -56,6 +68,10 @@ Generated: 2026-04-01 12:57
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
 - `review-structured-r3.yaml`
+- `review-structured-r4.yaml`
+- `review-structured-r5.yaml`
+- `review-structured-r7.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

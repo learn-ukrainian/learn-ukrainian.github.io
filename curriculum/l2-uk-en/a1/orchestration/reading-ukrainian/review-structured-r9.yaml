@@ -1,0 +1,49 @@
+round: 9
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Every plan point is covered with specific examples, correct section pacing,
+    and authentic textbook references (Большакова, Захарійчук) integrated naturally.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: The phonetic model for "пісня" is given as `[— ●
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow. Grammar rules are contextualized with clear examples.
+    The explanation of syllable counting and sounding out words matches real Ukrainian
+    primary school pedagogy.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items from the plan are introduced
+    naturally in context with accurate translations.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: 'All 5 required `<!-- INJECT_ACTIVITY: {id} -->` markers are present,
+    ordered logically, and placed immediately after the relevant instructional content.'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Tone is grounded and direct, avoiding generic enthusiasm while keeping
+    the learner engaged with practical phonetic tricks (the chin test) and mini-dialogues.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Markdown is clean, and all H2 headings exactly match the plan. The word
+    count successfully accommodates the necessary examples for the phonetic concepts
+    without feeling bloated.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent cultural grounding using Ukrainian city names, authentic textbook
+    references, and a clear distinction from Russian orthography (Ї).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogues are natural and appropriate for A1 level, modeling the syllable-reading
+    behavior perfectly in a realistic context (reading signs and packages).
+findings: []

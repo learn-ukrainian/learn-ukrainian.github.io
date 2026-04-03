@@ -1,0 +1,52 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'The module follows the plan exceptionally well but misses a key grammar
+    objective. The plan explicitly requires: `Recognize the Group I ending pattern
+    (-у/-ю, -єш, -є, -ємо, -єте, -ють)`. However, the'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'Typographical error with a double stress mark on `за́вжди́`. Additionally,
+    `гуляти` is incorrectly grouped under `-ати` instead of `-яти` in the explanation:
+    "Group I infinitives end in **-а́ти** (**ч'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent pedagogical breakdown. Delaying the accusative case rules and
+    treating them as chunks ("No rule required yet; just recognize the pattern") is
+    perfect for the A1 level. The progression from c
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required vocabulary is used in natural contexts, but the recommended
+    word `грати` is completely missing from the text.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Exercise markers are perfectly placed after their respective teaching
+    moments and match the plan's requirements exactly in type and focus.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: 'Dialogues feel natural and the direct explanations are clear and motivating
+    ("A helpful anchor to remember: ти завжди -єш"). No generic filler.'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Markdown is clean, headers exactly match the content outline, and the
+    word count is within the acceptable deterministic range.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Uses standard Ukrainian names (Юля, Сашко, Марина) and culturally appropriate
+    communicative contexts for learners.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogues are multi-turn, have distinct voices, and successfully integrate
+    the target grammar without feeling robotic. Phrases like "А де Олена?" and "Я
+    теж вивчаю" add natural conversational flow
+findings: []

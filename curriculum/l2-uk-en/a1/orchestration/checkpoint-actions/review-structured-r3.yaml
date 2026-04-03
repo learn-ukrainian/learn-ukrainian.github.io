@@ -1,0 +1,51 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: The writer covered all 5 sections exactly as outlined in the `content_outline`.
+    The dialogue uses the "Meeting + plans scenario" specified in the points. All
+    questions (M15-M20) are addressed.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Identified two errors: 1. "Люблю" (любити) is falsely classified as a
+    Group I verb in the dialogue analysis. It takes Group II endings. 2. Incorrect
+    stress mark on "тобі" ("То́бі" instead of "Тобі́").'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'Good overall PPP flow, but the rule for recognizing conjugation groups
+    is oversimplified to the point of being incorrect/confusing ("Group I ends in
+    -ють, Group II ends in -ять", ignoring -уть/-ать), '
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: The plan did not require specific words, but the review of M15-M20 concepts
+    integrates vocabulary flawlessly and contextually.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 4 exercise markers from `activity_hints` are injected at logical points
+    after their corresponding theory sections.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The text is encouraging, natural, and frames the review as a "mirror"
+    rather than a test. The dialogue has a very natural flow.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is deterministic, headers match the outline, and no extra/unplanned
+    sections were added.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The reading and dialogue present standard routines and interactions correctly
+    without calques or weird assumptions.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Excellent multi-turn conversation that weaves in all the requested grammar
+    patterns (modals, sequence, both verb groups) organically.
+findings: []
