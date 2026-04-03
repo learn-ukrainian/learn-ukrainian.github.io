@@ -2867,6 +2867,14 @@ def step_activities(
         # Re-dump after stripping deterministic types
         clean = yaml.dump(data, allow_unicode=True, default_flow_style=False, sort_keys=False)
 
+        # Auto-fix missing 'title' field — LLMs often skip it but include 'instruction'.
+        # Schema requires 'title' on all activity types.
+        for section in ("inline", "workbook"):
+            if section in data and isinstance(data[section], list):
+                for act in data[section]:
+                    if isinstance(act, dict) and "title" not in act and "instruction" in act:
+                        act["title"] = act["instruction"][:80]
+
         # Validate against JSON Schema
         validator = jsonschema.Draft7Validator(schema)
         errors = sorted(validator.iter_errors(data), key=lambda e: list(e.absolute_path))
