@@ -2,7 +2,7 @@ module: b1-011
 level: B1
 sequence: 11
 slug: pluralia-tantum
-version: '3.0'
+version: '3.1'
 title: "Іменники у множині"
 subtitle: "Двері, окуляри, Карпати — слова без однини"
 focus: grammar
@@ -117,6 +117,14 @@ content_outline:
       - "Numbers with pluralia tantum: одні двері, одні окуляри, двоє дверей, троє
         ножиць. Use збірні числівники (двоє, троє) or одні for 'one set.' *Один двері
         is ungrammatical."
+      - "Predicate agreement with pluralia tantum: when the predicate comes BEFORE the
+        noun, it still takes plural: Стояли великі двері (not *стояло). Лежали гострі
+        ножиці (not *лежало). Compare with singularia tantum: Лежало масло — singular.
+        The noun's tantum status controls agreement regardless of word order."
+      - "Common errors in speech and writing: *Ці гроші коштує дорого (should be коштують).
+        *Мої окуляри зламався (should be зламалися). *Нові штани був довгий (should be
+        були довгі). Each error reflects forgetting that these nouns are grammatically
+        plural despite sometimes referring to single objects."
   - section: "Підсумок"
     words: 450
     points:

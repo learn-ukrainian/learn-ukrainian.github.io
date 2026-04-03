@@ -2,7 +2,7 @@ module: b1-086
 level: B1
 sequence: 86
 slug: practice-exam-writing
-version: '3.0'
+version: '3.1'
 title: "Екзамен (Письмо і Говоріння)"
 subtitle: "Пробний екзамен B1 — продуктивні навички"
 focus: review
@@ -31,7 +31,7 @@ dialogue_situations:
       complex syntax'
 content_outline:
   - section: "Вступ: формат екзамену"
-    words: 300
+    words: 400
     points:
       - "Overview of the B1 practice exam — productive skills: Part 1: Письмо (Writing)
         — 2 writing tasks. Part 2: Говоріння (Speaking) — 2 speaking tasks. Time guidance:
@@ -42,8 +42,12 @@ content_outline:
         (pronunciation and intonation)."
       - "Tips: plan before writing (2-3 min for plan). For speaking, organize thoughts
         before starting. Quality over speed."
+      - "Common exam mistakes to avoid: writing too little (under 150 words), ignoring
+        the task requirements, using only simple sentences, forgetting вставні слова,
+        mixing registers inappropriately. For speaking: reading from notes instead of
+        speaking naturally, ignoring the time limit, not answering questions directly."
   - section: "Письмо 1: Творчий текст"
-    words: 700
+    words: 850
     points:
       - "Task: choose one of three topics and write 200+ words: A. Розповідь: 'Незвичайний
         день' — narrative with зачин, основна частина, кінцівка. Use рухові дієслова,
@@ -62,8 +66,13 @@ content_outline:
       - "Self-evaluation checklist: Чи є зачин/теза? Чи є основна частина? Чи є кінцівка/висновок?
         Чи використано складні речення? Чи є вставні слова? Чи є різноманітна лексика?
         Чи немає граматичних помилок?"
+      - "Grammar showcase strategy: learners deliberately plan which B1 grammar
+        structures to demonstrate. Target: at least 1 складнопідрядне речення з причини,
+        1 з умови, 1 з допусту, 1 вставне слово, 1 подвійне заперечення, 1 рухове
+        дієслово з префіксом. Planning these in advance ensures the text demonstrates
+        full B1 range rather than defaulting to simple structures."
   - section: "Письмо 2: Діловий текст"
-    words: 600
+    words: 750
     points:
       - "Task: write one of the following (100-150 words): A. Заява — requesting leave
         from studies/work. B. Офіційний лист — requesting information about a Ukrainian
@@ -78,8 +87,17 @@ content_outline:
       - "Common errors to avoid: Mixing registers (розмовне in formal context). Wrong
         case after згідно з / відповідно до. Missing реквізити (date, signature, addressee).
         Practice: learners write and self-evaluate."
+      - "Formal text rubric — detailed scoring: Оформлення (formatting) — 3 points:
+        correct адресат/адресант, centered title, дата and підпис. Стиль (register) —
+        3 points: no розмовна лексика, appropriate канцеляризми, formal tone. Граматика
+        (grammar) — 2 points: correct case government (згідно з + Ор., відповідно до +
+        Р.), correct verb forms. Зміст (content) — 2 points: clear прохання/мета,
+        logical обґрунтування. Total: 10 points. Learners self-score and identify gaps."
+      - "Side-by-side comparison: learners read a formal text with 5 deliberate errors
+        (register mixing, wrong case, missing elements) alongside a correct version.
+        Tasks: identify all errors, explain why each is wrong, and classify by type."
   - section: "Говоріння 1: Монолог"
-    words: 600
+    words: 700
     points:
       - "Task: speak for 2-3 minutes on one of three topics: A. 'Моє хобі' — describe
         what you enjoy doing and why. B. 'Подорож, яку я пам'ятаю' — narrate a memorable
@@ -94,8 +112,12 @@ content_outline:
         intonation for вставні слова. Practice: learners record themselves and self-evaluate."
       - "Self-evaluation criteria: Чи говорив/говорила я зв'язно? Чи використав/використала
         різні граматичні конструкції? Чи правильний наголос? Чи був план?"
+      - "Fillers and recovery strategies in Ukrainian: what to say when you forget
+        a word or lose your train of thought. 'Як це сказати...' (how do you say...),
+        'Iншими словами...' (in other words), 'Зачекайте, я згадаю...' (wait, I'll
+        remember). These keep the монолог flowing naturally rather than stopping dead."
   - section: "Говоріння 2: Діалог"
-    words: 600
+    words: 700
     points:
       - "Task: participate in a guided dialogue (3-4 minutes) on one topic: A. 'У
         магазині' — shopping, comparing products, making decisions. B. 'Плануємо вихідний'
@@ -110,8 +132,12 @@ content_outline:
         practice with a partner or record both sides."
       - "Register awareness: in shopping — semi-formal. Among friends — розмовний.
         About news — публіцистичний елементи. Register flexibility is a B1 skill."
+      - "Dialogue repair strategies: what to do when communication breaks down. Asking
+        for clarification: 'Перепрошую, чи можете повторити?' Rephrasing: 'Я маю на
+        увазі, що...' Checking understanding: 'Ви маєте на увазі, що...?' These
+        strategies are assessed as part of communicative competence."
   - section: "Підсумок і оцінювання"
-    words: 400
+    words: 600
     points:
       - "Scoring guidance: Writing: grammar (25%), vocabulary (25%), coherence (25%),
         task (25%). Speaking: same + pronunciation (20%, other categories adjusted).
@@ -121,6 +147,16 @@ content_outline:
         B1 Фінал capstone project planning."
       - "Error journal: learners list their top 5 recurring errors from both writing
         and speaking. These become personal improvement targets."
+      - "Productive vs receptive skills comparison: learners compare their M85
+        (reading/listening) results with M86 (writing/speaking) results. Typically,
+        receptive skills are stronger — this is normal. The gap between receptive and
+        productive identifies what learners understand but cannot yet produce. This
+        gap is the primary target for B2."
+      - "Writing portfolio review: learners collect their best writing from M81 (narrative),
+        M82 (argumentation), M83 (media response), and this exam. They read all four
+        texts together and observe their own progress. Which texts show the strongest
+        grammar? The richest vocabulary? The best structure? This builds metacognitive
+        awareness."
       - "Preview: B1 Фінал (M91) — capstone project where all skills come together
         in a final integrated performance."
 vocabulary_hints:

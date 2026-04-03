@@ -2,7 +2,7 @@ module: b1-064
 level: B1
 sequence: 64
 slug: complex-subordinate-relative
-version: '3.0'
+version: '3.1'
 title: "Означальні речення"
 subtitle: "Підрядні з який/яка/яке у різних відмінках"
 focus: grammar
@@ -30,7 +30,7 @@ dialogue_situations:
       місце(n)'
 content_outline:
   - section: "Означальні підрядні речення"
-    words: 650
+    words: 750
     points:
       - "Definition from Заболотний Grade 8 p.84: означальна підрядна частина характеризує
         іменник (або займенник) у головній частині і відповідає на питання який? яка?
@@ -43,7 +43,7 @@ content_outline:
         на столі. (participle phrase) = Книга, яку я прочитав, лежить на столі. (означальне
         речення) The clause is MORE NATURAL in spoken Ukrainian."
   - section: "Який у різних відмінках"
-    words: 800
+    words: 900
     points:
       - "The relative pronoun який declines like an adjective and must agree with
         its antecedent in gender and number, but its CASE is determined by its role
@@ -61,7 +61,7 @@ content_outline:
       - "Practice: complete 12 sentences choosing correct form of який (right gender
         from antecedent, right case from clause function)."
   - section: "Інші сполучні слова в означальних"
-    words: 550
+    words: 650
     points:
       - "Що as alternative to який (colloquial/neutral): Книга, що лежить на столі...
         = Книга, яка лежить на столі... Що is uninflected and works for all genders/numbers/cases:
@@ -74,7 +74,7 @@ content_outline:
       - "Чий for possession: Людина, чию книгу я читаю... (= якої книгу я читаю) Practice:
         choose between який, що, де, куди, коли in 8 sentences."
   - section: "Пунктуація та позиція"
-    words: 500
+    words: 600
     points:
       - "Rule: означальна підрядна ALWAYS requires commas: Місто, яке я відвідав,
         мене вразило. Unlike дієприкметниковий зворот, position doesn't matter — означальне
@@ -83,7 +83,7 @@ content_outline:
         отримав стипендію. (nested — який refers to студент, яку refers to мову)"
       - "Practice: punctuate 8 sentences with означальними реченнями."
   - section: "Практика: означальні у мовленні"
-    words: 600
+    words: 700
     points:
       - "High-frequency speech patterns: Це людина, яка... / Це місце, де... / Це
         час, коли... Describing people, places, and moments using means реченнями.
@@ -93,7 +93,7 @@ content_outline:
       - "Comparison exercise: rewrite 5 означальних речень as дієприкметникові звороти
         (where possible) and note which is more natural."
   - section: "Підсумок та перехід до M69"
-    words: 300
+    words: 400
     points:
       - "Summary: означальні = який?/яка?/яке?/які? Який declines by рід/число (from
         antecedent) and відмінок (from clause role). Alternatives: що (uninflected),

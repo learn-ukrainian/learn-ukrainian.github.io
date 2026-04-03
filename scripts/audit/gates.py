@@ -7,6 +7,8 @@ and computes recommendations based on violations.
 
 from dataclasses import dataclass
 
+from .config import AUDIT_THRESHOLDS
+
 
 @dataclass
 class GateResult:
@@ -23,7 +25,7 @@ def evaluate_word_count(total_words: int, target: int, raw_words: int = 0) -> Ga
     - WARN: below target but within 100 words
     - FAIL: 100+ words below target
     """
-    min_words = target - 100   # Hard fail threshold
+    min_words = target - AUDIT_THRESHOLDS["word_count_fail_margin"]
 
     msg = f"{total_words}/{target}"
     if raw_words > total_words:
@@ -177,7 +179,7 @@ def evaluate_immersion(
     phase_label: str = ""
 ) -> GateResult:
     """Evaluate immersion gate with ±3% tolerance."""
-    tolerance = 3  # Don't fail on trivial deviations (#975)
+    tolerance = AUDIT_THRESHOLDS["immersion_tolerance_pct"]
     if min_imm > 0:
         if score < min_imm - tolerance:
             return GateResult(
@@ -201,7 +203,7 @@ def evaluate_immersion(
     return GateResult('PASS', '🇺🇦', f"{score:.1f}%{phase_label}")
 
 
-def evaluate_naturalness(score: int, status: str) -> GateResult:
+def evaluate_naturalness(score: int | None, status: str | None) -> GateResult:
     """Evaluate naturalness score gate.
 
     Target: 8/10 for content modules.
@@ -218,11 +220,12 @@ def evaluate_naturalness(score: int, status: str) -> GateResult:
             return GateResult('INFO', 'ℹ️', f"{score}/10 (PENDING — awaiting review)")
         return GateResult('INFO', 'ℹ️', "PENDING — awaiting review")
 
-    if status == 'PASS' and score >= 8:
+    nat_min = AUDIT_THRESHOLDS["naturalness_min_score"]
+    if status == 'PASS' and score >= nat_min:
         return GateResult('PASS', '✅', f"{score}/10 (High)")
-    elif status == 'PASS' and score >= 7:
-        # Strict requirement: Fail if below 8
-        return GateResult('FAIL', '❌', f"{score}/10 (Acceptable but below 8/10 target)")
+    elif status == 'PASS' and score >= nat_min - 1:
+        # Strict requirement: Fail if below minimum
+        return GateResult('FAIL', '❌', f"{score}/10 (Acceptable but below {nat_min}/10 target)")
     elif score > 0:
         return GateResult('FAIL', '❌', f"{score}/10 ({status} - Requires rewrite)")
     else:
@@ -522,11 +525,13 @@ def compute_recommendation(
 
     severity = min(100, severity)
 
+    sev_update = AUDIT_THRESHOLDS["severity_update"]
+    sev_rewrite = AUDIT_THRESHOLDS["severity_rewrite"]
     if severity == 0:
         return ('PASS', [], 0)
-    elif severity < 40:
+    elif severity < sev_update:
         return ('UPDATE', reasons, severity)
-    elif severity < 75:
+    elif severity < sev_rewrite:
         reasons.insert(0, f"Revision recommended (severity {severity}/100)")
         return ('UPDATE', reasons, severity)
     else:

@@ -1,7 +1,7 @@
 # Audit Report: M03 — special-signs.md
 **Level:** A1 | **Module:** M03 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ❌ FAIL
-**Generated:** 2026-04-02 20:30:07
+**Generated:** 2026-04-03 14:02:15
 
 ## Configuration
 **Type:** A1
@@ -10,7 +10,7 @@
 **Items per Activity:** ≥6 items
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
-**Engagement:** ≥1 callouts
+**Engagement:** ≥0 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -51,7 +51,7 @@
   - FIX: Provide [3, 4] options for A1 quizzes.
 - **[SEMANTIC_FALSE_FRIEND]** Found 2 semantic false friend(s): 'лук' translated as 'onion' (Ukrainian meaning: bow (weapon), use цибуля instead); 'шар' translated as 'sphere' (Ukrainian meaning: layer, use куля instead)
   - FIX: The word exists in Ukrainian but the English translation uses the Russian meaning. Replace the word or fix the translation to match Ukrainian semantics.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in special-signs.yaml: Schema validation error at key 'correct': 2 is not of type 'boolean'
+- **[YAML_SCHEMA_VIOLATION]** Schema error in special-signs.yaml: Schema validation error at key '9': {'type': 'group-sort', 'instruction': 'Sort these 12 words by the voicing of their first consonant. Is the first sound voiced (like Б, Д, Г, З, Ж, Ґ) or voiceless (like П, Т, Х, С, Ш, К)?', 'groups': [{'label': 'Voiced first consonant', 'items': ['день', 'зуб', 'гора', 'дуб', 'ґудзик', 'жар']}, {'label': 'Voiceless first consonant', 'items': ['сіль', "п'ять", 'кіт', 'коса', 'шар', 'казка']}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
 
 ## Recommendation
@@ -65,7 +65,7 @@
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 5/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 4/1
+- **Engagement:** ✅ 4/0
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 62/1
 - **Structure:** ✅ Valid Structure

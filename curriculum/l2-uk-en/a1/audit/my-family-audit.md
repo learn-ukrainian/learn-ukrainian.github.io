@@ -1,7 +1,7 @@
 # Audit Report: M06 — my-family.md
 **Level:** A1 | **Module:** M06 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-04-02 20:30:03
+**Overall Status:** ✅ PASS
+**Generated:** 2026-04-03 14:02:11
 
 ## Configuration
 **Type:** A1-vocab
@@ -10,7 +10,7 @@
 **Items per Activity:** ≥6 items
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
-**Engagement:** ≥1 callouts
+**Engagement:** ≥0 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -40,11 +40,13 @@
   - FIX: No action needed — incidental dative exposure is acceptable.
 - **[HINT_IN_ACTIVITY]** anagram activity 'Untitled' has item-level hint in item 1
   - FIX: Remove all 'hint' fields from activity items (they break activities and provide no real pedagogical value)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in my-family.yaml: Schema validation error at key '0': {'letters': ['б', 'р', 'а', 'т'], 'answer': 'брат', 'hint': 'brother'} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 15/100)
 
-- 3 violations (minor)
+- 4 violations (moderate)
 
 ## Gates
 - **Words:** ✅ 1588/1200 (raw: 1627)
@@ -52,14 +54,14 @@
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/1
+- **Engagement:** ✅ 0/0
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 50/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ⚠️ 27.5% (target 8-25%, within tolerance (M06))
+- **Immersion:** 🇺🇦 27.5% (target 8-30% (M06))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes

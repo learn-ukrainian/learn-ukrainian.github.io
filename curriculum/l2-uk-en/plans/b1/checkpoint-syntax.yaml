@@ -2,7 +2,7 @@ module: b1-072
 level: B1
 sequence: 72
 slug: checkpoint-syntax
-version: '3.0'
+version: '3.1'
 title: "Контрольна робота 8"
 subtitle: "Перевірка знань: складні речення, пряма і непряма мова, дозвілля і культура"
 focus: review
@@ -29,14 +29,14 @@ dialogue_situations:
       exam format'
 content_outline:
   - section: "Вступ: як працювати з контрольною"
-    words: 350
+    words: 400
     points:
       - "Overview: this checkpoint tests everything from M66-M75 (Phase 8): складносурядне
         (M66), з'ясувальне (M67), означальне (M68), часове (M69), причини (M70), умови
         (M71), мети (M72), допусту (M73), пряма/непряма мова (M74), дозвілля (M75)."
       - "Self-assessment framework: after each block, rate confidence."
   - section: "Блок 1: Складносурядне речення"
-    words: 500
+    words: 550
     points:
       - "Conjunction classification: given 8 складносурядних речень, classify сполучники
         as єднальні, протиставні, or розділові."
@@ -45,7 +45,7 @@ content_outline:
       - "Construction: combine 4 pairs of simple sentences using appropriate сурядні
         сполучники."
   - section: "Блок 2: Складнопідрядні речення"
-    words: 700
+    words: 800
     points:
       - "Classification: given 10 складнопідрядних речень, determine the type of підрядне:
         з'ясувальне, означальне, часове, причини, умови, мети, допусту."
@@ -56,7 +56,7 @@ content_outline:
       - "Construction: build 4 складнопідрядні речення of specified types from given
         information."
   - section: "Блок 3: Пряма і непряма мова"
-    words: 550
+    words: 600
     points:
       - "Punctuation: correctly punctuate 6 sentences with пряма мова in various patterns
         (слова автора before/after/in the middle)."
@@ -64,7 +64,7 @@ content_outline:
         correct conjunction choice and pronoun/tense shifts."
       - "Reverse: convert 4 sentences from непряма to пряма мова."
   - section: "Блок 4: Дозвілля, культура і свята"
-    words: 500
+    words: 550
     points:
       - "Vocabulary: match 10 cultural/holiday terms to their descriptions."
       - "Reading comprehension: a short text about a Ukrainian holiday using complex
@@ -83,7 +83,7 @@ content_outline:
         celebrations are important, using at least складносурядне, з'ясувальне, означальне,
         причинне, and допустове."
   - section: "Підсумок та самооцінка"
-    words: 400
+    words: 500
     points:
       - "Self-assessment checklist: Складносурядне: Чи розрізняю єднальні/протиставні/розділові?
         Складнопідрядне: Чи визначаю тип підрядного? Який: Чи правильно вживаю який

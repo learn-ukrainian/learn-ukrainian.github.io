@@ -2,7 +2,7 @@ module: b1-073
 level: B1
 sequence: 73
 slug: text-register-formal
-version: '3.0'
+version: '3.1'
 title: "Офіційний стиль"
 subtitle: "Офіційно-діловий стиль мовлення: документи, заяви, ділове листування"
 focus: grammar
@@ -32,7 +32,7 @@ dialogue_situations:
       documents'
 content_outline:
   - section: "Що таке офіційно-діловий стиль?"
-    words: 600
+    words: 700
     points:
       - "Definition grounded in Заболотний Grade 8 p.260: Офіційно-діловий стиль задовольняє
         потреби суспільства в офіційній сфері спілкування. Iснує у двох формах: усній
@@ -51,6 +51,10 @@ content_outline:
         life. Government, military (ЗСУ), education, and civil society all operate
         through formal documents. Competence in this register is essential for integration
         into Ukrainian-speaking professional environments."
+      - "State Standard 2024 §4.5.1 register distinction: learners compare specific
+        lexical markers (канцеляризми vs розмовна лексика) and syntactic markers (складні
+        іменникові конструкції vs прості речення) across registers. Reading practice:
+        identify 5 formal markers in a sample оголошення from Заболотний Grade 6 p.230."
   - section: "Лексика офіційно-ділового стилю"
     words: 650
     points:
@@ -89,7 +93,7 @@ content_outline:
       - "Common formatting rules: дата (число, місяць, рік), підпис placement, відступи
         (indentation), use of великі літери for посади та назви."
   - section: "Усний діалог в офіційно-діловому стилі"
-    words: 650
+    words: 750
     points:
       - "Formal telephone conversation from Авраменко Grade 8 p.80: Model dialogue
         — a student calling to report an absence: 'Добрий день, Мирославо Михайлівно!
@@ -104,6 +108,11 @@ content_outline:
         compare and identify the specific lexical and grammatical shifts. Example:
         'Скажіть, будь ласка, коли прийом?' (розмовний) vs 'Перепрошую, чи не могли
         б ви повідомити про години прийому?' (офіційно-діловий)."
+      - "Formal introductions and institutional interactions: presenting oneself at
+        a прийом (reception), explaining the purpose of a visit (Мета мого візиту —
+        ...), requesting a зустріч (appointment) — 'Чи можна записатися на прийом до
+        ...?' Polite follow-up: 'Будь ласка, повідомте мене, коли буде зручно.' Practice:
+        learners role-play visiting a ЦНАП (administrative service center)."
   - section: "Писемне повідомлення та ділове листування"
     words: 700
     points:
@@ -121,7 +130,7 @@ content_outline:
         for comprehensive analysis — learners identify all характерні ознаки офіційно-ділового
         стилю."
   - section: "Підсумок: офіційна мова в житті"
-    words: 350
+    words: 500
     points:
       - "Complete vocabulary reference — key terms organized by function: канцеляризми,
         штампи, формули ввічливості, типи ділових паперів. Glossary with Ukrainian
@@ -129,6 +138,10 @@ content_outline:
       - "Self-check in Ukrainian: 1. Назвіть 5 ознак офіційно-ділового стилю. 2. Яка
         різниця між заявою та автобіографією? 3. Напишіть формальне звернення до директора
         школи. 4. Перетворіть розмовне речення на офіційно-ділове."
+      - "Стилі мовлення system overview: placement of офіційно-діловий стиль within
+        the five-style system (художній, науковий, публіцистичний, розмовний, офіційно-діловий).
+        Each style has specific сфера використання, мовні засоби, and жанри. Understanding
+        the system helps learners choose the right register for any situation."
       - "Preview of next module: Розмовний стиль (M78) — the opposite end of the register
         spectrum. Understanding both extremes helps learners navigate the full range
         of Ukrainian communication."

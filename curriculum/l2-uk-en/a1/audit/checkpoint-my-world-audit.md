@@ -1,7 +1,7 @@
 # Audit Report: M14 — checkpoint-my-world.md
 **Level:** A1 | **Module:** M14 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-04-02 20:29:55
+**Overall Status:** ✅ PASS
+**Generated:** 2026-04-03 14:02:03
 
 ## Configuration
 **Type:** A1
@@ -10,7 +10,7 @@
 **Items per Activity:** ≥6 items
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
-**Engagement:** ≥1 callouts
+**Engagement:** ≥0 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -41,11 +41,13 @@
   - FIX: Break into shorter sentences. First 5 words: 'великий велика велике новий нова́...'
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'you can...'.
   - FIX: Vary sentence structure.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in checkpoint-my-world.yaml: Schema validation error at key '8': {'type': 'match-up', 'instruction': 'Match the number to its Ukrainian word. These are the prices from the ярмарок dialogue — no formulas needed, just vocabulary.', 'pairs': [{'left': '20', 'right': 'двадцять'}, {'left': '25', 'right': "двадцять п'ять"}, {'left': '75', 'right': "сімдесят п'ять"}, {'left': '100', 'right': 'сто'}, {'left': '200', 'right': 'двісті'}, {'left': '300', 'right': 'триста'}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 15/100)
 
-- 3 violations (minor)
+- 4 violations (moderate)
 
 ## Gates
 - **Words:** ✅ 1538/1200 (raw: 1578)
@@ -53,14 +55,14 @@
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/1
+- **Engagement:** ✅ 0/0
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 49/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 23.4% (target 10-30% (M14))
+- **Immersion:** 🇺🇦 23.4% (target 10-38% (M14))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes

@@ -1,7 +1,7 @@
 # Audit Report: M04 — stress-and-melody.md
 **Level:** A1 | **Module:** M04 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-02 20:30:08
+**Generated:** 2026-04-03 14:02:15
 
 ## Configuration
 **Type:** A1
@@ -10,7 +10,7 @@
 **Items per Activity:** ≥6 items
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
-**Engagement:** ≥1 callouts
+**Engagement:** ≥0 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -48,11 +48,13 @@
   - FIX: Vary sentence structure.
 - **[INLINE_ENGLISH_IN_PROSE]** Inline English translations in B1+ prose (3 occurrences): (Divide into syllables), (Find the stress), (Read together) — breaks immersion target
   - FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
+- **[YAML_SCHEMA_VIOLATION]** Schema error in stress-and-melody.yaml: Schema validation error at key '8': {'type': 'observe', 'examples': ['ЗАмок (castle) ↔ замОк (lock)', 'МУка (torment) ↔ мукА (flour)', 'АТлас (atlas/maps) ↔ атлАС (satin fabric)', 'МАма — stress stays on the first syllable', 'воДА — stress stays on the last syllable', 'фотоГРАфія — stress stays on the third syllable'], 'prompt': 'Look at the first three pairs. What happens to the MEANING of a Ukrainian word when you move the stress to a different syllable? Now look at the last three examples — what does this tell you about learning new Ukrainian words?'} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 30/100)
 
-- 7 violations (significant)
+- 8 violations (significant)
 
 ## Gates
 - **Words:** ✅ 1790/1200 (raw: 1823)
@@ -60,14 +62,14 @@
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 1/1
+- **Engagement:** ✅ 1/0
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 48/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 14.2% (target 8-25% (M04))
+- **Immersion:** 🇺🇦 14.2% (target 8-30% (M04))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes

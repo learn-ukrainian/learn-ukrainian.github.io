@@ -1,7 +1,7 @@
 # Audit Report: M13 — many-things.md
 **Level:** A1 | **Module:** M13 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-04-02 20:30:02
+**Overall Status:** ✅ PASS
+**Generated:** 2026-04-03 14:02:09
 
 ## Configuration
 **Type:** A1-grammar
@@ -10,7 +10,7 @@
 **Items per Activity:** ≥6 items
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
-**Engagement:** ≥1 callouts
+**Engagement:** ≥0 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -34,13 +34,15 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: однина, множина
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: множина, однина
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in many-things.yaml: Schema validation error at key '8': {'type': 'translate', 'instruction': 'Choose the correct Ukrainian translation.', 'items': [{'source': 'These tables are big.', 'options': [{'text': 'Ці столи великі.', 'correct': True}, {'text': 'Це стіл великий.', 'correct': False}, {'text': 'Ті столи великий.', 'correct': False}]}, {'source': 'My pens are blue.', 'options': [{'text': 'Мої ручки сині.', 'correct': True}, {'text': 'Моя ручка синя.', 'correct': False}, {'text': 'Мої ручки синя.', 'correct': False}]}, {'source': 'Those chairs are old.', 'options': [{'text': 'Ті стільці старі.', 'correct': True}, {'text': 'Ці стільці старі.', 'correct': False}, {'text': 'Ті стільці старий.', 'correct': False}]}, {'source': 'The windows are clean.', 'options': [{'text': 'Вікна чисті.', 'correct': True}, {'text': 'Вікно чисте.', 'correct': False}, {'text': 'Вікна чистий.', 'correct': False}]}, {'source': 'These notebooks are new.', 'options': [{'text': 'Ці зошити нові.', 'correct': True}, {'text': 'Цей зошит новий.', 'correct': False}, {'text': 'Ці зошити нова.', 'correct': False}]}, {'source': 'Those armchairs are red.', 'options': [{'text': 'Ті крісла червоні.', 'correct': True}, {'text': 'Те крісло червоне.', 'correct': False}, {'text': 'Ці крісла червоні.', 'correct': False}]}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ⚠️ 1107/1200 (raw: 1448) (93 short)
@@ -48,14 +50,14 @@
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/1
+- **Engagement:** ✅ 0/0
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 37/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 25.9% (target 10-30% (M13))
+- **Immersion:** 🇺🇦 25.9% (target 10-38% (M13))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes

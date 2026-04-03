@@ -2,7 +2,7 @@ module: b1-068
 level: B1
 sequence: 68
 slug: complex-subordinate-purpose
-version: '3.0'
+version: '3.1'
 title: "Речення мети"
 subtitle: "Для чого? Щоб, для того щоб, аби"
 focus: grammar
@@ -30,7 +30,7 @@ dialogue_situations:
     motivation: 'Purpose clauses: щоб, аби, для того щоб — motivation and goal structures'
 content_outline:
   - section: "Підрядні обставинні мети"
-    words: 600
+    words: 700
     points:
       - "Definition: підрядне обставинне мети вказує на мету, з якою здійснюється
         дія головної частини. Відповідає на питання для чого? з якою метою? навіщо?
@@ -41,7 +41,7 @@ content_outline:
         щоб розуміти людей. But can precede for emphasis: Щоб розуміти людей, я вивчаю
         українську."
   - section: "Щоб + інфінітив vs щоб + особова форма"
-    words: 800
+    words: 900
     points:
       - "SAME subject → щоб + інфінітив: Я прийшов, щоб допомогти. (I came to help
         — same person) Вона вивчає мову, щоб працювати в Україні. Ми зібралися, щоб
@@ -58,7 +58,7 @@ content_outline:
       - "Practice: 12 sentences — determine whether to use infinitive or past-tense
         form based on subject identity."
   - section: "Щоб у з'ясувальних vs обставинних"
-    words: 550
+    words: 650
     points:
       - "Distinction from M67 (з'ясувальне з щоб): З'ясувальне: Я хочу, щоб ти прийшов.
         (desire — answers що хочу?) Мети: Я подзвонив, щоб ти прийшов. (purpose —
@@ -69,7 +69,7 @@ content_outline:
         = my help)"
       - "Practice: classify 8 sentences with щоб as з'ясувальне or мети."
   - section: "Варіанти сполучників мети"
-    words: 500
+    words: 600
     points:
       - "Для того щоб — emphasizes purpose, slightly formal: Для того щоб досягти
         мети, потрібно працювати. Split: Для того, щоб досягти мети, потрібно працювати."
@@ -79,7 +79,7 @@ content_outline:
       - "З тим щоб — formal/bureaucratic: З тим щоб забезпечити виконання, створено
         комісію. Practice: rewrite 4 purpose sentences using different conjunctions."
   - section: "Практика: речення мети у мовленні"
-    words: 650
+    words: 750
     points:
       - "High-frequency patterns: Я вивчаю..., щоб... / Потрібно..., щоб... / Ми зробили...,
         для того щоб... Dialogue: discussing motivation and goals using purpose clauses."
@@ -92,7 +92,7 @@ content_outline:
       - "Production: write 6-8 sentences about why you do things, using both щоб +
         infinitive and щоб + past-tense (different subjects)."
   - section: "Підсумок та перехід до M73"
-    words: 300
+    words: 400
     points:
       - "Summary: мети = для чого? навіщо? Щоб + інфінітив (one subject), щоб + мин.
         час (different subjects). Variants: для того щоб, аби. Distinction: з'ясувальне

@@ -1,7 +1,7 @@
 # Audit Report: M51 — my-plans.md
 **Level:** A1 | **Module:** M51 | **Phase:** A1.8 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-04-02 20:30:04
+**Overall Status:** ✅ PASS
+**Generated:** 2026-04-03 14:02:11
 
 ## Configuration
 **Type:** A1
@@ -10,7 +10,7 @@
 **Items per Activity:** ≥6 items
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
-**Engagement:** ≥1 callouts
+**Engagement:** ≥0 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -43,11 +43,13 @@
   - FIX: Adjust number of items to sort to 8-999.
 - **[HEADING_LEVEL]** Main section 'Summary' uses H2 (##) but spec requires H1 (#)
   - FIX: Change '## Summary' to '# Summary' for top-level TOC compliance
+- **[YAML_SCHEMA_VIOLATION]** Schema error in my-plans.yaml: Schema validation error at key '8': {'type': 'observe', 'examples': ['У понеділок я буду працювати.', 'У вівторок я буду вчитися.', 'У середу ввечері я буду дивитися футбол.', 'У четвер я буду готувати вечерю для родини.', "У п'ятницю я буду відпочивати.", 'У суботу зранку буду прибирати, а вдень гуляти в парку.', 'В неділю я буду спати довго!'], 'prompt': "Look at all seven sentences. What pattern do you notice about the position of буду? What form does the second verb always take? Why does Sunday use 'В' while all other days use 'У'?"} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 35/100)
 
-- 5 violations (moderate)
+- 6 violations (moderate)
 - 3 grammar-level violations (fundamental)
 
 ## Gates
@@ -56,14 +58,14 @@
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/1
+- **Engagement:** ✅ 0/0
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 30/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 24.1% (target 20-35% (M51))
+- **Immersion:** 🇺🇦 23.9% (target 20-40% (M51))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes

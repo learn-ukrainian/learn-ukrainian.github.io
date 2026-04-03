@@ -2,7 +2,7 @@ module: b1-069
 level: B1
 sequence: 69
 slug: complex-subordinate-concess
-version: '3.0'
+version: '3.1'
 title: "Речення допусту"
 subtitle: "Хоча, дарма що, незважаючи на те що"
 focus: grammar
@@ -26,7 +26,7 @@ dialogue_situations:
     motivation: 'Concessive clauses: хоча, незважаючи на те що, дарма що — argumentation'
 content_outline:
   - section: "Підрядні обставинні допусту"
-    words: 600
+    words: 700
     points:
       - "Definition from Заболотний Grade 8 p.112: підрядне обставинне допусту називає
         умову, всупереч якій відбувається дія головної частини. Відповідає на питання
@@ -39,7 +39,7 @@ content_outline:
         на те що (despite the fact that), попри те що (despite the fact that), хай/нехай
         (even if — literary)."
   - section: "Хоч/хоча — основний сполучник"
-    words: 700
+    words: 800
     points:
       - "Хоч/хоча — the most common and versatile: Хоча він запізнився, ми почекали
         на нього. Ми пішли на прогулянку, хоч було холодно. Position: flexible — before
@@ -53,7 +53,7 @@ content_outline:
       - "Practice: construct 8 concessive sentences with хоч/хоча, with and without
         correlative words."
   - section: "Інші допустові сполучники"
-    words: 600
+    words: 700
     points:
       - "Дарма що — emphasizes that the circumstance is futile/irrelevant: Дарма що
         він старався, нічого не вийшло. (Even though he tried, nothing worked — his
@@ -67,7 +67,7 @@ content_outline:
       - "Register pyramid: хоч (neutral) → дарма що (expressive) → незважаючи на те
         що (formal) → попри те що (formal Ukrainian)."
   - section: "Допуст vs причина vs умова"
-    words: 550
+    words: 650
     points:
       - "Three-way contrast: Причина: Ми не пішли, бо було холодно. (cause → result)
         Умова: Ми не підемо, якщо буде холодно. (condition → consequence) Допуст:
@@ -79,7 +79,7 @@ content_outline:
         4 допустові as протиставні and vice versa."
       - "Practice: classify 8 sentences as причинні, умовні, or допустові."
   - section: "Практика: допустові речення у мовленні"
-    words: 650
+    words: 750
     points:
       - "Argumentation patterns (useful for M87 — debate): Хоча деякі люди вважають,
         що..., проте я переконаний, що... Дарма що цей аргумент здається переконливим,
@@ -90,7 +90,7 @@ content_outline:
       - "Production: write 6 concessive sentences about opinions, experiences, or
         current events. Use at least 3 different conjunctions."
   - section: "Підсумок та перехід до M74"
-    words: 300
+    words: 400
     points:
       - "Summary: допустові = незважаючи на що? попри що? Хоч/хоча (нейтральний),
         дарма що (емоційний), незважаючи на те що (офіційний). Логіка: перешкода не

@@ -2,7 +2,7 @@ module: b1-043
 level: B1
 sequence: 43
 slug: dative-nuances
-version: '3.0'
+version: '3.1'
 title: "Давальний відмінок (деталі)"
 subtitle: "Суб'єкт стану, вік, потреба — розширені значення давального"
 focus: grammar
@@ -85,6 +85,21 @@ content_outline:
         достатньо (That is enough for us)."
       - "Practice dialogue: giving advice to friends using dative constructions. 'Тобі
         варто відпочити. Тобі потрібно більше спати. Тобі краще зателефонувати лікарю.'"
+  - section: "Давальний мети і призначення (§4.2.2.3)"
+    words: 500
+    points:
+      - "The State Standard includes PURPOSE as a dative function. Dative of purpose
+        answers ДЛЯ ЧОГО? in constructions without для: Пам'ятник героям (a monument
+        to heroes). Слава Україні! (Glory to Ukraine — dative of dedication). Присвята
+        вчителям (dedication to teachers). Гімн волі (hymn to freedom — but: гімн
+        волі uses Р.в., while гімн свободі uses Д.в. for 'dedicated to')."
+      - "Dative with prepositions: завдяки + Д.в. (thanks to — завдяки батькам, завдяки
+        наполегливості). навпроти/навсупроч + Д.в. (contrary to — навпроти очікуванням).
+        на зло + Д.в. (to spite — на зло ворогам). From Заболотний Grade 7 p.193:
+        прийменники з Д.в."
+      - "Practice: 8 sentences using dative of purpose and dedication. Distinguish
+        from для + Р.в.: подарунок мамі (Д.в. — to mom) vs подарунок для мами (Р.в.
+        — for mom). Both are correct; Д.в. is more personal and direct."
   - section: "Давальний vs інші відмінки"
     words: 500
     points:
@@ -100,11 +115,13 @@ content_outline:
   - section: "Підсумок"
     words: 400
     points:
-      - "Four semantic roles of Д.в.: 1. Суб'єкт стану (мені холодно). 2. Вік (мені
+      - "Five semantic roles of Д.в.: 1. Суб'єкт стану (мені холодно). 2. Вік (мені
         двадцять років). 3. Безособові конструкції (мені потрібно). 4. Адресат (дарувати
-        другові)."
+        другові). 5. Мета/призначення (пам'ятник героям, завдяки батькам)."
       - "Key verbs governing Д.в.: допомагати, заважати, радити, дзвонити, телефонувати,
-        завдячувати, відповідати. Preview: next module — орудний відмінок (деталі)."
+        завдячувати, відповідати. Self-check: classify 10 dative sentences by semantic
+        role."
+      - "Preview: next module — орудний відмінок (деталі)."
 vocabulary_hints:
   required:
     - "давальний відмінок (dative case)"

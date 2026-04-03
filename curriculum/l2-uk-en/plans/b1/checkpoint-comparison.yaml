@@ -2,7 +2,7 @@ module: b1-041
 level: B1
 sequence: 41
 slug: checkpoint-comparison
-version: '3.0'
+version: '3.1'
 title: "Контрольна робота 5"
 subtitle: "Перевірка знань: ступені порівняння, словотвір, покупки і послуги"
 focus: review
@@ -46,19 +46,23 @@ content_outline:
         малий-менший-найменший (мало-менше-найменше) Drill: sentences requiring correct
         form selection."
   - section: "Повторення: словотвір"
-    words: 700
+    words: 750
     points:
       - "Adjective formation methods review: Суфіксальний: -н-, -ськ-/-зьк-/-цьк-,
         -ів-, -уват-, -еньк- Префіксальний: пре-, без-, над-, анти- Складання: чорноокий,
         темно-зелений -Н-/-НН- spelling rule: основа на -н- + суфікс -н- = -нн-."
       - "Noun formation methods review: Agent nouns: -ач, -ець, -ник, -тель, -ар,
-        -ист (m. → f. counterparts) Place nouns: -ня, -ниця; prefix-suffix: при-...-я,
-        за-...-я Verbal nouns: -ння, -ття; безафіксний: підписати → підпис Словотвірний
-        ланцюжок: вода → водний → водник → підводник."
+        -ист (m. → f. counterparts) Place nouns: -ня, -ниця, -ище; prefix-suffix:
+        при-...-я, за-...-я Verbal nouns: -ння, -ття; безафіксний: підписати → підпис
+        Словотвірний ланцюжок: вода → водний → водник → підводник."
+      - "Adverb formation review: суфіксальний (-о, -е: швидко, гарно), префіксально-
+        суфіксальний (по-доброму, по-українськи). Adverb comparison: -іше/-ше (тихіше,
+        швидше), най- (найтихіше). Parallel adjective/adverb forms: тихіший (adj.)
+        vs тихіше (adv.)."
   - section: "Повторення: покупки і послуги"
     words: 500
     points:
-      - "Key transactional vocabulary and phrases from M44: На ринку: ціна, знижка,
+      - "Key transactional vocabulary and phrases from M40: На ринку: ціна, знижка,
         готівка, здача, ваги. У магазині: розмір, примірочна, чек, гарантія, бракований.
         На пошті: посилка, бандероль, доставка. У банку: рахунок, переказ, обмін валют,
         курс."
@@ -80,22 +84,33 @@ content_outline:
         into correct conversational order, filling in missing comparative forms and
         transactional vocabulary."
   - section: "Самооцінка і підготовка до Фази 6"
-    words: 500
+    words: 550
     points:
       - "Self-check grid: can I form comparatives? superlatives? suppletive forms?
         Can I form adjectives from nouns? Nouns from verbs? Agent nouns (m./f.)? Can
-        I shop, complain, and write reviews in Ukrainian?"
+        I shop, complain, and write reviews in Ukrainian? Rate each skill 1-5."
       - "Gap analysis: which areas need more practice before Phase 6? Preview of Phase
         6: advanced case usages, prepositions, numerals, pronouns. The shift: from
         FORMING words to USING cases precisely."
       - "Diagnostic: 10 quick-check questions covering all Phase 5 topics, with answer
         key and explanations."
+      - "Remediation guide: for each skill rated below 3, specific exercises to revisit
+        from M34-M40. Cross-references to the relevant sections in each module so
+        learners can self-direct their review."
   - section: "Підсумок"
-    words: 200
+    words: 400
     points:
-      - "Phase 5 achievement summary: comparison forms, word formation methods, and
-        practical application in shopping contexts. Transition to Phase 6: mastering
-        the nuances of Ukrainian cases."
+      - "Phase 5 achievement summary: comparison forms (проста, складена, підсилена),
+        suppletive pairs, word formation methods (suffixal, prefixal, compound,
+        zero-derivation), adverb formation and comparison, and practical application
+        in shopping/service contexts."
+      - "Key patterns to carry forward: the relationship between adjective and adverb
+        comparison (parallel suffixes, same alternations), word formation chains as
+        vocabulary expansion strategy, and register awareness (проста for speech,
+        складена for formal texts)."
+      - "Transition to Phase 6: mastering the nuances of Ukrainian cases — Родовий
+        відмінок у деталях, прийменники з відмінками, числівники. The focus shifts
+        from forming words to using them precisely in syntactic structures."
 vocabulary_hints:
   required:
     - "повторення (review — systematic revision of material)"

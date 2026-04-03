@@ -2,7 +2,7 @@ module: b1-044
 level: B1
 sequence: 44
 slug: instrumental-nuances
-version: '3.0'
+version: '3.1'
 title: "Орудний відмінок (деталі)"
 subtitle: "Характеристика, професія, шлях, сумісність — розширені значення орудного"
 focus: grammar
@@ -46,7 +46,7 @@ content_outline:
         генієм. Practice: 12 sentences describing people's roles and qualities using
         Ор.в."
   - section: "Орудний засобу та знаряддя"
-    words: 600
+    words: 700
     points:
       - "The original function of the instrumental — naming the TOOL or MEANS: писати
         ручкою/олівцем, різати ножем, їсти виделкою, їхати автобусом/потягом/літаком,
@@ -55,8 +55,14 @@ content_outline:
       - "Language as means: говорити/розмовляти українською (мовою). Note: українською
         is Ор.в. of українська (мова implied). Also: писати латиницею/кирилицею, думати
         українською."
-      - "Practice: describe daily routines using instrumental of means. 'Я їду на
-        роботу автобусом. Потім пишу звіти ручкою. Розмовляю з колегами українською.'"
+      - "Instrumental of manner (Ор.в. способу дії): говорити шепотом (whisper), іти
+        кроком (walk at a pace), бігти підтюпцем (jog), працювати днями і ночами (work
+        day and night), дивитися здивованими очима (look with surprised eyes). This
+        extends 'means' to 'how the action is done' — a distinctly Ukrainian use of
+        Ор.в. without preposition."
+      - "Practice: describe daily routines using instrumental of means and manner.
+        'Я їду на роботу автобусом. Потім пишу звіти ручкою. Розмовляю з колегами
+        українською. Ходжу парком повільним кроком.'"
   - section: "Орудний шляху та простору"
     words: 500
     points:
@@ -97,15 +103,34 @@ content_outline:
         sentences to passive, marking the agent with Ор.в. 'Тарас Шевченко написав
         Кобзар' → 'Кобзар написаний Тарасом Шевченком.'"
       - "Preview: passive constructions will be expanded in Phase 7 (participles)."
-  - section: "Підсумок"
+  - section: "Прийменники з Ор.в. (§4.2.2.5)"
     words: 500
     points:
-      - "Five semantic roles of Ор.в.: 1. Характеристика (працювати лікарем). 2. Засіб
+      - "The State Standard requires 8+ prepositions governing Ор.в. Beyond з/із (accompaniment):
+        за + Ор.в. (behind, beyond — за будинком, за рікою; also: за + Ор.в. to fetch
+        — піти за хлібом). між/поміж + Ор.в. (between — між друзями, поміж деревами).
+        над + Ор.в. (above — над містом, над річкою). під + Ор.в. (under, location
+        — під столом, під дахом). перед + Ор.в. (in front of — перед будинком; temporal:
+        перед обідом)."
+      - "Additional: поряд з + Ор.в. (next to — поряд з парком). разом з + Ор.в.
+        (together with — разом з батьками). порівняно з + Ор.в. (compared with —
+        порівняно з минулим роком). у зв'язку з + Ор.в. (in connection with — у зв'язку
+        з карантином). From Заболотний Grade 7 p.193: прийменники з Ор.в."
+      - "Comparison using Ор.в.: порівняно з (compared to), у порівнянні з (in comparison
+        with). 'Порівняно з минулим роком, ціни зросли.' Also: Ор.в. of comparison
+        in predicates: Він задоволений результатом (satisfied with — Ор.в.). Practice:
+        12 sentences using instrumental prepositions, distinguishing location (під,
+        над, за, між) from accompaniment (з, разом з) and comparison (порівняно з)."
+  - section: "Підсумок"
+    words: 400
+    points:
+      - "Six semantic roles of Ор.в.: 1. Характеристика (працювати лікарем). 2. Засіб
         (писати ручкою). 3. Шлях (іти вулицею). 4. Сумісність/керування (з другом,
-        цікавитися). 5. Агент пасиву (написано автором)."
+        цікавитися). 5. Агент пасиву (написано автором). 6. З прийменниками: 8+ prepositions
+        (за, між, над, під, перед, поряд з, порівняно з, у зв'язку з)."
       - "Key verbs governing Ор.в. summary: працювати, бути, стати, захоплюватися,
         цікавитися, користуватися, пишатися, керувати, володіти. Self-check: 10 sentences
-        requiring correct instrumental usage."
+        requiring correct instrumental usage across all six roles."
       - "Preview: next module — кличний відмінок у формальному контексті."
 vocabulary_hints:
   required:

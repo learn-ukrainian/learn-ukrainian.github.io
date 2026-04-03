@@ -1,7 +1,7 @@
 # Audit Report: M46 — holidays.md
 **Level:** A1 | **Module:** M46 | **Phase:** A1.7 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-04-02 20:30:00
+**Overall Status:** ✅ PASS
+**Generated:** 2026-04-03 14:02:07
 
 ## Configuration
 **Type:** A1-culture
@@ -10,7 +10,7 @@
 **Items per Activity:** ≥6 items
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
-**Engagement:** ≥1 callouts
+**Engagement:** ≥0 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -33,20 +33,29 @@
 - Priority types used: 3/8 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in holidays.yaml: Schema validation error at key '0': 'Різдвом' is not of type 'object'
+  - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ⚠️ 1162/1200 (raw: 1306) (38 short)
 - **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/1
+- **Engagement:** ✅ 0/0
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 56/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 30.5% (target 20-35% (M46))
+- **Immersion:** 🇺🇦 30.5% (target 20-40% (M46))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 2+ cultural hooks but content has no cultural section

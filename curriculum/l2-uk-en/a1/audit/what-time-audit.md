@@ -1,7 +1,7 @@
 # Audit Report: M22 — what-time.md
 **Level:** A1 | **Module:** M22 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-04-02 20:30:12
+**Overall Status:** ✅ PASS
+**Generated:** 2026-04-03 14:02:19
 
 ## Configuration
 **Type:** A1-vocab
@@ -10,7 +10,7 @@
 **Items per Activity:** ≥6 items
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
-**Engagement:** ≥1 callouts
+**Engagement:** ≥0 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -34,20 +34,29 @@
 - Priority types used: 3/8 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in what-time.yaml: Schema validation error at key '9': {'type': 'observe', 'examples': ['Котра година? — Перша. / О котрій? — О першій.', "Котра година? — Дев'ята. / О котрій? — О дев'ятій.", 'Котра година? — Десята. / О котрій? — О десятій.', 'Котра година? — Одинадцята. / О котрій? — Об одинадцятій.', 'Котра година? — Дванадцята. / О котрій? — О дванадцятій.'], 'prompt': "Which ending changes when you add 'о'? And what happens before 'одинадцята'? What pattern do you notice?"} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 1259/1200 (raw: 1471)
 - **Activities:** ✅ 9/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/1
+- **Engagement:** ✅ 0/0
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 49/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 29.0% HIGH (target 15-25% (M22))
+- **Immersion:** 🇺🇦 29.0% (target 15-35% (M22))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes

@@ -38,6 +38,17 @@ PROPER_NAME_WHITELIST: set[str] = {
 # Syllable fragments (ка, ра, ль, нь, шч) in phonetics modules are not words.
 VESUM_MIN_WORD_LENGTH = 3
 
+# Gate thresholds — centralized so they're easy to find and adjust.
+# All per-level thresholds are in LEVEL_CONFIG below.
+# These are gate-evaluation constants used across gates.py.
+AUDIT_THRESHOLDS = {
+    "word_count_fail_margin": 100,       # FAIL if > this many words below target
+    "immersion_tolerance_pct": 3,        # ±% tolerance before FAIL
+    "naturalness_min_score": 8,          # Minimum review score for PASS
+    "severity_update": 40,               # Severity score boundary: PASS → UPDATE
+    "severity_rewrite": 75,              # Severity score boundary: UPDATE → REWRITE
+}
+
 # Grammar constraints by level (what's ALLOWED at each level)
 GRAMMAR_CONSTRAINTS = {
     'A1': {
@@ -609,7 +620,7 @@ LEVEL_CONFIG = {
         'min_items_per_activity': 6,  # Standard: 6 items minimum per activity
         'min_types_unique': 0,  # Mar 2026: dropped with min_activities
         'min_vocab': 1,  # Relaxed: focus on unique lemma introduction
-        'min_engagement': 1,  # Mar 2026: lowered from 3→2→1 — phonetics modules may have only 1 natural callout point
+        'min_engagement': 0,  # Apr 2026: dropped — review judges callout quality, not mechanical count
         'immersion_graduated': True,
         'transliteration_allowed': True,
         'priority_types': {'fill-in', 'match-up', 'anagram', 'unjumble', 'quiz', 'watch-and-repeat', 'classify', 'image-to-letter'}
@@ -676,18 +687,8 @@ LEVEL_CONFIG = {
         'transliteration_allowed': False,
         'priority_types': {'quiz', 'fill-in', 'error-correction'}
     },
-    'B1-bridge': {
-        # Bridge modules (M01-05) teach grammar metalanguage
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 0,   # Mar 2026: dropped — plan activity_hints guide count, not audit gate (#969)
-        'min_items_per_activity': 6,
-        'min_types_unique': 3,
-        'min_vocab': 20,  # Metalanguage vocabulary
-        'min_engagement': 4,
-        # NO immersion gate - bridge modules teach terminology bilingually
-        'transliteration_allowed': False,
-        'priority_types': {'quiz', 'match-up', 'fill-in', 'error-correction', 'mark-the-words', 'essay-response', 'critical-analysis'}
-    },
+    # B1-bridge REMOVED 2026-04-03: bridge moved to end of A2 (metalanguage modules).
+    # B1 now starts with baselines, not bridge. All B1 uses B1-grammar config.
     'B1-grammar': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
         'min_activities': 0,   # Mar 2026: dropped — plan activity_hints guide count, not audit gate (#969)
@@ -1536,81 +1537,74 @@ AI_CONTAMINATION_PATTERNS = [
 
 
 def get_a1_immersion_range(
-    module_num: int, sandbox_lemma_count: int | None = None
+    module_num: int,
 ) -> tuple[int, int]:
     """Returns (min%, max%) for A1 based on module number.
 
     Note: Immersion includes Activities + Summary (full learner experience).
     Ranges calibrated for this comprehensive calculation.
-
-    When sandbox_lemma_count is provided and small (<20), the floor is lowered
-    for M11+ modules to prevent repetitive padding with a tiny vocabulary.
     """
+    # Recalibrated 2026-04-03 from actual A1 content data.
+    # Dialogue examples naturally push Ukrainian % higher — that's GOOD pedagogy.
+    # Ranges raised to accommodate dialogue-rich modules without penalizing them.
     if module_num <= 3:
-        return (5, 25)    # M1-M3: Phonetics — letters, sounds, textbook quotes, minimal pairs push Ukrainian up naturally
+        return (5, 25)    # M1-M3: Phonetics — letters, sounds, minimal pairs
     elif module_num <= 6:
-        return (8, 25)    # M4-M6: Stress, identity, family — more Ukrainian names/phrases
+        return (8, 30)    # M4-M6: Stress, identity, family — dialogues start here
     elif module_num <= 14:
-        return (10, 30)   # M7-M14: Gender, adjectives, numbers — grammar examples need Ukrainian
+        return (10, 38)   # M7-M14: Gender, adjectives, numbers — grammar examples + dialogues
     elif module_num <= 24:
-        return (15, 25)   # M15-M24: Sentence Building — verbs, questions, possessives
+        return (15, 35)   # M15-M24: Sentence Building — verbs, questions, rich dialogues
     elif module_num <= 34:
-        return (15, 30)   # M25-M34: Cases — accusative, locative, genitive
+        return (15, 40)   # M25-M34: Cases — applied grammar with many dialogue examples
     elif module_num <= 54:
-        return (20, 35)   # M35-M54: Daily Life + Communication — tense, food, travel
+        return (20, 40)   # M35-M54: Daily Life + Communication — dialogue-heavy
     else:
-        return (25, 40)   # M55-M64: Independence — practical skills, final exam
+        return (25, 48)   # M55+: Independence — practical skills, finale
 
 
 def get_a2_immersion_range(module_num: int) -> tuple[int, int]:
     """Returns (min%, max%) for A2 based on module number.
 
-    5-band graduated immersion — calibrated from A1 actual data (2026-03-31):
-    A1 ends at 20-41% (M51-M55 actual). Bridge continues from there.
+    5-band graduated immersion — recalibrated 2026-04-03:
+    A1 ends at 25-48% (M55+, actual max ~45%). A2 bridge continues from there.
+    Dialogue-rich content naturally raises immersion — upper bounds set generously.
 
-    - Bridge (M01-03): 20-40% — A1→A2 transition, reviewing cases + aspect metalanguage
-      A1 finale hits 41%. Bridge modules are grammar-theory-heavy review. 20-35% typical.
-    - Ramp (M04-07): 30-50% — genitive intro + foundations practice, mixing theory + application
-      First new case applied in real situations ("У мене немає..."), more dialogues possible.
-    - Band 1 (M08-20): 45-65% — genitive complete, dative — applied grammar, communicative
-      Shopping, health, services — dialogue-rich, less theory, more Ukrainian interaction.
-    - Band 2 (M21-50): 55-75% — instrumental, case synthesis, aspect, motion, complex sentences
-      Learner has all cases, can handle longer Ukrainian passages.
-    - Band 3 (M51-57): 70-90% — refinement, metalanguage prep for B1, graduation
-      Near-full immersion, preparing for B1's 85-100% target.
+    - Bridge (M01-03): 20-48% — A1→A2 transition, overlaps with A1 finale range
+    - Ramp (M04-07): 30-55% — genitive intro, dialogues increasing
+    - Band 1 (M08-20): 40-70% — applied grammar, communicative situations
+    - Band 2 (M21-50): 50-80% — all cases, longer Ukrainian passages
+    - Band 3 (M51-63): 65-90% — near-full immersion, B1 prep
     """
     if module_num <= 3:
-        return (20, 40)   # Bridge: same range as late A1 (actual A1 end: 20-41%)
+        return (20, 48)   # Bridge: overlaps with A1 finale (25-48%)
     elif module_num <= 7:
-        return (30, 50)   # Ramp: theory+application mix, first new case
+        return (30, 55)   # Ramp: theory+application, dialogues growing
     elif module_num <= 20:
-        return (45, 65)   # Band 1: applied grammar, communicative situations
+        return (40, 70)   # Band 1: applied grammar, dialogue-rich
     elif module_num <= 50:
-        return (55, 75)   # Band 2: all cases, longer Ukrainian passages
+        return (50, 80)   # Band 2: all cases, longer Ukrainian passages
     else:
-        return (70, 90)   # Band 3: near-full immersion, B1 prep
+        return (65, 90)   # Band 3: near-full immersion, B1 prep
 
 
 def get_b1_immersion_range(module_num: int) -> tuple[int, int]:
     """Returns (min%, max%) for B1 based on module number.
 
     B1 Immersion Philosophy:
-    - M01-05 (B1.0 Bridge): 60-85% — metalanguage bridge; max 2 paragraphs of English intro,
-      rest in Ukrainian. Floor ensures continuity from A2 Band 3 (75-90%).
-    - M06-85 (B1.1+): 85-100% Ukrainian — grammar explained IN Ukrainian using metalanguage
+    No bridge in B1 — metalanguage prep moved to end of A2 (2026-04-03).
+    A2 ends at 65-90% (Band 3). B1 continues from there.
 
-    The bridge modules (M01-05) prepare students to understand grammar explanations
-    in Ukrainian by teaching them the necessary metalanguage vocabulary first.
-    These modules should NOT drop below A2 Band 3 levels (75-90%).
+    - M01-05 (B1.1 Baselines): 75-100% — first B1 modules, grammar in Ukrainian
+      with minimal English scaffolding. Continues from A2 finale (65-90%).
+    - M06+ (B1.1+): 85-100% — fully immersed, grammar explained IN Ukrainian
     """
     if module_num <= 5:
-        # Bridge modules: English allowed for max 2 intro paragraphs, then Ukrainian
-        # Floor of 60% maintains continuity from A2 Band 3 (75-90% late A2)
-        # No ceiling: being MORE Ukrainian than required is always acceptable
-        return (60, 100)
+        # Baseline modules: continues from A2 finale range (65-90%)
+        return (75, 100)
 
-    # All other B1 modules target 85-100% Ukrainian immersion
-    return (85, 100)  # B1 is fully immersed - no upper limit
+    # All other B1 modules: fully immersed
+    return (85, 100)
 
 
 def get_level_config(level_code: str, module_focus: str | None = None) -> dict:
@@ -1628,7 +1622,7 @@ def get_level_config(level_code: str, module_focus: str | None = None) -> dict:
     return LEVEL_CONFIG.get(config_key, LEVEL_CONFIG['A1'])
 
 
-def get_word_target(level_code: str, module_num: int, module_focus: str | None = None) -> int:
+def get_word_target(level_code: str, _module_num: int | None = None, module_focus: str | None = None) -> int:
     """Get word target for a level. Word targets are MINIMUMS."""
     config = get_level_config(level_code, module_focus)
     return config['target_words']

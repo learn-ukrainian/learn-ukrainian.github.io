@@ -2,7 +2,7 @@ module: b1-060
 level: B1
 sequence: 60
 slug: education-and-university
-version: '3.0'
+version: '3.1'
 title: "Освіта і навчання"
 subtitle: "Академічна лексика, дисципліни та дієприкметники в науковому стилі"
 focus: communication
@@ -32,7 +32,7 @@ dialogue_situations:
       context'
 content_outline:
   - section: "Система освіти в Україні"
-    words: 700
+    words: 800
     points:
       - "Overview of Ukrainian education levels: початкова школа (1-4 класи), середня
         школа (5-9 класи), старша школа (10-11/12 класи), університет/інститут. Ступені
@@ -46,7 +46,7 @@ content_outline:
         ЗНО/НМТ (standardized testing for university admission). The concept of державне
         замовлення (state-funded places) vs контрактна форма (self-funded)."
   - section: "Навчальні дисципліни та спеціальності"
-    words: 650
+    words: 750
     points:
       - "Subject vocabulary using дієприкметники and дієприслівники: Вивчаючи фізику,
         студенти проводять досліди. Написана професором монографія отримала премію.
@@ -59,7 +59,7 @@ content_outline:
         for simultaneous/sequential actions: Готуючись до іспиту, я прочитав три підручники.
         Закінчивши бакалаврат, планую вступити до магістратури."
   - section: "Академічне середовище"
-    words: 650
+    words: 700
     points:
       - "University life vocabulary: лекція (lecture), семінар (seminar), практика
         (practice/internship), лабораторна робота (lab work), курсова робота (term
@@ -72,7 +72,7 @@ content_outline:
         phrases: Дослідження, проведене нашою групою, показало цікаві результати.
         Прочитавши вашу роботу, я маю кілька зауважень."
   - section: "Навчальний процес: дієприкметники і дієприслівники"
-    words: 650
+    words: 750
     points:
       - "Describing academic activities with Phase 7 grammar: Студент, який пише курсову
         → студент, що пише курсову (preferred over працюючий студент — Russian calque).
@@ -85,7 +85,7 @@ content_outline:
       - "Practice: rewrite 6 informal sentences about studies into formal academic
         register using participle phrases and gerund constructions."
   - section: "Порівняння систем освіти"
-    words: 500
+    words: 550
     points:
       - "Reading passage: a comparison of Ukrainian and international education systems.
         Uses complex sentences with subordinate clauses (preview of Phase 8) and Phase
@@ -95,7 +95,7 @@ content_outline:
       - "Discussion prompts: learners describe their own education experience using
         Phase 7 grammar structures."
   - section: "Підсумок фази 7 та перехід до M65"
-    words: 400
+    words: 450
     points:
       - "Summary of Phase 7 grammar applied in academic context: M57-58: дієприкметники
         (активні/пасивні) — academic descriptions. M59: дієприкметниковий зворот —

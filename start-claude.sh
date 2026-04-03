@@ -28,13 +28,12 @@ if [ -n "$MISSING_TOOLS" ]; then
     echo "   (These are recommended but not required to start)"
 fi
 
-# Check for claude
-if ! command -v claude &> /dev/null; then
-    echo "Error: Claude CLI not found"
-    echo "   Install with: npm install -g @anthropic-ai/claude-code"
+# Check for npx (required to run Claude Code)
+if ! command -v npx &> /dev/null; then
+    echo "Error: npx not found (install Node.js)"
     exit 1
 fi
-echo "Claude CLI found"
+echo "npx found — will launch Claude Code via npx @latest"
 
 # Change to project directory
 cd "$PROJECT_DIR"
@@ -116,4 +115,4 @@ echo ""
 # Launch via npx to avoid cache bugs (stale binary + prompt caching issues)
 # See: https://reddit.com/r/ClaudeAI/comments/1s7mkn3/
 echo "Launching Claude Code via npx (cache-safe)..."
-npx @anthropic-ai/claude-code --chrome --permission-mode bypassPermissions "$@"
+npx @anthropic-ai/claude-code@latest --chrome --permission-mode bypassPermissions "$@"

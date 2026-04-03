@@ -2,7 +2,7 @@ module: b1-039
 level: B1
 sequence: 39
 slug: word-formation-nouns
-version: '3.0'
+version: '3.1'
 title: "Творення назв осіб і місць"
 subtitle: "Суфікси для назв людей за діяльністю та назв приміщень і місць"
 focus: grammar
@@ -32,13 +32,14 @@ content_outline:
   - section: "Назви осіб за діяльністю"
     words: 900
     points:
-      - "Core suffixes for agent nouns from Заболотний Grade 6 p.57: -ач: читач, слухач,
-        викладач (from verbs: читати, слухати, викладати) -ець: борець, плавець, творець
-        (from verbs: боротися, плавати, творити) -ник: працівник, помічник, захисник
-        (from nouns/adj: праця, поміч, захист) -тель: вчитель, вихователь, мислитель
-        (from verbs: вчити, виховувати) -ар/-яр: пекар, школяр, лікар (from nouns:
-        піч/пекти, школа, лік/лікувати) -ист: журналіст, піаніст, оптиміст (from nouns:
-        журнал, піано, оптимізм)"
+      - "Core suffixes for agent nouns from Заболотний Grade 6 p.57 and State Standard
+        §4.3.3 (-тель, -ник, -ар, -іст): -ач: читач, слухач, викладач (from verbs:
+        читати, слухати, викладати) -ець: борець, плавець, творець (from verbs: боротися,
+        плавати, творити) -ник: працівник, помічник, захисник (from nouns/adj: праця,
+        поміч, захист) -тель: вчитель, вихователь, мислитель (from verbs: вчити,
+        виховувати) -ар/-яр: пекар, школяр, лікар (from nouns: піч/пекти, школа,
+        лік/лікувати) -ист: журналіст, піаніст, оптиміст (from nouns: журнал, піано,
+        оптимізм)"
       - "Feminine counterparts — systematic formation: -ач → -ачка: читач → читачка,
         слухач → слухачка -ець → -иця: борець → борчиня (note: irregular), плавець
         → плавчиня -ник → -ниця: працівник → працівниця, захисник → захисниця -тель
@@ -51,11 +52,14 @@ content_outline:
         -и truncated: кияни) -ак/-як: поляк, словак Feminine: -ка: українка, полька;
         -иня: киянка (not *киянинка)"
   - section: "Творення назв місць і приміщень"
-    words: 700
+    words: 750
     points:
-      - "Suffixes for назви приміщень: -ня: пекарня (де печуть), читальня (де читають),
-        бібліотека (borrowed) -ниця: лікарня (archaic: лічниця), робітниця (workshop,
-        archaic) -тека: бібліотека, фонотека, відеотека (Greek-origin suffix)"
+      - "State Standard §4.3.5 — place nouns with -ня, -ище: пекарня (де печуть),
+        читальня (де читають), кладовище (де зберігають/де ховають), стрільбище (де
+        стріляють), городище (де було місто). Suffix -ня typically derives from verbs
+        or agent nouns; -ище marks a larger or historical location."
+      - "Suffixes for назви приміщень: -ня: пекарня, читальня, їдальня -ниця: лікарня
+        (archaic: лічниця) -тека: бібліотека, фонотека, відеотека (Greek-origin suffix)"
       - "Prefixal-suffixal formation for geographic/spatial nouns: при- + -я: Прикарпаття
         (при Карпатах), Придніпров'я (при Дніпрі) за- + -я: Закарпаття (за Карпатами),
         Запоріжжя (за порогами) під- + -я: Поділля (під горами — etymological) над-
@@ -65,17 +69,24 @@ content_outline:
         -ота: краса → красота, висота, доброта Practice: form place and abstract nouns
         from 12 base words."
   - section: "Віддієслівні іменники"
-    words: 600
+    words: 700
     points:
-      - "Suffixes -ння/-ття from Литвінова Grade 6 p.83: читати → читання, вивчати
-        → вивчення, писати → писання жити → життя, прибути → прибуття, відкрити →
-        відкриття These are verbal nouns — they name the process or result of an action."
+      - "State Standard §4.3.4 — verbal nouns with -ння/-ення: читання, навчання.
+        From Литвінова Grade 6 p.83: читати → читання, вивчати → вивчення, писати →
+        писання жити → життя, прибути → прибуття, відкрити → відкриття. These are
+        verbal nouns — they name the process or result of an action."
       - "Безафіксний спосіб (Литвінова Grade 6 p.83): підписати → підпис, переходити
         → перехід, бігти → біг The noun is formed by removing the verb suffix and
         ending. This method is productive in Ukrainian and creates many common nouns."
-      - "Spelling rules: -інн(я) vs -енн(я) vs -інн(я): -інн(я): кипіння, горіння
-        (from verbs on -іти) -енн(я): здійснення, вивчення (from verbs on -ити with
-        е) Practice: form verbal nouns from 10 verbs and determine the correct suffix."
+      - "Spelling rules: -інн(я) vs -енн(я): -інн(я): кипіння, горіння (from verbs
+        on -іти) -енн(я): здійснення, вивчення (from verbs on -ити with е) -ання:
+        читання, писання (from verbs on -ати). Practice: form verbal nouns from 10
+        verbs and determine the correct suffix."
+      - "Semantic distinction: verbal nouns can denote either process or result —
+        читання means both 'the act of reading' and 'a reading (text to read).'
+        відкриття means 'the act of opening/discovering' and 'a discovery.' Context
+        determines meaning. Practice: 6 sentences where learners distinguish process
+        from result."
   - section: "Словотвірний ланцюжок"
     words: 500
     points:
@@ -87,7 +98,7 @@ content_outline:
         вчити, друг, місто. Then reverse: given a derived word, trace back to the
         base."
   - section: "Практика в контексті"
-    words: 600
+    words: 700
     points:
       - "Reading passage: a newspaper article about a new community centre, using
         agent nouns (працівники, вчителі, читачі) and place nouns (читальня, спортзал,
@@ -95,15 +106,25 @@ content_outline:
         formation."
       - "Dialogue: two people discussing professions and workplaces. 'Де працює пекар?
         У пекарні. А лікар? У лікарні. А де працює викладач? В університеті.' Learners
-        extend the pattern."
+        extend the pattern with 8-10 additional profession-place pairs."
+      - "Word formation analysis exercise: given a paragraph of Ukrainian text,
+        learners identify every derived noun, determine its base word, suffix, and
+        formation method. Then they form the feminine counterpart of each agent noun."
       - "Self-check: form agent nouns (m. and f.) for 8 activities, form place nouns
         for 6 locations, build 3 word formation chains."
   - section: "Підсумок"
-    words: 200
+    words: 450
     points:
       - "Reference tables: agent noun suffixes (m. → f.), place noun suffixes, verbal
-        noun suffixes, word formation methods. Preview: next module applies word formation
-        in a shopping/services context."
+        noun suffixes, word formation methods. Visual chart organizing all suffixes
+        by semantic category: people (-ач, -ець, -ник, -тель, -ар, -ист), places
+        (-ня, -ище, -тека), processes (-ння, -ття), abstracts (-ість, -ство, -ота)."
+      - "Mnemonic strategy: each suffix has a prototypical example that learners can
+        anchor to — вчитель for -тель, пекарня for -ня, читання for -ння. Build a
+        personal reference card with one memorable example per suffix."
+      - "Preview: next module applies word formation in a shopping/services context —
+        learners will encounter agent nouns (продавець, перукар) and place nouns
+        (крамниця, перукарня, майстерня) in real transactional dialogues."
 vocabulary_hints:
   required:
     - "словотвір (word formation)"

@@ -2,7 +2,7 @@ module: b1-066
 level: B1
 sequence: 66
 slug: complex-subordinate-reason
-version: '3.0'
+version: '3.1'
 title: "Речення причини"
 subtitle: "Чому? Бо, тому що, через те що, оскільки"
 focus: grammar
@@ -31,7 +31,7 @@ dialogue_situations:
       registers'
 content_outline:
   - section: "Підрядні обставинні причини"
-    words: 600
+    words: 700
     points:
       - "Definition from Авраменко Grade 8 p.86: складнопідрядне речення з підрядним
         причини — таке, в якому підрядна частина вказує на причину дії, про яку йдеться
@@ -43,7 +43,7 @@ content_outline:
       - "Position: typically AFTER main clause (natural order), but can precede for
         emphasis: Оскільки погода погіршилася, ми вирішили залишитися вдома."
   - section: "Сполучники причини"
-    words: 750
+    words: 850
     points:
       - "Бо — the most common, neutral/slightly colloquial: Я не прийшов, бо був хворий.
         Вона усміхається, бо рада. Always comes BETWEEN clauses (post-main position).
@@ -61,7 +61,7 @@ content_outline:
       - "Register guide and practice: 8 sentences — choose the most appropriate conjunction
         based on register and context."
   - section: "Причина vs умова"
-    words: 500
+    words: 600
     points:
       - "Contrast with conditional (M71): Причина: Одягай пальто, бо буде холодно.
         (it WILL be cold — fact) Умова: Одягай пальто, якщо буде холодно. (IF it is
@@ -70,7 +70,7 @@ content_outline:
         умова = possibility."
       - "Practice: classify 6 sentence pairs as причинні or умовні."
   - section: "Пунктуація причинних речень"
-    words: 550
+    words: 650
     points:
       - "Rules: Бо: comma before бо. Він не прийшов, бо захворів. Тому що: comma before
         тому що (as a unit) or тому, що (split). Оскільки: comma after підрядне if
@@ -81,7 +81,7 @@ content_outline:
         The split version puts тому in the main clause as a correlative word."
       - "Practice: punctuate 10 sentences with причинними реченнями."
   - section: "Причинні речення у мовленні"
-    words: 700
+    words: 800
     points:
       - "Reading passage: a text explaining reasons for events using various причинні
         сполучники. Learners identify all причинні підрядні and note register of each
@@ -93,7 +93,7 @@ content_outline:
         дієприслівникові звороти: Бо він запізнився, ми почали без нього. → Запізнившись,
         він пропустив початок."
   - section: "Підсумок та перехід до M71"
-    words: 300
+    words: 400
     points:
       - "Summary: причинні = чому? через що? Сполучники: бо (розмовний), тому що (нейтральний),
         оскільки (офіційний), через те що (перешкода). Пунктуація: кома перед сполучником

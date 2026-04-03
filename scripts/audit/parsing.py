@@ -180,26 +180,27 @@ def detect_focus(frontmatter_str: str, level_code: str, module_num: int,
     if 'checkpoint' in title_lower:
         return 'checkpoint'
 
+    # B1: mostly grammar with thematic interludes, no bridge (moved to A2 end)
     if level_code == 'B1':
-        if module_num <= 5:
-            return 'bridge'
-        elif module_num <= 51:
-            return 'grammar'
-        elif module_num <= 71:
-            return 'vocab'
+        if module_num <= 83:
+            return 'grammar'  # Grammar + thematic modules (bulk of B1)
+        else:
+            return 'capstone'  # M84-87: review, practice exams, finale
+
+    # B2: grammar → register/stylistics → domain vocab → communication → capstone
+    if level_code == 'B2':
+        if module_num <= 24:
+            return 'grammar'   # Passive voice, syntax, stylistic devices
+        elif module_num <= 38:
+            return 'vocab'     # Register modules (formal, informal, business, etc.)
+        elif module_num <= 42:
+            return 'vocab'     # Domain vocabulary (politics, law, economics)
+        elif module_num <= 69:
+            return 'grammar'   # Morphology, case semantics, synonymy, idioms
         elif module_num <= 81:
-            return 'culture'
+            return 'skills'    # Professional writing, presentations, debate
         else:
-            return 'skills'
-    elif level_code == 'B2':
-        if module_num <= 40:
-            return 'grammar'
-        elif module_num <= 70:
-            return 'vocab'
-        elif module_num <= 131:
-            return 'history'
-        else:
-            return 'skills'
+            return 'capstone'  # M82-90: thematic synthesis + capstone + exam
 
     return None
 

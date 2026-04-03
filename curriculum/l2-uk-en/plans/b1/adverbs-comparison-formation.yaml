@@ -2,7 +2,7 @@ module: b1-037
 level: B1
 sequence: 37
 slug: adverbs-comparison-formation
-version: '3.0'
+version: '3.1'
 title: "Ступені порівняння та творення прислівників"
 subtitle: "Як прислівники утворюються і порівнюються в українській мові"
 focus: grammar
@@ -31,21 +31,25 @@ dialogue_situations:
       usage'
 content_outline:
   - section: "Як утворюються прислівники?"
-    words: 700
+    words: 800
     points:
       - "Main formation patterns from Литвінова Grade 7 p.143: 1. Суфіксальний: від
         прикметників суфіксами -о, -е швидкий → швидко, тихий → тихо, гарячий → гаряче.
         2. Префіксально-суфіксальний: по- + прикметник + -ому/-ськи/-и по-доброму,
         по-українськи, по-козацьки, по-новому. 3. Від іменників: зранку (ранок), вночі
         (ніч), додому (дім). 4. Складання: мимоволі, самохіть, праворуч."
+      - "State Standard §4.3.7 context: adverb formation from adjectives using -о, -е
+        (добре, гарно) is a core B1 competency. Learners must recognize the formation
+        pattern and produce adverbs fluently from any якісний прикметник."
       - "Spelling rules for по- adverbs: по-українськи, по-братерськи, по-доброму,
         по-новому — always hyphenated. But: помалу, потроху, позавчора — no hyphen
-        (these are prefix formations, not the по-...-ому pattern)."
+        (these are prefix formations, not the по-...-ому pattern). Rule from Правопис
+        2019: по- with adverbs in -ому, -ему, -ськи, -зьки, -цьки = hyphen."
       - "Practice: form adverbs from 15 adjectives and identify the formation method.
         Some adjectives have multiple adverb forms: добрий → добре (sufix.) / по-доброму
-        (pref.-suf.)."
+        (pref.-suf.). Discuss how meaning shifts between forms."
   - section: "Ступені порівняння прислівників"
-    words: 800
+    words: 850
     points:
       - "Only adverbs formed from якісні прикметники with -о, -е can form degrees
         of comparison (Заболотний Grade 7 p.151). Cannot: adverbs with prefixes пре-,
@@ -58,6 +62,9 @@ content_outline:
       - "Compound forms (Заболотний Grade 8 p.28): Comparative: більш/менш + adverb
         (більш весело, менш часто). Superlative: найбільш/найменш + adverb (найбільш
         весело). Error: *більш веселіше — NEVER combine."
+      - "Systematic drill: provide 12 adverbs and have learners form all four degrees
+        (проста порівняльна, складена порівняльна, проста найвища, складена найвища),
+        flagging which ones have consonant alternations."
   - section: "Прислівник vs прикметник: паралельні форми"
     words: 600
     points:
@@ -89,14 +96,27 @@ content_outline:
         Чим більше читаєш, тим краще пишеш."
       - "Self-check: form all comparison forms for 8 adverbs, including at least 2
         suppletive and 2 with consonant alternations."
+  - section: "Типові помилки з прислівниками"
+    words: 200
+    points:
+      - "Error catalogue from Авраменко Grade 7 p.140: 1. *більш швидше (mixing forms).
+        2. *по українськи (missing hyphen). 3. *самий добре (Russicism — correct:
+        найкраще). 4. *тихо → *тихше (wrong suffix — correct: тихіше). 5. Confusing
+        -ше (adverb) with -ший (adjective): *Він біжить швидший."
+      - "Diagnostic exercise: 8 sentences with adverb errors. Learners identify and
+        correct each, classifying by error type."
   - section: "Підсумок"
-    words: 300
+    words: 450
     points:
       - "Reference table: adjective comparison vs adverb comparison side by side (Заболотний
         Grade 8 p.28 format). Formation methods: суфіксальний, пр.-суф., складання.
         Comparison: проста (-іше/-ше), складена (більш/менш), найвищий (най-)."
+      - "Summary decision tree: Is the word modifying a verb/adjective/adverb? → use
+        adverb form (-ше/-іше). Is it modifying a noun? → use adjective form (-ший).
+        Visual diagram showing the parallel tracks."
       - "Preview: word formation — next modules explore how Ukrainian builds new adjectives
-        (b1-042) and nouns (b1-043) from existing words."
+        (b1-042) and nouns (b1-043) from existing words. The formation patterns learned
+        here (суфіксальний, префіксальний) apply to all word classes."
 vocabulary_hints:
   required:
     - "прислівник (adverb — invariable part of speech)"

@@ -2,7 +2,7 @@ module: b1-063
 level: B1
 sequence: 63
 slug: complex-subordinate-object
-version: '3.0'
+version: '3.1'
 title: "З'ясувальні речення"
 subtitle: "Підрядні речення з що, щоб, чи, хто, куди"
 focus: grammar
@@ -30,7 +30,7 @@ dialogue_situations:
       що, думаю що'
 content_outline:
   - section: "Складнопідрядне речення: вступ"
-    words: 600
+    words: 700
     points:
       - "Definition from Заболотний Grade 8 p.84: складнопідрядне речення складається
         з головної частини і однієї або кількох підрядних частин. Підрядна частина
@@ -44,7 +44,7 @@ content_outline:
         module), обставинні (M69-73). This module focuses on з'ясувальні — the most
         common in speech."
   - section: "З'ясувальні підрядні частини"
-    words: 750
+    words: 850
     points:
       - "From Заболотний Grade 8 p.94: з'ясувальна підрядна частина відповідає на
         питання непрямих відмінків (кого? чого? кому? чому? кого? що? ким? чим?) and
@@ -76,7 +76,7 @@ content_outline:
       - "Practice: in 8 sentences, determine whether що/як/хто is a conjunction or
         relative word."
   - section: "Пунктуація та побудова"
-    words: 550
+    words: 650
     points:
       - "Main rule: comma before the conjunction/relative word: Я думаю, що це правильно.
         Він не знає, де я живу. No comma after the subordinate clause when it precedes
@@ -88,7 +88,7 @@ content_outline:
         + information to express. Learner adds correct conjunction and subordinate
         clause."
   - section: "З'ясувальні речення у мовленні"
-    words: 650
+    words: 750
     points:
       - "High-frequency patterns in daily speech: Я думаю, що... / Я вважаю, що...
         (expressing opinions) Він сказав, що... / Вона повідомила, що... (reporting
@@ -101,7 +101,7 @@ content_outline:
         усі з'ясувальні підрядні частини. — Визначте пояснюване слово для кожної.
         — Визначте: сполучник чи сполучне слово?"
   - section: "Підсумок та перехід до M68"
-    words: 350
+    words: 450
     points:
       - "Summary: з'ясувальні = підрядні, що відповідають на питання непрямих відмінків.
         Сполучники: що, щоб, чи. Сполучні слова: хто, де, куди, коли, як, скільки.

@@ -2,7 +2,7 @@ module: b1-074
 level: B1
 sequence: 74
 slug: text-register-informal
-version: '3.0'
+version: '3.1'
 title: "Розмовний стиль"
 subtitle: "Розмовне мовлення: побутова мова, діалоги, емоційна лексика"
 focus: grammar
@@ -31,7 +31,7 @@ dialogue_situations:
     motivation: 'Informal register: скорочення, сленг, розмовні форми — йо, лан, норм'
 content_outline:
   - section: "Що таке розмовний стиль?"
-    words: 600
+    words: 700
     points:
       - "Definition from Заболотний Grade 7 p.234: Розмовне мовлення є найдавнішим
         стилем будь-якої мови. Ним користуються здебільшого в побуті, але часто i
@@ -49,8 +49,12 @@ content_outline:
       - "Cultural note: розмовний стиль as the living soul of the language. This is
         where Ukrainian creativity, humor, and warmth live. Прислів'я, приказки, фразеологізми
         — the richest layer of Ukrainian is in its colloquial register."
+      - "State Standard 2024 §4.5.1 register distinction applied to розмовний: learners
+        identify specific lexical markers (побутова лексика, емоційні вигуки) and syntactic
+        markers (неповні речення, вільний порядок слів) that distinguish розмовний from
+        офіційно-діловий. Comparative analysis of the same повідомлення in both registers."
   - section: "Лексика розмовного стилю"
-    words: 700
+    words: 800
     points:
       - "Емоційно забарвлена лексика — words carrying emotional charge: Позитивні:
         чудовий, файний, гарнесенький, любенький. Негативні: бридкий, огидний, нікчемний,
@@ -66,6 +70,11 @@ content_outline:
       - "Вигуки та частки — interjections and particles: Вигуки: ой, ох, ух, ого,
         гей, овва, ну, отож. Частки: ж, бо, хіба, невже, та, ну. These words carry
         enormous communicative weight in Ukrainian and have no direct English equivalents."
+      - "Прислів'я та приказки in daily speech: 'Без труда нема плода,' 'Краще синиця
+        в руках, ніж журавель у небі,' 'Що посієш, те й пожнеш,' 'Хто рано встає, тому
+        Бог дає.' These are not archaic — Ukrainians use them constantly in casual
+        conversation. Practice: learners match прислів'я to situations where they would
+        be used."
   - section: "Граматика розмовного мовлення"
     words: 650
     points:
@@ -84,7 +93,7 @@ content_outline:
         (unless/except...), 'Та ну його!' (forget about it!), 'Отакої!' (well I never!).
         Practice: learners complete dialogues using natural constructions."
   - section: "Суржик vs справжня розмовна мова"
-    words: 600
+    words: 700
     points:
       - "Defining суржик: несвідоме змішування слів різних мов i властивих різним
         мовам мовних форм (from Заболотний Grade 8 p.217). Суржик is NOT розмовний
@@ -101,8 +110,12 @@ content_outline:
       - "Reading practice: two versions of the same dialogue — one with суржик, one
         with genuine розмовна українська. Learners analyze the differences and understand
         why authentic розмовна мова matters."
+      - "Regional розмовна лексика: файний (Western Ukraine — nice/pretty), цікавий
+        (Central — interesting), гарний (universal — beautiful/nice). Ukrainian dialects
+        enrich розмовний стиль without being суржик. Learners learn to recognize regional
+        color as natural variety, not error."
   - section: "Діалоги на побутові теми"
-    words: 550
+    words: 650
     points:
       - "Dialogue 1 — На кухні (In the kitchen): A conversation about cooking using
         food vocabulary, diminutives (картоплинка, цибулинка, олійка), and colloquial
@@ -118,7 +131,7 @@ content_outline:
       - "Practice: learners transform formal dialogues from M77 into розмовний стиль,
         making conscious lexical and grammatical choices."
   - section: "Підсумок: живе мовлення"
-    words: 350
+    words: 500
     points:
       - "Complete vocabulary reference — colloquial Ukrainian organized by: емоційна
         лексика, зменшувально-пестливі форми, фразеологізми, вигуки та частки, діалогічні
@@ -126,6 +139,10 @@ content_outline:
       - "Self-check in Ukrainian: 1. Назвіть 5 ознак розмовного стилю. 2. Чим розмовний
         стиль відрізняється від офіційно-ділового? 3. Поясніть значення трьох фразеологізмів
         з цього модуля. 4. Перетворіть офіційне речення на розмовне."
+      - "Register continuum overview: formal ↔ neutral ↔ informal is not binary —
+        Ukrainian speakers shift register fluidly within a single conversation. Practice:
+        learners identify register shifts in a multi-turn dialogue where a formal meeting
+        transitions to friendly chat."
       - "Preview of next module: Абревіатури та скорочення (M79) — how Ukrainian compresses
         language through abbreviations and shortened forms, relevant to both formal
         and informal registers."

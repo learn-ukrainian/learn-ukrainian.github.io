@@ -2,7 +2,7 @@ module: b1-052
 level: B1
 sequence: 52
 slug: checkpoint-cases
-version: '3.0'
+version: '3.1'
 title: "Контрольна робота 6"
 subtitle: "Перевірка знань: розширені відмінки, прийменники, числівники, займенники,
   житло"
@@ -48,17 +48,18 @@ content_outline:
         їхати дорогою. 4. Керування: захоплюватися, цікавитися, пишатися. 5. Агент
         пасиву: написано автором. Drill: 10 sentences requiring correct Ор.в. usage."
   - section: "Повторення: прийменники"
-    words: 600
+    words: 700
     points:
       - "Temporal prepositions reference: через + Зн.в. (after period), за + Зн.в.
         (within period), перед + Ор.в. (before), після + Р.в. (after), до + Р.в. (until),
         під час + Р.в. (during), протягом + Р.в. (throughout), на + Зн.в. (for duration)."
       - "Cause/purpose prepositions reference: Cause: через (neg.), завдяки (pos.),
-        від (reaction), з (motivation). Purpose: для, заради, за + Ор.в. (fetch),
-        щоб + inf. Golden rule: завдяки = GOOD, через = BAD. Drill: 12 mixed sentences
-        choosing correct preposition + case."
+        від (reaction), з (motivation), внаслідок (formal result), у зв'язку з (formal
+        connection). Purpose: для, заради, за + Ор.в. (fetch), щоб + inf. Golden rule:
+        завдяки = GOOD, через = BAD. Compound: через те що, завдяки тому що, для того
+        щоб. Drill: 12 mixed sentences choosing correct preposition + case."
   - section: "Повторення: кличний, числівники, займенники"
-    words: 600
+    words: 700
     points:
       - "Vocative in formal contexts: ім'я + по батькові: Іване Петровичу, Маріє Степанівно.
         Title + прізвище: лікарю Петренко (тільки перше в Кл.в.). Practice: form correct
@@ -69,8 +70,9 @@ content_outline:
         Drill: 10 numeral usage exercises."
       - "Pronouns: interrogative-relative (хто, який, чий — declension), reflexive
         (себе/собі/собою), indefinite (хтось, будь-хто, -небудь), negative (ніхто,
-        ніщо — preposition splits: ні з ким). Drill: 10 pronoun exercises with spelling
-        and case."
+        ніщо — preposition splits: ні з ким), означальні (кожний, весь/увесь, сам,
+        інший). Fractions: половина, третина, чверть + Р.в., півтора/півтори. Drill:
+        12 pronoun and numeral exercises with spelling, case, and agreement."
   - section: "Комплексні завдання"
     words: 1000
     points:
@@ -102,12 +104,19 @@ content_outline:
       - "Diagnostic: 15 quick-check questions covering all Phase 6 topics, with answer
         key and explanations."
   - section: "Підсумок"
-    words: 200
+    words: 300
     points:
-      - "Phase 6 achievement summary: advanced case usage, prepositions for time and
-        cause/purpose, formal vocative, numeral agreement, pronoun system. These are
-        the building blocks for Phase 7 (participles) and Phase 8 (complex syntax),
-        where precise case knowledge becomes essential."
+      - "Phase 6 achievement summary: advanced case usage (genitive with 15+ prepositions,
+        dative of experiencer and purpose, instrumental with 8+ prepositions and manner),
+        formal vocative with patronymics and profession + name, temporal and cause/purpose
+        prepositions, ordinal and cardinal numeral declension with fractions, complete
+        pronoun system (indefinite, negative, definitive, reflexive). These are the
+        building blocks for Phase 7 (participles) and Phase 8 (complex syntax), where
+        precise case knowledge becomes essential."
+      - "Transition to Phase 7: дієприкметники (participles) require precise case
+        agreement — a дієприкметник agrees with its noun in gender, number, AND case.
+        All the case knowledge from Phase 6 becomes the foundation for building complex
+        modifiers."
 vocabulary_hints:
   required:
     - "повторення (review)"

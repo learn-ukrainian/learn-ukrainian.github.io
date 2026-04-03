@@ -2,7 +2,7 @@ module: b1-046
 level: B1
 sequence: 46
 slug: prepositions-temporal
-version: '3.0'
+version: '3.1'
 title: "Часові прийменники"
 subtitle: "Через, за, на, перед, після, до — точне вираження часу"
 focus: grammar
@@ -47,7 +47,7 @@ content_outline:
         an hour I finished everything). Practice: 10 sentences requiring через or
         за."
   - section: "Перед, після, до, під час"
-    words: 700
+    words: 800
     points:
       - "перед + Ор.в. — 'before': перед обідом, перед зустріччю, перед екзаменом.
         Він прийшов перед початком уроку."
@@ -56,11 +56,15 @@ content_outline:
       - "до + Р.в. — 'until/before (deadline)': до обіду (before/by lunch), до п'ятої
         години (by 5 o'clock), до кінця тижня (by the end of the week). Зроби це до
         завтра (Do it by tomorrow)."
-      - "під час + Р.в. — 'during': під час обіду, під час уроку, під час війни. Practice:
-        describe a typical day using перед/після/до/під час: 'Перед сніданком я роблю
-        зарядку. Під час обіду читаю. Після роботи гуляю. До вечері все зроблю.'"
+      - "під час + Р.в. — 'during': під час обіду, під час уроку, під час війни.
+        Note synonyms: впродовж/протягом (covered next section) also express 'during'
+        but emphasize full duration."
+      - "Reading passage: a daily schedule narrated with before/after/during/until
+        constructions. 'Перед сніданком я роблю зарядку. Під час обіду читаю новини.
+        Після роботи гуляю в парку. До вечері намагаюся все зробити.' Learners identify
+        each temporal preposition and its governed case."
   - section: "Тривалість: протягом, впродовж, на"
-    words: 600
+    words: 700
     points:
       - "протягом/упродовж + Р.в. — 'throughout/for the duration of': протягом дня,
         упродовж тижня, протягом трьох місяців. Both are synonyms; протягом is slightly
@@ -69,12 +73,16 @@ content_outline:
       - "на + Зн.в. — 'for a period (planned duration)': Я приїхав на тиждень (I came
         for a week). Вона поїхала на рік. Візьміть це на годину. The period is planned/intended,
         not yet elapsed."
+      - "Duration with accusative: цілий день (all day — Зн.в.), цілу ніч (all night),
+        цілий тиждень (all week). These express duration without preposition. Also:
+        годинами (for hours — Ор.в.), днями (for days), тижнями (for weeks) — instrumental
+        plural expressing extended duration."
       - "Common error prevention (Заболотний Grade 7 p.193): NOT *на протязі (calque
         from Russian на протяжении) — use протягом. NOT *після п'яти (calque) — after
-        5 o'clock: після п'ятої. Practice: 8 sentences using duration prepositions
-        correctly."
+        5 o'clock: після п'ятої. Practice: 10 sentences using duration prepositions
+        correctly, including цілий день and годинами variants."
   - section: "Позначення часу доби і пір року"
-    words: 500
+    words: 600
     points:
       - "Seasons: взимку, навесні, влітку, восени (adverbs, no preposition). But with
         adjectives: цієї зими (Р.в.), минулого літа (Р.в.), наступної весни (Р.в.),
@@ -84,9 +92,12 @@ content_outline:
         From Авраменко Grade 11 p.42: avoid *без десяти шість (Russicism), correct:
         за десять хвилин шоста."
       - "Days and dates: у понеділок (Зн.в.), у середу, в п'ятницю. Цього понеділка
-        (Р.в., this Monday). Practice: schedule a week using temporal expressions."
+        (Р.в., this Monday). Frequency: щопонеділка, щосереди (every Monday, every
+        Wednesday). Note the different constructions: у понеділок (single event) vs
+        щопонеділка (recurring). Practice: schedule a week using temporal expressions,
+        distinguish one-time vs recurring events."
   - section: "По + М.в. та інші нюанси"
-    words: 500
+    words: 600
     points:
       - "по + М.в. — 'after' (temporal, formal): по обіді, по закінченні, по смерті,
         по завершенні. This is correct literary Ukrainian, NOT a Russicism. From Авраменко
@@ -96,15 +107,24 @@ content_outline:
         shops) Context determines meaning."
       - "Practice: mixed temporal preposition exercise — choose the correct preposition
         and case for 12 time-related sentences."
+      - "Common temporal expressions without prepositions: цілий день (all day), кожного
+        разу (every time — Р.в.), щодня (every day), щотижня (every week), щомісяця
+        (every month), щороку (every year). These adverbial time expressions complement
+        prepositional ones. From Литвінова Grade 7: прислівники часу."
   - section: "Підсумок"
-    words: 400
+    words: 500
     points:
       - "Reference table: через + Зн.в. (after a period), за + Зн.в. (within a period),
         перед + Ор.в. (before), після + Р.в. (after), до + Р.в. (until/by), під час
         + Р.в. (during), протягом/упродовж + Р.в. (throughout), на + Зн.в. (for a
         duration), по + М.в. (after — formal)."
-      - "Common Russicisms to avoid: *на протязі, *без десяти шість. Preview: next
-        module — прийменники причини і мети."
+      - "Common Russicisms to avoid: *на протязі (use протягом), *без десяти шість
+        (use за десять хвилин шоста), *у цьому році (use цього року — Р.в.). Also:
+        *слідуючий тиждень (Russicism) — correct: наступний тиждень."
+      - "Self-check: express these in Ukrainian: 'in 3 hours' (через три години),
+        'within 2 days' (за два дні), 'before lunch' (перед обідом), 'during winter'
+        (взимку / протягом зими), 'every Monday' (щопонеділка). Preview: next module
+        — прийменники причини і мети."
 vocabulary_hints:
   required:
     - "прийменник (preposition)"

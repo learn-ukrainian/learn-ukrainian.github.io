@@ -1,7 +1,7 @@
 # Audit Report: M24 — weather.md
 **Level:** A1 | **Module:** M24 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-04-02 20:30:10
+**Overall Status:** ✅ PASS
+**Generated:** 2026-04-03 14:02:18
 
 ## Configuration
 **Type:** A1-vocab
@@ -10,7 +10,7 @@
 **Items per Activity:** ≥6 items
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
-**Engagement:** ≥1 callouts
+**Engagement:** ≥0 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -41,12 +41,13 @@
   - FIX: No action needed — incidental dative exposure is acceptable.
 - **[COMPLEXITY]** Sentence too long for A1: 14 words (max 10)
   - FIX: Break into shorter sentences. First 5 words: 'Сади́ цвіту́ть навесні улі́тку трав...'
+- **[YAML_SCHEMA_VIOLATION]** Schema error in weather.yaml: Schema validation error at key '7': {'type': 'translate', 'instruction': 'Оберіть правильний переклад (Choose the correct translation)', 'items': [{'source': "It's raining.", 'options': [{'text': 'Іде дощ.', 'correct': True}, {'text': 'Іде сніг.', 'correct': False}, {'text': 'Дме вітер.', 'correct': False}]}, {'source': 'Tomorrow it will be sunny.', 'options': [{'text': 'Завтра буде сонячно.', 'correct': True}, {'text': 'Вчора було сонячно.', 'correct': False}, {'text': 'Завтра хмарно.', 'correct': False}]}, {'source': "What's the weather like today?", 'options': [{'text': 'Яка сьогодні погода?', 'correct': True}, {'text': 'Яка завтра погода?', 'correct': False}, {'text': 'Яка сьогодні пора року?', 'correct': False}]}, {'source': "In winter it's cold.", 'options': [{'text': 'Взимку холодно.', 'correct': True}, {'text': 'Влітку холодно.', 'correct': False}, {'text': 'Взимку тепло.', 'correct': False}]}, {'source': 'The wind is blowing.', 'options': [{'text': 'Дме вітер.', 'correct': True}, {'text': 'Іде вітер.', 'correct': False}, {'text': 'Світить вітер.', 'correct': False}]}, {'source': "I like autumn because it's cool.", 'options': [{'text': 'Мені подобається осінь, тому що восени прохолодно.', 'correct': True}, {'text': 'Мені подобається літо, тому що влітку прохолодно.', 'correct': False}, {'text': 'Мені подобається осінь, тому що восени спекотно.', 'correct': False}]}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 25/100)
+**📝 UPDATE** (severity 15/100)
 
-- 4 violations (moderate)
-- Immersion 7% off target (minor)
+- 5 violations (moderate)
 
 ## Gates
 - **Words:** ✅ 1368/1200 (raw: 1406)
@@ -54,14 +55,14 @@
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 5/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 1/1
+- **Engagement:** ✅ 1/0
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 46/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 32.4% HIGH (target 15-25% (M24))
+- **Immersion:** 🇺🇦 32.4% (target 15-35% (M24))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes

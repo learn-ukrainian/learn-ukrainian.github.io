@@ -2,7 +2,7 @@ module: b1-053
 level: B1
 sequence: 53
 slug: participles-active
-version: '3.0'
+version: '3.1'
 title: "Активні дієприкметники"
 subtitle: "Ознака за дією, яку виконує сам предмет"
 focus: grammar
@@ -102,7 +102,7 @@ content_outline:
       - "Reading practice: a short text containing both natural and unnatural active
         participles. Learners identify and correct the calques."
   - section: "Дієприкметник у тексті"
-    words: 700
+    words: 800
     points:
       - "Reading passage: a literary description of nature using participles naturally.
         Example from Голуб: 'Побілілі від снігу гори виднілися вдалині. Зів'яле листя
@@ -114,13 +114,22 @@ content_outline:
       - "Register awareness: active participles are more common in художній and науковий
         styles. In розмовний style, Ukrainians prefer описові звороти: не 'квітучий
         сад' but 'сад, що квітне' in everyday speech."
+      - "Contrastive analysis: compare active participles with synonymous constructions
+        in context. Show how the same idea is expressed differently across registers:
+        квітучий сад (художній) → сад, що квітне (розмовний) → сад у цвіту (neutral).
+        Learners match 6 participle phrases to their register-appropriate equivalents."
   - section: "Підсумок та перехід до M58"
-    words: 400
+    words: 500
     points:
       - "Summary: дієприкметник = ознака за дією. Активні = суб'єкт діє сам. Теперішній
         час: -уч-/-юч-, -ач-/-яч- (обережно з русизмами!). Минулий час: -л- (більш
         природні для української). Self-check: Я можу утворити активні дієприкметники
         ✓/✗, Я розрізняю природні й неприродні форми ✓/✗."
+      - "Consolidation table: formation summary with all suffix groups, their base conditions,
+        and 2-3 model examples each. Active present: -уч-/-юч- (I дієвідміна, квітнути
+        → квітнучий), -ач-/-яч- (II дієвідміна, лежати → лежачий). Active past: -л-
+        (зів'яти → зів'ялий, розквітнути → розквітлий). Natural vs calque quick-reference
+        list."
       - "Preview: M58 — Пасивні дієприкметники. The other side: ознака за дією, якої
         зазнає предмет: прочитана книга, збудований міст. These are far more productive
         and natural in Ukrainian."

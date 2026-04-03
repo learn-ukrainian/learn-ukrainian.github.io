@@ -2,7 +2,7 @@ module: b1-045
 level: B1
 sequence: 45
 slug: vocative-formal
-version: '3.0'
+version: '3.1'
 title: "Кличний відмінок (офіційний)"
 subtitle: "Звертання у формальному, діловому та офіційному контексті"
 focus: grammar
@@ -31,7 +31,7 @@ dialogue_situations:
     motivation: 'Formal vocative: пане Президенте, пані Міністре, панове депутати'
 content_outline:
   - section: "Повторення: кличний відмінок"
-    words: 500
+    words: 600
     points:
       - "Quick review of vocative formation from A2 (Авраменко Grade 6 p.106): І відміна
         тверда: -о (мамо, Миколо, Галино) І відміна м'яка: -е, -є (Надіє, Анастасіє,
@@ -40,8 +40,11 @@ content_outline:
       - "Important patterns learners may have missed: -ко ending: Тарасику, братику
         (diminutive) Nouns in -ець: -цю (хлопцю, молодцю) Names ending in -ій: -ію
         (Василію, Дмитрію) or -іє (Василіє — archaic)"
+      - "ІІІ відміна: -е (радосте, любове, молоде) Plural vocative = plural nominative
+        for most nouns (друзі!, колеги!, студенти!). Practice: form vocative for 15
+        names covering all declension classes."
   - section: "Офіційні звертання"
-    words: 800
+    words: 900
     points:
       - "From Литвінова Grade 6 p.141: пан + ім'я: пане Євгене, пане Миколо пані +
         ім'я: пані Оксано (but also: пані Оксана — Н.в. tolerated) добродій → добродію,
@@ -54,9 +57,12 @@ content_outline:
         лікарю Петренко But: друже Іване (both vocative when both are common or given
         names)"
       - "шановний/шановна: шановний Іване Петровичу, шановна Маріє Степанівно. In
-        letters: Шановний пане Директоре! Note: шановний takes Н.в. form (not *шановному)."
+        letters: Шановний пане Директоре! Note: шановний takes Н.в. form (not *шановному).
+        Profession + name address (§4.2.2.7): професоре Олександре, лікарю Петре,
+        вчителько Ганно — when both words are common/given names, both take vocative.
+        Compare: лікарю Петренко (title + surname — only first in vocative)."
   - section: "Кличний відмінок у діловому листуванні"
-    words: 700
+    words: 800
     points:
       - "Business letter opening: Шановний пане Директоре! Шановна пані Головою! Шановні
         колеги! (plural — Н.в. and Кл.в. coincide) Вельмишановний добродію! (very
@@ -64,6 +70,10 @@ content_outline:
       - "Email format: Добрий день, Олександре Миколайовичу! Вітаю, пане Петре! Шановна
         Маріє Степанівно, пишу з приводу... The vocative is MANDATORY in Ukrainian
         formal address — using Н.в. (*Олександр Миколайович!) sounds unnatural."
+      - "Closing formulas with vocative echo: 'З повагою, Олександр Петренко' (formal
+        close — no vocative). But: 'Чекаю на Вашу відповідь, Іване Олексійовичу.'
+        (vocative in the closing sentence — direct address). Also: 'Дякую Вам, шановна
+        Маріє Степанівно, за допомогу.'"
       - "Practice: write three email openings for different scenarios: to a teacher,
         to a business partner, to a government official. Each must use correct vocative
         forms."
@@ -80,7 +90,7 @@ content_outline:
         languages. Using it correctly signals respect and cultural competence. NOT
         using it (substituting Н.в.) sounds foreign or rude in formal contexts."
   - section: "Практика в контексті"
-    words: 700
+    words: 800
     points:
       - "Role play: formal meeting. Learners address each other using full formal
         address: ім'я + по батькові in vocative. 'Шановний Андрію Олексійовичу, дозвольте
@@ -92,12 +102,21 @@ content_outline:
       - "Error analysis: common mistakes by L2 speakers: *Шановний Іван Петрович!
         (should be Іване Петровичу) *Пані Оксано Петрівно! (correct — both in vocative)
         *Докторе Ковальчуку! (should be Ковальчук — прізвище stays Н.в.)"
+      - "Informal vs formal register comparison: Informal: Оксано, допоможи! Neutral:
+        Пані Оксано, чи можете допомогти? Formal: Шановна Оксано Петрівно, звертаюся
+        до Вас з проханням... Learners rewrite the same request in all three registers,
+        noting how vocative form stays the same but surrounding language changes."
   - section: "Підсумок"
-    words: 300
+    words: 400
     points:
       - "Vocative decision tree: Informal: Оксано! Андрію! Neutral: пане/пані + ім'я
         в Кл.в. Formal: Шановний(-а) + пане/пані + посада/ім'я + по батькові в Кл.в.
         Title + прізвище: тільки перше слово в Кл.в."
+      - "Punctuation with vocative (Авраменко Grade 8 p.133): Vocative address is
+        separated by comma(s): Оксано, підійди сюди. Шановний Іване Петровичу, дозвольте
+        звернутися до Вас. If the address is at the beginning with exclamation —
+        capitalize next word: Друзі! Сьогодні важливий день. If address is emphatic
+        with О: О Україно! О рідний краю!"
       - "Preview: next modules — часові прийменники, причина і мета."
 vocabulary_hints:
   required:

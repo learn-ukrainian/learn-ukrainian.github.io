@@ -2,7 +2,7 @@ module: b1-084
 level: B1
 sequence: 84
 slug: comprehensive-b1-review
-version: '3.0'
+version: '3.1'
 title: "Загальне повторення B1"
 subtitle: "Від фонетики до аргументації — повний огляд граматики B1"
 focus: review
@@ -31,7 +31,7 @@ dialogue_situations:
       presentation'
 content_outline:
   - section: "Фонетика та морфологія"
-    words: 600
+    words: 650
     points:
       - "Quick review of metalanguage: звук/літера, голосний/приголосний, дзвінкий/глухий/сонорний,
         наголос, транскрипція. Будова слова: корінь, префікс, суфікс, закінчення.
@@ -45,8 +45,12 @@ content_outline:
         each subclass."
       - "Diagnostic: learners complete exercises covering all Phase 1-2 topics, rating
         their confidence per area."
+      - "Error hotspot review: the most common Phase 1-2 errors across B1 learners:
+        wrong чергування in stem (*рокУ → рОку), wrong gender for abstract nouns (*розмов
+        → розмова is feminine), wrong plural for neuter nouns (*місти → міста). Targeted
+        practice on these specific pain points."
   - section: "Дієслова та рух"
-    words: 650
+    words: 700
     points:
       - "Умовний та наказовий способи (Phase 3): Реальна i нереальна умова (якщо vs
         якби). Наказовий з хай/нехай, ввічливі прохання. Зворотні дієслова: -ся/-сь
@@ -61,7 +65,7 @@ content_outline:
       - "Diagnostic: learners produce verb forms in conditional, imperative, reflexive,
         and motion contexts."
   - section: "Порівняння та словотвір"
-    words: 550
+    words: 600
     points:
       - "Ступені порівняння прикметників: Проста: важчий, найважчий. Складена: більш
         важкий, найбільш важкий. Суплетивні: гарний-кращий, поганий-гірший. Прислівники:
@@ -71,7 +75,7 @@ content_outline:
         words."
       - "Diagnostic: comparison exercises and word formation tasks."
   - section: "Відмінки, числівники, займенники"
-    words: 650
+    words: 700
     points:
       - "Нюанси відмінків: Родовий: частина від цілого, об'єкт бажання, дати. Давальний:
         суб'єкт стану (мені не спиться), вік. Орудний: характеристика за професією,
@@ -83,7 +87,7 @@ content_outline:
         (себе), неозначені. Practice: decline числівники, use advanced pronouns."
       - "Diagnostic: mixed case/numeral/pronoun exercises."
   - section: "Дієприкметники, синтаксис, стилі"
-    words: 650
+    words: 700
     points:
       - "Дієприкметники та дієприслівники (Phase 7): Активні i пасивні дієприкметники,
         звороти. Дієприслівники -учи/-ючи (НДВ), -вши/-ши (ДВ). Practice: expand sentences
@@ -97,7 +101,7 @@ content_outline:
       - "Diagnostic: integrated exercises combining syntax, register, and grammar
         from Phases 7-9."
   - section: "Iнтегроване завдання та самодіагностика"
-    words: 500
+    words: 650
     points:
       - "Comprehensive text analysis: a Ukrainian text (250-300 words) containing
         grammar from all 10 phases. Learners identify: чергування, вид дієслова, рухові
@@ -107,6 +111,15 @@ content_outline:
         — впевнено? Phase 3-4: дієслова, рухові — впевнено? Phase 5: порівняння, словотвір
         — впевнено? Phase 6: відмінки, числівники — впевнено? Phase 7-9: дієприкметники,
         синтаксис, стилі — впевнено? Learners create a personalized review plan."
+      - "Writing diagnostic: learners write a short text (150 words) on 'Чому я вчу
+        українську мову,' without looking at any notes. After writing, they self-analyze:
+        which grammar structures did I use? Which did I avoid? The avoided structures
+        are the ones needing review. This metacognitive exercise is more revealing than
+        any quiz."
+      - "Personalized review plan template: learners fill in: Мої сильні сторони:
+        ___. Мої слабкі місця: ___. Модулі для повторення: ___. Мій план на тиждень:
+        ___. This concrete planning step ensures the review module produces actionable
+        outcomes."
       - "Preview: Екзамен (M89-M90) — practice exams testing all B1 skills. Use the
         self-diagnostic to focus review on weak areas."
 vocabulary_hints:

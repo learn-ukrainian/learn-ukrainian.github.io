@@ -2,7 +2,7 @@ module: b1-075
 level: B1
 sequence: 75
 slug: text-compression
-version: '3.0'
+version: '3.1'
 title: "Абревіатури та скорочення"
 subtitle: "Складноскорочені слова, абревіатури, графічні скорочення"
 focus: grammar
@@ -31,7 +31,7 @@ dialogue_situations:
       compressed text'
 content_outline:
   - section: "Складноскорочені слова та абревіатури"
-    words: 700
+    words: 800
     points:
       - "Definition from Заболотний Grade 6 p.71: Складноскорочені — слова, які утворено
         складанням початкових частин слів, початкових звуків чи літер. Різновид складних
@@ -53,8 +53,13 @@ content_outline:
         слова from given словосполучення: міська рада → міськрада, головний бухгалтер
         → головбух, заробітна плата → зарплата, технічне завдання → техзавдання. And
         абревіатури: Українська повстанська армія → УПА, Мала академія наук → МАН."
+      - "Wartime and military абревіатури essential for understanding Ukrainian news:
+        ЗСУ (Збройні сили України), ТрО (Територіальна оборона), ППО (протиповітряна
+        оборона), ОК (оперативне командування), ДСНС (Державна служба з надзвичайних
+        ситуацій). These appear daily in Ukrainian media and are essential for any
+        Ukrainian language user to decode."
   - section: "Граматичні особливості абревіатур"
-    words: 600
+    words: 700
     points:
       - "Рід абревіатур — how to determine grammatical gender: Рід визначаємо за головним
         словом: ООН — жіночий рід (Організація), ЗМI — середній рід? Ні — множина
@@ -71,8 +76,12 @@ content_outline:
       - "Правопис: абревіатури write with великі літери without крапок: ООН, МВФ,
         ЗСУ (not О.О.Н. or М.В.Ф.). Складноскорочені слова from початкових частин:
         з малої літери (спецвипуск, лісгосп) unless they are власні назви (Кабмін)."
+      - "Practice: learners read a short Ukrainian news paragraph containing 5-6
+        абревіатури. Tasks: 1. Розшифрувати кожну абревіатуру. 2. Визначити рід. 3.
+        Написати речення з правильним узгодженням. This integrates all grammatical rules
+        in authentic reading context."
   - section: "Графічні скорочення"
-    words: 600
+    words: 700
     points:
       - "Rules from Глазова Grade 10 p.143: Types of графічні скорочення: 1. Усічення:
         вул. (вулиця), м. (місто), р. (рік/ріка), с. (село/сторінка). 2. Відкидання
@@ -90,8 +99,12 @@ content_outline:
       - "Reading practice: a formal Ukrainian document (оголошення or довідка) containing
         абревіатури and графічні скорочення. Learners decode all abbreviated forms
         and rewrite the document in full."
+      - "Academic скорочення for university context: проф. (професор), доц. (доцент),
+        канд. (кандидат), д-р (доктор), каф. (кафедра), ф-т (факультет). Learners
+        who plan to study at a Ukrainian university need these for understanding розкладів,
+        документів, and academic texts."
   - section: "Числа, дати та вимірювання"
-    words: 600
+    words: 700
     points:
       - "Dates in Ukrainian: Повна форма: двадцять друге березня дві тисячі двадцять
         шостого року. Скорочена: 22 березня 2026 р. or 22.03.2026. Родовий відмінок
@@ -106,8 +119,12 @@ content_outline:
         Вага: 70 кг (сімдесят кілограмів). Відстань: 450 км (чотириста п'ятдесят кілометрів).
         Practice: learners describe objects and distances using числівники with correct
         узгодження."
+      - "Historical dates important for Ukrainian identity: 24.08.1991 — День Незалежності,
+        22.01.1918 — Акт Злуки, 28.06.1996 — День Конституції. Practice: write these
+        dates прописом with correct родовий відмінок for month names. Cultural context
+        connects number formatting to Ukrainian history."
   - section: "Абревіатури в повсякденному житті"
-    words: 550
+    words: 650
     points:
       - "Абревіатури в новинах та ЗМI: Learners read a short news excerpt containing
         ЗСУ, ООН, ЄС, МЗС (Міністерство закордонних справ), ВР (Верховна Рада) and
@@ -121,13 +138,16 @@ content_outline:
         verbs). Important: Ukrainian internet language should remain Ukrainian, not
         default to Russian or English abbreviations."
   - section: "Підсумок: мова скорочень"
-    words: 350
+    words: 450
     points:
       - "Complete reference table: types of скорочення, правопис rules, граматичні
         особливості. Quick-reference for абревіатури studied."
       - "Self-check in Ukrainian: 1. Розшифруйте: ЗСУ, ООН, ЗМI, ЄС, ЦНАП. 2. Визначте
         рід: ООН (вона), МВФ (він), ЗСУ (вони). 3. Напишіть адресу з правильними скороченнями.
         4. Запишіть дату прописом: 14.08.1991."
+      - "Common abbreviation errors and their corrections: *О.О.Н. → ООН (no dots
+        in абревіатурах), *5 кг. → 5 кг (no dot after одиниці виміру), *22 березень →
+        22 березня (родовий відмінок). Learners self-correct using the reference table."
       - "Preview of next module: Подвійне заперечення (M80) — the Ukrainian system
         of double (and triple) negation, which differs fundamentally from English."
 vocabulary_hints:

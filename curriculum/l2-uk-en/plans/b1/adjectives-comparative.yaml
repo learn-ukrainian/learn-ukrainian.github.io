@@ -2,7 +2,7 @@ module: b1-034
 level: B1
 sequence: 34
 slug: adjectives-comparative
-version: '3.0'
+version: '3.1'
 title: "Вищий ступінь прикметників"
 subtitle: "Проста та складена форми вищого ступеня порівняння"
 focus: grammar
@@ -31,7 +31,7 @@ dialogue_situations:
       нижчий'
 content_outline:
   - section: "Що таке ступені порівняння?"
-    words: 500
+    words: 550
     points:
       - "Introduction: learners already use basic adjectives from A1-A2. Now they
         learn to express MORE and LESS. Ukrainian has two ступені порівняння: вищий
@@ -45,6 +45,10 @@ content_outline:
         expressing qualities that can vary in degree. From Заболотний Grade 6 p.137:
         adjectives expressing absolute qualities (сліпий, лисий, босий, голий, живий,
         порожній) cannot."
+      - "State Standard §4.3.1 context: synthetic (найкращий) and analytic (більш
+        цікавий) forms are both standard Ukrainian. Learners must master both to read
+        formal texts and speak naturally. This module covers вищий ступінь; найвищий
+        follows in M35."
   - section: "Проста форма вищого ступеня"
     words: 900
     points:
@@ -63,7 +67,7 @@ content_outline:
       - "Reading practice: a dialogue comparing two cities, using простa форма extensively.
         Learners identify all comparatives and their base forms."
   - section: "Складена форма вищого ступеня"
-    words: 700
+    words: 750
     points:
       - "Formation from Литвінова Grade 6 p.198: більш/менш + початкова форма прикметника.
         більш цікавий, менш складний, більш яскравий, менш відомий. The adjective
@@ -75,8 +79,11 @@ content_outline:
       - "Common error: mixing forms (*більш сильніший is WRONG). Either сильніший
         OR більш сильний, never both. From Авраменко Grade 11 p.29: 'самий кращий'
         is a Russicism — correct: найкращий."
+      - "Register practice (Заболотний Grade 8 p.21): rewrite 6-8 informal sentences
+        using складена forms for formal register, and vice versa. E.g., 'Ця задача
+        складніша' → 'Ця задача є більш складною' (academic style)."
   - section: "Порівняльні конструкції"
-    words: 550
+    words: 650
     points:
       - "Three ways to express 'than' in Ukrainian: 1. за + Знахідний відмінок: Петро
         вищий за Марію. 2. від + Родовий відмінок: Петро вищий від Марії. 3. ніж +
@@ -85,6 +92,10 @@ content_outline:
       - "Special constructions: чим... тим... (the... the...): Чим далі, тим цікавіше.
         набагато + comparative: набагато сильніший. трохи/дещо/значно + comparative:
         трохи молодший, значно кращий."
+      - "Case agreement in comparison constructions (Заболотний Grade 8 p.19): the
+        comparative adjective agrees with its noun in gender, number, case — Я бачив
+        кращу книжку (Зн.в., f.). Він розмовляв із старшим братом (Ор.в., m.). Practice:
+        8-10 sentences requiring declined comparatives within different case contexts."
       - "Practice passage: a product review comparing items at a market, using all
         three comparison constructions and various degree modifiers."
   - section: "Які прикметники не мають ступенів порівняння?"
@@ -99,13 +110,29 @@ content_outline:
       - "Creative usage note from Авраменко Grade 11 p.29: In advertising and informal
         speech, relative adjectives sometimes form humorous comparatives: 'найкрабовіші
         палички.' This is a deliberate stylistic device, not standard grammar."
+  - section: "Порівняння в українських прислів'ях і фразеології"
+    words: 200
+    points:
+      - "Ukrainian proverbs that use comparative structures (Заболотний Grade 6 p.138):
+        'Що темніша ніч, то ясніші зорі.' 'Свій хліб смачніший за чужий.' 'Старший
+        розумом, а не віком.' These fixed expressions give learners natural-sounding
+        models and cultural insight into how Ukrainians think about comparison."
+      - "Practice: learners match proverbs to their meanings, then use the чим...тим
+        and за constructions to create their own comparison sentences modeled on these
+        patterns."
   - section: "Підсумок і практика"
-    words: 350
+    words: 450
     points:
       - "Summary table: проста (-іш-/-ш-) vs складена (більш/менш), all alternation
-        patterns, comparison constructions (за/від/ніж)."
+        patterns, comparison constructions (за/від/ніж). Visual diagram showing the
+        two formation paths with decision tree: якісний прикметник → проста (default)
+        or складена (formal/awkward sound)."
       - "Self-check: Утворіть вищий ступінь порівняння: гарячий, близький, широкий,
-        тихий, дешевий, тяжкий, ясний. Preview: next module covers найвищий ступінь."
+        тихий, дешевий, тяжкий, ясний. For each, specify which suffix (-іш- or -ш-)
+        applies and whether consonant alternation occurs."
+      - "Preview: next module covers найвищий ступінь — how Ukrainian adds the prefix
+        най- to build superlatives, plus the unique що-/як- intensification system
+        that has no English equivalent."
 vocabulary_hints:
   required:
     - "вищий ступінь (comparative degree)"

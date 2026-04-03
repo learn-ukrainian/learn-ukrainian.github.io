@@ -36,9 +36,11 @@ class TestConfig:
         assert isinstance(PID_DIR, Path)
         assert "pids" in str(PID_DIR)
 
-    def test_cli_paths_are_strings(self):
-        from scripts.ai_agent_bridge._config import CLAUDE_CLI, GEMINI_CLI
-        assert isinstance(CLAUDE_CLI, str)
+    def test_cli_paths_are_correct_types(self):
+        from scripts.ai_agent_bridge._config import CLAUDE_CMD, GEMINI_CLI
+        assert isinstance(CLAUDE_CMD, list)
+        assert CLAUDE_CMD[0] == "npx"
+        assert "@anthropic-ai/claude-code" in CLAUDE_CMD[1]
         assert isinstance(GEMINI_CLI, str)
 
     def test_parent_env_has_gemini_session(self):

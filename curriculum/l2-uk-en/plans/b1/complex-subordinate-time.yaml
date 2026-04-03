@@ -2,7 +2,7 @@ module: b1-065
 level: B1
 sequence: 65
 slug: complex-subordinate-time
-version: '3.0'
+version: '3.1'
 title: "Часові речення"
 subtitle: "Одночасність і різночасність: коли, поки, доки, щойно"
 focus: grammar
@@ -29,7 +29,7 @@ dialogue_situations:
     motivation: 'Time clauses: коли, після того як, поки, щойно in life narration'
 content_outline:
   - section: "Підрядні обставинні часу"
-    words: 650
+    words: 750
     points:
       - "Definition: підрядні обставинні часу відповідають на питання коли? відколи?
         доки? як довго? They relate to the main clause AS A WHOLE (not to a specific
@@ -42,7 +42,7 @@ content_outline:
         пішов дощ, ми сховалися. (before — temporal frame set first) Ми сховалися,
         коли пішов дощ. (after — result then explanation)"
   - section: "Одночасність: коли, поки"
-    words: 650
+    words: 750
     points:
       - "Коли for simultaneity (imperfective verbs in both clauses): Коли ми йшли
         парком, ми розмовляли. (both ongoing at the same time) Коли сонце заходить,
@@ -55,7 +55,7 @@ content_outline:
         concise) The clause is clearer when subjects differ: Коли мама готувала, тато
         прибирав. (different subjects — clause needed)"
   - section: "Різночасність: коли, щойно, після того як, перш ніж"
-    words: 700
+    words: 750
     points:
       - "Коли for sequence (perfective verb in підрядне): Коли ми прийшли додому,
         почався дощ. (arrived → then rain started) Коли він закінчив роботу, пішов
@@ -71,7 +71,7 @@ content_outline:
         її. = Прочитавши книгу, я віддав її. Practice: 8 sentences — express the same
         temporal relation using both a часове речення and a дієприслівник."
   - section: "Дієвидові та часові кореляції"
-    words: 550
+    words: 650
     points:
       - "Aspect determines the temporal relationship: Одночасність: недок. + недок.
         — Коли я читав, вона спала. Послідовність: док. + док. — Коли я прочитав,
@@ -82,7 +82,7 @@ content_outline:
         (imperative in main)"
       - "Practice: choose correct aspect and tense in 8 temporal constructions."
   - section: "Практика: часові речення в контексті"
-    words: 600
+    words: 650
     points:
       - "Reading passage: a narrative with dense temporal structure. Learners identify
         all часові підрядні, determine одночасність vs різночасність, and note conjunction
@@ -92,7 +92,7 @@ content_outline:
       - "Production: write 6-8 sentences about your day using different temporal conjunctions.
         At least 2 одночасність, 2 різночасність."
   - section: "Підсумок та перехід до M70"
-    words: 350
+    words: 450
     points:
       - "Summary: часові = коли? відколи? доки? Одночасність (поки, коли + недок.)
         vs різночасність (щойно, після того як, перш ніж, коли + док.). Self-check:

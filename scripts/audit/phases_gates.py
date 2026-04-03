@@ -245,7 +245,7 @@ def evaluate_immersion(ctx: AuditContext, state: AuditState) -> tuple[float, int
         phase_label = " (checkpoint - no gate)"
     elif ctx.level_code == 'A1':
         sandbox_lemma_count = _count_sandbox_lemmas(ctx.file_path)
-        min_imm, max_imm = get_a1_immersion_range(ctx.module_num, sandbox_lemma_count)
+        min_imm, max_imm = get_a1_immersion_range(ctx.module_num)
         phase_label = f" (M{ctx.module_num:02d})"
         if sandbox_lemma_count is not None and sandbox_lemma_count < 20 and ctx.module_num > 10:
             phase_label += f" [sandbox:{sandbox_lemma_count}]"

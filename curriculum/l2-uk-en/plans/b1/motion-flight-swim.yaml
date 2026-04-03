@@ -2,7 +2,7 @@ module: b1-030
 level: B1
 sequence: 30
 slug: motion-flight-swim
-version: '3.0'
+version: '3.1'
 title: Летіти, пливти
 subtitle: Дієслова руху в повітрі та на воді — з усіма префіксами
 focus: grammar
@@ -109,6 +109,15 @@ content_outline:
       - 'Quick contrastive examples: Літак летить (literal — the plane is flying).
         Час летить (figurative — time flies). Корабель пливе (literal — the ship is
         sailing). Думки пливуть (figurative — thoughts drift).'
+      - 'Ukrainian idioms and collocations with летіти/пливти: Гроші летять (money
+        disappears fast). Все пливе перед очима (everything is blurry/spinning). Пливти
+        за течією (go with the flow). These are high-frequency expressions that learners
+        will encounter in everyday Ukrainian. Compare with English equivalents to show
+        where metaphors overlap and where they diverge.'
+      - 'Practice: learners sort 10-12 sentences into literal vs figurative categories,
+        then explain what the figurative meaning is in each case. Extension: write 3-4
+        original sentences using летіти or пливти figuratively in contexts from their
+        own life — Мої канікули летять! Дні до іспиту пливуть повільно.'
   - section: 'Підсумок: повітряний та водний рух'
     words: 300
     points:

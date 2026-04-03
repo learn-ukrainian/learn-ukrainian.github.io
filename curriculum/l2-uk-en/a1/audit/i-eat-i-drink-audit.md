@@ -1,7 +1,7 @@
 # Audit Report: M37 — i-eat-i-drink.md
 **Level:** A1 | **Module:** M37 | **Phase:** A1.6 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-02 20:30:00
+**Generated:** 2026-04-03 14:02:08
 
 ## Configuration
 **Type:** A1-grammar
@@ -10,7 +10,7 @@
 **Items per Activity:** ≥6 items
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
-**Engagement:** ≥1 callouts
+**Engagement:** ≥0 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -36,11 +36,13 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'feminine nouns...'.
   - FIX: Vary sentence structure.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in i-eat-i-drink.yaml: Schema validation error at key '8': {'type': 'unjumble', 'instruction': 'Складіть правильне речення зі слів (Put the words in the correct order)', 'items': [{'words': ['їм', 'Я', 'рибу'], 'correct_order': ['Я', 'їм', 'рибу']}, {'words': ["п'є", 'каву', 'Вона'], 'correct_order': ['Вона', "п'є", 'каву']}, {'words': ['їдять', 'кашу', 'Вони'], 'correct_order': ['Вони', 'їдять', 'кашу']}, {'words': ['воду', 'Ми', "п'ємо"], 'correct_order': ['Ми', "п'ємо", 'воду']}, {'words': ['хліб', 'Він', 'їсть'], 'correct_order': ['Він', 'їсть', 'хліб']}, {'words': ["п'єш", 'Ти', 'сік'], 'correct_order': ['Ти', "п'єш", 'сік']}, {'words': ['картоплю', 'їсте', 'Ви'], 'correct_order': ['Ви', 'їсте', 'картоплю']}, {'words': ['молоко', 'Вони', "п'ють"], 'correct_order': ['Вони', "п'ють", 'молоко']}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ⚠️ 1132/1200 (raw: 1328) (68 short)
@@ -48,14 +50,14 @@
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 1/1
+- **Engagement:** ✅ 1/0
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 37/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 23.4% (target 20-35% (M37))
+- **Immersion:** 🇺🇦 23.4% (target 20-40% (M37))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes

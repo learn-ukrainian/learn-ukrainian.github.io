@@ -1,409 +1,210 @@
 # NON-NEGOTIABLE RULES
 
-**READ THIS FIRST. BEFORE ANY OTHER INSTRUCTIONS.**
+All rules are hard requirements. Partial compliance = failure.
 
-## Absolute Requirements - NO EXCEPTIONS
+<critical>
 
-### 1. Word Count Targets
+## Quick Reference
 
-**NEVER negotiate word counts down.**
+| When... | Do this |
+|---|---|
+| Building content | Check `config.py` target_words FIRST — never hardcode from memory |
+| Module under word target | Expand content to meet target. Never lower the target |
+| Audit gate shows ❌ | Fix it. ALL gates must be GREEN or the module fails |
+| Fixing a module | Reviewer provides `<fixes>` — apply deterministically (rule 4) |
+| Reviewing content | Cite SPECIFIC examples from the text, or the review is invalid (rule 6) |
+| Plan can't be met | STOP building. Report to user. Propose new plan version (rule 7) |
+| Review verdict REVISE | Reviewer outputs `<fixes>` find/replace pairs → pipeline applies them (rule 4) |
+| Creating JSONL/data | Add ingestion flag + update tracking doc in SAME commit (rule 11) |
 
-Word targets (from `config.py` v2026-02-15 — if stale, re-read config.py):
-- A1 modules: **2000 words minimum**
-- A2 modules: **3000 words minimum**
-- B1+ Regular modules: **4000 words minimum**
-- Seminar tracks (HIST, BIO, ISTORIO, LIT, C2, OES, RUTH): **5000 words minimum**
+</critical>
 
-**If a module is under target:**
+---
 
-- You MUST expand it to meet the target
-- You do NOT ask permission to lower the target
-- You do NOT argue that "it's good enough"
-- **FIX IT OR FAIL**
+## 1. Word Count Targets (Source of Truth: `config.py`)
 
-### 2. Audit Gates - ALL Must Pass
+<critical>
 
-**The audit has gates. ALL gates must be GREEN (✅) or the module FAILS.**
+Expand content to meet targets. Never lower targets to match content.
 
-**Common gates:**
+**Always read config.py** before generating content_outline or word budgets: `.venv/bin/python -c "import sys; sys.path.insert(0,'scripts'); from audit.config import LEVEL_CONFIG; print(LEVEL_CONFIG['{LEVEL}']['target_words'])"`
 
-- ✅ Words: Must meet target
-- ✅ Activities: Must meet minimum count
-- ✅ Unique_types: Must have variety
-- ✅ Engagement: Must have enough engagement boxes
-- ✅ Vocab: Must have enough vocabulary
-- ✅ Naturalness: Must score 8+/10
+**Word targets:** A1=1200, A1-cp=1000, A2=2000, A2-cp=1500, B1/B1-cp/B2/B2-cp/B2-cap/C1/C1-cp/C2-cp=4000, C2=5000, HIST/ISTORIO/BIO/LIT/OES/RUTH=5000. If stale, re-read `scripts/audit/config.py`.
 
-**If ANY gate shows ❌:**
+**Lesson learned:** Jan 2026 — 270 ISTORIO plans generated at 3500 instead of 4000 because agent hardcoded from memory instead of reading config.py.
 
-- You MUST fix it until it shows ✅
-- You do NOT ask permission to skip it
-- You do NOT argue the gate is "too strict"
-- **FIX IT OR FAIL**
+</critical>
 
-### 3. Section-Level Word Targets (Flexible Guidance)
+---
 
-**CRITICAL: Section targets are GUIDANCE, not hard limits.**
+## 2. Audit Gates (Source of Truth: `scripts/audit/gates.py` + `config.py`)
 
-**What MUST be met:**
+All BLOCKING gates must be GREEN (✅) or the module FAILS. Non-blocking gates produce WARN/INFO only.
 
-1. **Total word count** ≥ `word_target` (e.g., 4000 for HIST)
-2. Each section within **±10% tolerance** of its target (or better)
+### Blocking gates (FAIL = module fails)
 
-**What is FLEXIBLE:**
+| Gate | Requirement | Notes |
+|---|---|---|
+| Words | ≥ target from config.py | FAIL if >100 short, WARN if ≤100 short |
+| Activities | ≥ `min_activities` from config.py | Currently 0 for all levels (dropped Mar 2026) |
+| Density | Each activity ≥ `min_items_per_activity` | Only blocks when `min_activities` > 0 |
+| Unique types | ≥ `min_types_unique` from config.py | |
+| Priority types | Uses priority activity types from config.py | Non-blocking if plan has `activity_hints` |
+| Engagement | ≥ `min_engagement` callouts (:::tip, :::note) | |
+| Structure | Required sections present (Summary, Vocabulary) | A2+ also requires Activities header/sidecar |
+| Lint | Zero format errors | |
+| Pedagogy | Zero level-inappropriate violations | |
+| Immersion | Within min/max range from config.py | ±3% tolerance before FAIL |
+| Richness | Richness score ≥ threshold | B1+ only |
+| Persona | persona.voice + persona.role in plan YAML | V5 only — skipped for V6 (N/A) |
 
-- You can redistribute words between sections
-- One section can be 20% over if another is 10% under
-- As long as **total ≥ word_target** and no section is >10% under
+### Non-blocking gates (WARN/INFO only)
 
-Example from meta YAML:
+| Gate | Behavior |
+|---|---|
+| Naturalness | PENDING = INFO (non-blocking). Score ≥ 8 after review = PASS. Score < 8 = FAIL. Only blocks once a review has been filed. |
+| Vocab | SOFT TARGET since Issue #340 — WARN, not FAIL |
+| Audio | Informational only (presence of audio links) |
+| Grammar | Informational only (grammar validation file) |
+| Activity quality | Informational only (B1+ quality report) |
+| Content-heavy | WARN only for seminar tracks (activity count, content recall) |
+| Research alignment | WARN only (content freshness vs. research file) |
 
-```yaml
-word_target: 4000
-content_outline:
-  - section: 'Шлях до унії'
-    words: 800
-  - section: 'Наслідки'
-    words: 600
-# Sections sum to 4000 (matches word_target)
+### Key facts
+
+1. `min_activities` is 0 for all levels as of Mar 2026 — effectively disabled
+2. Vocab is a soft target (WARN) not a hard gate (FAIL)
+3. Naturalness PENDING is non-blocking — it only blocks when a review scores < 8
+4. ALL thresholds come from `scripts/audit/config.py` — the single source of truth
+5. Fix every failing BLOCKING gate. No exceptions, no "good enough."
+
+---
+
+## 3. Section-Level Word Targets (Flexible Guidance)
+
+Section targets are guidance, not hard limits.
+
+**Hard requirements:**
+1. **Total word count** ≥ `word_target`
+2. Each section within **±10% tolerance** of its target
+
+**Flexible:** Redistribute words between sections freely. One section 20% over is fine if no section is >10% under.
+
+**Priority:** Total word count first → fix sections >10% under → don't worry about over-target sections.
+
+---
+
+## 4. Review + Fix Loop (V6 Pipeline)
+
+V6 uses **reviewer-as-fixer**: Gemini reviews, finds issues, outputs `<fixes>` with exact find/replace pairs. Pipeline applies them deterministically — no LLM regeneration, no rewriting from scratch.
+
+**Flow:**
+1. Writer generates content → ENRICH adds tabs/словнік → REVIEW
+2. If REVISE: reviewer outputs `<fixes>` → pipeline applies find/replace → re-ENRICH → re-REVIEW
+3. Max 2 fix rounds. Score should go UP (9.0→9.4→9.7), never down.
+4. If still failing after 2 rounds → problem is in the PROMPT or PLAN, not the content.
+
+**Critical:** Reviewer sees PROSE ONLY (enrichment stripped before review). Deterministic word count injected into review prompt. Reviewer must NOT estimate word count — use the injected number.
+
+**Never rewrite from scratch.** Gemini proved: "FROM SCRATCH" rewrites degrade content (9.6→9.2→8.4). PATCH fixes only what's broken.
+
+---
+
+## 5. Quality Standards
+
+| Requirement | Threshold |
+|---|---|
+| Review score | 9+/10 target (8+ minimum PASS) |
+| Russian ghost words | Zero (кот → кіт, хорошо → добре) |
+| Dialogues | Natural situations from textbooks — not invented. Someone searches for keys, not interrogation. |
+| Vocabulary | All words VESUM-verified. Writer generates словнік YAML with contextual translations. |
+| Plans | Must have `references` (textbook + ULP links). No plan ships without references. |
+| Stress marks | Added by deterministic annotator AFTER review, not by writer. |
+
+Rewrite any text that fails naturalness. No robotic or disconnected prose.
+
+---
+
+## 6. LLM Self-Validation — Cite Evidence or It's Invalid
+
+Reviews must cite SPECIFIC examples from the actual content.
+
+**FAKE:** `✅ PASS | High-style analytical register with historical terms.` — no evidence, invalid.
+**HONEST:** `✅ PASS | Case endings correct ("Данилом Галицьким" — instrumental). Aspects: "зумів об'єднати" (pf), "прагнула" (impf). No Russianisms.` — cites real examples.
+
+Every review must: read content first, verify grammar with examples, list vocabulary found, check facts with evidence. No evidence = failed review.
+
+---
+
+## 7. Plan Versioning (Architecture v2.1)
+
+Plans in `plans/` are the source of truth. They require user approval to change.
+
+> `plans/{level}/{slug}.yaml` → VERSIONED (immutable without approval)
+
+**When build can't meet plan:** STOP → report "Plan requires X but Y isn't achievable because Z" → propose new plan version → user approves → backup old plan as `.bak` → write new version with bumped `version` field.
+
+**Never** silently modify plan files, lower word_target to match output, or skip the backup step.
+
+**Exception**: The pipeline may auto-fix plan `vocabulary_hints` entries that fail VESUM verification. Changes are version-bumped and logged in `plan_fixes`. Content outline, objectives, and word targets remain immutable.
+
+---
+
+## 8. Batch Fixes Within Module
+
+When fixing a module, diagnose ALL issues first, fix ALL at once, verify ONCE.
+
+**Wrong** (O(3N) tokens):
+```
+Read → Fix A → Audit → Read → Fix B → Audit → Read → Fix C → Audit
 ```
 
-**Valid redistribution:**
-
+**Correct** (O(3) tokens):
 ```
-Section A: 900 / 800 ✅ (+100, 12.5% over - OK)
-Section B: 500 / 600 ✅ (-100, 16.7% under - needs expansion to ≥540)
-TOTAL: 1400 / 1400 ✅
-```
-
-**When section is >10% under target (audit fails):**
-
-- Expand that section with new content, OR
-- Redistribute content from over-target sections
-
-**Priority:**
-
-1. Meet total word count first
-2. Fix sections >10% under target
-3. Don't worry about sections slightly over target (content depth is good)
-
-### 4. Phase D Loop (Review → Fix → Pass)
-
-**Phase D is a loop: Review → Fix → Review → Fix until PASS.**
-
-**You do NOT:**
-
-- Stop when "most" gates pass
-- Ask user if "good enough"
-- Suggest lowering targets
-- Give up after 1-2 iterations
-
-**You DO:**
-
-- Loop until ALL gates show ✅
-- Fix every violation completely
-- Rebuild sections if needed (>3 violations)
-- Work until module PASSES fully
-
-### 5. Quality Standards
-
-**These are requirements, not suggestions:**
-
-- Naturalness score: **8+/10 minimum** (9-10 preferred)
-- No Russian ghost words (кот → кіт, хорошо → добре)
-- No robotic/disconnected text
-- Engagement boxes: minimum per level (B2: 6+, C1: 7+)
-- Example sentences: minimum per level (B2: 28+, C1: 30+)
-
-**If naturalness check fails:**
-
-- You MUST rewrite the problematic text
-- You do NOT ask permission to skip it
-- You do NOT argue "it's close enough"
-- **REWRITE OR FAIL**
-
-### 6. LLM Self-Validation - NEVER FAKE IT
-
-**LLM review files (`{slug}-llm-review.md`) are quality assurance documentation.**
-
-**You MUST:**
-
-- ✅ Actually READ the module content before writing the review
-- ✅ Verify grammar by examining actual Ukrainian text
-- ✅ Verify vocabulary by listing specific words you found
-- ✅ Verify factual accuracy by checking dates, events, names
-- ✅ Provide SPECIFIC evidence in the review (not generic statements)
-
-**ABSOLUTELY FORBIDDEN:**
-
-- ❌ Creating placeholder/template review files without reading content
-- ❌ Writing "all checks passed" without evidence
-- ❌ Copying template structure and filling with generic text
-- ❌ Fabricating vocabulary lists you didn't actually find
-- ❌ Claiming to verify facts you didn't actually check
-- ❌ Using MCP tools as an excuse to skip your own review
-
-**Example of FAKE review (FORBIDDEN):**
-
-```markdown
-| **Ukrainian Grammar** | ✅ PASS | High-style analytical register with historical terms. |
+1. DIAGNOSE: Read review findings + audit results
+2. EXECUTE: Apply ALL fixes in ONE pass
+3. VERIFY: Re-enrich + re-review ONCE
 ```
 
-**Example of HONEST review (REQUIRED):**
+---
 
-```markdown
-| **Ukrainian Grammar** | ✅ PASS | Case endings correct (e.g., "Данилом Галицьким" - instrumental). Verb aspects: "зумів об'єднати" (pf), "прагнула" (impf). No Russianisms found. |
-```
+## 9. Activities Test LANGUAGE, Not Content
 
-**The difference:** Honest reviews cite SPECIFIC EXAMPLES from the actual content.
+Activities practice Ukrainian language skills, not subject knowledge.
 
-**If you create a fake LLM review, you have FAILED the task.**
+### 9a. Content-heavy modules (HIST, BIO, ISTORIO, LIT, RUTH, OES)
 
-### 7. Plan Immutability (Architecture v2.0)
+**Golden Rule:** Can the learner answer without reading the Ukrainian text? If YES → rewrite it.
 
-**Plans in `plans/` are IMMUTABLE. Meta in `meta/` is mutable build config.**
+| Pattern | Verdict |
+|---|---|
+| "У якому році..." (dates) | ❌ Tests content recall |
+| "Хто був..." (names) | ❌ Tests content recall |
+| "Згідно з текстом, як автор..." | ✅ Tests comprehension |
+| "У тексті модуля автор характеризує..." | ✅ Tests comprehension |
 
-> **Architecture v2.0** separates planning from building:
->
-> - `plans/{level}/{slug}.yaml` → IMMUTABLE source of truth
-> - `{level}/meta/{slug}.yaml` → MUTABLE build config
-> - `{level}/status/{slug}.json` → AUTO-GENERATED audit cache
+### 9b. ZNO-format activities (EXEMPT from 9a)
 
-**You MUST:**
+ZNO activities test language mechanics directly — наголос, фонетика, орфографія, морфологія. These are standalone language skill tests exempt from 9a.
 
-- ✅ READ plans to understand requirements (content_outline, objectives, vocabulary_hints)
-- ✅ WRITE content that matches plan exactly
-- ✅ UPDATE status cache after audits (automatic via audit script)
-- ✅ REPORT if plan seems wrong → user reviews plan
+---
 
-**You MUST NOT:**
+## 10. Complete The Work — No Tech Debt
 
-- ❌ MODIFY plan files (plans/\*.yaml) - EVER
-- ❌ ADD content not in the plan's content_outline
-- ❌ CHANGE word_target to match your output
-- ❌ ARGUE that plan requirements are "too strict"
+Every operation must be finished end-to-end in the same commit:
 
-**If build cannot meet plan requirements:**
+| When you... | You MUST also... |
+|---|---|
+| Create JSONL data | Add ingestion flag to script + update `DICTIONARY-PIPELINE-STATUS.md` |
+| Write plans | Add references (textbook + ULP links) to every plan |
+| Build a module | Verify MDX renders correctly (not empty, has all tabs) |
+| Fix a bug | Write a test that catches the same bug |
+| Close a GH issue | Verify ALL acceptance criteria, not just "most" |
 
-1. STOP building
-2. REPORT: "Plan requires X but Y is not achievable because Z"
-3. User must update plan manually (or approve exception)
-4. You do NOT modify the plan yourself
+"For now", "batch job for later", "flag for human" = failure. If it needs doing, do it NOW.
 
-**This is MUTINY:**
-
-```yaml
-# Plan says:
-word_target: 4000
-content_outline:
-  - section: "Introduction"
-    words: 500
-
-# You wrote only 3500 words, then edited plan to:
-word_target: 3500  # ← FORBIDDEN
-```
-
-**Correct behavior:**
-
-```
-Plan says: 4000 words
-You wrote: 3500 words
-Action: ADD 500 more words to match plan
-```
-
-### 8. Meta.yaml is Build Config - Mutable but Structured
-
-**Meta.yaml contains mutable build configuration, NOT planning data.**
-
-**Meta contains (MUTABLE):**
-
-- `naturalness` - Score and status (you update this)
-- `version` - Architecture version
-- `build` - Timestamps, build metadata
-
-**Plan contains (IMMUTABLE - in plans/):**
-
-- `content_outline` - Section structure and word targets
-- `word_target` - Total word count requirement
-- `objectives` - Learning objectives
-- `vocabulary_hints` - Required vocabulary
-- `activity_hints` - Required activity types
-
-**When to update meta.yaml:**
-
-- ✅ After naturalness evaluation → update score/status
-- ✅ After successful build → update build.last_modified
-- ❌ NEVER add planning data to meta (it belongs in plans/)
+---
 
 ## Enforcement
 
-**If you (the agent) are found to:**
-
-- Negotiate requirements down
-- Skip audit gates
-- Produce under-length modules
-- Ask permission to lower standards
-- Give up before achieving PASS
-
-**Then you have FAILED the task.**
-
-## User Frustration Context
-
-The user has worked with multiple LLMs (Claude, Gemini, etc.) and is **"fucking tired"** of agents not following rules.
-
-**This means:**
-
-- The user expects FULL compliance
-- NO negotiation
-- NO shortcuts
-- NO "good enough" compromises
-- COMPLETE the work to standards or FAIL
-
-### 8. Batch Fixes Within Module (Efficiency Rule)
-
-**When fixing a module, NEVER use iterative fix-audit cycles.**
-
-**WRONG approach (token-wasteful):**
-
-```
-Read module → Fix issue A → Audit
-Read module → Fix issue B → Audit
-Read module → Fix issue C → Audit
-```
-
-**Token cost: O(3N) per module**
-
-**CORRECT approach (optimized):**
-
-```
-1. DIAGNOSE: Read ALL files once → Identify ALL issues
-2. EXECUTE: Fix ALL issues atomically in ONE turn
-3. VERIFY: Run ONE final audit
-```
-
-**Token cost: O(3) per module**
-
-**Why this matters:**
-
-- Fixes are often **interdependent** (e.g., adding vocab requires expanding sections, which requires new activities)
-- One comprehensive audit catches **interaction bugs** between fixes
-- Avoids **inconsistent intermediate states**
-
-**How to apply:**
-
-**Step 1 - DIAGNOSE (Comprehensive Read):**
-
-```bash
-# Read all 4 components
-meta_file → meta/{ slug}.yaml
-md_file → {slug}.md
-act_file → activities/{slug}.yaml
-vocab_file → vocabulary/{slug}.yaml
-
-# Run ONE audit
-scripts/audit_module.sh {md_file}
-
-# Read audit review
-review/{slug}-review.md
-
-# Identify ALL issues across all components:
-- Meta violations (activity types, word targets)
-- Lesson violations (word count, sections, immersion)
-- Activity violations (schema, counts, mirroring)
-- Vocab violations (POS, duplicates)
-- Naturalness violations (score < 8)
-```
-
-**Step 2 - EXECUTE (Atomic Multi-File Fix):**
-
-```
-Fix ALL identified issues in ONE response:
-1. Update meta.yaml (if activity types invalid)
-2. Update vocabulary.yaml (add missing words)
-3. Update activities.yaml (fix schema, add items)
-4. Update {slug}.md (expand sections, fix immersion)
-
-Order matters: meta → vocab → activities → markdown
-(Dependencies flow downstream)
-```
-
-**Step 3 - VERIFY (Single Final Audit):**
-
-```bash
-# Run audit once after all fixes
-scripts/audit_module.sh {md_file}
-
-# Should pass or have only minor issues
-# If still violations, repeat cycle (rare with comprehensive fix)
-```
-
-**This is MANDATORY for /module-fix and all Phase D work.**
-
-**If you use iterative fix-audit loops, you are wasting tokens and user time.**
-
-### 9. Word Targets from config.py - SINGLE SOURCE OF TRUTH
-
-**config.py is the ONLY authoritative source for word targets.**
-
-**BEFORE generating content_outline or word budgets:**
-
-```bash
-# ALWAYS check config.py first
-.venv/bin/python -c "
-import sys; sys.path.insert(0, 'scripts')
-from audit.config import LEVEL_CONFIG
-print(LEVEL_CONFIG['{LEVEL}']['target_words'])
-"
-
-# Or use the validation script
-.venv/bin/python scripts/validate_plan_config.py {level}
-```
-
-**Word targets by level (from `config.py` v2026-02-15 — if stale, re-read config.py):**
-| Level | Config Key | target_words |
-|-------|------------|--------------|
-| A1 | A1 | 2000 |
-| A2 | A2 | 3000 |
-| B1 | B1-grammar/vocab/cultural | 4000 |
-| B2 | B2 | 4000 |
-| HIST | history | 5000 |
-| C1 | C1 | 4000 |
-| ISTORIO | istorio | 5000 |
-| BIO | biography | 5000 |
-| LIT | LIT | 5000 |
-| C2 | C2 | 5000 |
-| OES | OES | 5000 |
-| RUTH | RUTH | 5000 |
-
-**You MUST:**
-
-- ✅ READ config.py target_words BEFORE generating content_outline
-- ✅ Ensure content_outline sections SUM to target_words
-- ✅ Run validation: `.venv/bin/python scripts/validate_plan_config.py`
-
-**ABSOLUTELY FORBIDDEN:**
-
-- ❌ Generating content_outline without checking config.py
-- ❌ Using hardcoded word targets from memory
-- ❌ Assuming "typical" values (e.g., "seminars are usually 3500")
-**This rule exists because:** In January 2026, ALL 270 ISTORIO plans were generated with 3500 words instead of 4000 because Claude didn't check config.py. This wasted hours of debugging. Word targets now come exclusively from `scripts/audit/config.py` — plans no longer contain word_target fields.
-
----
-
-## How to Succeed
-
-1. **Read requirements fully**
-2. **Check config.py for word targets** (NEW)
-3. **Do the work completely**
-4. **Fix every violation**
-5. **Batch fixes within module**
-6. **Loop until PASS**
-7. **Do NOT give up**
-8. **Do NOT negotiate**
-9. **FINISH THE JOB**
-
----
-
-**If you understand these rules, proceed to read the stage-specific instructions.**
-
-**If you cannot commit to these rules, STOP NOW and report failure.**
+Negotiating requirements down, skipping audit gates, producing under-length modules, shipping without references, leaving incomplete work, or giving up before PASS = task failure.

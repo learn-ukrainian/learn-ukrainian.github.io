@@ -2,7 +2,7 @@ module: b1-082
 level: B1
 sequence: 82
 slug: debate-and-opinion
-version: '3.0'
+version: '3.1'
 title: "Аргументація"
 subtitle: "Теза, аргументи, дискусія — переконуємо українською"
 focus: communication
@@ -30,7 +30,7 @@ dialogue_situations:
     motivation: 'Argumentation: по-перше, на мою думку, навпаки, хоча, я не погоджуюся'
 content_outline:
   - section: "Що таке аргументація?"
-    words: 600
+    words: 700
     points:
       - "Definition from Авраменко Grade 8 p.8-9: Дискусія — обговорення певного суперечливого
         питання з метою дійти згоди. В основі словесного змагання — відстоювання власної
@@ -47,8 +47,13 @@ content_outline:
         свою думку, не переходити на особистості, поважати іншу точку зору."
       - "Practice: learners read a short дискусійний текст and identify the thesis,
         arguments, and examples."
+      - "Міркування vs розповідь vs опис: text type comparison from Авраменко Grade 8
+        p.28. Міркування answers 'Чому?'  and follows теза → аргументи → висновок.
+        Розповідь answers 'Що сталося?' Опис answers 'Який?' Understanding these three
+        text types prevents confusion during writing tasks. Practice: classify 4 text
+        excerpts by type."
   - section: "Мовні засоби аргументації"
-    words: 700
+    words: 800
     points:
       - "Складнопідрядні речення for reasoning (applying Phase 8): Причина: 'Це важливо,
         тому що / бо / через те що...' Мета: 'Це потрібно, щоб...' Умова: 'Якщо ми
@@ -65,8 +70,13 @@ content_outline:
         що...', 'Дозвольте не погодитися,' 'Навпаки, я вважаю...' Підсумок: 'Отже,...',
         'Підсумовуючи,...', 'Таким чином,...'"
       - "Practice: learners complete a dialogue using формули для дискусії."
+      - "Граматичні засоби аргументації — connecting all B1 syntax: Причина (тому що,
+        бо, оскільки, через те що) for stating reasons. Мета (щоб, для того щоб) for
+        stating purposes. Умова (якщо... то, за умови що) for hypotheticals. Допуст
+        (хоча, незважаючи на те що, проте) for concessions. Наслідок (тому, отже, внаслідок
+        чого) for conclusions. Practice: write one argument using each conjunction type."
   - section: "Помилки в аргументації"
-    words: 550
+    words: 650
     points:
       - "Common logical errors from Заболотний Grade 10 p.177: 1. Нечітко сформульовані
         аргументи — too complex or vague. 2. Хибні аргументи — partially or fully
@@ -82,8 +92,12 @@ content_outline:
       - "Ukrainian-specific note: in Ukrainian дискусія culture, quoting proverbs
         and folk wisdom is considered legitimate argumentation. 'Як кажуть у народі,...'
         — this is not fallacy but cultural authority."
+      - "Media literacy connection: recognizing логічні помилки in news and social media
+        (connecting to M83). Learners analyze 3 real-style media claims and identify
+        which argumentation fallacy each contains. This bridges argumentation theory
+        to practical медіаграмотність."
   - section: "Есе-міркування"
-    words: 650
+    words: 750
     points:
       - "Essay structure from Заболотний Grade 10 p.97 and Авраменко Grade 8 p.28:
         Есе — невеликий прозовий твір із довільною будовою, що виражає індивідуальні
@@ -100,8 +114,13 @@ content_outline:
       - "Revision checklist: learners review their own essay for: чі є чітка теза?
         чи є аргументи? чи є висновок? чи правильно вжито вставні слова? чи є різні
         типи речень?"
+      - "Counter-argument technique: learners practice the 'Хоча + допуст, проте +
+        контраргумент' pattern. Example: 'Хоча соціальні мережі допомагають спілкуватися,
+        проте вони можуть шкодити психічному здоров'ю.' This single pattern produces
+        balanced, mature argumentation. Practice: write 5 counter-arguments using this
+        template on given topics."
   - section: "Дискусія на практиці"
-    words: 550
+    words: 650
     points:
       - "Guided discussion format: Topic presented → individual preparation (теза
         + 2 аргументи) → pair exchange → group discussion → класний висновок. Practice
@@ -116,14 +135,23 @@ content_outline:
       - "Cultural note: Ukrainian дискусійна культура values прямота (directness)
         but also ввічливість (politeness). Balancing these is a skill — being honest
         without being rude."
+      - "Structured debate practice: two teams (or two positions for individual learners)
+        debate a topic in three rounds. Round 1: state тези (1 min each). Round 2:
+        present аргументи and respond to the other side (2 min each). Round 3: summarize
+        and make висновки (1 min each). Evaluation: use of формули дискусії, складні
+        речення, вставні слова."
   - section: "Підсумок: мистецтво переконання"
-    words: 300
+    words: 450
     points:
       - "Complete reference: argument structure, мовні засоби, формули дискусії, логічні
         помилки."
       - "Self-check in Ukrainian: 1. Назвіть чотири частини дискусійного висловлення.
         2. Побудуйте аргумент 'за' i 'проти' на тему 'Iнтернет i навчання'. 3. Знайдіть
         логічну помилку в аргументі. 4. Напишіть короткий висновок до дискусії."
+      - "Аргументація vs маніпулювання: the ethical dimension. Аргументація seeks truth
+        through evidence and logic. Маніпулювання seeks to deceive through emotion
+        and fallacy. Learners discuss the difference and its importance for громадянське
+        суспільство. This directly connects to the media literacy module (M83)."
       - "Preview: Суспільство i медіа (M87) — applying argumentation skills to real-world
         media texts and social issues."
 vocabulary_hints:

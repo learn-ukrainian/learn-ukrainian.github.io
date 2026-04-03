@@ -1,7 +1,7 @@
 # Audit Report: M02 — reading-ukrainian.md
 **Level:** A1 | **Module:** M02 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-04-02 20:30:06
+**Overall Status:** ✅ PASS
+**Generated:** 2026-04-03 14:02:13
 
 ## Configuration
 **Type:** A1
@@ -10,7 +10,7 @@
 **Items per Activity:** ≥6 items
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
-**Engagement:** ≥1 callouts
+**Engagement:** ≥0 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -38,7 +38,7 @@
   - FIX: No action needed — incidental dative exposure is acceptable.
 - **[INFO]** Dative case used at A1: 'Двоскладові' (taught formally at A2)
   - FIX: No action needed — incidental dative exposure is acceptable.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in reading-ukrainian.yaml: Schema validation error at key '0': {'word': 'мама', 'answer': 'ма-ма', 'hint': '2 vowels = 2 syllables'} is not valid under any of the given schemas
+- **[YAML_SCHEMA_VIOLATION]** Schema error in reading-ukrainian.yaml: Schema validation error at key '0': '[а] only' is not of type 'object'
   - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
 
 ## Recommendation
@@ -52,7 +52,7 @@
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 5/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/1
+- **Engagement:** ✅ 0/0
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 50/1
 - **Structure:** ✅ Valid Structure

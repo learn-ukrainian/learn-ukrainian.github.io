@@ -2,7 +2,7 @@ module: b1-036
 level: B1
 sequence: 36
 slug: adjectives-suppletive
-version: '3.0'
+version: '3.1'
 title: "Гарний - кращий (суплетивні форми)"
 subtitle: "Нерегулярні ступені порівняння: зміна кореня"
 focus: grammar
@@ -29,7 +29,7 @@ dialogue_situations:
     motivation: 'Suppletive forms: гарний→кращий→найкращий, поганий→гірший→найгірший'
 content_outline:
   - section: "Що таке суплетивні форми?"
-    words: 500
+    words: 550
     points:
       - "Definition: суплетивізм (suppletion) is when a grammatical form is built
         from a completely different root than the base word. In English: good-better,
@@ -42,6 +42,10 @@ content_outline:
       - "Comparison with regular formation: Regular: сильний → сильніший (same root
         сильн-). Suppletive: гарний → кращий (different root крат-/красн-). The learner
         needs to memorize these — no rule predicts them."
+      - "How many suppletive pairs are there? Four core pairs (гарний, поганий,
+        великий, малий) plus their parallel adverb forms. Beyond these, Ukrainian
+        has напівсуплетивні (near-suppletive) forms where dramatic consonant changes
+        make the base barely recognizable (високий → вищий)."
   - section: "Чотири основні суплетивні пари"
     words: 900
     points:
@@ -97,15 +101,31 @@ content_outline:
         місто?'"
       - "Self-assessment: translate 10 comparison sentences from English to Ukrainian,
         requiring suppletive forms. Then peer-check."
+  - section: "Суплетивні форми у відмінках"
+    words: 250
+    points:
+      - "Declension practice for suppletive comparatives — these decline like regular
+        adjectives but learners need explicit drill because the stems are unfamiliar:
+        Н. кращий / краща / краще / кращі, Р. кращого / кращої / кращого / кращих,
+        Д. кращому / кращій / кращому / кращим. Same paradigm for гірший, більший,
+        менший."
+      - "Contextual sentences requiring declined suppletive forms in oblique cases
+        (Заболотний Grade 8 p.18): Я задоволений кращим результатом (Ор.в.). Ми
+        розмовляли про гіршу ситуацію (Зн.в.). У меншій кімнаті (М.в.) холодніше."
   - section: "Підсумок"
-    words: 300
+    words: 400
     points:
       - "Complete reference table: гарний — кращий — найкращий (добре — краще — найкраще)
         поганий — гірший — найгірший (погано — гірше — найгірше) великий — більший
         — найбільший (багато — більше — найбільше) малий — менший — найменший (мало
         — менше — найменше)"
+      - "Decision flowchart: Is it one of the 4 core pairs? → suppletive. Is it
+        високий/низький/широкий/вузький/легкий/довгий/дорогий/товстий? → near-suppletive
+        with consonant change. Otherwise → regular (-іш-/-ш-). This visual helps
+        learners systematize their knowledge."
       - "Preview: next module extends comparison to прислівники — how adverbs form
-        ступені порівняння systematically."
+        ступені порівняння systematically, including the suppletive adverb forms
+        reviewed here."
 vocabulary_hints:
   required:
     - "суплетивний (suppletive — formed from a different root)"

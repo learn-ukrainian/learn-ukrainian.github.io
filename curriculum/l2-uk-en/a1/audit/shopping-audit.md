@@ -1,7 +1,7 @@
 # Audit Report: M39 — shopping.md
 **Level:** A1 | **Module:** M39 | **Phase:** A1.6 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-02 20:30:06
+**Generated:** 2026-04-03 14:02:14
 
 ## Configuration
 **Type:** A1
@@ -10,7 +10,7 @@
 **Items per Activity:** ≥6 items
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
-**Engagement:** ≥1 callouts
+**Engagement:** ≥0 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -34,20 +34,29 @@
 - Priority types used: 3/8 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in shopping.yaml: Schema validation error at key '9': {'type': 'observe', 'examples': ['1 гривня — 2 гривні — 5 гривень', '21 гривня — 22 гривні — 25 гривень', '31 гривня — 32 гривні — 35 гривень', '1 копійка — 2 копійки — 5 копійок', '1 кілограм — 2 кілограми — 5 кілограмів', '1 літр — 2 літри — 5 літрів'], 'prompt': 'What pattern do you notice? When do you use each form? (Hint: look at the last digit of the number.)'} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 1588/1200 (raw: 1624)
 - **Activities:** ✅ 9/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 1/1
+- **Engagement:** ✅ 1/0
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 58/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 34.5% (target 20-35% (M39))
+- **Immersion:** 🇺🇦 34.5% (target 20-40% (M39))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes

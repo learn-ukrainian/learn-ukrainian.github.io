@@ -2,7 +2,7 @@ module: b1-035
 level: B1
 sequence: 35
 slug: adjectives-superlative
-version: '3.0'
+version: '3.1'
 title: "Найвищий ступінь прикметників"
 subtitle: "Проста та складена форми найвищого ступеня порівняння"
 focus: grammar
@@ -46,7 +46,7 @@ content_outline:
       - "Reading practice: a travel blog ranking Ukrainian cities and landmarks, using
         простa форма найвищого ступеня throughout."
   - section: "Складена форма найвищого ступеня"
-    words: 600
+    words: 650
     points:
       - "Formation from Заболотний Grade 8 p.18: найбільш/найменш + початкова форма
         прикметника. найбільш цікавий, найменш відомий, найбільш поширений. The adjective
@@ -57,8 +57,11 @@ content_outline:
       - "Critical error prevention: NEVER combine най- with більш (*найбільш найкращий).
         NEVER use самий (*самий кращий — this is a Russicism from самый лучший). Correct:
         найкращий or найбільш добрий."
+      - "Contrastive practice (Авраменко Grade 6 p.125): provide 8 adjective pairs
+        and have learners form both проста and складена superlatives, then choose which
+        sounds more natural in a given sentence context (academic paper vs casual chat)."
   - section: "Підсилені форми: що- та як-"
-    words: 600
+    words: 650
     points:
       - "Ukrainian has a unique intensifying mechanism absent in English: що- + найвищий
         ступінь: щонайкращий, щонайшвидший, щонайвищий. як- + найвищий ступінь: якнайкращий,
@@ -70,6 +73,9 @@ content_outline:
         option — factual)."
       - "Practice sentences in context: instructions, advice, evaluations. Приходьте
         якнайскоріше. Це щонайменша ціна. Він обрав якнайпростіший шлях."
+      - "Spelling rule: що- and як- are written together with the superlative (no hyphen):
+        щонайкращий, якнайбільший. Common error: *що-найкращий, *як найшвидший. These
+        forms decline like regular adjectives: щонайкращого, якнайбільшій."
   - section: "Синонімічні засоби"
     words: 550
     points:
@@ -95,12 +101,26 @@ content_outline:
       - "Self-check questions: 1. Утворіть найвищий ступінь: тихий, широкий, близький,
         дешевий. 2. Чим відрізняється щонайкращий від найкращий? 3. Чому *самий кращий
         — помилка?"
+  - section: "Типові помилки з найвищим ступенем"
+    words: 250
+    points:
+      - "Systematic error catalogue from Авраменко Grade 11 p.29 and Заболотний
+        Grade 8 p.21: 1. Russicism *самий кращий (→ найкращий). 2. Double marking
+        *найбільш найкращий (→ найкращий OR найбільш добрий). 3. Wrong base
+        *найдорогіший (→ найдорожчий — must apply alternation first, then най-).
+        4. Hyphenation *най-кращий (→ найкращий — prefix written together)."
+      - "Diagnostic drill: 8-10 sentences each containing one error from the catalogue.
+        Learners identify, classify (Russicism / double marking / wrong base /
+        spelling), and correct each error."
   - section: "Підсумок"
-    words: 300
+    words: 450
     points:
       - "Complete comparison chain diagram: початкова форма → вищий ступінь → найвищий
         ступінь. проста: гарний → гарніший → найгарніший. складена: — → більш гарний
         → найбільш гарний. підсилена: — → — → щонайгарніший / якнайгарніший."
+      - "Summary table consolidating all formation patterns: проста (най- + comparative),
+        складена (найбільш/найменш + base), підсилена (що-/як- + superlative),
+        синонімічні (дуже, вельми, пре-, повтор). Include register guidance for each."
       - "Preview: next module covers суплетивні (irregular) comparison forms where
         the comparative comes from a completely different root (гарний-кращий, поганий-гірший)."
 vocabulary_hints:

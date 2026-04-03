@@ -9,7 +9,7 @@ import uuid
 from pathlib import Path
 
 from ._broker import _is_task_locked, _remove_pid_file, _write_pid_file
-from ._config import _PARENT_ENV, CLAUDE_CLI, REPO_ROOT
+from ._config import _PARENT_ENV, CLAUDE_CMD, REPO_ROOT
 from ._db import get_db, get_session, set_session
 from ._messaging import acknowledge, send_message
 from ._prompts import build_claude_prompt
@@ -94,7 +94,7 @@ def _build_claude_command(prompt, claude_session_id, msg, new_session):
     Uses --bare for new non-session calls when ANTHROPIC_API_KEY is available
     (skips hooks/LSP/plugins for speed). Resumed sessions cannot use --bare.
     """
-    cmd = [CLAUDE_CLI, "-p", prompt]
+    cmd = [*CLAUDE_CMD, "-p", prompt]
     # --bare skips hooks, LSP, plugin sync, skill walks — much faster for scripted calls.
     # Only use for stateless calls (not resuming or starting named sessions).
     # Requires ANTHROPIC_API_KEY (--bare disables OAuth/keychain auth).

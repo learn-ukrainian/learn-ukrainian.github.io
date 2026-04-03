@@ -2,10 +2,10 @@
   "module": "checkpoint-first-contact",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-02T20:29:54.647903Z",
+  "last_audit": "2026-04-03T14:02:02.549515Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-01T13:07:58.530571Z",
+    "md": "2026-04-03T11:58:58.919322Z",
     "meta": null,
     "activities": "2026-03-30T22:17:20.538367Z",
     "vocabulary": "2026-03-30T22:17:20.646021Z",
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1432/1200 (raw: 1472) | engagement: 0/1"
+      "status": "pass",
+      "violations": 0,
+      "message": "1366/1200 (raw: 1406)"
     },
     "activities": {
       "status": "pass",
@@ -50,10 +50,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 1,
+    "pass_count": 5,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

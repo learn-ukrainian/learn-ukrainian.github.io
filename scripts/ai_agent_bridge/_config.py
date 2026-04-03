@@ -9,7 +9,9 @@ DB_PATH = Path(__file__).parent.parent.parent / ".mcp/servers/message-broker/mes
 PID_DIR = Path(__file__).parent.parent.parent / ".mcp/servers/message-broker/pids"
 
 # Resolve CLI paths at import time (before detached children lose PATH)
-CLAUDE_CLI = shutil.which("claude") or "claude"
+# Use npx to run Claude Code — avoids bugs in the globally installed version.
+# Returns a list: ["npx", "@anthropic-ai/claude-code"] to use as cmd prefix.
+CLAUDE_CMD = ["npx", "@anthropic-ai/claude-code@latest"]
 GEMINI_CLI = shutil.which("gemini") or "gemini"
 
 # Snapshot environment for passing to detached children

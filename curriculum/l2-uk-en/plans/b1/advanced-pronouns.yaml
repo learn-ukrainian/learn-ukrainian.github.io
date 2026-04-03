@@ -2,7 +2,7 @@ module: b1-050
 level: B1
 sequence: 50
 slug: advanced-pronouns
-version: '3.0'
+version: '3.1'
 title: "Займенники (деталі)"
 subtitle: "Питально-відносні, зворотний себе, неозначені та заперечні займенники"
 focus: grammar
@@ -99,13 +99,34 @@ content_outline:
         дзвонив.' 'Може, хто-небудь із сусідів?' 'Ні, ні з ким я не розмовляв.'"
       - "Self-check: classify 15 pronouns by type (interrogative, indefinite, negative,
         reflexive), form correct case for each in context."
+  - section: "Означальні займенники (§4.2.1.4)"
+    words: 500
+    points:
+      - "The State Standard includes означальні (definitive/universal) pronouns at B1.
+        Core set: кожний/кожен (every — кожен день, кожна людина), весь/увесь (all/entire
+        — увесь час, уся країна, усе місто, усі люди), сам (self/alone — сам зробив,
+        сама прийшла), самий (the very — той самий, у тій самій кімнаті), інший (other
+        — інший підхід, іншим разом), будь-який (any — будь-яка відповідь)."
+      - "Declension: кожний declines like an adjective: кожного дня, кожному, кожним.
+        весь/увесь has an irregular paradigm: всього/усього, всьому/усьому, всім/усім,
+        всіма/усіма. сам declines: самого, самому, самим. Note: сам (alone, without
+        help) vs самий (emphatic identity — той самий = the same one). From Заболотний
+        Grade 6 p.201: означальні займенники."
+      - "Usage in context: Кожен має право на освіту. Вся країна святкувала День
+        Незалежності. Він сам зробив це — ніхто не допомагав. Це той самий фільм,
+        який ми дивилися. Інші студенти вже пішли. Practice: 8 sentences using означальні
+        with correct declension."
   - section: "Підсумок"
-    words: 200
+    words: 400
     points:
       - "Pronoun type summary: питально-відносні (хто, який), зворотний (себе), неозначені
-        (хтось, будь-хто), заперечні (ніхто, ніщо). Key rules: spelling of particles,
-        preposition splitting, stress meaning. Preview: next module — житло і оренда
-        (communication module)."
+        (хтось, будь-хто), заперечні (ніхто, ніщо), означальні (кожний, весь, сам,
+        інший). Six pronoun categories mastered at B1."
+      - "Key rules: spelling of particles (-сь joined, будь- hyphenated, -небудь hyphenated,
+        де- joined), preposition splitting in negative pronouns (ні з ким), stress-dependent
+        meaning (нікого), irregular declension of весь/увесь."
+      - "Preview: next module — житло і оренда (communication module applying all
+        Phase 6 grammar in practical context)."
 vocabulary_hints:
   required:
     - "займенник (pronoun)"

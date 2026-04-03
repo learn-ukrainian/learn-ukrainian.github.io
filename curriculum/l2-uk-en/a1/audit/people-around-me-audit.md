@@ -1,7 +1,7 @@
 # Audit Report: M40 — people-around-me.md
 **Level:** A1 | **Module:** M40 | **Phase:** A1.6 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-04-02 20:30:05
+**Overall Status:** ✅ PASS
+**Generated:** 2026-04-03 14:02:12
 
 ## Configuration
 **Type:** A1-grammar
@@ -10,7 +10,7 @@
 **Items per Activity:** ≥6 items
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
-**Engagement:** ≥1 callouts
+**Engagement:** ≥0 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -38,11 +38,13 @@
   - FIX: No action needed — incidental dative exposure is acceptable.
 - **[COMPLEXITY]** Sentence too long for A1: 11 words (max 10)
   - FIX: Break into shorter sentences. First 5 words: 'Фо́рма знахі́дного відмі́нка однини́ чолові́чого...'
+- **[YAML_SCHEMA_VIOLATION]** Schema error in people-around-me.yaml: Schema validation error at key '9': {'type': 'observe', 'examples': ['Я бачу хліб. (хліб → хліб — no change)', 'Я бачу брата. (брат → брата — changes!)', "Я п'ю чай. (чай → чай — no change)", 'Я знаю друга. (друг → друга — changes!)', 'Я їм борщ. (борщ → борщ — no change)', 'Я чекаю лікаря. (лікар → лікаря — changes!)'], 'prompt': 'What is the pattern? When does a masculine noun change its ending, and when does it stay the same? What question word tells you which rule applies — кого? or що?'} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 3 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1209/1200 (raw: 1242)
@@ -50,14 +52,14 @@
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/1
+- **Engagement:** ✅ 0/0
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 30/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 29.2% (target 20-35% (M40))
+- **Immersion:** 🇺🇦 29.2% (target 20-40% (M40))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 2+ cultural hooks but content has no cultural section

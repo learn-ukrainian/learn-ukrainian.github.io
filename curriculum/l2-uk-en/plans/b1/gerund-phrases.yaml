@@ -2,7 +2,7 @@ module: b1-059
 level: B1
 sequence: 59
 slug: gerund-phrases
-version: '3.0'
+version: '3.1'
 title: "Дієприслівниковий зворот"
 subtitle: "Дієприслівник із залежними словами: відокремлення та стилістика"
 focus: grammar
@@ -32,7 +32,7 @@ dialogue_situations:
       кроку'
 content_outline:
   - section: "Дієприслівниковий зворот: будова"
-    words: 600
+    words: 700
     points:
       - "Definition from Заболотний Grade 7 p.127: дієприслівниковий зворот — це дієприслівник
         із залежними від нього словами. The зворот functions as an обставина (circumstantial
@@ -47,7 +47,7 @@ content_outline:
         words): Усміхаючись, вона підійшла. Both the phrase and the single gerund
         follow the same comma rule."
   - section: "Правила відокремлення"
-    words: 800
+    words: 900
     points:
       - "Main rule from Литвінова Grade 7 p.114 and Заболотний Grade 8 p.205: Дієприслівниковий
         зворот i одиничний дієприслівник ЗАВЖДИ відокремлюються комами, незалежно
@@ -68,7 +68,7 @@ content_outline:
       - "Practice: 12 sentences — learners place commas correctly, including exception
         cases."
   - section: "Порівняння зворотів: дієприкметниковий vs дієприслівниковий"
-    words: 550
+    words: 650
     points:
       - "Key differences: | Feature | Дієприкметниковий | Дієприслівниковий | | Role
         | означення (який?) | обставина (як? коли?) | | Modifies | іменник | дієслово-присудок
@@ -81,7 +81,7 @@ content_outline:
       - "Practice: classify phrases in sentences as дієприкметникові or дієприслівникові
         звороти and apply correct punctuation."
   - section: "Помилки та стилістика"
-    words: 550
+    words: 650
     points:
       - "Dangling gerund (рeview from M61-62, now with full phrases): *Перейшовши
         дорогу, мені стало легше. (Who crossed? → dangling) → Перейшовши дорогу, я
@@ -96,7 +96,7 @@ content_outline:
         and публіцистичний styles. In розмовний style, Ukrainians prefer clauses or
         simple sentences."
   - section: "Iнтегрована практика"
-    words: 600
+    words: 700
     points:
       - "Reading passage: a literary excerpt or news article using both дієприкметникові
         and дієприслівникові звороти. Learners: 1. Identify and classify all звороти.
@@ -106,12 +106,17 @@ content_outline:
         or event, using at least 3 дієприслівникові звороти (mix of imperfective and
         perfective) and 2 дієприкметникові звороти. Correct punctuation throughout."
   - section: "Підсумок та перехід до M64"
-    words: 300
+    words: 400
     points:
       - "Summary: дієприслівниковий зворот = дієприслівник + залежні слова. Завжди
         відокремлюється комами (винятки: фразеологізми, підсилювальна i). Self-check:
         Я правильно ставлю коми при дієприслівниковому звороті ✓/✗, Я розрізняю дієприкметниковий
         i дієприслівниковий звороти ✓/✗."
+      - "Consolidation: side-by-side punctuation reference for both phrase types.
+        Дієприкметниковий зворот: після означуваного слова → коми, перед → без ком,
+        після займенника → завжди коми. Дієприслівниковий зворот: ЗАВЖДИ коми (винятки:
+        фразеологізми, підсилювальна i, прислівниковий дієприслівник після дієслова).
+        Quick-test: 6 mixed sentences for learners to punctuate."
       - "Preview: M64 — Освіта та навчання. Communication module applying Phase 7
         grammar in academic contexts."
 vocabulary_hints:

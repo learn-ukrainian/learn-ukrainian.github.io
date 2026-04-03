@@ -2,7 +2,7 @@ module: b1-070
 level: B1
 sequence: 70
 slug: reported-speech
-version: '3.0'
+version: '3.1'
 title: "Пряма і непряма мова"
 subtitle: "Передача чужого мовлення: пряма мова, непряма мова, діалог"
 focus: grammar
@@ -60,7 +60,7 @@ content_outline:
         → наступного дня. These shifts are systematic, not random."
       - "Practice: transform 10 sentences from пряма to непряма мова."
   - section: "Складні випадки перетворення"
-    words: 550
+    words: 650
     points:
       - "Imperative → щоб + past tense: Вчитель сказав: «Відкрийте підручники.» →
         Вчитель сказав, щоб учні відкрили підручники. Note: imperative becomes past-tense
@@ -72,7 +72,7 @@ content_outline:
         → Він сказав, що це дуже красиво. Вигуки, звертання, частки — disappear in
         непряма мова. This is why пряма мова is more expressive."
   - section: "Діалог: оформлення"
-    words: 450
+    words: 550
     points:
       - "Ukrainian dialogue formatting with тире: — Привіт! Як справи? — запитала
         Оксана. — Дякую, добре. А в тебе? — відповів Андрій. — Чудово! Ти вже читав
@@ -81,7 +81,7 @@ content_outline:
       - "Dialogue in narrative text: combining авторські ремарки with speech. Practice:
         format a short dialogue (6-8 exchanges) with correct punctuation."
   - section: "Практика: пряма і непряма мова у тексті"
-    words: 700
+    words: 800
     points:
       - "Reading passage: a narrative containing both пряма and непряма мова. Learners
         identify each, explain why the author chose one over the other."
@@ -92,7 +92,7 @@ content_outline:
         you had. Use at least 3 instances of пряма мова and 3 of непряма мова, with
         correct punctuation throughout."
   - section: "Підсумок та перехід до M75"
-    words: 300
+    words: 400
     points:
       - "Summary: пряма мова = дослівна передача + лапки + автор. Непряма = переказ
         + складнопідрядне (що/щоб/чи). Зміни: займенники, час, місце. Діалог = тире.

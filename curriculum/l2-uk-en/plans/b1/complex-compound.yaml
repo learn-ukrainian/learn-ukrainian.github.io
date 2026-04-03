@@ -2,7 +2,7 @@ module: b1-062
 level: B1
 sequence: 62
 slug: complex-compound
-version: '3.0'
+version: '3.1'
 title: "Складносурядне речення"
 subtitle: "Єднальні, протиставні та розділові сполучники"
 focus: grammar
@@ -31,7 +31,7 @@ dialogue_situations:
       виставка(f)'
 content_outline:
   - section: "Що таке складносурядне речення?"
-    words: 600
+    words: 700
     points:
       - "Definition from Заболотний Grade 8 p.54: складносурядним називають складне
         речення, частини якого рівноправні за змістом і поєднані за допомогою сполучників
@@ -46,7 +46,7 @@ content_outline:
       - "Building on A2: learners already use і, але, або in speech. This module systematizes
         what they know and adds complexity."
   - section: "Єднальні сполучники"
-    words: 650
+    words: 750
     points:
       - "From Заболотний Grade 8 p.54: Єднальні сполучники: і (й), та (= і), ні...ні,
         як...так і, не тільки...але й. Смислові зв'язки: одночасність, послідовність.
@@ -87,7 +87,7 @@ content_outline:
         вставна конструкція: Уночі вітер стих і дощ перестав. (спільне обставинне
         — уночі) Practice: 10 sentences — place correct punctuation, including exceptions."
   - section: "Побудова складносурядних речень"
-    words: 600
+    words: 700
     points:
       - "Sentence building from simple to complex: Step 1: Two прості речення with
         connected ideas. Step 2: Choose сполучник based on смисловий зв'язок. Step
@@ -100,7 +100,7 @@ content_outline:
         at least 2 єднальні, 2 протиставні, and 2 розділові сполучники with correct
         punctuation."
   - section: "Підсумок та перехід до M67"
-    words: 400
+    words: 500
     points:
       - "Summary: складносурядне = рівноправні частини + сурядні сполучники. Три групи:
         єднальні (і, та), протиставні (але, а), розділові (або, то...то). Пунктуація:

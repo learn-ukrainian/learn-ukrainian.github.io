@@ -2,7 +2,7 @@ module: b1-048
 level: B1
 sequence: 48
 slug: cases-with-ordinal-numerals
-version: '3.0'
+version: '3.1'
 title: "Порядкові числівники і відмінки"
 subtitle: "Відмінювання порядкових числівників, дати, час, поверхи"
 focus: grammar
@@ -31,7 +31,7 @@ dialogue_situations:
       третій перон(nom)'
 content_outline:
   - section: "Відмінювання порядкових числівників"
-    words: 700
+    words: 800
     points:
       - "From Литвінова Grade 6 p.237: Ordinal numerals decline like adjectives. Твердий
         тип: перший, другий, четвертий, п'ятий, шостий... М'який тип: третій, третя,
@@ -42,8 +42,13 @@ content_outline:
       - "Compound ordinals (Заболотний Grade 6 p.179): ONLY the last word declines:
         двадцять третій день → двадцять третього дня → двадцять третьому дню. Practice:
         decline 'сто п'ятнадцята сторінка' through all cases."
+      - "Stress patterns: перший (fixed stress), другий (fixed), третій (fixed but
+        irregular soft declension), сьомий (fixed), десятий (fixed). All ordinals have
+        fixed stress on the same syllable throughout declension, unlike some cardinal
+        numerals. This simplifies memorization: once you know the nominative stress,
+        it stays."
   - section: "Дати"
-    words: 700
+    words: 800
     points:
       - "Saying 'today is': Сьогодні + ordinal in Н.в. + month in Р.в.: Сьогодні п'яте
         березня. Сьогодні тридцять перше грудня. Note: the ordinal is NEUTER (число
@@ -53,9 +58,14 @@ content_outline:
         року. Year: тисяча дев'ятсот дев'яностого року (only last word declines)."
       - "Writing dates with digits: 15 березня 2024 року. With ordinal ending: 15-го
         березня, 1-ша сторінка, 5-й клас. But dates in calendar format: 15.03.2024
-        (no ending). Practice: read and write 10 dates in full Ukrainian word form."
+        (no ending). Hyphen rules: the ordinal suffix attaches with a hyphen after
+        digits (5-й, 10-та, 3-тє), but NOT after Roman numerals: ХХІ століття (no
+        hyphen)."
+      - "Practice: read and write 10 dates in full Ukrainian word form. Include
+        historical dates: 24 серпня 1991 року (двадцять четвертого серпня тисяча
+        дев'ятсот дев'яносто першого року), birthdays, and future events."
   - section: "Час"
-    words: 600
+    words: 700
     points:
       - "From Авраменко Grade 11 p.42: Full hours: о першій годині, о другій, о третій,
         о п'ятій. Note: годині is in М.в. (о + М.в.). Half hours: о пів на п'яту (at
@@ -64,18 +74,27 @@ content_outline:
         Minutes to: за десять хвилин п'ята (4:50 — 'in ten minutes, the fifth'). NOT
         *без десяти п'ять (Russicism from без десяти пять). Correct: за десять хвилин
         п'ята or чотири п'ятдесят."
+      - "Formal vs colloquial time: Formal: п'ятнадцять хвилин на четверту (3:15).
+        Colloquial: три п'ятнадцять. Both are correct; formal uses ordinals, colloquial
+        uses cardinals. In writing, digital format (15:30) doesn't use ordinals."
       - "Practice: express these times in Ukrainian: 3:15, 7:30, 11:45, 1:20, 9:55,
-        12:00, 6:05. Then: answer 'Котра година?' for each."
+        12:00, 6:05. Give both formal (ordinal) and colloquial (cardinal) versions.
+        Then: answer 'Котра година?' for each."
   - section: "Поверхи, номери, порядок"
-    words: 500
+    words: 600
     points:
       - "Floors: на першому поверсі (М.в.), з другого поверху (Р.в.), на п'ятий поверх
-        (Зн.в. — direction). Маршрути: автобус номер сьомий, тролейбус п'ятнадцятий."
+        (Зн.в. — direction). Маршрути: автобус номер сьомий, тролейбус п'ятнадцятий.
+        Addresses: будинок третій, квартира п'ята, кабінет двісті десятий."
       - "Order: перший раз, вдруге (adverb — for the second time), утретє, вчетверте.
         В першу чергу (first of all). Centuries: у двадцять першому столітті (М.в.),
-        двадцяте століття (Н.в.)."
+        двадцяте століття (Н.в.). По-перше, по-друге, по-третє (firstly, secondly
+        — ordinal adverbs for listing)."
+      - "Ordinals in document titles and official contexts: стаття перша, пункт третій,
+        параграф п'ятий, розділ восьмий. From Авраменко Grade 7 p.63: numeral usage
+        in formal/official register."
       - "Practice: describe your building (which floor), give directions (take bus
-        number X), discuss historical periods (in the Y century)."
+        number X), discuss historical periods (in the Y century), cite document articles."
   - section: "Порядкові числівники в контексті"
     words: 700
     points:
@@ -90,11 +109,15 @@ content_outline:
         Незалежності), 28 червня 1996 (Конституція). Write in full word form with
         correct cases."
   - section: "Підсумок"
-    words: 300
+    words: 400
     points:
       - "Key patterns: ordinals decline like adjectives; compound ordinals — only
         last word declines; dates in Р.в.; clock time uses ordinals in М.в.; NOT *без
         десяти → за десять хвилин."
+      - "Self-check: 1. Decline двадцять п'ятий through all cases. 2. Write today's
+        date in full words (both 'today is' and 'on the date'). 3. Express times
+        3:15, 7:30, 11:45 in Ukrainian. 4. Say your address with floor and apartment
+        number. 5. Name three centuries in М.в. (у ... столітті)."
       - "Preview: кількісні вирази — agreement between quantity words and nouns."
 vocabulary_hints:
   required:

@@ -1625,18 +1625,18 @@ def step_write_with_retry(
     level: str, module_num: int, slug: str,
     packet_path: Path,
     writer: str = "gemini",
-    max_retries: int = 2,
+    max_retries: int = 4,
     skeleton: str = "",
     no_chunk: bool = False,
     verification_text: str = "",
 ) -> Path | None:
     """Write content with quick verify and retry loop.
 
-    Strategy (from Gemini consultation #982):
-    - Retry 1: same model + correction directive
-    - Retry 2: switch model (circuit breaker)
-    - Retry 3 (exhausted): return None → flag for human review
-    - Always regenerate WHOLE module (not sections)
+    Strategy:
+    - Up to 5 attempts (max_retries=4 → attempts 1-5)
+    - Each retry uses same writer + correction directive (no model switching)
+    - Never fall back to a different agent
+    - On exhaustion: return output + flag for human review
     - Do NOT include failed output in retry (prevents anchoring)
     """
     from build.quick_verify import (
@@ -2606,7 +2606,7 @@ def _build_pedagogy_patterns(plan: dict, level: str) -> str:
 
 def step_activities(
     content_path: Path, level: str, module_num: int, slug: str,
-    writer: str = "gemini-tools", max_retries: int = 2,
+    writer: str = "gemini-tools", max_retries: int = 4,
 ) -> Path | None:
     """Step 5e: Generate structured activity YAML from plan + prose.
 
@@ -3404,7 +3404,7 @@ def step_review(content_path: Path, level: str, module_num: int,
             review_timeout = 600
             _log(f"  ⚠️  Gemini probe failed ({int(probe_latency)}s) — keeping Gemini reviewer with default {review_timeout}s timeout")
 
-    # Re-check reviewer in case fallback happened above
+    # Dispatch review — never fall back to a different agent
     if reviewer == "gemini":
         ok, raw = None, None
         _GEMINI_REVIEW_MAX_RETRIES = 5
@@ -4261,12 +4261,13 @@ def step_publish(content_path: Path, level: str, slug: str) -> bool:
     order = modules.index(slug) + 1 if slug in modules else 1
 
     plan_title = slug.replace('-', ' ').title()
+    plan_path_pub = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
     try:
-        plan_data = yaml.safe_load(plan_path.read_text("utf-8"))
-        if "title" in plan_data:
+        plan_data = yaml.safe_load(plan_path_pub.read_text("utf-8"))
+        if plan_data and "title" in plan_data:
             plan_title = plan_data["title"]
     except Exception:
-        pass
+        _log(f"  ⚠️  Could not read plan title from {plan_path_pub} — using slug fallback")
 
     frontmatter = f"""---
 title: "{plan_title}"
@@ -4573,7 +4574,7 @@ def main():
     if steps in ("all", "write") and "write" not in completed_phases:
         content_path = step_write_with_retry(
             args.level, args.module, slug, packet_path,
-            writer=args.writer, max_retries=2,
+            writer=args.writer, max_retries=4,
             skeleton=skeleton_text,
             no_chunk=args.no_chunk,
             verification_text=verification_text,

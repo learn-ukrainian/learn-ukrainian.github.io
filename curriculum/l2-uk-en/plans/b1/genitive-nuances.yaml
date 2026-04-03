@@ -2,7 +2,7 @@ module: b1-042
 level: B1
 sequence: 42
 slug: genitive-nuances
-version: '3.0'
+version: '3.1'
 title: "Родовий відмінок (деталі)"
 subtitle: "Розширені значення родового: частина від цілого, бажання, заперечення,
   дати"
@@ -93,12 +93,35 @@ content_outline:
       - "The tricky cases: some nouns allow BOTH, with meaning difference: листа (a
         specific letter) vs листу (foliage, collective). Practice: 15 nouns, choose
         correct Р.в. ending and explain the category."
-  - section: "Підсумок"
-    words: 300
+  - section: "Родовий з прийменниками (§4.2.2.2)"
+    words: 600
     points:
-      - "Reference: five semantic roles of Р.в.: 1. Частковий (склянка води). 2. Бажання/пошуку
+      - "The State Standard lists 15+ prepositions governing Р.в. Beyond the basic
+        без, від, для, до, з/із, після, біля covered in A2, B1 expands to: замість
+        (instead of — замість кави), крім/окрім (except — крім мене), навколо (around
+        — навколо будинку), серед (among — серед друзів), щодо (regarding — щодо
+        вашого питання), внаслідок (as a result of — внаслідок дощу), поблизу (near
+        — поблизу школи). From Заболотний Grade 7 p.193: прийменники, що вживаються
+        з Р.в."
+      - "Compound prepositions + Р.в.: з-за (from behind — з-за хмар), з-під (from
+        under — з-під столу), з-поміж (from among — з-поміж учнів). Note: hyphenated
+        writing. Also: за допомогою (with the help of), у разі (in case of), на відміну
+        від (unlike). Practice: 10 sentences using B1-level genitive prepositions in
+        context."
+      - "Semantic grouping of Р.в. prepositions: Location (біля, навколо, поблизу,
+        серед). Source/cause (від, з, через, внаслідок). Exclusion (без, крім, замість).
+        Direction (до, з-за, з-під). Reference (щодо, стосовно). Time (після, до,
+        протягом — covered in prepositions-temporal module)."
+  - section: "Підсумок"
+    words: 400
+    points:
+      - "Reference: six semantic roles of Р.в.: 1. Частковий (склянка води). 2. Бажання/пошуку
         (шукати правди). 3. Заперечення (немає часу). 4. Дати (другого лютого). 5.
-        Приналежності (review from A2: книжка брата)."
+        Приналежності (review from A2: книжка брата). 6. З прийменниками (15+ prepositional
+        constructions)."
+      - "Self-check: 10 sentences requiring correct Р.в. usage across all six roles.
+        For each, identify the semantic function and form the correct genitive. Include
+        both -а/-я and -у/-ю masculine endings."
       - "Preview: next module — давальний відмінок (деталі): expressing states, age,
         and needs."
 vocabulary_hints:

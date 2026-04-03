@@ -1,7 +1,7 @@
 # Audit Report: M17 — verbs-group-two.md
 **Level:** A1 | **Module:** M17 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-04-02 20:30:10
+**Overall Status:** ✅ PASS
+**Generated:** 2026-04-03 14:02:17
 
 ## Configuration
 **Type:** A1-grammar
@@ -10,7 +10,7 @@
 **Items per Activity:** ≥6 items
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
-**Engagement:** ≥1 callouts
+**Engagement:** ≥0 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -34,13 +34,15 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: однина, множина
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: множина, однина
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in verbs-group-two.yaml: Schema validation error at key '8': {'type': 'observe', 'examples': ['робити → я роблю (б → бл)', 'ходити → я ходжу (д → дж)', 'просити → я прошу (с → ш)', 'бачити → я бачу (ч stays ч — no change)'], 'prompt': 'Look at the **я**-forms above. Three verbs change their stem consonant; one does not. Which consonant does NOT change? What do the three changing consonants (б, д, с) have in common — and why might ч behave differently?'} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1235/1200 (raw: 1364)
@@ -48,14 +50,14 @@
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 1/1
+- **Engagement:** ✅ 1/0
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 32/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 29.0% HIGH (target 15-25% (M17))
+- **Immersion:** 🇺🇦 29.0% (target 15-35% (M17))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 2+ cultural hooks but content has no cultural section

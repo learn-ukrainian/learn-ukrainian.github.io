@@ -2,7 +2,7 @@ module: b1-027
 level: B1
 sequence: 27
 slug: motion-prefixes-in-out
-version: '3.0'
+version: '3.1'
 title: Зайти, вийти
 subtitle: Префікси за- (входження/забігання) та ви- (вихід) з дієсловами руху
 focus: grammar
@@ -106,6 +106,15 @@ content_outline:
       - 'Narrative: describe a sequence of errands using за-/ви- verbs. Model: Вийшла
         з офісу о п''ятій. Зайшла до супермаркету. Вийшла, забігла до хімчистки. Вийшла
         i пішла додому.'
+      - 'Aspect pairs in action: зайти (pf) / заходити (impf), вийти (pf) / виходити
+        (impf). Contrast: Я зайшов до магазину (one-time event). Я часто заходжу до цього
+        магазину (habitual). Вона вийшла о п''ятій (completed exit). Вона зазвичай виходить
+        о шостій (routine). Learners practice choosing aspect based on context: single
+        event vs repeated action.'
+      - 'Error correction practice: common mistakes with за-/ви- preposition-case
+        combinations. *Зайшов у друга (wrong — should be до друга). *Вийшов від магазину
+        (wrong — should be з магазину). *Забіг у пошту (should be до пошти or на пошту).
+        Learners correct 6-8 sentences and explain each error.'
   - section: 'Підсумок: за- і ви-'
     words: 350
     points:

@@ -191,7 +191,7 @@ def dispatch_agent(
     else:
         mcp_config = str(PROJECT_ROOT / ".mcp.json")
         cmd = [
-            "npx", "@anthropic-ai/claude-code", "-p",
+            "npx", "@anthropic-ai/claude-code@latest", "-p",
             "--model", model,
             "--output-format", "text",
         ]

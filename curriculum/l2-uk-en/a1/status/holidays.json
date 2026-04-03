@@ -2,7 +2,7 @@
   "module": "holidays",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-02T20:30:00.089076Z",
+  "last_audit": "2026-04-03T14:02:07.796618Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-03-31T17:27:15.873919Z",
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1162/1200 (raw: 1306) (38 short) | engagement: 0/1"
+      "status": "warn",
+      "violations": 0,
+      "message": "1162/1200 (raw: 1306) (38 short)"
     },
     "activities": {
       "status": "pass",
@@ -50,10 +50,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
     "pass_count": 4,
-    "fail_count": 1,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

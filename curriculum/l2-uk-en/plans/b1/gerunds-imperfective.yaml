@@ -2,7 +2,7 @@ module: b1-057
 level: B1
 sequence: 57
 slug: gerunds-imperfective
-version: '3.0'
+version: '3.1'
 title: "Дієприслівники недоконаного виду"
 subtitle: "Додаткова дія, одночасна з основною: читаючи, слухаючи"
 focus: grammar
@@ -32,7 +32,7 @@ dialogue_situations:
       actions'
 content_outline:
   - section: "Що таке дієприслівник?"
-    words: 700
+    words: 750
     points:
       - "Definition from Литвінова Grade 7 p.114: дієприслівник — це незмінювана форма
         дієслова, яка означає додаткову дію й відповідає на питання що роблячи? що
@@ -68,7 +68,7 @@ content_outline:
       - "Reflexive gerunds: -ся remains after the suffix: усміхатися → усміхаючись,
         дивитися → дивлячись, навчатися → навчаючись. Note: -сь (not -ся) after vowel."
   - section: "Дієприслівник як обставина"
-    words: 600
+    words: 650
     points:
       - "Syntactic role: дієприслівник is ALWAYS an обставина in the sentence. Types
         of circumstance it expresses: Обставина способу дії (manner): Він ішов усміхаючись.
@@ -83,7 +83,7 @@ content_outline:
       - "Practice: determine the type of обставина for given дієприслівники in sentences,
         and experiment with repositioning them."
   - section: "Поширені помилки та практика"
-    words: 600
+    words: 650
     points:
       - "Dangling gerund (найпоширеніша помилка): *Їдучи в автобусі, мені зателефонували.
         (Who is riding? Not clear.) → Їдучи в автобусі, я отримав дзвінок. (I am riding
@@ -97,13 +97,50 @@ content_outline:
         дієприслівники to show simultaneous actions. Learners identify all gerunds,
         check logical subject alignment, and transform selected gerunds into subordinate
         clauses."
+  - section: "Дієприслівник у різних стилях мовлення"
+    words: 500
+    points:
+      - "Register distribution from §4.2.3.1 State Standard: imperfective gerunds are
+        productive in художній, науковий, and публіцистичний styles but rare in розмовний.
+        In everyday speech, Ukrainians prefer subordinate clauses: Коли я йшов додому...
+        (not Ідучи додому...). The gerund form signals written, educated register."
+      - "Discourse patterns: gerunds as sentence connectors in narrative prose. They
+        create flow between actions without repeating the subject: Андрій вийшов з дому.
+        Ідучи вулицею, він думав про розмову. Наближаючись до парку, почув музику. Each
+        gerund advances the narrative smoothly. Compare with choppy alternative: Він
+        ішов вулицею. Він думав про розмову."
+      - "Lexicalized gerund forms that function as prислівники or прийменники: незважаючи
+        (на) (despite — from зважати), починаючи (з) (starting from — from починати),
+        включаючи (including — from включати). These have lost their verbal force and
+        do NOT require logical subject alignment: Незважаючи на дощ, концерт відбувся.
+        (no dangling issue — the form is a прийменник)."
+  - section: "Читання та розширена практика"
+    words: 500
+    points:
+      - "Extended reading passage: a Ukrainian travelogue or nature essay (8-10 sentences)
+        using imperfective gerunds to describe simultaneous experiences. Example theme:
+        hiking in the Карпати. Learners: 1. Identify all дієприслівники. 2. Classify
+        by type of обставина. 3. Verify logical subject alignment. 4. Transform 3 gerunds
+        into subordinate clauses and evaluate which version reads better."
+      - "Contrastive exercise from Авраменко Grade 7 p.123: pairs of sentences — one
+        with a gerund, one with a clause. Learners decide which is more natural for
+        the given register (formal letter, casual conversation, news report, literary
+        text). Builds register awareness alongside grammatical competence."
+      - "Production task: learners write a paragraph (6-8 sentences) describing their
+        commute or a walk through their city. They must use at least 4 imperfective
+        gerunds naturally, varying the type of обставина (manner, time, reason). Peer
+        review checklist: Are all logical subjects correct? Is any gerund a Russian
+        calque? Does the text flow naturally?"
   - section: "Підсумок та перехід до M62"
-    words: 350
+    words: 400
     points:
       - "Summary: дієприслівник недоконаного виду = додаткова дія, одночасна з основною.
         Суфікси: -учи/-ючи (I), -ачи/-ячи (II). Незмінюваний. Роль обставини. Логічний
         підмет = спільний. Self-check: Я можу утворити дієприслівники ✓/✗, Я перевіряю
         спільність підмета ✓/✗."
+      - "Consolidation table: formation algorithm (verb → 3rd person plural present →
+        drop -ть → add -чи; for reflexive → add -сь). Quick-reference with 8 model
+        verbs across both дієвідміни, including reflexive examples."
       - "Preview: M62 — Дієприслівники доконаного виду. Secondary action that happens
         BEFORE the main action: прочитавши книгу, я віддав її."
 vocabulary_hints:

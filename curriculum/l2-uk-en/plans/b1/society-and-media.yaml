@@ -2,7 +2,7 @@ module: b1-083
 level: B1
 sequence: 83
 slug: society-and-media
-version: '3.0'
+version: '3.1'
 title: "Суспільство і медіа"
 subtitle: "Новини, ЗМI, суспільне життя — розуміємо та обговорюємо"
 focus: communication
@@ -32,7 +32,7 @@ dialogue_situations:
       in news'
 content_outline:
   - section: "Що таке медіа?"
-    words: 550
+    words: 650
     points:
       - "Definition from Авраменко Grade 7 p.28: Засоби масової інформації (ЗМI),
         або масмедіа — це засоби передавання, зберігання та відтворення інформації
@@ -48,8 +48,12 @@ content_outline:
       - "Cultural note: Ukrainian media landscape — key outlets. Українська правда,
         Новинарня, Суспільне, ТСН. The importance of Ukrainian-language media for
         diaspora and learners."
+      - "Social media in Ukrainian: Фейсбук, Iнстаграм, Ютуб, ТікТок — Ukrainian
+        users use these platforms actively. Vocabulary: допис (post), підписник (subscriber),
+        стрічка (feed), коментар (comment), поширити (to share). Practice: reading
+        and writing Ukrainian social media posts as a media literacy exercise."
   - section: "Читання новин"
-    words: 700
+    words: 800
     points:
       - "Structure of a news article: Заголовок (headline) — short, informative, often
         without verbs. Лід (lead) — first paragraph answering хто, що, де, коли, чому.
@@ -66,8 +70,13 @@ content_outline:
         думку,' 'мабуть,' 'можливо.'"
       - "Practice: learners read two short Ukrainian news articles (100-150 words
         each) on accessible topics and answer comprehension questions in Ukrainian."
+      - "News verbs — register-specific reporting vocabulary: повідомити (to report —
+        neutral), заявити (to state — official), зізнатися (to confess), стверджувати
+        (to claim — implies doubt), наголосити (to emphasize), попередити (to warn).
+        The choice of news verb reveals the journalist's attitude. Practice: learners
+        identify how different verbs change the tone of the same news story."
   - section: "Медіаманіпулювання"
-    words: 600
+    words: 700
     points:
       - "Definition from Авраменко Grade 7 p.184: Маніпулювання — приховане управління
         людиною з корисливою метою. Медіаманіпулювання — вид психологічного впливу
@@ -83,8 +92,13 @@ content_outline:
       - "The decolonization connection: Russian media manipulation about Ukraine uses
         all these techniques. Learning to read critically in Ukrainian is not just
         a language skill — it is cultural self-defense."
+      - "Fact-checking vocabulary and process: перевірити (to verify), джерело (source),
+        достовірний (reliable), фейк (fake), маніпулятивний (manipulative). Ukrainian
+        fact-checking organizations: StopFake, VoxCheck, «Без Брехні.» Learners practice
+        evaluating 3 claims using a structured fact-checking process: What is claimed?
+        What is the source? Is there evidence?"
   - section: "Суспільне життя"
-    words: 600
+    words: 700
     points:
       - "Суспільно-політична лексика for B1: суспільство (society), громадянин (citizen),
         держава (state), уряд (government), парламент (parliament), вибори (elections),
@@ -101,8 +115,13 @@ content_outline:
         full B1 toolkit."
       - "Reading practice: a B1-adapted article about волонтерство в Україні, with
         comprehension and vocabulary exercises."
+      - "Ukrainian identity vocabulary: державність (statehood), незалежність (independence),
+        самовизначення (self-determination), суверенітет (sovereignty), євроінтеграція
+        (European integration). State Standard 2024 Themes §3 includes суспільні
+        відносини — learners discuss Ukraine's path using these terms. Practice: express
+        an opinion about євроінтеграція using аргументація structure from M82."
   - section: "Медіатекст: аналіз і створення"
-    words: 600
+    words: 700
     points:
       - "Analyzing a Ukrainian media text: 1. Визначте стиль (публіцистичний, офіційний,
         розмовний?) 2. Знайдіть факти та думки. 3. Знайдіть абревіатури — розшифруйте.
@@ -116,14 +135,22 @@ content_outline:
         основна частина. Include at least 2 абревіатури."
       - "Oral practice: learners present their new report to the class, then answer
         questions — applying all B1 skills in an integrated task."
+      - "Порівняльний аналіз: learners read two news articles on the same event from
+        different Ukrainian sources and compare: How does vocabulary differ? Is the tone
+        neutral or emotional? Which article provides more фактів, which more думок?
+        Practice in критичне мислення using all B1 analytical tools."
   - section: "Підсумок: медіаграмотність"
-    words: 350
+    words: 450
     points:
       - "Complete reference: media vocabulary, news text structure, manipulation techniques,
         критичне читання questions."
       - "Self-check in Ukrainian: 1. Назвіть 5 типів ЗМI. 2. Чим факт відрізняється
         від думки? 3. Назвіть 3 прийоми медіаманіпулювання. 4. Напишіть заголовок
         i лід до новини про шкільну подію."
+      - "Media consumption plan: learners create a personal план for consuming Ukrainian
+        media at B1 level. Recommended: 1 news article per day (Українська правда,
+        Суспільне), 1 Ukrainian YouTube video per week, follow 3 Ukrainian social
+        media accounts. This bridges classroom learning to real-world language use."
       - "Preview: Загальне повторення B1 (M88) — comprehensive review of all B1 grammar
         and vocabulary before final exams."
 vocabulary_hints:

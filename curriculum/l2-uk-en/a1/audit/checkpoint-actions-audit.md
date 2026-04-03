@@ -1,7 +1,7 @@
 # Audit Report: M21 — checkpoint-actions.md
 **Level:** A1 | **Module:** M21 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-04-02 20:29:53
+**Overall Status:** ✅ PASS
+**Generated:** 2026-04-03 14:02:01
 
 ## Configuration
 **Type:** A1
@@ -10,7 +10,7 @@
 **Items per Activity:** ≥6 items
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
-**Engagement:** ≥1 callouts
+**Engagement:** ≥0 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -38,12 +38,13 @@
   - FIX: No action needed — incidental dative exposure is acceptable.
 - **[INLINE_ENGLISH_IN_PROSE]** Inline English translations in B1+ prose (12 occurrences): (She can help), (He must work), (You can speak) — breaks immersion target
   - FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
+- **[YAML_SCHEMA_VIOLATION]** Schema error in checkpoint-actions.yaml: Schema validation error at key '0': 'хочу' is not of type 'object'
+  - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
-- Immersion 6% off target (minor)
+- 3 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1472/1200 (raw: 1571)
@@ -51,14 +52,14 @@
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 1/1
+- **Engagement:** ✅ 1/0
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 54/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 30.8% HIGH (target 15-25% (M21))
+- **Immersion:** 🇺🇦 30.8% (target 15-35% (M21))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes

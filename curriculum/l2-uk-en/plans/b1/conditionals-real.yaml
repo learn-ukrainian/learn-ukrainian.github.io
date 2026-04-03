@@ -2,7 +2,7 @@ module: b1-014
 level: B1
 sequence: 14
 slug: conditionals-real
-version: '3.0'
+version: '3.1'
 title: "Умовний спосіб (реальний)"
 subtitle: "Якщо-речення та реальні умовні конструкції"
 focus: grammar
@@ -121,6 +121,16 @@ content_outline:
         (mixing real condition with conditional). Correct: Якщо я зроблю це вчасно...
         (real condition → дійсний спосіб). Rule: якщо + дійсний спосіб = real condition.
         якби + умовний спосіб = unreal condition (next module)."
+      - "Error 5: Calque from English 'would' overuse. English uses 'would' in both
+        polite requests AND conditionals. Ukrainian distinguishes: polite request = хотів
+        би / міг би (умовний). Habitual past = NOT умовний (*Коли я був маленький, я
+        ходив би в парк — wrong; correct: ходив). Learners must unlearn the English
+        'would = б' reflex."
+      - "Self-correction strategy: Three-step check before using б/би: 1. Is this a wish,
+        request, or polite suggestion? → Умовний correct. 2. Is this a real future
+        condition? → Use якщо + дійсний спосіб. 3. Is this a past habit? → Use simply
+        минулий час without б/би. Practice: learners classify 8-10 sentences by type
+        and choose the correct form."
   - section: "Підсумок та перехід до M19"
     words: 350
     points:

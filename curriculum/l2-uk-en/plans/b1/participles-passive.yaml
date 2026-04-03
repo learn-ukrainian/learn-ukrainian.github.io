@@ -2,7 +2,7 @@ module: b1-054
 level: B1
 sequence: 54
 slug: participles-passive
-version: '3.0'
+version: '3.1'
 title: "Пасивні дієприкметники"
 subtitle: "Ознака за дією, якої зазнає предмет"
 focus: grammar
@@ -47,7 +47,7 @@ content_outline:
         of -но/-то forms: прочитаний → прочитано, збудований → збудовано. The participle
         is the attributive form, -но/-то is the predicate form."
   - section: "Творення пасивних дієприкметників"
-    words: 900
+    words: 1000
     points:
       - "Three suffix groups from Заболотний Grade 7 p.189 and Литвінова Grade 7 p.88:
         1. Суфікс -н-: основа інфінітива на -а-: прочитати → прочитаний, написати
@@ -66,7 +66,7 @@ content_outline:
         5. Додайте закінчення прикметника (-ий/-а/-е/-i). Practice: 12-15 verbs for
         formation, including those with alternations."
   - section: "Відмінювання пасивних дієприкметників"
-    words: 600
+    words: 700
     points:
       - "Passive participles decline like прикметники of hard group: прочитаний, прочитаного,
         прочитаному, прочитаний/прочитаного, прочитаним, прочитаному. Feminine: прочитана,
@@ -95,7 +95,7 @@ content_outline:
       - "Practice: classify forms as дієприкметник or прикметник based on context.
         Learners add agents or direct objects to prove the form is a participle."
   - section: "Практика: пасивні дієприкметники у тексті"
-    words: 700
+    words: 800
     points:
       - "Reading passage: a description of a Ukrainian вишиванка or cultural artifact
         using passive participles: 'Вишита квітами сорочка, пофарбована натуральними
@@ -108,12 +108,17 @@ content_outline:
         object using passive participles: 'У кімнаті стоїть пофарбований стіл. На
         стіні висить намальована картина. На підлозі лежить вишитий килимок.'"
   - section: "Підсумок та перехід до M59"
-    words: 300
+    words: 500
     points:
       - "Summary: пасивні дієприкметники = ознака за дією іншого виконавця. Три суфікси:
         -н- (від -а-), -ен-/-єн- (від пригол.), -т- (односклад.). Чергування приголосних
         при творенні. Зв'язок з -но/-то формами. Self-check: Я можу утворити пасивні
         дієприкметники ✓/✗, Я знаю чергування приголосних ✓/✗."
+      - "Consolidation table: complete formation algorithm with suffix selection tree.
+        Given a verb → determine stem-final sound → select suffix → check for alternation
+        → add adjectival ending. Model examples for each path: прочитати (-а- stem →
+        -н-), побачити (consonant stem → -ен-), мити (monosyllabic → -т-). Quick-reference
+        alternation chart: д→дж, т→ч, з→ж, с→ш, б→бл."
       - "Preview: M59 — Дієприкметниковий зворот. The participle + its dependent words
         form a phrase that requires specific punctuation rules."
 vocabulary_hints:

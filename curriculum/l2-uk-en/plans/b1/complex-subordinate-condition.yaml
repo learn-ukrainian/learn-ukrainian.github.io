@@ -2,7 +2,7 @@ module: b1-067
 level: B1
 sequence: 67
 slug: complex-subordinate-condition
-version: '3.0'
+version: '3.1'
 title: "Речення умови"
 subtitle: "Якщо, коли (=якщо), як: реальні умови у складному реченні"
 focus: grammar
@@ -30,7 +30,7 @@ dialogue_situations:
       business'
 content_outline:
   - section: "Підрядні обставинні умови"
-    words: 650
+    words: 750
     points:
       - "Definition from Заболотний Grade 8 p.112: підрядне обставинне умови вказує
         на умову, за якої здійснюється дія головної частини. Conjunctions: якщо, коли
@@ -42,7 +42,7 @@ content_outline:
       - "Відмінність від причини (M70): Умова: Якщо буде холодно, одягни пальто. (maybe
         cold, maybe not) Причина: Одягни пальто, бо холодно. (it IS cold — fact)"
   - section: "Реальна умова"
-    words: 700
+    words: 800
     points:
       - "Якщо + present/future for real possibilities: Якщо підеш у магазин, купи
         хліба. Якщо матимеш час, приїжджай у гості. Якщо вона зателефонує, скажи,
@@ -57,7 +57,7 @@ content_outline:
         (то emphasizes consequence) Якщо хочеш, тоді приходь. (тоді = then) Practice:
         10 sentences using real conditionals with varied conjunctions."
   - section: "Нереальна умова"
-    words: 600
+    words: 700
     points:
       - "Якби + conditional mood (review from M19): Якби я знав, я б допоміг. (but
         I didn't know) Якби ти прийшов раніше, ми б встигли. Якби я мав більше часу,
@@ -69,7 +69,7 @@ content_outline:
         in future. Якби я знав (unreal — I don't know) → consequence in conditional.
         Practice: 6 pairs contrasting real and unreal conditionals."
   - section: "Офіційні та формальні конструкції"
-    words: 500
+    words: 600
     points:
       - "За умови що — formal: За умови що ви подасте документи вчасно, ваша заявка
         буде розглянута. У випадку якщо — formal, contingency: У випадку якщо виникнуть
@@ -79,7 +79,7 @@ content_outline:
         → за умови що (formal) → у випадку якщо (official). Practice: rewrite the
         same condition in 3 registers."
   - section: "Практика: умовні речення у контексті"
-    words: 650
+    words: 750
     points:
       - "Reading passage: a text mixing причинні, часові, and умовні clauses. Learners
         classify each підрядне by type (причина/час/умова)."
@@ -89,7 +89,7 @@ content_outline:
       - "Production: write 6-8 conditional sentences about plans, dreams, and hypotheticals.
         Mix real (якщо) and unreal (якби)."
   - section: "Підсумок та перехід до M72"
-    words: 300
+    words: 400
     points:
       - "Summary: умовні = за якої умови? Якщо/коли/як (реальна), якби (нереальна).
         Correlatives: то, тоді. Формальні: за умови що. Self-check: Я розрізняю реальну

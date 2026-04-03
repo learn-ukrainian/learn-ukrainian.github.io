@@ -2,7 +2,7 @@ module: b1-079
 level: B1
 sequence: 79
 slug: reading-literature
-version: '3.0'
+version: '3.1'
 title: "Читання художніх текстів"
 subtitle: "Художній стиль мовлення — від уривків до розуміння літератури"
 focus: communication
@@ -31,7 +31,7 @@ dialogue_situations:
       speech, characterization'
 content_outline:
   - section: "Художній стиль мовлення"
-    words: 600
+    words: 700
     points:
       - "Definition from Ворон Grade 9 p.169 and Заболотний Grade 8 p.115: Художній
         стиль — образне відтворення дійсності, емоційний вплив на читача або слухача.
@@ -50,8 +50,12 @@ content_outline:
       - "Cultural note: Ukrainian художня література is one of the richest in Europe.
         Reading Ukrainian literature in the original — even adapted excerpts at B1
         — connects the learner to the culture directly."
+      - "Жанри художньої літератури relevant at B1 from Заболотний Grade 5 p.134:
+        оповідання (short story), казка (fairy tale), легенда (legend), вірш (poem),
+        повість (novella). Each жанр has structural features learners should recognize.
+        Practice: match text excerpts to their жанр based on structural clues."
   - section: "Художні засоби"
-    words: 700
+    words: 800
     points:
       - "Епітет — an expressive adjective revealing a quality: 'сонячний промінь,'
         'лагідний вітер,' 'журливий спів.' Differs from звичайний прикметник: 'великий
@@ -68,8 +72,12 @@ content_outline:
       - "Гіпербола — exaggeration for effect: 'Місто як море людей.' 'Чекаю сто років.'
         Алітерація — repetition of sounds: 'Тихо тече вода.' Practice: learners identify
         all художні засоби in a passage and explain their effect on the reader."
+      - "Антитеза and оксиморон — contrast-based devices: Антитеза — juxtaposition
+        of opposites: 'Сміється — а в серці плаче.' Оксиморон — combining contradictory
+        terms: 'гарячий сніг,' 'живий труп.' These devices are common in Ukrainian
+        poetry and prose. Practice: create original examples of антитеза and оксиморон."
   - section: "Читання уривків: проза"
-    words: 700
+    words: 800
     points:
       - "Adapted literary excerpt 1 (150-200 words) — a nature description or village
         scene from a classic Ukrainian author (e.g., Коцюбинський, Стефаник, or Винниченко).
@@ -87,8 +95,13 @@ content_outline:
       - "Vocabulary from context: learners practice guessing word meanings from literary
         context, then verify with словник. This skill is essential for moving toward
         independent Ukrainian reading."
+      - "Comparative reading: two prose excerpts on the same topic (e.g., a market
+        scene) by different authors or from different periods. Learners compare style,
+        vocabulary, художні засоби and discuss how the same reality is rendered differently
+        through language. Practice: write a comparative analysis (5-7 sentences) using
+        вставні слова for structuring the argument."
   - section: "Читання уривків: поезія"
-    words: 550
+    words: 650
     points:
       - "Introduction to Ukrainian poetry at B1 — adapted or short poems: Poetry uses
         language most densely — every word matters. Key features: ритм (rhythm), рима
@@ -104,8 +117,13 @@ content_outline:
       - "Poetry vs prose — key differences: Ущільненість мови (density), ритм, рима,
         інверсія (unusual word order). Practice: learners rewrite a short poem as
         prose, noting what changes."
+      - "Memorization and recitation practice: learners choose one short poem (4-8
+        lines) to memorize and recite. Focus on правильний наголос and виразне читання
+        (expressive reading). This is a standard Ukrainian pedagogical practice from
+        Авраменко Grade 6 p.44 — reading aloud develops pronunciation, інтонація,
+        and emotional connection to the language."
   - section: "Реакція на текст: висловлювання власної думки"
-    words: 550
+    words: 650
     points:
       - "Structured response framework: 1. Загальне враження: 'Мені сподобався / не
         сподобався цей текст, бо...' 2. Аналіз: 'Автор використовує... (епітети, метафори),
@@ -121,8 +139,13 @@ content_outline:
         'Безумовно, автор...' 'Можливо, ліричний герой...' 'Зрештою, головна ідея
         — ...' Practice: learners discuss a literary excerpt using structured opinion
         language with вставні слова."
+      - "Written відгук (review) practice: learners write a structured review (100-120
+        words) of one of the excerpts read in the module, following the framework:
+        загальне враження → аналіз художніх засобів → особисте ставлення → рекомендація.
+        Self-evaluate using a checklist: чи є вставні слова? чи є складні речення?
+        чи є конкретні приклади з тексту?"
   - section: "Підсумок: дорога до літератури"
-    words: 300
+    words: 400
     points:
       - "Complete reference: художні засоби glossary with examples, reading strategies
         checklist, opinion vocabulary."
@@ -130,6 +153,10 @@ content_outline:
         епітет, порівняння та метафору в данному реченні. 3. Напишіть короткий відгук
         (5-7 речень) на прочитаний уривок. 4. Чим художній стиль відрізняється від
         публіцистичного?"
+      - "Recommended reading list for independent B1 practice: adapted versions of
+        Франко 'Захар Беркут,' Коцюбинський 'Тіні забутих предків,' Лесін Українка
+        selected poems, Стефаник short stories. Resources for finding adapted Ukrainian
+        texts online."
       - "Preview: Контрольна робота 9 (M84) — testing register awareness, negation,
         вставні слова, nature vocabulary, and literary reading."
 vocabulary_hints:

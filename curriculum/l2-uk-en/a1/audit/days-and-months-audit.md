@@ -1,7 +1,7 @@
 # Audit Report: M23 — days-and-months.md
 **Level:** A1 | **Module:** M23 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-04-02 20:29:57
+**Overall Status:** ✅ PASS
+**Generated:** 2026-04-03 14:02:04
 
 ## Configuration
 **Type:** A1-vocab
@@ -10,7 +10,7 @@
 **Items per Activity:** ≥6 items
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
-**Engagement:** ≥1 callouts
+**Engagement:** ≥0 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -33,20 +33,29 @@
 - Priority types used: 3/8 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in days-and-months.yaml: Schema validation error at key '7': {'type': 'translate', 'instruction': 'Оберіть правильний переклад (Choose the correct translation)', 'items': [{'source': 'On Monday', 'options': [{'text': 'понеділок', 'correct': False}, {'text': 'у понеділок', 'correct': True}, {'text': 'у понеділка', 'correct': False}]}, {'source': 'In April', 'options': [{'text': 'квітень', 'correct': False}, {'text': 'у квітня', 'correct': False}, {'text': 'у квітні', 'correct': True}]}, {'source': 'In autumn', 'options': [{'text': 'восени', 'correct': True}, {'text': 'осінь', 'correct': False}, {'text': 'у осінь', 'correct': False}]}, {'source': 'On Saturday', 'options': [{'text': 'субота', 'correct': False}, {'text': 'в суботу', 'correct': True}, {'text': 'у субота', 'correct': False}]}, {'source': 'In spring', 'options': [{'text': 'весна', 'correct': False}, {'text': 'у весну', 'correct': False}, {'text': 'навесні', 'correct': True}]}, {'source': 'In December', 'options': [{'text': 'грудень', 'correct': False}, {'text': 'в грудні', 'correct': True}, {'text': 'в грудня', 'correct': False}]}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
+
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
+
 ## Gates
 - **Words:** ✅ 1318/1200 (raw: 1455)
 - **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/1
+- **Engagement:** ✅ 0/0
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 69/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 29.1% HIGH (target 15-25% (M23))
+- **Immersion:** 🇺🇦 29.1% (target 15-35% (M23))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes

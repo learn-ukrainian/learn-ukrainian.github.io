@@ -1,5 +1,40 @@
 """Prompt building for Gemini and Claude interactions."""
 
+from pathlib import Path
+
+# Project root — resolved relative to this file
+_PROJECT_ROOT = Path(__file__).resolve().parents[2]
+
+
+def _load_gemini_context() -> str:
+    """Load .gemini/docs/ context files and return as a single block.
+
+    These files contain the linguistic rules, tool reference, and workflow
+    that Gemini MUST know for every interaction.  GEMINI.md tells Gemini
+    to "read these files" — we inject them directly so there's no chance
+    of Gemini skipping or hallucinating their contents.
+    """
+    docs_dir = _PROJECT_ROOT / ".gemini" / "docs"
+    if not docs_dir.exists():
+        return ""
+
+    parts: list[str] = []
+    for name in ("LINGUISTICS.md", "TOOLS.md", "WORKFLOW.md"):
+        path = docs_dir / name
+        if path.exists():
+            parts.append(path.read_text("utf-8"))
+
+    if not parts:
+        return ""
+
+    return (
+        "# PROJECT CONTEXT — NON-NEGOTIABLE RULES\n\n"
+        "The following rules, tools, and workflow govern ALL your output.\n"
+        "Violating any rule = task failure.\n\n"
+        + "\n\n---\n\n".join(parts)
+        + "\n\n---\n\n"
+    )
+
 
 def build_gemini_prompt(msg: dict, stdout_only: bool, output_path: str | None,
                         allow_write: bool, delimiters: str | None) -> str:
@@ -29,7 +64,8 @@ def _build_full_execution_prompt(msg: dict, delimiters: str | None) -> str:
     else:
         delimiter_instruction = "Your ONLY text output must be between the ===TAG_START=== / ===TAG_END=== delimiters defined in your task."
 
-    return f"""ROLE: You are a SILENT EXECUTION AGENT with FULL read-write access.
+    context = _load_gemini_context()
+    return f"""{context}ROLE: You are a SILENT EXECUTION AGENT with FULL read-write access.
 
 TOOLS YOU MUST USE (not simulate):
 - run_shell_command: scripts/audit_module.sh, .venv/bin/python scripts/*.py, grep, wc
@@ -77,7 +113,8 @@ def _build_orchestrated_prompt(msg: dict, output_path: str | None) -> str:
 - Output your result as plain text between the delimiters specified in the task
 - That's it. Nothing else. Just text output."""
 
-    prompt = f"""ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.
+    context = _load_gemini_context()
+    prompt = f"""{context}ROLE: You are a TEXT GENERATOR executing a specific task. You produce text output. That's it.
 
 ABSOLUTE RULES — VIOLATION OF ANY RULE MEANS TASK FAILURE:
 
@@ -105,7 +142,8 @@ ATTACHED DATA:
 
 def _build_standard_prompt(msg: dict) -> str:
     """Build STANDARD collaborative prompt for general communication."""
-    prompt = f"""You are Gemini, participating in a collaboration with Claude.
+    context = _load_gemini_context()
+    prompt = f"""{context}You are Gemini, participating in a collaboration with Claude.
 This is a message from Claude to you:
 
 ---

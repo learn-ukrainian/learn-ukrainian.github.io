@@ -1,7 +1,7 @@
 # Audit Report: M26 — free-time.md
 **Level:** A1 | **Module:** M26 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-02 20:29:58
+**Generated:** 2026-04-03 14:02:06
 
 ## Configuration
 **Type:** A1
@@ -10,7 +10,7 @@
 **Items per Activity:** ≥6 items
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
-**Engagement:** ≥1 callouts
+**Engagement:** ≥0 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -36,11 +36,13 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[COMPLEXITY]** Sentence too long for A1: 14 words (max 10)
   - FIX: Break into shorter sentences. First 5 words: 'Ти вже вмі́єш говори́ти про...'
+- **[YAML_SCHEMA_VIOLATION]** Schema error in free-time.yaml: Schema validation error at key '8': {'type': 'unjumble', 'instruction': 'Складіть речення зі слів (Put the words in order to make a sentence)', 'items': [{'words': ['у', 'суботу', 'кіно', 'в', 'Ходімо'], 'correct_order': ['Ходімо', 'в', 'кіно', 'у', 'суботу']}, {'words': ['на', 'грає', 'двічі', 'теніс', 'Лєна', 'тиждень', 'у'], 'correct_order': ['Лєна', 'грає', 'у', 'теніс', 'двічі', 'на', 'тиждень']}, {'words': ['рідко', 'Я', 'серіали', 'дивлюся'], 'correct_order': ['Я', 'рідко', 'дивлюся', 'серіали']}, {'words': ['не', 'ніколи', 'в', 'музей', 'ходить', 'Він'], 'correct_order': ['Він', 'ніколи', 'не', 'ходить', 'в', 'музей']}, {'words': ['завжди', 'у', 'Вона', 'неділю', 'читає'], 'correct_order': ['Вона', 'завжди', 'читає', 'у', 'неділю']}, {'words': ['тиждень', 'грає', 'на', 'баскетбол', 'тричі', 'у', 'Він'], 'correct_order': ['Він', 'грає', 'у', 'баскетбол', 'тричі', 'на', 'тиждень']}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 1 violations (minor)
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1596/1200 (raw: 1642)
@@ -48,14 +50,14 @@
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 3/1
+- **Engagement:** ✅ 3/0
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 57/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 29.3% (target 15-30% (M26))
+- **Immersion:** 🇺🇦 29.3% (target 15-40% (M26))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes

@@ -2,7 +2,7 @@ module: b1-049
 level: B1
 sequence: 49
 slug: cases-with-quantity-expressions
-version: '3.0'
+version: '3.1'
 title: "Кількісні вирази"
 subtitle: "Узгодження числівників з іменниками та неозначено-кількісні слова"
 focus: grammar
@@ -71,6 +71,21 @@ content_outline:
         двома, двох."
       - "Practice: choose cardinal or collective numeral for 10 noun groups, explaining
         why."
+  - section: "Дроби та змішані кількості (§4.2.1.3)"
+    words: 500
+    points:
+      - "The State Standard requires fractions at B1. Basic fractions: половина (1/2),
+        третина (1/3), чверть/четвертина (1/4), п'ята частина (1/5). Agreement: половина
+        + Р.в. одн. (половина яблука), третина + Р.в. одн. (третина населення), чверть
+        + Р.в. одн. (чверть години). From Голуб Grade 6 p.166: дробові числівники."
+      - "Decimal and compound fractions: два з половиною (2.5), три чверті (3/4), одна
+        ціла і дві десятих (1.2). In context: півтора (1.5 — masculine/neuter), півтори
+        (1.5 — feminine): півтора кілограма, півтори години. Note: півтора + Р.в. одн.
+        (not plural!)."
+      - "Percentages: десять відсотків (10%), сто відсотків (100%). Agreement: один
+        відсоток, два відсотки, п'ять відсотків. Practice: express recipe quantities
+        (півкіло, чверть ложки), statistics (третина населення, 25 відсотків), and time
+        (півтори години, дві з половиною доби)."
   - section: "Неозначено-кількісні слова"
     words: 500
     points:
@@ -93,12 +108,17 @@ content_outline:
         триста грамів сиру. Скільки коштують п'ять яблук? Self-check: 10 quantity
         expressions to form correctly."
   - section: "Підсумок"
-    words: 200
+    words: 400
     points:
       - "Agreement rules summary table: 1 + Н.в.одн., 2-4 + Н.в.мн., 5-20 + Р.в.мн.,
-        збірні + Р.в.мн. Oblique cases: all parts of compound numerals decline. Preview:
-        advanced pronouns — the final grammar module before the communication module
-        and checkpoint."
+        збірні + Р.в.мн., дроби (половина/третина/чверть + Р.в.одн., півтора/півтори
+        + Р.в.одн.). Oblique cases: all parts of compound numerals decline."
+      - "Self-check: 1. Agree numerals with nouns: 21 студент, 44 сторінки, 100 гривень.
+        2. Choose cardinal or collective: (два/двоє) хлопці, (три/троє) двері. 3. Decline
+        'п'ять книжок' through Р.в., Д.в., Ор.в. 4. Express fractions: 2.5 кг, 1/3
+        населення, 75%. 5. Use approximate quantities: близько, понад, до."
+      - "Preview: advanced pronouns — the final grammar module before the communication
+        module and checkpoint."
 vocabulary_hints:
   required:
     - "кількісний числівник (cardinal numeral — один, два, сто)"

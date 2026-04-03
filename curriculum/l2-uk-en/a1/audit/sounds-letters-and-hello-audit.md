@@ -1,7 +1,7 @@
 # Audit Report: M01 — sounds-letters-and-hello.md
 **Level:** A1 | **Module:** M01 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-04-02 20:30:07
+**Overall Status:** ✅ PASS
+**Generated:** 2026-04-03 14:02:14
 
 ## Configuration
 **Type:** A1
@@ -10,7 +10,7 @@
 **Items per Activity:** ≥6 items
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
-**Engagement:** ≥1 callouts
+**Engagement:** ≥0 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -47,11 +47,13 @@
   - FIX: Adjust number of items to sort to 6-30.
 - **[HINT_IN_ACTIVITY]** anagram activity 'Untitled' has item-level hint in item 1
   - FIX: Remove all 'hint' fields from activity items (they break activities and provide no real pedagogical value)
+- **[YAML_SCHEMA_VIOLATION]** Schema error in sounds-letters-and-hello.yaml: Schema validation error at key '0': {'video': 'https://www.youtube.com/watch?v=aq0cjB90s3w', 'letter': 'Й', 'word': 'йогурт', 'note': ''} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 15/100)
 
-- 4 violations (moderate)
+- 5 violations (moderate)
 
 ## Gates
 - **Words:** ✅ 1612/1200 (raw: 1779)
@@ -59,7 +61,7 @@
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ❌ 0/1
+- **Engagement:** ✅ 0/0
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 32/1
 - **Structure:** ✅ Valid Structure

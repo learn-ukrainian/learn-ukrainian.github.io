@@ -2,12 +2,12 @@
   "module": "my-plans",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-02T20:30:04.238429Z",
+  "last_audit": "2026-04-03T14:02:11.832945Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-31T17:27:15.877596Z",
+    "md": "2026-04-02T20:36:34.219290Z",
     "meta": null,
-    "activities": "2026-03-30T23:34:18.790482Z",
+    "activities": "2026-04-02T20:38:17.596124Z",
     "vocabulary": "2026-03-30T23:34:35.411441Z",
     "research": null,
     "plan": "2026-03-30T22:17:20.662467Z"
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1878/1200 (raw: 1902) | engagement: 0/1"
+      "status": "pass",
+      "violations": 0,
+      "message": "1878/1200 (raw: 1902)"
     },
     "activities": {
       "status": "pass",
@@ -50,10 +50,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
-    "fail_count": 1,
+    "pass_count": 5,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

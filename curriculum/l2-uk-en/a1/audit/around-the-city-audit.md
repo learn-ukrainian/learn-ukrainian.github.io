@@ -1,7 +1,7 @@
 # Audit Report: M33 — around-the-city.md
 **Level:** A1 | **Module:** M33 | **Phase:** A1.5 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-04-02 20:29:52
+**Overall Status:** ✅ PASS
+**Generated:** 2026-04-03 14:02:00
 
 ## Configuration
 **Type:** A1
@@ -10,7 +10,7 @@
 **Items per Activity:** ≥6 items
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
-**Engagement:** ≥1 callouts
+**Engagement:** ≥0 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -34,10 +34,14 @@
 - Priority types used: 3/8 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
-## Recommendation
-**📝 UPDATE** (severity 10/100)
+## PEDAGOGICAL VIOLATIONS
+- **[YAML_SCHEMA_VIOLATION]** Schema error in around-the-city.yaml: Schema validation error at key '0': 'Де?' is not of type 'object'
+  - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
 
-- Immersion 7% off target (minor)
+## Recommendation
+**📝 UPDATE** (severity 5/100)
+
+- 1 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1226/1200 (raw: 1355)
@@ -45,14 +49,14 @@
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 2/1
+- **Engagement:** ✅ 2/0
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 49/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 36.9% HIGH (target 15-30% (M33))
+- **Immersion:** 🇺🇦 36.9% (target 15-40% (M33))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes

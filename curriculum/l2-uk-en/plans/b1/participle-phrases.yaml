@@ -2,7 +2,7 @@ module: b1-055
 level: B1
 sequence: 55
 slug: participle-phrases
-version: '3.0'
+version: '3.1'
 title: "Дієприкметниковий зворот"
 subtitle: "Дієприкметник із залежними словами та правила відокремлення"
 focus: grammar
@@ -65,7 +65,7 @@ content_outline:
       - "Practice: 10-12 sentences where learners place commas correctly based on
         position of the зворот relative to the noun."
   - section: "Трансформація: зворот ↔ підрядне речення"
-    words: 650
+    words: 700
     points:
       - "Every дієприкметниковий зворот can be restated as a subordinate clause with
         який/яка/яке/які: Книга, прочитана всіма учнями, лежала на столі. → Книга,
@@ -93,7 +93,7 @@ content_outline:
       - "Overuse warning: stacking participle phrases creates heavy, bureaucratic
         prose. Prefer variety: mix звороти with який-clauses and simple sentences."
   - section: "Читання та практика"
-    words: 700
+    words: 850
     points:
       - "Reading passage: a news report or article using participle phrases naturally.
         Learners identify all звороти, mark commas, determine whether each could be
@@ -103,6 +103,11 @@ content_outline:
       - "Production: learners rewrite 5 simple sentences using participle phrases
         to make them more concise: Міст, який збудували минулого року, з'єднує два
         береги. → Збудований минулого року міст з'єднує два береги."
+      - "Extended reading: a Ukrainian Wikipedia-style passage about a historical building
+        or monument (e.g., Софійський собор) rich in participial phrases. Learners
+        analyze how participle phrases create concise, information-dense prose in
+        encyclopedic register. Compare the original with a version using який-clauses
+        to see the stylistic difference."
   - section: "Підсумок та перехід до M60"
     words: 400
     points:

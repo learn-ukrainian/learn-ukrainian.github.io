@@ -1,7 +1,7 @@
 # Audit Report: M50 — what-will-happen.md
 **Level:** A1 | **Module:** M50 | **Phase:** A1.8 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-02 20:30:12
+**Generated:** 2026-04-03 14:02:20
 
 ## Configuration
 **Type:** A1-grammar
@@ -10,7 +10,7 @@
 **Items per Activity:** ≥6 items
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
-**Engagement:** ≥1 callouts
+**Engagement:** ≥0 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -37,11 +37,13 @@
   - FIX: No action needed — incidental dative exposure is acceptable.
 - **[HEADING_LEVEL]** Main section 'Summary' uses H2 (##) but spec requires H1 (#)
   - FIX: Change '## Summary' to '# Summary' for top-level TOC compliance
+- **[YAML_SCHEMA_VIOLATION]** Schema error in what-will-happen.yaml: Schema validation error at key '7': {'type': 'group-sort', 'instruction': 'Розподіліть речення за часом (Sort sentences by tense)', 'groups': [{'label': 'Майбутній час (Future)', 'items': ['Завтра я буду працювати.', 'Вона буде читати книжку.', 'Ми будемо гуляти в парку.', 'Вони будуть відпочивати.', 'Ти будеш готувати вечерю?', 'Ви будете дивитися футбол?']}, {'label': 'Не майбутній час (Past / Present)', 'items': ['Зараз я читаю.', 'Він гуляв у парку вчора.', 'Вона читала книжку.', 'Ми готуємо зараз.', 'Учора вони відпочивали.', 'Ти добре говориш.']}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 2 violations (minor)
+- 3 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1260/1200 (raw: 1327)
@@ -49,14 +51,14 @@
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 2/1
+- **Engagement:** ✅ 2/0
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 36/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ⚠️ 35.9% (target 20-35%, within tolerance (M50))
+- **Immersion:** 🇺🇦 35.9% (target 20-40% (M50))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes

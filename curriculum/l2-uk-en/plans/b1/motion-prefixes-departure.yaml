@@ -2,7 +2,7 @@ module: b1-026
 level: B1
 sequence: 26
 slug: motion-prefixes-departure
-version: '3.0'
+version: '3.1'
 title: Піти, від'їхати
 subtitle: Префікси пі-/по- (вирушання) та від- (віддалення) з дієсловами руху
 focus: grammar
@@ -105,9 +105,17 @@ content_outline:
         (Пішли додому — they left for home). від- = moving away (Відійшов від дверей
         — he stepped away from the door). Journey stages: відійшов (pulled away) →
         поїхав (departed) → доїхав (traveled to) → приїхав (arrived).'
+      - 'Semantic map: arrival vs departure as mirror images. при- (arrival at destination)
+        mirrors пі-/по- (departure toward destination). до- (reaching a point) mirrors
+        від- (moving away from a point). This symmetry helps learners internalize the
+        system: при-/від- are about PROXIMITY, до-/по- are about JOURNEY endpoints.'
       - 'Dialogue: phone conversation tracking someone''s journey with all four prefix
         groups. ''Вже від''їхали?'' ''Так, доїхали до Білої Церкви.'' ''Коли приїдете?''
         — a natural context for all prefixes.'
+      - 'Production practice: learners narrate a friend''s trip using all four prefix
+        types in sequence. Model: Від''їхав із Харкова о шостій (від-). Поїхав через
+        Полтаву (по-). Доїхав до Києва за п''ять годин (до-). Приїхав на вокзал о
+        одинадцятій (при-). Learners write their own 6-8 sentence journey narratives.'
   - section: 'Підсумок: префікси від''їзду'
     words: 350
     points:

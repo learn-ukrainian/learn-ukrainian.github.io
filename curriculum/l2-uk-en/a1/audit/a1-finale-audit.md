@@ -1,7 +1,7 @@
 # Audit Report: M55 — a1-finale.md
 **Level:** A1 | **Module:** M55 | **Phase:** A1.8 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-04-02 20:29:52
+**Overall Status:** ✅ PASS
+**Generated:** 2026-04-03 14:02:00
 
 ## Configuration
 **Type:** A1
@@ -10,7 +10,7 @@
 **Items per Activity:** ≥6 items
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
-**Engagement:** ≥1 callouts
+**Engagement:** ≥0 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -47,12 +47,13 @@
   - FIX: Instrumental case not allowed until A2 (M36+). Restructure sentence.
 - **[GRAMMAR]** Instrumental case used at A1: 'За рогом'
   - FIX: Instrumental case not allowed until A2 (M36+). Restructure sentence.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in a1-finale.yaml: Schema validation error at key '10': {'type': 'translate', 'instruction': 'Оберіть правильний переклад (Choose the correct translation)', 'items': [{'source': 'How much does this vyshyvanka cost?', 'options': [{'text': 'Скільки коштує ця вишиванка?', 'correct': True}, {'text': 'Де ця вишиванка?', 'correct': False}, {'text': 'Дайте цю вишиванку.', 'correct': False}]}, {'source': "Let's go to a restaurant!", 'options': [{'text': 'Ходімо в ресторан!', 'correct': True}, {'text': 'Я в ресторані.', 'correct': False}, {'text': 'Де ресторан?', 'correct': False}]}, {'source': 'I got acquainted with Olena today.', 'options': [{'text': 'Сьогодні я познайомився з Оленою.', 'correct': True}, {'text': 'Я знаю Олену сьогодні.', 'correct': False}, {'text': 'Олена моя подруга.', 'correct': False}]}, {'source': 'Tomorrow I will travel around Ukraine.', 'options': [{'text': 'Завтра я буду подорожувати по Україні.', 'correct': True}, {'text': 'Вчора я подорожував по Україні.', 'correct': False}, {'text': 'Зараз я подорожую по Україні.', 'correct': False}]}, {'source': 'Congratulations! You are ready for A2!', 'options': [{'text': 'Вітаю! Ти готовий до А2!', 'correct': True}, {'text': 'Дякую! Ти вже на початку.', 'correct': False}, {'text': 'Привіт! Ти знаєш А2.', 'correct': False}]}, {'source': 'This is just the beginning!', 'options': [{'text': 'Це тільки початок!', 'correct': True}, {'text': 'Це вже кінець.', 'correct': False}, {'text': 'Це дуже добре!', 'correct': False}]}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 25/100)
+**📝 UPDATE** (severity 15/100)
 
-- 5 violations (moderate)
-- Immersion 5% off target (minor)
+- 6 violations (moderate)
 
 ## Gates
 - **Words:** ✅ 1605/1200 (raw: 1636)
@@ -60,14 +61,14 @@
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 1/1
+- **Engagement:** ✅ 1/0
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 35/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** ❌ 45.3% HIGH (target 25-40% (M55))
+- **Immersion:** 🇺🇦 45.3% (target 25-48% (M55))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes

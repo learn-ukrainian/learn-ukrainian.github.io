@@ -1,7 +1,7 @@
 # Audit Report: M05 — who-am-i.md
 **Level:** A1 | **Module:** M05 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-02 20:30:14
+**Generated:** 2026-04-03 14:02:22
 
 ## Configuration
 **Type:** A1-vocab
@@ -10,7 +10,7 @@
 **Items per Activity:** ≥6 items
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
-**Engagement:** ≥1 callouts
+**Engagement:** ≥0 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -40,11 +40,13 @@
   - FIX: No action needed — incidental dative exposure is acceptable.
 - **[INFO]** Dative case used at A1: 'Мені' (taught formally at A2)
   - FIX: No action needed — incidental dative exposure is acceptable.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in who-am-i.yaml: Schema validation error at key '0': 'Я — вчитель.' is not of type 'object'
+  - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 15/100)
 
-- 3 violations (minor)
+- 4 violations (moderate)
 
 ## Gates
 - **Words:** ✅ 1737/1200 (raw: 1914)
@@ -52,14 +54,14 @@
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 5/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 2/1
+- **Engagement:** ✅ 2/0
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 72/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 20.1% (target 8-25% (M05))
+- **Immersion:** 🇺🇦 20.1% (target 8-30% (M05))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes

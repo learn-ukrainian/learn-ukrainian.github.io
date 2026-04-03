@@ -2,7 +2,7 @@ module: b1-007
 level: B1
 sequence: 7
 slug: simplification-consonants
-version: '3.0'
+version: '3.1'
 title: "Спрощення приголосних"
 subtitle: "Щастя — щасливий: коли приголосний випадає"
 focus: grammar
@@ -113,9 +113,17 @@ content_outline:
         -> щасливий | | Trigger | Morphological (case, person) | Cluster of 3+ consonants
         | | Reversible? | Yes (друже -> друг) | Yes (щасливий -> щастя) | Both are
         regular, predictable, and essential for Ukrainian spelling."
+      - "Diagnostic algorithm for learners: 1. Does the derived word have FEWER
+        consonants than the base? → спрощення. 2. Does the derived word have a DIFFERENT
+        consonant? → чергування. 3. Apply: сонце vs сонячний (missing [л]? спрощення).
+        друг vs друже ([г]→[ж] чергування). Each step builds on the table above."
       - "Practice: mixed exercises where learners identify WHETHER a given change
         is чергування or спрощення, and WHICH specific type it is. This integrates
         learning from M08-M11."
+      - "Cross-reference to real text: excerpt from a news article or literary passage
+        containing both processes. Learners annotate each morphophonemic change,
+        labeling it as чергування (type) or спрощення (cluster). Demonstrates that
+        both processes co-occur naturally in authentic Ukrainian prose."
   - section: "Підсумок і практика"
     words: 300
     points:

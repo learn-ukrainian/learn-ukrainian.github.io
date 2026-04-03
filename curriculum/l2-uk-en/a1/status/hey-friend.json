@@ -2,7 +2,7 @@
   "module": "hey-friend",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-02T20:29:59.671155Z",
+  "last_audit": "2026-04-03T14:02:07.392639Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
     "md": "2026-03-31T17:27:15.873638Z",
@@ -20,8 +20,8 @@
     },
     "lesson": {
       "status": "fail",
-      "violations": 2,
-      "message": "1087/1200 (raw: 1265) | engagement: 0/1"
+      "violations": 1,
+      "message": "1087/1200 (raw: 1265)"
     },
     "activities": {
       "status": "pass",

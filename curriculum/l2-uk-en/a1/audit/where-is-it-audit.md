@@ -1,7 +1,7 @@
 # Audit Report: M29 — where-is-it.md
 **Level:** A1 | **Module:** M29 | **Phase:** A1.5 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-02 20:30:13
+**Generated:** 2026-04-03 14:02:21
 
 ## Configuration
 **Type:** A1-grammar
@@ -10,7 +10,7 @@
 **Items per Activity:** ≥6 items
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
-**Engagement:** ≥1 callouts
+**Engagement:** ≥0 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -76,12 +76,14 @@
   - FIX: Provide [3, 4] options for A1 quizzes.
 - **[COMPLEXITY_OPTIONS]** quiz '' Q10 has 2 options (target: [3, 4])
   - FIX: Provide [3, 4] options for A1 quizzes.
+- **[YAML_SCHEMA_VIOLATION]** Schema error in where-is-it.yaml: Schema validation error at key 'correct': False is not of type 'integer'
+  - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 50/100)
 
 - Revision recommended (severity 50/100)
-- 20 violations (severe - consider revision)
+- 21 violations (severe - consider revision)
 
 ## Gates
 - **Words:** ✅ 1598/1200 (raw: 1634)
@@ -89,14 +91,14 @@
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 5/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 2/1
+- **Engagement:** ✅ 2/0
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 60/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 20.3% (target 15-30% (M29))
+- **Immersion:** 🇺🇦 20.3% (target 15-40% (M29))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes

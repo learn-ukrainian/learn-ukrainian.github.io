@@ -2,7 +2,7 @@ module: b1-076
 level: B1
 sequence: 76
 slug: double-negation
-version: '3.0'
+version: '3.1'
 title: "Подвійне заперечення"
 subtitle: "Нічого не знаю, нікуди не йду — заперечення в українській мові"
 focus: grammar
@@ -30,7 +30,7 @@ dialogue_situations:
     motivation: 'Double negation: ніхто не, ніде немає, ніколи не, ніяких немає'
 content_outline:
   - section: "Заперечення в українській мові: принцип подвійності"
-    words: 650
+    words: 750
     points:
       - "The fundamental difference from English: Ukrainian negation is cumulative.
         English: 'Nobody knows anything' (one negative per clause). Ukrainian: 'Ніхто
@@ -48,8 +48,12 @@ content_outline:
       - "Practice: learners transform English negative sentences into Ukrainian, applying
         подвійне заперечення. Common error: *Ніхто прийшов (English pattern) → correct:
         Ніхто не прийшов."
+      - "Typological perspective: Ukrainian negation aligns with most Slavic languages
+        (Polish, Czech also require double negation). English is the exception, not
+        the rule. This helps learners stop seeing подвійне заперечення as 'illogical'
+        and accept it as the natural Ukrainian system."
   - section: "Заперечні займенники"
-    words: 700
+    words: 800
     points:
       - "Formation and meaning from Авраменко Grade 10 p.148: ніхто (nobody), ніщо
         (nothing), ніякий (no kind of), нічий (nobody's), нікотрий (neither one).
@@ -66,8 +70,12 @@ content_outline:
       - "Writing practice: sentences using заперечні займенники in all cases, with
         and without прийменники: нікого не бачу, ні до кого не йду, ні з ким не розмовляю,
         ні про що не думаю."
+      - "Заперечний займенник нікотрий (neither one) from Заболотний Grade 6 p.258:
+        less common but important for formal register — 'Нікотрий з варіантів не підходить.'
+        Відмінювання follows the pattern of котрий. Practice: use нікотрий in formal
+        sentences with подвійним запереченням."
   - section: "Заперечні прислівники"
-    words: 600
+    words: 700
     points:
       - "Formation and meaning: ніде (nowhere — location), нікуди (nowhere — direction),
         нізвідки (from nowhere), ніколи (never), ніяк (in no way), нітрохи (not at
@@ -83,8 +91,12 @@ content_outline:
       - "Contrast with неозначені прислівники: ніде (nowhere) vs десь (somewhere)
         vs будь-де (anywhere). ніколи (never) vs колись (sometime) vs будь-коли (anytime).
         This system of correlations helps learners see the logic."
+      - "Combination of заперечні прислівники with заперечними займенниками in natural
+        speech: 'Ніколи нікому нічого не розповідай!' (Never tell anyone anything!)
+        — four negative elements reinforcing one negation. Practice: learners build
+        maximally negative sentences and identify how many заперечних елементів are present."
   - section: "Написання не і ні: правила та винятки"
-    words: 600
+    words: 700
     points:
       - "Ні — РАЗОМ with заперечними займенниками та прислівниками: ніхто, ніщо, ніякий,
         нічий, ніде, ніколи, ніяк, нітрохи. АЛЕ: ні в кого, ні на якому, ні з чиїм
@@ -99,8 +111,13 @@ content_outline:
         разом. Practice: learners apply правопис rules in context."
       - "Reading practice: a Ukrainian text with blanks where learners decide разом
         чи окремо for не/ні constructions."
+      - "Не з дієприкметниками та дієприслівниками (connecting to Phase 7): непрочитана
+        книжка (passive participle — разом, no dependent words). не прочитана вчора книжка
+        (окремо — has dependent words). не читаючи (дієприслівник — завжди окремо).
+        Practice: apply not/ні rules to verbal adjective and gerund constructions from
+        earlier phases."
   - section: "Заперечення в діалогах та текстах"
-    words: 550
+    words: 600
     points:
       - "Dialogue practice — natural Ukrainian negative responses: '— Хто дзвонив?
         — Ніхто не дзвонив.' '— Ти щось бачив? — Ні, нічого не бачив.' '— Куди підеш?
@@ -116,13 +133,17 @@ content_outline:
         → 'Я нікого не бачив.' *'Ніхто знає' (missing не) → 'Ніхто не знає.' Practice:
         error identification and correction exercises."
   - section: "Підсумок: заперечення — це сила"
-    words: 300
+    words: 450
     points:
       - "Complete reference: заперечні займенники, прислівники, правопис не/ні, подвійне/потрійне
         заперечення rules. Quick-reference table."
       - "Self-check in Ukrainian: 1. Перекладіть: 'Nobody ever tells me anything.'
         2. Напишіть правильно: (ні)хто (не/ні) прийшов. 3. Поясніть різницю: нікого
         немає vs нікого й спитати. 4. Складіть речення з потрійним запереченням."
+      - "Negation in Ukrainian proverbs and фразеологізми: 'Не кажи гоп, поки не перескочиш'
+        (Don't say jump until you've jumped). 'Нема диму без вогню' (No smoke without
+        fire). 'Ніхто не знає, де чобіт тисне' (Nobody knows where the shoe pinches).
+        These demonstrate how negation is woven into Ukrainian folk wisdom and daily speech."
       - "Preview: Вставні слова (M81) — words that express the speaker's attitude
         without being grammatical members of the sentence."
 vocabulary_hints:

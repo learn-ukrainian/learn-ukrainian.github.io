@@ -2,7 +2,7 @@ module: b1-078
 level: B1
 sequence: 78
 slug: nature-and-environment
-version: '3.0'
+version: '3.1'
 title: "Природа і довкілля"
 subtitle: "Погода, рослини, тварини, екологія — природа українською"
 focus: communication
@@ -32,7 +32,7 @@ dialogue_situations:
       structures'
 content_outline:
   - section: "Погода та пори року"
-    words: 650
+    words: 750
     points:
       - "Weather vocabulary — precise Ukrainian terms: Температура: спека (heat),
         мороз (frost), відлига (thaw). Опади: дощ, злива (downpour), мряка (drizzle),
@@ -50,8 +50,13 @@ content_outline:
       - "Cultural note: Ukrainian folk погодні прикмети (weather signs): 'Ластівки
         низько літають — на дощ.' 'Соняшники опускають голівки — до негоди.' These
         connect nature vocabulary to Ukrainian folk wisdom."
+      - "Climate zones of Ukraine — geographical vocabulary: степ (steppe), лісостеп
+        (forest-steppe), Полісся (Polissia — marshy woodland), Карпати (Carpathians),
+        Крим (Crimea — Mediterranean climate). Each zone has distinct погода patterns.
+        Practice: describe the climate of a Ukrainian region using weather vocabulary
+        and складнопідрядні речення причини (тому що, оскільки)."
   - section: "Рослинний світ"
-    words: 600
+    words: 700
     points:
       - "Дерева: дуб (oak), береза (birch), верба (willow), тополя (poplar), калина
         (viburnum), сосна (pine), ялина (spruce), каштан (chestnut), липа (linden),
@@ -67,8 +72,13 @@ content_outline:
       - "Literary nature descriptions from textbooks: Learners read a poetic passage
         about Ukrainian nature (Шевченко, Коцюбинський, or adapted excerpt) and identify
         образні засоби: епітети, порівняння, персоніфікації."
+      - "Гриби та ягоди — mushroom and berry vocabulary essential for Ukrainian culture:
+        білий гриб (porcini), лисичка (chanterelle), мухомор (fly agaric — poisonous),
+        суниця (wild strawberry), малина (raspberry), ожина (blackberry), чорниця (blueberry).
+        Збирання грибів is a major Ukrainian cultural activity. Practice: describe a
+        trip to the forest using this vocabulary."
   - section: "Тваринний світ"
-    words: 600
+    words: 700
     points:
       - "Свійські тварини: кіт, собака, кінь, корова, свиня, вівця, коза, курка, качка,
         гуска, кролик. Careful: кіт/кітка (not *кот — that is Russian). Practice:
@@ -83,8 +93,12 @@ content_outline:
       - "Комахи та інші: бджола (bee), метелик (butterfly), мурашка (ant), жук (beetle),
         коник (grasshopper), павук (spider). Practice: learners describe the ecosystem
         of a Ukrainian ліс or поле, using the vocabulary from all three categories."
+      - "Тварини в українській мові та культурі: вовк (wolf — symbol of freedom and
+        danger), лисиця (fox — symbol of cunning), заєць (hare — symbol of cowardice).
+        Ukrainian казки and прислів'я use тварини as characters with fixed symbolic
+        roles. Practice: match тварини to their symbolic meanings in Ukrainian culture."
   - section: "Екологія та довкілля"
-    words: 650
+    words: 750
     points:
       - "Environmental vocabulary: довкілля (environment), екологія (ecology), забруднення
         (pollution), відходи (waste), сортування (sorting), переробка (recycling),
@@ -101,8 +115,13 @@ content_outline:
       - "Dialogue: two Ukrainians discussing environmental issues, using складнопідрядні
         речення (M65-72), вставні слова (M81), and подвійне заперечення (M80) in natural
         context. Practice: learners participate in a guided discussion."
+      - "Environmental impact of war on Ukraine: мінування (mining), забруднення ґрунтів
+        (soil contamination), знищення лісів (forest destruction), загибель тварин (animal
+        deaths). State Standard 2024 Themes §3 includes здоров'я and суспільні відносини
+        — environmental security intersects both. Practice: reading comprehension of
+        a B1-adapted text about екологічні наслідки війни."
   - section: "Природа в літературі"
-    words: 550
+    words: 650
     points:
       - "Ukrainian nature descriptions as an artistic tradition: Краєвид (landscape)
         as a genre — from Заболотний Grade 7. Ukrainian writers are famous for їхні
@@ -117,14 +136,23 @@ content_outline:
       - "Writing practice: learners compose a short опис природи (8-10 sentences)
         about a place they know, using weather, plant, and animal vocabulary with
         at least two образні засоби."
+      - "Порівняння природи в різних регіонах: learners compare descriptions of Карпати
+        vs степ vs узбережжя Чорного моря using ступені порівняння (Phase 5) and складнопідрядні
+        речення порівняння. This integrates nature vocabulary with earlier grammar
+        in a communicative task."
   - section: "Підсумок: природа — це Україна"
-    words: 350
+    words: 450
     points:
       - "Complete vocabulary reference organized by category: погода, рослини, тварини,
         екологія, літературні засоби."
       - "Self-check in Ukrainian: 1. Опишіть погоду сьогодні (5 речень). 2. Назвіть
         5 дерев, 5 квітів, 5 тварин українською. 3. Які екологічні проблеми є в Україні?
         4. Напишіть короткий прогноз погоди на завтра."
+      - "Integrated grammar review through nature topics: forming ступені порівняння
+        of nature adjectives (глибший, найглибший), using числівники for statistics
+        (площа заповідника — 33 000 гектарів), applying подвійне заперечення (нічого
+        не зробили для захисту), and вставні слова (на жаль, безумовно). Nature as a
+        vehicle for reviewing all B1 grammar."
       - "Preview: Читання художніх текстів (M83) — moving from nature descriptions
         to broader literary reading comprehension."
 vocabulary_hints:

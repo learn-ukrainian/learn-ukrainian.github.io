@@ -2,7 +2,7 @@ module: b1-071
 level: B1
 sequence: 71
 slug: leisure-culture-festivals
-version: '3.0'
+version: '3.1'
 title: "Дозвілля, культура і свята"
 subtitle: "Вільний час, мистецтво, традиції та святкування"
 focus: communication
@@ -31,7 +31,7 @@ dialogue_situations:
     motivation: 'Culture integration: all subordinate clause types in Великдень celebration'
 content_outline:
   - section: "Дозвілля і захоплення"
-    words: 700
+    words: 750
     points:
       - "Leisure vocabulary cluster: дозвілля (leisure), захоплення/хобі (hobby),
         спорт (sport), кіно (cinema), театр (theatre), концерт (concert), музей (museum),
@@ -47,7 +47,7 @@ content_outline:
         змагання (competition), перемога (victory). Using reported speech: Тренер
         сказав, що завтра буде тренування."
   - section: "Культура і мистецтво"
-    words: 650
+    words: 700
     points:
       - "Cultural vocabulary: мистецтво (art), живопис (painting), скульптура (sculpture),
         музика (music), пісня (song), танець (dance), вистава (performance), фільм
@@ -62,7 +62,7 @@ content_outline:
         пряма і непряма мова (M74): Критик написав, що ця виставка — «найважливіша
         подія року». Подруга сказала: «Тобі обов'язково треба це побачити!»"
   - section: "Українські свята і традиції"
-    words: 700
+    words: 750
     points:
       - "Major Ukrainian holidays: Різдво (Christmas — January 7/25), Великдень (Easter),
         Івана Купала (Midsummer — July 7), День Незалежності (August 24), День Конституції
@@ -76,19 +76,35 @@ content_outline:
       - "Reading passage: a text about one Ukrainian holiday with rich complex syntax.
         Comprehension questions test LANGUAGE: — Знайдіть усі складнопідрядні речення
         і визначте їх тип. — Перетворіть пряму мову в тексті на непряму."
+  - section: "Гастрономія і ресторанна культура"
+    words: 650
+    points:
+      - "Restaurant and dining vocabulary: ресторан (restaurant), кафе (café),
+        меню (menu), замовлення (order), страва (dish), напій (drink), рахунок
+        (bill), чайові (tips), шеф-кухар (chef), офіціант (waiter). Regional
+        cuisine: борщ, вареники, голубці, деруни, банош, сало. Using complex syntax:
+        Ресторан, який ми відвідали, славиться варениками. (означальне)"
+      - "Dialogue 3: ordering at a restaurant in Одеса — using Phase 8 syntax:
+        — Що ви порадите? Я чув, що тут найкращі деруни. (з'ясувальне) — Хоча
+        деруни смачні, раджу спробувати також банош, бо він — фірмова страва.
+        (допустове + причинне) — Якщо ви любите рибу, замовте чорноморського бичка.
+        (умовне)"
+      - "Reading passage: a short text about Ukrainian regional cuisines. Comprehension
+        questions test language: — Знайдіть складнопідрядні речення і визначте тип.
+        — Перетворіть пряму мову кухаря на непряму."
   - section: "Вираження думок і аргументація"
-    words: 600
+    words: 700
     points:
       - "Opinion patterns using Phase 8 syntax: Я вважаю, що... (з'ясувальне) тому
         що... (причинне). Хоча деякі люди думають, що..., я переконаний, що... (допустове
         + з'ясувальне). Якщо порівняти X і Y, то... (умовне). За словами експертів,
         ... (непряма мова)."
-      - "Dialogue 3: debating whether traditional or modern holidays are more important.
+      - "Dialogue 4: debating whether traditional or modern holidays are more important.
         Uses argumentation with Phase 8 structures."
       - "Production: write an opinion paragraph (6-8 sentences) about a cultural event
         or holiday, using at least 4 different types of складні речення."
   - section: "Підсумок фази 8 та перехід до M76"
-    words: 350
+    words: 450
     points:
       - "Summary of Phase 8 grammar applied in communicative contexts: M66: складносурядне
         (і, але, або) — connecting equal ideas. M67: з'ясувальне (що, щоб, чи) — reporting

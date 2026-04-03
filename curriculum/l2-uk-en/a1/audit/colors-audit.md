@@ -1,7 +1,7 @@
 # Audit Report: M10 — colors.md
 **Level:** A1 | **Module:** M10 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-02 20:29:56
+**Generated:** 2026-04-03 14:02:04
 
 ## Configuration
 **Type:** A1-vocab
@@ -10,7 +10,7 @@
 **Items per Activity:** ≥6 items
 **Unique Types:** ≥0 types required
 **Priority Types:** anagram, classify, fill-in, image-to-letter, match-up, quiz, unjumble, watch-and-repeat
-**Engagement:** ≥1 callouts
+**Engagement:** ≥0 callouts
 **Immersion:** 0-100%
 **Vocab Target:** ≥1 words
 **Transliteration:** Allowed
@@ -41,11 +41,13 @@
   - FIX: Complex sentences not allowed at A1 M1-M14. Use simple SVO sentences.
 - **[COMPLEXITY]** Sentence too long for A1: 12 words (max 10)
   - FIX: Break into shorter sentences. First 5 words: 'темно зелений ліс світло синє...'
+- **[YAML_SCHEMA_VIOLATION]** Schema error in colors.yaml: Schema validation error at key '8': {'type': 'translate', 'instruction': 'Choose the correct Ukrainian translation.', 'items': [{'source': 'a black dress', 'options': [{'text': 'чорна сукня', 'correct': True}, {'text': 'чорний сукня', 'correct': False}, {'text': 'чорне сукня', 'correct': False}]}, {'source': 'a white sweater', 'options': [{'text': 'білий светр', 'correct': True}, {'text': 'біла светр', 'correct': False}, {'text': 'біле светр', 'correct': False}]}, {'source': 'a grey coat', 'options': [{'text': 'сіре пальто', 'correct': True}, {'text': 'сірий пальто', 'correct': False}, {'text': 'сіра пальто', 'correct': False}]}, {'source': 'a dark-blue vase', 'options': [{'text': 'синя ваза', 'correct': True}, {'text': 'синій ваза', 'correct': False}, {'text': 'синє ваза', 'correct': False}]}, {'source': 'yellow sunflowers', 'options': [{'text': 'жовті соняшники', 'correct': True}, {'text': 'жовтий соняшники', 'correct': False}, {'text': 'жовта соняшники', 'correct': False}]}, {'source': 'a light-pink dress', 'options': [{'text': 'світло-рожева сукня', 'correct': True}, {'text': 'світло-рожевий сукня', 'correct': False}, {'text': 'рожева-світло сукня', 'correct': False}]}]} is not valid under any of the given schemas
+  - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 5/100)
+**📝 UPDATE** (severity 15/100)
 
-- 3 violations (minor)
+- 4 violations (moderate)
 
 ## Gates
 - **Words:** ✅ 1390/1200 (raw: 1570)
@@ -53,14 +55,14 @@
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 7/0 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 1/1
+- **Engagement:** ✅ 1/0
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 42/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 28.8% (target 10-30% (M10))
+- **Immersion:** 🇺🇦 28.8% (target 10-38% (M10))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 2+ cultural hooks but content has no cultural section

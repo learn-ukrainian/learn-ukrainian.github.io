@@ -22,7 +22,7 @@ from ._config import (
     _MODEL_CACHE,
     _MODEL_CACHE_TTL,
     _PARENT_ENV,
-    CLAUDE_CLI,
+    CLAUDE_CMD,
     DB_PATH,
     GEMINI_CLI,
     GH_CHAR_LIMIT,
@@ -51,28 +51,58 @@ from ._model import _detect_model_error, check_model
 from ._prompts import build_claude_prompt, build_gemini_prompt
 
 __all__ = [
+    "CLAUDE_CMD",
     # Config
-    "DB_PATH", "PID_DIR", "CLAUDE_CLI", "GEMINI_CLI", "_PARENT_ENV",
-    "_MODEL_CACHE", "_MODEL_CACHE_TTL", "GH_CHAR_LIMIT",
-    # DB
-    "init_db", "get_db", "get_session", "set_session",
-    # Broker
-    "_git_status_snapshot", "_validate_file_writes", "_write_pid_file",
-    "_is_task_locked", "_remove_pid_file", "broker_cleanup", "bridge_status",
-    # Messaging
-    "check_inbox", "read_message", "send_message", "detect_sender",
-    "send_to_gemini", "acknowledge", "acknowledge_all", "get_conversation",
+    "DB_PATH",
+    "GEMINI_CLI",
+    "GH_CHAR_LIMIT",
+    "PID_DIR",
+    "_MODEL_CACHE",
+    "_MODEL_CACHE_TTL",
+    "_PARENT_ENV",
+    "_detect_model_error",
     "_extract_issue_number",
     # GitHub
-    "_format_review_chunk", "_split_content", "_gh_comment", "_post_review_to_github",
-    # Model
-    "check_model", "_detect_model_error",
-    # Prompts
-    "build_gemini_prompt", "build_claude_prompt",
-    # Gemini
-    "ask_gemini", "process_and_respond",
+    "_format_review_chunk",
+    "_gh_comment",
+    # Broker
+    "_git_status_snapshot",
+    "_is_task_locked",
+    "_post_review_to_github",
+    "_remove_pid_file",
+    "_split_content",
+    "_validate_file_writes",
+    "_write_pid_file",
+    "acknowledge",
+    "acknowledge_all",
     # Claude
-    "ask_claude", "process_for_claude",
+    "ask_claude",
+    # Gemini
+    "ask_gemini",
+    "bridge_status",
+    "broker_cleanup",
+    "build_claude_prompt",
+    # Prompts
+    "build_gemini_prompt",
+    # Messaging
+    "check_inbox",
+    # Model
+    "check_model",
+    "detect_sender",
+    "get_conversation",
+    "get_db",
+    "get_session",
+    # DB
+    "init_db",
     # CLI
-    "interactive_mode", "process_all_gemini", "process_all_claude", "main",
+    "interactive_mode",
+    "main",
+    "process_all_claude",
+    "process_all_gemini",
+    "process_and_respond",
+    "process_for_claude",
+    "read_message",
+    "send_message",
+    "send_to_gemini",
+    "set_session",
 ]

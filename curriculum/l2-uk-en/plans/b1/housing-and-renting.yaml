@@ -2,7 +2,7 @@ module: b1-051
 level: B1
 sequence: 51
 slug: housing-and-renting
-version: '3.0'
+version: '3.1'
 title: "Житло і оренда"
 subtitle: "Пошук квартири, оренда, комунальні послуги — відмінки в дії"
 focus: communication
@@ -31,7 +31,7 @@ dialogue_situations:
     motivation: 'Housing vocabulary: оренда(f), комунальні(pl), меблі(pl), договір(m)'
 content_outline:
   - section: "Опис житла"
-    words: 700
+    words: 800
     points:
       - "Types of housing: квартира, будинок, приватний будинок, гуртожиток, однокімнатна/двокімнатна/трикімнатна
         квартира. Rooms: вітальня, спальня, кухня, ванна кімната, туалет, коридор,
@@ -44,7 +44,7 @@ content_outline:
         плита, холодильник, пральна машина, посудомийка. Practice: describe your ideal
         apartment using 10+ case constructions."
   - section: "Оголошення про оренду"
-    words: 600
+    words: 700
     points:
       - "Reading real-format Ukrainian rental ads: 'Здається 2к квартира, 55 кв.м,
         3/9 поверх, євроремонт, вмебльована, поруч метро. 12 000 грн/міс + комунальні.'
@@ -70,7 +70,7 @@ content_outline:
         меблі? Як повідомити про виїзд? Practice: role-play a lease negotiation using
         formal register."
   - section: "Проблеми з житлом"
-    words: 600
+    words: 700
     points:
       - "Common problems and complaints: Протікає кран/дах. Не працює опалення/гаряча
         вода. Зламалася пральна машина. Не працює ліфт. У кімнаті цвіль (mould). Сусіди
@@ -79,10 +79,14 @@ content_outline:
         опалення. Прошу надіслати майстра якнайшвидше. Дякую.' Using formal register
         with vocative (Шановний орендодавцю!) and purpose constructions (для ремонту,
         щоб полагодити)."
+      - "Emergency contacts: In urgent cases: Аварійна служба (f, emergency service),
+        сантехнік (m, plumber), електрик (m, electrician), служба газу (f, gas service).
+        'Терміново потрібен сантехнік — протікає труба у ванній.' Integration with
+        dative (мені потрібен) and cause prepositions (через аварію)."
       - "Practice: write a complaint message about a housing problem, using formal
         register, vocative, and purpose/cause prepositions."
   - section: "Практика: пошук квартири"
-    words: 600
+    words: 700
     points:
       - "Extended role play: the full process from ad to lease. 1. Read three ads,
         compare (using ступені порівняння from Phase 5). 2. Call the landlord (using
@@ -92,13 +96,19 @@ content_outline:
       - "Integrated grammar checklist: did you use... Р.в. (площею, без меблів, близько
         ста метрів)? Д.в. (мені потрібна, орендарю)? Ор.в. (з балконом, за адресою)?
         Кл.в. (Шановний пане)? порівняння (ця квартира більша, але дорожча)? числівники
-        (на третьому поверсі, двадцять п'ять тисяч)?"
+        (на третьому поверсі, двадцять п'ять тисяч)? займенники (якась квартира,
+        нічого підходящого, кожен варіант)?"
   - section: "Підсумок"
-    words: 300
+    words: 400
     points:
       - "Key housing vocabulary organized by category: types, rooms, furniture, rental
         terms, problems. Grammar integration: all Phase 6 cases and prepositions in
         action."
+      - "Cultural note: Ukrainian rental culture differs from Western norms. Оренда
+        is often informal (без договору, through знайомі). Terms like євроремонт (European-style
+        renovation), під ключ (turnkey), і меблі, і техніка (furnished + appliances)
+        reflect local market language. Understanding these terms is essential for real-life
+        housing searches on Ukrainian platforms like OLX."
       - "Preview: контрольна робота 6 — comprehensive review of Phase 6."
 vocabulary_hints:
   required:
