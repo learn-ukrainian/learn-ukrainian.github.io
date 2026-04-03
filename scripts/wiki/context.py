@@ -79,13 +79,16 @@ def get_wiki_context(track: str, slug: str) -> str:
     if not parts:
         return ""
 
-    header = (
+    body = "\n\n---\n\n".join(parts)
+    return (
+        "<wiki_context>\n"
         "## Compiled Wiki Knowledge\n\n"
         "The following articles from the project wiki provide compiled knowledge "
         "relevant to this module. Use them as authoritative context — they were "
         "compiled from primary sources (Костомаров, Чижевський, Попович, textbooks, etc.).\n\n"
+        f"{body}\n"
+        "</wiki_context>"
     )
-    return header + "\n\n---\n\n".join(parts)
 
 
 def _relevance_score(md_path: Path, slug: str, track: str) -> int:

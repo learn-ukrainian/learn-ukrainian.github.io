@@ -1337,8 +1337,9 @@ def step_write(level: str, module_num: int, slug: str,
             if wiki_ctx:
                 replacements["{WIKI_CONTEXT}"] = wiki_ctx
                 _log(f"  📚 Wiki context injected ({len(wiki_ctx):,} chars)")
-        except ImportError:
-            pass  # wiki module not available — graceful fallback
+        except Exception as exc:
+            _log(f"  ⚠️  Wiki context unavailable: {exc}")
+            # Graceful fallback — build proceeds without wiki context
 
     # Build skeleton/correction blocks for seminar template placeholders
     if is_seminar and skeleton:

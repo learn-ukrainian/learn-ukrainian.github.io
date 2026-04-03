@@ -2,8 +2,8 @@
 
 Auto-generated index of compiled wiki articles.
 
-**Total articles:** 22
-**Total words:** 29,041
+**Total articles:** 25
+**Total words:** 32,866
 
 ## Folk
 
@@ -16,6 +16,7 @@ Auto-generated index of compiled wiki articles.
 - [Український Фольклор: Родинна Мораль у Соціально-Побутових Думах](folk/genres/dumy-sotsialno-pobutovi.md) (1,463 words)
 - [Українські народні казки про тварин: Від тотемізму до алегорії](folk/genres/kazky-pro-tvaryn.md) (1,202 words)
 - [Козацькі думи: Походження та специфіка](folk/genres/pokhodzhennia-dum.md) (1,438 words)
+- [Соціально-побутові казки та концепція народного реалізму](folk/genres/sotsialno-pobutovi-kazky.md) (1,374 words)
 - [Український фольклор: Чумацькі та бурлацькі пісні: Голос мандрівника](folk/lyric/chumatski-burlatski-pisni.md) (1,272 words)
 - [Родинно-побутова лірика: Інтимний голос української душі](folk/lyric/rodynna-liryka-kolomyiky.md) (1,289 words)
 - [Український фольклор: Історичні перекази як пам'ять про минуле](folk/prose/istorychni-perekazy.md) (1,492 words)
@@ -25,6 +26,8 @@ Auto-generated index of compiled wiki articles.
 - [Колядки та Щедрівки: Космогонічні Міфи та Ритуальна Поезія](folk/ritual/koliadky-shchedrivky.md) (1,403 words)
 - [Українські Купальські Пісні: Ритуали та Символіка Літнього Сонцестояння](folk/ritual/kupalski-pisni.md) (1,191 words)
 - [Український фольклор: Обжинкові пісні: Апофеоз хліборобської праці](folk/ritual/obzhynkovi-pisni.md) (1,111 words)
+- [Український фольклор: Русальні пісні та духи природи](folk/ritual/rusalni-pisni.md) (1,332 words)
+- [Українська весільна обрядовість: Драматизм переходу](folk/ritual/vesilni-pisni.md) (1,119 words)
 - [Український Фольклор: Приказки та Прислів'я як Дзеркало Етики](folk/short-forms/prykazky-ta-pryslivia.md) (1,187 words)
 - [Український фольклор: Загадка як метафоричне бачення світу](folk/short-forms/zahadky.md) (1,611 words)
 - [Український фольклор: Голосіння](folk/tradition/holosinnya.md) (1,071 words)
