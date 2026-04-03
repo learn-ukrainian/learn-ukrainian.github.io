@@ -1020,6 +1020,8 @@ Continue naturally from where the previous section ended. Do not re-introduce co
 
 ---
 
+{{WIKI_CHUNK_CONTEXT}}
+
 ## Rules
 
 {get_immersion_rule(level, module_num)}
@@ -1044,6 +1046,18 @@ Continue naturally from where the previous section ended. Do not re-introduce co
 
 Write the section starting with the H2 heading. Output ONLY the section content — no preamble, no summary, no notes.
 """
+    # Inject wiki context for seminar chunks
+    SEMINAR_TRACKS_CHUNK = {"hist", "bio", "istorio", "lit", "folk", "oes", "ruth"}
+    is_seminar_chunk = level.lower() in SEMINAR_TRACKS_CHUNK or level.lower().startswith("lit-")
+    wiki_chunk_ctx = ""
+    if is_seminar_chunk:
+        try:
+            from wiki.context import get_wiki_context
+            wiki_chunk_ctx = get_wiki_context(level, slug)
+        except Exception:
+            pass
+    section_prompt = section_prompt.replace("{{WIKI_CHUNK_CONTEXT}}", wiki_chunk_ctx)
+
     return section_prompt
 
 
