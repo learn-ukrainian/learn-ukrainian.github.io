@@ -36,11 +36,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from wiki.compiler import compile_article, update_index
 from wiki.config import SEMINAR_TRACKS, TRACK_DOMAINS
+from wiki.enrichment import enrich_sources
 from wiki.sources import (
     gather_discovery_sources,
     list_discovery_slugs,
     list_literary_sources,
-    load_literary_jsonl,
 )
 from wiki.state import get_status_summary
 
@@ -138,24 +138,8 @@ def cmd_compile_one(track: str, slug: str, *, force: bool = False,
         print(f"  ❌ {sources_info['error']}")
         return False
 
-    # Collect all available source chunks
-    all_chunks = []
-    all_chunks.extend(sources_info.get("literary_chunks", []))
-    all_chunks.extend(sources_info.get("textbook_chunks", []))
-
-    # If discovery has few inline chunks, try loading full literary files
-    if len(all_chunks) < 5 and sources_info.get("literary_files"):
-        print(f"  📚 Loading additional sources from {len(sources_info['literary_files'])} files...")
-        for lit_path in sources_info["literary_files"][:3]:  # Cap at 3 files
-            chunks = load_literary_jsonl(lit_path)
-            # Take first 20 chunks (don't overwhelm the prompt)
-            all_chunks.extend(chunks[:20])
-            print(f"     + {lit_path.name}: {len(chunks)} chunks (using first 20)")
-
-    if not all_chunks:
-        print(f"  ⚠️  No source material found for {track}/{slug}")
-        # Still compile — Gemini can use its knowledge + we'll supplement later
-        all_chunks = [{"text": f"Topic: {slug.replace('-', ' ')}", "chunk_id": "no-source"}]
+    # Collect and enrich source chunks
+    all_chunks = enrich_sources(track, slug, sources_info)
 
     # Build a human-readable topic from the slug
     topic = _slug_to_topic(slug, track)
