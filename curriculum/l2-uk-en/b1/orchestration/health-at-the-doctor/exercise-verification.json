@@ -1,0 +1,365 @@
+{
+  "total_items": 293,
+  "grounded_items": 224,
+  "ungrounded": [
+    {
+      "word": "хворієте",
+      "exercise_type": "fill-in",
+      "context": "хворієте"
+    },
+    {
+      "word": "лікуєтеся",
+      "exercise_type": "fill-in",
+      "context": "лікуєтеся"
+    },
+    {
+      "word": "болите",
+      "exercise_type": "fill-in",
+      "context": "болите"
+    },
+    {
+      "word": "травма",
+      "exercise_type": "fill-in",
+      "context": "травма"
+    },
+    {
+      "word": "лікую",
+      "exercise_type": "fill-in",
+      "context": "лікую"
+    },
+    {
+      "word": "купити",
+      "exercise_type": "fill-in",
+      "context": "Дякую! А де я можу купити ці _____?"
+    },
+    {
+      "word": "хірурга",
+      "exercise_type": "quiz",
+      "context": "до хірурга"
+    },
+    {
+      "word": "кардіолога",
+      "exercise_type": "quiz",
+      "context": "до кардіолога"
+    },
+    {
+      "word": "дерматолога",
+      "exercise_type": "quiz",
+      "context": "до дерматолога"
+    },
+    {
+      "word": "моя",
+      "exercise_type": "quiz",
+      "context": "Моя маленька дитина захворіла: у неї висока температура і ка"
+    },
+    {
+      "word": "маленька",
+      "exercise_type": "quiz",
+      "context": "Моя маленька дитина захворіла: у неї висока температура і ка"
+    },
+    {
+      "word": "дитина",
+      "exercise_type": "quiz",
+      "context": "Моя маленька дитина захворіла: у неї висока температура і ка"
+    },
+    {
+      "word": "захворіла",
+      "exercise_type": "quiz",
+      "context": "Моя маленька дитина захворіла: у неї висока температура і ка"
+    },
+    {
+      "word": "педіатра",
+      "exercise_type": "quiz",
+      "context": "до педіатра"
+    },
+    {
+      "word": "окуліста",
+      "exercise_type": "quiz",
+      "context": "до окуліста"
+    },
+    {
+      "word": "невролога",
+      "exercise_type": "quiz",
+      "context": "до невролога"
+    },
+    {
+      "word": "серцем",
+      "exercise_type": "quiz",
+      "context": "У пацієнта проблеми із серцем, йому потрібно зробити кардіог"
+    },
+    {
+      "word": "кардіограму",
+      "exercise_type": "quiz",
+      "context": "У пацієнта проблеми із серцем, йому потрібно зробити кардіог"
+    },
+    {
+      "word": "психіатра",
+      "exercise_type": "quiz",
+      "context": "до психіатра"
+    },
+    {
+      "word": "дивний",
+      "exercise_type": "quiz",
+      "context": "У мене з'явився дивний червоний висип на шкірі рук."
+    },
+    {
+      "word": "рук",
+      "exercise_type": "quiz",
+      "context": "У мене з'явився дивний червоний висип на шкірі рук."
+    },
+    {
+      "word": "термінова",
+      "exercise_type": "quiz",
+      "context": "Пацієнту потрібна термінова операція після складної травми."
+    },
+    {
+      "word": "операція",
+      "exercise_type": "quiz",
+      "context": "Пацієнту потрібна термінова операція після складної травми."
+    },
+    {
+      "word": "складної",
+      "exercise_type": "quiz",
+      "context": "Пацієнту потрібна термінова операція після складної травми."
+    },
+    {
+      "word": "хочу",
+      "exercise_type": "quiz",
+      "context": "Я хочу перевірити свій зір і підібрати нові окуляри."
+    },
+    {
+      "word": "перевірити",
+      "exercise_type": "quiz",
+      "context": "Я хочу перевірити свій зір і підібрати нові окуляри."
+    },
+    {
+      "word": "підібрати",
+      "exercise_type": "quiz",
+      "context": "Я хочу перевірити свій зір і підібрати нові окуляри."
+    },
+    {
+      "word": "ангіною",
+      "exercise_type": "error-correction",
+      "context": "Він часто хворіє ангіною."
+    },
+    {
+      "word": "довго",
+      "exercise_type": "error-correction",
+      "context": "Вона довго лікувалася на запалення легенів."
+    },
+    {
+      "word": "легенів",
+      "exercise_type": "error-correction",
+      "context": "Вона довго лікувалася на запалення легенів."
+    },
+    {
+      "word": "права",
+      "exercise_type": "error-correction",
+      "context": "У мене сильно болять права рука."
+    },
+    {
+      "word": "рука",
+      "exercise_type": "error-correction",
+      "context": "У мене сильно болять права рука."
+    },
+    {
+      "word": "захворіло",
+      "exercise_type": "error-correction",
+      "context": "захворіло"
+    },
+    {
+      "word": "якісь",
+      "exercise_type": "error-correction",
+      "context": "Дайте мені, будь ласка, якісь хороші краплі від нежиті."
+    },
+    {
+      "word": "хороші",
+      "exercise_type": "error-correction",
+      "context": "Дайте мені, будь ласка, якісь хороші краплі від нежиті."
+    },
+    {
+      "word": "нежиті",
+      "exercise_type": "error-correction",
+      "context": "Дайте мені, будь ласка, якісь хороші краплі від нежиті."
+    },
+    {
+      "word": "нежитя",
+      "exercise_type": "error-correction",
+      "context": "нежитя"
+    },
+    {
+      "word": "нежитом",
+      "exercise_type": "error-correction",
+      "context": "нежитом"
+    },
+    {
+      "word": "терапевту",
+      "exercise_type": "error-correction",
+      "context": "терапевту"
+    },
+    {
+      "word": "медика",
+      "exercise_type": "error-correction",
+      "context": "медика"
+    },
+    {
+      "word": "легкою",
+      "exercise_type": "true-false",
+      "context": "В Україні з легкою застудою потрібно відразу їхати в лікарню"
+    },
+    {
+      "word": "застудою",
+      "exercise_type": "true-false",
+      "context": "В Україні з легкою застудою потрібно відразу їхати в лікарню"
+    },
+    {
+      "word": "їхати",
+      "exercise_type": "true-false",
+      "context": "В Україні з легкою застудою потрібно відразу їхати в лікарню"
+    },
+    {
+      "word": "найкраще",
+      "exercise_type": "true-false",
+      "context": "Англійську фразу «I have a headache» українською найкраще пе"
+    },
+    {
+      "word": "приймає",
+      "exercise_type": "true-false",
+      "context": "Якщо людина працює в поліклініці і приймає пацієнтів, її про"
+    },
+    {
+      "word": "місцевій",
+      "exercise_type": "quiz",
+      "context": "Мій брат успішно працює _____ у місцевій поліклініці."
+    },
+    {
+      "word": "лікаром",
+      "exercise_type": "quiz",
+      "context": "лікаром"
+    },
+    {
+      "word": "вуху",
+      "exercise_type": "quiz",
+      "context": "вуху"
+    },
+    {
+      "word": "вухі",
+      "exercise_type": "quiz",
+      "context": "вухі"
+    },
+    {
+      "word": "вушком",
+      "exercise_type": "quiz",
+      "context": "вушком"
+    },
+    {
+      "word": "кров'ю",
+      "exercise_type": "quiz",
+      "context": "кров'ю"
+    },
+    {
+      "word": "кровою",
+      "exercise_type": "quiz",
+      "context": "кровою"
+    },
+    {
+      "word": "обіду",
+      "exercise_type": "quiz",
+      "context": "Сьогодні після обіду мені раптом стало дуже _____."
+    },
+    {
+      "word": "поганий",
+      "exercise_type": "quiz",
+      "context": "поганий"
+    },
+    {
+      "word": "погане",
+      "exercise_type": "quiz",
+      "context": "погане"
+    },
+    {
+      "word": "поганому",
+      "exercise_type": "quiz",
+      "context": "поганому"
+    },
+    {
+      "word": "сучасний",
+      "exercise_type": "quiz",
+      "context": "Цей сучасний _____ від сухого кашлю треба пити після їжі."
+    },
+    {
+      "word": "три",
+      "exercise_type": "quiz",
+      "context": "три рази на один день"
+    },
+    {
+      "word": "трьома",
+      "exercise_type": "quiz",
+      "context": "трьома днями"
+    },
+    {
+      "word": "днями",
+      "exercise_type": "quiz",
+      "context": "трьома днями"
+    },
+    {
+      "word": "третій",
+      "exercise_type": "quiz",
+      "context": "третій раз"
+    },
+    {
+      "word": "викликайте",
+      "exercise_type": "fill-in",
+      "context": "_____ зараз дуже погано, негайно викликайте швидку допомогу."
+    },
+    {
+      "word": "швидку",
+      "exercise_type": "fill-in",
+      "context": "_____ зараз дуже погано, негайно викликайте швидку допомогу."
+    },
+    {
+      "word": "мною",
+      "exercise_type": "fill-in",
+      "context": "Мною"
+    },
+    {
+      "word": "нудити",
+      "exercise_type": "fill-in",
+      "context": "_____ раптом стало нудити в душному автобусі."
+    },
+    {
+      "word": "нею",
+      "exercise_type": "fill-in",
+      "context": "Нею"
+    },
+    {
+      "word": "нами",
+      "exercise_type": "fill-in",
+      "context": "нами"
+    },
+    {
+      "word": "новій",
+      "exercise_type": "fill-in",
+      "context": "_____ тепло і максимально комфортно в цій новій палаті."
+    },
+    {
+      "word": "палаті",
+      "exercise_type": "fill-in",
+      "context": "_____ тепло і максимально комфортно в цій новій палаті."
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 28,
+    "tested_in_exercises": 21,
+    "not_tested": [
+      "діагноз",
+      "одужати",
+      "поліклініка",
+      "призначити",
+      "симптом",
+      "скаржитися",
+      "хвороба"
+    ]
+  },
+  "all_grounded": false
+}

@@ -1,0 +1,52 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Covers all outline points and integrates the textbook references beautifully.
+    Deducting points because the module word count (5280 words) deviates by >10% from
+    the planned target (4000 words).
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Contains 7 instances of the "Давайте + verb" calque ("Давайте детально
+    проаналізуємо кожну ситуацію"), uses "знаходиться" for physical location ("сад
+    знаходиться за будинком"), and factually mislabels
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: The three diagnostic questions ("Чи відбувається цей рух прямо зараз...?")
+    provide a stellar, practical decision tree for learners.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended verbs of motion (including the preview words
+    "летіти", "пливти") are naturally integrated with clear examples.
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: 'Placed well contextually, but includes 2 extra unmapped markers (`quiz,
+    Choose correct carrying/leading verb pair based on context` and `fill-in, Fill
+    in prepositions`) that deviate from the plan''s 6 '
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Highly engaging narrative thread ("Київський ранок"), completely avoids
+    corporate speak, and talks directly to the learner.
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: Clean Markdown formatting and logical progression, but the pipeline calculated
+    word count is 5280, exceeding the 4000 limit by >30%.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent inclusion of a decolonized perspective explicitly warning against
+    the Russicism "відправлятися" for transport ("відправлятися в цьому контексті
+    є калькою... правильно казати відбуває").
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The injected dialogue naturally utilizes motion verbs to plan a weekend
+    in Kyiv, capturing typical family dynamics authentically.
+findings: []

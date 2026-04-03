@@ -1,0 +1,52 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 6
+  evidence: Failed to integrate the 3 mandatory textbook references (Авраменко Grade
+    10, Вашуленко Grade 2, Авраменко Grade 7). Missed specific contextual examples
+    required by the plan (e.g., "Рейс на Відень вилі
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'High overall accuracy, but contains one calque: "по гучномовцю оголосили
+    посадку" instead of "через гучномовець".'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Good use of contextualized PPP flow. However, the writer entirely omitted
+    the prefix "поплисти" from the prefix explanation list, which breaks the pedagogical
+    symmetry of teaching all prefixes.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Used all required vocabulary. However, missed the recommended vocabulary
+    word "поплисти" in the direct explanations.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 6 injected activities perfectly match the plan's `activity_hints`
+    in type, focus, and item count.
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: Contains explicit meta-commentary that breaks immersion (e.g., "Давайте
+    проаналізуємо цей текст", "Тепер ми набагато детальніше розглянемо...", "Давайте
+    коротко перевіримо").
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: The module deterministic word count is 5267 words, which is more than
+    10% over the 4000-word target. All H2 sections are present and ordered correctly.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Factually correct and uses natural Ukrainian contexts (e.g., traveling
+    to Istanbul via Boryspil) without relying on comparative crutches.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 6
+  evidence: Dialogues rely on anonymous em dashes ("— Доброго дня.") instead of named
+    speakers, and are purely transactional (classic textbook "passport and ticket"
+    interrogation).
+findings: []

@@ -1,68 +1,74 @@
 {
   "exists": true,
-  "words": 2585,
-  "quality": "solid",
-  "score": 8,
-  "score_raw": 13,
+  "words": 440,
+  "quality": "stub",
+  "score": 1,
+  "score_raw": 1,
   "score_max": 17,
-  "markers": 8,
+  "markers": 1,
   "profile": "core",
   "dimensions": {
     "state_standard": {
-      "score": 2,
+      "score": 0,
       "max": 2,
-      "detail": "8 sections covered"
+      "detail": "missing"
     },
     "vocabulary": {
-      "score": 1,
+      "score": 0,
       "max": 2,
-      "detail": "19 excerpts (need 20+)"
+      "detail": "missing"
     },
     "cultural_hooks": {
-      "score": 1,
+      "score": 0,
       "max": 2,
-      "detail": "1 cultural reference(s)"
+      "detail": "missing"
     },
     "learner_errors": {
-      "score": 2,
+      "score": 0,
       "max": 2,
-      "detail": "N/A for V6 packets"
+      "detail": "missing"
     },
     "cross_references": {
-      "score": 1,
+      "score": 0,
       "max": 1,
-      "detail": "4 authors"
+      "detail": "missing"
     },
     "pedagogy_notes": {
       "score": 0,
       "max": 1,
-      "detail": "0 pedagogy references"
+      "detail": "missing"
     },
     "source_verification": {
-      "score": 2,
+      "score": 0,
       "max": 2,
-      "detail": "19 cited sources"
+      "detail": "3 URLs but 0 known-good sources"
     },
     "claim_grounding": {
-      "score": 2,
+      "score": 1,
       "max": 2,
-      "detail": "1377 Ukrainian terms"
+      "detail": "5 cited examples, 188 Ukrainian terms"
     },
     "discovery_integration": {
-      "score": 1,
+      "score": 0,
       "max": 1,
-      "detail": "N/A for V6"
+      "detail": "0 resources"
     },
     "specificity": {
-      "score": 1,
+      "score": 0,
       "max": 2,
-      "detail": "2585 words (need 3000+)"
+      "detail": "1 specific markers (need 5+)"
     }
   },
   "gaps": [
-    "vocabulary: 19 excerpts (need 20+)",
-    "cultural_hooks: 1 cultural reference(s)",
-    "pedagogy_notes: 0 pedagogy references",
-    "specificity: 2585 words (need 3000+)"
+    "state_standard: missing",
+    "vocabulary: missing",
+    "cultural_hooks: missing",
+    "learner_errors: missing",
+    "cross_references: missing",
+    "pedagogy_notes: missing",
+    "source_verification: 3 URLs but 0 known-good sources",
+    "claim_grounding: 5 cited examples, 188 Ukrainian terms",
+    "discovery_integration: 0 resources",
+    "specificity: 1 specific markers (need 5+)"
   ]
 }

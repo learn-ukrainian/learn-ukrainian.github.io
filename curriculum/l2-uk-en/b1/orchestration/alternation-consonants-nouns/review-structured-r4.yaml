@@ -1,0 +1,49 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Covers almost all points, including minor ones like `колесо-колішні`.
+    However, it missed the specific plan requirement to cover word formation with
+    the suffix **-ськ-** (e.g., *Прага — празький, Норве
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Critical error in intro (claiming *книгарня* is an alternation). Phonetical
+    inaccuracy regarding hushing sounds being "softer". Otherwise, case forms are
+    excellent.
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent PPP flow. The disambiguation between *банку* (bank) and *банці*
+    (jar) is a high-value pedagogical addition.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Uses all required and recommended terms (`задньоязиковий`, `орфограма`,
+    `спільнокореневий`) naturally in context.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Activity markers match plan hints exactly in focus and type.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: 'Good cultural context (diminutives, proverbs). DEDUCT for meta-commentary:
+    "Ми переходимо до...", "Давайте глибоко проаналізуємо...", "Погляньмо, як це працює...".'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 4004 (perfectly on target). All H2 headings present. Clean
+    Markdown.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Decolonized approach. Uses authentic names (Олеже, Палажці) and addresses
+    foreign names correctly (Нью-Йорку).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Natural dialogue in intro. DEDUCT for using em-dashes without speaker
+    names in the prose, though context makes them clear.
+findings: []

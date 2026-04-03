@@ -1,0 +1,50 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 6
+  evidence: 'Missing required plan points: the proverb comparison ("Добре слово дім
+    будує"), the active-to-passive transformation examples ("Учні написали..."), and
+    the explicit comprehension questions in the prac'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: Uses calques ("вражаючий"), awkward passives ("мається на увазі"), morphological
+    mislabeling ("закінчення -ся"), and violates its own rule about instrumental agents
+    with impersonal passives ("відкрито
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: Failed to include the required comprehension questions after the reading
+    passage, and duplicated an activity marker which ruins the activity pacing and
+    density limits.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 7
+  evidence: Missing the required vocabulary term "неперехідне дієслово" from the text.
+    Other vocabulary successfully integrated.
+- dimension: 5
+  name: Exercise quality
+  score: 6
+  evidence: Duplicate `fill-in` marker inserted at the end of the file.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Good use of realistic examples (Palace of Culture, window washing) and
+    avoiding overly gamified language.
+- dimension: 7
+  name: Structural integrity
+  score: 7
+  evidence: Missing exact H2 match ("Підсумок та перехід" instead of "Підсумок та
+    перехід до M24"). Word count exceeds target by 20%.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent explanation of the difference between Ukrainian active preference
+    and bureaucratic "канцелярит".
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: Good contextual use of formal language, but hampered by the "відвідувачами"
+    instrumental case error in the text.
+findings: []

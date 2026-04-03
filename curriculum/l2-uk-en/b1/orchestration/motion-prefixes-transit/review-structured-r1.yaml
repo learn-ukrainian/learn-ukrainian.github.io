@@ -1,0 +1,50 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Covers all content points. **Deductions:** Word count (5425) is >35% over
+    the 4000 target. The `match-up` activity focus was changed from verb contrast
+    to figurative meanings.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: High quality. **Deduction:** Inclusion of "перевести статтю" which is
+    a Russian calque (acknowledged but used as a teaching example).
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow. Visual metaphors (bridge vs. arrow) are highly effective.
+    Conjugations and prepositions are clearly explained with contrastive examples.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required (*перейти, переїхати, перебігти, перенести, перевести, пройти,
+    проїхати, пробігти*) and recommended (*повз, кордон, перелетіти, переплисти*)
+    words are used naturally.
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: Good variety and placement. **Deduction:** The `match-up` exercise focus
+    deviation from the plan.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Professional and educational tone. Avoids "Numbers unlock..." cliches.
+    The road trip narrative and driving lesson dialogue are immersive and natural.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: H2 headings exactly match the plan. Word count included. Formatting is
+    clean.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Uses authentic Ukrainian geography (Zhytomyr, Dnipro, Kharkiv, Kyiv) and
+    cultural references (wooden churches, Dnipro views).
+- dimension: 9
+  name: Dialogue quality
+  score: 10
+  evidence: The "Driving lesson in Kharkiv" dialogue is multi-turn, natural, and perfectly
+    targets the grammar (directions using transit verbs).
+findings: []

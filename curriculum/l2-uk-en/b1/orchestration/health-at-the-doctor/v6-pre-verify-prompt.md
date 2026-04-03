@@ -5,7 +5,7 @@ You MUST verify facts using the tools below BEFORE writing begins. This is a ver
 
 ## Module
 
-**Module:** 16: Здоров'я і медицина (B1, B1.2 [Morphophonemics & Noun Subclasses])
+**Module:** 12: Здоров'я і медицина (B1, B1.1 [Baselines & Morphophonemics])
 
 ## Plan vocabulary to verify
 

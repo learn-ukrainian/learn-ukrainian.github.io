@@ -1,0 +1,452 @@
+{
+  "total_items": 289,
+  "grounded_items": 205,
+  "ungrounded": [
+    {
+      "word": "автомобілі",
+      "exercise_type": "fill-in",
+      "context": "Ми ____ з Києва пізно ввечері на автомобілі."
+    },
+    {
+      "word": "щасливо",
+      "exercise_type": "fill-in",
+      "context": "Нарешті ми щасливо ____ до нашого готелю в горах!"
+    },
+    {
+      "word": "горах",
+      "exercise_type": "fill-in",
+      "context": "Нарешті ми щасливо ____ до нашого готелю в горах!"
+    },
+    {
+      "word": "львові",
+      "exercise_type": "fill-in",
+      "context": "У Львові нам довелося змінити маршрут і ми ____ на інший авт"
+    },
+    {
+      "word": "нам",
+      "exercise_type": "fill-in",
+      "context": "У Львові нам довелося змінити маршрут і ми ____ на інший авт"
+    },
+    {
+      "word": "довелося",
+      "exercise_type": "fill-in",
+      "context": "У Львові нам довелося змінити маршрут і ми ____ на інший авт"
+    },
+    {
+      "word": "відійшли",
+      "exercise_type": "fill-in",
+      "context": "відійшли"
+    },
+    {
+      "word": "зайшов",
+      "exercise_type": "fill-in",
+      "context": "зайшов"
+    },
+    {
+      "word": "перейшов",
+      "exercise_type": "fill-in",
+      "context": "перейшов"
+    },
+    {
+      "word": "поспішаємо",
+      "exercise_type": "fill-in",
+      "context": "Ми дуже поспішаємо, адже наш літак ____ вже через годину."
+    },
+    {
+      "word": "годину",
+      "exercise_type": "fill-in",
+      "context": "Ми дуже поспішаємо, адже наш літак ____ вже через годину."
+    },
+    {
+      "word": "прилітає",
+      "exercise_type": "fill-in",
+      "context": "прилітає"
+    },
+    {
+      "word": "перелітає",
+      "exercise_type": "fill-in",
+      "context": "перелітає"
+    },
+    {
+      "word": "перейшли",
+      "exercise_type": "fill-in",
+      "context": "перейшли"
+    },
+    {
+      "word": "опинитися",
+      "exercise_type": "fill-in",
+      "context": "Щоб опинитися на іншому боці вулиці, ми швидко ____ дорогу."
+    },
+    {
+      "word": "іншому",
+      "exercise_type": "fill-in",
+      "context": "Щоб опинитися на іншому боці вулиці, ми швидко ____ дорогу."
+    },
+    {
+      "word": "боці",
+      "exercise_type": "fill-in",
+      "context": "Щоб опинитися на іншому боці вулиці, ми швидко ____ дорогу."
+    },
+    {
+      "word": "зійшли",
+      "exercise_type": "fill-in",
+      "context": "зійшли"
+    },
+    {
+      "word": "зупиняючись",
+      "exercise_type": "fill-in",
+      "context": "Вони ____ повз старий банк, навіть не зупиняючись."
+    },
+    {
+      "word": "переїхали",
+      "exercise_type": "fill-in",
+      "context": "переїхали"
+    },
+    {
+      "word": "йшли",
+      "exercise_type": "fill-in",
+      "context": "йшли"
+    },
+    {
+      "word": "гірською",
+      "exercise_type": "fill-in",
+      "context": "Ми довго ____ гірською стежкою вгору, щоб побачити озеро."
+    },
+    {
+      "word": "стежкою",
+      "exercise_type": "fill-in",
+      "context": "Ми довго ____ гірською стежкою вгору, щоб побачити озеро."
+    },
+    {
+      "word": "летіли",
+      "exercise_type": "fill-in",
+      "context": "летіли"
+    },
+    {
+      "word": "пливли",
+      "exercise_type": "fill-in",
+      "context": "пливли"
+    },
+    {
+      "word": "маршрутку",
+      "exercise_type": "fill-in",
+      "context": "Будь ласка, зупиніть маршрутку на наступній ____."
+    },
+    {
+      "word": "обратно",
+      "exercise_type": "fill-in",
+      "context": "обратно"
+    },
+    {
+      "word": "візьміть",
+      "exercise_type": "fill-in",
+      "context": "Візьміть сто гривень за проїзд, і передайте мені, будь ласка"
+    },
+    {
+      "word": "сто",
+      "exercise_type": "fill-in",
+      "context": "Візьміть сто гривень за проїзд, і передайте мені, будь ласка"
+    },
+    {
+      "word": "гривень",
+      "exercise_type": "fill-in",
+      "context": "Візьміть сто гривень за проїзд, і передайте мені, будь ласка"
+    },
+    {
+      "word": "здачу",
+      "exercise_type": "fill-in",
+      "context": "здачу"
+    },
+    {
+      "word": "остачу",
+      "exercise_type": "fill-in",
+      "context": "остачу"
+    },
+    {
+      "word": "одеси",
+      "exercise_type": "fill-in",
+      "context": "Підкажіть, о котрій годині ____ мій автобус до Одеси?"
+    },
+    {
+      "word": "софія",
+      "exercise_type": "match-up",
+      "context": "Софія Київська"
+    },
+    {
+      "word": "київська",
+      "exercise_type": "match-up",
+      "context": "Софія Київська"
+    },
+    {
+      "word": "вулиця",
+      "exercise_type": "match-up",
+      "context": "Вулиця Хрещатик"
+    },
+    {
+      "word": "хрещатик",
+      "exercise_type": "match-up",
+      "context": "Вулиця Хрещатик"
+    },
+    {
+      "word": "печерська",
+      "exercise_type": "match-up",
+      "context": "Києво-Печерська Лавра"
+    },
+    {
+      "word": "площа",
+      "exercise_type": "match-up",
+      "context": "Площа Ринок"
+    },
+    {
+      "word": "львів",
+      "exercise_type": "match-up",
+      "context": "Львів"
+    },
+    {
+      "word": "річка",
+      "exercise_type": "match-up",
+      "context": "Річка Смотрич"
+    },
+    {
+      "word": "стара",
+      "exercise_type": "match-up",
+      "context": "Стара Фортеця"
+    },
+    {
+      "word": "потьомкінські",
+      "exercise_type": "match-up",
+      "context": "Потьомкінські сходи"
+    },
+    {
+      "word": "одеса",
+      "exercise_type": "match-up",
+      "context": "Одеса"
+    },
+    {
+      "word": "морський",
+      "exercise_type": "match-up",
+      "context": "Морський порт"
+    },
+    {
+      "word": "порт",
+      "exercise_type": "match-up",
+      "context": "Морський порт"
+    },
+    {
+      "word": "гора",
+      "exercise_type": "match-up",
+      "context": "Гора Говерла"
+    },
+    {
+      "word": "карпати",
+      "exercise_type": "match-up",
+      "context": "Карпати"
+    },
+    {
+      "word": "найкраще",
+      "exercise_type": "quiz",
+      "context": "Як найкраще _____ до головного залізничного вокзалу на автом"
+    },
+    {
+      "word": "долетіти",
+      "exercise_type": "quiz",
+      "context": "долетіти"
+    },
+    {
+      "word": "відійти",
+      "exercise_type": "quiz",
+      "context": "відійти"
+    },
+    {
+      "word": "нова",
+      "exercise_type": "quiz",
+      "context": "Наша нова аптека розташована безпосередньо _____ двох вулиць"
+    },
+    {
+      "word": "треба",
+      "exercise_type": "quiz",
+      "context": "Спочатку вам треба _____ широку вулицю по розміченому пішохі"
+    },
+    {
+      "word": "широку",
+      "exercise_type": "quiz",
+      "context": "Спочатку вам треба _____ широку вулицю по розміченому пішохі"
+    },
+    {
+      "word": "величну",
+      "exercise_type": "quiz",
+      "context": "Щоб повністю оглянути цю величну фортецю, ми вирішили _____ "
+    },
+    {
+      "word": "фортецю",
+      "exercise_type": "quiz",
+      "context": "Щоб повністю оглянути цю величну фортецю, ми вирішили _____ "
+    },
+    {
+      "word": "усіх",
+      "exercise_type": "quiz",
+      "context": "Щоб повністю оглянути цю величну фортецю, ми вирішили _____ "
+    },
+    {
+      "word": "боків",
+      "exercise_type": "quiz",
+      "context": "Щоб повністю оглянути цю величну фортецю, ми вирішили _____ "
+    },
+    {
+      "word": "загальний",
+      "exercise_type": "quiz",
+      "context": "загальний напрямок"
+    },
+    {
+      "word": "швидкість",
+      "exercise_type": "quiz",
+      "context": "швидкість руху"
+    },
+    {
+      "word": "тип",
+      "exercise_type": "quiz",
+      "context": "тип транспорту"
+    },
+    {
+      "word": "знахідний",
+      "exercise_type": "quiz",
+      "context": "Знахідний"
+    },
+    {
+      "word": "родовий",
+      "exercise_type": "quiz",
+      "context": "Родовий"
+    },
+    {
+      "word": "туристи",
+      "exercise_type": "quiz",
+      "context": "Туристи вирішили сьогодні пішки _____ на знаменитий Високий "
+    },
+    {
+      "word": "знаменитий",
+      "exercise_type": "quiz",
+      "context": "Туристи вирішили сьогодні пішки _____ на знаменитий Високий "
+    },
+    {
+      "word": "зайти",
+      "exercise_type": "quiz",
+      "context": "зайти"
+    },
+    {
+      "word": "одну",
+      "exercise_type": "error-correction",
+      "context": "Мій літак відправляється через одну годину."
+    },
+    {
+      "word": "кутку",
+      "exercise_type": "error-correction",
+      "context": "на кутку"
+    },
+    {
+      "word": "остача",
+      "exercise_type": "error-correction",
+      "context": "остача"
+    },
+    {
+      "word": "водію",
+      "exercise_type": "error-correction",
+      "context": "Водію, зупиніть на слідуючій зупинці, будь ласка."
+    },
+    {
+      "word": "слідуючій",
+      "exercise_type": "error-correction",
+      "context": "Водію, зупиніть на слідуючій зупинці, будь ласка."
+    },
+    {
+      "word": "черговій",
+      "exercise_type": "error-correction",
+      "context": "черговій"
+    },
+    {
+      "word": "майбутній",
+      "exercise_type": "error-correction",
+      "context": "майбутній"
+    },
+    {
+      "word": "хочу",
+      "exercise_type": "error-correction",
+      "context": "Я хочу купити білет на швидкісний потяг Інтерсіті."
+    },
+    {
+      "word": "білет",
+      "exercise_type": "error-correction",
+      "context": "Я хочу купити білет на швидкісний потяг Інтерсіті."
+    },
+    {
+      "word": "пропуск",
+      "exercise_type": "error-correction",
+      "context": "пропуск"
+    },
+    {
+      "word": "найближчий",
+      "exercise_type": "error-correction",
+      "context": "Де знаходиться найближчий ж/д вокзал?"
+    },
+    {
+      "word": "поїздовий",
+      "exercise_type": "error-correction",
+      "context": "поїздовий"
+    },
+    {
+      "word": "рейковий",
+      "exercise_type": "error-correction",
+      "context": "рейковий"
+    },
+    {
+      "word": "франківську",
+      "exercise_type": "error-correction",
+      "context": "В Івано-Франківську мені потрібно пересісти в інший автобус."
+    },
+    {
+      "word": "києвом",
+      "exercise_type": "error-correction",
+      "context": "Києвом"
+    },
+    {
+      "word": "києву",
+      "exercise_type": "error-correction",
+      "context": "по Києву"
+    },
+    {
+      "word": "мандрували",
+      "exercise_type": "error-correction",
+      "context": "Ми з друзями довго мандрували по Карпатам."
+    },
+    {
+      "word": "карпатам",
+      "exercise_type": "error-correction",
+      "context": "Ми з друзями довго мандрували по Карпатам."
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 26,
+    "tested_in_exercises": 7,
+    "not_tested": [
+      "готель",
+      "екскурсія",
+      "затримка",
+      "зворотний",
+      "зупинка",
+      "купе",
+      "мандрувати",
+      "мандрівка",
+      "пам'ятка",
+      "пасажир",
+      "пересадка",
+      "перон",
+      "платформа",
+      "плацкарт",
+      "подорож",
+      "провідник",
+      "рейс",
+      "розклад",
+      "хостел"
+    ]
+  },
+  "all_grounded": false
+}

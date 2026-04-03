@@ -2,8 +2,8 @@
 
 Auto-generated index of compiled wiki articles.
 
-**Total articles:** 8
-**Total words:** 11,054
+**Total articles:** 10
+**Total words:** 13,588
 
 ## Folk
 
@@ -13,6 +13,8 @@ Auto-generated index of compiled wiki articles.
 - [Українська чарівна казка: Міфологічні архетипи та обряди ініціації](folk/genres/charivni-kazky.md) (1,559 words)
 - [Лицарські думи: Оспівування козацької звитяги](folk/genres/dumy-lytsarski.md) (1,540 words)
 - [Український фольклор: Невільницькі думи та плачі](folk/genres/dumy-nevilnytski.md) (1,239 words)
+- [Український Фольклор: Родинна Мораль у Соціально-Побутових Думах](folk/genres/dumy-sotsialno-pobutovi.md) (1,463 words)
 - [Український фольклор: Чумацькі та бурлацькі пісні: Голос мандрівника](folk/lyric/chumatski-burlatski-pisni.md) (1,272 words)
 - [Український фольклор: Загадка як метафоричне бачення світу](folk/short-forms/zahadky.md) (1,611 words)
+- [Український фольклор: Голосіння](folk/tradition/holosinnya.md) (1,071 words)
 

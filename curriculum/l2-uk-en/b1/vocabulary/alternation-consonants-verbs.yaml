@@ -1,0 +1,462 @@
+vocabulary:
+- word: африка́та
+  translation: affricate
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: наказовий спосіб
+  translation: imperative mood
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: провідмі́нювати
+  translation: to conjugate/decline
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: осно́ва
+  translation: stem
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: су́фікс
+  translation: suffix
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: словотво́рення
+  translation: word formation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: продукти́вний
+  translation: productive
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: вимо́ва
+  translation: pronunciation
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: закономі́рність
+  translation: regularity/pattern
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: чергува́ння
+  translation: alternation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: дієсло́во
+  translation: verb
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: дієвідмі́на
+  translation: conjugation class
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: осо́ба
+  translation: grammatical person
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: інфініти́в
+  translation: infinitive
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: зубни́й
+  translation: dental (consonant)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: свистя́чий
+  translation: sibilant (consonant)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: губни́й
+  translation: labial (consonant)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: задньоязико́вий
+  translation: velar (consonant)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: паради́гма
+  translation: paradigm
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: палаталіза́ція
+  translation: palatalization
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: мовний апарат
+  translation: vocal apparatus
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: перша особа однини
+  translation: first person singular
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: шипля́чий
+  translation: sibilant/hissing (consonant)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: вставни́й
+  translation: inserted/epenthetic
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: сиді́ти
+  translation: to sit
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ходи́ти
+  translation: to walk
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: води́ти
+  translation: to drive/lead
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ра́дити
+  translation: to advise
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: буди́ти
+  translation: to wake someone up
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: леті́ти
+  translation: to fly
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: плати́ти
+  translation: to pay
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: крути́ти
+  translation: to turn/twist
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: світи́ти
+  translation: to shine
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вози́ти
+  translation: to transport/drive around
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: моро́зити
+  translation: to freeze
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ла́зити
+  translation: to climb/crawl
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: каза́ти
+  translation: to say/tell
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: носи́ти
+  translation: to carry/wear
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: проси́ти
+  translation: to ask for
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: коси́ти
+  translation: to mow/cut
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: писа́ти
+  translation: to write
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ї́здити
+  translation: to ride/drive
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: прости́ти
+  translation: to forgive
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: чи́стити
+  translation: to clean/peel
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пусти́ти
+  translation: to let go/allow
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: могти́
+  translation: can/to be able to
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: берегти́
+  translation: to protect/keep
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: стри́гти
+  translation: to cut hair/shear
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пекти́
+  translation: to bake/burn
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: плака́ти
+  translation: to cry
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: текти́
+  translation: to flow
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: бреха́ти
+  translation: to lie
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: маха́ти
+  translation: to wave
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: колиха́ти
+  translation: to rock/sway
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: роби́ти
+  translation: to do/make
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: люби́ти
+  translation: to love/like
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: губи́ти
+  translation: to lose
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: купи́ти
+  translation: to buy
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ліпи́ти
+  translation: to model/sculpt
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: спа́ти
+  translation: to sleep
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: лови́ти
+  translation: to catch
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ста́вити
+  translation: to put/place
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: шумі́ти
+  translation: to make noise
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: гримі́ти
+  translation: to thunder/rattle
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: графи́ти
+  translation: to rule lines
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: заряджа́ти
+  translation: to charge
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: нагоро́джувати
+  translation: to reward/award
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: збага́чувати
+  translation: to enrich
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зни́жувати
+  translation: to lower/reduce
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: обража́ти
+  translation: to offend/insult
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: запро́шувати
+  translation: to invite
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: прикраша́ти
+  translation: to decorate
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: захища́ти
+  translation: to protect/defend
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: спро́щувати
+  translation: to simplify
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: заробля́ти
+  translation: to earn
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: виробля́ти
+  translation: to produce/manufacture
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: оформля́ти
+  translation: to process/formulate
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true

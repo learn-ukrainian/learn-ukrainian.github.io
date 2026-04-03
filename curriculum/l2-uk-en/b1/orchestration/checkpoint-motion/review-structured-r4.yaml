@@ -1,0 +1,54 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'DEDUCT for: The introduction summarizes the 10 content areas generally
+    rather than explicitly listing the specific module breakdowns (M27-M36) as requested
+    in the plan ("Ten content areas: просторові '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'DEDUCT for: Russian calque "знаходитеся" used for physical location.
+    DEDUCT for: tautological phrasing "думка спала на думку".'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'REWARD for: clear contrast between unidirectional and multidirectional
+    verbs with contextual examples. Good explicit error correction for consonant mutations
+    ("ходжу, а не ходу").'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'REWARD for: All required and recommended vocabulary items from the plan
+    are integrated naturally into the prose and dialogue.'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 'REWARD for: All plan activity hints are present with correct markers.
+    DEDUCT for: The mixed `quiz` testing all of M27-M36 is placed after Block 1, which
+    is prematurely early for a comprehensive review'
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: 'DEDUCT for: Heavy reliance on meta-commentary telling the user what will
+    be tested instead of showing ("У цьому першому блоці нашої контрольної роботи
+    ми дуже детально перевіряємо...", "Другий блок на'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: 'REWARD for: All headings present. DEDUCT for: Word count is 4926 words,
+    which exceeds the 4000 word target by 23%.'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'REWARD for: Authentic usage of Ukrainian proverbs ("Сім разів відмір
+    — один раз відріж", "Час летить — не наздоженеш") and geographically relevant
+    context (Carpathians, Kyiv).'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'REWARD for: The oral exam dialogue effectively forces the use of multiple
+    prefixes. DEDUCT for: The student''s described physical route in the dialogue
+    is slightly logically disjointed (walking to metr'
+findings: []

@@ -1,0 +1,241 @@
+vocabulary:
+- word: перевезти́
+  translation: to transport across (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: провести́
+  translation: to guide through / to conduct (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: провезти́
+  translation: to transport through (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: перелеті́ти
+  translation: to fly across (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: переплисти́
+  translation: to swim across (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пролеті́ти
+  translation: to fly past (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: проплисти́
+  translation: to sail past (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: на́скрізь
+  translation: through (adverb)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: кордо́н
+  translation: border
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: перейти́
+  translation: to cross on foot (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: переї́хати
+  translation: to cross by vehicle / to relocate (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: перебі́гти
+  translation: to run across (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: перенести́
+  translation: to carry across / to reschedule (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: перевести́
+  translation: to lead across / to translate (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пройти́
+  translation: to walk past / to walk through (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: прої́хати
+  translation: to drive past / to drive through (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пробі́гти
+  translation: to run past (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: переходити
+  translation: to cross (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: проходити
+  translation: to pass / to go through (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пішохідний перехід
+  translation: pedestrian crossing
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: перетну́ти
+  translation: to cross / to traverse
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: переїжджа́ти
+  translation: to drive across / to relocate (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: проїжджа́ти
+  translation: to drive past / to drive through (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пронести́
+  translation: to carry through / to carry past
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: че́рез
+  translation: through / across (preposition)
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: крізь
+  translation: through (preposition)
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: по
+  translation: along / on (preposition)
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: міст
+  translation: bridge
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: залізничний переїзд
+  translation: railway crossing
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: калю́жа
+  translation: puddle
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: зупи́нка
+  translation: stop / bus stop
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: поворо́т
+  translation: turn
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: перейти дорогу
+  translation: to cross the road
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: переїхати в нове місто
+  translation: to relocate to a new city
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: перенести зустріч
+  translation: to reschedule a meeting
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: перевести статтю
+  translation: to translate an article
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: проїхати зупинку
+  translation: to miss a stop (in transport)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пробігти очима
+  translation: to skim / scan with eyes
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: проїхати поворот
+  translation: to miss a turn
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пройти через парк
+  translation: to walk through a park
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

@@ -1,0 +1,289 @@
+vocabulary:
+- word: леті́ти
+  translation: to fly (unidirectional)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: літа́ти
+  translation: to fly (multidirectional)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пливти́
+  translation: to swim or sail (unidirectional)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пла́вати
+  translation: to swim or sail (multidirectional)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: щодня́
+  translation: every day
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: за́раз
+  translation: right now
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: валі́за
+  translation: suitcase
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пі́шки
+  translation: on foot
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: іти́
+  translation: to go on foot (unidirectional)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ходи́ти
+  translation: to go on foot (multidirectional or habitual)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ї́хати
+  translation: to go by vehicle (unidirectional)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ї́здити
+  translation: to go by vehicle (multidirectional or habitual)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: бі́гти
+  translation: to run (unidirectional)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: бі́гати
+  translation: to run (multidirectional or habitual)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: нести́
+  translation: to carry (unidirectional)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: носи́ти
+  translation: to carry or wear (multidirectional or habitual)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вести́
+  translation: to lead or guide (unidirectional)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: води́ти
+  translation: to lead, guide, or drive (multidirectional or habitual)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: везти́
+  translation: to transport or take by vehicle (unidirectional)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вози́ти
+  translation: to transport or take by vehicle (multidirectional or habitual)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: односпрямо́ваний
+  translation: unidirectional
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: різноспрямо́ваний
+  translation: multidirectional
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: дієслова руху
+  translation: motion verbs
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: парні дієслова
+  translation: paired verbs
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на́прямок
+  translation: direction
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: мета́
+  translation: goal or destination
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: у момент мовлення
+  translation: at the moment of speaking
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зви́чка
+  translation: habit
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: регулярна дія
+  translation: regular action
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: туди й назад
+  translation: there and back (round-trip)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: відмі́нювання
+  translation: conjugation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: суплетивні форми
+  translation: suppletive forms
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: чергува́ння
+  translation: alternation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ко́лесо
+  translation: wheel
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: пасажи́р
+  translation: passenger
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ванта́ж
+  translation: cargo or load
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: носити окуляри
+  translation: to wear glasses
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: водити машину
+  translation: to drive a car
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: прийме́нник
+  translation: preposition
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: куди́
+  translation: where to
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: зві́дки
+  translation: where from
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: че́рез
+  translation: through or across
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: повз
+  translation: past or by
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: відбува́ти
+  translation: to depart (for transport)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: виїжджа́ти
+  translation: to leave or depart
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ка́лька
+  translation: calque (loan translation)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: руси́зм
+  translation: russicism
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: додо́му
+  translation: home (homewards)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true

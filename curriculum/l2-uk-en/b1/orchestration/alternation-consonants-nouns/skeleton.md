@@ -1,58 +1,53 @@
 ## Що таке чергування приголосних? (~550 words total)
-- P1 (~150 words): [Establish a bridge from M08 (vowel alternations), explaining that while vowel changes often happen in the root, consonant alternations typically affect the final sound of the root/stem. Introduce the term 'чергування' as a systematic, predictable shift that occurs during declension or word formation.]
-- P2 (~150 words): [Introduce the core "three-way pattern" defined in Avramenko Grade 5: the velar group (задньоязикові) [г], [к], [х] each have two potential alternation targets. Contrast the hard starting points with their soft or hushing results (г — з — ж, к — ц — ч, х — с — ш) to give learners a map of the entire module.]
-- P3 (~150 words): [Explain the phonetic mechanism: why these sounds change. Discuss the role of historical "front vowels" (like the modern 'i' or the vocative 'e') in pulling the back-of-the-mouth velars forward, transforming them into sibilants or hushing sounds. Use the analogy of "lazy speech" or "tongue efficiency."]
-- P4 (~100 words): [Briefly touch upon the historical context of Proto-Slavic and Old East Slavic (давньоукраїнська мова), explaining that these aren't "irregularities" but are the very fossils of the language's evolution that make Ukrainian melodic and easy to pronounce.]
+- P1 (~150 words): [Bridge from M08 (vowels) to consonant shifts. Explain that just as 'o' changes to 'i' in 'стіл — стола', final consonants change systematically to facilitate pronunciation before specific endings or suffixes. Define 'чергування' as a morphophonemic rule, not a random spelling error.]
+- P2 (~150 words): [Classification of the 'velar' group (задньоязикові): г, к, х. Introduce the three-way pattern identified in Avramenko Grade 5: [г] — [з] — [ж], [к] — [ц] — [ч], [х] — [с] — [ш]. Explain that each starting sound has two potential 'destination' sounds depending on the grammar case.]
+- P3 (~125 words): [Historical context based on Old East Slavic (давньоукраїнська мова). Explain that these changes occurred centuries ago when certain 'front vowels' forced back-of-the-mouth consonants to move forward. Mention that while the history is complex, the results today are highly productive and predictable.]
+- P4 (~125 words): [Overview of the two main functional areas: Word Formation (suffixes like -к-, -н-) and Declension (cases like Vocative, Dative, and Locative). Set the expectation that this module focuses on nouns, while verbs will follow in M10.]
 
 ## Перша палаталізація: [г/к/х] -> [ж/ч/ш] (~825 words total)
-- P1 (~150 words): [Deep dive into the [г/к/х] -> [ж/ч/ш] pattern. Explain that this is triggered by the vocative ending -e and certain word-formation suffixes. Provide immediate primary examples: друг (base) -> друже (vocative), рука (base) -> ручка (diminutive).]
-- P2 (~150 words): [Focus on the Vocative Case (кличний відмінок) for masculine nouns. Detail the rule from Glazova Grade 10: 2nd declension, hard group, ending in -e. List transformations: ворог — вороже, козак — козаче, пастух — пастуше, чоловік — чоловіче, юнак — юначе.]
-- P3 (~150 words): [Discuss Word Formation (словотворення). Explain how suffixes like -к-, -н-, and -еньк- trigger the same shift. Provide examples: нога — ніжка — ніженька, рука — рученька, книга — книжка — книжковий, молоко — молочний.]
-- P4 (~125 words): [Extend the rule to adjectives and place-name-based suffixes like -ськ-. Show how the hushing sound is often assimilated or preserved: Прага — празький, Норвегія — норвезький, Лейпциг — лейпцизький.]
-- P5 (~150 words): [Reading Practice: Introduce authentic Ukrainian folk proverbs and sayings that utilize the vocative case naturally. Focus on "Терпи, козаче, отаманом будеш" and explain the kozak -> kozache shift in the context of historical address.]
-- Exercise: [Fill-in, focus on writing the correct кличний відмінок form of masculine nouns (e.g., козак -> козаче, друг -> друже), 8 items] (~100 words in items/instructions)
+- P1 (~150 words): [Detailed breakdown of the First Palatalization [г/к/х] -> [ж/ч/ш]. Explain the phonetic logic: these are 'hushing' sounds (шиплячі). Focus on word-formation triggers, particularly the diminutive suffix -к- and the adjectival -н-.]
+- P2 (~150 words): [Derivation examples from Zabolotnyi Grade 5: нога -> ніжка (г->ж), рука -> ручка (к->ч), вухо -> вушко (х->ш). Explain how the root vowel 'o' in 'нога' also changes to 'i' in 'ніжка', showing that multiple alternations can happen simultaneously.]
+- P3 (~150 words): [Transition to the Vocative case (Кличний відмінок) as the primary declension trigger. Explain the rule from Hlazova Grade 10: II declension masculine nouns in the 'hard group' take the ending -е, which triggers the shift.]
+- P4 (~150 words): [Vocative examples: друг -> друже, козак -> козаче, пастух -> пастуше. Mention common nouns used in address: чоловік -> чоловіче, юнак -> юначе. Contrast this with the soft group which takes -ю and does not alternate (e.g., учитель -> учителю).]
+- Dialogue (~100 words): [A conversation at a Lviv bookshop (Львівська книгарня) between a Bookseller (Книгар) and a Customer. Use address 'Друже' and discuss book titles involving 'книга -> книжка' and 'рука -> ручка'.]
+- Exercise: [Quiz, focus on identifying palatalization type (1st vs 2nd) based on pairs like друг-друже vs нога-нозі, 8 items]
+- Exercise: [Fill-in, focus on forming the correct Vocative case for masculine nouns (e.g., козак, чоловік, юнак), 8 items]
 
-## Друга палаталізація: [г/к/х] -> [з'/ц'/с'] (~925 words total)
-- P1 (~150 words): [Introduce the second pattern: [г] -> [з'], [к] -> [ц'], [х] -> [с']. Emphasize that these are "soft" (палаталізовані) sounds, not hushing ones. Use Avramenko's examples: нога — на нозі, рука — на руці, муха — на мусі.]
-- P2 (~150 words): [The Trigger: The ending -i. Explain that this alternation is strictly limited to the Dative and Locative singular cases of the 1st declension (mostly feminine nouns ending in -a). Contrast this with the Vocative trigger (-e) to help learners categorize the two types.]
-- P3 (~150 words): [Case Comparison: Walk through a partial declension of 'нога' to show where the change *doesn't* happen (ноги, ногу, ногою) versus where it *does* (нозі, на нозі). This visualization reinforces that -i is the catalyst.]
-- P4 (~150 words): [Proper Names: Apply the rule to names. Show how Olga becomes Olzi and Odarka becomes Odartsi. Explain that this is vital for correct syntax in sentences like "Я дав книжку Ользі" or "Ми були в гостях у Одарки."]
-- P5 (~125 words): [Common Pitfalls: Warn against mixing the two palatalizations. Explain why "*на ножі" is a mistake for "on the leg" (it uses the 1st palatalization incorrectly) while "на нозі" is correct. Contrast "книжці" (locative) with "книже" (hypothetical vocative vs actual diminutive "книжка").]
-- Exercise: [Quiz, focus on identifying which palatalization type is present: first or second, given a word pair (друг-друже vs. нога-нозі), 8 items] (~100 words)
-- Exercise: [Fill-in, focus on writing the correct давальний/місцевий form of feminine nouns (e.g., нога -> на нозі, рука -> руці), 6 items] (~100 words)
+## Друга палаталізація: [г/к/х] -> [з'/ц'/с'] (~825 words total)
+- P1 (~150 words): [Detailed breakdown of the Second Palatalization [г/к/х] -> [з'/ц'/с']. Explain these are 'sibilant' sounds (свистячі). Focus on the specific trigger: the ending -і in Dative and Locative cases for I declension nouns.]
+- P2 (~150 words): [Feminine noun examples from Avramenko Grade 5: нога -> на нозі, рука -> на руці, муха -> мусі. Contrast the endings: if the ending is -и (Genitive: ноги), there is no change. The change ONLY happens before -і.]
+- P3 (~150 words): [Deep dive into proper names. Explain why addressing 'Olha' in the Dative requires a change: Ольга -> Ользі. Use other examples like Одарка -> Одарці and Палажка -> Палажці. Explain that this reflects the living nature of the rule.]
+- P4 (~150 words): [Geographic applications. Explain how to talk about locations: Прага -> у Празі, Рига -> у Ризі, Америка -> в Америці. Note the exception for some foreign words where the change feels unnatural (Африка -> в Африці vs в Африці).]
+- Exercise: [Fill-in, focus on writing the correct Dative/Locative forms for feminine nouns (e.g., нога, рука, дочка), 6 items]
+- Exercise: [Match-up, focus on matching base nominative forms with their alternated case forms (e.g., книга <-> у книжці), 8 items]
+- P5 (~75 words): [Warning paragraph about mixing the two palatalizations. Explain that *на ножі would mean 'on the knife' (1st palat.), whereas 'on the leg' must be 'на нозі' (2nd palat.). Context determines the target sound.]
 
 ## Чергування [ц'] -> [ч] та інші (~550 words total)
-- P1 (~150 words): [Focus on the special alternation [ц'] -> [ч] in the Vocative case, as seen in Glazova Grade 10. List high-frequency examples: хлопець — хлопче, молодець — молодче, швець — шевче. Explain that the soft [ц'] of the stem yields to the hushing [ч] before the -e ending.]
-- P2 (~150 words): [Address "Minor" but important alternations. Mention [з] -> [ж] in the Vocative: князь — княже. Briefly touch on [с] -> [ш] in rare forms like колесо — на колішні, clarifying that while less productive, these are essential for high-level literacy.]
-- P3 (~150 words): [Systematic Synthesis: Combine all the bits into a "Master Logic." Explain how a learner can look at any noun ending in a velar or [ц'] and instantly predict its Vocative, Dative, and Locative forms based on the tables provided.]
-- Exercise: [Match-up, focus on matching base forms with their alternated case forms (e.g., Ольга <-> Ользі, козак <-> козаче), 8 items] (~100 words)
+- P1 (~150 words): [Introduction of the [ц'] -> [ч] alternation specifically in the Vocative case. Use examples from Hlazova: хлопець -> хлопче, молодець -> молодче, швець -> шевче. Explain that although [ц'] is soft, it still shifts to the hushing [ч].]
+- P2 (~150 words): [Explaining the difference between [к]->[ч] and [ц']->[ч]. Note that 'юнак' becomes 'юначе' (from к), while 'хлопець' becomes 'хлопче' (from ц'). The result is the same ([ч]), but the starting point differs.]
+- P3 (~150 words): [Briefly cover rare or minor alternations in nouns. Mention [з] -> [ж] in 'князь -> княже' (Vocative) and the archaic/dialectal [с] -> [ш] in 'колесо -> на колішні'. Reiterate that these are less productive but important for historical literacy.]
+- Exercise: [Error-correction, focus on finding and fixing alternation errors in sentences (e.g., *Ольгі -> Ользі, *козаже -> козаче), 6 items]
 
 ## Чергування у відмінюванні іменників II відміни (~600 words total)
-- P1 (~150 words): [Examine the 2nd Declension (masculine) paradigm as a whole. Use 'друг' as the model. Show that throughout the entire singular and plural declension, *only* the Vocative singular triggers the alternation. This simplifies the rule for masculine nouns.]
-- P2 (~150 words): [Contrast with 1st Declension (feminine/mixed). Highlight that feminine nouns have a "Dative/Locative" pocket for alternations, whereas masculine nouns have a "Vocative" pocket. This contrast is the key to avoiding cross-gender errors.]
-- P3 (~150 words): [Group Classification: Revisit the "Hard, Soft, Mixed" groups from Lytvynova Grade 6. Explain how 'тверда група' nouns are the primary candidates for these velar alternations, while 'м'яка група' (ending in -ю in Vocative) usually avoids them (e.g., вітязь — вітязю).]
-- Exercise: [Error-correction, focus on finding and fixing consonant alternation errors in sentences (e.g., *на ножі -> на нозі, *козаже -> козаче), 6 items] (~150 words)
+- P1 (~150 words): [Systematic review of the II declension (masculine and neuter). Explain that for masculine nouns, the 'hotspot' for alternation is almost exclusively the Vocative. Provide a full table for 'друг': друг, друга, другу, другом, на другу, друже!]
+- P2 (~150 words): [Analysis of neuter nouns. Explain that neuter nouns usually avoid these alternations in declension because they rarely take the -і ending in Dative/Locative (taking -у instead). Example: вухо -> вуху (no change) vs вухо -> у вусі (Locative with -і ending).]
+- P3 (~150 words): [Group classification recap: Hard, Soft, Mixed. Explain that alternations are a feature of the 'Hard' group (ending in г, к, х). Soft group nouns (ending in soft consonants or 'й') follow a different pattern with -ю endings and no palatalization.]
+- P4 (~150 words): [Reading practice analysis. Use the proverb 'Терпи, козаче, отаманом будеш'. Explain why 'козаче' is used instead of 'козак' or 'козаку', highlighting the cultural weight of the Vocative in folk wisdom.]
 
 ## Чергування у власних назвах і географічних іменах (~550 words total)
-- P1 (~150 words): [Geography Focus: Practice with place names. Explain why we say "у Празі" (Prague), "у Ризі" (Riga), and "в Америці" (America). Note the exception for some foreign names like "Пенелопа — Пенелопі" where the sound remains unchanged to preserve the original name's phonetics.]
-- P2 (~150 words): [Cultural Context - Forms of Address: Explain why correct alternation is a sign of respect and native-level fluency in Ukraine. Discuss the social awkwardness of using the nominative or an incorrect vocative (e.g., calling someone "*Олего" instead of "Олеже!").]
-- P3 (~150 words): [Common Proper Names: Provide a reference list of common names that undergo change: Марічка — Марічці, Галинка — Галинці, Олег — Олеже, Ігор — Ігорю (contrast with no change).]
-- Dialogue (~100 words): [At a Львівська книгарня (Lviv bookshop). A customer asks for a book ("книга") and the bookseller says it's in a specific "книжці" (г->ж). They discuss the author ("Ользі") and use the vocative "друже" to address each other politely.]
+- P1 (~150 words): [Cultural etiquette of address. Explain that using the correct alternation in a name (Олеже! vs *Олего!) is a sign of high linguistic register and respect. Provide a list of common names: Олег -> Олеже, Марічка -> Марічко (no alternation here, but contrast), Ігор -> Ігоре (no alternation).]
+- P2 (~150 words): [Guidelines for foreign names. Explain that while 'Прага' alternates to 'у Празі' because it is fully naturalized, names like 'Пенелопа' or 'Джавахарлал' do not alternate. The rule: if the word 'feels' Ukrainian and follows a standard ending, it usually alternates.]
+- P3 (~150 words): [Practical writing application. How to address a letter or email. 'Шановний козаче!' vs 'Дорога Ольго!'. Note that 'Ольга' in Vocative ends in -о (no change), but in Dative it changes to 'Ользі'. This distinction is crucial for learners.]
+- P4 (~100 words): [Exercise/Drill: Learners are given a map of Europe and must describe locations using 'у/в' + Locative, applying alternations to: Прага, Рига, Америка, Гамбург (в Гамбургу — no change vs у Гамбурзі — possible but rare).]
 
 ## Підсумок — Summary (~500 words)
-- P1 (~100 words): [Recap the three-way velar pattern and the two main types of palatalization. Emphasize that [г/к/х] are the "unstable" sounds that love to shift when they meet the vowels -e or -i.]
-- P2 (~100 words): [Complete Reference Table:
-| Base Consonant | First Palatalization (Кл.в., word formation) | Second Palatalization (Д.в./М.в.) |
-| :--- | :--- | :--- |
-| [г] | [ж] (друже) | [з'] (нозі) |
-| [к] | [ч] (козаче) | [ц'] (руці) |
-| [х] | [ш] (пастуше) | [с'] (мусі) |
-| [ц'] | [ч] (хлопче - Кл.в. only) | — |]
-- P3 (~300 words): [Self-check Questions:
-1. Які приголосні чергуються у кличному відмінку слова 'друг'? (г -> ж)
-2. Яке чергування відбувається у слові 'на нозі' і чому? (г -> з', друга палаталізація перед -і в місцевому відмінку)
-3. Утворіть кличний відмінок від слів: козак, юнак, хлопець. (козаче, юначе, хлопче)
-4. Поставте у давальний відмінок: Ольга, книга, рука. (Ользі, книзі, руці)
-5. Чому ми кажемо "у Празі", але "у Пенелопі"? (Географічні назви зазвичай чергуються, але деякі запозичені власні назви зберігають основу для впізнаваності.)]
+- P1 (~150 words): [Recap the three-way pattern: [г]—[з]—[ж], [к]—[ц]—[ч], [х]—[с]—[ш]. Create a final master table in prose or Markdown format as a 'cheat sheet' for the learner.]
+- P2 (~150 words): [Final advice on 'The Trigger Rule': If you see an -e (Vocative) or an -і (Dative/Locative feminine), stop and check for a velar. This mental 'pause' helps prevent common L2 errors.]
+- P3 (~200 words): [Self-check questions:
+    1. Які приголосні чергуються у кличному відмінку слова 'друг'? (Відповідь: [г] -> [ж])
+    2. Яке чергування відбувається у слові 'на нозі'? (Відповідь: [г] -> [з'])
+    3. Утворіть кличний відмінок від слів: козак, юнак, хлопець. (Відповідь: козаче, юначе, хлопче)
+    4. Поставте у давальний відмінок: Ольга, книга, рука. (Відповідь: Ользі, книзі, руці)
+    5. Чому в слові 'у вчителю' немає чергування? (Відповідь: бо це м'яка група, а не задньоязиковий [г/к/х])]
 
-Grand total: ~4500 words
+Grand total: ~4400 words

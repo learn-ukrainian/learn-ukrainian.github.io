@@ -1,0 +1,181 @@
+vocabulary:
+- word: нереа́льний
+  translation: unreal
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: формотворча частка
+  translation: form-creating particle (би/б)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: безособо́вий
+  translation: impersonal
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: реальна умова
+  translation: real condition (якщо)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: милозву́чність
+  translation: euphony
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: хай / нехай
+  translation: let (3rd person imperative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: будь ласка
+  translation: please
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ході́мо
+  translation: let's go (inclusive imperative)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: дійсний спосіб
+  translation: indicative mood
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ввічливе прохання
+  translation: polite request
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: хотів би
+  translation: I would like
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Чи не могли б ви...?
+  translation: Could you...?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: контрфактичність
+  translation: counterfactuality
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: ідіоматичний вираз
+  translation: idiomatic expression
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Якби не ти...
+  translation: If it weren't for you
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Якби ж то!
+  translation: If only!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: м'який знак
+  translation: soft sign
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Хай щастить!
+  translation: Good luck!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: подо́вження
+  translation: lengthening (of consonants)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: змішаний спосіб
+  translation: mixed method (word formation)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: власне зворотне
+  translation: proper reflexive
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: взає́мне
+  translation: reciprocal
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: стан
+  translation: state / middle voice
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пасивноподібне
+  translation: passive-like
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: перевага активного стану
+  translation: active preference
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ка́лька
+  translation: calque
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: тестува́ння
+  translation: testing
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: розро́бка
+  translation: development
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: підпи́сано
+  translation: has been signed
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Рушаймо!
+  translation: Let's get moving!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

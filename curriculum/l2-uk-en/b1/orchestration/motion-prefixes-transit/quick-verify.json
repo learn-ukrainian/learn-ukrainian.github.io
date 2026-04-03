@@ -1,0 +1,18 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 1/12 required vocab: пішохідний перехід (pedestrian crossing)"
+    },
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 6 exercise(s) but content has 0 placeholders"
+    }
+  ],
+  "timestamp": "2026-04-03T09:36:36.779471+00:00"
+}

@@ -1,0 +1,54 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: 'DEDUCT for missing textbook references. The plan explicitly requires
+    citing "Вашуленко Grade 3", "Голуб Grade 6", "Литвінова Grade 6", and "Заболотний
+    Grade 7", but none of these authors or textbooks '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'CRITICAL errors found: "опредмечена дія" and "опредмечену дію" (Russian
+    calques, should be "опредметнена/у"). Also, "з оточуючим світом" (Russian active
+    participle, should be "з навколишнім світом"). '
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent pedagogical progression from concept to practice. The use of
+    contrastive examples (process vs result, formal vs neutral) is strong and very
+    helpful for B1 learners.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary from the plan is introduced naturally in the text
+    with clear explanations and bolded keywords.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The placeholder markers are perfectly positioned after each relevant grammatical
+    section, ensuring progressive, immediate practice.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: DEDUCT for generic enthusiasm ("магію перетворення", "лінгвістичну магію"),
+    which violates the rule against "The magic of..." meta-commentary. Otherwise,
+    the tone is professional.
+- dimension: 7
+  name: Structural integrity
+  score: 7
+  evidence: 'DEDUCT for adding two unauthorized H2 headings (`## Суфікси -іння та
+    -ення...` and `## Стилістика: Канцелярит...`) that are not in the metadata `content_outline`.
+    Also altered two H2 names from the ex'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Good use of Ukrainian context in the reading examples (Дія, digital state,
+    green energy, rebuilding).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 6
+  evidence: DEDUCT for stilted/textbook-robotic phrasing in the opening dialogue.
+    While it intentionally crams verbal nouns for the lesson, sentences like "Моє
+    фотографування на заводі пройшло успішно" sound comp
+findings: []

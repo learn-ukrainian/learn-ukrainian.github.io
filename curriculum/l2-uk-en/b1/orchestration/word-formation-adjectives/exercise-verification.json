@@ -1,0 +1,485 @@
+{
+  "total_items": 207,
+  "grounded_items": 116,
+  "ungrounded": [
+    {
+      "word": "лісяний",
+      "exercise_type": "quiz",
+      "context": "лісяний"
+    },
+    {
+      "word": "лісоватий",
+      "exercise_type": "quiz",
+      "context": "лісоватий"
+    },
+    {
+      "word": "містовий",
+      "exercise_type": "quiz",
+      "context": "містовий"
+    },
+    {
+      "word": "міственний",
+      "exercise_type": "quiz",
+      "context": "міственний"
+    },
+    {
+      "word": "місткий",
+      "exercise_type": "quiz",
+      "context": "місткий"
+    },
+    {
+      "word": "сашкові",
+      "exercise_type": "quiz",
+      "context": "Як правильно сказати: телефон, який належить Сашкові?"
+    },
+    {
+      "word": "сашків",
+      "exercise_type": "quiz",
+      "context": "Сашків"
+    },
+    {
+      "word": "сашков",
+      "exercise_type": "quiz",
+      "context": "Сашков"
+    },
+    {
+      "word": "сашкін",
+      "exercise_type": "quiz",
+      "context": "Сашкін"
+    },
+    {
+      "word": "сашковий",
+      "exercise_type": "quiz",
+      "context": "Сашковий"
+    },
+    {
+      "word": "ганні",
+      "exercise_type": "quiz",
+      "context": "Як правильно сказати: книга, яка належить Ганні?"
+    },
+    {
+      "word": "ганнин",
+      "exercise_type": "quiz",
+      "context": "Ганнин"
+    },
+    {
+      "word": "ганнів",
+      "exercise_type": "quiz",
+      "context": "Ганнів"
+    },
+    {
+      "word": "ганнова",
+      "exercise_type": "quiz",
+      "context": "Ганнова"
+    },
+    {
+      "word": "ганнін",
+      "exercise_type": "quiz",
+      "context": "Ганнін"
+    },
+    {
+      "word": "козаський",
+      "exercise_type": "quiz",
+      "context": "козаський"
+    },
+    {
+      "word": "козакський",
+      "exercise_type": "quiz",
+      "context": "козакський"
+    },
+    {
+      "word": "козазький",
+      "exercise_type": "quiz",
+      "context": "козазький"
+    },
+    {
+      "word": "прагський",
+      "exercise_type": "quiz",
+      "context": "прагський"
+    },
+    {
+      "word": "пражський",
+      "exercise_type": "quiz",
+      "context": "пражський"
+    },
+    {
+      "word": "працький",
+      "exercise_type": "quiz",
+      "context": "працький"
+    },
+    {
+      "word": "парижський",
+      "exercise_type": "quiz",
+      "context": "парижський"
+    },
+    {
+      "word": "парицький",
+      "exercise_type": "quiz",
+      "context": "парицький"
+    },
+    {
+      "word": "париський",
+      "exercise_type": "quiz",
+      "context": "париський"
+    },
+    {
+      "word": "батьковий",
+      "exercise_type": "quiz",
+      "context": "батьковий"
+    },
+    {
+      "word": "батькін",
+      "exercise_type": "quiz",
+      "context": "батькін"
+    },
+    {
+      "word": "батьков",
+      "exercise_type": "quiz",
+      "context": "батьков"
+    },
+    {
+      "word": "люблю",
+      "exercise_type": "fill-in",
+      "context": "Я дуже люблю пити ____ чай."
+    },
+    {
+      "word": "пити",
+      "exercise_type": "fill-in",
+      "context": "Я дуже люблю пити ____ чай."
+    },
+    {
+      "word": "чай",
+      "exercise_type": "fill-in",
+      "context": "Я дуже люблю пити ____ чай."
+    },
+    {
+      "word": "лимоний",
+      "exercise_type": "fill-in",
+      "context": "лимоний"
+    },
+    {
+      "word": "гречаний",
+      "exercise_type": "fill-in",
+      "context": "гречаний"
+    },
+    {
+      "word": "бджоли",
+      "exercise_type": "fill-in",
+      "context": "Бджоли збирають ____ мед."
+    },
+    {
+      "word": "збирають",
+      "exercise_type": "fill-in",
+      "context": "Бджоли збирають ____ мед."
+    },
+    {
+      "word": "мед",
+      "exercise_type": "fill-in",
+      "context": "Бджоли збирають ____ мед."
+    },
+    {
+      "word": "гречанний",
+      "exercise_type": "fill-in",
+      "context": "гречанний"
+    },
+    {
+      "word": "гречковий",
+      "exercise_type": "fill-in",
+      "context": "гречковий"
+    },
+    {
+      "word": "сонний",
+      "exercise_type": "fill-in",
+      "context": "сонний"
+    },
+    {
+      "word": "мене",
+      "exercise_type": "fill-in",
+      "context": "У мене сьогодні такий ____ настрій."
+    },
+    {
+      "word": "сьогодні",
+      "exercise_type": "fill-in",
+      "context": "У мене сьогодні такий ____ настрій."
+    },
+    {
+      "word": "настрій",
+      "exercise_type": "fill-in",
+      "context": "У мене сьогодні такий ____ настрій."
+    },
+    {
+      "word": "соний",
+      "exercise_type": "fill-in",
+      "context": "соний"
+    },
+    {
+      "word": "пили",
+      "exercise_type": "fill-in",
+      "context": "Ми пили смачний ____ сік."
+    },
+    {
+      "word": "кімнаті",
+      "exercise_type": "fill-in",
+      "context": "У кімнаті стоїть ____ стіл."
+    },
+    {
+      "word": "стіл",
+      "exercise_type": "fill-in",
+      "context": "У кімнаті стоїть ____ стіл."
+    },
+    {
+      "word": "дерев'янний",
+      "exercise_type": "fill-in",
+      "context": "дерев'янний"
+    },
+    {
+      "word": "посуд",
+      "exercise_type": "fill-in",
+      "context": "Це гарний ____ посуд."
+    },
+    {
+      "word": "склянний",
+      "exercise_type": "fill-in",
+      "context": "склянний"
+    },
+    {
+      "word": "літній",
+      "exercise_type": "match-up",
+      "context": "літній"
+    },
+    {
+      "word": "студентський",
+      "exercise_type": "match-up",
+      "context": "студентський"
+    },
+    {
+      "word": "правобережний",
+      "exercise_type": "group-sort",
+      "context": "правобережний"
+    },
+    {
+      "word": "холодний",
+      "exercise_type": "error-correction",
+      "context": "Це був дуже туманий і холодний ранок."
+    },
+    {
+      "word": "тумановий",
+      "exercise_type": "error-correction",
+      "context": "тумановий"
+    },
+    {
+      "word": "французький",
+      "exercise_type": "error-correction",
+      "context": "французький"
+    },
+    {
+      "word": "купили",
+      "exercise_type": "error-correction",
+      "context": "Ми купили новий французський сир."
+    },
+    {
+      "word": "французський",
+      "exercise_type": "error-correction",
+      "context": "Ми купили новий французський сир."
+    },
+    {
+      "word": "сир",
+      "exercise_type": "error-correction",
+      "context": "Ми купили новий французський сир."
+    },
+    {
+      "word": "французкий",
+      "exercise_type": "error-correction",
+      "context": "французкий"
+    },
+    {
+      "word": "француський",
+      "exercise_type": "error-correction",
+      "context": "француський"
+    },
+    {
+      "word": "пташка",
+      "exercise_type": "error-correction",
+      "context": "Ця пташка має солов'їнний голос."
+    },
+    {
+      "word": "солов'їнний",
+      "exercise_type": "error-correction",
+      "context": "Ця пташка має солов'їнний голос."
+    },
+    {
+      "word": "голос",
+      "exercise_type": "error-correction",
+      "context": "Ця пташка має солов'їнний голос."
+    },
+    {
+      "word": "солов'янний",
+      "exercise_type": "error-correction",
+      "context": "солов'янний"
+    },
+    {
+      "word": "соловіний",
+      "exercise_type": "error-correction",
+      "context": "соловіний"
+    },
+    {
+      "word": "лимоновий",
+      "exercise_type": "error-correction",
+      "context": "лимоновий"
+    },
+    {
+      "word": "лимоннний",
+      "exercise_type": "error-correction",
+      "context": "лимоннний"
+    },
+    {
+      "word": "осіний",
+      "exercise_type": "error-correction",
+      "context": "Сьогодні справжній осіний день."
+    },
+    {
+      "word": "осінний",
+      "exercise_type": "error-correction",
+      "context": "осінний"
+    },
+    {
+      "word": "осіньовий",
+      "exercise_type": "error-correction",
+      "context": "осіньовий"
+    },
+    {
+      "word": "козацька",
+      "exercise_type": "error-correction",
+      "context": "козацька"
+    },
+    {
+      "word": "музеї",
+      "exercise_type": "error-correction",
+      "context": "У музеї є козакська зброя."
+    },
+    {
+      "word": "козакська",
+      "exercise_type": "error-correction",
+      "context": "У музеї є козакська зброя."
+    },
+    {
+      "word": "зброя",
+      "exercise_type": "error-correction",
+      "context": "У музеї є козакська зброя."
+    },
+    {
+      "word": "козазька",
+      "exercise_type": "error-correction",
+      "context": "козазька"
+    },
+    {
+      "word": "козаська",
+      "exercise_type": "error-correction",
+      "context": "козаська"
+    },
+    {
+      "word": "ручка",
+      "exercise_type": "fill-in",
+      "context": "ручка"
+    },
+    {
+      "word": "ручити",
+      "exercise_type": "fill-in",
+      "context": "ручити"
+    },
+    {
+      "word": "окуляри",
+      "exercise_type": "fill-in",
+      "context": "окуляри"
+    },
+    {
+      "word": "сіль",
+      "exercise_type": "fill-in",
+      "context": "сіль"
+    },
+    {
+      "word": "селити",
+      "exercise_type": "fill-in",
+      "context": "селити"
+    },
+    {
+      "word": "школяр",
+      "exercise_type": "fill-in",
+      "context": "школяр"
+    },
+    {
+      "word": "школити",
+      "exercise_type": "fill-in",
+      "context": "школити"
+    },
+    {
+      "word": "географічної",
+      "exercise_type": "fill-in",
+      "context": "Слово «празький» утворене від географічної назви ____."
+    },
+    {
+      "word": "прагнення",
+      "exercise_type": "fill-in",
+      "context": "прагнення"
+    },
+    {
+      "word": "порог",
+      "exercise_type": "fill-in",
+      "context": "порог"
+    },
+    {
+      "word": "галичина",
+      "exercise_type": "fill-in",
+      "context": "Галичина"
+    },
+    {
+      "word": "галка",
+      "exercise_type": "fill-in",
+      "context": "галка"
+    },
+    {
+      "word": "правий",
+      "exercise_type": "match-up",
+      "context": "правий + берег"
+    },
+    {
+      "word": "північ",
+      "exercise_type": "match-up",
+      "context": "північ + захід"
+    },
+    {
+      "word": "захід",
+      "exercise_type": "match-up",
+      "context": "північ + захід"
+    },
+    {
+      "word": "західний",
+      "exercise_type": "match-up",
+      "context": "північно-західний"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 21,
+    "tested_in_exercises": 4,
+    "not_tested": [
+      "голосна",
+      "збільшувальний",
+      "зменшувальний",
+      "материн",
+      "мотивувальне",
+      "наближений",
+      "основа",
+      "подвоєння",
+      "похідне",
+      "префікс",
+      "присвійний",
+      "продуктивний",
+      "складний",
+      "словотвір",
+      "сполучна",
+      "суфікс",
+      "твірна"
+    ]
+  },
+  "all_grounded": false
+}

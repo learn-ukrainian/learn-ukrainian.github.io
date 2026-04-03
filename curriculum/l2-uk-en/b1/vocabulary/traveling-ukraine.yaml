@@ -1,0 +1,367 @@
+vocabulary:
+- word: по́дорож
+  translation: journey / trip
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: мандрі́вка
+  translation: travel / journey / hike
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: подорожува́ти
+  translation: to travel
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: по́тяг / по́їзд
+  translation: train
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: авто́бус
+  translation: bus
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: маршру́тка
+  translation: minibus / route taxi
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: купе́
+  translation: compartment (on a train)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: плацка́рт
+  translation: open sleeping car
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: сидячий вагон
+  translation: seating carriage
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вокза́л
+  translation: station / terminal
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: платфо́рма
+  translation: platform
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: зупи́нка
+  translation: stop (bus / tram)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: зал очікування
+  translation: waiting room
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: квито́к
+  translation: ticket
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: зворотний квиток
+  translation: return ticket
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: квиток в один бік
+  translation: one-way ticket
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: розклад руху
+  translation: schedule / timetable
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: маршру́т
+  translation: route
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пасажи́р
+  translation: passenger
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: провідни́к
+  translation: conductor (on a train)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: за́три́мка
+  translation: delay
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: діста́тися
+  translation: to get to / to reach
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: бага́ж
+  translation: baggage
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: наплі́чник
+  translation: backpack
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ручна поклажа
+  translation: hand luggage
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: посадковий талон
+  translation: boarding pass
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ви́літ
+  translation: departure / takeoff
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: прилі́т
+  translation: arrival / landing
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: па́м'ятка
+  translation: landmark / monument
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: екску́рсія
+  translation: excursion / guided tour
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: готе́ль
+  translation: hotel
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: хостел
+  translation: hostel
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: трамва́й
+  translation: tram
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: таксі́
+  translation: taxi
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: валі́за
+  translation: suitcase
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ре́шта
+  translation: change (money back)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: приїжджа́ти
+  translation: to arrive
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пересі́сти
+  translation: to transfer / change transport
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: проїжджа́ти
+  translation: to pass through / drive past
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: доїжджа́ти
+  translation: to reach / arrive (by vehicle)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: заїжджа́ти
+  translation: to drop in / stop by
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зійти́
+  translation: to go down / descend
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пря́мо
+  translation: straight
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ліво́руч
+  translation: to the left
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: право́руч
+  translation: to the right
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: на розі
+  translation: at the corner
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на перехресті
+  translation: at the intersection
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: прову́лок
+  translation: lane / alley
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: світлофо́р
+  translation: traffic light
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вздовж
+  translation: along
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: споча́тку
+  translation: firstly / at first
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: по́тім
+  translation: then
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: наре́шті
+  translation: finally
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: Скільки коштує?
+  translation: How much does it cost?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: О котрій годині...?
+  translation: At what time...?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зупиніть на зупинці
+  translation: stop at the bus stop
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: передайте за проїзд
+  translation: pass the fare
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: як дістатися до
+  translation: how to get to
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: подорожувати Україною
+  translation: to travel through Ukraine
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: незабу́тній
+  translation: unforgettable
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: вра́жений
+  translation: impressed
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true

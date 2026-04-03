@@ -1,24 +1,19 @@
 {
-  "attempt": 2,
+  "attempt": 3,
   "passed": false,
   "errors": [
     {
-      "check": "STRUCTURE",
+      "check": "WORD_COUNT",
       "severity": "ERROR",
-      "message": "Missing section heading: 'Підсумок: таблиця дієслівних чергувань'"
+      "message": "Too short: 3168 words (target: 4000, minimum: 3400)"
     }
   ],
   "warnings": [
-    {
-      "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 1/14 required vocab: теперішній час (present tense)"
-    },
     {
       "check": "EXERCISES",
       "severity": "WARNING",
       "message": "Plan expects 6 exercise(s) but content has 0 placeholders"
     }
   ],
-  "timestamp": "2026-04-02T22:04:17.573485+00:00"
+  "timestamp": "2026-04-02T23:51:10.007358+00:00"
 }

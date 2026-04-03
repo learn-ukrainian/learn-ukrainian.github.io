@@ -1,0 +1,54 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 4
+  evidence: 'The text ignored the `dialogue_situations` (Cooking competition) and
+    replaced it with generic grammar complaining: `— Олено: Ти знаєш, що я зараз роблю?...
+    — Марку: Це фонетичне чергування!`. Also, it'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 4
+  evidence: 'CRITICAL errors: 1) Teaches that «друже» is locative/dative: `в іменниках
+    у місцевому та давальному відмінках (наприклад, «друг» — «друзі» — «друже»`. 2)
+    Uses wrong case with "через": `Глибока річка т'
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: Generally sound explanation of the historical [j] suffix and its impact
+    on modern II conjugation. However, presenting "друже" as a locative form is highly
+    confusing for learners who just learned it as
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: 'Used all `required` vocabulary naturally. Missed two `recommended` words:
+    "продуктивний" and "закономірність".'
+- dimension: 5
+  name: Exercise quality
+  score: 3
+  evidence: Activity markers do not correspond to the plan's `activity_hints` (e.g.,
+    missing `group-sort` and `error-correction` entirely, inventing custom marker
+    strings).
+- dimension: 6
+  name: Engagement & tone
+  score: 4
+  evidence: 'Fails the stylistic guidelines by relying heavily on meta-commentary
+    and "magic" framing: `Воно працює як магія`, `справжній ключ до розширення вашого
+    словникового запасу`, and `Ви озброєні знаннями, '
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, sections correspond well to the outline, and word count
+    is perfectly on target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Phonetics and morphology are explained natively on Ukrainian terms without
+    relying on Russian comparisons.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 3
+  evidence: The dialogue is a highly artificial "meta-conversation" where characters
+    just list out grammar rules to each other instead of engaging in the natural,
+    situational communication (cooking show) prescrib
+findings: []

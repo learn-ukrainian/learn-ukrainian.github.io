@@ -1,23 +1,3 @@
-<correction_directive>
-CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
-
-- FIX: Missing section heading: 'Підсумок: таблиця дієслівних чергувань'
-- NOTE: Missing 1/14 required vocab: теперішній час (present tense)
-- NOTE: Plan expects 6 exercise(s) but content has 0 placeholders
-</correction_directive>
-
-LEARNINGS FROM PAST BUILDS (same error patterns seen before):
-- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
-- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
-- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
-- [GLOBAL] NEVER frame Ukrainian as "lacking" or "missing" letters that Russian has. Ukrainian has its own 33-letter alphabet — it is complete. Do NOT write "Ukrainian lacks Ъ, Ы, Э" or "Ukrainian doesn't have these Russian letters." Instead, highlight what Ukrainian HAS: Ґ, Є, Ї, І are unique to Ukrainian. Present Ukrainian on its own terms.
-- [GLOBAL] NO LLM filler phrases. Do NOT write: "Let us start with...", "Numbers unlock the real Ukraine", "You now possess a complete...", "It is incredibly versatile", "one of the most rewarding skills". Start sections with a dialogue, a question, or a concrete example — never with a generic motivational opener. If a sentence could appear in any language course about any topic, delete it.
-- [GLOBAL] Every exercise item must test something EXPLICITLY taught in the preceding prose. If an exercise tests the collocation "малювати картину", the prose must contain "малювати картину" as a taught example. Do NOT test collocations, vocabulary, or patterns that the learner has to infer — test what was taught.
-- [GLOBAL] Quiz correct answers must be RANDOMIZED across positions. Do NOT place the correct answer at index 0 for all items. Distribute correct answers roughly evenly across all positions (0, 1, 2) to prevent pattern-guessing.
-- [GLOBAL] Do NOT use spatial metaphors for abstract grammatical requirements. Example: "на" with musical instruments is NOT "on top of" — it is an abstract grammatical requirement that must be memorized. Misleading mnemonics cause incorrect generalizations. If a rule must simply be memorized, say so directly.
-- [GLOBAL] Memorized chunks are allowed before their grammar is formally taught. Natural Ukrainian expressions (Мені подобається, У мене є, Мене звати, Як справи?, Звідки ти?, Скільки коштує?, Мені ... років) can appear in ANY module as memorized chunks, even if the underlying grammar (dative, genitive, etc.) is not taught until later. This mirrors how Ukrainian children and L2 learners naturally acquire language. Do NOT flag these as forward-references. DO flag premature drilling of case paradigms, untaught vocabulary words, and grammar analysis before its module.
-- [GLOBAL] Inline activity markers (<!-- INJECT_ACTIVITY: ... -->) must ONLY appear AFTER all concepts they test have been taught. If an activity tests both soft signs and apostrophes, it must appear after BOTH sections, not after the first one. This is critical in Ukrainian where apostrophe rules (б,п,в,м,ф,р + я,ю,є,ї) appear constantly — placing an apostrophe exercise before the apostrophe section teaches wrong sequencing. Rule: scan each activity's items and verify every tested concept has a preceding H2 section that teaches it.
-
 # Section-by-Section Generation — Section 1/7
 
 You are writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
@@ -31,10 +11,11 @@ You are writing ONE SECTION of a Ukrainian language module. Write ONLY this sect
 ## Section Skeleton (follow this exactly)
 
 ## Від іменників до дієслів (~550 words total)
-- P1 (~120 words): [Hook: The living nature of Ukrainian phonetics. Introduce the concept of "consonant friction" (alternation) as a natural adjustment for ease of speech, specifically in verbs.]
-- P2 (~130 words): [Bridge from M09 (Nouns). Remind the learner of [г/к/х] -> [ж/ч/ш] changes in nouns like друг/друже and нога/нозі. State that verbs follow a similar logic but with different triggers.]
-- P3 (~150 words): [The "Historical Why" (Заболотний Grade 7). Explain the ancient [j] suffix that existed in the 1st person singular. Describe how this "invisible" sound melted into the preceding consonant, creating the modern alternations like сидіти + j -> сиджу.]
-- P4 (~150 words): [The "Where and When": Clarify that for conjugation, this happens ALMOST exclusively in the 1st person singular (я-form) of II conjugation verbs. Provide a brief roadmap of the three groups: Dental/Sibilant, Velar, and Labial + [л].]
+- P1 (~100 words): [Introduction connecting this module to B1-009 (Noun alternations). Explain that while the consonants [г, к, х] remain the same actors, the stage has shifted to verbs, where the rules of the game (triggers) are entirely different.]
+- P2 (~120 words): [Historical linguistics brief: Explain the role of the ancient suffix *j* which followed the root in the 1st person singular. Describe how this *j* "melted" into the preceding consonant, causing palatalization and the specific shifts we see today (e.g., *d + j > dž*).]
+- P3 (~130 words): [The "1st Person Singular Trap": Explain why the alternation is so restricted in modern Ukrainian conjugation. Contrast the phonetic environment of "я" (historically ended in *jǫ*) with "ти/він/ми" (which had different vowels that didn't trigger the same shift).]
+- P4 (~100 words): [Overview of the three primary structural groups we will cover: 1. Dental/Sibilant (зубні/свистячі), 2. Velar (задньоязикові), and 3. Labial + L (губні + л). Use teaser examples: сидіти/сиджу, могти/можу, робити/роблю.]
+- Dialogue (~100 words): [Cooking competition setting. Host: "Я ходжу (д-дж) між столами." Participant: "Я чищу (ст-щ) картоплю, а потім я її посолю (no change)." Host: "Ви просите (с-с) більше часу? Я прошу (с-ш) тиші!"]
 
 ---
 ## Full Plan (for reference)

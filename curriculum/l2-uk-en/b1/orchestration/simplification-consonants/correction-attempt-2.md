@@ -1,9 +1,7 @@
 <correction_directive>
 CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
 
-- FIX: Missing section heading: 'Підсумок i практика'
-- NOTE: Missing 2/14 required vocab: закріплений (fixed — reflected in standard spelling), морфонологія (morphophonology — sound changes in morphology)
-- NOTE: Plan expects 5 exercise(s) but content has 0 placeholders
+- FIX: Too short: 1583 words (target: 4000, minimum: 3400)
 </correction_directive>
 
 LEARNINGS FROM PAST BUILDS (same error patterns seen before):

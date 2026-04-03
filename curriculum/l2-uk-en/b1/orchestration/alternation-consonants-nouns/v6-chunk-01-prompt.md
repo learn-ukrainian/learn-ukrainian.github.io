@@ -1,21 +1,3 @@
-<correction_directive>
-CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
-
-- FIX: Too short: 2622 words (target: 4000, minimum: 3400)
-</correction_directive>
-
-LEARNINGS FROM PAST BUILDS (same error patterns seen before):
-- [GLOBAL] сес-тра is a VALID word division per Правопис 2019 §49. Do NOT mark it as an error. Phonetic syllabification (се-стра) and typographic word division (сес-тра) follow different rules — both are correct in their respective contexts.
-- [GLOBAL] Ukrainian textbooks teach a hands-on-EARS test for voicing (закрий долонями вуха), NOT a hand-on-throat test. The hand-on-throat test is a valid phonetics technique but must NOT be attributed to Ukrainian textbooks. Source: Кравцова 2019, Grade 2, p.39.
-- [GLOBAL] Do NOT invent Ukrainian words for minimal pairs. "Сір" is NOT a word meaning "grey" — the correct form is "сірий". Use verified minimal pairs only: кит/кіт, бити/біти, лис/ліс.
-- [GLOBAL] NEVER frame Ukrainian as "lacking" or "missing" letters that Russian has. Ukrainian has its own 33-letter alphabet — it is complete. Do NOT write "Ukrainian lacks Ъ, Ы, Э" or "Ukrainian doesn't have these Russian letters." Instead, highlight what Ukrainian HAS: Ґ, Є, Ї, І are unique to Ukrainian. Present Ukrainian on its own terms.
-- [GLOBAL] NO LLM filler phrases. Do NOT write: "Let us start with...", "Numbers unlock the real Ukraine", "You now possess a complete...", "It is incredibly versatile", "one of the most rewarding skills". Start sections with a dialogue, a question, or a concrete example — never with a generic motivational opener. If a sentence could appear in any language course about any topic, delete it.
-- [GLOBAL] Every exercise item must test something EXPLICITLY taught in the preceding prose. If an exercise tests the collocation "малювати картину", the prose must contain "малювати картину" as a taught example. Do NOT test collocations, vocabulary, or patterns that the learner has to infer — test what was taught.
-- [GLOBAL] Quiz correct answers must be RANDOMIZED across positions. Do NOT place the correct answer at index 0 for all items. Distribute correct answers roughly evenly across all positions (0, 1, 2) to prevent pattern-guessing.
-- [GLOBAL] Do NOT use spatial metaphors for abstract grammatical requirements. Example: "на" with musical instruments is NOT "on top of" — it is an abstract grammatical requirement that must be memorized. Misleading mnemonics cause incorrect generalizations. If a rule must simply be memorized, say so directly.
-- [GLOBAL] Memorized chunks are allowed before their grammar is formally taught. Natural Ukrainian expressions (Мені подобається, У мене є, Мене звати, Як справи?, Звідки ти?, Скільки коштує?, Мені ... років) can appear in ANY module as memorized chunks, even if the underlying grammar (dative, genitive, etc.) is not taught until later. This mirrors how Ukrainian children and L2 learners naturally acquire language. Do NOT flag these as forward-references. DO flag premature drilling of case paradigms, untaught vocabulary words, and grammar analysis before its module.
-- [GLOBAL] Inline activity markers (<!-- INJECT_ACTIVITY: ... -->) must ONLY appear AFTER all concepts they test have been taught. If an activity tests both soft signs and apostrophes, it must appear after BOTH sections, not after the first one. This is critical in Ukrainian where apostrophe rules (б,п,в,м,ф,р + я,ю,є,ї) appear constantly — placing an apostrophe exercise before the apostrophe section teaches wrong sequencing. Rule: scan each activity's items and verify every tested concept has a preceding H2 section that teaches it.
-
 # Section-by-Section Generation — Section 1/7
 
 You are writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
@@ -29,10 +11,10 @@ You are writing ONE SECTION of a Ukrainian language module. Write ONLY this sect
 ## Section Skeleton (follow this exactly)
 
 ## Що таке чергування приголосних? (~550 words total)
-- P1 (~150 words): [Establish a bridge from M08 (vowel alternations), explaining that while vowel changes often happen in the root, consonant alternations typically affect the final sound of the root/stem. Introduce the term 'чергування' as a systematic, predictable shift that occurs during declension or word formation.]
-- P2 (~150 words): [Introduce the core "three-way pattern" defined in Avramenko Grade 5: the velar group (задньоязикові) [г], [к], [х] each have two potential alternation targets. Contrast the hard starting points with their soft or hushing results (г — з — ж, к — ц — ч, х — с — ш) to give learners a map of the entire module.]
-- P3 (~150 words): [Explain the phonetic mechanism: why these sounds change. Discuss the role of historical "front vowels" (like the modern 'i' or the vocative 'e') in pulling the back-of-the-mouth velars forward, transforming them into sibilants or hushing sounds. Use the analogy of "lazy speech" or "tongue efficiency."]
-- P4 (~100 words): [Briefly touch upon the historical context of Proto-Slavic and Old East Slavic (давньоукраїнська мова), explaining that these aren't "irregularities" but are the very fossils of the language's evolution that make Ukrainian melodic and easy to pronounce.]
+- P1 (~125 words): [Introduction and bridge from M08 (vowels). Definition of 'чергування' as a systematic replacement of sounds within a root or stem. Explanation that while vowel alternations affect the internal root, consonant alternations in nouns typically target the final sound of the stem when endings change.]
+- P2 (~150 words): [The logic of the 'задньоязикові' (velars): [г], [к], [х]. Explanation that these sounds are historically 'unstable' in Ukrainian and shift their pronunciation depending on what follows them. Contrast between static languages and the fluid morphophonemics of Ukrainian.]
+- P3 (~125 words): [Introduction of the 3x3 pattern overview. Explanation of the two 'target' rows: the hushing row ([ж], [ч], [ш]) and the sibilant row ([з'], [ц'], [с']). Reference to Авраменко Grade 5 p.114 regarding the systematic nature of these pairs.]
+- P4 (~150 words): [Conceptual explanation of 'Palatalization'. Why front vowels like -і and -е trigger these shifts. A brief look at the historical 'First' and 'Second' palatalization without overwhelming technical jargon, framing it as the 'DNA' of the language's melody.]
 
 ---
 ## Full Plan (for reference)
@@ -258,102 +240,7 @@ references:
 ## Knowledge Packet
 
 <knowledge_packet>
-# Verified Knowledge Packet: Чергування приголосних (іменники)
-**Module:** alternation-consonants-nouns | **Phase:** B1.1 [Baselines & Morphophonemics]
-**Textbook grades searched:** 1, 2, 3, 5
 
----
-
-## Що таке чергування приголосних?
-
-*No textbook results found for: Що таке чергування приголосних задньоязиковий давньоукраїнська мова*
-
-## Перша палаталізація: [г/к/х] -> [ж/ч/ш]
-
-*No textbook results found for: Перша палаталізація Заболотний друг дружити нога ніжка ворог вороже рука ручка*
-
-## Друга палаталізація: [г/к/х] -> [з'/ц'/с']
-
-*No textbook results found for: Друга палаталізація з' ц' с' Авраменко нога на нозі Ольга Ользі дорога*
-
-## Чергування [ц'] -> [ч] та інші
-
-*No textbook results found for: Чергування ц' та інші Глазова хлопець хлопче швець шевче молодець молодче*
-
-## Чергування у відмінюванні іменників II відміни
-
-*No textbook results found for: Чергування у відмінюванні іменників відміни відміна друг друга другу другові Зн Ор нога*
-
-## Чергування у власних назвах і географічних іменах
-
-*No textbook results found for: Чергування у власних назвах і географічних іменах Прага у Празі Рига у Ризі Одарка Одарці Пенелопа Пенелопі кличний відмінок*
-
-## Підсумок: таблиця чергувань
-
-*No textbook results found for: Підсумок таблиця чергувань Кл з' ц' с' Дайте відповіді на запитання Які приголосні чергуються у кличному відмінку слова 'друг' Яке чергування відбувається у слові 'на нозі' Утворіть кличний відмінок*
-
-## Grammar Reference
-
-*No grammar results for: кличний з' ц' с' давальний місцевий кличний відмінок відміна*
-
-
-## МійКлас Theory (miyklas.com.ua)
-
-*Ukrainian school curriculum theory — use this terminology and teaching approach.*
-
-### Приголосні м'які й тверді, дзвінкі й глухі
-> **Source:** МійКлас — [Приголосні м'які й тверді, дзвінкі й глухі](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/prigolosni-m-iaki-i-tverdi-dzvinki-i-glukhi-vimova-prigolosnikh-g-i-g-40885)
-
-### Теорія:
-
-*www.ua.pistacja.tv*  
-Приголосні звуки – це звуки, що творяться за допомогою голосу й шуму або лише шуму. При їх вимові струмінь видихуваного повітря натрапляє на різні перепони органів мовлення \(язик, зуби, губи\), унаслідок чого виникають шуми, які є основою саме приголосних звуків.
-Зверни увагу\!
-Тверді і м’які приголосні — це різні звуки, для позначення яких на письмі використовують ті самі літери: \[лин\] лин – \[л'ін'\] лінь.
-Напівпом'якшені звуки — це **відтінки **твердих звуків: \[в’інок\] вінок — \[виниекнути\] виникнути.
-В українській мові є такі м’які приголосні: \[д'\], \[т'\], \[з'\], \[с'\], \[ц'\], \[л'\], \[н'\], \[дз'\], \[р'\].
- 
-Запам'ятати ці приголосні  можна, вивчивши таку фразу: «Де Ти З'їСи Ці ЛиНи, аДЗуР».
-
-Звук \[й\] завжди м’який.
-
-### Вимова приголосних звуків. Уподібнення приголосних
-> **Source:** МійКлас — [Вимова приголосних звуків. Уподібнення приголосних](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/vimova-prigolosnikh-zvukiv-upodibnennia-prigolosnikh-zvukiv-42793)
-
-### Теорія:
-
-*www.ua.pistacja.tv*  
-Вимова приголосних звуків
-Для української мови характерна  **виразна** вимова приголосних звуків, зокрема дзвінких. Вони завжди вимовляються **чітко**. Особливо в кінці складу та слова й перед голосними: стежка \[сте́жка\],  виріб \[ви́р'іб\], дружина \[дружи́на\]. Але бувають випадки, коли звуки важко відрізнити один від одного.
-Що таке уподібнення приголосних і коли воно відбувається
-У процесі мовлення один приголосний стає схожий за звучанням на інший, тобто зазнає впливу сусіднього звуку. Таке явище називається уподібненням.
-Приклад:
-Слово боротьба пишемо з літерою т \(боротися\), а вимовляємо й чуємо \[бород'ба́\], бо глухий \[т'\] уподібнився під впливом дзвінкого \[б\] до  \[д'\].
-Зверни увагу\!
-Сумнівний приголосний можна легко перевірити.
-
-### Спрощення в групах приголосних
-> **Source:** МійКлас — [Спрощення в групах приголосних](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/sproshchennia-v-grupakh-prigolosnikh-41974)
-
-### Теорія:
-
-*www.ua.pistacja.tv*  
-При вiдмiнюваннi слова або його твореннi інколи виникає важкий для вимови збiг приголосних звукiв. Тому в процесi мовлення один із таких приголосних випадає, тобто вiдбувається спрощення \(правило «третього зайвого»\). Зазвичай спрощені звуки не пишемо.
-Спрощення приголосних відбувається в таких **групах** приголосних:
-- \[ждн\], \[здн\] → \[жн\], \[зн\] \(випадає д\): проїздити – проїзний, тиждень – тижня;
-  
-- \[зкн\], \[скн\] → \[зн\], \[сн\] \(випадає к\): брязкіт — брязнути, тріск — тріснути, писк — писнути \(рідше — пискнути\);
-  
-- \[стл\], \[стн\] → \[сл\], \[сн\] \(випадає т\): щастя — щасливий, прихвостень — прихвосня, перстень — персня;
-  
-- \[рнц\] → \[нц\] \(випадає р\): чернець — ченці;
-  
-- \[рдц\] → \[рц\] \(випадає д\): сердець — серце;
-...
-
----
-**Total textbook excerpts found:** 1
-**Grades searched:** 1, 2, 3, 5
 </knowledge_packet>
 
 ---

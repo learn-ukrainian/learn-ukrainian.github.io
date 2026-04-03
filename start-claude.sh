@@ -112,9 +112,10 @@ echo "   Quick reference: npm run generate, npm run vocab:enrich, npm run pipeli
 
 echo ""
 
-# Token efficiency: cap context window to 200K (long sessions cost more)
-# Ref: Anthropic guidance (Lydia Hallie, 2026-04-03)
-export CLAUDE_CODE_AUTO_COMPACT_WINDOW=200000
+# Autocompact at 65% of 1M context (~650K tokens)
+# Balances: using the 1M window we pay for vs. leaving buffer before degradation
+# Subagents handle isolated work in their own windows, so main thread stays clean
+export CLAUDE_CODE_AUTO_COMPACT_WINDOW=650000
 
 # Launch via npx to avoid cache bugs (stale binary + prompt caching issues)
 echo "Launching Claude Code via npx (cache-safe)..."

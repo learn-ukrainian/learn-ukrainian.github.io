@@ -1,0 +1,53 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: The text follows the plan structure perfectly. However, it copies a flawed
+    example from the plan's prompt ("Закон ухвалено Верховною Радою") which contradicts
+    the rules taught in the module.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'The text contains a critical grammatical error in Section 1: «Новий важливий
+    закон ухвалено Верховною Радою». The -но/-то forms NEVER take the instrumental
+    case for the agent.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'The error above creates massive pedagogical confusion. Section 1 shows
+    an example of using the instrumental case with -но/-то, while Section 3 explicitly
+    forbids it: "ми ніколи не використовуємо орудн'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary is smoothly integrated and contextualized (пасивний
+    стан, активний стан, будуватися, називатися, знаходитися, використовуватися, збудовано,
+    виконано, прочитано, ухвалено, канце
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 5 markers are present, appropriately placed after the relevant sections,
+    and precisely match the types and focus specified in the plan.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: Deducting points for meta-commentary ("Зробімо зараз значно глибший порівняльний
+    аналіз") and generic enthusiasm that tells instead of shows ("Вона максимально
+    точно передає найтонші відтінки... Це га
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean Markdown formatting. Headings precisely match the plan.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent points about Ukrainian's structural preference for the active
+    voice and the organic nature of -но/-то compared to bureaucratic -ся passives.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: The dialogue in the Palace of Culture is stilted and robotic ("Добрий
+    день! Це виглядає неймовірно сучасно і дуже вражає!", "Це справді чудово видно
+    голим оком навіть зараз"). Needs more natural phras
+findings: []

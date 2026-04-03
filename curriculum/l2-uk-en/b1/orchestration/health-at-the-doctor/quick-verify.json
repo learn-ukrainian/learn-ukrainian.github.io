@@ -1,24 +1,7 @@
 {
-  "attempt": 2,
-  "passed": false,
-  "errors": [
-    {
-      "check": "STRUCTURE",
-      "severity": "ERROR",
-      "message": "Missing section heading: 'Підсумок: здоров'я українською'"
-    }
-  ],
-  "warnings": [
-    {
-      "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 1/16 required vocab: призначити (to prescribe — perfective)"
-    },
-    {
-      "check": "EXERCISES",
-      "severity": "WARNING",
-      "message": "Plan expects 5 exercise(s) but content has 0 placeholders"
-    }
-  ],
-  "timestamp": "2026-04-02T04:27:25.478848+00:00"
+  "attempt": 3,
+  "passed": true,
+  "errors": [],
+  "warnings": [],
+  "timestamp": "2026-04-03T12:16:31.737306+00:00"
 }

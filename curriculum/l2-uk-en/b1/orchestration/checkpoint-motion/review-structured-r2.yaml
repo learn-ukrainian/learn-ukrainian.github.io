@@ -1,0 +1,49 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Text missed the preposition vs. adverb distinction for `навпроти` (Блок
+    1) and the figurative uses of `нести/вести` requested in the plan (Блок 5).
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'Generally excellent and natural, but uses a Russian calqued version of
+    a proverb: «Сім разів відміряй — один відріж» instead of the standard Ukrainian
+    «Сім разів відмір — один раз відріж».'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Superb. Clear, detailed explanations of spatial prepositions and motion
+    verbs. The distinction between «в/на» and «з/із» is perfectly taught.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required vocabulary is used in context, but the recommended word `перевірка`
+    was missed as a noun.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 6 markers are placed correctly and align perfectly with the plan's
+    instructions.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The text is encouraging and clear, avoiding overly corporate speak while
+    maintaining a solid pedagogical tone.
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: The module is well-structured, but the word count (4875) is >20% over
+    the target (4000).
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: Good use of Ukrainian geography (Kyiv, Carpathians, Dnipro), but the proverb
+    was a calque.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: The oral exam dialogue is highly transactional and stilted ("Ні, я не
+    поїду відразу додому. Я обов'язково заїду...").
+findings: []

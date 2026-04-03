@@ -1,0 +1,53 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 6
+  evidence: Failed to explicitly cite any of the 5 textbook references provided in
+    the plan. Replaced the planned `пейзаж` with `вид`. Added extra activities not
+    in the plan.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Included a non-existent word (`кміти` instead of `кмітити`). Made multiple
+    sloppy phonetic claims regarding consonant alternations (`[ж]` turning into `[ж]`,
+    and `[к] + [с]` turning into a single `[ц'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent pedagogical breakdown of the rules. The explanation of `журавлиний`
+    vs `журавлинний` is brilliant. Short forms of possessives in the accusative case
+    (for inanimate objects) were noted with h
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Effectively wove in all required terms (`словотвір`, `суфікс`, `префікс`,
+    `продуктивний`, `присвійний`, etc.) organically.
+- dimension: 5
+  name: Exercise quality
+  score: 5
+  evidence: Injected 8 markers instead of the 6 planned. Changed the focus of the
+    main quiz and injected random `fill-in` and `match-up` blocks that the plan didn't
+    ask for.
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: Used forbidden motivational openers ("це справжня суперсила") and excessive
+    meta-commentary ("Давайте детально проаналізуємо", "Тепер варто значно детальніше
+    поговорити", "Розглянемо ще п'ять").
+- dimension: 7
+  name: Structural integrity
+  score: 7
+  evidence: The module is structurally sound but significantly over the word count
+    target (5210 words vs 4000 planned target).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Culturally on-point. Great local examples (Kyiv gallery, Ukrainian cities,
+    Halych).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The gallery dialogue sets up the vocabulary well, though slightly formal,
+    it perfectly matches the `науково-навчальний` register.
+findings: []

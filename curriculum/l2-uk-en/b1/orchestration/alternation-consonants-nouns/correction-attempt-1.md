@@ -1,8 +1,9 @@
 <correction_directive>
 CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
 
+- FIX: Missing section heading: 'Що таке чергування приголосних?'
 - FIX: Missing section heading: 'Підсумок: таблиця чергувань'
-- NOTE: Missing 3/14 required vocab: тверда група (hard group — nouns with hard stem-final consonant), м'яка група (soft group — nouns with soft stem-final consonant), мішана група (mixed group — nouns with шиплячий stem-final)
+- NOTE: Missing 1/14 required vocab: мішана група (mixed group — nouns with шиплячий stem-final)
 - NOTE: Plan expects 5 exercise(s) but content has 0 placeholders
 </correction_directive>
 

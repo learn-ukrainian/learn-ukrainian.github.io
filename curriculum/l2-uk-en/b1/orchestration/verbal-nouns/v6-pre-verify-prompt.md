@@ -5,7 +5,7 @@ You MUST verify facts using the tools below BEFORE writing begins. This is a ver
 
 ## Module
 
-**Module:** 21: Віддієслівні іменники (B1, B1.3 [Verbs])
+**Module:** 17: Віддієслівні іменники (B1, B1.2 [Verbs])
 
 ## Plan vocabulary to verify
 

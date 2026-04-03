@@ -1,41 +1,47 @@
-## Подорож починається: планування та транспорт (~800 words total)
-- P1 (~120 words): [Bridge from M27-M35: Explain how this module serves as the communicative synthesis of the "Motion Verb Universe." Transition from learning prefixes in isolation to using them for real-world travel planning across Ukraine.]
-- P2 (~150 words): [Synonyms and nuances: Contrast "подорож" (journey/trip) with "мандрівка" (slightly more romantic/literary travel). Introduce the verbs "подорожувати" and "мандрувати" with 3 examples of usage in the present tense.]
-- P3 (~180 words): [Transport vocabulary: Categorize transport into залізничний (поїзд/потяг), автомобільний (автобус, маршрутка, таксі), and повітряний (літак). Explain the cultural role of the "маршрутка" in Ukraine.]
-- P4 (~200 words): [Grammar: The Instrumental Case for Routes (Орудний відмінок шляху). Explain how "подорож Україною" or "їхати горами" uses the instrumental to denote the area/path. Compare with "по + Dat" to show why Instrumental is often more natural for Ukrainians.]
-- P5 (~150 words): [Planning a trip: Vocabulary for the initial stage—бронювати (to book), маршрут (route), графік (schedule), and квиток (ticket). Explain the difference between "квиток в один бік" and "зворотний квиток".]
-- Exercise: [group-sort, Categorizing transport (залізничний, міський, повітряний), 12 items]
+## Подорож починається: планування та транспорт (~825 words total)
+- P1 (~160 words): [Introduction to the "Motion Verb Universe" capstone. Explaining how this module synthesizes prefix knowledge (M28-35) with travel. Connecting "подорож" (journey) and "мандрівка" (travel/hike) to specific transport verbs: їхати потягом, летіти літаком, плисти поромом.]
+- P2 (~170 words): [Transport vocabulary in detail. Distinguishing between "потяг" and "поїзд", "автобус" and the uniquely Ukrainian "маршрутка". Discussing the levels of train comfort: "купе" vs. "плацкарт" vs. "сидячий вагон" (Intercity+), using "розклад руху" to plan.]
+- P3 (~165 words): [Station infrastructure. Defining "вокзал" (large station) vs. "зупинка" (stop). Explaining "перон" vs. "платформа" and the importance of the "зал очікування". Introduction of "квиток" and "зворотний квиток" with price queries: "Скільки коштує?"]
+- P4 (~180 words): [Grammar: The Instrumental case for travel routes. Explaining "подорожувати Україною", "їхати Закарпаттям", "мандрувати Карпатами". Contrast this with "до" + Genitive (destination) to show the difference between "to" and "through".]
+- Exercise 1: [Group-sort, Category: Sort transport vocabulary: залізничний (поїзд, електричка), автомобільний (фура, таксі), повітряний (гелікоптер), водний (катер), 12 items]
 
-## На вокзалі та в аеропорту (~900 words total)
-- P1 (~180 words): [The Train Station (Залізничний вокзал): Detailed anatomy of the station experience. Contrast "перон" (the platform structure) with "платформа" (the track number). Introduce "зал очікування" and "каса".]
-- P2 (~180 words): [Dialogue: At the ticket office (каса). A 10-turn exchange modeled after Kravtsova Grade 3. Focus on "Скільки коштує?", "Яке це купе?", "Чи є нижня полиця?", and "Дякую за допомогу!"]
-- P3 (~180 words): [Train Culture in Ukraine: Explain the distinction between "купе" (4-person compartment) and "плацкарт" (open car). Mention "Укрзалізниця" and the specific verb "провідник/провідниця" as the key figure of the journey.]
-- P4 (~180 words): [The Airport (Аеропорт): Vocabulary for flight travel. Focus on prefixes in flight context: "виліт" (departure), "приліт" (arrival), "пересадка" (transfer). Mention "реєстрація на рейс" and "посадка починається".]
-- P5 (~180 words): [Decolonization Focus: Based on Zabolotnyi Grade 7. Explain why "поїзд відходить" or "виїжджає" is preferred over the Russicism "*відправляється". Teach learners to say "автобус виїжджає" naturally.]
-- Exercise: [quiz, Selecting correct motion verb prefixes in station/airport contexts, 12 items]
+## На вокзалі та в аеропорту (~880 words total)
+- P1 (~120 words): [Dialogue Model: At the train station. Tourist asking a cashier: "Чи є квитки на поїзд до Львова на завтра?", "Які є місця?", "Продайте два нижніх у купе, будь ласка." Dealing with "квиток в один бік" vs "туди й назад".]
+- P2 (~160 words): [Linguistic analysis of time in travel. Using "о котрій годині...?" for departures (відходить) and arrivals (прибуває). Examples: "Поїзд відходить о сьомій сорок", "Автобус приїжджає о пів на десяту".]
+- P3 (~120 words): [Dialogue Model: At the airport. Checking in: "Де реєстрація на рейс до Варшави?", "Ось мій паспорт", "Чи є затримка рейсу?". Asking about baggage: "Чи потрібно здавати цей наплічник у багаж?"]
+- P4 (~170 words): [Motion Verb Prefixes in transit. Explaining the logic of "виліт" (departure/flying out), "приліт" (arrival/flying in), and "пересадка" (transfer/change). Using "пересісти" (to change transport) with the preposition "на" + Accusative: "пересісти на метро".]
+- P5 (~160 words): [Decolonization & Naturalness Note. Explaining why "відправлятися" for transport is a Russicism to be avoided. Promoting native alternatives: "поїзд відходить", "автобус виїжджає", "літак вилітає". Reference: Заболотний Grade 7, p.188.]
+- Exercise 2: [Fill-in, Focus: Complete travel dialogues with transport vocabulary and motion verbs (виїхав, доїхали, пересіли), 12 items]
 
-## Маршрут: від Києва до Карпат (~1000 words total)
-- P1 (~250 words): [Model Narrative Part 1: Leaving the Capital. Describe a traveler leaving Kyiv (виїжджати з Києва). Use "вийти на перон" and "зайти у вагон". Mention seeing the Dnieper river while crossing the bridge (переїжджати через міст).]
-- P2 (~250 words): [Model Narrative Part 2: Trans-Ukrainian Route. Narrate passing through cities like Vinnytsia and Khmelnytskyi (проїжджати повз). Use "об’їжджати" for a detour and "під’їжджати до вокзалу" for the approach.]
-- P3 (~250 words): [Model Narrative Part 3: Arrival in the West. Reaching Lviv or Yaremche (приїхати/доїхати). Describe arriving in the mountains. Use "зійти з поїзда" (exit the train) and "пересісти на автобус" (transfer to a bus).]
-- P4 (~250 words): [Regional Landmarks: Introduce travel destinations using decolonized perspectives—Lviv (Площа Ринок), Chernihiv (П’ятницька церква), and the Carpathians (Говерла, водоспад Пробій). Practice "дістатися до..." with these locations.]
-- Exercise: [match-up, Connecting Ukrainian landmarks to their respective cities and regions, 12 items]
+## Маршрут: від Києва до Карпат (~990 words total)
+- P1 (~320 words): [The Grand Travel Narrative: A 300-word model story. A couple travels from Kyiv to the Carpathians. They start at "Залізничний вокзал", "виїжджають" from Kyiv, "проїжджають" Vinnytsia, "приїжджають" to Frankivsk, "пересідають" to a bus, "доїжджають" to Yaremche, and finally "виходять" to see the waterfall.]
+- P2 (~190 words): [Prefix Breakdown of the Narrative. Analyzing how "про-" denotes passing through a city (проїхали Житомир), "до-" denotes reaching the final goal (доїхали до гір), and "за-" denotes a short detour or checking into a hotel (заїхали в готель).]
+- P3 (~180 words): [Landmarks of Ukraine: Central and West. Describing Kyiv (Хрещатик, Софія), Lviv (Площа Ринок, Високий Замок), and Kamyanets-Podilskyi (Фортеця). Using motion verbs to describe visiting them: "обійти площу Ринок", "піднятися на Замок".]
+- P4 (~160 words): [Landmarks of Ukraine: South and Nature. Describing Odesa (Потьомкінські сходи, море) and the Carpathians (Говерла, Буковель, озеро Синевир). Focus on "дістатися" (to reach/get to) for remote places like "Синевир".]
+- Exercise 3: [Match-up, Focus: Match Ukrainian landmarks (Лавра, Ратуша, Сходи, Говерла) with their cities/regions, 12 items]
+- P5 (~140 words): [Cultural context: Traveling by "маршрутка" in Ukraine. Practical advice on "зупиніть на зупинці" vs "зупиніть за перехрестям". Vocabulary for paying: "передайте за проїзд", "решта" (change).]
 
-## Орієнтування в місті: як дістатися? (~850 words total)
-- P1 (~200 words): [Questioning patterns for navigation: "Як дістатися до центру?", "Де найближча зупинка метро?", "Ви не підкажете, як доїхати до музею?". Focus on the politeness of "Ви не підкажете?".]
-- P2 (~200 words): [Giving directions with Prefixed Verbs: Explain how "пройдіть" (walk through/past), "перейдіть" (cross), and "поверніть" (turn) are the core of navigation. Using spatial prepositions from M27 (поруч, навпроти).]
-- P3 (~200 words): [Urban transport markers: Vocabulary for "зупинка" (stop), "станція метро", "квартал" (block), and "перехрестя" (intersection). Explain the use of "сідати на..." (to get on/take a bus/tram).]
-- P4 (~250 words): [Dialogue: A lost traveler in Lviv. Asking a local for directions to the Opera House. A 12-turn dialogue integrating "пройдіть прямо", "поверніть ліворуч", and "перейдіть через дорогу".]
-- Exercise: [fill-in, Completing navigation dialogues with appropriate transport verbs and prepositions, 12 items]
+## Орієнтування в місті: як дістатися? (~825 words total)
+- P1 (~160 words): [Phrases for asking directions. "Вибачте, як дістатися до центру?", "Як пройти до оперного театру?", "Чи це правильна дорога до музею?". Distinguishing between "йти" (walk) and "їхати" (drive/ride) in the question.]
+- P2 (~160 words): [Spatial Navigation Vocabulary. "Прямо", "ліворуч", "праворуч". Using "на розі" (at the corner) and "на перехресті" (at the intersection). Phrases for turning: "поверніть на першому повороті".]
+- P3 (~170 words): [Grammar: Motion Verbs + Complex Spatial Prepositions. Reviewing "через" (across/through), "повз" (past), "вздовж" (along), and "крізь" (through/piercing). Examples: "Пройдіть через парк", "Йдіть вздовж річки", "Проїдьте повз банк".]
+- P4 (~180 words): [Giving Directions Model. A detailed multi-step instruction: "Спочатку йдіть прямо до світлофора. Потім поверніть ліворуч. Перейдіть дорогу біля аптеки. Ви побачите великий собор навпроти."]
+- Exercise 4: [Quiz, Focus: Choose correct motion verbs and prepositions in city navigation contexts (пройти через, доїхати до), 12 items]
+- Exercise 5: [Error-correction, Focus: Fix Russicisms and calques in travel sentences (відправлятися → виїжджати, на углу → на розі), 12 items]
 
-## Подорожні історії: розповідь про поїздку (~900 words total)
-- P1 (~200 words): [Narrative Structure: Teach learners how to organize a travel story. Paragraph 1: Intent/Planning. Paragraph 2: The Path (The "how"). Paragraph 3: Destination (The "what"). Paragraph 4: Reflection.]
-- P2 (~250 words): [Complete Model Story: "Мандри до Одеси". A cohesive text (~200 words) using all 10 prefixes (ви-, за-, до-, при-, від-, про-, пере-, об-, під-, з-). Focus on text coherence and flow.]
-- P3 (~250 words): [Expressing Impressions: Vocabulary for travel reviews—"неймовірна подорож", "варто відвідати", "мене вразило". Use of figurative motion verbs (час пролетів, думки розбіглися).]
-- Exercise: [error-correction, Fixing common travel Russicisms (білет -> квиток, відправлятися -> відбувати), 12 items]
-- Exercise: [free-write, Drafting a personal 3-day travel itinerary for a trip to Zakarpattia with required verbs, 12 items]
+## Подорожні історії: розповідь про поїздку (~880 words total)
+- P1 (~165 words): [Structural Narrative Planning. Teaching the arc: Setting the scene (куди, з ким), The Journey (як їхали, що бачили), The Destination (враження, пам'ятки), and the Return (повернення додому).]
+- P2 (~270 words): [Full Sample Story: "Моя мандрівка до Львова". A 250-word narrative using past tense, 10 prefixes (від'їхали, прибули, зайшли, обійшли, випили кави, повернулися). Demonstrating text coherence and emotional tone ("вражений", "незабутньо").]
+- P3 (~175 words): [Sequence Markers & Cohesion. Using "Спочатку", "потім", "після цього", "нарешті", "пізніше". Explaining how these words prevent a "list-like" feel and create a professional B1 flow.]
+- P4 (~150 words): [Final Production Scaffold. Providing the checklist for the final task: Use at least 5 different transport types, 10 prefixed motion verbs, and mention 3 Ukrainian landmarks. Setting the target for the learner's own story.]
+- Exercise 6: [Free-write, Focus: Write a travel narrative (200+ words) about a trip to a Ukrainian city using 10+ motion verbs, 12 items (scaffolded prompts)]
 
 ## Підсумок (~150 words)
-- P1 (~150 words): [Synthesis of the module. Self-check questions: Яка різниця між "приїхати" та "доїхати"? Як правильно запитати дорогу? Чому ми використовуємо Орудний відмінок для опису шляху Україною? List 5 "golden" travel phrases for every learner.]
+- P1 (~150 words): [Final recap of the Motion Verb Universe capstone. Self-check questions:
+    - Чи можете ви купити квиток на вокзалі, використовуючи "о котрій"?
+    - Чи знаєте ви різницю між "проїхати місто" та "приїхати в місто"?
+    - Чи можете ви пояснити дорогу до Золотих Воріт у Києві?
+    - Які префікси ви використаєте, щоб описати виїзд з дому та повернення назад?
+    Summary of the decolonized terms: виїжджати/відходити instead of *відправлятися.]
 
-Grand total: ~4600 words
+Grand total: ~4550 words

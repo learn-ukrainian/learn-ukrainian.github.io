@@ -2,50 +2,5 @@
   "mode": "v6",
   "track": "b1",
   "slug": "figurative-motion",
-  "phases": {
-    "check": {
-      "status": "complete",
-      "ts": "2026-04-02T21:43:41.564099+00:00"
-    },
-    "research": {
-      "status": "complete",
-      "ts": "2026-04-02T21:44:25.759920+00:00"
-    },
-    "skeleton": {
-      "status": "complete",
-      "ts": "2026-04-02T21:45:00.774423+00:00"
-    },
-    "pre-verify": {
-      "status": "complete",
-      "ts": "2026-04-02T21:49:42.844615+00:00"
-    },
-    "write": {
-      "status": "complete",
-      "ts": "2026-04-02T22:01:07.984031+00:00"
-    },
-    "exercises": {
-      "status": "complete",
-      "ts": "2026-04-02T22:01:07.984653+00:00"
-    },
-    "verify-exercises": {
-      "status": "complete",
-      "ts": "2026-04-02T22:09:09.036913+00:00"
-    },
-    "annotate": {
-      "status": "complete",
-      "ts": "2026-04-02T22:09:09.070581+00:00"
-    },
-    "vocab": {
-      "status": "complete",
-      "ts": "2026-04-02T22:09:46.635075+00:00"
-    },
-    "enrich": {
-      "status": "complete",
-      "ts": "2026-04-02T22:09:46.635215+00:00"
-    },
-    "verify": {
-      "status": "complete",
-      "ts": "2026-04-02T22:09:46.999744+00:00"
-    }
-  }
+  "phases": {}
 }

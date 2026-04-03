@@ -1,0 +1,50 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: Missing the "друг -> друже" comparison in Section 3. Missing the decision
+    flowchart in Section 6. Missing the self-check questions and M11 preview in Section
+    7.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'CRITICAL: Taught `-еть` as a Ukrainian 1st conjugation ending (Russianism).
+    CRITICAL: Used non-standard forms `машу` and `дрімлю` (Russianisms) as standard
+    examples, contradicting VESUM standard Ukrai'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Generally follows PPP well with clear examples, but teaching `-еть` as
+    a Ukrainian ending is fundamentally damaging to the grammar explanation.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary from the plan is smoothly integrated
+    into the prose.
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: All 6 exercises are placed logically, but 3 of them changed the requested
+    `type` or `focus` from the plan's `activity_hints` (e.g., using a quiz instead
+    of error-correction, match-up instead of group-
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: Dialogue is good, but the text relies occasionally on meta-commentary
+    ("Але зараз ми переходимо до іншої великої теми", "Як ми вже з'ясували").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, appropriate H2 usage, word count is within range (3596
+    words).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: No issues, culturally appropriate examples.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The dialogue is effective at demonstrating the linguistic problem naturally,
+    though slightly didactic.
+findings: []

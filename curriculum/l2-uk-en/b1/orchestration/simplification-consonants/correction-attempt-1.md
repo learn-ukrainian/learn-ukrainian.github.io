@@ -1,8 +1,9 @@
 <correction_directive>
 CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
 
-- FIX: Missing section heading: 'Підсумок i практика'
-- NOTE: Missing 3/14 required vocab: випадати (to drop out — of a sound disappearing), основа (stem — the word minus its ending), морфонологія (morphophonology — sound changes in morphology)
+- FIX: Missing section heading: 'Підсумок і практика'
+- FIX: Russian characters found: ы
+- NOTE: Missing 4/14 required vocab: випадати (to drop out — of a sound disappearing), виняток (exception — case that does not follow the rule), орфограма (orthographic rule — spelling pattern requiring knowledge), морфонологія (morphophonology — sound changes in morphology)
 - NOTE: Plan expects 5 exercise(s) but content has 0 placeholders
 </correction_directive>
 

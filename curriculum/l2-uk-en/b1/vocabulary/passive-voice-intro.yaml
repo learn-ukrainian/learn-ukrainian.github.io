@@ -1,0 +1,433 @@
+vocabulary:
+- word: вважа́тися
+  translation: to be considered
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: продава́тися
+  translation: to be sold
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: виробля́тися
+  translation: to be produced
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ви́дано
+  translation: has been published
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: засно́вано
+  translation: has been founded
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: спроєкто́вано
+  translation: has been designed
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: опубліко́вано
+  translation: has been published
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: наді́слано
+  translation: has been sent
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: приро́дний
+  translation: natural
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: активний стан
+  translation: active voice
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: будува́тися
+  translation: to be built
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: назива́тися
+  translation: to be called
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: знахо́дитися
+  translation: to be located
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: використо́вуватися
+  translation: to be used
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: збудо́вано
+  translation: has been built
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ви́конано
+  translation: has been completed
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: прочи́тано
+  translation: has been read
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ухва́лено
+  translation: has been adopted/passed
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: перехідне дієслово
+  translation: transitive verb
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: неперехідне дієслово
+  translation: intransitive verb
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: стан дієслова
+  translation: verb voice
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: підмет
+  translation: subject
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: викона́вець
+  translation: performer of an action
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: об'є́кт
+  translation: object
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: мовозна́вець
+  translation: linguist
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: підру́чник
+  translation: textbook
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: нагрома́дження
+  translation: accumulation/stacking
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: незгра́бно
+  translation: awkwardly/clumsily
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: доре́чний
+  translation: appropriate/relevant
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: доці́льно
+  translation: advisable/expediently
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: Палац культури
+  translation: Palace of Culture
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: архіте́ктор
+  translation: architect
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: реконстру́кція
+  translation: reconstruction
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пофарбо́ваний
+  translation: painted
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: вільний огляд
+  translation: free viewing
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: фінансува́тися
+  translation: to be financed
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: міська рада
+  translation: city council
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: неозброєним оком
+  translation: with the naked eye
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зворотні дієслова
+  translation: reflexive verbs
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ча́стка
+  translation: particle
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: прямий додаток
+  translation: direct object
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: неживий предмет
+  translation: inanimate object
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: бюрократи́чний
+  translation: bureaucratic
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: рефлексивні дієслова
+  translation: reflexive verbs
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: істо́та
+  translation: animate being
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: неісто́та
+  translation: inanimate object
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: лексикалізо́ваний
+  translation: lexicalized
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: безособові форми
+  translation: impersonal forms
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: напи́сано
+  translation: has been written
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зро́блено
+  translation: has been done
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відкри́то
+  translation: has been opened
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: забу́то
+  translation: has been forgotten
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: прийня́то
+  translation: has been accepted
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відпра́влено
+  translation: has been sent
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: заборо́нено
+  translation: is forbidden
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ієрархія природності
+  translation: hierarchy of naturalness
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: доконаний факт
+  translation: completed fact
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: порівняльний аналіз
+  translation: contrastive analysis
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: химе́рно
+  translation: bizarrely
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: роботизо́вано
+  translation: robotically
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: дерево рішень
+  translation: decision tree
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: прове́дено
+  translation: has been held/conducted
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: було реалізовано
+  translation: had been realized
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: волонте́р
+  translation: volunteer
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: оргкоміте́т
+  translation: organizing committee
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: встано́влено
+  translation: has been installed
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: при́брано
+  translation: has been cleaned
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: тона́льність
+  translation: tone/modality
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: результа́т
+  translation: result
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: проце́с
+  translation: process
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: тво́рчість
+  translation: creativity
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: нюа́нс
+  translation: nuance
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true

@@ -1,0 +1,271 @@
+vocabulary:
+- word: зайти́
+  translation: to enter / drop by
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: заходити
+  translation: to enter / drop by
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ви́йти
+  translation: to exit / go out
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: виходити
+  translation: to exit / go out
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: заї́хати
+  translation: to drive in / stop by
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: заїжджа́ти
+  translation: to drive in / stop by
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ви́їхати
+  translation: to drive out
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: забі́гти
+  translation: to run in briefly / pop in
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: забігати
+  translation: to run in briefly / pop in
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ви́бігти
+  translation: to run out
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вибігати
+  translation: to run out
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зане́сти́
+  translation: to carry in
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: заносити
+  translation: to carry in
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ви́нести
+  translation: to carry out
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: виносити
+  translation: to carry out
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: завести́
+  translation: to bring someone in / lead in
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: заво́дити
+  translation: to bring someone in / lead in
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: завезти́
+  translation: to deliver / transport in
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: завозити
+  translation: to deliver / transport in
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ви́вести
+  translation: to lead out
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: виводити
+  translation: to lead out
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ви́везти
+  translation: to transport out
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вивозити
+  translation: to transport out
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: залеті́ти
+  translation: to fly in
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: заліта́ти
+  translation: to fly in
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ви́летіти
+  translation: to fly out
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вилітати
+  translation: to fly out
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: заплисти́
+  translation: to swim in
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: заплива́ти
+  translation: to swim in
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ви́плисти
+  translation: to swim out
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: виплива́ти
+  translation: to swim out
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: кав'я́рня
+  translation: cafe
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: метушли́вий
+  translation: busy / hectic
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: автозапра́вка
+  translation: gas station
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пальне́
+  translation: fuel
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: заско́чити
+  translation: to pop in / drop by
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відділ кадрів
+  translation: HR department
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: бухгалте́рія
+  translation: accounting department
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пере́пустка
+  translation: pass / permit
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: зайти в глухий кут
+  translation: to reach a dead end / stalemate
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: винести сміття
+  translation: to take out the trash
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вийти заміж
+  translation: to get married (for a woman)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вийти з ладу
+  translation: to break down / go out of order
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вийти на зв'язок
+  translation: to get in touch / contact
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зайти до друга
+  translation: to drop by a friend's
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

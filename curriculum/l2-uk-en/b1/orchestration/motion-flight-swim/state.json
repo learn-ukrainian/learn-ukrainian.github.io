@@ -2,14 +2,5 @@
   "mode": "v6",
   "track": "b1",
   "slug": "motion-flight-swim",
-  "phases": {
-    "stress": {
-      "status": "complete",
-      "ts": "2026-04-02T14:58:40.331440+00:00"
-    },
-    "publish": {
-      "status": "complete",
-      "ts": "2026-04-02T14:58:40.331777+00:00"
-    }
-  }
+  "phases": {}
 }

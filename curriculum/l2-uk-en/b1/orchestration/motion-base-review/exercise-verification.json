@@ -1,0 +1,91 @@
+{
+  "total_items": 143,
+  "grounded_items": 128,
+  "ungrounded": [
+    {
+      "word": "офіціант",
+      "exercise_type": "quiz",
+      "context": "Обережно, офіціант _____ гарячу каву!"
+    },
+    {
+      "word": "сестра",
+      "exercise_type": "quiz",
+      "context": "Моя сестра чудово _____ автомобіль."
+    },
+    {
+      "word": "їхали",
+      "exercise_type": "quiz",
+      "context": "їхали"
+    },
+    {
+      "word": "рівно",
+      "exercise_type": "quiz",
+      "context": "Поїзд _____ до Києва рівно о сьомій."
+    },
+    {
+      "word": "відпустку",
+      "exercise_type": "fill-in",
+      "context": "Ти часто (їздити) _____ у відпустку?"
+    },
+    {
+      "word": "здоров'я",
+      "exercise_type": "fill-in",
+      "context": "Вона щоранку (бігати) _____ для здоров'я."
+    },
+    {
+      "word": "важкі",
+      "exercise_type": "fill-in",
+      "context": "Вони (нести) _____ важкі валізи."
+    },
+    {
+      "word": "валізи",
+      "exercise_type": "fill-in",
+      "context": "Вони (нести) _____ важкі валізи."
+    },
+    {
+      "word": "аеропорт",
+      "exercise_type": "fill-in",
+      "context": "Таксі (везти) _____ нас в аеропорт."
+    },
+    {
+      "word": "спортзал",
+      "exercise_type": "error-correction",
+      "context": "Я іду в спортзал тричі на тиждень."
+    },
+    {
+      "word": "тричі",
+      "exercise_type": "error-correction",
+      "context": "Я іду в спортзал тричі на тиждень."
+    },
+    {
+      "word": "покупками",
+      "exercise_type": "error-correction",
+      "context": "Вчора ми їхали в центр міста за покупками і повернулися ввеч"
+    },
+    {
+      "word": "подивись",
+      "exercise_type": "error-correction",
+      "context": "Подивись! Маленька дитина бігає прямо до нас!"
+    },
+    {
+      "word": "йде",
+      "exercise_type": "error-correction",
+      "context": "йде"
+    },
+    {
+      "word": "восьмій",
+      "exercise_type": "error-correction",
+      "context": "Мій поїзд відправляється о восьмій годині."
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 22,
+    "tested_in_exercises": 19,
+    "not_tested": [
+      "валіза",
+      "односпрямований",
+      "різноспрямований"
+    ]
+  },
+  "all_grounded": false
+}

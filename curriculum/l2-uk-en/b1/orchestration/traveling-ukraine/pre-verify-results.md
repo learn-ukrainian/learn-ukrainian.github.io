@@ -1,27 +1,40 @@
 ## VESUM Verification
-- Confirmed: подорож, мандрівка, подорожувати, мандрувати, квиток, вокзал, платформа, перон, зупинка, маршрут, пересадка, дістатися, маршрутка, купе, плацкарта (ticket), провідник, пасажир, рейс, затримка, пам'ятка, екскурсія, готель, хостел, зворотний, рух.
-- Not found: "зворотний квиток" and "розклад руху" (as single dictionary entries, but both components are verified and the phrases are confirmed via GRAC corpus). Note: **Плацкарта** (feminine) is the official term for the ticket/document, while **плацкарт** (masculine) is the colloquial term for the wagon.
+- Confirmed: подорож, мандрівка, подорожувати, мандрувати, квиток, вокзал, платформа, перон, зупинка, маршрут, пересадка, дістатися, маршрутка, купе, плацкарта (note: formal form is feminine 'плацкарта', though 'плацкарт' is common), провідник, пасажир, рейс, затримка, пам'ятка, екскурсія, готель, хостел.
+- Not found: зворотний квиток, розклад руху (verified as individual components; phrases are standard and correct).
 
 ## Textbook Excerpts
 ### Section: Подорож починається: планування та транспорт
-> "Подорож Україною — це завжди відкриття. Ми вибираємо маршрут, купуємо квитки і вирушаємо в дорогу." 
-> Source: Synthetic based on GRAC frequency and curriculum alignment (primary search_text calls timed out).
+> Уявіть, що хтось із вас планує поїхати на відпочинок у Карпати... По телефону ви маєте узгодити час, дату поїздки, умови проживання, екскурсійну програму тощо.
+> Source: Zabolotnyi, Grade 8 (s. 101)
+
+### Section: На вокзалі та в аеропорту
+> — Скажіть, будь ласка, чи є сьогодні автобус на Моринці? — Так, звичайно, є. — О котрій годині найближчий рейс? — О десятій... — Тоді продайте мені, будь ласка, два квитки на цей рейс.
+> Source: Kravtsova, Grade 3 (s. 83)
+
 ### Section: Маршрут: від Києва до Карпат
-> "...вона обов'язково вирушає в чергову подорож Україною, тому що не уявляє без цього свого життя."
-> Source: GRAC (Usage of "подорож Україною" in the instrumental case of path).
+> Прокладіть маршрут подорожі, з’єднавши міста, які ви плануєте відвідати... Львів, Софійський собор у Києві, П’ятницька церква в Чернігові.
+> Source: Schupak, Grade 5 (s. 83)
+
+### Section: Орієнтування в місті: як дістатися?
+> Мандрівники можуть піднятися на гору пішки, а можуть трамваєм. Маршрут проходить від річки Мізунки до каскаду Мізунського водоспаду.
+> Source: Avramenko, Grade 7 (s. 190)
+
+### Section: Подорожні історії: розповідь про поїздку
+> До Києва із Лубни їхали степом і пущею... Під сани прогуркотів міст.
+> Source: Golub, Grade 6 (s. 92)
 
 ## Grammar Rules
-- **Instrumental of Path**: The use of the instrumental case without a preposition to indicate a route or space of movement (e.g., *подорожувати Україною*, *йти лісом*) is a standard linguistic feature in Ukrainian. It emphasizes the process of movement across a territory.
-- **Consonant Alternation**: Правопис § 16 confirms the alternation of *д* → *дж* in verbs like *їздити* → *їжджу*, which is critical for motion verb forms in this module.
+- **Instrumental Case for Route (Орудний шляху)**: Правопис doesn't list semantic roles, but textbook examples confirm usage: "їхали степом і пущею" (Grade 6), "мандрівка Україною" (Grade 5). This is a B1 target grammar point.
+- **Verb Alternations (їхати -> їжджу)**: Правопис §16 — Чергування Т із Ч; З із Ж; ЗД із ЖДЖ (ї́здити — ї́жджу).
 
 ## Calque Warnings
-- **відправлятися**: CALQUE — Although found in official schedules, it is a Russianism (*отправляться*). Use **відходити** (most natural for trains) or **вирушати** (more poetic/elevated).
-- **вірний**: CALQUE — Avoid using "вірний маршрут" (correct route); use **правильний** or **точний**.
-- **поїзд vs потяг**: OK — Both are correct, but **поїзд** is the official technical term, while **потяг** is often preferred in literary or modern contexts.
+- **відправлятися**: Calque when used for trains — use **відходити** or **вирушати**.
+- **квиток на поїзд**: Better as **квиток до [міста]** or **квиток на потяг**.
+- **слідуюча зупинка**: Calque — use **наступна зупинка**.
 
 ## CEFR Check
-- **подорож**: B1 — OK
-- **квиток**: A1/A2 — OK
-- **маршрутка**: B1 — OK (Common Ukrainian realia)
-- **зворотний**: B1 — OK
-- **плацкарта**: B1 — OK (Specific vocabulary for Ukrainian train travel)
+- **дістатися**: B1 — OK (PULS: "досягти" is B1, "дійти" is B1; "дістатися" is standard for B1 travel).
+- **мандрівка**: B1 — OK.
+- **маршрутка**: A1 — OK.
+- **плацкартний**: B1 — OK (PULS).
+- **зворотний**: B2 — Slightly above target (B1 target is "навпаки/протилежний"), but essential for travel context ("зворотний квиток").

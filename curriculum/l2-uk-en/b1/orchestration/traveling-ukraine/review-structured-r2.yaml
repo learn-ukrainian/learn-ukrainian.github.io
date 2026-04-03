@@ -1,0 +1,53 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Covers the sections thoroughly, but missed the exact dialogue phrases
+    requested by the plan for the airport scene (e.g., `''О котрій посадка?'' ''Посадка
+    починається о чотирнадцятій тридцять.''`).
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Contains a critical Surzhyk error ("плацкарт" instead of "плацкартний
+    вагон") and a common calque ("в першу чергу" instead of "насамперед"). The dialogue
+    logic is also flawed (flying to Warsaw but tra
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent contextualization of grammar. The explanation differentiating
+    the Instrumental case for routes ("їхати Україною") vs. the Genitive case for
+    destinations ("до Києва") is outstanding and clear
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required words are used naturally. Missed recommended words "хостел"
+    and "провідник" (0 occurrences).
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 6 markers are placed logically after the relevant teaching blocks
+    and match the plan's specifications exactly.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: 'Contains unnecessary meta-commentary and telling instead of showing:
+    "Головна тема нашого спілкування...", "Тепер перейдемо до надзвичайно цікавої
+    та унікальної граматичної конструкції...", "Давайте д'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Word count (5111 words) is significantly over the 4000-word target (+27%).
+    However, the Markdown is clean and well-structured.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent integration of real Ukrainian landmarks (Khreshchatyk, Sofia,
+    High Castle, Synevyr) and a strong, accurate decolonization note regarding "відправлятися".
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The train ticket dialogue is excellent, but the airport dialogue is slightly
+    robotic and unnatural ("Це виключно моя ручна поклажа. Я обов'язково візьму її
+    із собою в салон літака").
+findings: []

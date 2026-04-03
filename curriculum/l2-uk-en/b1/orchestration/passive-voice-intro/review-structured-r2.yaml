@@ -1,0 +1,52 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: The required passive structures (`був побудований`, `були пофарбовані`,
+    `буде відкрито`) were placed in the introductory text before the dialogue, rather
+    than inside the dialogue as specified by the `
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'Contains calques: the phrase "неозброєним оком" (Russian "невооруженным
+    глазом", should be "голим оком") and repetitive "давайте + дієслово" constructions
+    (should be 1st person plural imperative, e.g.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'The dialogue models the very grammatical construction it condemns. The
+    text warns that using an instrumental agent with passive -ся is bureaucratic and
+    unnatural, yet the dialogue explicitly uses it: '
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary words (активний стан, пасивний стан, збудовано,
+    виконано, канцелярит, etc.) are effectively and naturally integrated.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 5 activity markers are correctly structured and placed exactly after
+    the relevant sections as per the plan.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: Has elements of meta-commentary («Давайте уважно подивимося», «ми пропонуємо
+    чекліст», «Тут у вас може виникнути запитання»), which detracts slightly from
+    the immersion.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Clean Markdown structure and all sections are well-organized, but the
+    word count is 4920 (significantly over the 4000 target).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Correctly explains the stylistic preference for active voice in Ukrainian
+    grammar, adhering to standard textbooks (Заболотний, Авраменко).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: The dialogue was highly transactional, robotic, and sounded like an interrogation
+    rather than a natural conversation, worsened by the bureaucratic phrasing.
+findings: []

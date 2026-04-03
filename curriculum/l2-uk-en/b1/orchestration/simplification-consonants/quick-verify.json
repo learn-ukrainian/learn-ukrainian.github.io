@@ -1,24 +1,19 @@
 {
-  "attempt": 2,
+  "attempt": 5,
   "passed": false,
   "errors": [
     {
-      "check": "STRUCTURE",
+      "check": "TOXIC",
       "severity": "ERROR",
-      "message": "Missing section heading: 'Підсумок i практика'"
+      "message": "Russian characters found: ъ"
     }
   ],
   "warnings": [
     {
       "check": "VOCABULARY",
       "severity": "WARNING",
-      "message": "Missing 2/14 required vocab: закріплений (fixed — reflected in standard spelling), морфонологія (morphophonology — sound changes in morphology)"
-    },
-    {
-      "check": "EXERCISES",
-      "severity": "WARNING",
-      "message": "Plan expects 5 exercise(s) but content has 0 placeholders"
+      "message": "Missing 1/14 required vocab: морфонологія (morphophonology — sound changes in morphology)"
     }
   ],
-  "timestamp": "2026-04-02T02:25:59.221756+00:00"
+  "timestamp": "2026-04-03T15:06:39.902379+00:00"
 }

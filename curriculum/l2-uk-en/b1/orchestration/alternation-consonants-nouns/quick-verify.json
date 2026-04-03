@@ -1,13 +1,24 @@
 {
-  "attempt": 2,
+  "attempt": 3,
   "passed": false,
   "errors": [
     {
-      "check": "WORD_COUNT",
+      "check": "STRUCTURE",
       "severity": "ERROR",
-      "message": "Too short: 2622 words (target: 4000, minimum: 3400)"
+      "message": "Missing section heading: 'Чергування [ц'] -> [ч] та інші'"
+    },
+    {
+      "check": "STRUCTURE",
+      "severity": "ERROR",
+      "message": "Missing section heading: 'Підсумок: таблиця чергувань'"
     }
   ],
-  "warnings": [],
-  "timestamp": "2026-04-02T22:04:03.716314+00:00"
+  "warnings": [
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 5 exercise(s) but content has 0 placeholders"
+    }
+  ],
+  "timestamp": "2026-04-02T22:40:34.674499+00:00"
 }

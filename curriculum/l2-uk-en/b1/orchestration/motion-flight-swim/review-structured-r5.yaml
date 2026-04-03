@@ -1,0 +1,52 @@
+round: 5
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'Excellent coverage of outline points, but missing the term "злітна смуга"
+    from the Section 4 vocabulary list. Found: "подивитися у вікно на літаки, готуючись
+    до польоту."'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'One minor calque/stylistic inconsistency: "по гучномовцю гучно і офіційно
+    оголошується посадка". In Section 1, the text correctly used the natural "через
+    гучномовець", but reverted to the Russian-infl'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Very strong PPP flow and clear explanations. Minor factual inconsistency
+    in the summary: the text claims "ми завжди кажемо **переплисти** *(to swim across)*,
+    а не «перепливти»", which contradicts Sect'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required and recommended words are included, but "злітна смуга" from
+    the outline was omitted.
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: The `group-sort` marker was placed before Section 3, asking learners to
+    sort forms of `летіти` but omitting `пливти` (contrary to the plan). This violates
+    the rule against placing exercises before the
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Engaging tone, great contextual examples, and natural dialogues. Avoids
+    overly corporate language.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All H2 headings exactly match the `content_outline`. Sections are ordered
+    correctly. Word count is in range.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Culturally neutral, appropriate references to Boryspil, Black Sea, Odesa,
+    and standard Ukrainian contexts.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are natural, properly formatted with named speakers, and provide
+    excellent communicative context.
+findings: []

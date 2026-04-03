@@ -1,0 +1,51 @@
+round: 5
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Missed teaching the `-ичн-/-ічн-` suffixes which were explicitly required
+    in the objectives.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'Two syntactic errors: "здаватися як безмежний" (wrong case government/calque
+    structure) and "називається чергування" (requires the instrumental case "чергуванням").'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow, correct grammar rules with multiple clear examples.
+    Intelligently corrected the hallucinated `[г] -> [з']` rule from the plan to the
+    accurate `[г] -> [ж]`.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary used naturally in prose (e.g.,
+    "словотвір", "продуктивний", "зменшувальний", "наближений").
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: The `match-up` activity only includes 8 random nouns instead of the 12
+    geographic and social nouns requested by the plan to test the `-ськ-/-зьк-/-цьк-`
+    alternations.
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: Contains unnecessary meta-commentary and generic enthusiasm ("Суфікс —
+    це ваш найголовніший і найпотужніший інструмент...", "Ці величні слова...").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, all sections present and correctly ordered, word count
+    within acceptable limits (4962).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Correct integration and citation of Ukrainian textbook pedagogy (Заболотний,
+    Авраменко, Литвінова, Голуб).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 6
+  evidence: The art gallery dialogue is highly transactional, stilted, and robotic
+    ("Будь ласка, погляньте на цю унікальну роботу... Це враження виникає через синюватий
+    колір неба...").
+findings: []

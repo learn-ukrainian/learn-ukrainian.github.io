@@ -1,0 +1,49 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Covers all pedagogical points flawlessly, but the word count is 5053,
+    which exceeds the 4000-word target by ~26%.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Contains a major paronym hallucination ("створення" vs "створіння"), incorrect
+    phonetic claims about vowel alternation in "падіння", and minor instances of канцелярит
+    ("здійснюємо перетворення").
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Exceptionally clear explanations of process vs. result, clear breakdowns
+    of verb stems, and excellent examples of avoiding bureaucratese.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items from the plan are integrated
+    naturally into the text.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Activity markers are placed correctly after their respective theory blocks.
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: Contains too much generic enthusiasm and meta-commentary ("надзвичайно
+    потужним граматичним інструментом", "захопливий світ", "лінгвістичну трансформацію").
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Formatting is clean and readable, but the overall module is too long compared
+    to the target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent references to Ukrainian digitalization (Дія) and proper stylistic
+    norms (Antonenko-Davydovych).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: The opening dialogue is extremely stilted and robotic, though this was
+    explicitly forced by the plan's rigid vocabulary requirements. The second text
+    (motivation letter) is excellent.
+findings: []

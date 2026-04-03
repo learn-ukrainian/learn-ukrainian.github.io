@@ -1,0 +1,53 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 6
+  evidence: 'The text misses several specific points from the plan: 1) The main reading
+    passage fails to mention "аеропорт Боріспіль" as requested. 2) The mandatory dialogue
+    setting at the Black Sea with parents a'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Contains a critical Russianism/typo: "стрімкий **зльот**" instead of
+    the correct Ukrainian "стрімкий **зліт**".'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Good use of PPP flow and textbook references. However, the `fill-in` activity
+    testing specific maritime and aviation vocabulary is placed before that vocabulary
+    is introduced, breaking the pedagogical
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items from the plan are naturally
+    integrated into the text.
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: Activity counts and topics align with `activity_hints`. Deduction for
+    placing the vocabulary `fill-in` activity in the wrong section, which would require
+    learners to guess words they haven't been taug
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: Generally engaging and descriptive, but contains some minor instances
+    of teacherly meta-commentary that tell rather than show (e.g., "Глибоке знання
+    всіх цих корисних префіксів дозволить вам неймовірн
+- dimension: 7
+  name: Structural integrity
+  score: 6
+  evidence: The word count is 5147 words, which is massively over the target of 4000
+    words (>28% off target).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Accurate references to Ukrainian educational materials (Авраменко, Вашуленко).
+    Natural geographical references (Босфор).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 6
+  evidence: 'Deducted because the core conversational requirement ("At the Чорне море
+    near Одеса") was entirely ignored. The substitute transactional airport/seaport
+    dialogues are fine, but failing to include the '
+findings: []

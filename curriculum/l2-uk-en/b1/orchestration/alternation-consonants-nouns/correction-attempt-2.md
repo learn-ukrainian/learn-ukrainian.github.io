@@ -1,7 +1,9 @@
 <correction_directive>
 CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
 
-- FIX: Too short: 2622 words (target: 4000, minimum: 3400)
+- FIX: Too short: 969 words (target: 4000, minimum: 3400)
+- FIX: Missing 5/14 required vocab: давальний відмінок (dative case), задньоязиковий (velar — consonant formed at the back of the mouth), відміна (declension class — noun classification by ending pattern), тверда група (hard group — nouns with hard stem-final consonant), корінь (root — core morpheme of a word)
+- NOTE: Plan expects 5 exercise(s) but content has 0 placeholders
 </correction_directive>
 
 LEARNINGS FROM PAST BUILDS (same error patterns seen before):

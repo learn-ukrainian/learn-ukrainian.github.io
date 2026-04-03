@@ -1,48 +1,57 @@
 ## Здоров'я і самопочуття (~720 words total)
-- P1 (~160 words): Introduction to the concept of health as the ultimate value (*найвищий скарб*). Explanation of the lexical family: *здоров'я* (noun) with the apostrophe after [в], *здоровий* (adjective), and the verb pair *одужувати* (imperfective) / *одужати* (perfective). Comparison to the Grade 3 proverb "Здоров’я — найдорожчий скарб".
-- P2 (~150 words): Describing general well-being using *почуватися*. Contrasting *Я добре почуваюся* with *Мені погано*. Introduction of the Dative experiencer construction for physical sensations: *Мені нудить* (I feel nauseous) and *Мені боляче* (It hurts me).
-- P3 (~170 words): Introduction to morphophonemic alternations (B1.2 focus) using the word *біль* (pain). Explain the і→о alternation in closed vs. open syllables: *біль* (closed) vs. *болить* (open). Discussion of the prefix *без-* in *безболісний* (painless) and how the alternation carries over to word formation.
-- P4 (~160 words): Review of body parts with a focus on consonant alternations from M09: *вухо* (ear) → *у вусі* (х→с), *око* (eye) → *в оці* (к→ц), and *ніс* (nose) → *носа* (і→о alternation). Contrast with stable stems like *голова* → *головний*.
-- Exercise: [match-up, focus: Medical word families and alternations (біль-болить, вухо-вусі), 12 items] (~80 words)
+- P1 (~80 words): [Philosophy of health as the most valuable human asset — intro using high-register Ukrainian prose: "Здоров’я — це не просто відсутність хвороб, а гармонія тіла та духу." Contrast feeling healthy vs. the need for help when sick.]
+- P2 (~110 words): [Linguistic deep-dive into the "здоров-" word family. Explain the noun "здоров'я" (neuter) with its morphophonemic feature: the apostrophe after the labial "в" before "я". Contrast with the adjective "здоровий" and the perfective/imperfective pair "одужати/одужувати".]
+- P3 (~100 words): [Expressing general wellbeing using reflexive and impersonal constructions. Explain "Я почуваюся добре" (I feel well) vs. the dative experiencer construction "Мені погано" (I feel bad). Provide contextual examples: "Сьогодні я почуваюся значно краще, ніж учора."]
+- P4 (~100 words): [The core construction for physical pain: "У мене болить..." + Nominative. Explain that "болить" agrees with the body part: "болить голова" (singular) vs. "болять ноги" (plural). Contrast with the English "I have a headache" to emphasize the possession structure.]
+- P5 (~110 words): [Morphophonemic focus on the word "біль" (pain). Explain the vowel alternation (чергування голосних) "і" to "о" in open/closed syllables: "біль" (closed) vs. "болить/болю" (open). Introduce the derivative "безболісний" (painless) to show the pattern persistence.]
+- P6 (~120 words): [Advanced body parts review for B1. Focus on noun alternations during case changes: "ніс — носа" (і→о), "вухо — у вусі" (х→с), and "око — в оці" (к→ц). Use medical examples: "лікар оглянув ніс", "краплі у вусі", "порошинка в оці."]
+- Exercise: [Match-up, Match medical word families: лікар-лікувати-ліки, біль-болить-безболісний, 12 items]
 
 ## У лікаря: діалог (~880 words total)
-- P1 (~160 words): Setting the scene at a *поліклініка* (clinic). Vocabulary for the medical bureaucracy: *реєстрація* (registration), *черга* (queue), and *медична картка* (medical card). Explanation of the etiquette: *Хто останній?* (Who is last?) and *Можна зайти?* (May I enter?).
-- P2 (~180 words): Model Dialogue 1 — The Consultation. A multi-turn dialogue between *Терапевт* and *Пацієнт*. Focus on the phrase *На що скаржитесь?* and the answer *Скаржуся на головний біль*. Emphasis on the case government: *скаржитися на + Accusative* (Знахідний відмінок).
-- P3 (~160 words): The physical examination. Introduction of imperative forms (наказовий спосіб) used by doctors: *Відкрийте рота* (Open your mouth), *Дихайте глибоко* (Breathe deeply), *Покажіть горло* (Show your throat), and *Не рухайтеся* (Don't move).
-- P4 (~150 words): Model Dialogue 2 — At the Dentist (*У стоматолога*). Specialized vocabulary: *зуб* (tooth), *ясна* (gums), *пломба* (filling), and *знеболювальне* (anesthetic). Use of the word *лікувати* in context: *Лікар лікує зуби*.
-- P5 (~140 words): Discussion of the paronym *лікувати* (to treat) vs. *лічити* (to count) based on Avramenko Grade 8. Clarification that *лікар лікує пацієнта*, while *дитина лічить до десяти*.
-- Exercise: [fill-in, focus: Complete doctor-patient dialogue with correct case forms (скаржитися на, хворіти на), 12 items] (~90 words)
+- P1 (~80 words): [Introduction to the Ukrainian healthcare setting: "поліклініка" vs. "лікарня". Briefly mention the role of the "реєстратура" and how one makes an appointment with a "терапевт" (GP).]
+- P2 (~150 words): [Model Dialogue 1: At the GP (терапевт). 15-turn full Ukrainian dialogue between a doctor and a patient. Patient complains of "головний біль" and "температура". Doctor asks about duration, performs an examination ("дихайте глибоко"), and gives a diagnosis.]
+- P3 (~100 words): [Analysis of Dialogue 1. Highlight specific medical register vocabulary: "скарги" (complaints), "огляд" (examination), "призначення" (prescription/treatment plan). Explain the cultural nuance of calling the doctor "лікарю" in the vocative.]
+- P4 (~120 words): [Model Dialogue 2: At the Dentist (стоматолог). Focused interaction involving specialized vocabulary: "зубний біль", "ясла", "пломба", "знеболювальне". Demonstrate the specific flow of a dental consultation from pain description to the procedure.]
+- P5 (~100 words): [Grammatical focus on the Imperative Mood (наказовий спосіб) used by doctors. Provide 5-6 common commands: "відкрийте рота", "покажіть горло", "не рухайтеся", "дихайте", "лягайте". Explain the polite plural ending "-те".]
+- P6 (~110 words): [Vocabulary distinction: "лікар" vs. "доктор". Based on Avramenko's rules, explain that "лікар" is a medical practitioner, while "доктор" refers to an academic degree (Doctor of Science). Use examples: "Мій лікар — чудовий фахівець" vs. "Він доктор філологічних наук."]
+- P7 (~120 words): [Medical verb government (керування). Explain three critical patterns: "скаржитися на" + Accusative (скаржуся на біль), "хворіти на" + Accusative (хворіти на грип), and "лікуватися від" + Genitive (лікуватися від застуди).]
+- Exercise: [Fill-in, Complete doctor-patient dialogue with correct case forms (скаржитися на..., лікуватися від...), 12 items]
 
 ## Спеціалісти та обстеження (~720 words total)
-- P1 (~160 words): Overview of medical specialists: *хірург, окуліст, педіатр, гінеколог, травматолог*. Explanation of the term *лікар* and its female equivalent *лікарка*. Review of the agent suffix *-ар* from M12 (II declension, soft group): *лікар* belongs to the same paradigm as *пекар* or *школяр*.
-- P2 (~170 words): Types of medical examinations (*обстеження*). Focus on *аналіз крові* (blood test) and *аналіз сечі* (urine test). Grammar note: *кров* is a III declension feminine noun (from M14), so the genitive is *крові*. Introduction of *УЗД* (ultrasound) and *рентген* (X-ray).
-- P3 (~160 words): Measuring vitals. Vocabulary: *тиск* (pressure), *пульс* (pulse), and *температура*. Explain the construction *міряти тиск/температуру*. Mentioning the stable *о* in *тиск* → *тиску* (no alternation) vs. *біль* → *болю*.
-- P4 (~140 words): Reading practice. A short simulated medical report summary in Ukrainian. Focus on identifying the *діагноз*, *симптоми*, and *призначення* (treatment plan).
-- Exercise: [quiz, focus: Match symptoms to the correct specialist (зубний біль → стоматолог), 12 items] (~90 words)
+- P1 (~100 words): [Catalog of medical specialists in Ukraine. List and define: "хірург", "окуліст", "педіатр", "кардіолог", "стоматолог". Explain their suffixes, noting that most are masculine but apply to both genders in professional contexts.]
+- P2 (~100 words): [Word formation focus: the agent suffix "-ар". Connect "лікар" to the pattern of "пекар", "школяр", "аптекар". Explain that these belong to the soft group of the second declension (II відміна), which affects their case endings.]
+- P3 (~120 words): [Diagnostic procedures (обстеження). Introduce "аналіз крові", "аналіз сечі", "рентген", "УЗД" (ultrasound), and "вимірювання тиску". Focus on the pronunciation of abbreviations like УЗД [у-зе-де].]
+- P4 (~120 words): [Grammar of diagnostic tests. Explain why the Genitive case is used for the substance being tested: "аналіз (чого?) крові", "вимірювання (чого?) температури". Note the III declension ending for "кров" -> "крові".]
+- P5 (~180 words): [Reading Practice: A simplified medical report (виписка). Provide a text containing a patient's personal data, symptoms, diagnosis ("ГРВІ"), and recommendations. Ask the learner to identify the core components of the treatment plan in prose.]
+- Exercise: [Quiz, Match symptoms to the correct specialist (головний біль → терапевт, зубний біль → стоматолог), 12 items]
 
 ## В аптеці (~770 words total)
-- P1 (~160 words): Entering the *аптека*. Vocabulary: *аптекар/фармацевт* (pharmacist), *рецепт* (prescription), and *ліки* (medicine). Explain that *ліки* is a *pluralia tantum* (only plural) when referring to "medicine" in a medical sense (from M15).
-- P2 (~150 words): Model Dialogue 3 — Buying medicine. Patient asks: *У вас є ці ліки за рецептом?* Pharmacist explains usage: *Приймати двічі на день після їжі* (Take twice a day after meals). Introduction of *дозування* (dosage).
-- P3 (~180 words): Pharmacy inventory grammar showcase. Discussion of other *pluralia tantum* in medicine: *краплі* (drops), *вітаміни* (vitamins — usually plural), and the forms of *ліки* across cases: *немає ліків* (Genitive), *завдяки лікам* (Dative).
-- P4 (~150 words): Forms of medication: *таблетка* (pill), *мазь* (ointment), *укол/ін'єкція* (injection), and *сироп* (syrup). Comparison of word families: *лікар → лікувати → лікування*.
-- P5 (~130 words): Discussion of allergic reactions. *У мене алергія на...* + Accusative. Examples: *алергія на антибіотики*, *алергія на пилок*. Use of *протиалергійні засоби*.
+- P1 (~80 words): [Intro to the pharmacy (аптека) interaction. Explain the role of the "фармацевт" or "аптекар" and the necessity of a "рецепт" for certain medicines.]
+- P2 (~120 words): [Dialogue: At the Pharmacy. A customer presents a "рецепт" and asks for dosage instructions. "Скільки разів на день приймати?", "Після їжі чи до їжі?". Introduce time-frequency adverbs: "тричі на день", "щогодини".]
+- P3 (~100 words): [Forms of medicine: "таблетка", "сироп", "мазь", "краплі", "спрей", "ін'єкція/укол". Explain the semantic difference between "щеплення" (vaccination) and a regular "укол" (shot/injection).]
+- P4 (~150 words): [Grammar Showcase: Pluralia Tantum in medicine. Based on M15, explain that "ліки" (medicine) and "краплі" (drops) are used only in plural. Drill the cases: "немає ліків" (Genitive), "завдяки лікам" (Dative), "лікувати ліками" (Instrumental).]
+- P5 (~120 words): [Morphophonemic patterns in the word family "ліки". Show the progression: "лік" (obsolete/poetic) -> "лікувати" (verb) -> "лікування" (process) -> "лікар" (agent). Explain the stability of the root and the suffix additions.]
+- P6 (~100 words): [Instructions and dosage. Explain phrases like "приймати натщесерце" (take on an empty stomach), "запивати водою" (wash down with water), and "зовнішнє застосування" (external use).]
+- Exercise: [Sentence-builder, Build sentences describing symptoms and medical actions using correct grammar, 12 items]
 
 ## Хвороби та симптоми (~770 words total)
-- P1 (~170 words): Common seasonal illnesses: *застуда* (cold), *грип* (flu), and *ангіна* (tonsillitis). Use of the verb *хворіти на...* + Accusative. *Я захворів на грип*. Contrast with *лікуватися від...* + Genitive. *Він лікується від застуди*.
-- P2 (~180 words): Focus on *нежить* (runny nose) and *кашель* (cough). Both are II declension masculine nouns. *Нежить* is masculine (not feminine!), soft group: *сильний нежить*, *нежитю* (Dative). *Кашель* also masculine soft: *сильний кашель*, *кашлю*. This reinforces M13-M14 classification skills.
-- P3 (~150 words): Describing symptoms in detail: *чхати* (to sneeze), *кашляти* (to cough), *ковтати* (to swallow). *Мені боляче ковтати*. Mentioning *запалення* (inflammation) as a neuter noun with the *-ення* suffix.
-- P4 (~150 words): Prevention and immunity. Vocabulary: *щеплення* (vaccination), *імунітет* (immunity), *профілактика* (prevention). Use of advice verbs: *раджу* (I advise), *треба* (it is necessary), *варто* (it is worth).
-- Exercise: [sentence-builder, focus: Build sentences describing symptoms and medical actions (У мене нежить, я хворію на грип), 12 items] (~120 words)
+- P1 (~120 words): [Common illnesses (хвороби): "грип", "застуда", "ангіна", "алергія", "отруєння". Provide short descriptions of each in Ukrainian to build contextual vocabulary: "Грип — це вірусне захворювання з високою температурою."]
+- P2 (~100 words): [Describing specific symptoms: "кашель" (cough), "нежить" (runny nose), "чхання", "нудота", "висип". Use authentic phrases: "У мене заклало ніс", "Мене нудить", "Важко дихати".]
+- P3 (~150 words): [Linguistic focus on "нежить" and "кашель". Correct the common mistake of treating "нежить" as feminine. Explain they are masculine II declension nouns: "сильний нежить", "сухий кашель". Show Genitive forms: "нежитю", "кашлю".]
+- P4 (~120 words): [Impersonal constructions for discomfort: "Мені боляче ковтати" (It hurts to swallow), "Мені крутиться голова" (I am dizzy). Explain the use of Dative "мені" to show the person experiencing the state.]
+- P5 (~100 words): [Prevention and immunity (профілактика). Introduce "щеплення", "вітаміни", "імунітет", "здоровий спосіб життя". Explain the verb "загартовуватися" (to harden/temper oneself).]
+- P6 (~80 words): [Giving medical advice using modal constructions: "Вам слід...", "Вам варто...", "Вам необхідно...". Use examples like "Вам варто дотримуватися ліжкового режиму" (You should stay in bed).]
+- Exercise: [Error-correction, Fix case government errors in medical sentences (*скаржитися від, *хворіти з), 12 items]
 
-## Підсумок (~550 words)
-- P1 (~150 words): Recap of communicative goals. Can you now describe your symptoms using *скаржитися на*? Can you identify the correct specialist? Can you navigate the pharmacy using *ліки* and *рецепт*?
-- P2 (~150 words): Final review of morphophonemic highlights: the і→о alternation in *біль/болить*, the consonant shifts in *вухо/вусі* and *око/оці*, and the status of *нежить* as a masculine noun.
-- P3 (~250 words): Self-check questions:
-    - На що ви скаржитеся, якщо у вас висока температура і болить горло?
-    - Як називається лікар, який лікує дітей?
-    - Яке закінчення має слово «нежить» у давальному відмінку?
-    - Назвіть три слова, що належать до родини слова «лікувати».
-    - Як сказати «Take medicine three times a day» українською?
-    - Preview of M17: Контрольна робота 2 (Checkup 2).
+## Підсумок — Summary (~500 words)
+- P1 (~150 words): [Recap of communicative goals: You can now describe symptoms using "у мене болить", "скаржитися на", and "хворіти на". You know how to act at the GP and at the pharmacy, asking for "дозування" and showing a "рецепт". You can understand a basic "діагноз" and follow a doctor's "призначення".]
+- P2 (~150 words): [Recap of grammar and morphophonemics: You've mastered the alternation in "біль/болить", "вухо/вусі", and "око/оці". You understand that "ліки" and "краплі" are pluralia tantum and that "лікар" belongs to the agent suffix "-ар" group. You've learned the masculine nature of "нежить" and the case government of medical verbs.]
+- P3 (~200 words): [Self-check questions: 
+  - Як українською сказати "I have a sore throat"? (У мене болить горло).
+  - Який спеціаліст лікує зуби? (Стоматолог).
+  - Утворіть родовий відмінок від слова "кров". (Крові).
+  - Як сказати "Take medicine three times a day"? (Приймати ліки тричі на день).
+  - Якого роду іменник "нежить"? (Чоловічого).
+  - Як змінити "х" у слові "вухо" в місцевому відмінку? (У вусі).]
 
-Grand total: ~4460 words
+Grand total: ~4410 words

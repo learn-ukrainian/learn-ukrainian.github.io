@@ -3,20 +3,19 @@
 You are writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 32: Подорож Україною (B1, B1.3 [Motion Verb Universe])
-**Section to write:** Подорож починається: планування та транспорт (~800 words total)
-**Word target for this section:** 800 words (aim for 880 to account for undershoot)
+**Section to write:** Подорож починається: планування та транспорт (~825 words total)
+**Word target for this section:** 825 words (aim for 907 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Подорож починається: планування та транспорт (~800 words total)
-- P1 (~120 words): [Bridge from M27-M35: Explain how this module serves as the communicative synthesis of the "Motion Verb Universe." Transition from learning prefixes in isolation to using them for real-world travel planning across Ukraine.]
-- P2 (~150 words): [Synonyms and nuances: Contrast "подорож" (journey/trip) with "мандрівка" (slightly more romantic/literary travel). Introduce the verbs "подорожувати" and "мандрувати" with 3 examples of usage in the present tense.]
-- P3 (~180 words): [Transport vocabulary: Categorize transport into залізничний (поїзд/потяг), автомобільний (автобус, маршрутка, таксі), and повітряний (літак). Explain the cultural role of the "маршрутка" in Ukraine.]
-- P4 (~200 words): [Grammar: The Instrumental Case for Routes (Орудний відмінок шляху). Explain how "подорож Україною" or "їхати горами" uses the instrumental to denote the area/path. Compare with "по + Dat" to show why Instrumental is often more natural for Ukrainians.]
-- P5 (~150 words): [Planning a trip: Vocabulary for the initial stage—бронювати (to book), маршрут (route), графік (schedule), and квиток (ticket). Explain the difference between "квиток в один бік" and "зворотний квиток".]
-- Exercise: [group-sort, Categorizing transport (залізничний, міський, повітряний), 12 items]
+## Подорож починається: планування та транспорт (~825 words total)
+- P1 (~160 words): [Introduction to the "Motion Verb Universe" capstone. Explaining how this module synthesizes prefix knowledge (M28-35) with travel. Connecting "подорож" (journey) and "мандрівка" (travel/hike) to specific transport verbs: їхати потягом, летіти літаком, плисти поромом.]
+- P2 (~170 words): [Transport vocabulary in detail. Distinguishing between "потяг" and "поїзд", "автобус" and the uniquely Ukrainian "маршрутка". Discussing the levels of train comfort: "купе" vs. "плацкарт" vs. "сидячий вагон" (Intercity+), using "розклад руху" to plan.]
+- P3 (~165 words): [Station infrastructure. Defining "вокзал" (large station) vs. "зупинка" (stop). Explaining "перон" vs. "платформа" and the importance of the "зал очікування". Introduction of "квиток" and "зворотний квиток" with price queries: "Скільки коштує?"]
+- P4 (~180 words): [Grammar: The Instrumental case for travel routes. Explaining "подорожувати Україною", "їхати Закарпаттям", "мандрувати Карпатами". Contrast this with "до" + Genitive (destination) to show the difference between "to" and "through".]
+- Exercise 1: [Group-sort, Category: Sort transport vocabulary: залізничний (поїзд, електричка), автомобільний (фура, таксі), повітряний (гелікоптер), водний (катер), 12 items]
 
 ---
 ## Full Plan (for reference)

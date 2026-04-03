@@ -1,0 +1,13 @@
+{
+  "attempt": 3,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 3/21 required vocab: пошук роботи (job search), співбесіда (interview), робоче місце (workplace)"
+    }
+  ],
+  "timestamp": "2026-04-03T05:50:16.972908+00:00"
+}

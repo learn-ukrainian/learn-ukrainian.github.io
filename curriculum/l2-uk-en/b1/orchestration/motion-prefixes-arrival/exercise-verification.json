@@ -1,0 +1,271 @@
+{
+  "total_items": 180,
+  "grounded_items": 130,
+  "ungrounded": [
+    {
+      "word": "гори",
+      "exercise_type": "quiz",
+      "context": "Ми йшли цілий день і нарешті _____ до вершини гори."
+    },
+    {
+      "word": "приїхали",
+      "exercise_type": "quiz",
+      "context": "приїхали"
+    },
+    {
+      "word": "сьомій",
+      "exercise_type": "quiz",
+      "context": "Мій літак _____ в аеропорт рівно о сьомій годині."
+    },
+    {
+      "word": "жахливий",
+      "exercise_type": "quiz",
+      "context": "Через жахливий затор ми ледве _____ до вокзалу."
+    },
+    {
+      "word": "затор",
+      "exercise_type": "quiz",
+      "context": "Через жахливий затор ми ледве _____ до вокзалу."
+    },
+    {
+      "word": "улюблений",
+      "exercise_type": "quiz",
+      "context": "Наш улюблений дядько щойно _____ до нас у гості."
+    },
+    {
+      "word": "дядько",
+      "exercise_type": "quiz",
+      "context": "Наш улюблений дядько щойно _____ до нас у гості."
+    },
+    {
+      "word": "втомився",
+      "exercise_type": "quiz",
+      "context": "Я дуже втомився, поки _____ цей важкий рюкзак на п'ятий пове"
+    },
+    {
+      "word": "поки",
+      "exercise_type": "quiz",
+      "context": "Я дуже втомився, поки _____ цей важкий рюкзак на п'ятий пове"
+    },
+    {
+      "word": "рюкзак",
+      "exercise_type": "quiz",
+      "context": "Я дуже втомився, поки _____ цей важкий рюкзак на п'ятий пове"
+    },
+    {
+      "word": "свіжу",
+      "exercise_type": "quiz",
+      "context": "Листоноша _____ мені свіжу газету."
+    },
+    {
+      "word": "газету",
+      "exercise_type": "quiz",
+      "context": "Листоноша _____ мені свіжу газету."
+    },
+    {
+      "word": "ліжка",
+      "exercise_type": "quiz",
+      "context": "Я ледве _____ до ліжка після важкого тренування."
+    },
+    {
+      "word": "важкого",
+      "exercise_type": "quiz",
+      "context": "Я ледве _____ до ліжка після важкого тренування."
+    },
+    {
+      "word": "тренування",
+      "exercise_type": "quiz",
+      "context": "Я ледве _____ до ліжка після важкого тренування."
+    },
+    {
+      "word": "маленький",
+      "exercise_type": "quiz",
+      "context": "Маленький кіт миттєво _____ на кухню, коли почув звук."
+    },
+    {
+      "word": "завтра",
+      "exercise_type": "fill-in",
+      "context": "Завтра вранці ми _____ до кордону."
+    },
+    {
+      "word": "приїдемо",
+      "exercise_type": "fill-in",
+      "context": "приїдемо"
+    },
+    {
+      "word": "доїде",
+      "exercise_type": "fill-in",
+      "context": "доїде"
+    },
+    {
+      "word": "приїде",
+      "exercise_type": "fill-in",
+      "context": "приїде"
+    },
+    {
+      "word": "учора",
+      "exercise_type": "fill-in",
+      "context": "Учора кур'єр _____ мою нову посилку."
+    },
+    {
+      "word": "мою",
+      "exercise_type": "fill-in",
+      "context": "Учора кур'єр _____ мою нову посилку."
+    },
+    {
+      "word": "нову",
+      "exercise_type": "fill-in",
+      "context": "Учора кур'єр _____ мою нову посилку."
+    },
+    {
+      "word": "добіжиш",
+      "exercise_type": "fill-in",
+      "context": "добіжиш"
+    },
+    {
+      "word": "будеш",
+      "exercise_type": "fill-in",
+      "context": "Якщо ти будеш бігти так швидко, ти першим _____ до фінішу."
+    },
+    {
+      "word": "прибіжиш",
+      "exercise_type": "fill-in",
+      "context": "прибіжиш"
+    },
+    {
+      "word": "добіжить",
+      "exercise_type": "fill-in",
+      "context": "добіжить"
+    },
+    {
+      "word": "прибіжить",
+      "exercise_type": "fill-in",
+      "context": "прибіжить"
+    },
+    {
+      "word": "втомилися",
+      "exercise_type": "fill-in",
+      "context": "Ми дуже втомилися, але врешті-решт _____ до нашого готелю."
+    },
+    {
+      "word": "доїхала",
+      "exercise_type": "fill-in",
+      "context": "доїхала"
+    },
+    {
+      "word": "прилітає",
+      "exercise_type": "fill-in",
+      "context": "прилітає"
+    },
+    {
+      "word": "долітає",
+      "exercise_type": "fill-in",
+      "context": "долітає"
+    },
+    {
+      "word": "допливла",
+      "exercise_type": "fill-in",
+      "context": "допливла"
+    },
+    {
+      "word": "туристична",
+      "exercise_type": "fill-in",
+      "context": "Туристична група _____ до іншого берега річки перед заходом "
+    },
+    {
+      "word": "берега",
+      "exercise_type": "fill-in",
+      "context": "Туристична група _____ до іншого берега річки перед заходом "
+    },
+    {
+      "word": "річки",
+      "exercise_type": "fill-in",
+      "context": "Туристична група _____ до іншого берега річки перед заходом "
+    },
+    {
+      "word": "заходом",
+      "exercise_type": "fill-in",
+      "context": "Туристична група _____ до іншого берега річки перед заходом "
+    },
+    {
+      "word": "сонця",
+      "exercise_type": "fill-in",
+      "context": "Туристична група _____ до іншого берега річки перед заходом "
+    },
+    {
+      "word": "припливла",
+      "exercise_type": "fill-in",
+      "context": "припливла"
+    },
+    {
+      "word": "допливе",
+      "exercise_type": "fill-in",
+      "context": "допливе"
+    },
+    {
+      "word": "припливе",
+      "exercise_type": "fill-in",
+      "context": "припливе"
+    },
+    {
+      "word": "долетіли",
+      "exercise_type": "error-correction",
+      "context": "долетіли"
+    },
+    {
+      "word": "готель",
+      "exercise_type": "error-correction",
+      "context": "Водій таксі успішно довіз нас в готель."
+    },
+    {
+      "word": "олег",
+      "exercise_type": "error-correction",
+      "context": "Дядько Олег нарешті приїхав до нашого села після важкої доро"
+    },
+    {
+      "word": "важкої",
+      "exercise_type": "error-correction",
+      "context": "Дядько Олег нарешті приїхав до нашого села після важкої доро"
+    },
+    {
+      "word": "доносить",
+      "exercise_type": "error-correction",
+      "context": "Кожного ранку листоноша доносить нам свіжі газети."
+    },
+    {
+      "word": "привозить",
+      "exercise_type": "error-correction",
+      "context": "привозить"
+    },
+    {
+      "word": "доводить",
+      "exercise_type": "error-correction",
+      "context": "доводить"
+    },
+    {
+      "word": "туристи",
+      "exercise_type": "error-correction",
+      "context": "Туристи ледве прийшли до свого табору через сильний снігопад"
+    },
+    {
+      "word": "допливли",
+      "exercise_type": "error-correction",
+      "context": "допливли"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 23,
+    "tested_in_exercises": 15,
+    "not_tested": [
+      "вершина",
+      "довезти",
+      "довести",
+      "доплисти",
+      "посилка",
+      "привезти",
+      "привести",
+      "припливти"
+    ]
+  },
+  "all_grounded": false
+}

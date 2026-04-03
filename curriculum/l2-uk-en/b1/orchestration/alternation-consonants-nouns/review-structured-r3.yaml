@@ -1,0 +1,50 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The writer reorganized the order of the `content_outline`, grouping masculine
+    vocative/locative together before moving to feminine dative/locative, and inserted
+    a new "Cognates" section. While pedagog
+- dimension: 2
+  name: Linguistic accuracy
+  score: 5
+  evidence: Contains critical factual errors regarding noun morphology ("у соці",
+    "на колішні") and misrepresents the Pravopys 2019 rules on foreign assimilated
+    cities ("не в Гамбурзі").
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent breakdown of the phonetic logic (front vowels pushing velar
+    consonants forward). The "Родинні слова" section is a brilliant addition for demonstrating
+    productivity.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary words from the plan are naturally
+    integrated into the text.
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: Good variety, but the duplicate `match-up` marker is injected too early
+    in the text (before feminine declensions are explained).
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The tone is professional yet accessible. Explanations treat the learner
+    as intelligent without falling into generic "meta-commentary".
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Markdown is clean and headings are well formatted. Word count is successfully
+    met.
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: Authentic use of diminutives and natural vocative forms (друже, козаче).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The opening dialogue sets up the grammatical problems perfectly in a realistic
+    Lviv bookstore setting.
+findings: []

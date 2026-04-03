@@ -1,0 +1,277 @@
+vocabulary:
+- word: прийти́
+  translation: to arrive on foot (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: приї́хати
+  translation: to arrive by vehicle (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: прибі́гти
+  translation: to come running (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: принести́
+  translation: to bring (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: привести́
+  translation: to bring someone (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: привезти́
+  translation: to deliver by vehicle (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: дійти́
+  translation: to reach on foot (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: дої́хати
+  translation: to reach by vehicle (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: добі́гти
+  translation: to reach running (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: донести́
+  translation: to carry all the way (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: прихо́дити
+  translation: to arrive on foot regularly (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: приїзди́ти
+  translation: to arrive by vehicle regularly (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: прино́сити
+  translation: to bring regularly (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: прилеті́ти
+  translation: to arrive by air (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: припливти́
+  translation: to arrive by water (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: долеті́ти
+  translation: to fly all the way to (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: доплисти́
+  translation: to swim all the way to (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: довести́
+  translation: to lead all the way to (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: довезти́
+  translation: to transport all the way to (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: кур'є́р
+  translation: courier
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: поси́лка
+  translation: package/parcel
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: листоно́ша
+  translation: mail carrier
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: верши́на
+  translation: summit/peak
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: прибу́ти
+  translation: to arrive (formal)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: приїжджа́ти
+  translation: to arrive by vehicle regularly / commute
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: сади́ба
+  translation: estate
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: діста́тися
+  translation: to get to / reach
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: підвезти́
+  translation: to give a ride
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: досягнення мети
+  translation: reaching a goal
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дійти згоди
+  translation: to reach an agreement
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дійти висновку
+  translation: to reach a conclusion
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я прийшов до тебе
+  translation: I arrived to visit you
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я ледве дійшов до тебе
+  translation: I barely made it to your place
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: прибіга́ти
+  translation: to arrive running regularly (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: приліта́ти
+  translation: to arrive by air regularly (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: приплива́ти
+  translation: to arrive by water regularly (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: приво́дити
+  translation: to lead/bring regularly (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: приво́зити
+  translation: to deliver by vehicle regularly (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: доходити
+  translation: to reach on foot regularly (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: доїжджа́ти
+  translation: to reach by vehicle regularly (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: добіга́ти
+  translation: to reach running regularly (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: доносити
+  translation: to carry all the way regularly (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: дово́дити
+  translation: to lead all the way regularly (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: довозити
+  translation: to transport all the way regularly (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: доліта́ти
+  translation: to fly all the way to regularly (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: доплива́ти
+  translation: to swim all the way to regularly (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true

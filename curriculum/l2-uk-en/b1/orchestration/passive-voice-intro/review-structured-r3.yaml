@@ -1,0 +1,48 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: All sections from the plan are covered beautifully. The Avramenko and
+    Zabolotnyi textbook references are woven directly into the explanations.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: No Russianisms or calques. Correctly enforces the accusative object with
+    -но/-то forms ("Зроблено нову роботу").
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: The prose flows well from concept to examples, with excellent contrastive
+    analysis of the three constructions.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Target vocabulary is integrated smoothly into the prose without feeling
+    like forced lists.
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: The quiz marker for identifying all three voices is placed prematurely
+    before two of the voices are taught.
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: 'The text suffers from heavy "fluff" and overwrought enthusiasm: "абсолютно
+    унікальну, дуже виразну і стилістично красиву", "фантастичній природності", "магічним
+    чином зупиняє час". This violates the r'
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: The module is 4785 words, which is ~20% over the target of 4000 words.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent framing of the passive voice as "bureaucratese" (канцелярит)
+    vs the natural Ukrainian active voice.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The architect dialogue perfectly demonstrates the formal, official tone
+    where passive voice actually belongs.
+findings: []

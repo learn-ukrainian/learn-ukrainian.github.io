@@ -1,0 +1,51 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'Covered almost all points, including specific references to Grade 6/7
+    textbooks. However, it missed Objective 5: "Learner can distinguish якісні from
+    відносні прикметники formed by the same suffix and'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'Good use of proper Ukrainian terminology. Minor issues: "consonant coincidence"
+    is a weak translation for "збіг приголосних" (consonant cluster). A factual inaccuracy
+    states "відбувається подвоєння пр'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent grammar progression. Rules are backed by diverse examples.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items from the plan are utilized
+    effectively in the text in organic contexts.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Marker placements are optimal, testing exactly what was just taught. The
+    counts map perfectly to the module plan.
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: Heavy use of meta-commentary ("Це дозволяє мислити українською", "магічним
+    чином перетворюють") creates a marketing/corporate tone rather than an immersive
+    educational experience.
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: Outline structure is solid, but the deterministic word count of 5005 words
+    is significantly over the 4000-word target (>25% overage).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Successfully avoids Russian equivalents; seamlessly incorporates Ukrainian
+    textbook citations and geographic locations (Kyiv, Bakhmach, Halych).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 6
+  evidence: The gallery dialogue is extremely robotic and transactional. Responses
+    like "Розумію ваш аналіз" or "він справді вражає своєю глибиною та майстерністю
+    виконання" sound like two scholars reading an ess
+findings: []

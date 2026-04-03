@@ -1,24 +1,18 @@
 {
   "attempt": 1,
-  "passed": false,
-  "errors": [
-    {
-      "check": "STRUCTURE",
-      "severity": "ERROR",
-      "message": "Missing section heading: 'Активний i пасивний стан'"
-    },
-    {
-      "check": "WORD_COUNT",
-      "severity": "ERROR",
-      "message": "Too short: 2809 words (target: 4000, minimum: 3400)"
-    }
-  ],
+  "passed": true,
+  "errors": [],
   "warnings": [
     {
       "check": "VOCABULARY",
       "severity": "WARNING",
-      "message": "Missing 1/14 required vocab: неперехідне дієслово (intransitive verb — no direct object)"
+      "message": "Missing 2/14 required vocab: перехідне дієслово (transitive verb — takes a direct object), неперехідне дієслово (intransitive verb — no direct object)"
+    },
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 5 exercise(s) but content has 0 placeholders"
     }
   ],
-  "timestamp": "2026-04-02T08:07:42.810567+00:00"
+  "timestamp": "2026-04-03T15:37:19.487620+00:00"
 }

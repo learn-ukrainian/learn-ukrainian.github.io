@@ -1,0 +1,53 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Covers all required vocabulary and structural outlines. Deducted slightly
+    because the plan requested "a dialogue at a train station" under `content_outline`,
+    but the writer chose to prioritize the `di
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Good use of complex spatial grammar, but deducted for a critical aspect
+    mismatch (`довго переплисти`) and two noticeable Russianisms (`відносно іншого`
+    and `перевірочного блоку`).
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Generally excellent explanations, particularly the differentiation between
+    unidirectional and multidirectional verbs. Deducted because it entirely omitted
+    the aspect transformation rule for `поїхати→в
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Flawless. Uses all required words (`маршрут`, `розклад`, `просторовий
+    прийменник`, `односпрямований`, `різноспрямований`, `переносне значення`, `подорож`)
+    and recommended terms naturally in context.
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: All 6 markers are present and match the plan's `activity_hints`, but they
+    are distributed sub-optimally. The "Mixed quiz" covering all prefixes is placed
+    immediately after Block 1 (prepositions only).
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Very natural and encouraging. Does an excellent job showing the "beauty"
+    of figurative motion (`Справи йдуть добре`, `Сім разів відмір`).
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean Markdown formatting. Word count (4928) easily clears the 4000-word
+    target. All H2 blocks match the outline.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Deeply authentic references (Kyiv train station, Carpathian mountains,
+    Dnipro river, folk proverbs).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The oral exam dialogue is highly natural and perfectly demonstrates prefix
+    usage in a logistical city route.
+findings: []

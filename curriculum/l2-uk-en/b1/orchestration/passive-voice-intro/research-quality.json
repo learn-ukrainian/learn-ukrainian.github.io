@@ -1,6 +1,6 @@
 {
   "exists": true,
-  "words": 1813,
+  "words": 2062,
   "quality": "solid",
   "score": 8,
   "score_raw": 14,
@@ -16,7 +16,7 @@
     "vocabulary": {
       "score": 1,
       "max": 2,
-      "detail": "14 excerpts (need 20+)"
+      "detail": "15 excerpts (need 20+)"
     },
     "cultural_hooks": {
       "score": 1,
@@ -41,12 +41,12 @@
     "source_verification": {
       "score": 2,
       "max": 2,
-      "detail": "14 cited sources"
+      "detail": "15 cited sources"
     },
     "claim_grounding": {
       "score": 2,
       "max": 2,
-      "detail": "944 Ukrainian terms"
+      "detail": "1053 Ukrainian terms"
     },
     "discovery_integration": {
       "score": 1,
@@ -56,12 +56,12 @@
     "specificity": {
       "score": 1,
       "max": 2,
-      "detail": "1813 words (need 3000+)"
+      "detail": "2062 words (need 3000+)"
     }
   },
   "gaps": [
-    "vocabulary: 14 excerpts (need 20+)",
+    "vocabulary: 15 excerpts (need 20+)",
     "cultural_hooks: 1 cultural reference(s)",
-    "specificity: 1813 words (need 3000+)"
+    "specificity: 2062 words (need 3000+)"
   ]
 }

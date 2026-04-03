@@ -60,3 +60,61 @@
 {"slug": "alternation-consonants-nouns", "error_type": "STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T22:02:37.324822+00:00"}
 {"slug": "alternation-consonants-nouns", "error_type": "WORD_COUNT", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T22:04:03.716500+00:00"}
 {"slug": "alternation-consonants-verbs", "error_type": "STRUCTURE", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T22:04:17.574555+00:00"}
+{"slug": "alternation-consonants-nouns", "error_type": "STRUCTURE, TOXIC", "attempt": 3, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T22:15:33.392488+00:00"}
+{"slug": "alternation-consonants-nouns", "error_type": "STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T22:34:09.012598+00:00"}
+{"slug": "alternation-consonants-nouns", "error_type": "STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T22:34:37.538806+00:00"}
+{"slug": "alternation-consonants-nouns", "error_type": "WORD_COUNT, STRUCTURE", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T22:35:39.620706+00:00"}
+{"slug": "alternation-consonants-nouns", "error_type": "WORD_COUNT, VOCABULARY", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T22:35:57.170027+00:00"}
+{"slug": "alternation-consonants-nouns", "error_type": "WORD_COUNT, STRUCTURE", "attempt": 3, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T22:38:47.567094+00:00"}
+{"slug": "alternation-consonants-nouns", "error_type": "STRUCTURE", "attempt": 3, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T22:40:34.674752+00:00"}
+{"slug": "alternation-consonants-verbs", "error_type": "STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T23:42:26.361100+00:00"}
+{"slug": "alternation-consonants-verbs", "error_type": "WORD_COUNT", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T23:44:37.414526+00:00"}
+{"slug": "alternation-consonants-verbs", "error_type": "WORD_COUNT", "attempt": 3, "model": "gemini-tools", "success": false, "timestamp": "2026-04-02T23:51:10.007540+00:00"}
+{"slug": "simplification-consonants", "error_type": "STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T00:44:56.076640+00:00"}
+{"slug": "simplification-consonants", "error_type": "WORD_COUNT, STRUCTURE, VOCABULARY", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T00:50:26.613486+00:00"}
+{"slug": "simplification-consonants", "error_type": "STRUCTURE", "attempt": 3, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T00:54:52.233012+00:00"}
+{"slug": "health-at-the-doctor", "error_type": "STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T01:41:27.086625+00:00"}
+{"slug": "health-at-the-doctor", "error_type": "WORD_COUNT", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T01:44:47.097569+00:00"}
+{"slug": "health-at-the-doctor", "error_type": "WRITE_FAILED", "attempt": 3, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T01:55:10.265416+00:00"}
+{"slug": "verbal-nouns", "error_type": "STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T02:52:56.083911+00:00"}
+{"slug": "passive-voice-intro", "error_type": "STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T03:37:02.956862+00:00"}
+{"slug": "passive-voice-intro", "error_type": "WORD_COUNT", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T03:44:08.658472+00:00"}
+{"slug": "passive-voice-intro", "error_type": "STRUCTURE, WORD_COUNT", "attempt": 3, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T03:49:03.839634+00:00"}
+{"slug": "verb-formation-suffixes", "error_type": "STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T04:50:58.724661+00:00"}
+{"slug": "daily-life-and-routines", "error_type": "VOCABULARY, STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T05:32:27.127281+00:00"}
+{"slug": "daily-life-and-routines", "error_type": "WRITE_FAILED", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T05:42:33.804931+00:00"}
+{"slug": "daily-life-and-routines", "error_type": "PASS", "attempt": 3, "model": "gemini-tools", "success": true, "timestamp": "2026-04-03T05:50:16.973101+00:00"}
+{"slug": "checkpoint-verbs", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-03T06:25:37.862335+00:00"}
+{"slug": "motion-base-review", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-03T07:09:44.935184+00:00"}
+{"slug": "motion-prefixes-arrival", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-03T08:02:12.872066+00:00"}
+{"slug": "figurative-motion", "error_type": "STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T08:45:21.457599+00:00"}
+{"slug": "figurative-motion", "error_type": "WORD_COUNT", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T08:46:47.828826+00:00"}
+{"slug": "motion-prefixes-in-out", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-03T08:47:29.565092+00:00"}
+{"slug": "figurative-motion", "error_type": "STRUCTURE", "attempt": 3, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T08:53:37.055914+00:00"}
+{"slug": "motion-prefixes-transit", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-03T09:36:36.779665+00:00"}
+{"slug": "figurative-motion", "error_type": "TOXIC", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T09:39:59.736310+00:00"}
+{"slug": "figurative-motion", "error_type": "STRUCTURE, WORD_COUNT", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T09:41:57.529729+00:00"}
+{"slug": "figurative-motion", "error_type": "WORD_COUNT", "attempt": 3, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T09:44:43.201966+00:00"}
+{"slug": "figurative-motion", "error_type": "STRUCTURE", "attempt": 4, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T09:49:35.739863+00:00"}
+{"slug": "figurative-motion", "error_type": "WORD_COUNT", "attempt": 5, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T09:55:01.594046+00:00"}
+{"slug": "traveling-ukraine", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-03T10:21:18.005340+00:00"}
+{"slug": "motion-flight-swim", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-03T10:24:29.333784+00:00"}
+{"slug": "checkpoint-motion", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-03T10:59:09.388621+00:00"}
+{"slug": "word-formation-adjectives", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-03T11:54:00.551508+00:00"}
+{"slug": "health-at-the-doctor", "error_type": "STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T12:06:30.424551+00:00"}
+{"slug": "health-at-the-doctor", "error_type": "WORD_COUNT", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T12:11:26.776114+00:00"}
+{"slug": "health-at-the-doctor", "error_type": "PASS", "attempt": 3, "model": "gemini-tools", "success": true, "timestamp": "2026-04-03T12:16:31.737666+00:00"}
+{"slug": "verbal-nouns", "error_type": "STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T12:31:46.587693+00:00"}
+{"slug": "verbal-nouns", "error_type": "STRUCTURE, WORD_COUNT", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T12:33:00.822314+00:00"}
+{"slug": "verbal-nouns", "error_type": "PASS", "attempt": 3, "model": "gemini-tools", "success": true, "timestamp": "2026-04-03T12:36:38.678778+00:00"}
+{"slug": "verb-formation-suffixes", "error_type": "STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T13:15:53.939156+00:00"}
+{"slug": "verb-formation-suffixes", "error_type": "WORD_COUNT", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T13:19:27.786345+00:00"}
+{"slug": "verb-formation-suffixes", "error_type": "STRUCTURE", "attempt": 3, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T13:25:08.082347+00:00"}
+{"slug": "verb-formation-suffixes", "error_type": "WORD_COUNT, STRUCTURE", "attempt": 4, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T13:26:31.308729+00:00"}
+{"slug": "verb-formation-suffixes", "error_type": "STRUCTURE", "attempt": 5, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T13:35:38.077022+00:00"}
+{"slug": "simplification-consonants", "error_type": "TOXIC, STRUCTURE", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T14:42:08.171619+00:00"}
+{"slug": "simplification-consonants", "error_type": "WORD_COUNT", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T14:46:18.519980+00:00"}
+{"slug": "simplification-consonants", "error_type": "TOXIC", "attempt": 3, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T14:53:26.902593+00:00"}
+{"slug": "simplification-consonants", "error_type": "WORD_COUNT, STRUCTURE", "attempt": 4, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T15:03:24.791754+00:00"}
+{"slug": "simplification-consonants", "error_type": "TOXIC", "attempt": 5, "model": "gemini-tools", "success": false, "timestamp": "2026-04-03T15:06:39.902830+00:00"}
+{"slug": "passive-voice-intro", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-03T15:37:19.488022+00:00"}

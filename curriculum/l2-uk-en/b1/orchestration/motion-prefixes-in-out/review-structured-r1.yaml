@@ -1,0 +1,51 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: The text missed explicit teaching of the `ви- + на + Зн.в.` grammatical
+    pattern requested in the plan (e.g., "вийшов на вулицю"), although it was naturally
+    used in narrative examples.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Found a calque ("місцезнаходження") and a Russicism ("стаканчик" for a
+    to-go coffee cup). All other Ukrainian grammar, preposition logic, and morphology
+    are excellent.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow, creating strong spatial mental models ("перетин межі",
+    "візуальна стрілка").
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items from the plan are utilized
+    effectively in the prose.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 6 markers are successfully injected immediately after their relevant
+    conceptual blocks.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: 'DEDUCT for minor meta-commentary: "Давайте прочитаємо коротку, але динамічну
+    розповідь...", "Тепер давайте детальніше проаналізуємо цей невеликий текст."'
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: 'The deterministic word count is 5275, which exceeds the target of 4000
+    by over 30%. Also, the section header `## Префікс за-: увійти...` contains a typo
+    leaked from the plan, as `увійти` does not have'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Realistic scenarios including Lviv IT offices, coffee shop runs, and natural
+    daily errands.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are highly natural, with excellent context and contextualized
+    usage of polite imperatives in an office setting.
+findings: []

@@ -1,0 +1,12 @@
+- source: auto-generated
+  date: '2026-04-03'
+  error_types:
+  - STRUCTURE
+  status: active
+  note: V6 build failed after 3 attempts
+- source: auto-generated
+  date: '2026-04-03'
+  error_types:
+  - TOXIC
+  status: active
+  note: V6 build failed after 5 attempts

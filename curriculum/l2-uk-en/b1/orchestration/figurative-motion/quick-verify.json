@@ -1,13 +1,29 @@
 {
-  "attempt": 1,
-  "passed": true,
-  "errors": [],
+  "attempt": 5,
+  "passed": false,
+  "errors": [
+    {
+      "check": "WORD_COUNT",
+      "severity": "ERROR",
+      "message": "Too short: 1294 words (target: 4000, minimum: 3400)"
+    }
+  ],
   "warnings": [
     {
       "check": "TOXIC",
       "severity": "WARNING",
       "message": "Latin characters mixed with Cyrillic: I"
+    },
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 2/11 required vocab: переносне значення (figurative meaning), пряме значення (literal meaning)"
+    },
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 6 exercise(s) but content has 0 placeholders"
     }
   ],
-  "timestamp": "2026-04-02T22:01:07.980200+00:00"
+  "timestamp": "2026-04-03T09:55:01.593498+00:00"
 }

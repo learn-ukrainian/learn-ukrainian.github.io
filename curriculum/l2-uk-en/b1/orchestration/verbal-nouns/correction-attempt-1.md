@@ -2,6 +2,7 @@
 CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
 
 - FIX: Missing section heading: 'Підсумок та перехід до M22'
+- NOTE: Missing 1/14 required vocab: суфіксальний (suffixal — word formation method)
 - NOTE: Plan expects 5 exercise(s) but content has 0 placeholders
 </correction_directive>
 

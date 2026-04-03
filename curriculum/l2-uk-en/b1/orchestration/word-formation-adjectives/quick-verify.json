@@ -1,0 +1,18 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 1/11 required vocab: сполучна голосна (connecting vowel — -о- or -е- in compounds)"
+    },
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 6 exercise(s) but content has 0 placeholders"
+    }
+  ],
+  "timestamp": "2026-04-03T11:54:00.551313+00:00"
+}

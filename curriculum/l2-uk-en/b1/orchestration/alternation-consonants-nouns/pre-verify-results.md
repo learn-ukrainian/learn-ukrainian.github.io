@@ -1,33 +1,32 @@
 ## VESUM Verification
-- Confirmed: чергування, приголосний, палаталізація, відмінок, група, закінчення, звертання, корінь, шиплячий, свистячий, словотворення, прислів'я, орфограма, спільнокореневий, однина, множина, продуктивний, непродуктивний, кличний, місцевий, давальний, мішаний, твердий, м'який.
-- Not found: [None - all core terms and their components are confirmed.]
+- Confirmed: чергування, приголосний, палаталізація, кличний, відмінок, давальний, місцевий, задньоязиковий, відміна, тверда, м'яка, мішана, група, закінчення, звертання, корінь, шиплячий, свистячий, словотворення, словотвір, прислів'я, орфограма, спільнокореневий, однина, множина, продуктивний, непродуктивний.
+- Not found: (All terms or their constituent words were confirmed).
 
 ## Textbook Excerpts
 ### Section: Що таке чергування приголосних?
-> "Найпоширенішими є такі чергування приголосних: [г] — [з] — [ж], [к] — [ц] — [ч], [х] — [с] — [ш]."
-> Source: Авраменко, Grade 5, p. 114
+> "Чергування, альтернація (лат. alternatio) — парадигматичне відношення між одиницями одного рівня мови, що полягає в їхній здатності заміняти одні одних у тому ж самому місці в структурі одиниці вищого рівня..."
+> Source: Wikipedia (summarizing academic textbooks like Л. П. Павленко)
 
 ### Section: Перша палаталізація: [г/к/х] -> [ж/ч/ш]
-> "Чергування приголосних у кличному відмінку (г-ж, к-ч, х-ш: друг-друже, вовк-вовче) є наслідком праслов'янської першої палаталізації."
-> Source: Глазова, Grade 10, §26
+> "До них належать такі чергування: г/ж, к/ч, х/ш (плуг — плужок, друг — дружба, дорога — дорожній, вік — вічний, око — очі, рука — ручний, парубок — парубче, пастух — пастуше, сухий — сушити)."
+> Source: Wikipedia (reflecting Zabolotnyi Grade 5 curriculum patterns)
 
 ### Section: Друга палаталізація: [г/к/х] -> [з'/ц'/с']
-> "Чергування приголосних у Дав. і Місц. відмінках (результат другої палаталізації): рука — руці, нога — нозі. Це жива норма сучасної української мови."
-> Source: Глазова, Grade 10, §26
+> "До них належать такі чергування: г/з, к/ц, х/с. Це чергування відбувається перед закінченням -і в давальному відмінку однини іменників жіночого роду та в місцевому відмінку однини іменників чоловічого, жіночого та середнього родів."
+> Source: Wikipedia (reflecting Avramenko Grade 5 examples: книга — книзі, берег — на березі)
 
 ## Grammar Rules
-- [Consonant Alternation in Nouns]: Правопис § 18 (Suffixal Changes) — Confirms changes like "козак — козацький" and "Прага — празький".
-- [Verb Alternation Baseline]: Правопис § 16 — Confirms related alternations [т/ч], [з/ж], [с/ш] in verb forms, providing a system-wide context.
-- [Vocative Case Rules]: Правопис § 87, § 91 (per general grammatical sources confirmed in grep) — Triggers [г/к/х] -> [ж/ч/ш] (друже, козаче, пастуше) and [ц'] -> [ч] (хлопче).
+- Consonant Alternation in Nouns: Правопис § 18 (Word formation context) and § 93/128 (Declension context) — Confirming patterns: [г] — [ж] — [з'], [к] — [ч] — [ц'], [х] — [ш] — [с'].
+- Vocative Case: Правопис § 128 (confirmed in plan context) — [к] -> [ч] (козак — козаче), [г] -> [ж] (друг — друже), [х] -> [ш] (пастух — пастуше).
 
 ## Calque Warnings
-- [чергування приголосних]: OK — Standard linguistic term.
-- [кличний відмінок]: OK — Standard linguistic term (formerly dismissed as "form" in Soviet eras).
-- [палаталізація]: OK — International linguistic term used in Ukrainian textbooks.
+- приймати участь: Calque — брати участь
+- самий поширений: Calque — найпоширеніший
+- слідувати шаблону: Calque — іти за шаблоном / дотримуватися шаблону
 
 ## CEFR Check
-- чергування: B1 — Technical linguistic term for this level.
-- приголосний: A1/A2 — Basic grammatical term.
-- рука, нога, вухо: A1 — Core vocabulary used as mnemonic.
-- Ольга, книга: A1 — Core nouns used as examples.
-- кличний відмінок: B1 — Formal introduction of case name and systematic rules.
+- дорога: A1 — OK
+- рука: A1 — OK
+- корінь: B1 — OK
+- чергування: B1 (Technical/Academic) — OK
+- палаталізація: B2/C1 (Technical) — Acceptable as metalanguage for B1 theory module.

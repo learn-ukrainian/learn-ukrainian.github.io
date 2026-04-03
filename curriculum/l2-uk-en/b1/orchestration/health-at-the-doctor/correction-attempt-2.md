@@ -1,7 +1,7 @@
 <correction_directive>
 CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
 
-- FIX: Missing section heading: 'Підсумок: здоров'я українською'
+- FIX: Too short: 1786 words (target: 4000, minimum: 3400)
 - NOTE: Missing 1/16 required vocab: призначити (to prescribe — perfective)
 - NOTE: Plan expects 5 exercise(s) but content has 0 placeholders
 </correction_directive>

@@ -3,13 +3,29 @@
   "track": "b1",
   "slug": "daily-life-and-routines",
   "phases": {
-    "stress": {
+    "check": {
       "status": "complete",
-      "ts": "2026-04-02T14:58:39.207851+00:00"
+      "ts": "2026-04-03T04:55:11.790225+00:00"
     },
-    "publish": {
+    "research": {
       "status": "complete",
-      "ts": "2026-04-02T14:58:39.208171+00:00"
+      "ts": "2026-04-03T04:55:54.262704+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-03T04:57:08.616997+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-03T04:59:02.187023+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-03T05:50:16.973710+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-03T05:50:16.973879+00:00"
     }
   }
 }

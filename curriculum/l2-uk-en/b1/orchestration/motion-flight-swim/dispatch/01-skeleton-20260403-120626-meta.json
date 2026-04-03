@@ -1,0 +1,10 @@
+{
+  "timestamp": "2026-04-03T12:06:26.129780",
+  "phase": "skeleton",
+  "agent": "gemini (gemini-3-flash-preview)",
+  "ok": false,
+  "returncode": null,
+  "prompt_chars": 20633,
+  "response_chars": 863,
+  "duration_s": 300.0
+}

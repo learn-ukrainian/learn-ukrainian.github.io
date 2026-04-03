@@ -3,13 +3,65 @@
   "track": "b1",
   "slug": "word-formation-adjectives",
   "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-03T11:32:44.401900+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-03T11:34:00.095271+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-03T11:35:33.709048+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-03T11:38:14.730672+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-03T11:54:00.552255+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-03T11:54:00.552512+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-03T11:59:13.815387+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-03T11:59:13.835145+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-03T11:59:13.847627+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-03T12:03:29.238791+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-03T12:03:29.238935+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-03T12:03:29.652900+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-03T12:29:26.473957+00:00"
+    },
     "stress": {
       "status": "complete",
-      "ts": "2026-04-02T14:58:41.353980+00:00"
+      "ts": "2026-04-03T12:29:33.572226+00:00"
     },
     "publish": {
       "status": "complete",
-      "ts": "2026-04-02T14:58:41.354318+00:00"
+      "ts": "2026-04-03T12:29:35.982900+00:00"
     }
   }
 }

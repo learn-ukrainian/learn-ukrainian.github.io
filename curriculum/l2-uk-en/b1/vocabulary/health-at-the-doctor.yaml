@@ -1,0 +1,619 @@
+vocabulary:
+- word: паціє́нт
+  translation: patient
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ліка́рня
+  translation: hospital
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: поліклі́ніка
+  translation: clinic / outpatient clinic
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: терапе́вт
+  translation: GP / general practitioner
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: хіру́рг
+  translation: surgeon
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: стомато́лог
+  translation: dentist
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: засту́да
+  translation: cold
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: грип
+  translation: flu
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: алергі́я
+  translation: allergy
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ще́плення
+  translation: vaccination
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: обсте́ження
+  translation: medical examination
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: табле́тка
+  translation: pill / tablet
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: здоро́в'я
+  translation: health
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: лі́кар
+  translation: doctor
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: хворо́ба
+  translation: disease / illness
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: температу́ра
+  translation: temperature
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ка́шель
+  translation: cough
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: не́жить
+  translation: runny nose
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лі́ки
+  translation: medicine
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: реце́пт
+  translation: prescription
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: апте́ка
+  translation: pharmacy
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: діа́гноз
+  translation: diagnosis
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: симпто́м
+  translation: symptom
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ска́ржитися
+  translation: to complain (about symptoms)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: лікува́ти
+  translation: to treat
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: оду́жати
+  translation: to recover (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: призна́чи́ти
+  translation: to prescribe / to assign
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: здоро́вий
+  translation: healthy
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: оду́жувати
+  translation: to be recovering (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Будьте здорові!
+  translation: Bless you! / Be healthy!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: почува́тися
+  translation: to feel (oneself)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пога́но
+  translation: bad / poorly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ну́дить
+  translation: to feel nauseous
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: кра́ще
+  translation: better
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: У мене болить...
+  translation: My ... hurts
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: болі́ти
+  translation: to hurt
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: живі́т
+  translation: stomach / belly
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: зуб
+  translation: tooth
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ву́хо
+  translation: ear
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: о́ко
+  translation: eye
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: м'я́зи
+  translation: muscles
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: но́ги
+  translation: legs
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ніс
+  translation: nose
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: голова́
+  translation: head
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: головний біль
+  translation: headache
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: реєстрату́ра
+  translation: reception / registry
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: Відкрийте рота
+  translation: Open your mouth
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дихайте глибоко
+  translation: Breathe deeply
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: запа́лення
+  translation: inflammation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: Покажіть язика
+  translation: Show your tongue
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Не рухайтеся
+  translation: Do not move
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Лягайте на кушетку
+  translation: Lie down on the couch
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Поверніться спиною
+  translation: Turn your back
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Затримайте дихання
+  translation: Hold your breath
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: я́сна́
+  translation: gums
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: пло́мба
+  translation: filling (dental)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: знебо́лювальне
+  translation: painkiller / anesthetic
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: хворіти на...
+  translation: to be sick with...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: лікуватися від...
+  translation: to be treated for...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: окулі́ст
+  translation: ophthalmologist / eye doctor
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: педіа́тр
+  translation: pediatrician
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кардіо́лог
+  translation: cardiologist
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: дермато́лог
+  translation: dermatologist
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: невро́лог
+  translation: neurologist
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: психіа́тр
+  translation: psychiatrist
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: аналіз крові
+  translation: blood test
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: аналіз сечі
+  translation: urine test
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: рентге́н
+  translation: X-ray
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: УЗД
+  translation: ultrasound scan
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: вимірювання тиску
+  translation: blood pressure measurement
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: се́ча
+  translation: urine
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ГРВІ
+  translation: ARI (Acute Respiratory Infection)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: фармаце́вт
+  translation: pharmacist
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Скільки разів на день?
+  translation: How many times a day?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: тричі на день
+  translation: three times a day
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: двічі на день
+  translation: twice a day
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: після їжі
+  translation: after meals
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: до їжі
+  translation: before meals
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: щогоди́ни
+  translation: every hour
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: щодня́
+  translation: every day
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: на ніч
+  translation: at night / before bed
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: сиро́п
+  translation: syrup
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: мазь
+  translation: ointment
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: кра́плі
+  translation: drops
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: спрей
+  translation: spray
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: уко́л
+  translation: shot / injection
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лікува́ння
+  translation: treatment
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: приймати натщесерце
+  translation: to take on an empty stomach
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: запивати водою
+  translation: to wash down with water
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ангі́на
+  translation: tonsillitis / strep throat
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: отру́єння
+  translation: poisoning (food)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: нудо́та
+  translation: nausea
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: чха́ння́
+  translation: sneezing
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ви́сип
+  translation: rash
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: заклало ніс
+  translation: nose is stuffed up
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: лихома́нить
+  translation: to have a fever / chills
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: паморочиться в голові
+  translation: to feel dizzy
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вітамі́ни
+  translation: vitamins
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: здоровий спосіб життя
+  translation: healthy lifestyle
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: загарто́вуватися
+  translation: to temper oneself / to toughen up
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Вам слід...
+  translation: You ought to...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Вам варто...
+  translation: You should...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Вам необхідно...
+  translation: You must / It is necessary...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

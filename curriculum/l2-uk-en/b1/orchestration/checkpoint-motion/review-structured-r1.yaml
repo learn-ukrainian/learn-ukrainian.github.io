@@ -1,0 +1,50 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 6
+  evidence: The text hallucinates 19 incorrect activity markers instead of the 6 planned
+    ones. It also fails to place the self-assessment framework "after each block"
+    as required.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: The text incorrectly teaches the calque "мова йде про" as a special standard
+    construction instead of the correct "йдеться про". Everything else, including
+    preposition/case government and prefix semant
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Strong grammatical explanations with clear examples. However, teaching
+    a calque ("мова йде про") as the target construction is a serious flaw.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary from the plan is integrated organically.
+- dimension: 5
+  name: Exercise quality
+  score: 2
+  evidence: The `INJECT_ACTIVITY` markers use completely broken syntax instead of
+    standard IDs, and the writer spammed 19 markers instead of the 6 planned ones.
+- dimension: 6
+  name: Engagement & tone
+  score: 4
+  evidence: 'Heavy use of meta-commentary and generic hype, especially in the intro:
+    "Це справжня нервова система української граматики...", "ми свідомо використовуємо
+    науково-навчальний стиль мовлення...". The te'
+- dimension: 7
+  name: Structural integrity
+  score: 6
+  evidence: The word count is 5177 words, which is nearly 30% over the 4000-word target.
+    The text is bloated with meta-commentary.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Authentic proverbs ("Сім разів відміряй — один відріж") and good cultural
+    context for travel in Ukraine.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The oral exam dialogue is a realistic academic situation and successfully
+    integrates the grammar points.
+findings: []

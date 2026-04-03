@@ -1,0 +1,48 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'Deducted for missing the explicit grammatical rules for prepositions
+    with `при-` (в/у + Зн.в., на + Зн.в., до + Р.в.) which the plan mandated in the
+    section "Префікс при-: прибуття".'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Deducted for Russianisms/calques (`доставку`, `парковку`) and the incorrect
+    semantic use of `довести` for a vehicle ("довів свій транспортний засіб").
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent breakdown of the difference between "arrival" vs "reaching",
+    with good scaffolding from base verbs to prefixes.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items from the plan are seamlessly
+    integrated into the prose and dialogue.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The injected markers correspond perfectly to the plan's requirements.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Engaging travel narratives and a relatable focus on the emotional nuance
+    of travel (e.g., the relief of reaching a destination).
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: Word count is quite high (4796 words) compared to the 4000-word target,
+    resulting in a minor deduction. All headings match the plan exactly.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Natural geographical references (Carpathians, Dovbush rocks, Odesa, Kyiv)
+    with appropriate context.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The dialogue is a realistic exchange about coordinating arrivals at a
+    train station.
+findings: []

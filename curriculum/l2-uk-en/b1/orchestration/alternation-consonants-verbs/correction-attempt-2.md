@@ -1,8 +1,8 @@
 <correction_directive>
 CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
 
-- FIX: Missing section heading: 'Підсумок: таблиця дієслівних чергувань'
-- NOTE: Missing 1/14 required vocab: теперішній час (present tense)
+- FIX: Too short: 898 words (target: 4000, minimum: 3400)
+- NOTE: Missing 4/14 required vocab: дієслово (verb), дієвідміна (conjugation class — verb classification), зубний (dental — consonant formed at the teeth: д, т), задньоязиковий (velar — consonant formed at back of mouth: г, к, х)
 - NOTE: Plan expects 6 exercise(s) but content has 0 placeholders
 </correction_directive>
 
