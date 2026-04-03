@@ -2,8 +2,8 @@
 
 Auto-generated index of compiled wiki articles.
 
-**Total articles:** 25
-**Total words:** 32,866
+**Total articles:** 27
+**Total words:** 35,294
 
 ## Folk
 
@@ -17,6 +17,7 @@ Auto-generated index of compiled wiki articles.
 - [Українські народні казки про тварин: Від тотемізму до алегорії](folk/genres/kazky-pro-tvaryn.md) (1,202 words)
 - [Козацькі думи: Походження та специфіка](folk/genres/pokhodzhennia-dum.md) (1,438 words)
 - [Соціально-побутові казки та концепція народного реалізму](folk/genres/sotsialno-pobutovi-kazky.md) (1,374 words)
+- [Образ Степового Кордону в Українському Фольклорі](folk/genres/zastavy-bohatyrski.md) (1,301 words)
 - [Український фольклор: Чумацькі та бурлацькі пісні: Голос мандрівника](folk/lyric/chumatski-burlatski-pisni.md) (1,272 words)
 - [Родинно-побутова лірика: Інтимний голос української душі](folk/lyric/rodynna-liryka-kolomyiky.md) (1,289 words)
 - [Український фольклор: Історичні перекази як пам'ять про минуле](folk/prose/istorychni-perekazy.md) (1,492 words)
@@ -28,6 +29,7 @@ Auto-generated index of compiled wiki articles.
 - [Український фольклор: Обжинкові пісні: Апофеоз хліборобської праці](folk/ritual/obzhynkovi-pisni.md) (1,111 words)
 - [Український фольклор: Русальні пісні та духи природи](folk/ritual/rusalni-pisni.md) (1,332 words)
 - [Українська весільна обрядовість: Драматизм переходу](folk/ritual/vesilni-pisni.md) (1,119 words)
+- [Український фольклор: Веснянки та гаївки](folk/ritual/vesnianky-hayivky.md) (1,127 words)
 - [Український Фольклор: Приказки та Прислів'я як Дзеркало Етики](folk/short-forms/prykazky-ta-pryslivia.md) (1,187 words)
 - [Український фольклор: Загадка як метафоричне бачення світу](folk/short-forms/zahadky.md) (1,611 words)
 - [Український фольклор: Голосіння](folk/tradition/holosinnya.md) (1,071 words)
