@@ -238,56 +238,57 @@ No grammar runs of 4+ consecutive modules found.
 
 ## Module Summary
 
-- **Total modules:** 90
-- **Checkpoints/exams:** 8
+- **Total modules:** 93
+- **Checkpoints/exams:** 10
 - **Grammar/structural modules:** 51
-- **Topic/thematic modules:** 39
+- **Topic/thematic modules:** 42
 
 ### Consecutive Grammar Runs (4+ modules)
 
-- **Run of 6:** M01–M06 (passive-voice-system through passive-in-context)
-- **Run of 20:** M19–M38 (correlative-constructions through checkpoint-register)
-- **Run of 12:** M42–M53 (checkpoint-domain through word-formation-adverbs-integration)
+- **Run of 4:** M19–M22 (homogeneous-members through parenthetical-expressions)
+- **Run of 6:** M29–M34 (complex-syntax-ellipsis-parcelling through syntactic-stylistic-devices)
+- **Run of 4:** M40–M43 (register-literary-ukrainian through register-practice-cross-register-rewriting)
+- **Run of 13:** M51–M63 (advanced-case-semantics through word-formation-adjective-adverbs)
 
 ## State Standard Coverage
 
 | SS Ref | Category | Description | Module(s) | Status |
 |--------|----------|-------------|-----------|--------|
-| §4.1.1.1 | morphology | Advanced noun declension — rare forms, archaic endings, foreign noun adaptation | numeral-declension-time-dates, numeral-declension-compound-numbers, word-formation-abstract-nouns, pronoun-system-advanced, advanced-conjunctions-i | COVERED |
-| §4.1.1.2 | morphology | Advanced adjective forms — participle-adjectives, compound adjectives | word-formation-adjective-formation, past-passive-participles, active-participles-present, active-participles-past, participles-vs-relative-clauses | COVERED |
+| §4.1.1.1 | morphology | Advanced noun declension — rare forms, archaic endings, foreign noun adaptation | pronoun-system-advanced, numeral-declension-time-dates, numeral-declension-compound-numbers, word-formation-abstract-nouns, genitive-advanced | COVERED |
+| §4.1.1.2 | morphology | Advanced adjective forms — participle-adjectives, compound adjectives | word-formation-adjective-adverbs, past-passive-participles, active-participles-present, active-participles-past, participles-vs-relative-clauses | COVERED |
 | §4.1.1.3 | morphology | Full numeral paradigm — compound, collective, fractional with case agreement | numeral-declension-time-dates, numeral-declension-compound-numbers | COVERED |
-| §4.1.1.4 | morphology | Full pronoun system — reflexive, reciprocal, definitive (сам, самий, весь, ко... | numeral-declension-time-dates, numeral-declension-compound-numbers, word-formation-abstract-nouns, pronoun-system-advanced, passive-voice-system | COVERED |
+| §4.1.1.4 | morphology | Full pronoun system — reflexive, reciprocal, definitive (сам, самий, весь, ко... | pronoun-system-advanced, numeral-declension-time-dates, numeral-declension-compound-numbers, word-formation-abstract-nouns, passive-voice-system | COVERED |
 | §4.1.2.1 | cases | Nominative — predicate nominative, vocative function, appositive | predicate-types | LIKELY |
-| §4.1.2.2 | cases | Genitive — partitive genitive, subjective/objective genitive, 18+ preposition... | — | MISSING |
-| §4.1.2.3 | cases | Dative — purpose, advantage/disadvantage, ethical dative | — | MISSING |
+| §4.1.2.2 | cases | Genitive — partitive genitive, subjective/objective genitive, 18+ preposition... | genitive-advanced | LIKELY |
+| §4.1.2.3 | cases | Dative — purpose, advantage/disadvantage, ethical dative | dative-advanced | LIKELY |
 | §4.1.2.4 | cases | Accusative — abstract objects, emotional states, expanded preposition usage | word-formation-abstract-nouns | LIKELY |
-| §4.1.2.5 | cases | Instrumental — comparison, accompaniment, concession; all prepositions | — | MISSING |
-| §4.1.2.6 | cases | Locative — expanded with abstract nouns (на основі, в умовах) | numeral-declension-time-dates, numeral-declension-compound-numbers, word-formation-abstract-nouns, pronoun-system-advanced | COVERED |
+| §4.1.2.5 | cases | Instrumental — comparison, accompaniment, concession; all prepositions | instrumental-advanced | LIKELY |
+| §4.1.2.6 | cases | Locative — expanded with abstract nouns (на основі, в умовах) | pronoun-system-advanced, numeral-declension-time-dates, numeral-declension-compound-numbers, word-formation-abstract-nouns | COVERED |
 | §4.1.2.7 | cases | Vocative — stylistic usage, archaic forms, literary vocative | stylistic-connectors, phonetic-stylistic-devices, lexical-stylistic-devices, syntactic-stylistic-devices, register-literary-ukrainian | COVERED |
-| §4.1.3.1 | verbs | Indicative — complex aspect usage, passive voice (participles), pluperfect (д... | aspect-nuances-secondary-imperfectivization, aspect-nuances-imperative-infinitive, pluperfect-tense, word-formation-adverbs-integration, proverbs-work-wisdom-character | COVERED |
+| §4.1.3.1 | verbs | Indicative — complex aspect usage, passive voice (participles), pluperfect (д... | aspect-nuances-secondary-imperfectivization, aspect-nuances-imperative-infinitive, pluperfect-tense, word-formation-adjective-adverbs, proverbs-work-wisdom-character | COVERED |
 | §4.1.3.2 | verbs | Imperative — softened forms, aspect choice in commands | aspect-nuances-imperative-infinitive, aspect-nuances-secondary-imperfectivization | COVERED |
 | §4.1.3.3 | verbs | Conditional — complex conditionals, counterfactuals | conditional-mood-particles, complex-syntax-ellipsis-parcelling | COVERED |
 | §4.2.1 | word_formation | Expanded comparison — irregular forms, stylistic choices | stylistic-connectors, phonetic-stylistic-devices, lexical-stylistic-devices, syntactic-stylistic-devices | COVERED |
 | §4.2.2 | word_formation | Adverb comparison — irregular, compound forms | numeral-declension-compound-numbers | LIKELY |
 | §4.2.3 | word_formation | Aspect pairs — prefix-based, suffix-based, suppletive | aspect-nuances-secondary-imperfectivization, aspect-nuances-imperative-infinitive | COVERED |
 | §4.2.4 | word_formation | Prefixed motion verbs — full system with all prefixes | passive-voice-system, pronoun-system-advanced | COVERED |
-| §4.2.5 | word_formation | Agent nouns — professional and casual | numeral-declension-time-dates, numeral-declension-compound-numbers, word-formation-abstract-nouns, pronoun-system-advanced, word-formation-person-suffixes | COVERED |
-| §4.2.6 | word_formation | Verbal nouns (-ння/-ення) — nominalization in formal register | numeral-declension-time-dates, numeral-declension-compound-numbers, word-formation-abstract-nouns, pronoun-system-advanced, register-introduction | COVERED |
-| §4.2.7 | word_formation | Zero-suffix deverbal nouns (переїзд, розгляд) | numeral-declension-time-dates, numeral-declension-compound-numbers, word-formation-abstract-nouns, pronoun-system-advanced, word-formation-person-suffixes | COVERED |
-| §4.2.8 | word_formation | Place nouns — expanded | numeral-declension-time-dates, numeral-declension-compound-numbers, word-formation-abstract-nouns, pronoun-system-advanced, word-formation-person-suffixes | COVERED |
-| §4.2.9 | word_formation | Adjectives from nouns — expanded suffixes | numeral-declension-time-dates, numeral-declension-compound-numbers, word-formation-abstract-nouns, pronoun-system-advanced, word-formation-adjective-formation | COVERED |
-| §4.2.10 | word_formation | Adverbs from adjectives — expanded | word-formation-adjective-formation, word-formation-adverbs-integration | COVERED |
-| §4.3.1.1 | syntax | Declarative — thematic/rhematic structure, stylistic inversion | secondary-sentence-members, b2-one-member-sentences, multi-clause-sentences, complex-syntax-ellipsis-parcelling, checkpoint-syntax | COVERED |
-| §4.3.1.2 | syntax | Questions — deliberative, rhetorical, embedded | — | MISSING |
-| §4.3.2 | syntax | Complex simple — detached members, apposition, inserted constructions | homogeneous-members, parenthetical-expressions, detached-members, secondary-sentence-members, correlative-constructions | COVERED |
+| §4.2.5 | word_formation | Agent nouns — professional and casual | pronoun-system-advanced, numeral-declension-time-dates, numeral-declension-compound-numbers, word-formation-abstract-nouns, word-formation-person-suffixes | COVERED |
+| §4.2.6 | word_formation | Verbal nouns (-ння/-ення) — nominalization in formal register | pronoun-system-advanced, numeral-declension-time-dates, numeral-declension-compound-numbers, word-formation-abstract-nouns, register-formal-informal | COVERED |
+| §4.2.7 | word_formation | Zero-suffix deverbal nouns (переїзд, розгляд) | pronoun-system-advanced, numeral-declension-time-dates, numeral-declension-compound-numbers, word-formation-abstract-nouns, word-formation-person-suffixes | COVERED |
+| §4.2.8 | word_formation | Place nouns — expanded | pronoun-system-advanced, numeral-declension-time-dates, numeral-declension-compound-numbers, word-formation-abstract-nouns, word-formation-person-suffixes | COVERED |
+| §4.2.9 | word_formation | Adjectives from nouns — expanded suffixes | pronoun-system-advanced, numeral-declension-time-dates, numeral-declension-compound-numbers, word-formation-abstract-nouns, word-formation-adjective-adverbs | COVERED |
+| §4.2.10 | word_formation | Adverbs from adjectives — expanded | word-formation-adjective-adverbs | LIKELY |
+| §4.3.1.1 | syntax | Declarative — thematic/rhematic structure, stylistic inversion | secondary-sentence-members, b2-one-member-sentences, checkpoint-syntax-i, multi-clause-sentences, complex-syntax-ellipsis-parcelling | COVERED |
+| §4.3.1.2 | syntax | Questions — deliberative, rhetorical, embedded | questions-deliberative-rhetorical | LIKELY |
+| §4.3.2 | syntax | Complex simple — detached members, apposition, inserted constructions | homogeneous-members, detached-members, parenthetical-expressions, secondary-sentence-members, correlative-constructions | COVERED |
 | §4.3.3 | syntax | One-member sentences — impersonal, infinitive, nominative | b2-impersonal-passive, b2-one-member-sentences, multi-clause-sentences, aspect-nuances-imperative-infinitive | COVERED |
-| §4.3.4 | syntax | Complex sentences — attributive, explanatory, temporal, causal, conditional, ... | conditional-mood-particles, complex-syntax-ellipsis-parcelling, checkpoint-syntax, numeral-declension-compound-numbers, participles-vs-relative-clauses | COVERED |
+| §4.3.4 | syntax | Complex sentences — attributive, explanatory, temporal, causal, conditional, ... | conditional-mood-particles, checkpoint-syntax-i, complex-syntax-ellipsis-parcelling, checkpoint-syntax-ii, numeral-declension-compound-numbers | COVERED |
 | §4.3.5 | syntax | Direct and indirect speech — transformation rules | direct-indirect-speech | LIKELY |
 | §4.4.1.1 | stylistics | Stylistic phonetic devices — alliteration, assonance, onomatopoeia | phonetic-stylistic-devices, stylistic-connectors, lexical-stylistic-devices, syntactic-stylistic-devices | COVERED |
 | §4.4.1.2 | stylistics | Stylistic lexical devices — metaphor, metonymy, synecdoche, epithet, oxymoron | phonetic-stylistic-devices, lexical-stylistic-devices, syntactic-stylistic-devices, stylistic-connectors | COVERED |
-| §4.4.1.3 | stylistics | Stylistic syntactic devices — anaphora, parallelism, ellipsis, rhetorical que... | syntactic-stylistic-devices, stylistic-connectors, complex-syntax-ellipsis-parcelling, phonetic-stylistic-devices, lexical-stylistic-devices | COVERED |
+| §4.4.1.3 | stylistics | Stylistic syntactic devices — anaphora, parallelism, ellipsis, rhetorical que... | syntactic-stylistic-devices, questions-deliberative-rhetorical, stylistic-connectors, complex-syntax-ellipsis-parcelling, phonetic-stylistic-devices | COVERED |
 
-**Summary:** 25 COVERED, 4 LIKELY, 4 MISSING out of 33 requirements
+**Summary:** 24 COVERED, 9 LIKELY, 0 MISSING out of 33 requirements
 
 ## Theme Coverage
 
@@ -295,25 +296,25 @@ No grammar runs of 4+ consecutive modules found.
 |-------|-----------|--------|
 | людина | b2-impersonal-passive, third-person-plural-passive, word-formation-person-suffixes | COVERED |
 | дім | — | MISSING |
-| побут | — | MISSING |
+| побут | pobut-shchodenne | COVERED |
 | культурне дозвілля | mystetstvo-i-literatura | COVERED |
-| спорт | — | MISSING |
+| спорт | sport-i-dozvillia | COVERED |
 | подорожі | religion-in-ukraine | COVERED |
-| суспільні відносини | register-media-journalistic, discussion-debate | COVERED |
+| суспільні відносини | discussion-debate | COVERED |
 | економіка | register-business-ukrainian, economics-business-vocabulary | COVERED |
-| здоров'я | — | MISSING |
+| здоров'я | zdorovya-i-medytsyna | COVERED |
 | освіта | nauka-i-doslidzhennia | COVERED |
-| робота | proverbs-work-wisdom-character, professional-email-basics, professional-email-advanced (+2 more) | COVERED |
+| робота | proverbs-work-wisdom-character, professional-email-basics, professional-email-advanced (+1 more) | COVERED |
 | купівля | — | MISSING |
 | харчування | — | MISSING |
 | послуги | — | MISSING |
 | місця | — | MISSING |
 | природа | proverbs-nature-time-caution, idioms-nature | COVERED |
 | наука і техніка | tekhnolohii-ta-shi, nauka-i-doslidzhennia | COVERED |
-| медіа | register-media-journalistic, news-analysis-basics, news-analysis-advanced | COVERED |
+| медіа | news-analysis | COVERED |
 | традиції | — | MISSING |
 
-**Summary:** 10 covered, 9 missing out of 19 themes
+**Summary:** 13 covered, 6 missing out of 19 themes
 
 ## Cross-Level Boundaries
 
@@ -333,54 +334,54 @@ No grammar runs of 4+ consecutive modules found.
 
 ## Module Summary
 
-- **Total modules:** 112
-- **Checkpoints/exams:** 6
-- **Grammar/structural modules:** 31
-- **Topic/thematic modules:** 81
+- **Total modules:** 132
+- **Checkpoints/exams:** 11
+- **Grammar/structural modules:** 38
+- **Topic/thematic modules:** 94
 
 ### Consecutive Grammar Runs (4+ modules)
 
-- **Run of 5:** M05–M09 (logical-connectors through thesis-development)
-- **Run of 5:** M16–M20 (advanced-punctuation through c1-1-checkpoint)
-- **Run of 4:** M42–M45 (case-studies through checkpoint-movoznavstvo)
+- **Run of 6:** M05–M10 (logical-connectors through c1-0-checkpoint)
+- **Run of 5:** M19–M23 (advanced-punctuation through c1-1-checkpoint)
+- **Run of 4:** M50–M53 (case-studies through checkpoint-movoznavstvo)
 
 ## State Standard Coverage
 
 | SS Ref | Category | Description | Module(s) | Status |
 |--------|----------|-------------|-----------|--------|
 | §4.1.1.1 | morphology | Mastery noun declension — all exceptions, archaic/dialectal forms, profession... | aspect-pairs-mastery-c1, imperative-mastery, numeral-mastery-c1, professional-scenarios | COVERED |
-| §4.1.1.2 | morphology | Advanced adjective — participial, compound, stylistic short forms | advanced-punctuation | LIKELY |
+| §4.1.1.2 | morphology | Advanced adjective — participial, compound, stylistic short forms | advanced-punctuation, stylistic-phonetics-euphony, stylistic-syntax-figures | COVERED |
 | §4.1.1.3 | morphology | Full numeral mastery — compound cardinals in all cases, fractions, approximate | numeral-mastery-c1, aspect-pairs-mastery-c1, imperative-mastery | COVERED |
 | §4.1.1.4 | morphology | Complete pronoun paradigm — indefinite (будь-хто, хто-небудь), negative (ніяк... | irregular-verbs-complete | LIKELY |
-| §4.1.2.1 | cases | Nominative — all syntactic functions, stylistic inversion | — | MISSING |
+| §4.1.2.1 | cases | Nominative — all syntactic functions, stylistic inversion | stylistic-phonetics-euphony, stylistic-syntax-figures | COVERED |
 | §4.1.2.2 | cases | Genitive — complete: subjective, objective, partitive, qualitative; 20+ prepo... | — | MISSING |
 | §4.1.2.3 | cases | Dative — all meanings including ethical, possessive (мені болить), purpose | — | MISSING |
 | §4.1.2.4 | cases | Accusative — complete with all prepositions and abstract usage | abstract-writing, irregular-verbs-complete | COVERED |
 | §4.1.2.5 | cases | Instrumental — all semantic roles including metaphorical use | metaphor-simile | LIKELY |
 | §4.1.2.6 | cases | Locative — abstract, literary, professional contexts | abstract-writing, professional-scenarios | COVERED |
 | §4.1.2.7 | cases | Vocative — rhetorical, literary, official, intimate | rhetorical-questions, persuasive-speech, intimate-register | COVERED |
-| §4.1.3.1 | verbs | Indicative — aspectual subtleties, narrative present, historical present | research-verbs, irregular-verbs-complete, aspect-pairs-mastery-c1 | COVERED |
+| §4.1.3.1 | verbs | Indicative — aspectual subtleties, narrative present, historical present | research-verbs, irregular-verbs-complete, aspect-pairs-mastery-c1, deverbatyvni-imennyky | COVERED |
 | §4.1.3.2 | verbs | Imperative — all forms including let-constructions, hortative | imperative-mastery | LIKELY |
-| §4.1.3.3 | verbs | Conditional — irrealis, hypothetical reasoning | — | MISSING |
-| §4.2.1 | word_formation | Comparison — adjectives and adverbs, irregular, stylistic alternation | irregular-verbs-complete | LIKELY |
+| §4.1.3.3 | verbs | Conditional — irrealis, hypothetical reasoning | umovnyi-sposib-irrealis | LIKELY |
+| §4.2.1 | word_formation | Comparison — adjectives and adverbs, irregular, stylistic alternation | irregular-verbs-complete, stylistic-phonetics-euphony, stylistic-syntax-figures | COVERED |
 | §4.2.2 | word_formation | Aspect pairs — systematic, including rare/literary | aspect-pairs-mastery-c1 | LIKELY |
 | §4.2.3 | word_formation | Agent nouns — professional and institutional | professional-scenarios | LIKELY |
 | §4.2.4-4.2.6 | word_formation | Deverbal nouns — -ння/-ення, zero suffix, -ок- suffix | — | MISSING |
 | §4.2.7 | word_formation | Abstract nouns — -ість (людяність, справедливість) | abstract-writing | LIKELY |
 | §4.2.8 | word_formation | Adjectives from nouns — academic/professional vocabulary | analysis-vocabulary, economics-vocabulary-c1 | COVERED |
 | §4.2.9 | word_formation | Adverbs from adjectives — professional register | high-formal-register, intimate-register, professional-scenarios | COVERED |
-| §4.3.1 | syntax | Simple sentence — all types, stylistic variation, emphasis patterns | complex-sentence-practice | LIKELY |
+| §4.3.1 | syntax | Simple sentence — all types, stylistic variation, emphasis patterns | complex-sentence-practice, stylistic-phonetics-euphony, stylistic-syntax-figures | COVERED |
 | §4.3.2 | syntax | Complex simple — participial constructions, absolute, detached members | combined-complex-sentences, complex-sentence-practice, checkpoint-complex-sentences | COVERED |
 | §4.3.3 | syntax | One-member sentences — impersonal, generalized personal, infinitive, nominative | one-member-sentences-c1, combined-complex-sentences, checkpoint-complex-sentences | COVERED |
 | §4.3.4.1 | syntax | Complex conjunctive — all clause types, multi-clause, nested | combined-complex-sentences, complex-sentence-practice, checkpoint-complex-sentences | COVERED |
-| §4.3.4.2 | syntax | Asyndetic complex sentences — semantic relations without conjunctions | combined-complex-sentences, complex-sentence-practice, checkpoint-complex-sentences, asyndetic-semantics, one-member-sentences-c1 | COVERED |
-| §4.4.1.1 | stylistics | Ukrainian language styles — artistic, scientific, official, publicistic, conv... | academic-style-markers, fonetychni-stylistychni-zasoby, morfolohichni-stylistychni-zasoby, syntaksychni-stylistychni-zasoby, frazeolohichni-stylistychni-zasoby | COVERED |
-| §4.4.2 | stylistics | Stylistic phonetics — euphony, rhythm, sound symbolism | — | MISSING |
-| §4.4.3 | stylistics | Stylistic lexicon — tropes, figures, periphrasis, gradation, litotes | hyperbole-litotes | LIKELY |
-| §4.4.4 | stylistics | Stylistic syntax — period, antithesis, chiasmus, asyndeton, polysyndeton | — | MISSING |
+| §4.3.4.2 | syntax | Asyndetic complex sentences — semantic relations without conjunctions | combined-complex-sentences, complex-sentence-practice, checkpoint-complex-sentences, stylistic-syntax-figures, asyndetic-semantics | COVERED |
+| §4.4.1.1 | stylistics | Ukrainian language styles — artistic, scientific, official, publicistic, conv... | academic-style-markers, fonetychni-stylistychni-zasoby, stylistic-phonetics-euphony, morfolohichni-stylistychni-zasoby, syntaksychni-stylistychni-zasoby | COVERED |
+| §4.4.2 | stylistics | Stylistic phonetics — euphony, rhythm, sound symbolism | stylistic-phonetics-euphony, stylistic-syntax-figures | COVERED |
+| §4.4.3 | stylistics | Stylistic lexicon — tropes, figures, periphrasis, gradation, litotes | hyperbole-litotes, stylistic-phonetics-euphony, stylistic-syntax-figures | COVERED |
+| §4.4.4 | stylistics | Stylistic syntax — period, antithesis, chiasmus, asyndeton, polysyndeton | stylistic-phonetics-euphony, stylistic-syntax-figures | COVERED |
 | §4.4.6 | stylistics | Rhetoric elements in oral/written communication | rhetorical-questions, persuasive-speech, digital-communication | COVERED |
 
-**Summary:** 14 COVERED, 10 LIKELY, 7 MISSING out of 31 requirements
+**Summary:** 21 COVERED, 7 LIKELY, 3 MISSING out of 31 requirements
 
 ## Theme Coverage
 
@@ -388,27 +389,27 @@ No grammar runs of 4+ consecutive modules found.
 |-------|-----------|--------|
 | людина | — | MISSING |
 | дім | ukrainian-house | COVERED |
-| побут | — | MISSING |
+| побут | pobut-ta-domashnie-hospodarstvo | COVERED |
 | культурне дозвілля | praktyka-1-narodna-kultura, checkpoint-folk-culture, operne-mystetstvo (+6 more) | COVERED |
-| спорт | — | MISSING |
-| подорожі | — | MISSING |
+| спорт | sport-ta-zdorovia | COVERED |
+| подорожі | podorozhi-ta-turyzm | COVERED |
 | суспільні відносини | media-landscape | COVERED |
 | внутрішня політика | political-system | COVERED |
 | зовнішня політика | global-context, diaspora-ukrainian | COVERED |
 | економіка | business-etiquette, economics-vocabulary-c1 | COVERED |
 | здоров'я | narodna-medytsyna | COVERED |
-| освіта | — | MISSING |
+| освіта | osvita-nauka-samovdoskonalennia | COVERED |
 | робота | job-interview, professional-scenarios | COVERED |
 | купівля | — | MISSING |
 | харчування | — | MISSING |
-| послуги | — | MISSING |
+| послуги | kupivlia-ta-posluhy | COVERED |
 | місця | — | MISSING |
 | природа | — | MISSING |
 | наука і техніка | science-technology-c1 | COVERED |
 | медіа | media-landscape | COVERED |
-| традиції | traditional-clothing, ukrainian-cuisine-traditions | COVERED |
+| традиції | checkpoint-folk-traditions, traditional-clothing, ukrainian-cuisine-traditions | COVERED |
 
-**Summary:** 11 covered, 10 missing out of 21 themes
+**Summary:** 16 covered, 5 missing out of 21 themes
 
 ## Cross-Level Boundaries
 
@@ -427,16 +428,16 @@ No grammar runs of 4+ consecutive modules found.
 
 ## Module Summary
 
-- **Total modules:** 106
+- **Total modules:** 110
 - **Checkpoints/exams:** 6
 - **Grammar/structural modules:** 23
-- **Topic/thematic modules:** 83
+- **Topic/thematic modules:** 87
 
 ### Consecutive Grammar Runs (4+ modules)
 
 - **Run of 4:** M23–M26 (c2-1-practice-i through c2-1-checkpoint)
 - **Run of 4:** M40–M43 (c2-2-practice-i through c2-2-checkpoint)
-- **Run of 4:** M101–M104 (final-review-i through final-exam-integrated-skills)
+- **Run of 4:** M105–M108 (final-review-i through final-exam-integrated-skills)
 
 ## State Standard Coverage
 
@@ -475,8 +476,8 @@ No grammar runs of 4+ consecutive modules found.
 |-------|-----------|--------|
 | людина | — | MISSING |
 | дім | — | MISSING |
-| побут | — | MISSING |
-| культурне дозвілля | podoroz-dozvillya-kultura | COVERED |
+| побут | pobut-i-shchodenne-zhyttia | COVERED |
+| культурне дозвілля | kharchuvannia-i-kultura-yizhi, podoroz-dozvillya-kultura | COVERED |
 | спорт | sport-i-liudskyi-potentsial | COVERED |
 | подорожі | podoroz-dozvillya-kultura | COVERED |
 | суспільні відносини | suspilstvo-i-hromadyanstvo, media-i-dezinformatsiya | COVERED |
@@ -489,13 +490,13 @@ No grammar runs of 4+ consecutive modules found.
 | купівля | spozhyvannya-i-posluhy | COVERED |
 | харчування | — | MISSING |
 | послуги | spozhyvannya-i-posluhy | COVERED |
-| місця | misto-selo-prostir | COVERED |
+| місця | dim-i-zhytlovyi-prostir, misto-selo-prostir | COVERED |
 | природа | ekolohiya-i-klimat | COVERED |
 | наука і техніка | osvita-nauka-innovatsiyi | COVERED |
 | медіа | media-i-dezinformatsiya | COVERED |
 | традиції | identychnist-tradytsiyi-simya | COVERED |
 
-**Summary:** 17 covered, 4 missing out of 21 themes
+**Summary:** 18 covered, 3 missing out of 21 themes
 
 ## Cross-Level Boundaries
 

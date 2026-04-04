@@ -255,123 +255,117 @@ levels:
       - practice-exam                     # merges reading + writing exams
   b2:
     type: core
+    # V5 — 93 modules, State Standard 2024 fully compliant (#1144)
+    # Redesigned 2026-04-04: grammar wall fix, 9 missing themes, 4 SS gaps filled
     modules:
-      # B2.1a [Passive Voice System]
+      # B2.0 [Passive Voice System]
       - passive-voice-system
       - past-passive-participles
       - b2-impersonal-passive
+      - dim-zhytlo                        # NEW — Theme: дім
       - reflexive-passive
       - third-person-plural-passive
       - passive-in-context
+      - pobut-shchodenne                  # NEW — Theme: побут
       - active-participles-present
+      - checkpoint-passive-voice
+      # B2.1 [Participles & Sentence Structure]
       - active-participles-past
       - participles-vs-relative-clauses
-      - checkpoint-passive-voice
+      - zdorovya-i-medytsyna              # NEW — Theme: здоров'я
       - phrases-word-combinations
       - predicate-types
       - secondary-sentence-members
+      - sport-i-dozvillia                 # NEW — Theme: спорт
       - b2-one-member-sentences
       - homogeneous-members
-      # B2.1b [Participles & Register Intro]
-      - parenthetical-expressions
-      # B2.1b [Advanced Syntax]
       - detached-members
-      # B2.1b [Participles & Register Intro]
+      - checkpoint-syntax-i
+      # B2.2 [Advanced Syntax & Stylistics]
+      - parenthetical-expressions
       - multi-clause-sentences
-      # B2.2 [Phraseology & Synonymy]
+      - kharchuvannia-i-kukhnia           # NEW — Theme: харчування
       - correlative-constructions
-      # B2.1b [Participles & Register Intro]
       - emphasis-and-inversion
       - stylistic-connectors
-      # B2.2 [Phraseology & Synonymy]
+      - kupivlia-i-servisy                # NEW — Theme: купівля + послуги
       - complex-syntax-ellipsis-parcelling
-      # B2.1b [Advanced Syntax]
       - direct-indirect-speech
-      - checkpoint-syntax
-      - phonetic-stylistic-devices
-      - lexical-stylistic-devices
-      - syntactic-stylistic-devices
-      # B2.1b [Participles & Register Intro]
-      - register-introduction
-      - register-formal-informal
+      - checkpoint-syntax-ii
+      # B2.3 [Stylistic Devices & Register]
+      - phonetic-stylistic-devices        # SS 4.4.1.1
+      - lexical-stylistic-devices         # SS 4.4.1.2
+      - syntactic-stylistic-devices       # SS 4.4.1.3
+      - mistsia-i-oriientyry              # NEW — Theme: місця
+      - register-formal-informal          # absorbs register-introduction
       - register-business-ukrainian
-      - register-academic-technical
-      - register-official-legal
-      - register-literary-ukrainian
-      - register-media-journalistic
-      - register-colloquial-style
-      # B2.2a [Stylistics & Register]
-      - register-religious-ukrainian
-      # B2.1b [Participles & Register Intro]
+      - register-formal-written           # MERGE: academic-technical + official-legal
+      - tradytsii-i-zvychai              # NEW — Theme: традиції
+      - register-literary-ukrainian       # absorbs register-religious
+      - register-public-discourse         # MERGE: media-journalistic + colloquial-style
+      - checkpoint-register-domain        # MERGE: register + domain checkpoints
+      # B2.4 [Domain Vocabulary & Advanced Cases]
       - register-practice-cross-register-rewriting
-      # B2.2a [Stylistics & Register]
-      - checkpoint-register
-      # B2.1c [Register System & Domain Vocabulary]
       - politics-government-vocabulary
       - law-justice-vocabulary
       - economics-business-vocabulary
-      # B2.2b [Domain Vocabulary]
-      - checkpoint-domain
-      # B2.2 [Phraseology & Synonymy]
+      - genitive-advanced                 # NEW — SS 4.1.2.2
+      - dative-advanced                   # NEW — SS 4.1.2.3
+      - instrumental-advanced             # NEW — SS 4.1.2.5
+      - questions-deliberative-rhetorical # NEW — SS 4.3.1.2
+      - advanced-case-semantics
+      - pronoun-system-advanced
+      - checkpoint-cases-morphology
+      # B2.5 [Verb Nuances & Word Formation]
       - aspect-nuances-secondary-imperfectivization
       - aspect-nuances-imperative-infinitive
-      - pluperfect-tense
-      - conditional-mood-particles
-      # B2.1c [Register System & Domain Vocabulary]
+      - pluperfect-tense                  # SS 4.1.3.1
+      - conditional-mood-particles        # SS 4.1.3.3
       - numeral-declension-time-dates
       - numeral-declension-compound-numbers
-      - word-formation-person-suffixes
-      - word-formation-abstract-nouns
-      - word-formation-place-object-names
-      - word-formation-adjective-formation
-      - word-formation-adverbs-integration
-      # B2.2 [Phraseology & Synonymy]
+      - word-formation-person-suffixes    # SS 4.2.5
+      - word-formation-abstract-nouns     # SS 4.2.6/4.2.7
+      - word-formation-place-object-names # SS 4.2.8
+      - word-formation-adjective-adverbs  # MERGE: adjective-formation + adverbs-integration
+      # B2.6 [Connectors, Synonymy & Phraseology]
       - advanced-conjunctions-i
       - advanced-conjunctions-ii
       - checkpoint-morphology
-      - advanced-case-semantics
-      - pronoun-system-advanced
       - synonymy-types-and-rows
       - synonymy-in-registers
       - synonymy-practice-precision
       - proverbs-work-wisdom-character
       - proverbs-nature-time-caution
       - set-expressions-combined
+      - checkpoint-lexicology-i
+      # B2.7 [Idioms, Neologisms & Professional Communication]
       - idioms-somatic
       - idioms-animals
       - idioms-nature
       - neologisms-borrowings
-      - checkpoint-lexicology
-      # B2.4 [Communication Skills]
+      - checkpoint-lexicology-ii
       - professional-email-basics
       - professional-email-advanced
-      - professional-reports-basics
-      - professional-reports-advanced
-      # B2.3 [Skills & Checkpoint]
+      - professional-reports              # MERGE: basics + advanced
       - academic-writing
       - text-analysis
-      # B2.4 [Communication Skills]
-      - news-analysis-basics
-      - news-analysis-advanced
-      - presentation-skills-basics
-      - presentation-skills-advanced
+      - news-analysis                     # MERGE: basics + advanced
+      # B2.8 [Communication Skills & Capstone]
+      - presentation-skills               # MERGE: basics + advanced
       - discussion-debate
       - checkpoint-communication
-      # B2.3 [Skills & Checkpoint]
-      - tekhnolohii-ta-shi
-      - nauka-i-doslidzhennia
-      - mystetstvo-i-literatura
-      - modern-diaspora
+      - tekhnolohii-ta-shi                # Theme: наука і техніка
+      - nauka-i-doslidzhennia             # Theme: наука і техніка
+      - mystetstvo-i-literatura           # Theme: культурне дозвілля
+      - modern-diaspora                   # Theme: суспільні відносини
       - religion-in-ukraine
-      - capstone-research
-      - capstone-prezentatsiya
-      - b2-pidsumkovyy-ohlyad
-      # B2.4 [Communication Skills]
-      - b2-final-exam
+      - b2-final-exam                     # absorbs capstone + review
   c1:
     type: core
+    # V5 — 115 modules, State Standard 2024 fully compliant (#1145)
+    # Redesigned 2026-04-04: 7 SS gaps filled, 10 missing themes added, grammar walls broken
     modules:
-      # C1.1 [Academic Foundation]
+      # C1.0 [Bridge & Academic Foundation]
       - b2-review-bridge
       - academic-style-markers
       - research-verbs
@@ -381,11 +375,15 @@ levels:
       - citation-reference
       - essay-structure
       - thesis-development
+      - c1-0-checkpoint
+      # C1.1 [Academic Writing & Grammar Mastery]
       - counterarguments
       - summary-paraphrase
+      - nominatyvnyi-vidminok-funktsiyi    # NEW — SS §4.1.2.1
       - research-article
       - abstract-writing
       - literature-review
+      - rodovyi-vidminok-systema            # NEW — SS §4.1.2.2
       - oral-presentations
       - advanced-punctuation
       - irregular-verbs-complete
@@ -396,45 +394,58 @@ levels:
       - cv-resume-writing
       - job-interview
       - business-etiquette
+      - davalnyi-vidminok-systema           # NEW — SS §4.1.2.3
       - digital-communication
       - political-system
       - media-landscape
+      - sport-ta-zdorovia                   # NEW — Theme: спорт + людина
       - global-context
       - economics-vocabulary-c1
-      - science-technology-c1
+      - c1-2-checkpoint
+      # C1.3 [Language Studies & Morphology]
       - zahalne-movoznavstvo
       - dialects-of-ukrainian
       - surzhyk
+      - podorozhi-ta-turyzm                 # NEW — Theme: подорожі
       - history-of-language
       - diaspora-ukrainian
       - leksykolohiia-c1
       - morfolohichna-norma-c1
       - aspect-pairs-mastery-c1
+      - pobut-ta-domashnie-hospodarstvo     # NEW — Theme: побут
       - imperative-mastery
       - numeral-mastery-c1
+      - umovnyi-sposib-irrealis             # NEW — SS §4.1.3.3
       - tekstoznavstvo
       - professional-scenarios
       - case-studies
       - review
       - speaking-practice
       - checkpoint-movoznavstvo
+      # C1.4 [Complex Sentences]
       - skladnosuriadne-rechennia
       - skladnopidriadne-oznachalne-zyasuvalne
+      - osvita-nauka-samovdoskonalennia      # NEW — Theme: освіта
       - skladnopidriadne-obstavynne
       - asyndetic-semantics
       - combined-complex-sentences
+      - kupivlia-ta-posluhy                  # NEW — Theme: купівля + послуги
       - complex-sentence-practice
       - one-member-sentences-c1
       - checkpoint-complex-sentences
-      # C1.3 [Advanced Stylistics & Rhetoric]
+      # C1.5 [Stylistics & Rhetoric]
       - metaphor-simile
       - irony-sarcasm
       - hyperbole-litotes
       - euphemism-taboo
+      - kharchuvannia-ta-kulinariia          # NEW — Theme: харчування
       - rhetorical-questions
       - fonetychni-stylistychni-zasoby
+      - stylistic-phonetics-euphony          # NEW — SS §4.4.2
       - morfolohichni-stylistychni-zasoby
+      - mistsia-ta-urbanistyka               # NEW — Theme: місця
       - syntaksychni-stylistychni-zasoby
+      - stylistic-syntax-figures             # NEW — SS §4.4.4
       - frazeolohichni-stylistychni-zasoby
       - degrees-of-certainty
       - politeness-strategies
@@ -442,13 +453,15 @@ levels:
       - intimate-register
       - slang-youth
       - persuasive-speech
-      # C1.5 [Literature]
+      - pryroda-ta-ekologiia                 # NEW — Theme: природа
+      - checkpoint-c1-5
+      # C1.6 [Literature]
       - istoriia-ukrainskoi-literatury
       - literaturoznavcha-terminolohiia
       - analiz-poezii
-      - review-c1-5
-      - checkpoint-c1-5
-      # C1.3 [Advanced Stylistics & Rhetoric]
+      - deverbatyvni-imennyky                # NEW — SS §4.2.4-4.2.6
+      - review-c1-6
+      # C1.7 [Folk Music & Crafts]
       - kobzari-bandura
       - ritual-songs
       - kolyskovi-ta-dumy
@@ -457,7 +470,8 @@ levels:
       - pysanky
       - vyshyvanka
       - honcharstvo-ta-rizbyarstvo
-      # C1.4 [Folk Culture & Fine Arts]
+      - checkpoint-folk-music
+      # C1.8 [Folk Culture & Traditions]
       - narodna-mifolohiia
       - narodna-medytsyna
       - kozatski-lehendy
@@ -467,12 +481,16 @@ levels:
       - khrestyny-ta-vesillia
       - pomynalni-obriady
       - halychyna
+      - checkpoint-folk-traditions
+      # C1.9 [Regional Culture & Daily Life]
       - traditional-clothing
       - ukrainian-cuisine-traditions
       - ukrainian-house
       - podillia-ta-volyn
+      - science-technology-c1
       - praktyka-1-narodna-kultura
       - checkpoint-folk-culture
+      # C1.10 [Fine Arts & Performance]
       - ukrainian-avant-garde
       - klasychna-muzyka-1-vytoky
       - klasychna-muzyka-2-natsionalna-shkola
@@ -482,6 +500,8 @@ levels:
       - obrazotvorche-mystetstvo-1
       - obrazotvorche-mystetstvo-2
       - balet-i-tanets
+      - checkpoint-fine-arts
+      # C1.11 [Theatre, Architecture & Cinema]
       - teatralne-mystetstvo-1
       - teatralne-mystetstvo-2
       - ukrainska-arkhitektura
@@ -1287,6 +1307,8 @@ levels:
       - c1-pro-capstone
   c2:
     type: core
+    # V5 — 110 modules, State Standard 2024 fully compliant (#1146)
+    # Redesigned 2026-04-04: 4 missing themes added, thematic block restructured
     modules:
       # C2.1 [Stylistic Perfection]
       - c1-bridge-assessment
@@ -1356,6 +1378,11 @@ levels:
       - professional-identity
       - c2-3-review
       - c2-3-checkpoint
+      # C2.4 [Thematic Mastery]
+      - liudyna-i-suspilna-rol              # NEW — Theme: людина
+      - dim-i-zhytlovyi-prostir             # NEW — Theme: дім
+      - pobut-i-shchodenne-zhyttia          # NEW — Theme: побут
+      - kharchuvannia-i-kultura-yizhi       # NEW — Theme: харчування
       - suspilstvo-i-hromadyanstvo
       - zovnishnia-polityka-i-diaspora
       - ekonomika-i-dobrobut
@@ -1370,7 +1397,7 @@ levels:
       - identychnist-tradytsiyi-simya
       - c2-4-practice
       - c2-4-checkpoint
-      # C2.4 [Meta-Skills & Capstone]
+      # C2.5 [Meta-Skills & Capstone]
       - complete-grammar-review
       - rare-archaic-forms
       - regional-varieties
