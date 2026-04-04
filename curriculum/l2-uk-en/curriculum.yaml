@@ -147,22 +147,21 @@ levels:
       - a2-finale
   b1:
     type: core
-    # V5 — 93 modules, State Standard 2024 fully compliant (#1143)
-    # Redesigned 2026-04-04: aspect mastery block, grammar wall fix, all 15 SS themes
+    # V5.1 — 95 modules, State Standard 2024 fully compliant (#1143)
+    # V5.1 fixes: moved aspect-in-imperatives/conditionals after base modules,
+    # restored gerund-phrases as separate module, added homogeneous-members earlier
     modules:
       # B1.0 [Baselines & Aspect Mastery]
       - b1-baseline-past-present
       - b1-baseline-future-aspect
       - people-and-relationships          # Theme: людина
-      - aspect-past-tense                 # NEW — SS 4.2.3.1
-      - aspect-future-tense               # NEW — SS 4.2.3.1
-      - aspect-in-narration               # NEW — SS 4.2.3.1
+      - aspect-past-tense                 # SS 4.2.3.1
+      - aspect-future-tense               # SS 4.2.3.1
+      - aspect-in-narration               # SS 4.2.3.1
       - daily-life-and-routines           # Theme: щоденне життя
-      - aspect-in-imperatives             # NEW — SS 4.2.3.2
-      - aspect-in-negation                # NEW — SS 4.2.3.1
-      - work-and-career                   # NEW — Theme: робота
-      - aspect-in-conditionals            # NEW — SS 4.2.3.3
-      - checkpoint-aspect                 # NEW
+      - aspect-in-negation                # SS 4.2.3.1
+      - work-and-career                   # Theme: робота
+      - checkpoint-aspect
       # B1.1 [Morphophonemics]
       - alternation-vowels
       - alternation-consonants-nouns
@@ -171,28 +170,30 @@ levels:
       - simplification-consonants
       - noun-subclasses-masculine
       - noun-subclasses-hissing
-      - restaurant-and-food               # NEW — Theme: ресторан
+      - restaurant-and-food               # Theme: ресторан
       - noun-subclasses-feminine
       - pluralia-tantum
       - checkpoint-morphophonemics
       # B1.2 [Verb System]
       - conditionals-real
       - conditionals-unreal
-      - imperative-nuances
+      - aspect-in-conditionals            # SS 4.2.3.3 — requires conditionals base
       - shopping-and-services             # Theme: купівля, послуги
+      - imperative-nuances
+      - aspect-in-imperatives             # SS 4.2.3.2 — requires imperative base
       - reflexive-verbs-nuances
+      - housing-and-renting               # Theme: дім
       - passive-voice-intro
       - verbal-nouns
-      - housing-and-renting               # Theme: дім
       - verb-formation-suffixes
       - checkpoint-verbs
       # B1.3 [Motion Verbs]
       - prepositions-spatial-review
       - motion-base-review
       - motion-prefixes-arrival
+      - traveling-ukraine                 # Theme: подорожі — breaks grammar wall
       - motion-prefixes-departure
       - motion-prefixes-in-out
-      - traveling-ukraine                 # Theme: подорожі
       - motion-prefixes-transit           # absorbs motion-prefixes-around
       - motion-flight-swim
       - figurative-motion
@@ -203,18 +204,19 @@ levels:
       - adverbs-comparison-formation
       - nature-and-environment            # Theme: природа
       - word-formation-adjectives
-      - possessive-adjectives             # NEW — SS 4.2.1.2
+      - possessive-adjectives             # SS 4.2.1.2
       - word-formation-nouns
       - checkpoint-comparison
       # B1.5 [Case Nuances & Prepositions]
+      - homogeneous-members               # SS 4.4.2 — simple sentence syntax, before complex
       - genitive-nuances
       - dative-nuances
-      - instrumental-nuances
       - education-and-university          # Theme: освіта
+      - instrumental-nuances
       - vocative-formal
       - prepositions-temporal
+      - places-and-locations              # Theme: місця
       - prepositions-cause-purpose
-      - places-and-locations              # NEW — Theme: місця
       - cases-with-ordinal-numerals
       - cases-with-quantity-expressions
       - advanced-pronouns
@@ -226,7 +228,8 @@ levels:
       - leisure-culture-festivals         # Theme: дозвілля, традиції
       - short-form-adjectives
       - gerunds-imperfective
-      - gerunds-perfective                # absorbs gerund-phrases
+      - gerunds-perfective
+      - gerund-phrases                    # restored — applies to both aspects
       - society-and-media                 # Theme: суспільство
       - checkpoint-participles
       # B1.7 [Complex Syntax]
@@ -238,7 +241,6 @@ levels:
       - complex-subordinate-condition
       - complex-subordinate-purpose
       - complex-subordinate-concess
-      - homogeneous-members               # NEW — SS 4.4.2
       - reported-speech
       - checkpoint-syntax
       # B1.8 [Text & Register]
