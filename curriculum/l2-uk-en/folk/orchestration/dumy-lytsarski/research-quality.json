@@ -1,0 +1,49 @@
+{
+  "exists": true,
+  "words": 1521,
+  "quality": "thin",
+  "score": 2,
+  "score_raw": 2,
+  "score_max": 10,
+  "markers": 2,
+  "profile": "history",
+  "dimensions": {
+    "sources": {
+      "score": 0,
+      "max": 3,
+      "detail": "missing"
+    },
+    "chronology": {
+      "score": 0,
+      "max": 2,
+      "detail": "missing"
+    },
+    "primary_quotes": {
+      "score": 2,
+      "max": 2,
+      "detail": "159 quotes (159>, 0«»)"
+    },
+    "engagement_hooks": {
+      "score": 0,
+      "max": 1,
+      "detail": "missing"
+    },
+    "decolonization": {
+      "score": 0,
+      "max": 1,
+      "detail": "missing"
+    },
+    "section_notes": {
+      "score": 0,
+      "max": 1,
+      "detail": "missing"
+    }
+  },
+  "gaps": [
+    "sources: missing",
+    "chronology: missing",
+    "engagement_hooks: missing",
+    "decolonization: missing",
+    "section_notes: missing"
+  ]
+}
