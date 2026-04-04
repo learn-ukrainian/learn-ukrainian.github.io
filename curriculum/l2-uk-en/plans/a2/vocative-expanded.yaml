@@ -1,0 +1,142 @@
+module: a2-027
+level: A2
+sequence: 27
+slug: vocative-expanded
+version: '1.0'
+title: Пане лікарю! Друже мій!
+subtitle: Кличний відмінок у формальних, професійних та емоційних звертаннях
+focus: grammar
+pedagogy: PPP
+phase: A2.4 [Instrumental Case]
+word_target: 2000
+objectives:
+  - Learner can form and use formal vocative address with пане/пані +
+    profession or surname (пане директоре, пані вчителько, пане Коваленку).
+  - Learner can form vocative of professional titles and roles (лікарю,
+    вчителю, професоре, колего, товаришу).
+  - Learner can use emotional and affectionate vocative patterns (друже мій,
+    люба моя, серденько, сонечко).
+  - Learner can choose the appropriate vocative register — formal,
+    professional, or emotional — based on social context.
+dialogue_situations:
+  - setting: 'At a clinic — patient addressing the doctor formally, then
+      calling a friend afterward: Пане лікарю, мені потрібна довідка. —
+      Добре, пане Ковальчуку, сідайте. Later on phone: Друже мій, уяви
+      собі — лікар каже, що я здоровий!'
+    speakers:
+      - Пацієнт (Олег)
+      - Лікар
+      - Друг (by phone)
+    motivation: 'Formal vocative (пане лікарю, пане Ковальчуку) → emotional
+      vocative (друже мій) in one natural scenario'
+  - setting: 'Teacher addressing students in class, then a student addressing
+      the teacher: Маріє, читай далі. Андрію, тихіше. — Пані вчителько,
+      я не розумію це завдання. — Добре, Андрію, пояснюю ще раз.'
+    speakers:
+      - Вчителька
+      - Учні (Марія, Андрій)
+    motivation: 'Professional vocative (пані вчителько) + first name vocative
+      (Маріє, Андрію) in classroom context'
+content_outline:
+  - section: 'Пане, пані: формальне звертання (Formal Address)'
+    words: 550
+    points:
+      - 'A1 taught basic vocative (Оксано! Тарасе!). Now: formal address
+        system with пане/пані.'
+      - 'Pattern: Пане + vocative of profession/title: пане директоре, пане
+        професоре, пане міністре. Пані + vocative of profession: пані
+        вчителько, пані директорко, пані лікарко.'
+      - 'With surnames: Пане Ковальчуку, пане Шевченку (masculine surnames
+        decline). Пані Ковальчук, пані Шевченко (feminine surnames — пані
+        is invariable, surname may or may not decline depending on form).'
+      - 'Cultural context: пан/пані replaced товариш after independence.
+        Using пане/пані is a conscious decolonial choice — it signals
+        Ukrainian, not Soviet, identity.'
+      - 'Older alternatives: добродію/добродійко — more literary/diaspora
+        usage. Still understood but less common in modern everyday Ukrainian.'
+  - section: 'Професійні звертання (Professional Vocative)'
+    words: 500
+    points:
+      - 'Masculine profession vocatives: лікарю (doctor), вчителю (teacher),
+        професоре (professor), інженере (engineer), водію (driver). Pattern:
+        second declension → -у/-ю for most, -е for hard-stem nouns.'
+      - 'Feminine profession vocatives: лікарко (female doctor), вчителько
+        (female teacher), професорко (female professor). Ukrainian actively
+        uses feminitives — this is natural and standard.'
+      - 'Common-gender nouns: колего (colleague), колего is the same for both.
+        Суддя → суддю (judge). Pattern depends on noun class.'
+      - 'Practice: role-play addressing professionals — Пане лікарю, у мене
+        болить голова. Пані вчителько, я зробив домашнє завдання.'
+  - section: 'Друже мій, люба моя: емоційний кличний (Emotional Vocative)'
+    words: 550
+    points:
+      - 'Affectionate vocatives between close people: друже (friend), друже
+        мій (my friend), подруго моя (my friend, to a woman), люба/любий
+        (dear), кохана/коханий (beloved).'
+      - 'Diminutive vocatives — deeply Ukrainian: серденько (sweetheart, lit.
+        little heart), сонечко (sunshine, lit. little sun), зіронько (little
+        star), любочко (darling).'
+      - 'Possessive + vocative: мій is always after the noun in vocative —
+        друже мій (not *мій друже), мамо моя (not *моя мамо). This word order
+        is fixed in vocative constructions.'
+      - 'Emotional exclamations: Боже мій! (My God!), Мамо! (Mom!), Друзі!
+        (Friends! — plural vocative = nominative for most nouns).'
+      - 'Register awareness: when to use друже мій vs. пане vs. first name.
+        Context determines register — same person might be Тарасе at a party
+        and пане Ковальчуку at a meeting.'
+  - section: 'Який кличний обрати? (Choosing the Right Vocative)'
+    words: 400
+    points:
+      - 'Register summary table: formal (пане лікарю), professional (лікарю),
+        friendly (Тарасе), emotional (друже мій), intimate (любий/люба).'
+      - 'Practice scenarios: learner chooses the appropriate vocative form for
+        different social situations — writing an email to a professor, calling
+        a friend, talking to a doctor, comforting a child.'
+      - 'Common mistakes: *пан лікар (nominative instead of vocative after
+        пане) → пане лікарю. *Друже моя (wrong gender agreement) → подруго
+        моя.'
+vocabulary_hints:
+  required:
+    - кличний (vocative (case))
+    - звертання (address, appeal)
+    - пан (Mr., sir)
+    - пані (Mrs., Ms., madam)
+    - лікар (doctor)
+    - вчитель (teacher)
+    - друг (friend)
+    - ввічливий (polite)
+    - офіційний (official, formal)
+    - професія (profession)
+  recommended:
+    - добродій (sir (literary/diaspora))
+    - добродійка (madam (literary/diaspora))
+    - емоційний (emotional)
+    - ніжний (tender, affectionate)
+    - колега (colleague)
+activity_hints:
+  - type: fill-in
+    focus: Form the correct vocative of professional titles and names (пане
+      _____, пані _____)
+    items: 8
+  - type: quiz
+    focus: Choose the correct vocative register for a given social situation
+    items: 8
+  - type: match-up
+    focus: Match nominative forms to their vocative equivalents (лікар →
+      лікарю, вчитель → вчителю, друг → друже)
+    items: 8
+  - type: error-correction
+    focus: 'Fix vocative errors (*пан лікар → пане лікарю, *друже моя →
+      подруго моя, *Мій друже → Друже мій)'
+    items: 8
+  - type: group-sort
+    focus: Sort vocative forms by register (formal, professional, emotional)
+    items: 8
+references:
+  - title: Заболотний Grade 5, §31-33
+    notes: Кличний відмінок іменників, форми звертання
+  - title: Авраменко Grade 7, §12
+    notes: Звертання у мовленні — пан/пані, офіційне та неофіційне
+  - title: 'ULP: Ukrainian Vocative Case'
+    url: https://www.ukrainianlessons.com/vocative-case/
+    notes: Vocative forms including formal address

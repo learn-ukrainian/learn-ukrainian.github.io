@@ -1,0 +1,121 @@
+module: a2-012
+level: A2
+sequence: 12
+slug: euphony-advanced
+version: '1.0'
+title: Милозвучність у складних контекстах
+subtitle: Розширені правила у/в, з/із/зі та і/й у складних реченнях
+focus: grammar
+pedagogy: PPP
+phase: A2.2 [Genitive Case Complete]
+word_target: 2000
+objectives:
+  - Learner can correctly apply у/в alternation in complex contexts — after
+    prepositions, at phrase boundaries, and with case forms (у школі vs. в
+    університеті).
+  - Learner can apply з/із/зі rules with consonant clusters and case forms
+    (з друзями, із задоволенням, зі школи, зі мною).
+  - Learner can apply і/й rules in compound and complex sentences, including
+    after vowel-ending words and before consonant clusters.
+  - Learner can produce naturally euphonic multi-clause sentences without
+    hesitation.
+dialogue_situations:
+  - setting: 'Friends planning a weekend trip — negotiating where to go and how
+      to get there: Поїдемо в Карпати чи у Львів? — У Львів! Із задоволенням!
+      Я поїду з Оленою й Тарасом. А ви зі Львова повернетесь у неділю?'
+    speakers:
+      - Оленка
+      - Тарас
+    motivation: 'Natural trip planning triggers all three euphony types: у/в
+      with place names, з/із/зі with people, і/й linking clauses'
+content_outline:
+  - section: 'У чи в? Складні випадки (U or V? Complex Cases)'
+    words: 600
+    points:
+      - 'Review A1 basic rule: у after consonants, в after vowels. Now the
+        exceptions and complex contexts.'
+      - 'At sentence/clause beginnings: В Україні зима холодна (sentence start
+        allows в before vowels). After comma or dash — new phonetic context
+        resets the rule.'
+      - 'With case forms: у школі, в університеті, у місті, в Одесі. The
+        surrounding sounds determine the choice, not the preposition itself.'
+      - 'Prefixed у-/в- verbs: увійти/ввійти — both exist, choice depends on
+        preceding word''s final sound. Увечері прийшов / Він увійшов.'
+      - 'Common mistakes: *в вікно (в before в) → у вікно, *у університеті
+        (у before у) → в університеті.'
+  - section: 'З, із чи зі? Правила перед збігами приголосних (Z, Iz, or Zi?)'
+    words: 600
+    points:
+      - 'Base rule: з is default. Із before difficult initial clusters (із
+        задоволенням, із сміхом). Зі before з-, с-, ш-, щ- and complex
+        clusters (зі школи, зі мною, зі снігу).'
+      - 'With case forms and pronouns: з ним, з нею, з нами, зі мною (мн-
+        cluster). З Києва, зі Львова (Льв- cluster).'
+      - 'Genitive context (current A2.2 focus): з родини, із сім''ї, зі школи.
+        The genitive preposition context makes euphony practice natural.'
+      - 'Common mistakes: *з школи → зі школи, *з мною → зі мною, *зі ним →
+        з ним (no cluster after зі needed).'
+  - section: 'І чи й? У складних реченнях (I or Y? In Complex Sentences)'
+    words: 500
+    points:
+      - 'Review: й after vowels (мама й тато), і after consonants (брат і
+        сестра). Now in multi-clause sentences.'
+      - 'After clause boundaries: comma resets the phonetic context. Він
+        прийшов, і ми поїхали (і after comma, new clause). Вона заспівала, й
+        усі заплакали (й because усі starts with vowel? No — after comma,
+        default і is always safe).'
+      - 'With compound subjects and objects: хліб і масло, кава й молоко.
+        Apply the rule to each pair individually.'
+      - 'Special: та as a synonym for і — та never alternates, always та.
+        Useful when euphony is ambiguous: мама та тато.'
+  - section: 'Все разом: мелодійні речення (Putting It All Together)'
+    words: 300
+    points:
+      - 'Building multi-clause sentences that sound natural: Ми поїхали у
+        Львів із друзями й провели чудовий вихідний.'
+      - 'Reading aloud practice: euphony is about SOUND, not just rules. Read
+        sentences aloud and feel when they flow vs. when they stumble.'
+      - 'Consolidation: all three rules (у/в, з/із/зі, і/й) serve the same
+        principle — милозвучність. Ukrainian actively avoids consonant clusters
+        and vowel collisions at word boundaries.'
+vocabulary_hints:
+  required:
+    - милозвучність (euphony, melodiousness)
+    - евфонія (euphony (technical term))
+    - чергування (alternation)
+    - голосний (vowel)
+    - приголосний (consonant)
+    - збіг (cluster, collision)
+    - прийменник (preposition)
+    - сполучник (conjunction)
+    - вживати (to use, to apply)
+    - складний (complex, compound)
+  recommended:
+    - спрощення (simplification)
+    - уникати (to avoid)
+    - мелодійний (melodious)
+    - межа (boundary)
+    - правило (rule)
+activity_hints:
+  - type: quiz
+    focus: 'Choose the correct euphonic variant (у/в, з/із/зі, і/й) in
+      context'
+    items: 8
+  - type: fill-in
+    focus: Complete sentences with the correct preposition or conjunction form
+    items: 8
+  - type: error-correction
+    focus: 'Find euphony errors in sentences (e.g., *в вікно, *з школи,
+      *і усі) and correct them'
+    items: 8
+  - type: match-up
+    focus: Match sentence beginnings with euphonically correct continuations
+    items: 8
+references:
+  - title: Заболотний Grade 5, §4-5
+    notes: Милозвучність української мови, чергування у/в, і/й
+  - title: Авраменко Grade 9, §2
+    notes: Фонетика, евфонічні чергування у складних реченнях
+  - title: 'ULP: Ukrainian Euphony Rules'
+    url: https://www.ukrainianlessons.com/euphony/
+    notes: у/в, і/й, з/із/зі rules with examples

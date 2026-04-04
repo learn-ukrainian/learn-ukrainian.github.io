@@ -1,0 +1,133 @@
+module: a2-020
+level: A2
+sequence: 20
+slug: locative-expanded
+version: '1.0'
+title: Місцевий відмінок у нових контекстах
+subtitle: Абстрактні іменники, часові вирази та тема розмови у місцевому відмінку
+focus: grammar
+pedagogy: PPP
+phase: A2.3 [Dative Case]
+word_target: 2000
+objectives:
+  - Learner can use the locative case with abstract nouns to express contexts
+    and domains (у житті, в освіті, на роботі, у політиці).
+  - Learner can use temporal locative expressions for months, weeks, and
+    periods (у минулому місяці, на цьому тижні, у дитинстві).
+  - Learner can use topic-marking locative with по + locative for
+    communication topics (по телефону, по радіо) and розмовляти/говорити
+    про + accusative vs. по + locative distinctions.
+  - Learner can combine locative with prepositions у/в, на, по in varied
+    real-life contexts beyond simple physical location.
+dialogue_situations:
+  - setting: 'Two friends catching up after a long time — talking about life
+      changes: Що нового у твоєму житті? — У минулому місяці я змінила роботу.
+      Тепер працюю в освіті. А ти? — Я на новому курсі. Розмовляли по
+      телефону з мамою — вона хвилюється.'
+    speakers:
+      - Марія
+      - Ігор
+    motivation: 'Natural catch-up triggers all three locative extensions:
+      abstract (у житті, в освіті), temporal (у минулому місяці), topic
+      (по телефону)'
+  - setting: 'Student discussing schedule and interests with a tutor: На цьому
+      тижні у мене три заняття. У вільний час я читаю про Україну — у
+      підручнику з історії. В дитинстві я мало знав про українську культуру.'
+    speakers:
+      - Студент
+      - Викладач
+    motivation: 'Temporal locative (на цьому тижні, в дитинстві) + abstract
+      domain (в історії, про культуру)'
+content_outline:
+  - section: 'Місцевий з абстрактними іменниками (Locative with Abstract Nouns)'
+    words: 550
+    points:
+      - 'A1 taught locative for physical location (у місті, на вулиці). Now
+        expanding to abstract domains and contexts.'
+      - 'Common abstract locative phrases: у житті (in life), в освіті (in
+        education), у політиці (in politics), на роботі (at work), в економіці
+        (in economics), у мистецтві (in art).'
+      - 'Pattern: у/в + abstract noun in locative = "in the domain/field of."
+        Note: на роботі (not *у роботі) — на is fixed for робота.'
+      - 'Practice forming locative of abstract feminine nouns in -а/-я:
+        наука→у науці, політика→у політиці, культура→у культурі.'
+  - section: 'Часовий місцевий відмінок (Temporal Locative)'
+    words: 600
+    points:
+      - 'Months: у січні, у лютому, у березні... all months use у/в + locative.
+        Masculine months in -ень: -ні (січень→у січні). Neuter місяць compounds:
+        у минулому місяці, у наступному місяці.'
+      - 'Weeks: на цьому тижні, на минулому тижні, на наступному тижні. Note:
+        тиждень uses на (not у).'
+      - 'Life periods: у дитинстві (in childhood), у молодості (in youth),
+        у старості (in old age), у минулому (in the past), у майбутньому
+        (in the future).'
+      - 'Contrast with accusative for duration: у понеділок (on Monday, acc.)
+        vs. у минулому місяці (last month, loc.). The question test: Коли?
+        (temporal loc.) vs. Як довго? (duration, acc.).'
+  - section: 'По телефону, по радіо: місцевий із прийменником «по» (Locative
+      with "po")'
+    words: 500
+    points:
+      - 'Topic/means with по + locative: по телефону (by phone), по радіо
+        (on the radio), по пошті (by mail), по дорозі (on the way).'
+      - 'Distinction: говорити по телефону (the medium of communication) vs.
+        говорити про телефон (about the phone as a topic). По + locative =
+        means/channel. Про + accusative = topic.'
+      - 'Common phrases: Я подзвоню по телефону. Ми почули по радіо. Він
+        надіслав по пошті. Зустрілися по дорозі додому.'
+      - 'Note: по + locative is the traditional Ukrainian pattern. Some modern
+        usage shifts to по + dative for distribution (по одному), but for
+        communication means, locative is standard.'
+  - section: 'Місцевий відмінок: від місця до сенсу (From Place to Meaning)'
+    words: 350
+    points:
+      - 'Summary: locative is not just "where" — it answers де? (location),
+        коли? (time), and як? (means/channel).'
+      - 'Consolidation table: physical (у місті), abstract (у житті), temporal
+        (у січні), means (по телефону) — all locative, four different functions.'
+      - 'Practice: building sentences that use 2-3 locative functions together:
+        У минулому місяці я розмовляв по телефону з другом у Києві.'
+vocabulary_hints:
+  required:
+    - місцевий (locative (case))
+    - абстрактний (abstract)
+    - минулий (past, previous)
+    - місяць (month)
+    - тиждень (week)
+    - телефон (phone, telephone)
+    - подорож (journey, trip)
+    - зустріч (meeting, encounter)
+    - думка (thought, opinion)
+    - проблема (problem)
+  recommended:
+    - дитинство (childhood)
+    - молодість (youth)
+    - майбутнє (future)
+    - освіта (education)
+    - мистецтво (art)
+activity_hints:
+  - type: quiz
+    focus: 'Identify the function of locative in each sentence (physical
+      location, abstract domain, temporal, or means)'
+    items: 8
+  - type: fill-in
+    focus: Complete sentences with the correct locative form of the noun
+      (у минулому ___, на цьому ___, по ___)
+    items: 8
+  - type: match-up
+    focus: Match locative expressions with their English equivalents across
+      all four function types
+    items: 8
+  - type: error-correction
+    focus: 'Fix preposition errors (e.g., *у роботі → на роботі, *у
+      телефону → по телефону, *на минулому місяці → у минулому місяці)'
+    items: 8
+references:
+  - title: Заболотний Grade 5, §28-30
+    notes: Місцевий відмінок іменників, прийменники
+  - title: Заболотний Grade 6, §34-35
+    notes: Часові конструкції з місцевим відмінком
+  - title: 'ULP: Ukrainian Cases — Locative'
+    url: https://www.ukrainianlessons.com/locative-case/
+    notes: Locative case uses including temporal and abstract

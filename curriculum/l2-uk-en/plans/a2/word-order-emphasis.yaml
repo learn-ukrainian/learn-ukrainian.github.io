@@ -1,0 +1,144 @@
+module: a2-050
+level: A2
+sequence: 50
+slug: word-order-emphasis
+version: '1.0'
+title: Порядок слів і наголос у реченні
+subtitle: Тема і рема, інверсія для контрасту та природний порядок слів
+focus: grammar
+pedagogy: PPP
+phase: A2.7 [Complex Sentences and Conditionals]
+word_target: 2000
+objectives:
+  - Learner can identify theme (тема, known information) and rheme (рема,
+    new information) in Ukrainian sentences and understand that rheme
+    typically comes last.
+  - Learner can use fronting (moving a word to sentence-initial position) to
+    create emphasis or contrast (Книгу я вже прочитав, not *Я вже прочитав
+    книгу when emphasizing "the book specifically").
+  - Learner can distinguish neutral word order (SVO) from marked word order
+    and understand the communicative effect of each.
+  - Learner can produce natural Ukrainian sentences where word order conveys
+    meaning beyond what grammar alone encodes.
+dialogue_situations:
+  - setting: 'Roommates dividing chores — clarifying who does what: Хто
+      помив посуд? — Посуд помив Тарас. А підлогу? — Підлогу ще ніхто не
+      помив. Добре, підлогу помию я.'
+    speakers:
+      - Оленка
+      - Марійка
+    motivation: 'Natural fronting for contrast: Посуд помив Тарас (посуд =
+      theme, Тарас = rheme). Підлогу помию я (підлогу = theme, я = rheme)'
+  - setting: 'Friends discussing a movie — disagreeing about details: Цей
+      фільм зняв Сенцов. — Ні, цей фільм зняв не Сенцов, а Лозниця. —
+      А от «Номери» — це точно Сенцов зняв.'
+    speakers:
+      - Друг 1
+      - Друг 2
+    motivation: 'Contrast through word order shift: neutral (Сенцов зняв
+      фільм) vs. contrastive (Цей фільм зняв Сенцов) vs. corrective
+      (не Сенцов, а Лозниця)'
+content_outline:
+  - section: 'Тема і рема: що відоме, що нове? (Theme and Rheme)'
+    words: 550
+    points:
+      - 'Every sentence has two parts: тема (theme, the known/given info,
+        what the sentence is about) and рема (rheme, the new info, the
+        communicative focus).'
+      - 'In neutral Ukrainian word order, тема comes first and рема comes
+        last: Тарас (theme) купив нову книгу (rheme). The "news" is at
+        the end.'
+      - 'Test: answer a question. Хто купив книгу? → Книгу купив Тарас
+        (Тарас is the new info = rheme = last). Що купив Тарас? → Тарас
+        купив книгу (книгу = rheme = last).'
+      - 'This is different from English, where word order is grammatically
+        fixed (SVO). Ukrainian uses word order for MEANING — the grammar
+        is encoded in case endings, so word order is free to convey emphasis.'
+  - section: 'Прямий порядок слів (Neutral Word Order)'
+    words: 500
+    points:
+      - 'Default neutral order: Subject + Predicate + Object (SVO): Студент
+        читає книгу. Мама готує вечерю. This is the unmarked, emotionally
+        neutral order.'
+      - 'Adjective before noun: нова книга, великий будинок (same as English).
+        Adverb before verb or after: добре працює / працює добре (both OK,
+        but emphasis shifts).'
+      - 'Time expressions typically go first or last: Вчора ми ходили в кіно.
+        Ми ходили в кіно вчора. (Вчора first = neutral context-setting;
+        вчора last = emphasizing "it was yesterday").'
+      - 'Practice: identify the neutral word order in sentences and explain
+        what the theme and rheme are.'
+  - section: 'Інверсія для контрасту (Fronting for Contrast)'
+    words: 600
+    points:
+      - 'Fronting the object: Книгу я вже прочитав (I''ve already read THE
+        BOOK — as opposed to something else). The object moves to the front
+        to become the theme, and the subject shifts to become part of the
+        rheme.'
+      - 'Fronting the verb: Прочитав я цю книгу! (emphatic, expressive —
+        I DID read this book!). Verb-first order conveys strong assertion
+        or emotional emphasis.'
+      - 'Corrective contrast: Не Тарас це зробив, а Олег. (Not Taras did
+        this, but Oleh.) The corrected element is fronted with не...а.'
+      - 'Cleft-like patterns: Це Тарас допоміг мені. (It was Taras who
+        helped me.) Це + noun identifies the rheme explicitly.'
+      - 'Practice: transform neutral sentences into emphatic ones by changing
+        word order, then explain the shift in meaning.'
+  - section: 'Порядок слів у реальному мовленні (Word Order in Real Speech)'
+    words: 350
+    points:
+      - 'In conversation, word order constantly shifts based on what is known
+        vs. new. Practice with mini-dialogues where each answer reorders
+        the sentence to highlight the new information.'
+      - 'Common patterns: — Хто це зробив? — Це зробив Тарас. (SVO → OVS).
+        — Що ти купив? — Я купив каву. (neutral SVO stays).'
+      - 'Reading practice: identifying word order shifts in a short Ukrainian
+        text and explaining why the author chose that order.'
+vocabulary_hints:
+  required:
+    - порядок (order)
+    - речення (sentence)
+    - тема (theme, topic (linguistics))
+    - рема (rheme, new information)
+    - наголос (stress, emphasis)
+    - інверсія (inversion)
+    - контраст (contrast)
+    - підкреслювати (to emphasize, to underline)
+    - початок (beginning)
+    - кінець (end)
+  recommended:
+    - виділяти (to highlight, to single out)
+    - означення (attribute, modifier)
+    - нейтральний (neutral)
+    - емфатичний (emphatic)
+    - акцент (accent, emphasis)
+activity_hints:
+  - type: quiz
+    focus: 'Identify the rheme (new information) in each sentence based on
+      the question it answers'
+    items: 8
+  - type: match-up
+    focus: Match questions with the correctly word-ordered answers (Хто
+      приїхав? → Приїхав Тарас, not Тарас приїхав)
+    items: 8
+  - type: fill-in
+    focus: Reorder words to create the correct emphasis for a given context
+      (the book / I / already / read → for emphasis on "the book")
+    items: 8
+  - type: group-sort
+    focus: Sort sentences into neutral word order vs. marked/emphatic word
+      order
+    items: 8
+  - type: error-correction
+    focus: 'Fix sentences where word order creates unintended emphasis
+      (e.g., answering "What did you buy?" with *Каву купив я instead
+      of Я купив каву)'
+    items: 6
+references:
+  - title: Заболотний Grade 8, §10-12
+    notes: Порядок слів у реченні, прямий і зворотний порядок
+  - title: Авраменко Grade 8, §6-7
+    notes: Тема і рема, актуальне членування речення
+  - title: 'ULP: Ukrainian Word Order'
+    url: https://www.ukrainianlessons.com/word-order/
+    notes: How Ukrainian word order differs from English

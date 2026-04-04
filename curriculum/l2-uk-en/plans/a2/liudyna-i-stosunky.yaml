@@ -1,0 +1,126 @@
+module: a2-004
+level: A2
+sequence: 4
+slug: liudyna-i-stosunky
+version: '1.0'
+title: Яка вона людина? Описуємо людей навколо нас
+subtitle: Зовнішність, характер та стосунки — описуємо рідних, друзів і знайомих
+focus: communication
+pedagogy: PPP
+phase: A2.1 [Foundation and Aspect Introduction]
+word_target: 2000
+objectives:
+  - Learner can describe a person's appearance using basic adjectives and noun
+    phrases (високий, темноволосий, з карими очима).
+  - Learner can describe a person's character using personality adjectives
+    (привітний, щирий, працьовитий, терплячий).
+  - Learner can talk about relationships and people in their life (родич, сусід,
+    колега, знайомий) using appropriate vocabulary.
+  - Learner can recognize imperfective/perfective aspect in context when
+    describing habitual vs. one-time actions of people they know.
+dialogue_situations:
+  - setting: 'Two friends looking at photos on a phone — describing family members
+      and friends: Це моя сестра. Вона висока, темноволоса. Дуже весела і щира
+      людина. А це мій сусід — він завжди допомагає (impf). Учора допоміг (pf)
+      мені з валізою.'
+    speakers:
+      - Подруга 1
+      - Подруга 2
+    motivation: 'Natural context for describing people: appearance + character +
+      aspect contrast (допомагає/допоміг)'
+  - setting: 'New colleague at work — introducing yourself and asking about the
+      team: Хто ваш керівник? Який він? — Він дуже відповідальний і справедливий.
+      А колеги? — Усі привітні, особливо Оксана — вона завжди підказує (impf)
+      новим працівникам.'
+    speakers:
+      - Новий працівник
+      - Досвідчений колега
+    motivation: 'Workplace introductions: describing colleagues'' character with
+      imperfective habitual actions'
+content_outline:
+  - section: 'Зовнішність: як виглядає людина? (Appearance: What Does a Person Look Like?)'
+    words: 500
+    points:
+      - 'Core appearance vocabulary: високий/низький, худий/повний, молодий/старий,
+        темноволосий/світловолосий, кароокий/блакитноокий.'
+      - 'Describing with мати and з + instrumental (preview): Вона має карі очі /
+        Вона з карими очима. Note: instrumental is previewed here but formally
+        taught later in A2.4.'
+      - 'Practice describing people from photos or illustrations — building
+        multi-adjective descriptions. Agreement: високий чоловік, висока жінка.'
+  - section: 'Характер: яка вона людина? (Character: What Kind of Person Is She?)'
+    words: 600
+    points:
+      - 'Positive traits: привітний, щирий, чуйний, добрий, веселий, розумний,
+        працьовитий, терплячий, відповідальний, наполегливий.'
+      - 'Challenging traits (not just "negative"): впертий, сумний, ледачий,
+        серйозний, тихий. Ukrainian perspective — впертий can be positive
+        (persistent, principled).'
+      - 'Sentence patterns for describing character: Він дуже добрий. Вона —
+        щира людина. Мій брат — працьовитий і відповідальний.'
+      - 'Aspect integration: habitual character traits use imperfective — Він
+        завжди допомагає (impf, always helps). One-time proof of character uses
+        perfective — Він допоміг (pf) мені вчора (he helped me yesterday).'
+  - section: 'Люди навколо нас: родичі, друзі, знайомі (People Around Us)'
+    words: 550
+    points:
+      - 'Relationship vocabulary: родич, мати/батько, брат/сестра, дідусь/бабуся,
+        дядько/тітка, друг/подруга, товариш, сусід/сусідка, колега, знайомий.'
+      - 'Talking about relationships: Ми дружимо вже п''ять років. Вона — моя
+        найкраща подруга. Він мій сусід — живе поруч.'
+      - 'Describing how someone acts toward you: Вона мені довіряє. Він мене
+        поважає. Вони нам допомагають.'
+      - 'Natural conversation about people: responding to "А хто це?" and
+        "Який він/яка вона?"'
+  - section: 'Описуємо людину цілком (Describing a Person Fully)'
+    words: 350
+    points:
+      - 'Combining appearance + character + relationship in a short paragraph:
+        Мій друг Андрій — високий хлопець із карими очима. Він дуже веселий
+        і щирий. Ми познайомилися в університеті.'
+      - 'Practice: learner describes 2-3 people they know using the full
+        pattern (who they are, what they look like, what their character is).'
+      - 'Cultural note: Ukrainians often describe people through their actions
+        and character more than physical appearance — "Добра людина" is a
+        powerful compliment.'
+vocabulary_hints:
+  required:
+    - людина (person, human being)
+    - стосунок (relationship)
+    - характер (character, personality)
+    - зовнішність (appearance)
+    - привітний (friendly, welcoming)
+    - щирий (sincere, genuine)
+    - працьовитий (hardworking)
+    - терплячий (patient)
+    - сусід (neighbor)
+    - описувати (to describe)
+  recommended:
+    - впертий (stubborn, persistent)
+    - чуйний (responsive, caring)
+    - наполегливий (persistent, determined)
+    - родич (relative)
+    - знайомий (acquaintance)
+activity_hints:
+  - type: match-up
+    focus: Match personality adjectives to their definitions or example situations
+    items: 8
+  - type: quiz
+    focus: 'Choose the correct adjective to complete a person description (Він
+      завжди допомагає — він дуже ___: щирий/ледачий/сумний)'
+    items: 8
+  - type: fill-in
+    focus: Complete sentences describing people with the correct adjective form
+      (agreement for gender)
+    items: 8
+  - type: group-sort
+    focus: Sort personality adjectives into positive traits and challenging traits
+    items: 8
+references:
+  - title: Заболотний Grade 5, §38-42
+    notes: Іменник — людина, стосунки, описові тексти
+  - title: Большакова Grade 1, §14-16
+    notes: Опис людини, зовнішність і характер у дитячих текстах
+  - title: 'ULP: How to Describe a Person in Ukrainian'
+    url: https://www.ukrainianlessons.com/describing-people/
+    notes: Appearance and personality vocabulary
