@@ -1,0 +1,146 @@
+module: c1-010
+level: C1
+sequence: 10
+slug: c1-0-checkpoint
+version: '1.0'
+title: "Підсумковий контроль: C1.0 — Академічний старт"
+subtitle: "Контрольна точка C1.0"
+focus: checkpoint
+pedagogy: review
+word_target: 4000
+objectives:
+  - "Перевірити рівень засвоєння базової академічної лексики та термінології
+    після вхідного блоку C1."
+  - "Оцінити навички створення структурованих академічних текстів: есе, тези,
+    анотація."
+  - "Підтвердити вміння формулювати тезу, розвивати аргумент та робити висновки."
+  - "Виявити індивідуальні зони для подальшого вдосконалення на рівні C1."
+
+reading_situations:
+  - source_type: "академічний текст"
+    topic: "Комплексний текст на перетині освіти, науки та суспільства для перевірки
+      розуміння академічного регістру."
+    key_elements: ["аргументація", "термінологія", "логічні зв'язки", "імпліцитна
+      інформація"]
+    motivation: "Контрольне читання для перевірки розуміння академічного дискурсу."
+
+listening_situations:
+  - media_type: "лекція"
+    setting: "Фрагмент академічної лекції з узагальненням декількох вивчених тем."
+    focus_points: ["ключові тези", "аргументація", "академічна лексика"]
+    motivation: "Контрольне аудіювання: сприйняття складної академічної інформації."
+
+writing_tasks:
+  - task_type: "есе"
+    prompt: "Напишіть академічне есе (300-400 слів) на одну з тем: 'Роль критичного
+      мислення в сучасній освіті' або 'Мова як інструмент формування світогляду'."
+    requirements: ["тричастинна структура", "академічний регістр", "хеджування",
+      "логічні конектори"]
+    motivation: "Контрольна перевірка письмової компетенції на початковому етапі C1."
+    model_answer: "Текст має демонструвати володіння академічним стилем: чітка теза,
+      розвинені аргументи з прикладами, збалансований висновок."
+
+discussion_topics:
+  - context: "Підсумкова рефлексія: що ви навчилися і що потребує подальшої роботи."
+    questions:
+      - "Які аспекти академічного письма даються вам найлегше і найважче?"
+      - "Як ви оцінюєте свій прогрес порівняно з рівнем B2?"
+    motivation: "Самооцінка та планування подальшого навчання."
+
+content_outline:
+  - section: "Академічна лексика: повторення та систематизація"
+    words: 1000
+    subsections:
+      - "Ключова академічна термінологія C1.0: від абстрактних понять до фахових
+        термінів"
+      - "Дискурсивні маркери: додаток, протиставлення, висновок"
+      - "Хеджування та модальність: здається, ймовірно, можна припустити"
+    key_concepts:
+      - "термінологія"
+      - "дискурсивний маркер"
+      - "хеджування"
+  - section: "Структура академічного тексту"
+    words: 1000
+    subsections:
+      - "Теза, аргумент, приклад, висновок: архітектоніка есе"
+      - "Анотація та тези: компресія інформації"
+      - "Логічна когерентність та когезія тексту"
+    key_concepts:
+      - "когерентність"
+      - "когезія"
+      - "архітектоніка"
+  - section: "Граматика C1.0: підсумковий огляд"
+    words: 1000
+    subsections:
+      - "Складні речення в академічному стилі"
+      - "Пасивні конструкції та безособові речення"
+      - "Вставні слова та конструкції як засоби модальності"
+    key_concepts:
+      - "пасивний"
+      - "безособовий"
+      - "модальність"
+  - section: "Комунікативні навички: від письма до дискусії"
+    words: 1000
+    subsections:
+      - "Мистецтво формулювання питань та відповідей"
+      - "Аргументація в усній дискусії"
+      - "Етика академічного спілкування: повага до альтернативних позицій"
+    key_concepts:
+      - "аргументація"
+      - "дискусія"
+      - "етика"
+
+vocabulary:
+  required:
+    - аргументація
+    - когерентність
+    - термінологія
+    - хеджування
+    - модальність
+    - компетенція
+    - когезія
+    - дискурс
+  recommended:
+    - архітектоніка
+    - імпліцитний
+    - когнітивний
+    - синтез
+    - рефлексія
+
+activity_hints:
+  - type: essay-response
+    description: "Write a structured academic essay (300-400 words) demonstrating all
+      C1.0 skills — thesis, argumentation, hedging, academic register."
+  - type: critical-analysis
+    description: "Analyze a complex academic text — evaluate argument structure, identify
+      hedging devices, and assess logical coherence."
+  - type: error-correction
+    description: "Fix academic register violations, logical inconsistencies, and
+      stylistic errors in a mixed-register text."
+  - type: fill-in
+    description: "Complete an academic text with appropriate discourse markers,
+      hedging expressions, and logical connectors."
+  - type: select
+    description: "Choose the correct academic formulation for each context: formal
+      vs informal, hedged vs categorical, active vs passive."
+
+activities:
+  types_required:
+    - essay-response
+    - critical-analysis
+    - error-correction
+    - fill-in
+    - select
+  min_items_per_type: 10
+  total_min_items: 50
+
+references:
+  - "Глазова, 11 клас (2019): §1-10 — Академічне мовлення"
+  - "Авраменко, 11 клас (2019): Наукова доповідь, с. 164"
+  - "Ворон, 11 клас (2019): с. 207-218 — Науковий стиль"
+  - "State Standard 2024: C1.0 competencies — academic foundation"
+
+connects_to:
+  previous: "thesis-development"
+  next: "counterarguments"
+phase: "C1.0 [Academic Foundation]"

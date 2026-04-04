@@ -1,0 +1,147 @@
+module: c1-044
+level: C1
+sequence: 44
+slug: pobut-ta-domashnie-hospodarstvo
+version: '1.0'
+title: "Побут та домашнє господарство"
+subtitle: "Повсякденне життя, побут, домашнє господарство"
+focus: thematic
+pedagogy: TTT
+word_target: 4000
+objectives:
+  - "Опанувати розширену побутову лексику рівня C1: облаштування житла, ремонт,
+    комунальні послуги."
+  - "Вивчити специфіку офіційно-ділового мовлення у сфері ЖКГ: договори, акти,
+    скарги."
+  - "Навчитися описувати побутові проблеми, домашнє господарство та повсякденні
+    рутини розгорнутою мовою."
+  - "Аналізувати зміни в українському побуті: традиційна хата vs сучасна квартира."
+
+reading_situations:
+  - source_type: "етнографічний нарис"
+    topic: "Побут української хати: від печі до покуті — семантика простору."
+    key_elements: ["етнографія", "сакральний простір", "побутова лексика"]
+    motivation: "Поєднання побутової лексики з культурологічним аналізом."
+  - source_type: "побутовий текст"
+    topic: "Як правильно скласти скаргу до ЖЕКу: зразок та аналіз."
+    key_elements: ["офіційно-діловий стиль", "комунальні послуги", "заява"]
+    motivation: "Вивчення офіційно-ділового стилю в побутовому контексті."
+
+listening_situations:
+  - media_type: "діалог"
+    setting: "Розмова з майстром про ремонт квартири: обговорення матеріалів,
+      термінів, вартості."
+    focus_points: ["побутова лексика", "переговори", "уточнення деталей"]
+    motivation: "Сприйняття розмовного регістру в побутовій ситуації."
+
+writing_tasks:
+  - task_type: "офіційний лист"
+    prompt: "Напишіть заяву до ОСББ (250 слів) щодо проблеми з опаленням у вашому
+      будинку: опис ситуації, вимоги, правове обґрунтування."
+    requirements: ["офіційно-діловий стиль", "коректна структура заяви",
+      "побутова та юридична лексика"]
+    motivation: "Практика офіційно-ділового письма у побутовій сфері."
+    model_answer: "Текст має містити формальне звернення, виклад суті проблеми,
+      посилання на законодавство та чітке формулювання вимог."
+
+discussion_topics:
+  - context: "Як змінився побут українців за останні 30 років?"
+    questions:
+      - "Що збереглося з традиційного побуту і що зникло безповоротно?"
+      - "Як війна змінила побутові звички українців?"
+    motivation: "Обговорення трансформації побуту та його лексичного відображення."
+
+content_outline:
+  - section: "Житло та облаштування"
+    words: 1000
+    subsections:
+      - "Типи житла: квартира, будинок, котедж, гуртожиток"
+      - "Облаштування кімнат: меблі, техніка, декор"
+      - "Ремонт: будівельна лексика, матеріали, інструменти"
+    key_concepts:
+      - "облаштування"
+      - "ремонт"
+      - "житловий"
+  - section: "Комунальні послуги та ЖКГ"
+    words: 1000
+    subsections:
+      - "Опалення, водопостачання, електрика, газ: терміни та тарифи"
+      - "ОСББ, ЖЕК, керуюча компанія: структура управління"
+      - "Комунальні платежі, субсидії, лічильники"
+    key_concepts:
+      - "комунальний"
+      - "тариф"
+      - "субсидія"
+  - section: "Домашнє господарство"
+    words: 1000
+    subsections:
+      - "Прибирання, прання, прасування: побутові дії та засоби"
+      - "Організація простору: зберігання, планування, мінімалізм"
+      - "Садівництво та городництво: вирощування, догляд, збір врожаю"
+    key_concepts:
+      - "побут"
+      - "господарство"
+      - "організація"
+  - section: "Побут як культурний код"
+    words: 1000
+    subsections:
+      - "Традиційний побут: хата, піч, рушник на іконі"
+      - "Радянська спадщина в побуті: хрущовка, комуналка, 'блат'"
+      - "Сучасний українець у своєму домі: нові звички, нові цінності"
+    key_concepts:
+      - "традиція"
+      - "модернізація"
+      - "ідентичність"
+
+vocabulary:
+  required:
+    - побут
+    - господарство
+    - облаштування
+    - ремонт
+    - комунальний
+    - житловий
+    - тариф
+    - субсидія
+  recommended:
+    - садівництво
+    - мінімалізм
+    - лічильник
+    - прибирання
+    - інструмент
+
+activity_hints:
+  - type: fill-in
+    description: "Complete household and utility-related texts with appropriate
+      vocabulary: repair terms, communal services, home organization."
+  - type: match-up
+    description: "Match household items, rooms, and services with their functions,
+      descriptions, and contexts of use."
+  - type: critical-analysis
+    description: "Analyze an ethnographic text about the traditional Ukrainian хата —
+      identify cultural codes embedded in household vocabulary."
+  - type: error-correction
+    description: "Fix Russianisms and surzhyk in household vocabulary: підʼїзд→під'їзд,
+      кран→кран (correct), ковьор→килим, кастрюля→каструля."
+  - type: select
+    description: "Choose the correct Ukrainian household term over Russian-influenced
+      alternatives in everyday contexts."
+
+activities:
+  types_required:
+    - fill-in
+    - match-up
+    - critical-analysis
+    - error-correction
+    - select
+  min_items_per_type: 5
+  total_min_items: 25
+
+references:
+  - "Глазова, 11 клас (2019): §1-5 — Культура мовлення: побутова лексика"
+  - "Авраменко, 11 клас (2019): Офіційно-діловий стиль — заяви, скарги"
+  - "State Standard 2024: C1 — тематичне поле 'побут'"
+
+connects_to:
+  previous: "aspect-pairs-mastery-c1"
+  next: "imperative-mastery"

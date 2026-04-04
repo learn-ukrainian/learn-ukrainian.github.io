@@ -1,0 +1,147 @@
+module: c1-108
+level: C1
+sequence: 108
+slug: checkpoint-folk-traditions
+version: '1.0'
+title: "Контрольна точка: Народні традиції, обряди та регіональна культура"
+subtitle: "Підсумковий контроль: обряди, легенди, регіональна специфіка"
+focus: checkpoint
+pedagogy: review
+word_target: 4000
+objectives:
+  - "Перевірити та систематизувати знання про календарні та родинні обряди."
+  - "Оцінити розуміння народної міфології, медицини та казкової спадщини."
+  - "Підтвердити навички порівняльного аналізу регіональних традицій: Галичина,
+    Поділля, Волинь, Полісся."
+  - "Продемонструвати вміння аналізувати обрядову семантику в академічному стилі."
+
+reading_situations:
+  - source_type: "етнографічний текст"
+    topic: "Порівняльний аналіз весільних обрядів: Полісся vs Галичина."
+    key_elements: ["ритуал", "символіка", "регіональна відмінність", "архаїка"]
+    motivation: "Контрольне читання для перевірки знань обрядової етнографії."
+  - source_type: "текст для аналізу"
+    topic: "Народна казка з етнографічним коментарем: символіка персонажів та
+      мотивів."
+    key_elements: ["архетип", "мотив", "інтерпретація", "символізм"]
+    motivation: "Перевірка навичок літературознавчого та етнографічного аналізу."
+
+listening_situations:
+  - media_type: "аудіо"
+    setting: "Запис народної казки у виконанні оповідача з характерним говірковим
+      забарвленням."
+    focus_points: ["сюжет", "діалектні риси", "оповідна техніка"]
+    motivation: "Сприйняття автентичного усного фольклору."
+
+writing_tasks:
+  - task_type: "порівняльний аналіз"
+    prompt: "Порівняйте календарні обряди (зимові vs весняні) за структурою, символікою
+      та функцією (300-350 слів). Що об'єднує, а що відрізняє ці цикли?"
+    requirements: ["порівняльна структура", "конкретні приклади обрядів",
+      "етнографічна термінологія"]
+    motivation: "Синтез знань про обрядовий цикл."
+    model_answer: "Текст має виявити спільні архетипні мотиви (оновлення, родючість)
+      та показати відмінності в ритуальних практиках та символіці."
+
+discussion_topics:
+  - context: "Народні традиції: живий спадок чи музейний експонат?"
+    questions:
+      - "Які обряди зберігаються в сучасному побуті, а які зникли? Чому?"
+      - "Як народна медицина та міфологія впливають на сучасну свідомість українців?"
+    motivation: "Підсумкова рефлексія про живучість народної традиції."
+
+content_outline:
+  - section: "Календарні обряди: підсумок"
+    words: 1000
+    subsections:
+      - "Зимовий цикл: Різдво, Коляда, Водохреще, Маланка"
+      - "Весняно-літній цикл: Масляна, Великдень, Зелені свята, Купала"
+      - "Осінній цикл: Покрова, жниварські обряди, Спас"
+    key_concepts:
+      - "обряд"
+      - "календарний цикл"
+      - "символіка"
+  - section: "Родинні обряди"
+    words: 1000
+    subsections:
+      - "Хрестини та ім'янаречення: ритуали прийняття в громаду"
+      - "Весілля: сватання, вінчання, посад, перезва"
+      - "Поминальні обряди: проводи, поминки, Гробки"
+    key_concepts:
+      - "ритуал"
+      - "ініціація"
+      - "поминки"
+  - section: "Народна міфологія та усна спадщина"
+    words: 1000
+    subsections:
+      - "Козацькі легенди та історичні перекази"
+      - "Казки та притчі: архетипи, мотиви, повчання"
+      - "Народна медицина: знахарство, замовляння, фітотерапія"
+    key_concepts:
+      - "легенда"
+      - "архетип"
+      - "знахарство"
+  - section: "Регіональна культура: порівняльний огляд"
+    words: 1000
+    subsections:
+      - "Галичина: європейський контекст, греко-католицька традиція"
+      - "Поділля та Волинь: землеробська архаїка, вишиванкові орнаменти"
+      - "Полісся та Слобожанщина: лісова культура, козацькі впливи"
+    key_concepts:
+      - "регіональність"
+      - "етнографічна зона"
+      - "порівняння"
+
+vocabulary:
+  required:
+    - обряд
+    - ритуал
+    - символіка
+    - архетип
+    - знахарство
+    - легенда
+    - регіональність
+    - ініціація
+  recommended:
+    - замовляння
+    - фітотерапія
+    - перезва
+    - сватання
+    - етнографічний
+
+activity_hints:
+  - type: critical-analysis
+    description: "Compare winter and spring ritual cycles — analyze shared archetypes,
+      differing symbolism, and regional variations."
+  - type: error-correction
+    description: "Fix factual errors in a text about folk traditions — misattributed
+      regions, wrong ritual sequences, confused terminology."
+  - type: match-up
+    description: "Match folk rituals (Коляда, Купала, весілля, хрестини) with their
+      seasons, symbols, and regional specifics."
+  - type: true-false
+    description: "Evaluate statements about Ukrainian folk traditions — separate
+      ethnographic facts from popular misconceptions."
+  - type: select
+    description: "Identify the ethnographic region based on described ritual practices,
+      costume elements, or linguistic features."
+
+activities:
+  types_required:
+    - critical-analysis
+    - error-correction
+    - match-up
+    - true-false
+    - select
+  min_items_per_type: 5
+  total_min_items: 25
+
+references:
+  - "Глазова, 11 клас (2019): §40 — Стилістичне забарвлення: етнографічна лексика"
+  - "Караман, 10 клас (2018): §38 — Лексичні засоби стилістики"
+  - "State Standard 2024: C1 — народні традиції та обряди"
+
+connects_to:
+  previous: "halychyna"
+  next: "traditional-clothing"
+phase: "C1.8 [Folk Traditions]"
