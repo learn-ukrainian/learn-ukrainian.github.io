@@ -1,7 +1,7 @@
 # Audit Report: M03 — special-signs.md
 **Level:** A1 | **Module:** M03 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-04-03 14:02:15
+**Overall Status:** ✅ PASS
+**Generated:** 2026-04-04 19:30:13
 
 ## Configuration
 **Type:** A1
@@ -49,18 +49,16 @@
   - FIX: Provide [3, 4] options for A1 quizzes.
 - **[COMPLEXITY_OPTIONS]** quiz '' Q6 has 2 options (target: [3, 4])
   - FIX: Provide [3, 4] options for A1 quizzes.
-- **[SEMANTIC_FALSE_FRIEND]** Found 2 semantic false friend(s): 'лук' translated as 'onion' (Ukrainian meaning: bow (weapon), use цибуля instead); 'шар' translated as 'sphere' (Ukrainian meaning: layer, use куля instead)
-  - FIX: The word exists in Ukrainian but the English translation uses the Russian meaning. Replace the word or fix the translation to match Ukrainian semantics.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in special-signs.yaml: Schema validation error at key '9': {'type': 'group-sort', 'instruction': 'Sort these 12 words by the voicing of their first consonant. Is the first sound voiced (like Б, Д, Г, З, Ж, Ґ) or voiceless (like П, Т, Х, С, Ш, К)?', 'groups': [{'label': 'Voiced first consonant', 'items': ['день', 'зуб', 'гора', 'дуб', 'ґудзик', 'жар']}, {'label': 'Voiceless first consonant', 'items': ['сіль', "п'ять", 'кіт', 'коса', 'шар', 'казка']}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 30/100)
 
-- 9 violations (significant)
+- 8 violations (significant)
 
 ## Gates
-- **Words:** ✅ 1619/1200 (raw: 1728)
+- **Words:** ✅ 1627/1200 (raw: 1736)
 - **Activities:** ✅ 9/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 5/0 types
@@ -70,7 +68,7 @@
 - **Vocab:** ✅ 62/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
 - **Immersion:** 🇺🇦 12.9% (target 5-25% (M03))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
@@ -80,8 +78,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 459 | Included in Core |
+| **Intro/Narrative** | ✅ | 463 | Included in Core |
 | **Апо́стро́ф (The Apostrophe)** | ✅ | 318 | Included in Core |
 | **Дзвінкі́ і глухі́ (Voiced and Voiceless)** | ✅ | 272 | Included in Core |
-| **Вимо́ва украї́нських зву́ків (Pronouncing Ukrainian Sounds)** | ✅ | 330 | Included in Core |
+| **Вимо́ва украї́нських зву́ків (Pronouncing Ukrainian Sounds)** | ✅ | 334 | Included in Core |
 | **Підсумок — Summary** | ✅ | 240 | Included in Core |

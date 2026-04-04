@@ -2,10 +2,10 @@
   "module": "linking-ideas",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-03T14:02:09.413953Z",
+  "last_audit": "2026-04-04T19:30:03.879610Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-31T17:27:15.875408Z",
+    "md": "2026-04-03T23:47:07.193099Z",
     "meta": null,
     "activities": "2026-03-30T22:46:37.870407Z",
     "vocabulary": "2026-03-30T22:46:58.770181Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1230/1200 (raw: 1376)"
+      "message": "1259/1200 (raw: 1405)"
     },
     "activities": {
       "status": "pass",

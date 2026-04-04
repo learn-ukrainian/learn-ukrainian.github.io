@@ -202,7 +202,8 @@ inline:
     - синку
     - бабусю
 workbook:
-- type: fill-in
+- id: fill-in-vocative-dialogue
+  type: fill-in
   instruction: Завершіть діалог — вставте кличний відмінок (Complete the dialogue
     — write the vocative form)
   items:
@@ -222,7 +223,8 @@ workbook:
     answer: Дідусю
   - sentence: — Вибачте, _____ (пан)!
     answer: пане
-- type: match-up
+- id: match-up-nominative-vocative
+  type: match-up
   instruction: 'З''єднайте: називний → кличний відмінок (Match: nominative → vocative)'
   pairs:
   - left: Олена
@@ -241,7 +243,8 @@ workbook:
     right: дідусю
   - left: Марія
     right: Маріє
-- type: true-false
+- id: true-false-vocative-rules
+  type: true-false
   instruction: Правда чи ні? (True or false?)
   items:
   - statement: '''Олено, привіт!'' — правильний кличний відмінок.'
@@ -270,7 +273,8 @@ workbook:
     correct: false
     explanation: 'Ні! Кличний відмінок — живий і повсякденний. Кожен українець використовує
       його постійно: у текстах, вдома, з друзями.'
-- type: error-correction
+- id: error-correction-vocative
+  type: error-correction
   instruction: Виправте помилку — знайдіть неправильну форму (Find and correct the
     error)
   items:
@@ -328,7 +332,8 @@ workbook:
     - сестрі
     - сестру
     explanation: Сестра (жіночий -а) → Сестро (-а → -о).
-- type: observe
+- id: observe-feminine-vocative
+  type: observe
   examples:
   - Олена → Олено
   - мама → мамо
@@ -339,7 +344,8 @@ workbook:
   prompt: Яке закінчення змінюється в кличному відмінку для іменників жіночого роду
     на -а? Запишіть правило одним реченням. (What ending changes in the vocative for
     feminine nouns ending in -а? Write the rule in one sentence.)
-- type: quiz
+- id: quiz-consonant-alternations
+  type: quiz
   instruction: Приголосний чергування — оберіть правильну форму (Consonant alternations
     — choose the correct form)
   items:

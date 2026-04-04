@@ -1,7 +1,7 @@
 # Audit Report: M46 — holidays.md
 **Level:** A1 | **Module:** M46 | **Phase:** A1.7 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:07
+**Generated:** 2026-04-04 19:30:01
 
 ## Configuration
 **Type:** A1-culture
@@ -43,7 +43,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1162/1200 (raw: 1306) (38 short)
+- **Words:** ⚠️ 1163/1200 (raw: 1307) (37 short)
 - **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
@@ -63,7 +63,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 379 | Included in Core |
+| **Intro/Narrative** | ✅ | 380 | Included in Core |
 | **Украї́нські свя́та́ (Ukrainian Holidays)** | ✅ | 325 | Included in Core |
 | **Держа́вні свята (National Holidays)** | ✅ | 258 | Included in Core |
 | **Підсумок — Summary** | ✅ | 200 | Included in Core |

@@ -22,10 +22,11 @@ def evaluate_word_count(total_words: int, target: int, raw_words: int = 0) -> Ga
     """Evaluate word count gate.
 
     - PASS: at or above target (no upper limit - we love words!)
-    - WARN: below target but within 100 words
-    - FAIL: 100+ words below target
+    - WARN: below target but within margin
+    - FAIL: more than word_count_fail_pct% below target
     """
-    min_words = target - AUDIT_THRESHOLDS["word_count_fail_margin"]
+    fail_pct = AUDIT_THRESHOLDS["word_count_fail_pct"]
+    min_words = int(target * (1 - fail_pct / 100))
 
     msg = f"{total_words}/{target}"
     if raw_words > total_words:
@@ -34,11 +35,11 @@ def evaluate_word_count(total_words: int, target: int, raw_words: int = 0) -> Ga
     if total_words >= target:
         return GateResult('PASS', '✅', msg)
     elif total_words >= min_words:
-        # Within 100 words of target - warn but don't fail
+        # Below target but within tolerance - warn but don't fail
         shortfall = target - total_words
         return GateResult('WARN', '⚠️', f"{msg} ({shortfall} short)")
     else:
-        # More than 100 words short - fail
+        # More than {fail_pct}% below target - fail
         return GateResult('FAIL', '❌', msg)
 
 

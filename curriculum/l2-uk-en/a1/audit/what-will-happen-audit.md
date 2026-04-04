@@ -1,7 +1,7 @@
 # Audit Report: M50 — what-will-happen.md
 **Level:** A1 | **Module:** M50 | **Phase:** A1.8 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:20
+**Generated:** 2026-04-04 19:30:21
 
 ## Configuration
 **Type:** A1-grammar
@@ -35,15 +35,13 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[INFO]** Dative case used at A1: 'чолові' (taught formally at A2)
   - FIX: No action needed — incidental dative exposure is acceptable.
-- **[HEADING_LEVEL]** Main section 'Summary' uses H2 (##) but spec requires H1 (#)
-  - FIX: Change '## Summary' to '# Summary' for top-level TOC compliance
 - **[YAML_SCHEMA_VIOLATION]** Schema error in what-will-happen.yaml: Schema validation error at key '7': {'type': 'group-sort', 'instruction': 'Розподіліть речення за часом (Sort sentences by tense)', 'groups': [{'label': 'Майбутній час (Future)', 'items': ['Завтра я буду працювати.', 'Вона буде читати книжку.', 'Ми будемо гуляти в парку.', 'Вони будуть відпочивати.', 'Ти будеш готувати вечерю?', 'Ви будете дивитися футбол?']}, {'label': 'Не майбутній час (Past / Present)', 'items': ['Зараз я читаю.', 'Він гуляв у парку вчора.', 'Вона читала книжку.', 'Ми готуємо зараз.', 'Учора вони відпочивали.', 'Ти добре говориш.']}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
+- 2 violations (minor)
 
 ## Gates
 - **Words:** ✅ 1260/1200 (raw: 1327)

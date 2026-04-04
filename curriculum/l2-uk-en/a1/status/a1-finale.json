@@ -2,10 +2,10 @@
   "module": "a1-finale",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-03T14:02:00.572080Z",
+  "last_audit": "2026-04-04T19:29:49.554537Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-31T17:27:15.867335Z",
+    "md": "2026-04-04T00:13:58.025002Z",
     "meta": null,
     "activities": "2026-03-31T00:59:01.340073Z",
     "vocabulary": "2026-03-31T00:59:45.026699Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1605/1200 (raw: 1636)"
+      "message": "1602/1200 (raw: 1633)"
     },
     "activities": {
       "status": "pass",

@@ -1,7 +1,7 @@
 # Audit Report: M07 — checkpoint-first-contact.md
 **Level:** A1 | **Module:** M07 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:02
+**Generated:** 2026-04-04 19:29:52
 
 ## Configuration
 **Type:** A1
@@ -53,7 +53,7 @@
 - 6 violations (moderate)
 
 ## Gates
-- **Words:** ✅ 1366/1200 (raw: 1406)
+- **Words:** ✅ 1353/1200 (raw: 1393)
 - **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
@@ -65,7 +65,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 30.2% (target 10-38% (M07))
+- **Immersion:** 🇺🇦 30.8% (target 10-38% (M07))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -74,7 +74,7 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 235 | Included in Core |
-| **Чита́ння (Reading Practice)** | ⚪️ | 0 | Skipped (using YAML) |
-| **Грама́тика (Grammar Summary)** | ✅ | 272 | Included in Core |
-| **Діало́г (Capstone Dialogue)** | ✅ | 418 | Included in Core |
-| **Підсумок — Summary** | ✅ | 155 | Included in Core |
+| **Читання (Reading Practice)** | ⚪️ | 0 | Skipped (using YAML) |
+| **Граматика (Grammar Summary)** | ✅ | 272 | Included in Core |
+| **Діалог (Capstone Dialogue)** | ✅ | 418 | Included in Core |
+| **Підсумок — Summary** | ✅ | 157 | Included in Core |

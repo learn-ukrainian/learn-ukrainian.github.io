@@ -1,7 +1,7 @@
 # Audit Report: M06 — my-family.md
 **Level:** A1 | **Module:** M06 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:11
+**Generated:** 2026-04-04 19:30:06
 
 ## Configuration
 **Type:** A1-vocab
@@ -49,7 +49,7 @@
 - 4 violations (moderate)
 
 ## Gates
-- **Words:** ✅ 1588/1200 (raw: 1627)
+- **Words:** ✅ 1561/1200 (raw: 1600)
 - **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
@@ -61,7 +61,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 27.5% (target 8-30% (M06))
+- **Immersion:** 🇺🇦 27.3% (target 8-30% (M06))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -69,8 +69,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 540 | Included in Core |
+| **Intro/Narrative** | ✅ | 512 | Included in Core |
 | **Сім'я (Family Vocabulary)** | ➖ | 261 | Excluded Type |
-| **У мене є (I Have)** | ✅ | 356 | Included in Core |
+| **У мене є (I Have)** | ✅ | 361 | Included in Core |
 | **Мій, моя, моє́ (Possessive Pronouns)** | ✅ | 255 | Included in Core |
-| **Підсумок — Summary** | ✅ | 176 | Included in Core |
+| **Підсумок — Summary** | ✅ | 172 | Included in Core |

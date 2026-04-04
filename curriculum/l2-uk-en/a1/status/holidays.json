@@ -2,10 +2,10 @@
   "module": "holidays",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-03T14:02:07.796618Z",
+  "last_audit": "2026-04-04T19:30:01.244882Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-31T17:27:15.873919Z",
+    "md": "2026-04-03T23:49:18.515880Z",
     "meta": null,
     "activities": "2026-03-30T23:16:43.121511Z",
     "vocabulary": "2026-03-30T23:17:13.374505Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "warn",
       "violations": 0,
-      "message": "1162/1200 (raw: 1306) (38 short)"
+      "message": "1163/1200 (raw: 1307) (37 short)"
     },
     "activities": {
       "status": "pass",

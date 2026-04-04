@@ -2,10 +2,10 @@
   "module": "i-eat-i-drink",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-03T14:02:08.610740Z",
+  "last_audit": "2026-04-04T19:30:02.566731Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-31T17:27:15.874702Z",
+    "md": "2026-04-03T23:25:51.166942Z",
     "meta": null,
     "activities": "2026-03-30T16:01:24.639533Z",
     "vocabulary": "2026-03-30T16:01:41.145610Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "warn",
       "violations": 0,
-      "message": "1132/1200 (raw: 1328) (68 short)"
+      "message": "1156/1200 (raw: 1352) (44 short)"
     },
     "activities": {
       "status": "pass",

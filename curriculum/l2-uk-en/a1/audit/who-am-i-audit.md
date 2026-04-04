@@ -1,7 +1,7 @@
 # Audit Report: M05 — who-am-i.md
 **Level:** A1 | **Module:** M05 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:22
+**Generated:** 2026-04-04 19:30:24
 
 ## Configuration
 **Type:** A1-vocab
@@ -34,22 +34,16 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[INFO]** Dative case used at A1: 'Мені' (taught formally at A2)
-  - FIX: No action needed — incidental dative exposure is acceptable.
-- **[INFO]** Dative case used at A1: 'Мені' (taught formally at A2)
-  - FIX: No action needed — incidental dative exposure is acceptable.
-- **[INFO]** Dative case used at A1: 'Мені' (taught formally at A2)
-  - FIX: No action needed — incidental dative exposure is acceptable.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in who-am-i.yaml: Schema validation error at key '0': 'Я — вчитель.' is not of type 'object'
   - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
-- 4 violations (moderate)
+- 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1737/1200 (raw: 1914)
+- **Words:** ✅ 1714/1200 (raw: 1891)
 - **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 5/0 types
@@ -61,7 +55,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 20.1% (target 8-30% (M05))
+- **Immersion:** 🇺🇦 19.7% (target 8-30% (M05))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -69,10 +63,10 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 455 | Included in Core |
-| **Мене звати... (My name is...)** | ✅ | 341 | Included in Core |
+| **Intro/Narrative** | ✅ | 447 | Included in Core |
+| **Мене звати... (My name is...)** | ✅ | 340 | Included in Core |
 | **Це... (This is...)** | ✅ | 218 | Included in Core |
 | **Особо́ві займе́нники (Personal Pronouns)** | ✅ | 100 | Included in Core |
 | **Я — студе́нт (I am a student)** | ✅ | 265 | Included in Core |
-| **Звідки? (Where from?)** | ✅ | 258 | Included in Core |
+| **Звідки? (Where from?)** | ✅ | 244 | Included in Core |
 | **Підсумок — Summary** | ✅ | 100 | Included in Core |

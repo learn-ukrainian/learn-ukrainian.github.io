@@ -2,10 +2,10 @@
   "module": "days-and-months",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-03T14:02:04.966218Z",
+  "last_audit": "2026-04-04T19:29:56.645410Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-31T17:27:15.871406Z",
+    "md": "2026-04-03T17:17:30.904340Z",
     "meta": null,
     "activities": "2026-03-30T07:12:04.347644Z",
     "vocabulary": "2026-03-30T07:12:34.658219Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1318/1200 (raw: 1455)"
+      "message": "1319/1200 (raw: 1456)"
     },
     "activities": {
       "status": "pass",

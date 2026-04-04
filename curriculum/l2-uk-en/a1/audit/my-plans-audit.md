@@ -1,7 +1,7 @@
 # Audit Report: M51 — my-plans.md
 **Level:** A1 | **Module:** M51 | **Phase:** A1.8 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:11
+**Generated:** 2026-04-04 19:30:07
 
 ## Configuration
 **Type:** A1
@@ -41,19 +41,17 @@
   - FIX: Instrumental case not allowed until A2 (M36+). Restructure sentence.
 - **[COMPLEXITY]** group-sort '' has 7 items (target: 8-999)
   - FIX: Adjust number of items to sort to 8-999.
-- **[HEADING_LEVEL]** Main section 'Summary' uses H2 (##) but spec requires H1 (#)
-  - FIX: Change '## Summary' to '# Summary' for top-level TOC compliance
 - **[YAML_SCHEMA_VIOLATION]** Schema error in my-plans.yaml: Schema validation error at key '8': {'type': 'observe', 'examples': ['У понеділок я буду працювати.', 'У вівторок я буду вчитися.', 'У середу ввечері я буду дивитися футбол.', 'У четвер я буду готувати вечерю для родини.', "У п'ятницю я буду відпочивати.", 'У суботу зранку буду прибирати, а вдень гуляти в парку.', 'В неділю я буду спати довго!'], 'prompt': "Look at all seven sentences. What pattern do you notice about the position of буду? What form does the second verb always take? Why does Sunday use 'В' while all other days use 'У'?"} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 35/100)
 
-- 6 violations (moderate)
+- 5 violations (moderate)
 - 3 grammar-level violations (fundamental)
 
 ## Gates
-- **Words:** ✅ 1878/1200 (raw: 1902)
+- **Words:** ✅ 1873/1200 (raw: 1897)
 - **Activities:** ✅ 7/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
@@ -65,7 +63,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 23.9% (target 20-40% (M51))
+- **Immersion:** 🇺🇦 24.0% (target 20-40% (M51))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -74,6 +72,6 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 517 | Included in Core |
-| **Планува́ння (Planning)** | ✅ | 639 | Included in Core |
+| **Планува́ння (Planning)** | ✅ | 640 | Included in Core |
 | **Мій тиждень (My Week)** | ✅ | 509 | Included in Core |
-| **Summary** | ✅ | 213 | Included in Core |
+| **Summary** | ✅ | 207 | Included in Core |

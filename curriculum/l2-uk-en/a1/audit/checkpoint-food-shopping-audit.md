@@ -1,7 +1,7 @@
 # Audit Report: M41 — checkpoint-food-shopping.md
 **Level:** A1 | **Module:** M41 | **Phase:** A1.6 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:02
+**Generated:** 2026-04-04 19:29:53
 
 ## Configuration
 **Type:** A1
@@ -49,7 +49,7 @@
 - 4 violations (moderate)
 
 ## Gates
-- **Words:** ✅ 1252/1000 (raw: 1362)
+- **Words:** ✅ 1248/1000 (raw: 1358)
 - **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 8/0 types
@@ -61,7 +61,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 34.9% (target 20-40% (M41))
+- **Immersion:** 🇺🇦 35.0% (target 20-40% (M41))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -71,6 +71,6 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 256 | Included in Core |
 | **Чита́ння (Reading Practice)** | ⚪️ | 0 | Skipped (using YAML) |
-| **Грама́тика (Grammar Summary)** | ✅ | 369 | Included in Core |
+| **Грама́тика (Grammar Summary)** | ✅ | 365 | Included in Core |
 | **Діало́г (Connected Dialogue)** | ✅ | 305 | Included in Core |
 | **Підсумок — Summary** | ✅ | 139 | Included in Core |

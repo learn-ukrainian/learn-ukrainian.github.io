@@ -1,7 +1,7 @@
 # Audit Report: M18 — i-want-i-can.md
 **Level:** A1 | **Module:** M18 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:09
+**Generated:** 2026-04-04 19:30:03
 
 ## Configuration
 **Type:** A1-grammar
@@ -46,7 +46,7 @@
 - 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1400/1200 (raw: 1604)
+- **Words:** ✅ 1363/1200 (raw: 1567)
 - **Activities:** ✅ 9/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 7/0 types
@@ -58,7 +58,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 26.2% (target 15-35% (M18))
+- **Immersion:** 🇺🇦 27.0% (target 15-35% (M18))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -66,7 +66,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 399 | Included in Core |
-| **Хотіти (To Want)** | ✅ | 374 | Included in Core |
+| **Intro/Narrative** | ✅ | 376 | Included in Core |
+| **Хотіти (To Want)** | ✅ | 360 | Included in Core |
 | **Могти́ і мусити (Can and Must)** | ✅ | 345 | Included in Core |
 | **Підсумок — Summary** | ✅ | 282 | Included in Core |

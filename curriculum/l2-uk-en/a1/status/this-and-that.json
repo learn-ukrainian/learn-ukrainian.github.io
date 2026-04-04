@@ -2,10 +2,10 @@
   "module": "this-and-that",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-03T14:02:16.423575Z",
+  "last_audit": "2026-04-04T19:30:15.162917Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-31T17:27:15.881494Z",
+    "md": "2026-04-03T15:44:49.751297Z",
     "meta": null,
     "activities": "2026-03-30T14:56:56.456943Z",
     "vocabulary": "2026-03-30T14:57:12.804208Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1363/1200 (raw: 1467)"
+      "message": "1309/1200 (raw: 1409)"
     },
     "activities": {
       "status": "pass",

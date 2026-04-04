@@ -2,12 +2,12 @@
   "module": "at-the-cafe",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-03T14:02:01.368698Z",
+  "last_audit": "2026-04-04T19:56:12.807964Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-31T17:27:15.868187Z",
+    "md": "2026-04-04T19:47:26.220149Z",
     "meta": null,
-    "activities": "2026-03-30T16:18:09.491640Z",
+    "activities": "2026-04-04T19:35:42.761622Z",
     "vocabulary": "2026-03-30T16:18:42.949542Z",
     "research": null,
     "plan": "2026-03-30T22:17:20.650890Z"
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "fail",
-      "violations": 1,
-      "message": "1060/1200 (raw: 1206)"
+      "status": "warn",
+      "violations": 0,
+      "message": "1067/1200 (raw: 1213) (133 short)"
     },
     "activities": {
       "status": "pass",
@@ -50,10 +50,10 @@
     }
   },
   "overall": {
-    "status": "fail",
+    "status": "pass",
     "blocking_issues": [],
     "pass_count": 4,
-    "fail_count": 1,
+    "fail_count": 0,
     "deferred_count": 0
   }
 }

@@ -2,10 +2,10 @@
   "module": "shopping",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-03T14:02:14.338498Z",
+  "last_audit": "2026-04-04T19:30:11.818122Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-31T17:27:15.879654Z",
+    "md": "2026-04-03T23:35:13.116529Z",
     "meta": null,
     "activities": "2026-03-30T16:39:47.198222Z",
     "vocabulary": "2026-03-30T16:40:09.928299Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1588/1200 (raw: 1624)"
+      "message": "1552/1200 (raw: 1588)"
     },
     "activities": {
       "status": "pass",

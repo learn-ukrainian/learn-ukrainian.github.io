@@ -1,7 +1,7 @@
 # Audit Report: M28 — euphony.md
 **Level:** A1 | **Module:** M28 | **Phase:** A1.5 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:05
+**Generated:** 2026-04-04 19:29:57
 
 ## Configuration
 **Type:** A1
@@ -105,7 +105,7 @@
 - 31 violations (severe - consider revision)
 
 ## Gates
-- **Words:** ✅ 1415/1200 (raw: 1455)
+- **Words:** ✅ 1477/1200 (raw: 1517)
 - **Activities:** ✅ 9/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
@@ -117,7 +117,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 23.4% (target 15-40% (M28))
+- **Immersion:** 🇺🇦 23.7% (target 15-40% (M28))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -125,7 +125,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 424 | Included in Core |
-| **У чи В? (У or В?)** | ✅ | 330 | Included in Core |
-| **І чи Й? З, із, чи зі?** | ✅ | 351 | Included in Core |
-| **Підсумок — Summary** | ✅ | 310 | Included in Core |
+| **Intro/Narrative** | ✅ | 431 | Included in Core |
+| **У чи В? (У or В?)** | ✅ | 360 | Included in Core |
+| **І чи Й? З, із, чи зі?** | ✅ | 377 | Included in Core |
+| **Підсумок — Summary** | ✅ | 309 | Included in Core |

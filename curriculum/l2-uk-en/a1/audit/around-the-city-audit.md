@@ -1,7 +1,7 @@
 # Audit Report: M33 — around-the-city.md
 **Level:** A1 | **Module:** M33 | **Phase:** A1.5 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:00
+**Generated:** 2026-04-04 19:29:50
 
 ## Configuration
 **Type:** A1
@@ -44,7 +44,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1226/1200 (raw: 1355)
+- **Words:** ✅ 1238/1200 (raw: 1367)
 - **Activities:** ✅ 9/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
@@ -56,7 +56,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 36.9% (target 15-40% (M33))
+- **Immersion:** 🇺🇦 37.0% (target 15-40% (M33))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -64,7 +64,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 396 | Included in Core |
+| **Intro/Narrative** | ✅ | 413 | Included in Core |
 | **Де і куди ра́зом (Where and Where To Together)** | ✅ | 254 | Included in Core |
-| **Мій райо́н (My Neighborhood)** | ✅ | 350 | Included in Core |
+| **Мій райо́н (My Neighborhood)** | ✅ | 345 | Included in Core |
 | **Підсумок — Summary** | ✅ | 226 | Included in Core |

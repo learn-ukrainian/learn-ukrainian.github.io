@@ -42,7 +42,7 @@ VESUM_MIN_WORD_LENGTH = 3
 # All per-level thresholds are in LEVEL_CONFIG below.
 # These are gate-evaluation constants used across gates.py.
 AUDIT_THRESHOLDS = {
-    "word_count_fail_margin": 100,       # FAIL if > this many words below target
+    "word_count_fail_pct": 12,            # FAIL if more than this % below target
     "immersion_tolerance_pct": 3,        # ±% tolerance before FAIL
     "naturalness_min_score": 8,          # Minimum review score for PASS
     "severity_update": 40,               # Severity score boundary: PASS → UPDATE

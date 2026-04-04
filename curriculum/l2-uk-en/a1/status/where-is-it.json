@@ -2,10 +2,10 @@
   "module": "where-is-it",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-03T14:02:21.323751Z",
+  "last_audit": "2026-04-04T19:30:23.213301Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-31T17:27:15.886107Z",
+    "md": "2026-04-03T18:09:55.797641Z",
     "meta": null,
     "activities": "2026-03-30T21:22:26.463125Z",
     "vocabulary": "2026-03-30T21:22:57.148889Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1598/1200 (raw: 1634)"
+      "message": "1619/1200 (raw: 1655)"
     },
     "activities": {
       "status": "pass",

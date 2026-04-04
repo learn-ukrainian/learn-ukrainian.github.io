@@ -1,7 +1,7 @@
 # Audit Report: M43 — please-do-this.md
 **Level:** A1 | **Module:** M43 | **Phase:** A1.7 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:13
+**Generated:** 2026-04-04 19:30:09
 
 ## Configuration
 **Type:** A1-grammar
@@ -48,7 +48,7 @@
 - 3 violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1174/1200 (raw: 1311) (26 short)
+- **Words:** ⚠️ 1169/1200 (raw: 1306) (31 short)
 - **Activities:** ✅ 9/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
@@ -60,7 +60,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 29.2% (target 20-40% (M43))
+- **Immersion:** 🇺🇦 29.3% (target 20-40% (M43))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -70,5 +70,5 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 361 | Included in Core |
 | **Наказо́вий спо́сіб (The Imperative Mood)** | ✅ | 404 | Included in Core |
-| **Як утвори́ти? (How to Form It)** | ✅ | 296 | Included in Core |
+| **Як утвори́ти? (How to Form It)** | ✅ | 291 | Included in Core |
 | **Підсумок — Summary** | ✅ | 113 | Included in Core |

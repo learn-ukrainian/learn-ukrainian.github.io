@@ -1,7 +1,7 @@
 # Audit Report: M23 — days-and-months.md
 **Level:** A1 | **Module:** M23 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:04
+**Generated:** 2026-04-04 19:29:56
 
 ## Configuration
 **Type:** A1-vocab
@@ -43,7 +43,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1318/1200 (raw: 1455)
+- **Words:** ✅ 1319/1200 (raw: 1456)
 - **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
@@ -55,7 +55,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 29.1% (target 15-35% (M23))
+- **Immersion:** 🇺🇦 30.8% (target 15-35% (M23))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -63,7 +63,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 385 | Included in Core |
-| **Дні тижня (Days of the Week)** | ✅ | 332 | Included in Core |
+| **Intro/Narrative** | ✅ | 460 | Included in Core |
+| **Дні тижня (Days of the Week)** | ✅ | 258 | Included in Core |
 | **Мі́сяці і по́ри ро́ку (Months and Seasons)** | ✅ | 390 | Included in Core |
 | **Підсумок — Summary** | ✅ | 211 | Included in Core |

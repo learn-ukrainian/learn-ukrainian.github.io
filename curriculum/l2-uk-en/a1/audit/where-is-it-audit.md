@@ -1,7 +1,7 @@
 # Audit Report: M29 — where-is-it.md
 **Level:** A1 | **Module:** M29 | **Phase:** A1.5 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:21
+**Generated:** 2026-04-04 19:30:23
 
 ## Configuration
 **Type:** A1-grammar
@@ -86,7 +86,7 @@
 - 21 violations (severe - consider revision)
 
 ## Gates
-- **Words:** ✅ 1598/1200 (raw: 1634)
+- **Words:** ✅ 1619/1200 (raw: 1655)
 - **Activities:** ✅ 10/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 5/0 types
@@ -98,7 +98,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 20.3% (target 15-40% (M29))
+- **Immersion:** 🇺🇦 20.2% (target 15-40% (M29))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -107,6 +107,6 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 341 | Included in Core |
-| **Місце́вий відмі́нок (The Locative Case)** | ✅ | 442 | Included in Core |
-| **В чи на? (В or На?)** | ✅ | 437 | Included in Core |
+| **Місце́вий відмі́нок (The Locative Case)** | ✅ | 445 | Included in Core |
+| **В чи на? (В or На?)** | ✅ | 455 | Included in Core |
 | **Підсумок — Summary** | ✅ | 378 | Included in Core |

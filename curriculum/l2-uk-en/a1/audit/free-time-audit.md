@@ -1,7 +1,7 @@
 # Audit Report: M26 — free-time.md
 **Level:** A1 | **Module:** M26 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:06
+**Generated:** 2026-04-04 19:29:59
 
 ## Configuration
 **Type:** A1
@@ -45,7 +45,7 @@
 - 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1596/1200 (raw: 1642)
+- **Words:** ✅ 1598/1200 (raw: 1644)
 - **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
@@ -57,7 +57,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 29.3% (target 15-40% (M26))
+- **Immersion:** 🇺🇦 29.4% (target 15-40% (M26))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -67,5 +67,5 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 422 | Included in Core |
 | **Хо́бі і спорт (Hobbies and Sports)** | ✅ | 396 | Included in Core |
-| **Як часто? (How Often?)** | ✅ | 424 | Included in Core |
+| **Як часто? (How Often?)** | ✅ | 426 | Included in Core |
 | **Підсумок — Summary** | ✅ | 354 | Included in Core |

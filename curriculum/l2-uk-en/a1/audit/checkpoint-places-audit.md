@@ -1,7 +1,7 @@
 # Audit Report: M35 — checkpoint-places.md
 **Level:** A1 | **Module:** M35 | **Phase:** A1.5 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:03
+**Generated:** 2026-04-04 19:29:54
 
 ## Configuration
 **Type:** A1
@@ -36,18 +36,16 @@
 ## PEDAGOGICAL VIOLATIONS
 - **[GRAMMAR]** Instrumental case used at A1: 'за рогом'
   - FIX: Instrumental case not allowed until A2 (M36+). Restructure sentence.
-- **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'can you...'.
-  - FIX: Vary sentence structure.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in checkpoint-places.yaml: Schema validation error at key '0': 'у' is not of type 'object'
   - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1541/1200 (raw: 1581)
+- **Words:** ✅ 1357/1200 (raw: 1397)
 - **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 7/0 types
@@ -59,7 +57,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 31.4% (target 20-40% (M35))
+- **Immersion:** 🇺🇦 36.0% (target 20-40% (M35))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 2+ cultural hooks but content has no cultural section
@@ -67,8 +65,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 220 | Included in Core |
+| **Intro/Narrative** | ✅ | 117 | Included in Core |
 | **Чита́ння (Reading Practice)** | ⚪️ | 0 | Skipped (using YAML) |
-| **Грама́тика (Grammar Summary)** | ✅ | 312 | Included in Core |
-| **Діало́г (Connected Dialogue)** | ✅ | 413 | Included in Core |
-| **Підсумок — Summary** | ✅ | 185 | Included in Core |
+| **Грама́тика (Grammar Summary)** | ✅ | 304 | Included in Core |
+| **Діало́г (Connected Dialogue)** | ✅ | 412 | Included in Core |
+| **Підсумок — Summary** | ✅ | 156 | Included in Core |

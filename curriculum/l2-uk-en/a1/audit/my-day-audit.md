@@ -1,7 +1,7 @@
 # Audit Report: M25 — my-day.md
 **Level:** A1 | **Module:** M25 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:10
+**Generated:** 2026-04-04 19:30:05
 
 ## Configuration
 **Type:** A1
@@ -44,7 +44,7 @@
 - 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1514/1200 (raw: 1549)
+- **Words:** ✅ 1478/1200 (raw: 1513)
 - **Activities:** ✅ 7/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
@@ -56,7 +56,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 32.9% (target 15-40% (M25))
+- **Immersion:** 🇺🇦 34.4% (target 15-40% (M25))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 2+ cultural hooks but content has no cultural section
@@ -64,7 +64,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 401 | Included in Core |
-| **Мій типовий день (My Typical Day)** | ✅ | 311 | Included in Core |
-| **Від ра́нку до ве́чора (From Morning to Evening)** | ✅ | 417 | Included in Core |
-| **Підсумок — Summary** | ✅ | 385 | Included in Core |
+| **Intro/Narrative** | ✅ | 392 | Included in Core |
+| **Мій типовий день (My Typical Day)** | ✅ | 288 | Included in Core |
+| **Від ра́нку до ве́чора (From Morning to Evening)** | ✅ | 410 | Included in Core |
+| **Підсумок — Summary** | ✅ | 388 | Included in Core |

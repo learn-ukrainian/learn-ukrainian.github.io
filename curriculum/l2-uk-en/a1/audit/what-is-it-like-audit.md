@@ -1,7 +1,7 @@
 # Audit Report: M09 — what-is-it-like.md
 **Level:** A1 | **Module:** M09 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:19
+**Generated:** 2026-04-04 19:30:19
 
 ## Configuration
 **Type:** A1-grammar
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: рід, іменник, прикметник
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: іменник, прикметник, рід
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in what-is-it-like.yaml: Schema validation error at key '8': {'type': 'translate', 'instruction': 'Choose the correct Ukrainian translation. Watch the adjective endings!', 'items': [{'source': 'The table is new.', 'options': [{'text': 'Стіл новий.', 'correct': True}, {'text': 'Стіл нова.', 'correct': False}, {'text': 'Стіл нове.', 'correct': False}]}, {'source': 'The window is clean.', 'options': [{'text': 'Вікно чистий.', 'correct': False}, {'text': 'Вікно чиста.', 'correct': False}, {'text': 'Вікно чисте.', 'correct': True}]}, {'source': 'The room is big and bright.', 'options': [{'text': 'Кімната велика і світла.', 'correct': True}, {'text': 'Кімната великий і світлий.', 'correct': False}, {'text': 'Кімната велике і світле.', 'correct': False}]}, {'source': 'The book is new and cheap.', 'options': [{'text': 'Книга новий і дешевий.', 'correct': False}, {'text': 'Книга нова і дешева.', 'correct': True}, {'text': 'Книга нове і дешеве.', 'correct': False}]}, {'source': 'The atlas is expensive.', 'options': [{'text': 'Атлас дорогий.', 'correct': True}, {'text': 'Атлас дорога.', 'correct': False}, {'text': 'Атлас дороге.', 'correct': False}]}, {'source': 'The chair is small but comfortable.', 'options': [{'text': 'Стілець маленька, але зручна.', 'correct': False}, {'text': 'Стілець маленьке, але зручне.', 'correct': False}, {'text': 'Стілець маленький, але зручний.', 'correct': True}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json

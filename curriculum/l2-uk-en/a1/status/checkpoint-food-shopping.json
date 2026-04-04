@@ -2,10 +2,10 @@
   "module": "checkpoint-food-shopping",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-03T14:02:02.954263Z",
+  "last_audit": "2026-04-04T19:29:53.398995Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-31T17:27:15.869660Z",
+    "md": "2026-04-03T23:38:47.995797Z",
     "meta": null,
     "activities": "2026-03-31T01:35:56.746631Z",
     "vocabulary": "2026-03-31T01:28:09.694269Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1252/1000 (raw: 1362)"
+      "message": "1248/1000 (raw: 1358)"
     },
     "activities": {
       "status": "pass",

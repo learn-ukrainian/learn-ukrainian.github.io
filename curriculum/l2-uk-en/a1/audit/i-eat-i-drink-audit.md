@@ -1,7 +1,7 @@
 # Audit Report: M37 — i-eat-i-drink.md
 **Level:** A1 | **Module:** M37 | **Phase:** A1.6 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:08
+**Generated:** 2026-04-04 19:30:02
 
 ## Configuration
 **Type:** A1-grammar
@@ -45,7 +45,7 @@
 - 2 violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1132/1200 (raw: 1328) (68 short)
+- **Words:** ⚠️ 1156/1200 (raw: 1352) (44 short)
 - **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
@@ -57,7 +57,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 23.4% (target 20-40% (M37))
+- **Immersion:** 🇺🇦 24.2% (target 20-40% (M37))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -67,5 +67,5 @@
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 334 | Included in Core |
 | **Їсти і пити (To Eat and To Drink)** | ✅ | 271 | Included in Core |
-| **Знахі́дний відмі́нок — неживе́ (Accusative Inanimate)** | ✅ | 360 | Included in Core |
+| **Знахі́дний відмі́нок — неживе́ (Accusative Inanimate)** | ✅ | 384 | Included in Core |
 | **Підсумок — Summary** | ✅ | 167 | Included in Core |

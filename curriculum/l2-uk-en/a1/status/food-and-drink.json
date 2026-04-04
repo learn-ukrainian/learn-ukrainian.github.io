@@ -1,16 +1,16 @@
 {
-  "module": "hey-friend",
+  "module": "food-and-drink",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-04T19:56:13.434833Z",
+  "last_audit": "2026-04-04T19:29:58.624193Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-04-03T23:40:43.000519Z",
+    "md": "2026-04-04T01:07:16.006885Z",
     "meta": null,
-    "activities": "2026-04-04T19:36:11.771163Z",
-    "vocabulary": "2026-03-30T22:13:28.705229Z",
+    "activities": "2026-04-04T01:02:51.253387Z",
+    "vocabulary": "2026-04-04T01:03:19.536381Z",
     "research": null,
-    "plan": "2026-03-30T22:17:20.658073Z"
+    "plan": "2026-03-30T22:17:20.656912Z"
   },
   "gates": {
     "meta": {
@@ -19,9 +19,9 @@
       "message": "Valid Structure"
     },
     "lesson": {
-      "status": "warn",
+      "status": "pass",
       "violations": 0,
-      "message": "1089/1200 (raw: 1267) (111 short)"
+      "message": "1643/1200 (raw: 1738)"
     },
     "activities": {
       "status": "pass",
@@ -31,7 +31,7 @@
     "vocabulary": {
       "status": "pass",
       "violations": 0,
-      "message": "23/1"
+      "message": "74/1"
     },
     "naturalness": {
       "status": "info",
@@ -52,7 +52,7 @@
   "overall": {
     "status": "pass",
     "blocking_issues": [],
-    "pass_count": 4,
+    "pass_count": 5,
     "fail_count": 0,
     "deferred_count": 0
   }

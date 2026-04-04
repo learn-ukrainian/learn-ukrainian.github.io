@@ -1,7 +1,7 @@
 # Audit Report: M12 — this-and-that.md
 **Level:** A1 | **Module:** M12 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:16
+**Generated:** 2026-04-04 19:30:15
 
 ## Configuration
 **Type:** A1-grammar
@@ -44,7 +44,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1363/1200 (raw: 1467)
+- **Words:** ✅ 1309/1200 (raw: 1409)
 - **Activities:** ✅ 9/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 7/0 types
@@ -56,7 +56,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 18.5% (target 10-38% (M12))
+- **Immersion:** 🇺🇦 19.9% (target 10-38% (M12))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -65,6 +65,6 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 354 | Included in Core |
-| **Цей, ця, це (This)** | ✅ | 320 | Included in Core |
-| **Той, та, те (That)** | ✅ | 396 | Included in Core |
-| **Підсумок — Summary** | ✅ | 293 | Included in Core |
+| **Цей, ця, це (This)** | ✅ | 286 | Included in Core |
+| **Той, та, те (That)** | ✅ | 409 | Included in Core |
+| **Підсумок — Summary** | ✅ | 260 | Included in Core |

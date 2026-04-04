@@ -1,7 +1,7 @@
 # Audit Report: M44 — linking-ideas.md
 **Level:** A1 | **Module:** M44 | **Phase:** A1.7 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:09
+**Generated:** 2026-04-04 19:30:03
 
 ## Configuration
 **Type:** A1-grammar
@@ -47,7 +47,7 @@
 - 3 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1230/1200 (raw: 1376)
+- **Words:** ✅ 1259/1200 (raw: 1405)
 - **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
@@ -59,7 +59,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 30.7% (target 20-40% (M44))
+- **Immersion:** 🇺🇦 30.0% (target 20-40% (M44))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -67,7 +67,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 293 | Included in Core |
-| **Сполучники (Conjunctions)** | ✅ | 369 | Included in Core |
-| **Бо і тому́ що (Because)** | ✅ | 392 | Included in Core |
+| **Intro/Narrative** | ✅ | 312 | Included in Core |
+| **Сполучники (Conjunctions)** | ✅ | 402 | Included in Core |
+| **Бо і тому́ що (Because)** | ✅ | 369 | Included in Core |
 | **Підсумок — Summary** | ✅ | 176 | Included in Core |

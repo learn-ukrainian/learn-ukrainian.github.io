@@ -1,7 +1,7 @@
 # Audit Report: M38 — at-the-cafe.md
 **Level:** A1 | **Module:** M38 | **Phase:** A1.6 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-04-03 14:02:01
+**Overall Status:** ✅ PASS
+**Generated:** 2026-04-04 19:56:12
 
 ## Configuration
 **Type:** A1
@@ -41,16 +41,14 @@
   - FIX: No action needed — incidental dative exposure is acceptable.
 - **[INFO]** Dative case used at A1: 'мені' (taught formally at A2)
   - FIX: No action needed — incidental dative exposure is acceptable.
-- **[YAML_SCHEMA_VIOLATION]** Schema error in at-the-cafe.yaml: Schema validation error at key '0': 'піцу' is not of type 'object'
-  - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
 
 ## Recommendation
-**📝 UPDATE** (severity 15/100)
+**📝 UPDATE** (severity 5/100)
 
-- 4 violations (moderate)
+- 3 violations (minor)
 
 ## Gates
-- **Words:** ❌ 1060/1200 (raw: 1206)
+- **Words:** ⚠️ 1067/1200 (raw: 1213) (133 short)
 - **Activities:** ✅ 9/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 8/0 types
@@ -62,7 +60,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 29.4% (target 20-40% (M38))
+- **Immersion:** 🇺🇦 29.7% (target 20-40% (M38))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -70,7 +68,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 305 | Included in Core |
+| **Intro/Narrative** | ✅ | 302 | Included in Core |
 | **Як замо́вити (How to Order)** | ⚪️ | 0 | Skipped (using YAML) |
 | **Культу́ра кафе (Cafe Culture)** | ✅ | 259 | Included in Core |
 | **Підсумок — Summary** | ✅ | 185 | Included in Core |

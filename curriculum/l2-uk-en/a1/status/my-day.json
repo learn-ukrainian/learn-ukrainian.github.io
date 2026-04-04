@@ -2,10 +2,10 @@
   "module": "my-day",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-03T14:02:10.623421Z",
+  "last_audit": "2026-04-04T19:30:05.875290Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-31T17:27:15.876477Z",
+    "md": "2026-04-03T17:33:21.591976Z",
     "meta": null,
     "activities": "2026-03-30T07:43:14.184539Z",
     "vocabulary": "2026-03-30T07:43:42.422310Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1514/1200 (raw: 1549)"
+      "message": "1478/1200 (raw: 1513)"
     },
     "activities": {
       "status": "pass",

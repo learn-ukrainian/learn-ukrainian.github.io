@@ -1,7 +1,7 @@
 # Audit Report: M24 — weather.md
 **Level:** A1 | **Module:** M24 | **Phase:** A1.4 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:18
+**Generated:** 2026-04-04 19:30:17
 
 ## Configuration
 **Type:** A1-vocab
@@ -50,7 +50,7 @@
 - 5 violations (moderate)
 
 ## Gates
-- **Words:** ✅ 1368/1200 (raw: 1406)
+- **Words:** ✅ 1378/1200 (raw: 1416)
 - **Activities:** ✅ 7/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 5/0 types
@@ -62,7 +62,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 32.4% (target 15-35% (M24))
+- **Immersion:** 🇺🇦 32.3% (target 15-35% (M24))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -71,6 +71,6 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 348 | Included in Core |
-| **Яка погода? (What's the Weather?)** | ✅ | 357 | Included in Core |
+| **Яка погода? (What's the Weather?)** | ✅ | 365 | Included in Core |
 | **Погода і по́ри року (Weather and Seasons)** | ✅ | 409 | Included in Core |
-| **Підсумок — Summary** | ✅ | 254 | Included in Core |
+| **Підсумок — Summary** | ✅ | 256 | Included in Core |

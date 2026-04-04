@@ -1,7 +1,7 @@
 # Audit Report: M39 — shopping.md
 **Level:** A1 | **Module:** M39 | **Phase:** A1.6 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:14
+**Generated:** 2026-04-04 19:30:11
 
 ## Configuration
 **Type:** A1
@@ -44,7 +44,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1588/1200 (raw: 1624)
+- **Words:** ✅ 1552/1200 (raw: 1588)
 - **Activities:** ✅ 9/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
@@ -56,7 +56,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 34.5% (target 20-40% (M39))
+- **Immersion:** 🇺🇦 35.0% (target 20-40% (M39))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -64,7 +64,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 386 | Included in Core |
+| **Intro/Narrative** | ✅ | 388 | Included in Core |
 | **Скільки коштує? (How Much?)** | ✅ | 396 | Included in Core |
-| **Де купи́ти? (Where to Buy)** | ✅ | 484 | Included in Core |
+| **Де купи́ти? (Where to Buy)** | ✅ | 446 | Included in Core |
 | **Підсумок — Summary** | ✅ | 322 | Included in Core |

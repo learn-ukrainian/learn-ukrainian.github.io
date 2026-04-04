@@ -1,7 +1,7 @@
 # Audit Report: M30 — my-city.md
 **Level:** A1 | **Module:** M30 | **Phase:** A1.5 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:10
+**Generated:** 2026-04-04 19:30:05
 
 ## Configuration
 **Type:** A1-vocab
@@ -45,7 +45,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1562/1200 (raw: 1601)
+- **Words:** ✅ 1424/1200 (raw: 1459)
 - **Activities:** ✅ 10/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 7/0 types
@@ -57,7 +57,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 38.3% (target 15-40% (M30))
+- **Immersion:** 🇺🇦 33.5% (target 15-40% (M30))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -65,7 +65,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 419 | Included in Core |
-| **Місця́ в мі́сті (City Places)** | ✅ | 417 | Included in Core |
-| **Де це? (Where Is It?)** | ✅ | 424 | Included in Core |
-| **Підсумок — Summary** | ✅ | 302 | Included in Core |
+| **Intro/Narrative** | ✅ | 465 | Included in Core |
+| **Місця́ в мі́сті (City Places)** | ✅ | 401 | Included in Core |
+| **Де це? (Where Is It?)** | ✅ | 414 | Included in Core |
+| **Підсумок — Summary** | ✅ | 144 | Included in Core |

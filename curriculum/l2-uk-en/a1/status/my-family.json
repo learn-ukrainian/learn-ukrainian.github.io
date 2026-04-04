@@ -2,10 +2,10 @@
   "module": "my-family",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-03T14:02:11.034474Z",
+  "last_audit": "2026-04-04T19:30:06.536994Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-31T17:27:15.876901Z",
+    "md": "2026-04-03T15:05:46.831651Z",
     "meta": null,
     "activities": "2026-03-30T22:17:20.538796Z",
     "vocabulary": "2026-03-30T22:17:20.646204Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1588/1200 (raw: 1627)"
+      "message": "1561/1200 (raw: 1600)"
     },
     "activities": {
       "status": "pass",

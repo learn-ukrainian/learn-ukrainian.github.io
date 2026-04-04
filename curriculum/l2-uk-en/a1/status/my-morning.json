@@ -2,10 +2,10 @@
   "module": "my-morning",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-03T14:02:11.427037Z",
+  "last_audit": "2026-04-04T19:30:07.187375Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-31T17:27:15.877181Z",
+    "md": "2026-04-03T16:40:11.794546Z",
     "meta": null,
     "activities": "2026-03-30T06:14:57.243463Z",
     "vocabulary": "2026-03-30T06:15:11.797790Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1282/1200 (raw: 1449)"
+      "message": "1262/1200 (raw: 1425)"
     },
     "activities": {
       "status": "pass",

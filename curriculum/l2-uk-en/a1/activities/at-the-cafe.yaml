@@ -167,7 +167,8 @@ inline:
   - left: Можна меню?
     right: Asking to see the menu
 workbook:
-- type: group-sort
+- id: group-sort-cafe-phrases
+  type: group-sort
   instruction: Розподіліть фрази за категоріями (Sort the phrases by category)
   groups:
   - label: Ordering food and drinks
@@ -186,7 +187,8 @@ workbook:
     - Залиште решту.
     - Все було дуже смачно!
     - Дякуємо!
-- type: true-false
+- id: true-false-cafe-culture
+  type: true-false
   instruction: Правда чи ні? (True or false?)
   items:
   - statement: In Ukraine, the bill comes to your table automatically.
@@ -216,7 +218,8 @@ workbook:
     correct: false
     explanation: '''Що ви рекомендуєте?'' means ''What do you recommend?'' ''Скільки
       коштує?'' means ''How much does it cost?'''
-- type: error-correction
+- id: error-correction-cafe-order
+  type: error-correction
   instruction: Знайдіть і виправте помилку (Find and correct the error)
   items:
   - sentence: Мені кава, будь ласка.
@@ -274,7 +277,8 @@ workbook:
     - будьте
     - будемо
     explanation: The fixed polite phrase is 'будь ласка', not 'будьте ласка'.
-- type: translate
+- id: translate-cafe-phrases
+  type: translate
   instruction: Оберіть правильний переклад (Choose the correct translation)
   items:
   - source: The bill, please.
@@ -325,7 +329,8 @@ workbook:
       correct: false
     - text: Дайте, будь ласка, чай.
       correct: false
-- type: quiz
+- id: quiz-accusative-review
+  type: quiz
   instruction: Оберіть правильний варіант (Choose the correct option)
   items:
   - question: Which form is correct in 'Мені ___, будь ласка'?

@@ -2,10 +2,10 @@
   "module": "many-things",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-03T14:02:09.813033Z",
+  "last_audit": "2026-04-04T19:30:04.554347Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-31T17:27:15.875679Z",
+    "md": "2026-04-03T15:53:48.595876Z",
     "meta": null,
     "activities": "2026-03-30T15:12:26.807658Z",
     "vocabulary": "2026-03-30T15:12:43.952487Z",

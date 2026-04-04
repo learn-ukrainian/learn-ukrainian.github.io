@@ -1,7 +1,7 @@
 # Audit Report: M20 — my-morning.md
 **Level:** A1 | **Module:** M20 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:11
+**Generated:** 2026-04-04 19:30:07
 
 ## Configuration
 **Type:** A1-grammar
@@ -60,7 +60,7 @@
 - 9 violations (significant)
 
 ## Gates
-- **Words:** ✅ 1282/1200 (raw: 1449)
+- **Words:** ✅ 1262/1200 (raw: 1425)
 - **Activities:** ✅ 9/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
@@ -72,7 +72,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 25.4% (target 15-35% (M20))
+- **Immersion:** 🇺🇦 25.8% (target 15-35% (M20))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -80,7 +80,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 361 | Included in Core |
-| **Дієслова́ на -ся (Reflexive Verbs)** | ✅ | 272 | Included in Core |
-| **Мій ранок (My Morning)** | ✅ | 371 | Included in Core |
+| **Intro/Narrative** | ✅ | 350 | Included in Core |
+| **Дієслова́ на -ся (Reflexive Verbs)** | ✅ | 265 | Included in Core |
+| **Мій ранок (My Morning)** | ✅ | 369 | Included in Core |
 | **Підсумок — Summary** | ✅ | 278 | Included in Core |

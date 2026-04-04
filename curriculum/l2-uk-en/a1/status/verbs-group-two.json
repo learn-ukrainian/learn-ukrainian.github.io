@@ -2,10 +2,10 @@
   "module": "verbs-group-two",
   "level": "A1",
   "plan_version": "2.0",
-  "last_audit": "2026-04-03T14:02:17.629901Z",
+  "last_audit": "2026-04-04T19:30:17.128620Z",
   "audit_duration_ms": 0,
   "source_mtimes": {
-    "md": "2026-03-31T17:27:15.882315Z",
+    "md": "2026-04-03T16:27:42.414102Z",
     "meta": null,
     "activities": "2026-03-30T04:43:08.002373Z",
     "vocabulary": "2026-03-30T04:43:22.283807Z",
@@ -21,7 +21,7 @@
     "lesson": {
       "status": "pass",
       "violations": 0,
-      "message": "1235/1200 (raw: 1364)"
+      "message": "1236/1200 (raw: 1365)"
     },
     "activities": {
       "status": "pass",

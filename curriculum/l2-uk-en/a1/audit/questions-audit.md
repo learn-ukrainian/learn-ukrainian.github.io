@@ -1,7 +1,7 @@
 # Audit Report: M19 — questions.md
 **Level:** A1 | **Module:** M19 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:13
+**Generated:** 2026-04-04 19:30:10
 
 ## Configuration
 **Type:** A1-grammar
@@ -44,7 +44,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1351/1200 (raw: 1495)
+- **Words:** ✅ 1315/1200 (raw: 1459)
 - **Activities:** ✅ 9/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
@@ -56,7 +56,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 24.0% (target 15-35% (M19))
+- **Immersion:** 🇺🇦 24.5% (target 15-35% (M19))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -64,7 +64,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 347 | Included in Core |
-| **Питальні слова (Question Words)** | ✅ | 417 | Included in Core |
+| **Intro/Narrative** | ✅ | 335 | Included in Core |
+| **Питальні слова (Question Words)** | ✅ | 396 | Included in Core |
 | **Запере́чення (Negation)** | ✅ | 430 | Included in Core |
-| **Підсумок — Summary** | ✅ | 157 | Included in Core |
+| **Підсумок — Summary** | ✅ | 154 | Included in Core |

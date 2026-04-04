@@ -1,7 +1,7 @@
 # Audit Report: M15 — what-i-like.md
 **Level:** A1 | **Module:** M15 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:18
+**Generated:** 2026-04-04 19:30:19
 
 ## Configuration
 **Type:** A1-grammar
@@ -43,7 +43,7 @@
 - 1 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1395/1200 (raw: 1477)
+- **Words:** ✅ 1314/1200 (raw: 1396)
 - **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
@@ -55,7 +55,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 28.8% (target 15-35% (M15))
+- **Immersion:** 🇺🇦 29.0% (target 15-35% (M15))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -63,7 +63,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 306 | Included in Core |
-| **Я люблю... (I Like...)** | ✅ | 397 | Included in Core |
-| **Мені подобається... (I Like...)** | ✅ | 374 | Included in Core |
-| **Підсумок — Summary** | ✅ | 318 | Included in Core |
+| **Intro/Narrative** | ✅ | 307 | Included in Core |
+| **Я люблю... (I Like...)** | ✅ | 402 | Included in Core |
+| **Мені подобається... (I Like...)** | ✅ | 372 | Included in Core |
+| **Підсумок — Summary** | ✅ | 233 | Included in Core |

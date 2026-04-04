@@ -1,7 +1,7 @@
 # Audit Report: M42 — hey-friend.md
 **Level:** A1 | **Module:** M42 | **Phase:** A1.7 | **Pedagogy:** PPP | **Target:** 1200
-**Overall Status:** ❌ FAIL
-**Generated:** 2026-04-03 14:02:07
+**Overall Status:** ✅ PASS
+**Generated:** 2026-04-04 19:56:13
 
 ## Configuration
 **Type:** A1-grammar
@@ -34,17 +34,8 @@
 - Priority types used: 3/8 (fill-in, match-up, quiz) ✅
 - Low density activities: 0
 
-## PEDAGOGICAL VIOLATIONS
-- **[YAML_SCHEMA_VIOLATION]** Schema error in hey-friend.yaml: Schema validation error at key '0': 'друже' is not of type 'object'
-  - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
-
-- 1 violations (minor)
-
 ## Gates
-- **Words:** ❌ 1087/1200 (raw: 1265)
+- **Words:** ⚠️ 1089/1200 (raw: 1267) (111 short)
 - **Activities:** ✅ 9/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types
@@ -65,6 +56,6 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 312 | Included in Core |
-| **Кличний відмінок (The Vocative Case)** | ✅ | 327 | Included in Core |
+| **Кличний відмінок (The Vocative Case)** | ✅ | 329 | Included in Core |
 | **Закі́нчення кли́чного (Vocative Endings)** | ✅ | 356 | Included in Core |
 | **Підсумок — Summary** | ✅ | 92 | Included in Core |

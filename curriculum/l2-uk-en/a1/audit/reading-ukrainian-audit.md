@@ -1,7 +1,7 @@
 # Audit Report: M02 — reading-ukrainian.md
 **Level:** A1 | **Module:** M02 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:13
+**Generated:** 2026-04-04 19:30:11
 
 ## Configuration
 **Type:** A1
@@ -38,16 +38,18 @@
   - FIX: No action needed — incidental dative exposure is acceptable.
 - **[INFO]** Dative case used at A1: 'Двоскладові' (taught formally at A2)
   - FIX: No action needed — incidental dative exposure is acceptable.
+- **[GRAMMAR]** Subordinate clause marker at A1: 'бо т'
+  - FIX: Complex sentences not allowed at A1 M1-M14. Use simple SVO sentences.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in reading-ukrainian.yaml: Schema validation error at key '0': '[а] only' is not of type 'object'
   - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
 
 ## Recommendation
 **📝 UPDATE** (severity 15/100)
 
-- 4 violations (moderate)
+- 5 violations (moderate)
 
 ## Gates
-- **Words:** ✅ 1741/1200 (raw: 1778)
+- **Words:** ✅ 1775/1200 (raw: 1812)
 - **Activities:** ✅ 6/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 5/0 types
@@ -59,7 +61,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 16.7% (target 5-25% (M02))
+- **Immersion:** 🇺🇦 17.2% (target 5-25% (M02))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -67,7 +69,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 563 | Included in Core |
+| **Intro/Narrative** | ✅ | 585 | Included in Core |
 | **Голосні лі́тери (Vowel Letters)** | ✅ | 415 | Included in Core |
 | **Чита́ння слів (Reading Words)** | ⚪️ | 0 | Skipped (using YAML) |
 | **Підсумок — Summary** | ✅ | 164 | Included in Core |

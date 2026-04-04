@@ -1,7 +1,7 @@
 # Audit Report: M55 — a1-finale.md
 **Level:** A1 | **Module:** M55 | **Phase:** A1.8 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:00
+**Generated:** 2026-04-04 19:29:49
 
 ## Configuration
 **Type:** A1
@@ -56,7 +56,7 @@
 - 6 violations (moderate)
 
 ## Gates
-- **Words:** ✅ 1605/1200 (raw: 1636)
+- **Words:** ✅ 1602/1200 (raw: 1633)
 - **Activities:** ✅ 11/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 7/0 types
@@ -68,7 +68,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 45.3% (target 25-48% (M55))
+- **Immersion:** 🇺🇦 45.5% (target 25-48% (M55))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes
@@ -77,6 +77,6 @@
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Intro/Narrative** | ✅ | 389 | Included in Core |
-| **День (Daytime)** | ✅ | 410 | Included in Core |
+| **День (Daytime)** | ✅ | 407 | Included in Core |
 | **Ве́чір (Evening)** | ✅ | 438 | Included in Core |
 | **Підсумок: ти гото́вий/гото́ва! (You're Ready!)** | ✅ | 368 | Included in Core |

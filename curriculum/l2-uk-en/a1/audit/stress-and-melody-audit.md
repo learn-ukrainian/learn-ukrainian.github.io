@@ -1,7 +1,7 @@
 # Audit Report: M04 — stress-and-melody.md
 **Level:** A1 | **Module:** M04 | **Phase:** A1.1 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:15
+**Generated:** 2026-04-04 19:30:13
 
 ## Configuration
 **Type:** A1
@@ -46,7 +46,7 @@
   - FIX: Provide [3, 4] options for A1 quizzes.
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'the word...'.
   - FIX: Vary sentence structure.
-- **[INLINE_ENGLISH_IN_PROSE]** Inline English translations in B1+ prose (3 occurrences): (Divide into syllables), (Find the stress), (Read together) — breaks immersion target
+- **[INLINE_ENGLISH_IN_PROSE]** Inline English translations in B1+ prose (3 occurrences): (Divide into syllables), (Find the stress), (Read the whole word) — breaks immersion target
   - FIX: Remove inline English translations. Use context clues, Ukrainian definitions, or move translations to vocabulary section
 - **[YAML_SCHEMA_VIOLATION]** Schema error in stress-and-melody.yaml: Schema validation error at key '8': {'type': 'observe', 'examples': ['ЗАмок (castle) ↔ замОк (lock)', 'МУка (torment) ↔ мукА (flour)', 'АТлас (atlas/maps) ↔ атлАС (satin fabric)', 'МАма — stress stays on the first syllable', 'воДА — stress stays on the last syllable', 'фотоГРАфія — stress stays on the third syllable'], 'prompt': 'Look at the first three pairs. What happens to the MEANING of a Ukrainian word when you move the stress to a different syllable? Now look at the last three examples — what does this tell you about learning new Ukrainian words?'} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
@@ -57,7 +57,7 @@
 - 8 violations (significant)
 
 ## Gates
-- **Words:** ✅ 1790/1200 (raw: 1823)
+- **Words:** ✅ 1793/1200 (raw: 1826)
 - **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 6/0 types

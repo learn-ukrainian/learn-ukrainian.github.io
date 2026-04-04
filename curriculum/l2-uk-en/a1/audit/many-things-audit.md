@@ -1,7 +1,7 @@
 # Audit Report: M13 — many-things.md
 **Level:** A1 | **Module:** M13 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:09
+**Generated:** 2026-04-04 19:30:04
 
 ## Configuration
 **Type:** A1-grammar
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: множина, однина
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: однина, множина
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in many-things.yaml: Schema validation error at key '8': {'type': 'translate', 'instruction': 'Choose the correct Ukrainian translation.', 'items': [{'source': 'These tables are big.', 'options': [{'text': 'Ці столи великі.', 'correct': True}, {'text': 'Це стіл великий.', 'correct': False}, {'text': 'Ті столи великий.', 'correct': False}]}, {'source': 'My pens are blue.', 'options': [{'text': 'Мої ручки сині.', 'correct': True}, {'text': 'Моя ручка синя.', 'correct': False}, {'text': 'Мої ручки синя.', 'correct': False}]}, {'source': 'Those chairs are old.', 'options': [{'text': 'Ті стільці старі.', 'correct': True}, {'text': 'Ці стільці старі.', 'correct': False}, {'text': 'Ті стільці старий.', 'correct': False}]}, {'source': 'The windows are clean.', 'options': [{'text': 'Вікна чисті.', 'correct': True}, {'text': 'Вікно чисте.', 'correct': False}, {'text': 'Вікна чистий.', 'correct': False}]}, {'source': 'These notebooks are new.', 'options': [{'text': 'Ці зошити нові.', 'correct': True}, {'text': 'Цей зошит новий.', 'correct': False}, {'text': 'Ці зошити нова.', 'correct': False}]}, {'source': 'Those armchairs are red.', 'options': [{'text': 'Ті крісла червоні.', 'correct': True}, {'text': 'Те крісло червоне.', 'correct': False}, {'text': 'Ці крісла червоні.', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json

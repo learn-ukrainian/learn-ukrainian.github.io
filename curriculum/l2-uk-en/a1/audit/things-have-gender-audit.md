@@ -1,7 +1,7 @@
 # Audit Report: M08 — things-have-gender.md
 **Level:** A1 | **Module:** M08 | **Phase:** A1.2 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:16
+**Generated:** 2026-04-04 19:30:14
 
 ## Configuration
 **Type:** A1-grammar

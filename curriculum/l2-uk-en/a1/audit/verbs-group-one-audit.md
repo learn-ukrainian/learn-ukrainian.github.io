@@ -1,7 +1,7 @@
 # Audit Report: M16 — verbs-group-one.md
 **Level:** A1 | **Module:** M16 | **Phase:** A1.3 | **Pedagogy:** PPP | **Target:** 1200
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:17
+**Generated:** 2026-04-04 19:30:16
 
 ## Configuration
 **Type:** A1-grammar
@@ -34,7 +34,7 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: множина, однина
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: однина, множина
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in verbs-group-one.yaml: Schema validation error at key '8': {'type': 'translate', 'instruction': 'Choose the correct Ukrainian translation.', 'items': [{'source': 'I read.', 'options': [{'text': 'Я читаю.', 'correct': True}, {'text': 'Ти читаєш.', 'correct': False}, {'text': 'Він читає.', 'correct': False}]}, {'source': 'You listen to music.', 'options': [{'text': 'Вона слухає музику.', 'correct': False}, {'text': 'Ти слухаєш музику.', 'correct': True}, {'text': 'Я слухаю музику.', 'correct': False}]}, {'source': 'She cooks dinner.', 'options': [{'text': 'Вона готую вечерю.', 'correct': False}, {'text': 'Вона готуєш вечерю.', 'correct': False}, {'text': 'Вона готує вечерю.', 'correct': True}]}, {'source': 'He works.', 'options': [{'text': 'Він працюю.', 'correct': False}, {'text': 'Він працюєш.', 'correct': False}, {'text': 'Він працює.', 'correct': True}]}, {'source': 'You walk in the park.', 'options': [{'text': 'Я гуляю в парку.', 'correct': False}, {'text': 'Ти гуляєш у парку.', 'correct': True}, {'text': 'Він гуляє в парку.', 'correct': False}]}, {'source': 'I study Ukrainian.', 'options': [{'text': 'Я вивчаю українську.', 'correct': True}, {'text': 'Ти вивчаєш українську.', 'correct': False}, {'text': 'Вона вивчає українську.', 'correct': False}]}]} is not valid under any of the given schemas
   - FIX: Fix the activity YAML to match the schema in schemas/activity-v2.schema.json
@@ -45,7 +45,7 @@
 - 2 violations (minor)
 
 ## Gates
-- **Words:** ⚠️ 1143/1200 (raw: 1330) (57 short)
+- **Words:** ⚠️ 1152/1200 (raw: 1343) (48 short)
 - **Activities:** ✅ 8/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 7/0 types
@@ -57,7 +57,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 24.9% (target 15-35% (M16))
+- **Immersion:** 🇺🇦 25.1% (target 15-35% (M16))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 2+ cultural hooks but content has no cultural section
@@ -65,7 +65,7 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 351 | Included in Core |
-| **Пе́рша дієвідмі́на (Group I Verbs)** | ✅ | 263 | Included in Core |
-| **Я, ти, він/вона (Persons)** | ✅ | 359 | Included in Core |
+| **Intro/Narrative** | ✅ | 353 | Included in Core |
+| **Пе́рша дієвідмі́на (Group I Verbs)** | ✅ | 266 | Included in Core |
+| **Я, ти, він/вона (Persons)** | ✅ | 363 | Included in Core |
 | **Підсумок — Summary** | ✅ | 170 | Included in Core |

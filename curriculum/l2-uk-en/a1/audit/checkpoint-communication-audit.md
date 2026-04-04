@@ -1,7 +1,7 @@
 # Audit Report: M47 — checkpoint-communication.md
 **Level:** A1 | **Module:** M47 | **Phase:** A1.7 | **Pedagogy:** PPP | **Target:** 1000
 **Overall Status:** ✅ PASS
-**Generated:** 2026-04-03 14:02:02
+**Generated:** 2026-04-04 19:29:52
 
 ## Configuration
 **Type:** A1
@@ -35,8 +35,6 @@
 - Low density activities: 0
 
 ## PEDAGOGICAL VIOLATIONS
-- **[INFO]** Dative case used at A1: 'мені' (taught formally at A2)
-  - FIX: No action needed — incidental dative exposure is acceptable.
 - **[ROBOTIC_STRUCTURE]** Robotic structure: 3 sentences start with 'can i...'.
   - FIX: Vary sentence structure.
 - **[YAML_SCHEMA_VIOLATION]** Schema error in checkpoint-communication.yaml: Schema validation error at key '0': 'принеси' is not of type 'object'
@@ -45,10 +43,10 @@
 ## Recommendation
 **📝 UPDATE** (severity 5/100)
 
-- 3 violations (minor)
+- 2 violations (minor)
 
 ## Gates
-- **Words:** ✅ 1028/1000 (raw: 1187)
+- **Words:** ⚠️ 947/1000 (raw: 1107) (53 short)
 - **Activities:** ✅ 9/0
 - **Density:** ✅ All > 6
 - **Unique_types:** ✅ 7/0 types
@@ -60,7 +58,7 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Content_heavy:** ℹ️ N/A (standard module)
-- **Immersion:** 🇺🇦 27.6% (target 20-40% (M47))
+- **Immersion:** 🇺🇦 30.2% (target 20-40% (M47))
 - **Grammar:** ℹ️ N/A (covered by naturalness)
 - **Naturalness:** ℹ️ PENDING — awaiting review
 - **Research:** ⚠️ Refresh recommended: Research has 2+ cultural hooks but content has no cultural section
@@ -68,8 +66,8 @@
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Intro/Narrative** | ✅ | 267 | Included in Core |
+| **Intro/Narrative** | ✅ | 221 | Included in Core |
 | **Чита́ння (Reading Practice)** | ⚪️ | 0 | Skipped (using YAML) |
-| **Грама́тика (Grammar Summary)** | ✅ | 240 | Included in Core |
-| **Діало́г (Connected Dialogue)** | ✅ | 204 | Included in Core |
-| **Підсумок — Summary** | ✅ | 117 | Included in Core |
+| **Грама́тика (Grammar Summary)** | ✅ | 266 | Included in Core |
+| **Діало́г (Connected Dialogue)** | ✅ | 184 | Included in Core |
+| **Підсумок — Summary** | ✅ | 111 | Included in Core |
