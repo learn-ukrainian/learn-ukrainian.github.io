@@ -147,75 +147,87 @@ levels:
       - a2-finale
   b1:
     type: core
-    # V4 — 92 modules, State Standard 2024 compliant
-    # Designed 2026-03-22 by Gemini, reviewed by Claude, revised by Gemini
+    # V5 — 93 modules, State Standard 2024 fully compliant (#1143)
+    # Redesigned 2026-04-04: aspect mastery block, grammar wall fix, all 15 SS themes
     modules:
-      # B1.1 [Baselines & Morphophonemics]
+      # B1.0 [Baselines & Aspect Mastery]
       - b1-baseline-past-present
       - b1-baseline-future-aspect
-      - people-and-relationships
+      - people-and-relationships          # Theme: людина
+      - aspect-past-tense                 # NEW — SS 4.2.3.1
+      - aspect-future-tense               # NEW — SS 4.2.3.1
+      - aspect-in-narration               # NEW — SS 4.2.3.1
+      - daily-life-and-routines           # Theme: щоденне життя
+      - aspect-in-imperatives             # NEW — SS 4.2.3.2
+      - aspect-in-negation                # NEW — SS 4.2.3.1
+      - work-and-career                   # NEW — Theme: робота
+      - aspect-in-conditionals            # NEW — SS 4.2.3.3
+      - checkpoint-aspect                 # NEW
+      # B1.1 [Morphophonemics]
       - alternation-vowels
       - alternation-consonants-nouns
       - alternation-consonants-verbs
+      - health-at-the-doctor              # Theme: здоров'я
       - simplification-consonants
       - noun-subclasses-masculine
       - noun-subclasses-hissing
+      - restaurant-and-food               # NEW — Theme: ресторан
       - noun-subclasses-feminine
       - pluralia-tantum
-      - health-at-the-doctor
       - checkpoint-morphophonemics
-      # B1.2 [Verbs]
+      # B1.2 [Verb System]
       - conditionals-real
       - conditionals-unreal
       - imperative-nuances
-      - verbal-nouns
+      - shopping-and-services             # Theme: купівля, послуги
       - reflexive-verbs-nuances
       - passive-voice-intro
+      - verbal-nouns
+      - housing-and-renting               # Theme: дім
       - verb-formation-suffixes
-      - daily-life-and-routines
       - checkpoint-verbs
-      # B1.3 [Motion Verb Universe]
+      # B1.3 [Motion Verbs]
       - prepositions-spatial-review
       - motion-base-review
       - motion-prefixes-arrival
       - motion-prefixes-departure
       - motion-prefixes-in-out
-      - motion-prefixes-transit
-      - motion-prefixes-around
+      - traveling-ukraine                 # Theme: подорожі
+      - motion-prefixes-transit           # absorbs motion-prefixes-around
       - motion-flight-swim
       - figurative-motion
-      - traveling-ukraine
       - checkpoint-motion
-      # B1.4 [Degrees of Comparison & Word Formation]
-      - adjectives-comparative
+      # B1.4 [Comparison & Word Formation]
+      - adjectives-comparative            # absorbs adjectives-suppletive
       - adjectives-superlative
-      - adjectives-suppletive
       - adverbs-comparison-formation
+      - nature-and-environment            # Theme: природа
       - word-formation-adjectives
+      - possessive-adjectives             # NEW — SS 4.2.1.2
       - word-formation-nouns
-      - shopping-and-services
       - checkpoint-comparison
-      # B1.5 [Advanced Case Usages & Prepositions]
+      # B1.5 [Case Nuances & Prepositions]
       - genitive-nuances
       - dative-nuances
       - instrumental-nuances
+      - education-and-university          # Theme: освіта
       - vocative-formal
       - prepositions-temporal
       - prepositions-cause-purpose
+      - places-and-locations              # NEW — Theme: місця
       - cases-with-ordinal-numerals
       - cases-with-quantity-expressions
       - advanced-pronouns
-      - housing-and-renting
       - checkpoint-cases
       # B1.6 [Participles & Gerunds]
       - participles-active
       - participles-passive
       - participle-phrases
+      - leisure-culture-festivals         # Theme: дозвілля, традиції
       - short-form-adjectives
       - gerunds-imperfective
-      - gerunds-perfective
-      - gerund-phrases
-      - education-and-university
+      - gerunds-perfective                # absorbs gerund-phrases
+      - society-and-media                 # Theme: суспільство
       - checkpoint-participles
       # B1.7 [Complex Syntax]
       - complex-compound
@@ -226,26 +238,21 @@ levels:
       - complex-subordinate-condition
       - complex-subordinate-purpose
       - complex-subordinate-concess
+      - homogeneous-members               # NEW — SS 4.4.2
       - reported-speech
-      - leisure-culture-festivals
       - checkpoint-syntax
-      # B1.8 [Text and Register]
+      # B1.8 [Text & Register]
       - text-register-formal
       - text-register-informal
-      - text-compression
-      - double-negation
+      - text-compression                  # covers SS 4.1.5 abbreviations
+      - reading-literature                # Theme: дозвілля
       - introductory-words
-      - nature-and-environment
-      - reading-literature
       - checkpoint-text-register
       # B1.9 [Synthesis & Graduation]
       - narrative-mastery
-      - debate-and-opinion
-      - society-and-media
-      - comprehensive-b1-review
-      - practice-exam-reading
-      - practice-exam-writing
-      - b1-finale
+      - debate-and-opinion                # Theme: суспільні відносини
+      - comprehensive-b1-review           # absorbs b1-finale
+      - practice-exam                     # merges reading + writing exams
   b2:
     type: core
     modules:
