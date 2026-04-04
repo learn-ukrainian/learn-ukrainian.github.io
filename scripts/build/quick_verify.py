@@ -189,7 +189,8 @@ def _check_vocabulary(content: str, plan: dict) -> list[QuickVerifyError]:
     """Check that required vocabulary items appear in the prose."""
     errors = []
     vocab = plan.get("vocabulary_hints", {})
-    required = vocab.get("required", [])
+    # Handle both flat list (seminar plans) and dict (core plans)
+    required = vocab if isinstance(vocab, list) else vocab.get("required", [])
 
     if not required:
         return errors

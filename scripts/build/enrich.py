@@ -123,8 +123,13 @@ def _build_slovnyk(plan: dict, content: str = "", slug: str = "") -> str:
 
     # 2. Fallback: plan vocabulary_hints → table + FlashcardDeck
     vocab = plan.get("vocabulary_hints", {})
-    required = vocab.get("required", [])
-    recommended = vocab.get("recommended", [])
+    # Handle both flat list format (seminar plans) and dict format (core plans)
+    if isinstance(vocab, list):
+        required = vocab  # Flat list of words → treat as required
+        recommended = []
+    else:
+        required = vocab.get("required", [])
+        recommended = vocab.get("recommended", [])
 
     if not required and not recommended:
         return ""
