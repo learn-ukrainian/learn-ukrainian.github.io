@@ -4829,8 +4829,14 @@ def main():
     # Step 8b: ANNOTATE (stress marks — after review, before publish)
     # Moved here from step 6 because the stress annotator has heteronym bugs
     # (e.g., бра́ти vs брати́) that caused review rejections
+    # Skip for seminar tracks — B2+ immersion doesn't need stress marks
+    _SEMINAR_TRACKS_ANNOTATE = {"hist", "bio", "istorio", "lit", "folk", "oes", "ruth"}
+    _is_seminar_annotate = args.level.lower() in _SEMINAR_TRACKS_ANNOTATE or args.level.lower().startswith("lit-")
     if steps in ("all", "review", "publish", "annotate") and "stress" not in completed_phases:
-        step_annotate(content_path)
+        if _is_seminar_annotate:
+            _log("\n  ⏭️  Skipping stress marks (seminar track — B2+ immersion)")
+        else:
+            step_annotate(content_path)
         _save_v6_state(args.level, slug, "stress")
 
     # Step 9: PUBLISH
