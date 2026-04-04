@@ -1,13 +1,13 @@
-module: b1-006
+module: b1-015
 level: B1
-sequence: 6
+sequence: 15
 slug: alternation-consonants-verbs
 version: '3.0'
 title: "Чергування приголосних (дієслова)"
 subtitle: "Сидіти — сиджу, плакати — плачу: приголосні в дієсловах"
 focus: grammar
 pedagogy: PPP
-phase: "B1.1 [Baselines & Morphophonemics]"
+phase: "B1.1 [Morphophonemics]"
 word_target: 4000
 objectives:
   - "Learner can predict and produce consonant alternations in the 1st person singular

@@ -1,13 +1,13 @@
-module: b1-012
+module: b1-016
 level: B1
-sequence: 12
+sequence: 16
 slug: health-at-the-doctor
 version: '3.0'
 title: "Здоров'я і медицина"
 subtitle: "У лікаря — від скарг до рецепта"
 focus: communication
 pedagogy: PPP
-phase: "B1.1 [Baselines & Morphophonemics]"
+phase: "B1.1 [Morphophonemics]"
 word_target: 4000
 objectives:
   - "Learner can describe symptoms and health complaints in Ukrainian using appropriate

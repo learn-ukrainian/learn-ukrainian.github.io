@@ -1,13 +1,13 @@
-module: b1-046
+module: b1-057
 level: B1
-sequence: 46
+sequence: 57
 slug: prepositions-temporal
 version: '3.1'
 title: "Часові прийменники"
 subtitle: "Через, за, на, перед, після, до — точне вираження часу"
 focus: grammar
 pedagogy: PPP
-phase: "B1.5 [Advanced Case Usages & Prepositions]"
+phase: "B1.5 [Case Nuances & Prepositions]"
 word_target: 4000
 objectives:
   - "Learner can use через + Зн.в. to express 'after a period' (через годину, через

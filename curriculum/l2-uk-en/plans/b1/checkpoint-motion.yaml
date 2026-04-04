@@ -1,13 +1,13 @@
-module: b1-033
+module: b1-043
 level: B1
-sequence: 33
+sequence: 43
 slug: checkpoint-motion
 version: '3.0'
 title: "Контрольна робота 3"
 subtitle: "Перевірка знань: просторові прийменники, дієслова руху, префікси, подорожі"
 focus: review
 pedagogy: PPP
-phase: "B1.3 [Motion Verb Universe]"
+phase: "B1.3 [Motion Verbs]"
 word_target: 4000
 objectives:
   - "Learner can demonstrate mastery of spatial prepositions with correct case agreement

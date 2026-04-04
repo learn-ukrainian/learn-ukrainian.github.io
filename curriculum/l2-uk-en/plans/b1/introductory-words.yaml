@@ -1,13 +1,13 @@
-module: b1-077
+module: b1-088
 level: B1
-sequence: 77
+sequence: 88
 slug: introductory-words
 version: '3.0'
 title: "Вставні слова та Однорідні члени речення"
 subtitle: "Мабуть, можливо, здається, на жаль — слова, що виражають ставлення мовця"
 focus: grammar
 pedagogy: PPP
-phase: "B1.8 [Text and Register]"
+phase: "B1.8 [Text & Register]"
 word_target: 4000
 objectives:
   - "Learner can explain what вставні конструкції are (express the speaker's attitude,

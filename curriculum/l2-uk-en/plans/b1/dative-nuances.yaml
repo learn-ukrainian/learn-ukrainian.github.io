@@ -1,13 +1,13 @@
-module: b1-043
+module: b1-053
 level: B1
-sequence: 43
+sequence: 53
 slug: dative-nuances
 version: '3.1'
 title: "Давальний відмінок (деталі)"
 subtitle: "Суб'єкт стану, вік, потреба — розширені значення давального"
 focus: grammar
 pedagogy: PPP
-phase: "B1.5 [Advanced Case Usages & Prepositions]"
+phase: "B1.5 [Case Nuances & Prepositions]"
 word_target: 4000
 objectives:
   - "Learner can use the dative to express the experiencer of a state (мені холодно,

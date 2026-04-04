@@ -1,13 +1,13 @@
-module: b1-037
+module: b1-046
 level: B1
-sequence: 37
+sequence: 46
 slug: adverbs-comparison-formation
 version: '3.1'
 title: "Ступені порівняння та творення прислівників"
 subtitle: "Як прислівники утворюються і порівнюються в українській мові"
 focus: grammar
 pedagogy: PPP
-phase: "B1.4 [Degrees of Comparison & Word Formation]"
+phase: "B1.4 [Comparison & Word Formation]"
 word_target: 4000
 objectives:
   - "Learner can form adverbs from adjectives using suffixes -о, -е, -и (швидкий-швидко,

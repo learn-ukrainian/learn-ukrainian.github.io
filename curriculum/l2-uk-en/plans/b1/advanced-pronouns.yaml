@@ -1,13 +1,13 @@
-module: b1-050
+module: b1-062
 level: B1
-sequence: 50
+sequence: 62
 slug: advanced-pronouns
 version: '3.1'
 title: "Займенники (деталі)"
 subtitle: "Питально-відносні, зворотний себе, неозначені та заперечні займенники"
 focus: grammar
 pedagogy: PPP
-phase: "B1.5 [Advanced Case Usages & Prepositions]"
+phase: "B1.5 [Case Nuances & Prepositions]"
 word_target: 4000
 objectives:
   - "Learner can use interrogative-relative pronouns (хто, що, який, чий, котрий)

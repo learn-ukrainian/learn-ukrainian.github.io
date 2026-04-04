@@ -1,13 +1,13 @@
-module: b1-083
+module: b1-071
 level: B1
-sequence: 83
+sequence: 71
 slug: society-and-media
 version: '3.1'
 title: "Суспільство і медіа"
 subtitle: "Новини, ЗМI, суспільне життя — розуміємо та обговорюємо"
 focus: communication
 pedagogy: PPP
-phase: "B1.9 [Synthesis & Graduation]"
+phase: "B1.6 [Participles & Gerunds]"
 word_target: 4000
 objectives:
   - "Learner can read and understand B1-level Ukrainian news articles, extracting

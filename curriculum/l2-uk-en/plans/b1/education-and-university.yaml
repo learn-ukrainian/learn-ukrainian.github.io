@@ -1,13 +1,13 @@
-module: b1-060
+module: b1-055
 level: B1
-sequence: 60
+sequence: 55
 slug: education-and-university
 version: '3.1'
 title: "Освіта і навчання"
 subtitle: "Академічна лексика, дисципліни та дієприкметники в науковому стилі"
 focus: communication
 pedagogy: PPP
-phase: "B1.6 [Participles & Gerunds]"
+phase: "B1.5 [Case Nuances & Prepositions]"
 word_target: 4000
 objectives:
   - "Learner can discuss education, university life, and academic disciplines using

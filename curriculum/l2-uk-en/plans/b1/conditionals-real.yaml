@@ -1,13 +1,13 @@
-module: b1-014
+module: b1-024
 level: B1
-sequence: 14
+sequence: 24
 slug: conditionals-real
 version: '3.1'
 title: "Умовний спосіб (реальний)"
 subtitle: "Якщо-речення та реальні умовні конструкції"
 focus: grammar
 pedagogy: PPP
-phase: "B1.2 [Verbs]"
+phase: "B1.2 [Verb System]"
 word_target: 4000
 objectives:
   - "Learner can form and use дієслова умовного способу with the particle би/б to

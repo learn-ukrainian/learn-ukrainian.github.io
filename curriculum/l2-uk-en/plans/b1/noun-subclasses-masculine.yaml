@@ -1,13 +1,13 @@
-module: b1-008
+module: b1-018
 level: B1
-sequence: 8
+sequence: 18
 slug: noun-subclasses-masculine
 version: '3.0'
 title: "Іменники на -ар, -яр, -ин"
 subtitle: "Пекар, школяр, киянин — хто вони і як їх відмінювати"
 focus: grammar
 pedagogy: PPP
-phase: "B1.1 [Baselines & Morphophonemics]"
+phase: "B1.1 [Morphophonemics]"
 word_target: 4000
 objectives:
   - "Learner can identify masculine nouns with suffixes -ар, -яр and explain their

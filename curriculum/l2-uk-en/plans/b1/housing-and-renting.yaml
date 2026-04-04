@@ -1,13 +1,13 @@
-module: b1-051
+module: b1-031
 level: B1
-sequence: 51
+sequence: 31
 slug: housing-and-renting
 version: '3.1'
 title: "Житло і оренда"
 subtitle: "Пошук квартири, оренда, комунальні послуги — відмінки в дії"
 focus: communication
 pedagogy: PPP
-phase: "B1.5 [Advanced Case Usages & Prepositions]"
+phase: "B1.2 [Verb System]"
 word_target: 4000
 objectives:
   - "Learner can describe an apartment/house using spatial vocabulary and case constructions:

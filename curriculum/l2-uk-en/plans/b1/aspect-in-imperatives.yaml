@@ -1,0 +1,231 @@
+module: b1-008
+level: B1
+sequence: 8
+slug: aspect-in-imperatives
+version: '1.0'
+title: "Вид у наказовому способі"
+subtitle: "Відкрий! vs Не відкривай! — чому заперечення змінює вид"
+focus: aspect-imperatives
+pedagogy: TTT
+phase: "B1.0 [Baselines & Aspect Mastery]"
+word_target: 4000
+objectives:
+  - "Learner can explain why positive imperatives often use доконаний вид (specific
+    result requested) while negative imperatives almost always use недоконаний вид
+    (general prohibition) — using Ukrainian metalanguage"
+  - "Learner can form imperatives of both aspects and choose the correct one based on
+    communicative intent: polite request (impf) vs direct command (pf), general warning
+    (impf) vs specific instruction (pf)"
+  - "Learner can produce natural imperative pairs (Відкрий вікно! / Не відкривай вікно!)
+    and explain the aspect logic behind each"
+  - "Learner can use imperatives appropriately in everyday situations: giving advice
+    (порада), making requests (прохання), issuing warnings (заборона), and giving
+    instructions (інструкція)"
+dialogue_situations:
+  - setting: "A cooking lesson — the instructor gives specific commands (pf: наріж,
+      поклади, перемішай) and general rules (impf: не додавай забагато солі, завжди
+      мийте руки): Спочатку наріж цибулю. Потім поклади на сковорідку. Але не додавай
+      олії забагато — вона має лише покрити дно."
+    speakers:
+      - Інструктор
+      - Учениця
+    motivation: "Specific sequential instructions (pf) vs general ongoing rules (impf)
+      — natural imperative aspect contrast in a practical setting"
+  - setting: "Parent sending a teenager off to school — mix of specific commands (pf:
+      візьми парасольку, не забудь ключі) and general advice (impf: будь уважний,
+      не запізнюйся): Візьми парасольку — обіцяють дощ. І не забудь ключі! — Мамо,
+      не хвилюйся. Я все пам'ятаю."
+    speakers:
+      - Мама
+      - Син
+    motivation: "Specific actions (pf) vs general behavioral advice (impf) in a
+      familiar daily scenario"
+content_outline:
+  - section: "Тест: який наказ звучить природно?"
+    words: 850
+    points:
+      - "Diagnostic: 10 imperative pairs — learners choose the more natural option.
+        Examples: (Відкрий / Відкривай) вікно, будь ласка — тут душно. Не (відкрий /
+        відкривай) вікно — надворі холодно. (Запиши / Записуй) мій номер телефону.
+        Не (запиши / записуй) нічого — я все скажу усно."
+      - "Self-assessment: pattern recognition. Most learners will notice: positive =
+        usually pf, negative = usually impf. But WHY? This module explains the logic
+        behind what intuition already senses."
+      - "Key insight framed: The imperative is where aspect choice is MOST meaningful
+        in everyday speech. Відкрий! (do it — specific result) vs Відкривай! (go ahead,
+        start doing it — process/permission). Не відкривай! (don't do it — general
+        prohibition) vs Не відкрий! (very rare — be careful not to accidentally open)."
+      - "Quick formation review: наказовий спосіб від основи теперішнього часу. 2 ос.
+        одн.: пиши!, напиши!, читай!, прочитай! 2 ос. мн./ввічл.: пишіть!, напишіть!
+        1 ос. мн.: пишімо!, напишімо! Negation: не + imperative form."
+  - section: "Позитивний наказ: доконаний чи недоконаний?"
+    words: 1050
+    points:
+      - "Perfective positive imperative — the default for commands (Заболотний Grade 7
+        p.84): Specific result requested: Напиши лист! (write and finish it). Відчини
+        двері! (open them — result: doors open). Прочитай цю статтю! (read it through
+        — result: you'll know the content). Sequential instructions: Спочатку помий
+        руки. Потім наріж хліб. Візьми тарілку."
+      - "Imperfective positive imperative — invitation, permission, process:
+        General invitation: Заходьте! Сідайте! (come in, sit down — welcoming,
+        not commanding). Permission to begin/continue: Починайте! Читайте далі!
+        Ongoing/repeated action: Пишіть акуратно. Говоріть повільніше. Process focus:
+        Слухай уважно. (listen — ongoing attention, not a one-time act)."
+      - "Politeness scale: imperfective imperatives often feel SOFTER than perfective.
+        Допоможіть, будь ласка (impf — general request for help). Допоможіть мені
+        перенести цю валізу (pf context — specific action). Розкажіть про себе (impf —
+        open invitation). Розкажіть, що сталося (pf context — specific request for
+        info). The aspect shifts the pragmatic force."
+      - "Practice: learners receive 8 situations and must choose the aspect for a
+        positive imperative, then explain their choice: Ти просиш друга зачинити вікно.
+        (pf — specific result). Ти кажеш гостям сідати за стіл. (impf — invitation).
+        Учитель каже учням писати тест. (impf — begin process)."
+  - section: "Негативний наказ: чому майже завжди недоконаний?"
+    words: 1050
+    points:
+      - "The negative imperative rule (Литвінова Grade 7 p.84): Не + недоконаний вид
+        is the standard form for prohibitions and warnings. Не відкривай вікно! (don't
+        open it — general prohibition). Не торкайся! (don't touch — warning). Не
+        запізнюйся! (don't be late — general advice). Не хвилюйся! (don't worry —
+        reassurance)."
+      - "WHY imperfective? A prohibition targets the ACTION ITSELF — it says 'this
+        activity is forbidden.' Imperfective captures the activity as a whole (process,
+        general category). Perfective captures a specific completed result — which
+        makes less sense to prohibit (you can't 'un-complete' something)."
+      - "Rare не + доконаний вид: warning against accidental result. Не впади!
+        (careful not to fall! — accidental event). Не загуби ключі! (don't lose the
+        keys — accidental result to prevent). Не забудь! (don't forget — accidental
+        lapse). These are not prohibitions — they are WARNINGS about possible unwanted
+        outcomes. The speaker doesn't forbid an action; they warn about a potential
+        accidental result."
+      - "Practice: learners classify negative imperatives as заборона (prohibition —
+        impf) or застереження (warning — pf), then produce their own examples.
+        Mini-dialogue: a parent gives a mix of prohibitions and warnings to a child
+        leaving for school."
+  - section: "Підсумок: вид як прагматичний вибір"
+    words: 1050
+    points:
+      - "Synthesis table: Positive imperative — pf (specific command/result), impf
+        (invitation/permission/process). Negative imperative — impf (prohibition/advice),
+        pf (warning against accidental result). The choice is PRAGMATIC — it depends on
+        what the speaker wants to communicate, not on a mechanical rule."
+      - "Situational practice: learners roleplay 4 scenarios using both aspects in
+        imperatives. A) Cooking: give step-by-step instructions (pf) + general food
+        safety rules (impf). B) Doctor's advice: specific instructions (pf: випийте
+        цей чай) + general prohibitions (impf: не пийте холодну воду). C) Tourist
+        guide: invitations (impf: дивіться! фотографуйте!) + specific instructions
+        (pf: зверніть увагу на цю фреску). D) Parent: commands (pf: прибери кімнату)
+        + warnings (pf: не забудь ключі) + general rules (impf: не запізнюйся)."
+      - "Common errors: *Не відкрий вікно! (wrong — general prohibition = impf:
+        не відкривай). *Заходь, будь ласка! Сідь! (pf for invitation feels abrupt —
+        impf Заходьте! Сідайте! is warmer). *Не забувай ключі! (overly general for
+        a specific warning — pf Не забудь ключі! is better)."
+      - "Preview of next module: Вид і заперечення — how aspect interacts with negation
+        beyond imperatives (не + impf general, ще не + pf expected completion)."
+vocabulary_hints:
+  - word: "наказовий спосіб"
+    pos: "noun phrase"
+    translation: "imperative mood (command form)"
+  - word: "заборона"
+    pos: "noun:f"
+    translation: "prohibition (не + impf imperative)"
+  - word: "застереження"
+    pos: "noun:n"
+    translation: "warning (не + pf — accidental result)"
+  - word: "дозвіл"
+    pos: "noun:m"
+    translation: "permission (impf imperative — go ahead)"
+  - word: "прохання"
+    pos: "noun:n"
+    translation: "request (politeness varies by aspect)"
+  - word: "порада"
+    pos: "noun:f"
+    translation: "advice (often impf imperative)"
+  - word: "інструкція"
+    pos: "noun:f"
+    translation: "instruction (sequential — pf imperatives)"
+  - word: "ввічливий"
+    pos: "adj"
+    translation: "polite (impf imperatives often softer)"
+  - word: "категоричний"
+    pos: "adj"
+    translation: "categorical, firm (pf imperatives more direct)"
+  - word: "відкривати"
+    pos: "verb:impf"
+    translation: "to open (impf — Не відкривай!)"
+  - word: "відкрити"
+    pos: "verb:pf"
+    translation: "to open (pf — Відкрий!)"
+  - word: "закривати"
+    pos: "verb:impf"
+    translation: "to close (impf — Не закривай!)"
+  - word: "закрити"
+    pos: "verb:pf"
+    translation: "to close (pf — Закрий!)"
+  - word: "торкатися"
+    pos: "verb:impf"
+    translation: "to touch (impf — Не торкайся!)"
+  - word: "запізнюватися"
+    pos: "verb:impf"
+    translation: "to be late (impf — Не запізнюйся!)"
+  - word: "забувати"
+    pos: "verb:impf"
+    translation: "to forget (impf — general)"
+  - word: "забути"
+    pos: "verb:pf"
+    translation: "to forget (pf — Не забудь! specific warning)"
+  - word: "починати"
+    pos: "verb:impf"
+    translation: "to begin (impf — Починайте! invitation)"
+  - word: "почати"
+    pos: "verb:pf"
+    translation: "to begin (pf — Почніть! specific command)"
+activity_hints:
+  - type: quiz
+    focus: "Choose the correct aspect for imperatives in context — positive commands,
+      invitations, prohibitions, and warnings"
+    items: 10
+  - type: fill-in
+    focus: "Form the imperative of the correct aspect based on the situation description
+      (prohibition vs specific command vs invitation)"
+    items: 8
+  - type: group-sort
+    focus: "Sort imperative sentences into categories: команда (pf), запрошення (impf),
+      заборона (не + impf), застереження (не + pf)"
+    items: 10
+  - type: error-correction
+    focus: "Find and correct aspect errors in imperative sentences (*Не відкрий вікно!
+      → Не відкривай; *Заходь, сідь → Заходьте, сідайте)"
+    items: 6
+  - type: match-up
+    focus: "Match situations (cooking step, general rule, warning, invitation) to the
+      correct imperative aspect"
+    items: 8
+  - type: open-writing
+    focus: "Write instructions for a guest visiting your home — mix specific commands
+      (pf), invitations (impf), and house rules (не + impf)"
+    items: 6
+connects_to:
+  - "b1-006 (Вид у розповіді — aspect in narration, prerequisite)"
+  - "b1-009 (Вид і заперечення — aspect with negation, direct continuation)"
+  - "b1-011 (Вид в умовних реченнях — aspect in conditionals)"
+prerequisites:
+  - "b1-006 aspect-in-narration (narrative aspect mastery)"
+  - "A2 imperative-complete (basic imperative formation)"
+grammar:
+  - "Наказовий спосіб: утворення від основи теперішнього часу"
+  - "Позитивний наказ: доконаний (команда/результат) vs недоконаний (запрошення/процес)"
+  - "Негативний наказ: не + недоконаний (заборона) vs не + доконаний (застереження)"
+  - "Прагматична функція вибору виду в наказовому способі"
+  - "Шкала ввічливості: недоконаний м'якший за доконаний"
+register: розмовний
+references:
+  - title: "Заболотний Grade 7, p.82-88"
+    notes: "Наказовий спосіб дієслова: утворення, вживання, вправи на вибір виду
+      в наказовому способі."
+  - title: "Литвінова Grade 7, p.82-86"
+    notes: "Наказовий спосіб: форми 2-ї особи і 1-ї особи множини, заперечні
+      імперативи, вид у наказовому способі."
+  - title: "Авраменко Grade 7, p.80-84"
+    notes: "Наказовий спосіб: утворення, значення, ввічливість і категоричність,
+      практичні вправи."

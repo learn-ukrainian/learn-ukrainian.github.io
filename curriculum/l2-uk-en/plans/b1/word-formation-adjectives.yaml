@@ -1,13 +1,13 @@
-module: b1-038
+module: b1-048
 level: B1
-sequence: 38
+sequence: 48
 slug: word-formation-adjectives
 version: '3.0'
 title: "Творення прикметників"
 subtitle: "Як утворюються прикметники від іменників, дієслів і прикметників"
 focus: grammar
 pedagogy: PPP
-phase: "B1.4 [Degrees of Comparison & Word Formation]"
+phase: "B1.4 [Comparison & Word Formation]"
 word_target: 4000
 objectives:
   - "Learner can form adjectives from nouns using productive suffixes (-н-, -ськ-/-зьк-/-цьк-,

@@ -1,13 +1,13 @@
-module: b1-074
+module: b1-085
 level: B1
-sequence: 74
+sequence: 85
 slug: text-register-informal
 version: '3.1'
 title: "Розмовний стиль"
 subtitle: "Розмовне мовлення: побутова мова, діалоги, емоційна лексика"
 focus: grammar
 pedagogy: PPP
-phase: "B1.8 [Text and Register]"
+phase: "B1.8 [Text & Register]"
 word_target: 4000
 objectives:
   - "Learner can identify and describe the key characteristics of розмовний стиль

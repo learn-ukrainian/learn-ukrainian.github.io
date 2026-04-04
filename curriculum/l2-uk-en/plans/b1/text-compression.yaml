@@ -1,13 +1,13 @@
-module: b1-075
+module: b1-086
 level: B1
-sequence: 75
+sequence: 86
 slug: text-compression
 version: '3.1'
 title: "Абревіатури та скорочення"
 subtitle: "Складноскорочені слова, абревіатури, графічні скорочення"
 focus: grammar
 pedagogy: PPP
-phase: "B1.8 [Text and Register]"
+phase: "B1.8 [Text & Register]"
 word_target: 4000
 objectives:
   - "Learner can explain what абревіація is and how складноскорочені слова are formed

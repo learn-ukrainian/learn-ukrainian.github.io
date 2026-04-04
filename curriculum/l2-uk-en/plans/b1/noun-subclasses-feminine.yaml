@@ -1,13 +1,13 @@
-module: b1-010
+module: b1-021
 level: B1
-sequence: 10
+sequence: 21
 slug: noun-subclasses-feminine
 version: '3.0'
 title: "Жіночий рід (нульове закінчення)"
 subtitle: "III відміна — від любові до подорожі"
 focus: grammar
 pedagogy: PPP
-phase: "B1.1 [Baselines & Morphophonemics]"
+phase: "B1.1 [Morphophonemics]"
 word_target: 4000
 objectives:
   - "Learner can identify III відміна nouns — feminine nouns with нульове закінчення

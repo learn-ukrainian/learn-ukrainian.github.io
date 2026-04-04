@@ -1,13 +1,13 @@
-module: b1-041
+module: b1-051
 level: B1
-sequence: 41
+sequence: 51
 slug: checkpoint-comparison
 version: '3.1'
 title: "Контрольна робота 4"
 subtitle: "Перевірка знань: ступені порівняння, словотвір, покупки і послуги"
 focus: review
 pedagogy: PPP
-phase: "B1.4 [Degrees of Comparison & Word Formation]"
+phase: "B1.4 [Comparison & Word Formation]"
 word_target: 4000
 objectives:
   - "Learner can demonstrate mastery of comparative and superlative formation for

@@ -1,13 +1,13 @@
-module: b1-005
+module: b1-014
 level: B1
-sequence: 5
+sequence: 14
 slug: alternation-consonants-nouns
 version: '3.0'
 title: "Чергування приголосних (іменники)"
 subtitle: "Друг — друже — друзі: як змінюються приголосні в іменниках"
 focus: grammar
 pedagogy: PPP
-phase: "B1.1 [Baselines & Morphophonemics]"
+phase: "B1.1 [Morphophonemics]"
 word_target: 4000
 objectives:
   - "Learner can predict and produce the first palatalization [г/к/х] -> [ж/ч/ш] in

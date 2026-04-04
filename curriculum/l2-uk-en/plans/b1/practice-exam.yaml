@@ -1,0 +1,59 @@
+module: b1-093
+level: B1
+sequence: 93
+slug: practice-exam
+version: '1.0'
+title: "Пробний екзамен B1"
+subtitle: "Інтегрований екзамен: читання, слухання, письмо, говоріння"
+focus: exam
+pedagogy: PPP
+phase: "B1.9 [Synthesis & Graduation]"
+word_target: 4000
+objectives:
+  - "Learner can demonstrate B1-level reading comprehension on texts of various
+    genres (news, literary, formal, informal)"
+  - "Learner can demonstrate B1-level listening comprehension by answering questions
+    on audio/text-based simulations"
+  - "Learner can produce B1-level written texts: informal leaf, formal letter,
+    narrative paragraph, opinion paragraph"
+  - "Learner can demonstrate B1-level speaking by describing images, role-playing
+    situations, and expressing opinions on familiar topics"
+  - "Learner can complete exam-format tasks (multiple choice, true/false, fill-in,
+    matching, open writing) within time constraints"
+content_outline:
+  - section: "Частина 1: Читання і розуміння"
+    words: 1000
+    points:
+      - "3-4 texts of varying genres and registers (200-400 words each)"
+      - "Comprehension questions: основна думка, деталі, vocabulary in context"
+      - "Text analysis: стиль, граматика, лексика, художні засоби"
+  - section: "Частина 2: Слухання і розуміння"
+    words: 800
+    points:
+      - "Audio-simulated listening tasks with transcripts"
+      - "News broadcast, dialogue, academic lecture excerpts"
+      - "Note-taking and comprehension verification"
+  - section: "Частина 3: Письмо"
+    words: 1200
+    points:
+      - "Informal letter/message to a friend"
+      - "Formal letter (application, complaint, request)"
+      - "Narrative paragraph (past/present/future tenses, aspect)"
+      - "Opinion paragraph with argumentation"
+  - section: "Частина 4: Говоріння"
+    words: 1000
+    points:
+      - "Image description (vocabulary, grammar, fluency)"
+      - "Role-play situation (at doctor, in restaurant, at work)"
+      - "Expressing opinion on familiar topic with arguments"
+      - "Spontaneous Q&A on personal topics"
+activity_hints:
+  - type: quiz
+    focus: "Reading comprehension — multiple choice"
+  - type: fill-in
+    focus: "Listening gap-fill"
+  - type: translate
+    focus: "Writing tasks"
+references:
+  - "ЗНО format (Зовнішнє незалежне оцінювання)"
+  - "CEFR B1 exam descriptors"

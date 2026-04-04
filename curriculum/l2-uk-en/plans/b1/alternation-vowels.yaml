@@ -1,13 +1,13 @@
-module: b1-004
+module: b1-013
 level: B1
-sequence: 4
+sequence: 13
 slug: alternation-vowels
 version: '3.0'
 title: "Чергування голосних"
 subtitle: "Коли о та е стають і — і коли зникають зовсім"
 focus: grammar
 pedagogy: PPP
-phase: "B1.1 [Baselines & Morphophonemics]"
+phase: "B1.1 [Morphophonemics]"
 word_target: 4000
 objectives:
   - "Learner can predict when [о] or [е] in a root will become [i] in a different

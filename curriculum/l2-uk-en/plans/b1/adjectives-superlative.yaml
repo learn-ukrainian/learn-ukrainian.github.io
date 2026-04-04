@@ -1,13 +1,13 @@
-module: b1-035
+module: b1-045
 level: B1
-sequence: 35
+sequence: 45
 slug: adjectives-superlative
 version: '3.1'
 title: "Найвищий ступінь прикметників"
 subtitle: "Проста та складена форми найвищого ступеня порівняння"
 focus: grammar
 pedagogy: PPP
-phase: "B1.4 [Degrees of Comparison & Word Formation]"
+phase: "B1.4 [Comparison & Word Formation]"
 word_target: 4000
 objectives:
   - "Learner can form the simple superlative using prefix най- added to the comparative

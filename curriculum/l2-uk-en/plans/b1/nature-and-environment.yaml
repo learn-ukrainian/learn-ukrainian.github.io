@@ -1,13 +1,13 @@
-module: b1-078
+module: b1-047
 level: B1
-sequence: 78
+sequence: 47
 slug: nature-and-environment
 version: '3.1'
 title: "Природа і довкілля"
 subtitle: "Погода, рослини, тварини, екологія — природа українською"
 focus: communication
 pedagogy: PPP
-phase: "B1.8 [Text and Register]"
+phase: "B1.4 [Comparison & Word Formation]"
 word_target: 4000
 objectives:
   - "Learner can describe weather, seasons, and natural phenomena in Ukrainian using

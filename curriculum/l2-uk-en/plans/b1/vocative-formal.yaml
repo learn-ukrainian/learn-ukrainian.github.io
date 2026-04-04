@@ -1,13 +1,13 @@
-module: b1-045
+module: b1-056
 level: B1
-sequence: 45
+sequence: 56
 slug: vocative-formal
 version: '3.1'
 title: "Кличний відмінок (офіційний)"
 subtitle: "Звертання у формальному, діловому та офіційному контексті"
 focus: grammar
 pedagogy: PPP
-phase: "B1.5 [Advanced Case Usages & Prepositions]"
+phase: "B1.5 [Case Nuances & Prepositions]"
 word_target: 4000
 objectives:
   - "Learner can form vocative correctly for all noun classes including patronymics

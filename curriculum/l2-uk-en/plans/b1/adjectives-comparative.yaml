@@ -1,13 +1,13 @@
-module: b1-034
+module: b1-044
 level: B1
-sequence: 34
+sequence: 44
 slug: adjectives-comparative
 version: '3.1'
 title: "Вищий ступінь прикметників"
 subtitle: "Проста та складена форми вищого ступеня порівняння"
 focus: grammar
 pedagogy: PPP
-phase: "B1.4 [Degrees of Comparison & Word Formation]"
+phase: "B1.4 [Comparison & Word Formation]"
 word_target: 4000
 objectives:
   - "Learner can form the simple comparative of adjectives using suffixes -іш- and

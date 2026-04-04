@@ -1,0 +1,219 @@
+module: b1-006
+level: B1
+sequence: 6
+slug: aspect-in-narration
+version: '1.0'
+title: "Вид у розповіді"
+subtitle: "Тло і передній план — як аспект створює наратив"
+focus: aspect-narration
+pedagogy: TTT
+phase: "B1.0 [Baselines & Aspect Mastery]"
+word_target: 4000
+objectives:
+  - "Learner can identify background (тло — imperfective) and foreground events
+    (передній план — perfective) in a Ukrainian narrative text and explain the
+    aspect logic using Ukrainian metalanguage"
+  - "Learner can weave both aspects into connected storytelling: imperfective for
+    setting, atmosphere, and simultaneous actions; perfective for sequential events
+    and plot advancement"
+  - "Learner can use temporal connectors (спочатку, потім, тим часом, раптом, нарешті)
+    correctly with the appropriate aspect"
+  - "Learner can rewrite a narrative passage changing the aspect distribution to
+    demonstrate how aspect transforms the story's focus and pacing"
+dialogue_situations:
+  - setting: "Two friends recounting a dramatic evening — one describes the atmosphere
+      (impf background), the other jumps in with the key events (pf foreground): Було
+      тихо. Ми сиділи в кав'ярні, пили каву... — І раптом зайшов Максим! Він кинув
+      сумку на стіл і сказав: 'Я знайшов роботу!'"
+    speakers:
+      - Юлія
+      - Катерина
+    motivation: "Natural collaborative storytelling — one speaker provides background
+      (impf), the other delivers events (pf)"
+content_outline:
+  - section: "Тест: тло чи подія?"
+    words: 850
+    points:
+      - "Diagnostic: learners read a short Ukrainian narrative (10-12 sentences) and
+        mark each verb as тло (background) or подія (foreground event). No rules given —
+        pure intuition. Text example: Був теплий вечір. Сонце сідало за обрій. Ми
+        сиділи на терасі й розмовляли. Раптом задзвонив телефон. Я підвів і відповів.
+        Це був Андрій — він повернувся з Америки."
+      - "Self-assessment: how many verbs did you classify correctly? Discussion: what
+        patterns did you notice? (Background verbs = impf, event verbs = pf.) This
+        module makes the pattern explicit and teaches you to USE it in your own writing."
+      - "Key concept introduced: every narrative has two layers. Тло (background) —
+        setting, weather, ongoing situations, emotions, descriptions. Uses недоконаний
+        вид. Передній план (foreground) — events that move the story forward, changes,
+        turning points. Uses доконаний вид."
+      - "Visual metaphor: тло is the stage set (static, continuous), передній план is
+        the actors' actions (dynamic, sequential). A story with only foreground is a
+        bare list of events. A story with only background is a description with no plot."
+  - section: "Тло: недоконаний вид у наративі"
+    words: 1050
+    points:
+      - "Functions of imperfective in narration (Заболотний Grade 7 p.54): Setting the
+        scene: Надворі було холодно. Дув сильний вітер. Describing ongoing actions:
+        Діти гралися у дворі. Бабуся сиділа біля вікна і в'язала. Simultaneous actions:
+        Поки мама готувала вечерю, тато читав газету. Emotional/mental states: Він
+        хвилювався. Вона не знала, що робити."
+      - "Temporal connectors with imperfective background: тим часом (meanwhile),
+        у цей час (at that time), поки (while), доки (while/until), увесь час
+        (all the time), зазвичай (usually — for habitual background). Each connector
+        naturally pairs with imperfective because it signals duration or simultaneity."
+      - "Extended background passage practice: learners write a 5-sentence scene-setting
+        paragraph using only недоконаний вид. Topic: Опишіть вечір у маленькому
+        українському містечку. Every verb must be imperfective. Discussion: what kind
+        of atmosphere does pure background create? (Calm, static, timeless.)"
+      - "Contrast: what happens when you accidentally use perfective in background?
+        *Надворі було холодно. Подув сильний вітер. — 'Подув' (pf) turns the wind into
+        an EVENT, not a setting element. It implies the wind just started, changing the
+        story. Aspect choice changes meaning, not just 'correctness.'"
+  - section: "Передній план: доконаний вид у наративі"
+    words: 1050
+    points:
+      - "Functions of perfective in narration: Sequential events (plot): Він встав,
+        одягнувся, вийшов із дому. Turning points: Раптом двері відчинилися. Completed
+        results: Вона написала лист і відправила його. Single decisive actions: Він
+        прийняв рішення."
+      - "Temporal connectors with perfective foreground: спочатку (first), потім (then),
+        після цього (after that), раптом (suddenly), нарешті (finally), тоді (then).
+        These connectors signal sequence — one action follows another. Sequential chains
+        are naturally perfective: Спочатку я подзвонив. Потім написав листа. Нарешті
+        отримав відповідь."
+      - "The interplay — weaving both layers: Ми сиділи (impf — background) в парку.
+        Було (impf — setting) тихо. Раптом хтось закричав (pf — event). Ми підвелися
+        (pf — reaction) і побігли (pf — action) до виходу. Серце калатало (impf — state
+        during events). Ми вибігли (pf — completed escape) на вулицю."
+      - "Practice: learners receive a bare event chain (6 perfective verbs) and must
+        add background sentences between events using imperfective. Then they receive
+        a pure background description and must insert events. Both exercises demonstrate
+        that aspect creates narrative RHYTHM."
+  - section: "Підсумок: аспект як наративний інструмент"
+    words: 1050
+    points:
+      - "Synthesis: aspect in narration is not about individual sentences — it's about
+        the FLOW between background and foreground. Native speakers shift between aspects
+        instinctively. B1 learners need to make this shift consciously until it becomes
+        automatic."
+      - "Narrative transformation exercise: learners receive a short text and rewrite
+        it twice. Version A: emphasize background (expand descriptions, add imperfective
+        detail, slow the pacing). Version B: emphasize foreground (cut descriptions,
+        accelerate events, make it punchy). Compare both versions — how does aspect
+        distribution change the FEEL of the story?"
+      - "Common errors in aspect narration: Mixing aspects within a background block
+        (*Надворі йшов дощ. Загриміло. Було сиро. — 'загриміло' is pf, breaking the
+        background). Using imperfective for clearly sequential events (*Він вставав,
+        одягався, виходив з дому — sounds habitual, not narrative). Over-using one
+        aspect — either all-pf (reads like a police report) or all-impf (reads like
+        a description with no events)."
+      - "Preview of next module: after daily-life-and-routines thematic break,
+        aspect-in-imperatives — how aspect changes the meaning of commands (Не відкривай!
+        vs Відкрий!)."
+vocabulary_hints:
+  - word: "тло"
+    pos: "noun:n"
+    translation: "background (narrative layer — imperfective)"
+  - word: "передній план"
+    pos: "noun phrase"
+    translation: "foreground (narrative layer — perfective events)"
+  - word: "розповідь"
+    pos: "noun:f"
+    translation: "narrative, story"
+  - word: "оповідання"
+    pos: "noun:n"
+    translation: "short story, narration"
+  - word: "оповідач"
+    pos: "noun:m"
+    translation: "narrator"
+  - word: "подія"
+    pos: "noun:f"
+    translation: "event (foreground — usually perfective)"
+  - word: "опис"
+    pos: "noun:m"
+    translation: "description (background — usually imperfective)"
+  - word: "спочатку"
+    pos: "adv"
+    translation: "at first, initially (sequential connector)"
+  - word: "потім"
+    pos: "adv"
+    translation: "then, afterwards (sequential connector)"
+  - word: "раптом"
+    pos: "adv"
+    translation: "suddenly (event marker — perfective)"
+  - word: "нарешті"
+    pos: "adv"
+    translation: "finally, at last (sequential endpoint)"
+  - word: "тим часом"
+    pos: "adv phrase"
+    translation: "meanwhile (simultaneous background)"
+  - word: "одночасно"
+    pos: "adv"
+    translation: "simultaneously (parallel actions — impf)"
+  - word: "послідовно"
+    pos: "adv"
+    translation: "sequentially (chain of events — pf)"
+  - word: "послідовність"
+    pos: "noun:f"
+    translation: "sequence (of events)"
+  - word: "спогад"
+    pos: "noun:m"
+    translation: "memory, recollection"
+  - word: "поки"
+    pos: "conj"
+    translation: "while (background connector)"
+  - word: "після цього"
+    pos: "adv phrase"
+    translation: "after that (sequential connector)"
+  - word: "тоді"
+    pos: "adv"
+    translation: "then, at that time"
+activity_hints:
+  - type: quiz
+    focus: "Identify each verb in a narrative as тло (background/impf) or подія
+      (foreground/pf) and explain why"
+    items: 10
+  - type: fill-in
+    focus: "Choose the correct aspect (impf or pf) for verbs in a narrative passage
+      based on their narrative function"
+    items: 8
+  - type: group-sort
+    focus: "Sort temporal connectors into background-connectors (тим часом, поки) and
+      foreground-connectors (потім, раптом, нарешті)"
+    items: 8
+  - type: error-correction
+    focus: "Find aspect errors in narrative passages — background verbs that should be
+      impf, event verbs that should be pf"
+    items: 6
+  - type: match-up
+    focus: "Match narrative functions (setting, turning point, simultaneous action,
+      sequential chain) to the correct aspect"
+    items: 8
+  - type: open-writing
+    focus: "Write a short story (8-10 sentences) about an unexpected event — weave
+      background (impf) and foreground (pf) deliberately"
+    items: 6
+connects_to:
+  - "b1-004 (Вид у минулому часі — aspect in past, prerequisite)"
+  - "b1-005 (Вид у майбутньому часі — aspect in future)"
+  - "b1-008 (Вид у наказовому способі — aspect in imperatives, after thematic break)"
+prerequisites:
+  - "b1-004 aspect-past-tense (result vs process in past)"
+  - "b1-005 aspect-future-tense (three future constructions)"
+grammar:
+  - "Тло розповіді: недоконаний вид для опису, стану, тривалих дій"
+  - "Передній план: доконаний вид для подій, послідовності, поворотних моментів"
+  - "Часові конектори: спочатку, потім, раптом, тим часом, нарешті"
+  - "Чергування видів у зв'язному тексті як наративна стратегія"
+  - "Типові помилки: зміщення аспекту в блоці тла або переднього плану"
+register: розмовний
+references:
+  - title: "Заболотний Grade 7, p.54-60"
+    notes: "Вид дієслова у розповіді: тло і передній план, вправи на вживання виду
+      в оповіданні, аналіз текстів."
+  - title: "Литвінова Grade 7, p.30-40"
+    notes: "Вид дієслова: зв'язок виду і наративної функції, часові конектори,
+      практичні вправи на розповідь."
+  - title: "Авраменко Grade 7, p.63-68"
+    notes: "Вид у тексті: аналіз оповідань, визначення наративних функцій доконаного
+      і недоконаного виду."

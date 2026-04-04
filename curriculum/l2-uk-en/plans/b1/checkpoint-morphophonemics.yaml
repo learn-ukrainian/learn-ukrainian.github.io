@@ -1,13 +1,13 @@
-module: b1-013
+module: b1-023
 level: B1
-sequence: 13
+sequence: 23
 slug: checkpoint-morphophonemics
 version: '3.0'
 title: "Контрольна робота 1"
 subtitle: "Базовий рівень та морфонеміка — перевірка M01-M12"
 focus: review
 pedagogy: PPP
-phase: "B1.1 [Baselines & Morphophonemics]"
+phase: "B1.1 [Morphophonemics]"
 word_target: 4000
 objectives:
   - Learner can correctly use all three future tense forms, past and present 

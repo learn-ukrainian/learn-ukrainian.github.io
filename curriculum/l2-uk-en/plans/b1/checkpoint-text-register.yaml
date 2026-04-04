@@ -1,13 +1,13 @@
-module: b1-080
+module: b1-089
 level: B1
-sequence: 80
+sequence: 89
 slug: checkpoint-text-register
 version: '3.1'
 title: "Контрольна робота 8"
 subtitle: "Перевірка знань: стилі мовлення, заперечення, вставні слова, природа, читання"
 focus: review
 pedagogy: PPP
-phase: "B1.8 [Text and Register]"
+phase: "B1.8 [Text & Register]"
 word_target: 4000
 objectives:
   - "Learner can demonstrate mastery of офіційно-діловий and розмовний стилі by identifying

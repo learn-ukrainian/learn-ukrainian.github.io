@@ -1,13 +1,13 @@
-module: b1-017
+module: b1-030
 level: B1
-sequence: 17
+sequence: 30
 slug: verbal-nouns
 version: '3.0'
 title: "Віддієслівні іменники"
 subtitle: "Читання, бачення, відкриття — як дієслова стають іменниками"
 focus: grammar
 pedagogy: PPP
-phase: "B1.2 [Verbs]"
+phase: "B1.2 [Verb System]"
 word_target: 4000
 objectives:
   - "Learner can form віддієслівні іменники using productive suffixes -ння, -ття,

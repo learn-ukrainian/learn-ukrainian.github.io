@@ -1,13 +1,13 @@
-module: b1-011
+module: b1-022
 level: B1
-sequence: 11
+sequence: 22
 slug: pluralia-tantum
 version: '3.1'
 title: "Іменники у множині"
 subtitle: "Двері, окуляри, Карпати — слова без однини"
 focus: grammar
 pedagogy: PPP
-phase: "B1.1 [Baselines & Morphophonemics]"
+phase: "B1.1 [Morphophonemics]"
 word_target: 4000
 objectives:
   - "Learner can identify nouns that exist only in множина (pluralia tantum) and explain

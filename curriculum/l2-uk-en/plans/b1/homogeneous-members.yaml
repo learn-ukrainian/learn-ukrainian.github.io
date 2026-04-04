@@ -1,0 +1,190 @@
+module: b1-081
+level: B1
+sequence: 81
+slug: homogeneous-members
+version: '1.0'
+title: "Однорідні члени речення"
+subtitle: "Пунктуація, сполучники та узагальнювальне слово"
+focus: grammar
+pedagogy: TTT
+phase: "B1.7 [Complex Syntax]"
+word_target: 4000
+objectives:
+  - "Learner can identify однорідні члени речення in a sentence and explain their
+    defining features: відповідають на те саме питання, залежать від того самого слова,
+    виконують однакову синтаксичну роль"
+  - "Learner can correctly punctuate sentences with однорідні члени: кома before а, але,
+    проте; кома with repeated сполучники (і...і, то...то); no кома with single і, та,
+    або, чи"
+  - "Learner can use узагальнювальне слово with однорідні члени and apply correct
+    punctuation: двокрапка after узагальнювальне слово before the list, тире after
+    the list before узагальнювальне слово"
+  - "Learner can produce natural Ukrainian sentences with однорідні члени using varied
+    conjunctions (єднальні, протиставні, розділові) and appropriate intonation patterns"
+dialogue_situations:
+  - setting: 'Friends planning a weekend trip — listing activities and places: Можемо
+      поїхати і на Синевир (m), і до Мукачева (n), і в Ужгород (m). — А мені хочеться
+      або в гори (pl), або на узбережжя (n). Треба вибрати!'
+    speakers:
+      - Ірина
+      - Дмитро
+    motivation: 'Repeated єднальний conjunction і...і (comma before each). Розділовий
+      conjunction або...або (comma before second). Natural enumeration in planning context.'
+content_outline:
+  - section: "Однорідні члени: визначення і розпізнавання"
+    words: 1000
+    points:
+      - "Definition (Заболотний Grade 5 p.178): Однорідними називають члени речення,
+        які залежать від того самого слова в реченні, відповідають на те саме питання
+        і виконують однакову синтаксичну роль. Приклад: Фермер засіяв поля пшеницею,
+        вівсом і ячменем. (Три однорідні додатки — чим? — залежать від засіяв.)"
+      - "Any sentence member can be однорідний (Глазова Grade 11 p.126): Однорідні
+        підмети: Діти і дорослі зібралися на свято. Однорідні присудки: Вона читала,
+        писала і малювала. Однорідні додатки: Купив хліб, молоко та масло. Однорідні
+        означення: Високе, стрункий, зелене дерево. Однорідні обставини: Він працював
+        швидко, точно і сумлінно."
+      - "How to identify — three tests: 1. Чи відповідають на те саме питання? (Do they
+        answer the same question?) 2. Чи залежать від того самого слова? (Do they depend
+        on the same word?) 3. Чи виконують однакову синтаксичну роль? (Do they serve
+        the same syntactic function?) If all three = YES → однорідні."
+      - "Intonation of однорідні члени: Перелічувальна інтонація (listing intonation) —
+        each member receives equal stress with a slight rise: Яблука↗, груші↗, сливи↘.
+        This intonation signals to the listener that a list is being given. Practice:
+        learners read sentences aloud with correct listing intonation."
+  - section: "Сполучники при однорідних членах"
+    words: 1000
+    points:
+      - "Three types of conjunctions (Авраменко Grade 7 p.173): Єднальні (coordinating/
+        additive): і (й), та (= і), також. Протиставні (adversative): а, але, проте,
+        та (= але), зате, однак. Розділові (disjunctive): або, чи, то...то, хоч...хоч."
+      - "Punctuation rules with єднальні сполучники (Глазова Grade 11 p.126): Single
+        і/й/та (= і) — NO comma: Поезія — безмежний степ і лебединий легіт. Repeated
+        і...і / та...та — COMMA before each repeated conjunction: Душа і трудиться, і
+        мріє. І яблука, і груші, і сливи — все дозріло."
+      - "Punctuation with протиставні сполучники: ALWAYS comma before а, але, проте,
+        зате, однак: Підніматися вгору важко, але радісно. Він не великий, а середній.
+        Слово маленьке, проте важливе. No exceptions — протиставні always require a
+        comma."
+      - "Punctuation with розділові сполучники: Single або/чи — NO comma: Приходь
+        сьогодні або завтра. Repeated або...або / чи...чи / то...то — COMMA: Або ти
+        підеш, або я піду. То дощ, то сонце. Чи він, чи вона — хтось мусить поїхати."
+  - section: "Узагальнювальне слово"
+    words: 1000
+    points:
+      - "Definition (Заболотний Grade 8 p.25): Узагальнювальне слово — a word that
+        generalizes or summarizes the entire list of однорідні члени. Common
+        узагальнювальні слова: все (everything), всі (everyone), скрізь (everywhere),
+        завжди (always), ніхто (nobody), ніщо (nothing), ніколи (never), кожен (each),
+        усюди (everywhere)."
+      - "Punctuation rule 1 — узагальнювальне слово BEFORE the list → двокрапка:
+        Усе зраділо стрічаючи день: і трави, і квіти, і птахи. Він побував скрізь:
+        у Києві, Львові, Одесі й Харкові. Pattern: [узагальнювальне]: [однорідний 1],
+        [однорідний 2], [однорідний 3]."
+      - "Punctuation rule 2 — однорідні члени BEFORE узагальнювальне слово → тире:
+        І трави, і квіти, і птахи — усе зраділо. У Києві, Львові, Одесі — скрізь
+        він побував. Pattern: [однорідний 1], [однорідний 2], [однорідний 3] — [узагальнювальне]."
+      - "Punctuation rule 3 — узагальнювальне слово before list, but sentence continues
+        after → двокрапка + тире: Усе: і трави, і квіти, і птахи — зраділо цього
+        ранку. Practice: learners rewrite sentences placing узагальнювальне слово in
+        different positions and adjusting punctuation."
+  - section: "Підсумок: однорідні члени в тексті"
+    words: 1000
+    points:
+      - "Summary punctuation table: Single і/й/та(=і)/або/чи → no comma. Repeated
+        і...і/та...та/або...або/чи...чи/то...то → comma. а/але/проте/зате/однак →
+        always comma. Узагальнювальне before list → двокрапка. List before узагальнювальне
+        → тире. Both → двокрапка...тире."
+      - "Stylistic use of однорідні члени in writing: Enumeration creates rhythm and
+        emphasis. Asyndeton (without conjunctions) speeds up: Прийшов, побачив, переміг.
+        Polysyndeton (repeated conjunctions) slows down, adds weight: І прийшов, і
+        побачив, і переміг. Learners analyze examples from Ukrainian literature."
+      - "Common errors to avoid: *Я люблю читати, і малювати (comma before single і
+        — WRONG). *Він не великий але сильний (no comma before але — WRONG). *Усе
+        зраділо, і трави, і квіти (missing двокрапка after узагальнювальне — WRONG,
+        should be: Усе зраділо: і трави, і квіти)."
+      - "Самоперевірка: 1. Знайдіть однорідні члени і визначте їхню синтаксичну роль
+        у 3 реченнях. 2. Розставте розділові знаки: 'І яблука і груші і сливи все
+        дозріло в саду.' 3. Складіть 2 речення з узагальнювальним словом (одне з
+        двокрапкою, одне з тире). 4. Поясніть різницю: 'Він любить читати і малювати'
+        vs 'Він любить і читати, і малювати.'"
+vocabulary_hints:
+  required:
+    - "однорідний (homogeneous — members that are equal in syntactic function)"
+    - "сполучник (conjunction — word connecting sentence parts)"
+    - "єднальний (coordinating/additive — conjunction type: і, та)"
+    - "протиставний (adversative — conjunction type: а, але, проте)"
+    - "розділовий (disjunctive — conjunction type: або, чи)"
+    - "узагальнювальний (generalizing — a word that summarizes a list)"
+    - "двокрапка (colon — punctuation mark after узагальнювальне слово)"
+    - "тире (dash — punctuation mark before узагальнювальне слово)"
+    - "кома (comma — basic punctuation between однорідні члени)"
+    - "пунктуація (punctuation — system of розділові знаки)"
+    - "перелік (enumeration/list — a series of однорідні члени)"
+    - "інтонація (intonation — voice pattern for listing)"
+    - "підмет (subject — sentence member that can be однорідний)"
+    - "присудок (predicate — sentence member that can be однорідний)"
+    - "додаток (object — sentence member that can be однорідний)"
+  recommended:
+    - "означення (attribute/modifier — sentence member that can be однорідний)"
+    - "обставина (adverbial — sentence member that can be однорідний)"
+    - "речення (sentence — syntactic unit containing однорідні члени)"
+    - "синтаксичний (syntactic — relating to sentence structure)"
+    - "перелічувальний (enumerative — type of intonation for lists)"
+    - "відокремлений (detached/parenthetical — contrasted with однорідний)"
+    - "асиндетон (asyndeton — listing without conjunctions)"
+activity_hints:
+  - type: fill-in
+    focus: "Розставте розділові знаки в реченнях з однорідними членами: коми, двокрапки,
+      тире"
+    items: 10
+  - type: quiz
+    focus: "Визначте тип сполучника (єднальний, протиставний, розділовий) і чи потрібна
+      кома"
+    items: 10
+  - type: error-correction
+    focus: "Знайдіть і виправте пунктуаційні помилки в реченнях з однорідними членами
+      та узагальнювальним словом"
+    items: 8
+  - type: group-sort
+    focus: "Розподіліть сполучники за типами: єднальні, протиставні, розділові"
+    items: 10
+  - type: match-up
+    focus: "З'єднайте пунктуаційне правило з прикладом: одиничний і → без коми,
+      повторюваний і...і → кома"
+    items: 8
+  - type: open-writing
+    focus: "Напишіть текст (5-8 речень) про ваше місто або улюблені речі, використовуючи
+      однорідні члени з різними сполучниками та узагальнювальним словом"
+    items: 8
+connects_to:
+  - "b1-073 (complex-compound — складносурядне речення, expands conjunction usage)"
+  - "b1-074 (complex-subordinate-object — складнопідрядне, contrasts with однорідні)"
+  - "b1-083 (checkpoint-syntax — checkpoint testing syntax including однорідні члени)"
+  - "b1-079 (introductory-words — вставні слова, another sentence complication)"
+prerequisites:
+  - "A2 completion (basic sentence structure, знання сполучників і, а, але)"
+  - "b1-073 through b1-080 (complex sentence foundations)"
+grammar:
+  - "Однорідні члени речення: визначення, ознаки, розпізнавання"
+  - "Сполучники при однорідних членах: єднальні (і, та), протиставні (а, але, проте),
+    розділові (або, чи, то...то)"
+  - "Пунктуація: кома з одиничним vs повторюваним сполучником"
+  - "Узагальнювальне слово: двокрапка (перед переліком) і тире (після переліку)"
+  - "Перелічувальна інтонація: рівномірний наголос на кожному члені"
+register: науково-навчальний
+references:
+  - title: "Заболотний Grade 5, p.178-182"
+    notes: "Однорідні члени речення: визначення, ознаки, базові правила пунктуації,
+      поняття про однорідні."
+  - title: "Глазова Grade 11, p.126"
+    notes: "Розділові знаки у простих реченнях з однорідними членами: повна таблиця
+      правил, парні сполучники, кома в складних випадках."
+  - title: "Авраменко Grade 7, p.173"
+    notes: "Сполучник як службова частина мови: види сполучників за будовою та значенням,
+      вживання з однорідними членами."
+  - title: "Заболотний Grade 8, p.25"
+    notes: "Узагальнювальне слово при однорідних членах: двокрапка і тире, правила
+      розстановки."
+  - title: "Заболотний Grade 11, p.148"
+    notes: "Пунктуація у складносурядному реченні: контрастне порівняння з однорідними
+      членами — коли сполучник з'єднує однорідні, а коли частини речення."

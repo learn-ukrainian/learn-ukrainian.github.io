@@ -1,0 +1,227 @@
+module: b1-005
+level: B1
+sequence: 5
+slug: aspect-future-tense
+version: '1.0'
+title: "Вид у майбутньому часі"
+subtitle: "Три способи сказати 'я буду' — і чому їх саме три"
+focus: aspect-future
+pedagogy: TTT
+phase: "B1.0 [Baselines & Aspect Mastery]"
+word_target: 4000
+objectives:
+  - "Learner can form and distinguish three Ukrainian future constructions: складений
+    майбутній час (буду + інфінітив), синтетичний недоконаний (-тиму/-тимеш), and
+    простий доконаний (напишу, зроблю) — and explain which вид each requires"
+  - "Learner can choose the correct future construction based on communicative intent:
+    planned process (буду писати / писатиму) vs guaranteed result (напишу)"
+  - "Learner can explain why доконаний вид has only ONE future form (простий) while
+    недоконаний has TWO (складений and синтетичний) — connecting this to the nature
+    of aspect"
+  - "Learner can use future tense naturally in planning, promises, and predictions,
+    selecting aspect based on whether the focus is on the action itself or its completion"
+dialogue_situations:
+  - setting: "Two friends planning a weekend trip to Карпати — one wants to plan every
+      detail (perfective: забронюю, купимо, приїдемо), the other is more relaxed about
+      the process (imperfective: будемо гуляти, відпочиватимемо): Я завтра забронюю
+      готель. — А я буду просто насолоджуватися природою."
+    speakers:
+      - Марина
+      - Андрій
+    motivation: "Planned result (pf future) vs ongoing enjoyment (impf future) in natural
+      trip planning"
+  - setting: "Parent and teenager negotiating homework — parent wants results (зробиш
+      уроки, напишеш твір), teen describes the process (буду робити, писатиму):
+      Коли ти зробиш домашнє завдання? — Я буду робити після обіду. Спочатку
+      писатиму математику, потім напишу твір."
+    speakers:
+      - Мама
+      - Дмитро
+    motivation: "Result-focused questions (pf) vs process-focused answers (impf) — both
+      future forms for imperfective shown naturally"
+content_outline:
+  - section: "Тест: яке майбутнє ви оберете?"
+    words: 800
+    points:
+      - "Diagnostic: learners see 10 future-tense situations and must choose between
+        буду + inf, -тиму form, or simple perfective. No rules — just intuition.
+        Examples: Завтра я ... цю книжку (читатиму / буду читати / прочитаю). Я обіцяю,
+        що ... до вечора (писатиму / буду писати / напишу)."
+      - "Self-assessment: learners note which form felt most natural in each context.
+        Discussion: did you feel a difference between буду читати and читатиму? Between
+        either of those and прочитаю? That feeling is real — this module makes it
+        explicit."
+      - "Key question framed: Ukrainian has THREE future constructions. English has
+        'will' + variations. Why three? Because вид splits the future into process-future
+        and result-future — and process-future has two forms."
+      - "Quick review of future formation from A2/B1 baseline: складений (буду + inf),
+        синтетичний (-тиму/-тимеш/-тиме/-тимемо/-тимете/-тимуть), простий доконаний
+        (напишу, зроблю — same endings as present tense of perfective verbs)."
+  - section: "Три конструкції: форма і значення"
+    words: 1100
+    points:
+      - "Construction 1 — складений майбутній час (Литвінова Grade 7 p.44): буду +
+        інфінітив недоконаного виду. Парадигма: буду писати, будеш писати, буде писати,
+        будемо писати, будете писати, будуть писати. Значення: planned future process,
+        ongoing future action, neutral statement about future. Feels slightly more
+        conversational, common in щоденне мовлення."
+      - "Construction 2 — синтетичний недоконаний (Заболотний Grade 7 p.73): інфінітив
+        + -му/-меш/-ме/-мемо/-мете/-муть (fused with буду). Парадигма: писатиму,
+        писатимеш, писатиме, писатимемо, писатимете, писатимуть. Same meaning as
+        складений — but feels slightly more literary, formal, or emphatic. Both are
+        fully correct; style preference varies by region and register."
+      - "Construction 3 — простий доконаний майбутній (Литвінова Grade 7 p.46): Дієслова
+        доконаного виду утворюють форми майбутнього часу як теперішній час — ті самі
+        особові закінчення. напишу, напишеш, напише, напишемо, напишете, напишуть.
+        Значення: completed future action with result. Я напишу лист = the letter WILL
+        BE DONE."
+      - "Why no *буду написати? Because доконаний вид + складений майбутній = logical
+        contradiction. Складений implies process; доконаний implies completion. Ukrainian
+        grammar rejects the mismatch. This is not a 'rule to memorize' — it's a logical
+        consequence of what вид means."
+  - section: "Коли який? Вибір конструкції"
+    words: 1100
+    points:
+      - "Decision framework: What do you want to say about the future? Focus on PROCESS
+        → недоконаний (буду + inf or -тиму): Завтра я буду працювати. Увечері
+        читатиму книжку. Focus on RESULT → доконаний (простий): Завтра я закінчу проєкт.
+        Увечері прочитаю цю статтю."
+      - "Promises and commitments: usually доконаний (result matters). Я напишу тобі.
+        Ми приїдемо вчасно. Вона зробить усе, що обіцяла. But process-promises exist:
+        Я буду старатися. Ми будемо чекати на тебе. — the commitment is to the ongoing
+        effort, not to a specific result."
+      - "Plans and schedules: often mix both aspects. Завтра я встану о сьомій (pf —
+        single completed action), потім снідатиму (impf — ongoing), о дев'ятій поїду
+        на роботу (pf — departure), там працюватиму до шостої (impf — duration), а
+        ввечері приготую вечерю (pf — result: dinner ready)."
+      - "Practice: learners create a план на завтра mixing both aspects. Must include:
+        3+ pf (completed milestones), 3+ impf (ongoing activities), at least one pair
+        showing the same verb in both aspects (читатиму газету... прочитаю статтю).
+        Discuss: why did you choose each aspect?"
+  - section: "Підсумок: три майбутні як система"
+    words: 1000
+    points:
+      - "Synthesis: the three-construction system is not complexity — it's precision.
+        English 'I will write' is ambiguous between process and result. Ukrainian
+        писатиму (process) vs напишу (result) forces the speaker to commit to a
+        meaning. This is a feature, not a burden."
+      - "складений vs синтетичний — a style choice, not a meaning choice. Both mean
+        the same thing (imperfective future). Regional and register variation: складений
+        more common in розмовний стиль, синтетичний in писемний. Both are fully standard
+        (Правопис 2019). Learners can prefer whichever feels natural."
+      - "Common errors and corrections: *Я буду написати цей лист (impossible — pf +
+        compound). *Завтра я прочитаю книжку цілий день (duration marker conflicts with
+        pf — use читатиму). *Вона завтра зробить уроки і робитиме (redundant — pick one
+        aspect per event)."
+      - "Preview of next module: Вид у розповіді — how to weave both aspects into
+        connected narrative, using background (impf) and foreground events (pf)."
+vocabulary_hints:
+  - word: "складений майбутній час"
+    pos: "noun phrase"
+    translation: "compound future tense (буду + infinitive)"
+  - word: "синтетичний"
+    pos: "adj"
+    translation: "synthetic — single-word form (-тиму)"
+  - word: "простий"
+    pos: "adj"
+    translation: "simple — perfective future uses present-tense endings"
+  - word: "інфінітив"
+    pos: "noun:m"
+    translation: "infinitive — base verb form ending in -ти"
+  - word: "парадигма"
+    pos: "noun:f"
+    translation: "paradigm — full set of conjugated forms"
+  - word: "особове закінчення"
+    pos: "noun phrase"
+    translation: "personal ending (-у, -еш, -е, etc.)"
+  - word: "обіцяти"
+    pos: "verb:impf"
+    translation: "to promise (impf — the act of promising)"
+  - word: "пообіцяти"
+    pos: "verb:pf"
+    translation: "to promise (pf — a specific promise made)"
+  - word: "старатися"
+    pos: "verb:impf"
+    translation: "to try, to make effort (impf)"
+  - word: "постаратися"
+    pos: "verb:pf"
+    translation: "to make an effort (pf — with expected result)"
+  - word: "планувати"
+    pos: "verb:impf"
+    translation: "to plan (impf — process of planning)"
+  - word: "запланувати"
+    pos: "verb:pf"
+    translation: "to plan (pf — plan is set)"
+  - word: "забронювати"
+    pos: "verb:pf"
+    translation: "to book, to reserve (pf — booking completed)"
+  - word: "насолоджуватися"
+    pos: "verb:impf"
+    translation: "to enjoy (impf — ongoing enjoyment)"
+  - word: "закінчити"
+    pos: "verb:pf"
+    translation: "to finish (pf — result: done)"
+  - word: "закінчувати"
+    pos: "verb:impf"
+    translation: "to be finishing (impf — process of wrapping up)"
+  - word: "розмовний стиль"
+    pos: "noun phrase"
+    translation: "conversational style (where складений is common)"
+  - word: "писемний стиль"
+    pos: "noun phrase"
+    translation: "written style (where синтетичний is common)"
+  - word: "зобов'язання"
+    pos: "noun:n"
+    translation: "obligation, commitment"
+  - word: "передбачення"
+    pos: "noun:n"
+    translation: "prediction, forecast"
+activity_hints:
+  - type: quiz
+    focus: "Choose the correct future construction (складений, синтетичний, or простий
+      доконаний) based on context and communicative intent"
+    items: 10
+  - type: fill-in
+    focus: "Form the future tense of given verbs — identify the вид first, then select
+      the appropriate construction"
+    items: 8
+  - type: group-sort
+    focus: "Sort future-tense forms into три конструкції and explain why each verb
+      uses that construction"
+    items: 10
+  - type: error-correction
+    focus: "Find and correct impossible or unnatural future constructions (*буду написати,
+      *прочитаю цілий день)"
+    items: 6
+  - type: match-up
+    focus: "Match communicative situations (promise, plan, prediction) to the most
+      natural future construction"
+    items: 8
+  - type: open-writing
+    focus: "Write 'Мій план на завтра' mixing perfective and imperfective future — mark
+      and justify each aspect choice"
+    items: 6
+connects_to:
+  - "b1-004 (Вид у минулому часі — aspect choice in past, direct prerequisite)"
+  - "b1-006 (Вид у розповіді — weaving aspects in connected narrative)"
+  - "b1-002 (Майбутнє і вид дієслова — baseline future tense review)"
+prerequisites:
+  - "b1-004 aspect-past-tense (aspect decision-making in past tense)"
+  - "b1-002 b1-baseline-future-aspect (future tense forms reviewed)"
+grammar:
+  - "Складений майбутній час: буду + інфінітив недоконаного виду"
+  - "Синтетичний недоконаний майбутній час: -тиму/-тимеш/-тиме/-тимемо/-тимете/-тимуть"
+  - "Простий доконаний майбутній час: особові закінчення теперішнього часу від дієслів доконаного виду"
+  - "Логічна несумісність *буду + доконаний інфінітив"
+  - "Вибір конструкції за комунікативною інтенцією: процес vs результат"
+register: розмовний
+references:
+  - title: "Литвінова Grade 7, p.44-48"
+    notes: "Майбутній час: три способи утворення, зв'язок виду і майбутнього часу,
+      парадигми всіх трьох конструкцій."
+  - title: "Заболотний Grade 7, p.70-76"
+    notes: "Майбутній час дієслова: складений і синтетичний недоконаний, простий
+      доконаний. Вправи на утворення і вибір форми."
+  - title: "Авраменко Grade 7, p.70-74"
+    notes: "Майбутній час: утворення, вправи на розрізнення трьох конструкцій,
+      стилістичні відмінності складеного і синтетичного."

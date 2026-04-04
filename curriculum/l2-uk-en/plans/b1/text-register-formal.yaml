@@ -1,13 +1,13 @@
-module: b1-073
+module: b1-084
 level: B1
-sequence: 73
+sequence: 84
 slug: text-register-formal
 version: '3.1'
 title: "Офіційний стиль"
 subtitle: "Офіційно-діловий стиль мовлення: документи, заяви, ділове листування"
 focus: grammar
 pedagogy: PPP
-phase: "B1.8 [Text and Register]"
+phase: "B1.8 [Text & Register]"
 word_target: 4000
 objectives:
   - "Learner can identify and describe the key characteristics of офіційно-діловий

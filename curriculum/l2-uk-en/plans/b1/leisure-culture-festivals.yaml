@@ -1,13 +1,13 @@
-module: b1-071
+module: b1-067
 level: B1
-sequence: 71
+sequence: 67
 slug: leisure-culture-festivals
 version: '3.1'
 title: "Дозвілля, культура і свята"
 subtitle: "Вільний час, мистецтво, традиції та святкування"
 focus: communication
 pedagogy: PPP
-phase: "B1.7 [Complex Syntax]"
+phase: "B1.6 [Participles & Gerunds]"
 word_target: 4000
 objectives:
   - "Learner can discuss leisure activities, hobbies, sports, and entertainment using

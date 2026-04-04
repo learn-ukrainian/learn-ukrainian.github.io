@@ -1,13 +1,13 @@
-module: b1-048
+module: b1-060
 level: B1
-sequence: 48
+sequence: 60
 slug: cases-with-ordinal-numerals
 version: '3.1'
 title: "Порядкові числівники і відмінки"
 subtitle: "Відмінювання порядкових числівників, дати, час, поверхи"
 focus: grammar
 pedagogy: PPP
-phase: "B1.5 [Advanced Case Usages & Prepositions]"
+phase: "B1.5 [Case Nuances & Prepositions]"
 word_target: 4000
 objectives:
   - "Learner can decline ordinal numerals like adjectives (перший-першого-першому)

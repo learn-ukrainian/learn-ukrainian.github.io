@@ -1,13 +1,13 @@
-module: b1-047
+module: b1-058
 level: B1
-sequence: 47
+sequence: 58
 slug: prepositions-cause-purpose
 version: '3.1'
 title: "Причина і мета"
 subtitle: "Прийменники і конструкції для вираження причини та мети"
 focus: grammar
 pedagogy: PPP
-phase: "B1.5 [Advanced Case Usages & Prepositions]"
+phase: "B1.5 [Case Nuances & Prepositions]"
 word_target: 4000
 objectives:
   - "Learner can express cause using через + Зн.в. (negative cause), завдяки + Д.в.

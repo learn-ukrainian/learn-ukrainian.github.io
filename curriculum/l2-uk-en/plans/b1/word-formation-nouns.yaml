@@ -1,13 +1,13 @@
-module: b1-039
+module: b1-050
 level: B1
-sequence: 39
+sequence: 50
 slug: word-formation-nouns
 version: '3.1'
 title: "Творення назв осіб і місць"
 subtitle: "Суфікси для назв людей за діяльністю та назв приміщень і місць"
 focus: grammar
 pedagogy: PPP
-phase: "B1.4 [Degrees of Comparison & Word Formation]"
+phase: "B1.4 [Comparison & Word Formation]"
 word_target: 4000
 objectives:
   - "Learner can form agent nouns (назви осіб за діяльністю) using productive suffixes:

@@ -1,13 +1,13 @@
-module: b1-044
+module: b1-054
 level: B1
-sequence: 44
+sequence: 54
 slug: instrumental-nuances
 version: '3.1'
 title: "Орудний відмінок (деталі)"
 subtitle: "Характеристика, професія, шлях, сумісність — розширені значення орудного"
 focus: grammar
 pedagogy: PPP
-phase: "B1.5 [Advanced Case Usages & Prepositions]"
+phase: "B1.5 [Case Nuances & Prepositions]"
 word_target: 4000
 objectives:
   - "Learner can use the instrumental for predicate characterisation: Він працює лікарем.

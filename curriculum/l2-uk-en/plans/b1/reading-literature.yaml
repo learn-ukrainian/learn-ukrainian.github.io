@@ -1,13 +1,13 @@
-module: b1-079
+module: b1-087
 level: B1
-sequence: 79
+sequence: 87
 slug: reading-literature
 version: '3.1'
 title: "Читання художніх текстів"
 subtitle: "Художній стиль мовлення — від уривків до розуміння літератури"
 focus: communication
 pedagogy: PPP
-phase: "B1.8 [Text and Register]"
+phase: "B1.8 [Text & Register]"
 word_target: 4000
 objectives:
   - "Learner can identify and describe the key characteristics of художній стиль (образність,

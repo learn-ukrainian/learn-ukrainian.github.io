@@ -1,0 +1,200 @@
+module: b1-020
+level: B1
+sequence: 20
+slug: restaurant-and-food
+version: '1.0'
+title: "Ресторан і їжа"
+subtitle: "Українська кухня, замовлення у ресторані та відмінювання іменників у контексті їжі"
+focus: thematic-vocabulary
+pedagogy: TTT
+phase: "B1.1 [Morphophonemics]"
+word_target: 4000
+objectives:
+  - "Learner can name Ukrainian dishes, ingredients, and food categories using authentic
+    vocabulary: борщ, вареники, деруни, галушки, пампушки, узвар, сало"
+  - "Learner can order food in a restaurant using natural Ukrainian patterns: Я б
+    хотів/хотіла..., Принесіть, будь ласка..., Що ви порадите?"
+  - "Learner can use correct noun case forms in food contexts, particularly genitive
+    partitive (тарілка борщу, склянка узвару, шматок сала) and accusative for ordering
+    (Замовлю вареники, візьму салат)"
+  - "Learner can describe taste, texture, and cooking methods using Ukrainian adjectives
+    and participles: смачний, гострий, солоний, варений, смажений, запечений"
+dialogue_situations:
+  - setting: 'Restaurant in Одеса — a couple ordering dinner, discussing menu: Що
+      порадите (pf) на перше? — Спробуйте (pf) наш борщ із пампушками (f, pl).
+      А на друге? — Рекомендую вареники з картоплею (f). Ще склянку узвару (m,
+      gen), будь ласка.'
+    speakers:
+      - Офіціант
+      - Гостя
+    motivation: 'Restaurant ordering patterns: порадити/спробувати (pf imperatives),
+      genitive partitive (борщу, узвару), з + instrumental (з пампушками, з картоплею).'
+  - setting: 'Friends at a Карпатська колиба (f, Carpathian-style restaurant) discussing
+      Ukrainian cuisine: Ти вже куштував (impf) бануш (m)? — Ні, але чув (impf), що
+      це гуцульська страва (f). Треба спробувати (pf)! А деруни (pl) тут неймовірні.'
+    speakers:
+      - Максим
+      - Юлія
+    motivation: 'Food discussion: куштувати (impf, experience) vs спробувати (pf,
+      try once). Regional cuisine vocabulary. Adjective agreement: гуцульська страва (f).'
+content_outline:
+  - section: "Українська кухня: страви і продукти"
+    words: 1000
+    points:
+      - "Traditional Ukrainian dishes — systematic vocabulary: Перші страви (soups):
+        борщ (the quintessential Ukrainian soup, varieties: червоний, зелений, холодний),
+        юшка (fish soup or light broth), капусняк (cabbage soup), розсольник (pickle
+        soup). Другі страви (main courses): вареники (filled dumplings — з картоплею,
+        з сиром, з вишнями), деруни (potato pancakes), голубці (stuffed cabbage rolls),
+        галушки (dumplings served in broth or with sauce)."
+      - "More dishes and sides: пампушки (garlic bread rolls, served with борщ), млинці
+        (thin crepes — з м'ясом, з сиром, з варенням), каша (porridge — гречана,
+        пшенична, вівсяна), сало (cured pork fat — iconic Ukrainian product). Напої:
+        узвар (dried fruit compote — traditional Christmas drink), компот (fruit drink),
+        кисіль (starchy fruit drink)."
+      - "Food categories and ingredients: м'ясо (meat), риба (fish), овочі (vegetables),
+        фрукти (fruit), крупи (grains), молочне (dairy), спеції (spices). Key
+        ingredients: картопля (potatoes), цибуля (onion), часник (garlic), буряк
+        (beetroot), капуста (cabbage), сметана (sour cream — essential condiment)."
+      - "Taste and texture adjectives: смачний (tasty), гострий (spicy/sharp), солоний
+        (salty), кислий (sour), солодкий (sweet), гіркий (bitter), свіжий (fresh),
+        ніжний (tender/delicate). Cooking methods as adjectives: варений (boiled),
+        смажений (fried), запечений (baked), тушкований (stewed), копчений (smoked)."
+  - section: "У ресторані: замовлення і спілкування"
+    words: 1000
+    points:
+      - "Restaurant vocabulary: ресторан (restaurant), кафе (café, невідм.), їдальня
+        (cafeteria/canteen), меню (menu, невідм.), офіціант/офіціантка (waiter/waitress),
+        замовлення (order), рахунок (bill/check), чайові (tip — plural noun), порція
+        (portion), гарнір (side dish), закуска (appetizer/starter)."
+      - "Ordering patterns — natural Ukrainian (grounded in situational speech, Литвінова
+        Grade 7 p.205 register model): Polite request: Принесіть, будь ласка, борщ із
+        пампушками. Conditional: Я б хотів/хотіла замовити... Question: Що ви порадите?
+        Що є сьогодні на перше/друге/десерт? Specification: Мені, будь ласка, вареники
+        з картоплею та сметаною."
+      - "Genitive partitive in food context (Заболотний Grade 8 p.22 — genitive functions):
+        After quantity words: тарілка борщу (gen), склянка узвару (gen), шматок хліба
+        (gen), ложка меду (gen), порція вареників (gen pl). Partitive genitive: Дайте
+        хліба (gen). Покладіть сметани (gen). Налийте узвару (gen). This is natural
+        Ukrainian — the genitive expresses 'some of.'"
+      - "Practice dialogue: complete restaurant scenario from entering to paying. Learners
+        practice: greeting (Добрий вечір, у вас є вільний столик?), ordering (Мені,
+        будь ласка...), asking questions (А це з чим подається?), requesting the bill
+        (Можна рахунок?), paying and tipping."
+  - section: "Відмінки в контексті їжі"
+    words: 1000
+    points:
+      - "Noun subclass forms in food vocabulary — morphophonemic review: Masculine nouns
+        in genitive: борщу (not *борща — partitive -у for uncountable/mass nouns),
+        узвару, хліба, меду (partitive -у), сиру. But: вареника (gen sg, countable),
+        деруна (gen sg, countable). Rule review: -у/-ю for abstract, mass, uncountable;
+        -а/-я for countable, concrete (Заболотний Grade 6 p.47)."
+      - "Instrumental case with food: з + instrumental for accompaniments and ingredients:
+        борщ із пампушками (f pl, instr), вареники з картоплею (f, instr), млинці з
+        м'ясом (n, instr), кава з молоком (n, instr), чай із цукром (m, instr). Note
+        alternation із/з depending on following consonant."
+      - "Accusative for ordering (direct object): Замовлю борщ (m, acc=nom), візьму
+        каву (f, acc), принесіть салат (m, acc=nom). For feminine nouns: замовити каву
+        (acc -у), порцію (acc -ю), закуску (acc -у). Practice distinguishing accusative
+        from genitive partitive: Дайте каву (acc, specific) vs Дайте кави (gen,
+        partitive — some coffee)."
+      - "Practice: learners write a restaurant review using all cases naturally. Describe
+        what was ordered (acc), what it was served with (instr), how much of something
+        was given (gen partitive), and the overall impression."
+  - section: "Підсумок: їжа і мова"
+    words: 1000
+    points:
+      - "Vocabulary summary organized by category: страви (борщ, вареники, деруни,
+        галушки, голубці, пампушки, млинці), продукти (м'ясо, риба, овочі, крупи,
+        молочне), смак (смачний, гострий, солоний, кислий, солодкий), приготування
+        (варений, смажений, запечений, тушкований), ресторан (меню, офіціант, замовлення,
+        рахунок, чайові)."
+      - "Cultural note: Ukrainian food culture — their їжа is deeply tied to identity.
+        Борщ is UNESCO Intangible Cultural Heritage of Ukraine (inscribed 2022 during
+        the full-scale invasion as an emergency safeguarding measure). Вареники,
+        пампушки, and деруни are regional markers. Food is communal — 'Просимо до
+        столу!' is an invitation to belonging."
+      - "Case summary table for food nouns: борщ — борщу (gen part), борщ (acc),
+        борщем (instr). вареники — вареників (gen pl), вареники (acc pl), з варениками
+        (instr pl). кава — кави (gen part), каву (acc), з кавою (instr). сметана —
+        сметани (gen part), сметану (acc), зі сметаною (instr)."
+      - "Самоперевірка: 1. Назвіть 5 традиційних українських страв і опишіть їх (з чим
+        подаються, який смак). 2. Замовте обід у ресторані: перше, друге, напій (використайте
+        правильні відмінки). 3. Поясніть різницю: 'Дайте каву' vs 'Дайте кави'. 4.
+        Напишіть відгук про ресторан (5-8 речень), вживаючи знахідний, родовий та
+        орудний відмінки."
+vocabulary_hints:
+  required:
+    - "страва (dish/course — a prepared food item)"
+    - "борщ (borscht — quintessential Ukrainian beet soup)"
+    - "вареники (varenyky — filled dumplings, pl of вареник)"
+    - "деруни (potato pancakes — pl of дерун)"
+    - "пампушки (garlic bread rolls — served with борщ, pl of пампушка)"
+    - "сало (cured pork fat — iconic Ukrainian product)"
+    - "узвар (dried fruit compote — traditional Ukrainian drink)"
+    - "меню (menu — невідмінюване noun)"
+    - "замовлення (order — the act of ordering food)"
+    - "офіціант (waiter — masc; fem: офіціантка)"
+    - "рахунок (bill/check — restaurant bill)"
+    - "гарнір (side dish — served with a main course)"
+    - "закуска (appetizer/starter — first course before soup)"
+    - "кухня (cuisine/kitchen — both meanings in Ukrainian)"
+    - "порція (portion — a serving of food)"
+  recommended:
+    - "чайові (tip — plural noun, від чай)"
+    - "смачний (tasty/delicious)"
+    - "гострий (spicy/sharp — taste)"
+    - "смажений (fried — cooking method)"
+    - "запечений (baked — cooking method)"
+    - "тушкований (stewed — cooking method)"
+    - "сметана (sour cream — essential Ukrainian condiment)"
+activity_hints:
+  - type: match-up
+    focus: "З'єднайте українські страви з їхніми описами: інгредієнти, спосіб приготування"
+    items: 10
+  - type: fill-in
+    focus: "Доповніть діалог у ресторані: правильні відмінкові форми іменників (родовий
+      частковий, знахідний, орудний)"
+    items: 10
+  - type: quiz
+    focus: "Визначте правильну форму: борщу чи борща? кави чи каву? Поясніть вибір
+      відмінка"
+    items: 10
+  - type: group-sort
+    focus: "Розподіліть лексику: перші страви, другі страви, напої, десерти, прибори"
+    items: 10
+  - type: role-play
+    focus: "Розіграйте сцену в ресторані: замовлення, запитання офіціанту, прохання
+      принести рахунок"
+    items: 10
+  - type: open-writing
+    focus: "Напишіть відгук про ресторан: що замовили, як було приготовано, загальне
+      враження (5-8 речень)"
+    items: 8
+connects_to:
+  - "b1-016 (noun-subclasses-masculine — genitive -у/-а distinction deepened here)"
+  - "b1-018 (noun-subclasses-feminine — feminine instrumental forms practiced here)"
+  - "b1-003 (people-and-relationships — social vocabulary for dining situations)"
+  - "b1-051 (checkpoint-comparison — comparative forms for food descriptions)"
+prerequisites:
+  - "A2 completion (basic food vocabulary, basic case forms)"
+  - "b1-013 through b1-019 (morphophonemic foundations, noun subclasses)"
+grammar:
+  - "Родовий частковий (partitive genitive): тарілка борщу, склянка узвару, шматок
+    хліба"
+  - "Genitive -у/-ю vs -а/-я in masculine nouns: борщу (mass) vs вареника (countable)"
+  - "Instrumental with з/із for food accompaniments: з пампушками, з картоплею"
+  - "Accusative vs genitive partitive: Дайте каву (specific) vs Дайте кави (some)"
+  - "Невідмінювані іменники: меню, кафе — don't change form"
+register: розмовно-побутовий
+references:
+  - title: "Заболотний Grade 6, p.47-55"
+    notes: "Відмінювання іменників: родовий відмінок чоловічого роду — закінчення -а/-я
+      vs -у/-ю, правила розподілу."
+  - title: "Заболотний Grade 8, p.22"
+    notes: "Функції родового відмінка: партитивне значення, кількісне значення."
+  - title: "Литвінова Grade 7, p.205"
+    notes: "Ситуативне мовлення: формули ввічливого прохання, замовлення, подяки."
+  - title: "Авраменко Grade 6, p.137"
+    notes: "Творення прикметників: відносні прикметники від іменників (для опису страв
+      — картопляний, м'ясний)."

@@ -1,13 +1,13 @@
-module: b1-040
+module: b1-027
 level: B1
-sequence: 40
+sequence: 27
 slug: shopping-and-services
 version: '3.1'
 title: "Покупки і послуги"
 subtitle: "На ринку, в магазині, на пошті — порівняння і словотвір у дії"
 focus: communication
 pedagogy: PPP
-phase: "B1.4 [Degrees of Comparison & Word Formation]"
+phase: "B1.2 [Verb System]"
 word_target: 4000
 objectives:
   - "Learner can navigate shopping situations in Ukrainian: asking about prices, comparing

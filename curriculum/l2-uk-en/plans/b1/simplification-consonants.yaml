@@ -1,13 +1,13 @@
-module: b1-007
+module: b1-017
 level: B1
-sequence: 7
+sequence: 17
 slug: simplification-consonants
 version: '3.1'
 title: "Спрощення приголосних"
 subtitle: "Щастя — щасливий: коли приголосний випадає"
 focus: grammar
 pedagogy: PPP
-phase: "B1.1 [Baselines & Morphophonemics]"
+phase: "B1.1 [Morphophonemics]"
 word_target: 4000
 objectives:
   - "Learner can identify consonant simplification in Ukrainian words and explain

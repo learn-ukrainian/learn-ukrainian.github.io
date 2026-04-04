@@ -1,13 +1,13 @@
-module: b1-009
+module: b1-019
 level: B1
-sequence: 9
+sequence: 19
 slug: noun-subclasses-hissing
 version: '3.0'
 title: "Іменники на ж, ч, ш, щ"
 subtitle: "Мішана група II відміни — від сторожа до товариша"
 focus: grammar
 pedagogy: PPP
-phase: "B1.1 [Baselines & Morphophonemics]"
+phase: "B1.1 [Morphophonemics]"
 word_target: 4000
 objectives:
   - "Learner can identify nouns with hissing consonant stems (ж, ч, ш, щ) as belonging

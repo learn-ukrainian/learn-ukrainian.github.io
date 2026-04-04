@@ -1,0 +1,195 @@
+module: b1-012
+level: B1
+sequence: 12
+slug: checkpoint-aspect
+version: '1.0'
+title: "Контрольна робота: вид дієслова"
+subtitle: "Діагностична перевірка аспектного вибору в усіх контекстах M01-M11"
+focus: checkpoint
+pedagogy: TTT
+phase: "B1.0 [Baselines & Aspect Mastery]"
+word_target: 4000
+objectives:
+  - "Learner can correctly choose between доконаний and недоконаний вид in past tense
+    narratives, distinguishing тло (background) from послідовність подій (event chain)"
+  - "Learner can choose appropriate aspect in future tense contexts: планована одноразова
+    дія (pf — напишу) vs регулярна/тривала дія (impf — писатиму)"
+  - "Learner can use correct aspect in наказовий спосіб: general instruction (impf —
+    читайте!) vs specific single command (pf — прочитайте цю статтю!)"
+  - "Learner can apply aspect rules in заперечення: не читав (impf — general negation)
+    vs не прочитав (pf — expected result not achieved)"
+  - "Learner can choose aspect in умовний спосіб and conditional sentences: Якби я
+    знав (impf)... Якби я дізнався (pf)..."
+dialogue_situations:
+  - setting: 'Teacher reviewing homework with a student — aspect choice errors as
+      diagnostic: Ти читав (impf — процес) цей текст? — Так, я прочитав (pf — результат)
+      його вчора ввечері. — Добре. Тепер напиши (pf — одноразова дія) відповіді на
+      запитання.'
+    speakers:
+      - Вчитель
+      - Учень
+    motivation: 'Aspect diagnostics in real academic setting: читав (impf, process
+      question) vs прочитав (pf, result confirmation) vs напиши (pf imperative, single
+      task).'
+content_outline:
+  - section: "Вид у минулому: тло і послідовність"
+    words: 1000
+    points:
+      - "Diagnostic review of aspect in past tense (building on Литвінова Grade 7 p.30):
+        Недоконаний вид as тло розповіді (narrative background) — ongoing, simultaneous,
+        habitual actions: Надворі падав (impf) сніг. Діти гралися (impf) у дворі.
+        Доконаний вид as подієвий ланцюг (event chain) — sequential completed actions:
+        Він встав (pf), одягнувся (pf), вийшов (pf) з дому."
+      - "Mixed aspect in connected narrative (Заболотний Grade 7 p.62): Коли ми снідали
+        (impf — тло), зателефонувала (pf — подія) бабуся. Вона сказала (pf), що
+        приїжджає (impf — план, що розгортається). Ми зраділи (pf) і почали (pf)
+        готуватися (impf — початок тривалої дії). Key diagnostic: can the learner
+        explain WHY each verb is perfective or imperfective?"
+      - "Diagnostic exercise type 1 — aspect identification: given a narrative paragraph,
+        learner identifies each verb as доконаний/недоконаний and explains the aspectual
+        function (тло, подія, початок дії, результат). Texts drawn from M01-M11 themes
+        (daily life, relationships, health, work)."
+      - "Diagnostic exercise type 2 — aspect choice: learner completes a narrative
+        choosing between verb pairs: Вчора я [читав/прочитав] книжку цілий вечір.
+        Нарешті [закінчував/закінчив] останній розділ."
+  - section: "Вид у майбутньому та наказовому"
+    words: 1000
+    points:
+      - "Aspect in future tense (Литвінова Grade 7 p.44): Доконаний вид — single
+        planned action with expected result: Завтра я напишу (pf) лист. Після обіду
+        подзвоню (pf) мамі. Недоконаний вид — habitual, repeated, or duration-focused
+        future: Щодня писатиму (impf) щоденник. Цілий тиждень готуватимуся (impf) до
+        іспиту."
+      - "Three future tense forms and aspect: Синтетичний майбутній (pf only): напишу,
+        прочитаю. Аналітичний майбутній (impf): буду писати, буду читати. Синтетичний
+        із -му (impf): писатиму, читатиму. Diagnostic: learner must choose the correct
+        form based on aspect and context."
+      - "Aspect in наказовий спосіб (Авраменко Grade 7 p.78): Недоконаний — general,
+        repeated instruction, invitation: Читайте (impf) більше! Пишіть (impf) щодня!
+        Сідайте (impf), будь ласка! Доконаний — specific, one-time command with expected
+        completion: Прочитайте (pf) сторінку 45. Напишіть (pf) відповідь. Сядьте (pf)
+        на це місце."
+      - "Diagnostic exercise type 3 — imperative aspect: Learner chooses between impf
+        and pf imperative in context. [Читай/Прочитай] цей текст до завтра (pf —
+        specific task, deadline). [Читай/Прочитай] кожен день перед сном (impf —
+        habitual advice). The distinction is about whether a SPECIFIC RESULT is expected."
+  - section: "Вид і заперечення"
+    words: 1000
+    points:
+      - "Aspect under negation — a key Ukrainian distinction (Авраменко Grade 7 p.57):
+        Недоконаний вид — general negation, action did not take place at all: Я не читав
+        (impf) цю книжку. (= never read it, general statement.) Доконаний вид — expected
+        result was not achieved: Я не прочитав (pf) цю книжку. (= didn't finish it,
+        though expected to.)"
+      - "Negation patterns across contexts: Past: Він не дзвонив (impf — never called)
+        vs Він не подзвонив (pf — didn't call though he should have). Future: Не
+        буду читати (impf — refuse/won't do it generally) vs Не прочитаю (pf — won't
+        manage to finish). Imperative: Не відчиняйте (impf — general prohibition,
+        standard form for negative imperatives) vs Не відчиніть (pf — warning, 'don't
+        accidentally open')."
+      - "Critical rule: negative imperatives strongly prefer недоконаний вид in standard
+        Ukrainian. Не чіпайте! (impf — don't touch, general). Не бігайте! (impf —
+        don't run). The perfective negative imperative (Не впусти!) implies accidental
+        or unintentional possibility — a warning, not a prohibition."
+      - "Diagnostic exercise type 4 — negation and aspect: Learner explains the
+        difference in meaning between pairs. Я не писав листа (impf — didn't write at
+        all) vs Я не написав листа (pf — didn't finish). Не забувай! (impf — general
+        reminder) vs Не забудь! (pf — specific warning about one thing)."
+  - section: "Вид в умовному способі та підсумок"
+    words: 1000
+    points:
+      - "Aspect in умовний спосіб (conditional mood): Недоконаний — hypothetical ongoing
+        or repeated action: Якби я жив (impf) у Києві, я ходив би (impf) в театр
+        щотижня. Доконаний — hypothetical single completed action: Якби я переїхав (pf)
+        до Києва, я знайшов би (pf) нову роботу."
+      - "Conditional sentences with aspect interplay: Якби вона подзвонила (pf —
+        one-time event), я б відповів (pf). Якби вона дзвонила (impf — regularly), я
+        б завжди відповідав (impf). The aspect reflects the NATURE of the hypothetical
+        action: one-time result vs habitual process."
+      - "Comprehensive diagnostic review — summary table across all contexts: минулий
+        час (тло vs подія), майбутній час (план vs тривалість), наказовий спосіб
+        (конкретна команда vs загальна інструкція), заперечення (загальне vs нереалізований
+        результат), умовний спосіб (одноразове vs повторюване). Learner fills in the
+        table with own examples from M01-M11 vocabulary."
+      - "Самоперевірка: 1. Перекажіть свій минулий тиждень, чергуючи доконаний і
+        недоконаний вид (мінімум 8 дієслів). 2. Складіть 3 пари наказів: загальна
+        інструкція (impf) vs конкретна команда (pf). 3. Поясніть різницю: 'Я не читав
+        цю книжку' vs 'Я не прочитав цю книжку'. 4. Складіть 2 умовні речення з
+        різним видом дієслова."
+vocabulary_hints:
+  required:
+    - "доконаний вид (perfective aspect — completed, result-oriented action)"
+    - "недоконаний вид (imperfective aspect — ongoing, unbounded action)"
+    - "видова пара (aspectual pair — e.g., писати/написати)"
+    - "тло розповіді (narrative background — imperfective setting/scene)"
+    - "послідовність подій (sequence of events — perfective event chain)"
+    - "наказовий спосіб (imperative mood — commands and requests)"
+    - "заперечення (negation — negative constructions with aspect)"
+    - "умовний спосіб (conditional mood — hypothetical actions with би/б)"
+    - "результативність (resultativity — focus on outcome, triggers perfective)"
+    - "тривалість (duration — focus on process length, triggers imperfective)"
+    - "діагностика (diagnostics — self-assessment of aspect mastery)"
+    - "повторення (review/repetition — consolidation of learned material)"
+    - "контрольна робота (test/assessment — formal diagnostic check)"
+    - "минулий час (past tense — time frame for aspect practice)"
+    - "майбутній час (future tense — time frame for aspect practice)"
+  recommended:
+    - "подієвий ланцюг (event chain — sequence of perfective actions)"
+    - "загальне заперечення (general negation — imperfective, action didn't occur)"
+    - "нереалізований результат (unrealized result — perfective negation, expected outcome
+      not achieved)"
+    - "заборона (prohibition — negative imperative, strongly prefers imperfective)"
+    - "попередження (warning — perfective negative imperative for accidental actions)"
+    - "синтетичний майбутній (synthetic future — perfective: напишу)"
+    - "аналітичний майбутній (analytic future — imperfective: буду писати)"
+activity_hints:
+  - type: quiz
+    focus: "Визначте вид дієслова та поясніть аспектну функцію (тло, подія, результат,
+      тривалість) у реченнях з M01-M11"
+    items: 12
+  - type: fill-in
+    focus: "Оберіть правильний вид дієслова у контексті: минулий, майбутній, наказовий
+      спосіб, заперечення"
+    items: 10
+  - type: error-correction
+    focus: "Знайдіть і виправте помилки у вживанні виду в реченнях: неправильний
+      аспект у розповіді, наказі, запереченні"
+    items: 8
+  - type: group-sort
+    focus: "Розподіліть дієслова за видом і контекстом: тло / подія / загальна інструкція
+      / конкретна команда"
+    items: 10
+  - type: match-up
+    focus: "З'єднайте видові пари та вкажіть контекст, де кожен вид доречний"
+    items: 8
+  - type: open-writing
+    focus: "Напишіть текст із завданнями: 1) розповідь про минулий тиждень (тло + події),
+      2) три пари наказів, 3) два умовні речення з різним видом"
+    items: 8
+connects_to:
+  - "b1-001 (b1-baseline-past-present — aspect in past tense, reviewed here)"
+  - "b1-002 (b1-baseline-future-aspect — aspect in future tense, reviewed here)"
+  - "b1-010 (work-and-career — aspect in work narratives, tested here)"
+  - "b1-023 (checkpoint-morphophonemics — next major checkpoint)"
+prerequisites:
+  - "b1-001 through b1-011 (all B1.0 modules covering aspect in various contexts)"
+grammar:
+  - "Вид дієслова в минулому часі: тло (недоконаний) vs послідовність подій (доконаний)"
+  - "Вид у майбутньому: синтетичний (pf) vs аналітичний/синтетичний -му (impf)"
+  - "Вид у наказовому способі: загальна інструкція (impf) vs конкретна команда (pf)"
+  - "Вид і заперечення: загальне (impf) vs нереалізований результат (pf)"
+  - "Вид в умовному способі: повторювана/тривала (impf) vs одноразова (pf) гіпотетична
+    дія"
+  - "Негативний наказовий спосіб: перевага недоконаного виду для заборон"
+register: науково-навчальний
+references:
+  - title: "Литвінова Grade 7, p.30-47"
+    notes: "Вид дієслова: доконаний/недоконаний — повний огляд, зв'язок виду і часу,
+      аспектуальна стратегія в розповіді."
+  - title: "Заболотний Grade 7, p.54-65"
+    notes: "Дієслово: вид, часи, утворення видових пар, вибір виду в контексті."
+  - title: "Авраменко Grade 7, p.57-78"
+    notes: "Вид дієслова: таблиці видових пар, наказовий спосіб, особливі форми."
+  - title: "Литвінова Grade 7, p.44"
+    notes: "Зв'язок виду і часу: доконаний вид не має теперішнього часу, три форми
+      майбутнього часу."

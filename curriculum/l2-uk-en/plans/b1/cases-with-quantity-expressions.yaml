@@ -1,13 +1,13 @@
-module: b1-049
+module: b1-061
 level: B1
-sequence: 49
+sequence: 61
 slug: cases-with-quantity-expressions
 version: '3.1'
 title: "Кількісні вирази"
 subtitle: "Узгодження числівників з іменниками та неозначено-кількісні слова"
 focus: grammar
 pedagogy: PPP
-phase: "B1.5 [Advanced Case Usages & Prepositions]"
+phase: "B1.5 [Case Nuances & Prepositions]"
 word_target: 4000
 objectives:
   - "Learner can correctly agree cardinal numerals with nouns: один стіл (Н.в.), два/три/чотири

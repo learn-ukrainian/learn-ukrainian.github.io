@@ -1,0 +1,195 @@
+module: b1-059
+level: B1
+sequence: 59
+slug: places-and-locations
+version: '1.0'
+title: "Місця і розташування"
+subtitle: "Географічна лексика, описи міст і країн, відмінки для місця та походження"
+focus: thematic-vocabulary
+pedagogy: TTT
+phase: "B1.5 [Case Nuances & Prepositions]"
+word_target: 4000
+objectives:
+  - "Learner can describe geographic features and landmarks using precise Ukrainian
+    vocabulary: місцевість, околиця, передмістя, набережна, узбережжя, заповідник"
+  - "Learner can use locative case correctly for places (у/в + місцевий відмінок):
+    у Києві, в Одесі, на Хрещатику, у заповіднику, на площі"
+  - "Learner can use genitive case for origins and destinations (з/із + родовий):
+    з Харкова, з України, із Закарпаття"
+  - "Learner can write a structured description of a city or region (5-8 sentences)
+    using appropriate case forms, prepositions, and geographic vocabulary"
+dialogue_situations:
+  - setting: 'Tourist information centre in Чернівці — visitor asking about places
+      to see: Що варто відвідати (pf) у Чернівцях (loc)? — Обов''язково побувайте
+      (pf) на площі (f, loc) Філармонії. А ще раджу (impf) прогулятися (pf) набережною
+      (f, instr) Прута (m, gen).'
+    speakers:
+      - Туристка
+      - Працівник інформаційного центру
+    motivation: 'Locative for place (у Чернівцях, на площі), instrumental for path
+      (набережною), genitive for named features (Прута). Perfective imperatives for
+      specific recommendations.'
+  - setting: 'Two friends comparing their hometowns: Я з Полтави (f, gen). У нас
+      рівнина (f, nom), широкі поля. А ти звідки? — Із Закарпаття (n, gen). Там
+      гори (pl), ліси, і повітря чудове.'
+    speakers:
+      - Олена
+      - Василь
+    motivation: 'Genitive for origin (з Полтави, із Закарпаття). Geographic vocabulary:
+      рівнина, гори. Natural comparison of regions.'
+content_outline:
+  - section: "Географічна лексика: рельєф і ландшафт"
+    words: 1000
+    points:
+      - "Landforms and terrain — systematic vocabulary (grounded in Заболотний Grade 5
+        p.69 thematic grouping): рівнина (plain), височина (highland/upland), низовина
+        (lowland), гора (mountain, pl гори), пагорб (hill), долина (valley), яр (ravine),
+        степ (steppe). Ukraine-specific: Карпати (Carpathians), Кримські гори (Crimean
+        mountains), Подільська височина (Podolian Upland)."
+      - "Water features: річка (river), озеро (lake), море (sea), узбережжя (coast/shore),
+        набережна (embankment/waterfront), острів (island), півострів (peninsula).
+        Ukrainian rivers: Дніпро, Дністер, Південний Буг, Десна. Lakes: Світязь,
+        Синевир."
+      - "Settlements and urban features: місто (city), село (village), містечко (small
+        town), передмістя (suburb, невідм. pl), околиця (outskirts), район (district),
+        площа (square), вулиця (street), провулок (lane/alley), набережна (embankment
+        street — also a noun)."
+      - "Nature and protected areas: заповідник (nature reserve), національний парк
+        (national park), ліс (forest), парк (park), сад (garden/orchard), краєвид
+        (landscape/view), пам'ятка (landmark/monument — архітектурна пам'ятка,
+        природна пам'ятка). Practice: learners categorize vocabulary into рельєф, водойми,
+        поселення, природа."
+  - section: "Місцевий відмінок: де?"
+    words: 1000
+    points:
+      - "Locative case for location (Заболотний Grade 6 p.55 — місцевий відмінок):
+        The locative answers де? (where?) and is ALWAYS used with a preposition. Two
+        main prepositions: у/в (in/at) and на (on/at). Rule for cities: у Києві, у
+        Львові, в Одесі, у Харкові, в Ужгороді. But: на Хрещатику (streets with
+        specific names take на)."
+      - "У vs на for geographic locations — rules and patterns: у + enclosed spaces:
+        у місті, у селі, у парку, у заповіднику, у долині. на + open spaces, surfaces,
+        events: на площі, на вулиці, на узбережжі, на острові, на горі, на рівнині.
+        Special: на Україні is INCORRECT — в Україні (the old form на Україні was a
+        Russianized colonial usage; modern standard: в Україні)."
+      - "Locative endings review in geographic context: Masculine: -і/-ї (у Києві, у
+        заповіднику, на острові). Exception: -у in a few words (на лугу). Feminine: -і
+        (у долині, на площі, в Одесі, на вулиці). Neuter: -і (у місті, у селі, на
+        морі, на узбережжі). Plural: -ах/-ях (у Карпатах, у горах, на вулицях)."
+      - "Practice: learners describe where places are located using locative. Софійський
+        собор — у Києві, на Софійській площі. Синевир — у Карпатах, на Міжгірщині.
+        Потьомкінські сходи — в Одесі, на узбережжі."
+  - section: "Родовий відмінок: звідки? і куди?"
+    words: 1000
+    points:
+      - "Genitive for origin — з/із + родовий відмінок (Заболотний Grade 6 p.47):
+        з Києва (from Kyiv), з Львова (from Lviv), з Одеси (from Odesa), з Харкова
+        (from Kharkiv), із Закарпаття (from Transcarpathia), з України (from Ukraine).
+        Question word: звідки? (from where?)."
+      - "Genitive in geographic descriptions — possession and relation: центр міста
+        (centre of the city, gen), узбережжя моря (coast of the sea, gen), долина
+        Дністра (valley of the Dniester, gen), вершина гори (peak of the mountain,
+        gen), набережна Дніпра (embankment of the Dnipro, gen)."
+      - "Direction — до + genitive vs у/на + accusative: до Києва / у Київ (to Kyiv —
+        до emphasizes direction, у/на emphasizes destination). до моря / на море (to
+        the sea). до лісу / у ліс (to/into the forest). Both are correct; register and
+        emphasis differ. Practice: Ми їдемо до Львова. = Ми їдемо у Львів."
+      - "Practice: learners write about their own origins and describe a Ukrainian city
+        using genitive constructions. Я з [місто, gen]. Це місто на березі [річка, gen].
+        У центрі [місто, gen] є [пам'ятка]."
+  - section: "Підсумок: описуємо місця"
+    words: 1000
+    points:
+      - "Model city description — structured text about a Ukrainian city (following
+        composition model from Заболотний Grade 7 p.248): Зачин (where is it, brief
+        introduction). Основна частина: geography (на березі чого?), landmarks (що
+        варто побачити?), atmosphere (яке місто?). Кінцівка (why visit?). Example:
+        Чернівці — місто на Буковині, у передгір'ї Карпат..."
+      - "Case summary table for geographic nouns: Київ — у Києві (loc), з Києва (gen),
+        до Києва (gen), у Київ (acc). Одеса — в Одесі (loc), з Одеси (gen), до Одеси
+        (gen), в Одесу (acc). Карпати — у Карпатах (loc pl), з Карпат (gen pl), до
+        Карпат (gen pl). Закарпаття — на Закарпатті (loc), із Закарпаття (gen)."
+      - "Vocabulary summary by category: рельєф (рівнина, височина, низовина, гора,
+        долина), водойми (річка, озеро, море, узбережжя), поселення (місто, село,
+        передмістя, околиця), міські об'єкти (площа, вулиця, провулок, набережна),
+        природа (заповідник, ліс, парк, краєвид, пам'ятка)."
+      - "Самоперевірка: 1. Опишіть місто, де ви живете (або хочете відвідати), — 5-8
+        речень, використовуючи місцевий і родовий відмінки. 2. Поясніть різницю: 'у
+        Києві' vs 'на Хрещатику'. 3. Назвіть 5 географічних об'єктів України і
+        скажіть, де вони розташовані. 4. Яка різниця: 'до Києва' і 'у Київ'?"
+vocabulary_hints:
+  required:
+    - "місцевість (locality/area — a geographic area)"
+    - "околиця (outskirts — the edge of a settlement)"
+    - "передмістя (suburb — area around a city, невідм. pl)"
+    - "площа (square — public urban space)"
+    - "набережна (embankment/waterfront — street along a river)"
+    - "узбережжя (coast/shoreline — land along the sea)"
+    - "заповідник (nature reserve — protected natural area)"
+    - "краєвид (landscape/view — scenery)"
+    - "пам'ятка (landmark/monument — notable place or structure)"
+    - "рівнина (plain — flat terrain)"
+    - "височина (highland/upland — elevated terrain)"
+    - "острів (island — land surrounded by water)"
+    - "провулок (lane/alley — small street)"
+    - "розташування (location — where something is situated)"
+    - "орієнтир (landmark/reference point — for navigation)"
+  recommended:
+    - "низовина (lowland — low-lying terrain)"
+    - "півострів (peninsula — land surrounded by water on three sides)"
+    - "гірський (mountainous — adjective from гора)"
+    - "долина (valley — low area between mountains)"
+    - "містечко (small town — diminutive of місто)"
+    - "район (district — administrative area)"
+    - "берег (bank/shore — edge of water)"
+activity_hints:
+  - type: fill-in
+    focus: "Поставте іменник у правильний відмінок: У [Київ] є багато парків. Вона
+      з [Одеса]. Ми їдемо до [Львів]."
+    items: 10
+  - type: quiz
+    focus: "Оберіть правильний прийменник: у/в чи на? з чи із? Поясніть вибір."
+    items: 10
+  - type: match-up
+    focus: "З'єднайте географічний об'єкт з описом: рівнина, височина, узбережжя, долина,
+      заповідник"
+    items: 10
+  - type: group-sort
+    focus: "Розподіліть лексику за категоріями: рельєф, водойми, поселення, міські
+      об'єкти"
+    items: 12
+  - type: error-correction
+    focus: "Знайдіть і виправте помилки у відмінках і прийменниках: *на Україні →
+      в Україні, *у Хрещатику → на Хрещатику"
+    items: 8
+  - type: open-writing
+    focus: "Опишіть українське місто або ваше рідне місто (5-8 речень): де розташоване,
+      що варто побачити, яке воно"
+    items: 8
+connects_to:
+  - "b1-054 (genitive-nuances — genitive case functions expanded)"
+  - "b1-056 (prepositions-spatial-review — spatial prepositions refreshed)"
+  - "b1-058 (prepositions-temporal — temporal prepositions, contrasted with spatial)"
+  - "b1-063 (checkpoint-cases — checkpoint testing case usage including places)"
+  - "b1-039 (traveling-ukraine — travel situations that use this vocabulary)"
+prerequisites:
+  - "A2 completion (basic case forms, у/в/на prepositions)"
+  - "b1-054 through b1-058 (case nuances and preposition review)"
+grammar:
+  - "Місцевий відмінок з прийменниками у/в і на для місця: у Києві, на площі"
+  - "Родовий відмінок з прийменником з/із для походження: з Одеси, із Закарпаття"
+  - "Родовий відмінок для географічних описів: узбережжя моря, центр міста"
+  - "Напрямок: до + gen vs у/на + acc: до Києва vs у Київ"
+  - "У/в vs на для географічних назв: у місті, на острові, в Україні"
+register: розмовний / науково-навчальний
+references:
+  - title: "Заболотний Grade 6, p.47-55"
+    notes: "Відмінювання іменників: родовий і місцевий відмінки — закінчення, функції,
+      вживання з прийменниками."
+  - title: "Заболотний Grade 7, p.248"
+    notes: "Опис місця: композиційна структура (зачин, основна частина, кінцівка),
+      мовні засоби."
+  - title: "Заболотний Grade 5, p.69"
+    notes: "Тематичні групи слів: організація лексики за семантичними полями."
+  - title: "Литвінова Grade 6, p.193"
+    notes: "Прийменники місця: у/в, на — правила вживання з відмінками."

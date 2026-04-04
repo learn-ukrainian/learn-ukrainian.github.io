@@ -1,0 +1,221 @@
+module: b1-004
+level: B1
+sequence: 4
+slug: aspect-past-tense
+version: '1.0'
+title: "Вид у минулому часі"
+subtitle: "Одного разу vs щодня — як вид змінює значення минулого"
+focus: aspect-past
+pedagogy: TTT
+phase: "B1.0 [Baselines & Aspect Mastery]"
+word_target: 4000
+objectives:
+  - "Learner can distinguish a single completed past event (доконаний вид) from a
+    repeated or ongoing past action (недоконаний вид) and explain the difference using
+    Ukrainian metalanguage"
+  - "Learner can select the correct aspect in past tense based on temporal markers
+    (одного разу, щодня, завжди, часто, іноді) and explain why"
+  - "Learner can identify whether a past-tense sentence focuses on result (доконаний)
+    or process (недоконаний) and produce minimal pairs demonstrating the contrast"
+  - "Learner can use 8-10 core видові пари correctly in past-tense contexts, choosing
+    aspect based on communicative intent rather than mechanical rules"
+dialogue_situations:
+  - setting: "Two colleagues at lunch discussing what happened yesterday — one had a
+      productive day (completed tasks, results), the other had a frustrating day (tried
+      but didn't finish things): Я вчора написав три листи і відправив звіт. А ти? —
+      А я цілий день писав звіт, але так і не закінчив..."
+    speakers:
+      - Тарас
+      - Оксана
+    motivation: "Natural contrast: completed actions (pf) vs uncompleted processes (impf)
+      in same conversation"
+  - setting: "Grandparent telling grandchild about childhood routines vs specific memorable
+      events: Коли я був маленький, щоліта ми їздили до бабусі. А одного літа ми поїхали
+      на море — уперше в житті!"
+    speakers:
+      - Дідусь
+      - Онук
+    motivation: "Habitual past (impf) vs one-time event (pf) — temporal markers drive
+      aspect choice"
+content_outline:
+  - section: "Тест на інтуїцію: що ви вже відчуваєте?"
+    words: 800
+    points:
+      - "Diagnostic test: 10 sentence pairs where learners choose between доконаний
+        and недоконаний вид in past tense based on context. No rules given yet — pure
+        intuition from A2. Examples: Вчора я (читав / прочитав) цю книжку — до останньої
+        сторінки. Вчора я (читав / прочитав) увечері — мені було нудно."
+      - "Immediate self-assessment: which pairs felt obvious, which felt ambiguous?
+        Learners mark their confidence level. This reveals what A2 taught them implicitly
+        and what B1 needs to make explicit."
+      - "Mini-dialogue with aspect ambiguity: two people describe the same evening
+        differently — Я дивився фільм (process, enjoyed it) vs Я подивився фільм
+        (finished it, ready to discuss). Discussion: both are 'correct' — the choice
+        is about WHAT you want to communicate."
+      - "Introduction of the core question: Вид — це не граматичне правило, а спосіб
+        мислення. The speaker decides what matters — the process or the result — and
+        вид expresses that decision."
+  - section: "Результат чи процес? Основний вибір"
+    words: 1100
+    points:
+      - "Core principle (Заболотний Grade 7 p.54): Доконаний вид у минулому часі
+        позначає завершену дію з результатом. Недоконаний вид позначає тривалу дію,
+        процес, або факт без акценту на результаті. Мінімальні пари: писав лист (процес,
+        тривалість) / написав лист (результат, лист готовий). читав книжку (процес) /
+        прочитав книжку (результат, закінчив)."
+      - "Decision framework with 8 core видових пар in past tense: писати/написати,
+        читати/прочитати, робити/зробити, говорити/сказати, брати/взяти, вчити/вивчити,
+        готувати/приготувати, відповідати/відповісти. Each pair shown in result-context
+        and process-context."
+      - "Time markers as signals (Литвінова Grade 7 p.38): Недоконаний → щодня, завжди,
+        часто, іноді, зазвичай, довго, три години, цілий день. Доконаний → одного разу,
+        вчора ввечері (single event), нарешті, за годину, раптом. Warning: markers are
+        signals, not rules — context overrides."
+      - "Practice: learners receive sentences with time markers and choose aspect, then
+        explain their choice using Ukrainian terms (результат, процес, тривалість,
+        завершеність). Example: Він (вчив / вивчив) українську три роки → вчив (процес,
+        тривалість). Він (вчив / вивчив) усі нові слова → вивчив (результат, завершеність)."
+  - section: "Повторюваність і однократність"
+    words: 1100
+    points:
+      - "Second aspect dimension: repeated vs single (Заболотний Grade 7 p.56). Repeated
+        past action = недоконаний вид: Щоранку він снідав о восьмій. Вона часто телефонувала
+        мамі. Ми завжди гуляли після обіду. Single past event = доконаний вид: Одного
+        разу він не поснідав. Вона зателефонувала о п'ятій. Ми погуляли в парку."
+      - "Habitual past as narrative device: Коли я жив у Львові, щовечора ходив на
+        прогулянку. Зазвичай купував каву на Площі Ринок і сідав на лавку біля фонтану.
+        The entire passage uses недоконаний because it describes a recurring pattern —
+        not because any single action was 'incomplete.'"
+      - "Contrast with one-time interruption: ...Але одного вечора я побачив старого
+        друга. Ми зупинилися, поговорили. Він запросив мене на вечерю. Perfective breaks
+        the habitual pattern — signals a specific, unique event."
+      - "Practice: learners rewrite a habitual-past paragraph (all imperfective) by
+        inserting a single event that breaks the routine. They must switch to perfective
+        for the interruption and back to imperfective for the resumed routine. Discussion:
+        how does the aspect shift change the narrative feel?"
+  - section: "Підсумок: вид як інструмент мислення"
+    words: 1000
+    points:
+      - "Synthesis table: two axes of aspect choice in past tense. Axis 1: result
+        (доконаний) vs process (недоконаний). Axis 2: single event (доконаний) vs
+        repeated (недоконаний). Both axes point the same direction — but the reasoning
+        differs, and learners must identify WHICH axis drives their choice."
+      - "Common errors and corrections: *Я вчора прочитав книжку три години (unnatural
+        — process + duration = читав). *Вона щодня приготувала обід (repeated action =
+        готувала). *Він одного разу писав лист бабусі (single completed event = написав).
+        Analysis of WHY each error feels wrong to a native speaker."
+      - "Extended practice: learners tell a story about 'Мій минулий тиждень' using
+        both aspects. Must include: 3+ habitual actions (impf), 3+ completed events (pf),
+        1+ contrast within the same sentence (Коли я читав, зателефонував друг). Peer
+        feedback focuses on aspect choice, not grammar form."
+      - "Preview of next module: Вид у майбутньому часі — three constructions for
+        future tense in Ukrainian, and how вид determines which one you use."
+vocabulary_hints:
+  - word: "доконаний вид"
+    pos: "noun phrase"
+    translation: "perfective aspect — completed, bounded action"
+  - word: "недоконаний вид"
+    pos: "noun phrase"
+    translation: "imperfective aspect — ongoing, unbounded action"
+  - word: "видова пара"
+    pos: "noun phrase"
+    translation: "aspectual pair (e.g., писати/написати)"
+  - word: "результат"
+    pos: "noun:m"
+    translation: "result — what perfective past emphasizes"
+  - word: "процес"
+    pos: "noun:m"
+    translation: "process — what imperfective past emphasizes"
+  - word: "тривалість"
+    pos: "noun:f"
+    translation: "duration (signals imperfective)"
+  - word: "завершеність"
+    pos: "noun:f"
+    translation: "completedness (signals perfective)"
+  - word: "повторюваність"
+    pos: "noun:f"
+    translation: "recurrence, habituality (signals imperfective)"
+  - word: "однократність"
+    pos: "noun:f"
+    translation: "single occurrence (signals perfective)"
+  - word: "одного разу"
+    pos: "adv phrase"
+    translation: "once, one time (perfective marker)"
+  - word: "щодня"
+    pos: "adv"
+    translation: "every day (imperfective marker)"
+  - word: "щоразу"
+    pos: "adv"
+    translation: "every time (imperfective marker)"
+  - word: "завжди"
+    pos: "adv"
+    translation: "always (imperfective marker)"
+  - word: "іноді"
+    pos: "adv"
+    translation: "sometimes (imperfective marker)"
+  - word: "нарешті"
+    pos: "adv"
+    translation: "finally, at last (often perfective marker)"
+  - word: "раптом"
+    pos: "adv"
+    translation: "suddenly (perfective marker)"
+  - word: "готувати"
+    pos: "verb:impf"
+    translation: "to prepare, to cook (imperfective)"
+  - word: "приготувати"
+    pos: "verb:pf"
+    translation: "to prepare, to cook (perfective — result ready)"
+  - word: "вивчити"
+    pos: "verb:pf"
+    translation: "to learn thoroughly (perfective of вчити)"
+  - word: "зателефонувати"
+    pos: "verb:pf"
+    translation: "to call (perfective — one completed call)"
+activity_hints:
+  - type: quiz
+    focus: "Choose доконаний or недоконаний вид in past-tense sentences based on context
+      and time markers"
+    items: 10
+  - type: fill-in
+    focus: "Insert the correct past-tense form (aspect choice) of a given verb pair
+      into a sentence with context clues"
+    items: 8
+  - type: match-up
+    focus: "Match time markers (щодня, одного разу, часто, нарешті) to aspect choice
+      and explain why"
+    items: 8
+  - type: error-correction
+    focus: "Find and correct aspect errors in past-tense sentences (e.g., *щодня
+      приготувала → готувала)"
+    items: 6
+  - type: group-sort
+    focus: "Sort past-tense sentences into результат/процес and однократність/повторюваність"
+    items: 10
+  - type: open-writing
+    focus: "Write 'Мій минулий тиждень' — use both aspects, include habitual and
+      single events, mark your aspect choices"
+    items: 6
+connects_to:
+  - "b1-001 (Минуле і теперішнє — baseline review of tenses and aspect)"
+  - "b1-005 (Вид у майбутньому часі — aspect choice in future tense)"
+  - "b1-006 (Вид у розповіді — weaving aspects in narration)"
+prerequisites:
+  - "b1-001 b1-baseline-past-present (past/present tense forms and basic aspect concept)"
+  - "b1-003 metalanguage-syntax-cases (Ukrainian grammatical metalanguage)"
+grammar:
+  - "Доконаний вид у минулому часі: одноразова завершена дія з результатом"
+  - "Недоконаний вид у минулому часі: тривала, повторювана або фактична дія"
+  - "Часові маркери як сигнали вибору виду (щодня → недок., одного разу → док.)"
+  - "Мінімальні пари видових дієслів у минулому часі"
+  - "Два виміри вибору: результат/процес і однократність/повторюваність"
+register: розмовний
+references:
+  - title: "Заболотний Grade 7, p.54-58"
+    notes: "Вид дієслова: доконаний і недоконаний — визначення, тести на вид, мінімальні
+      пари. Вправи на вибір виду в минулому часі."
+  - title: "Литвінова Grade 7, p.30-40"
+    notes: "Вид дієслова: зв'язок виду і часу, часові маркери, вибір виду за контекстом.
+      Практичні вправи на розрізнення виду."
+  - title: "Авраменко Grade 7, p.63-68"
+    notes: "Минулий час: утворення, вид у минулому часі, вправи на вибір між доконаним
+      і недоконаним у минулому."
