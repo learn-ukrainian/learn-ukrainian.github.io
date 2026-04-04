@@ -76,13 +76,19 @@ def cache_set(key: str, value: object) -> None:
 # ==================== CURRICULUM LOADING ====================
 
 _curriculum_cache: dict | None = None
+_curriculum_mtime: float = 0.0
 
 
 def load_curriculum() -> dict:
-    """Load curriculum.yaml once and cache."""
-    global _curriculum_cache
-    if _curriculum_cache is None:
-        _curriculum_cache = yaml.safe_load(CURRICULUM_YAML.read_text()) or {} if CURRICULUM_YAML.exists() else {}
+    """Load curriculum.yaml, cached with mtime check for auto-refresh."""
+    global _curriculum_cache, _curriculum_mtime
+    if CURRICULUM_YAML.exists():
+        current_mtime = CURRICULUM_YAML.stat().st_mtime
+        if _curriculum_cache is None or current_mtime != _curriculum_mtime:
+            _curriculum_cache = yaml.safe_load(CURRICULUM_YAML.read_text()) or {}
+            _curriculum_mtime = current_mtime
+    else:
+        _curriculum_cache = {}
     return _curriculum_cache
 
 
