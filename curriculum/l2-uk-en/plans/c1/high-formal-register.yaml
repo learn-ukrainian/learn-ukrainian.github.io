@@ -1,6 +1,6 @@
-module: c1-065
+module: c1-079
 level: C1
-sequence: 65
+sequence: 79
 slug: high-formal-register
 version: '1.1'
 title: "Високий офіційний регістр та протокольне мовлення"

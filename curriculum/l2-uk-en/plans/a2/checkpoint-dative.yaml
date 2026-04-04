@@ -1,6 +1,6 @@
-module: a2-020
+module: a2-023
 level: A2
-sequence: 20
+sequence: 23
 slug: checkpoint-dative
 version: '1.0'
 title: Контрольна робота — давальний відмінок
@@ -10,92 +10,80 @@ pedagogy: Review
 phase: A2.3 [Dative Case]
 word_target: 1500
 objectives:
-  - Learner can produce all dative pronoun forms and use them in impersonal 
-    constructions (М15 recall).
-  - Learner can form dative noun endings for all genders with correct consonant 
-    alternations (М16 recall).
-  - Learner can build fully agreeing dative noun phrases with adjectives and 
-    possessives (М17 recall).
-  - Learner can use dative-governing verbs, подобатися, and age constructions 
-    correctly in context (М18 recall).
+- Learner can produce all dative pronoun forms and use them in impersonal constructions (М15 recall).
+- Learner can form dative noun endings for all genders with correct consonant alternations (М16 recall).
+- Learner can build fully agreeing dative noun phrases with adjectives and possessives (М17 recall).
+- Learner can use dative-governing verbs, подобатися, and age constructions correctly in context (М18
+  recall).
 dialogue_situations:
-  - setting: 'Secret Santa at the office — matching gifts to people: Що подарувати
-      Олексієві (m)? Книгу! А Наталці (f)? Шоколад! Новому колезі (m) — кружку (f,
-      mug). Шефу (m) — вино.'
-    speakers:
-      - Організатор
-      - Колеги
-    motivation: 'Dative consolidation: Олексієві, Наталці, колезі, шефу'
+- setting: 'Secret Santa at the office — matching gifts to people: Що подарувати Олексієві (m)? Книгу!
+    А Наталці (f)? Шоколад! Новому колезі (m) — кружку (f, mug). Шефу (m) — вино.'
+  speakers:
+  - Організатор
+  - Колеги
+  motivation: 'Dative consolidation: Олексієві, Наталці, колезі, шефу'
 content_outline:
-  - section: 'Частина 1: Розпізнавання (Part 1: Recognition)'
-    words: 400
-    points:
-      - Identify dative forms in context — distinguish dative from genitive, 
-        accusative, and locative case forms.
-      - Recognize impersonal dative constructions (мені холодно) vs. nominative 
-        subject sentences (я замерзла).
-      - Match dative pronoun forms to their nominative counterparts.
-      - Identify the dative experiencer in подобатися sentences.
-  - section: 'Частина 2: Вибір форми (Part 2: Choosing the Correct Form)'
-    words: 500
-    points:
-      - Choose correct dative noun endings across all genders — masculine 
-        -ові/-у, feminine -і with alternations, neuter -у/-ю.
-      - Select correct dative adjective and possessive pronoun forms 
-        (-ому/-ій/-им).
-      - Choose between dative and accusative case based on the verb (допомагати 
-        кому vs. бачити кого).
-      - Fill in correct forms in post office and service dialogues from М19.
-  - section: 'Частина 3: Продукування (Part 3: Production)'
-    words: 400
-    points:
-      - Write complete sentences using dative-governing verbs with correct 
-        noun/pronoun forms.
-      - Produce подобатися sentences with correct experiencer (Dat.) and subject
-        (Nom.) agreement.
-      - Express age using dative construction with correct number agreement.
-      - Write a short address or greeting using full dative noun phrases 
-        (possessive + adjective + noun).
-  - section: 'Огляд помилок та порівняння відмінків (Error Review and Case Comparison)'
-    words: 200
-    points:
-      - Common dative errors and how to avoid them — mixing -ому/-ій, forgetting
-        consonant alternations, wrong case after дякувати/допомагати.
-      - Summary comparison chart of Nominative, Genitive, Dative endings for 
-        nouns, adjectives, and pronouns.
-      - Self-assessment checklist for dative case mastery.
+- section: 'Частина 1: Розпізнавання (Part 1: Recognition)'
+  words: 400
+  points:
+  - Identify dative forms in context — distinguish dative from genitive, accusative, and locative case
+    forms.
+  - Recognize impersonal dative constructions (мені холодно) vs. nominative subject sentences (я замерзла).
+  - Match dative pronoun forms to their nominative counterparts.
+  - Identify the dative experiencer in подобатися sentences.
+- section: 'Частина 2: Вибір форми (Part 2: Choosing the Correct Form)'
+  words: 500
+  points:
+  - Choose correct dative noun endings across all genders — masculine -ові/-у, feminine -і with alternations,
+    neuter -у/-ю.
+  - Select correct dative adjective and possessive pronoun forms (-ому/-ій/-им).
+  - Choose between dative and accusative case based on the verb (допомагати кому vs. бачити кого).
+  - Fill in correct forms in post office and service dialogues from М19.
+- section: 'Частина 3: Продукування (Part 3: Production)'
+  words: 400
+  points:
+  - Write complete sentences using dative-governing verbs with correct noun/pronoun forms.
+  - Produce подобатися sentences with correct experiencer (Dat.) and subject (Nom.) agreement.
+  - Express age using dative construction with correct number agreement.
+  - Write a short address or greeting using full dative noun phrases (possessive + adjective + noun).
+- section: Огляд помилок та порівняння відмінків (Error Review and Case Comparison)
+  words: 200
+  points:
+  - Common dative errors and how to avoid them — mixing -ому/-ій, forgetting consonant alternations, wrong
+    case after дякувати/допомагати.
+  - Summary comparison chart of Nominative, Genitive, Dative endings for nouns, adjectives, and pronouns.
+  - Self-assessment checklist for dative case mastery.
 vocabulary_hints:
   required:
-    - давальний відмінок (dative case)
-    - допомагати (to help)
-    - дякувати (to thank)
-    - подобатися (to be pleasing to, to like)
-    - подарувати (to give as a gift)
-    - надіслати (to send)
-    - потрібно (necessary, needed)
-    - холодно (cold (impersonal state))
+  - давальний відмінок (dative case)
+  - допомагати (to help)
+  - дякувати (to thank)
+  - подобатися (to be pleasing to, to like)
+  - подарувати (to give as a gift)
+  - надіслати (to send)
+  - потрібно (necessary, needed)
+  - холодно (cold (impersonal state))
   recommended:
-    - закінчення (ending (grammar))
-    - чергування (alternation (grammar))
-    - узгодження (agreement (grammar))
+  - закінчення (ending (grammar))
+  - чергування (alternation (grammar))
+  - узгодження (agreement (grammar))
 activity_hints:
-  - type: quiz
-    focus: Identify the dative form among case options (recognition — Part 1 
-      material)
-    items: 8
-  - type: fill-in
-    focus: Complete sentences with correct dative noun/adjective/pronoun endings
-      (Part 2 material)
-    items: 8
-  - type: match-up
-    focus: Match dative-governing verbs to correct case forms and sentence 
-      completions
-    items: 8
-  - error-correction
+- type: quiz
+  focus: Identify the dative form among case options (recognition — Part 1 material)
+  items: 8
+- type: fill-in
+  focus: Complete sentences with correct dative noun/adjective/pronoun endings (Part 2 material)
+  items: 8
+- type: match-up
+  focus: Match dative-governing verbs to correct case forms and sentence completions
+  items: 8
+- type: error-correction
+  focus: Find and correct grammar errors in sentences covering module topics
+  items: 6
 references:
-  - title: "Заболотний Grade 10, §157"
-    notes: "Complete dative case reference — noun endings, parallel forms, style rules"
-  - title: "Захарійчук Grade 4, §281"
-    notes: "Pronoun declension tables including all dative forms"
-  - title: "Кравцова Grade 4, §135"
-    notes: "Dative vs. Locative distinction exercises — common checkpoint test pattern"
+- title: Заболотний Grade 10, §157
+  notes: Complete dative case reference — noun endings, parallel forms, style rules
+- title: Захарійчук Grade 4, §281
+  notes: Pronoun declension tables including all dative forms
+- title: Кравцова Grade 4, §135
+  notes: Dative vs. Locative distinction exercises — common checkpoint test pattern

@@ -1,6 +1,6 @@
-module: b2-017
+module: b2-020
 level: B2
-sequence: 17
+sequence: 20
 slug: detached-members
 version: '1.2'
 title: "Відокремлені члени речення"

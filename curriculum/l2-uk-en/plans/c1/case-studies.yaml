@@ -1,6 +1,6 @@
-module: c1-042
+module: c1-050
 level: C1
-sequence: 42
+sequence: 50
 slug: case-studies
 version: '1.1'
 title: "Аналіз практичних ситуацій"

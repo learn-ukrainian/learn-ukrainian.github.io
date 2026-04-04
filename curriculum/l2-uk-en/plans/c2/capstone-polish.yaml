@@ -1,6 +1,6 @@
-module: capstone-polish
+module: c2-103
 level: C2
-sequence: 99
+sequence: 103
 version: '1.2'
 title: 'Фінальне шліфування проєкту: Технічне оформлення та презентація'
 subtitle: 'Оформлення проєкту: форматування'

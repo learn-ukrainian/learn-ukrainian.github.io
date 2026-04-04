@@ -1,6 +1,6 @@
-module: c1-038
+module: c1-045
 level: C1
-sequence: 38
+sequence: 45
 slug: imperative-mastery
 version: '1.1'
 title: "Майстерність імператива: Тонкощі спонукання та етикет"

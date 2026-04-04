@@ -71,11 +71,14 @@ levels:
       - a1-finale
   a2:
     type: core
+    # V5 — 69 modules, State Standard 2024 fully compliant (#1147)
+    # Redesigned 2026-04-04: grammar wall fix, 2 missing themes, 4 SS gaps filled
     modules:
       # A2.1 [Foundation and Aspect Introduction]
       - a2-bridge
       - aspect-concept
       - aspect-in-vocabulary
+      - liudyna-i-stosunky                 # NEW — Theme: людина
       - genitive-intro
       - genitive-dates-numbers
       - foundations-practice
@@ -84,6 +87,7 @@ levels:
       - genitive-prepositions-source
       - genitive-prepositions-purpose
       - genitive-prepositions-direction
+      - euphony-advanced                   # NEW — SS §4.1.3
       - genitive-adjectives-pronouns
       - genitive-plural
       - shopping-and-health
@@ -92,6 +96,7 @@ levels:
       - dative-pronouns
       - dative-nouns
       - dative-adjectives-pronouns
+      - locative-expanded                  # NEW — SS §4.2.2.6
       - dative-verbs
       - services-and-communication
       - checkpoint-dative
@@ -99,6 +104,7 @@ levels:
       - instrumental-accompaniment
       - instrumental-means
       - instrumental-profession
+      - vocative-expanded                  # NEW — SS §4.2.2.6
       - instrumental-prepositions
       - instrumental-adjectives-pronouns
       - work-and-food
@@ -107,6 +113,7 @@ levels:
       - plural-nominative-accusative
       - plural-genitive
       - plural-other-cases
+      - dozvillia-i-khobi                  # NEW — Theme: дозвілля
       - which-case-when
       - all-cases-practice
       - home-and-daily-life
@@ -123,6 +130,7 @@ levels:
       - because-and-although
       - purpose-clauses
       - relative-clauses
+      - word-order-emphasis                # NEW — SS §4.5.2
       - real-conditionals
       - education-and-work
       - checkpoint-syntax
@@ -134,14 +142,14 @@ levels:
       - synonyms-antonyms-style
       - preferences-and-choices
       - nature-and-traditions
-      # A2.9 [Metalanguage Bridge & Foundation]
+      # A2.9 [Metalanguage Bridge]
       - metalanguage-words-and-cases
       - metalanguage-verbs-and-time
       - metalanguage-sentences-and-classroom
       - metalanguage-phonetics
       - metalanguage-morphology
       - metalanguage-syntax-cases
-      # A2.10 [Refinement and Graduation]
+      # A2.10 [Review and Graduation]
       - a2-comprehensive-review
       - a2-practice-exam
       - a2-finale

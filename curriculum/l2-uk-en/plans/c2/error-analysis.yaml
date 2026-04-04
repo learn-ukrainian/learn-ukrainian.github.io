@@ -1,6 +1,6 @@
-module: error-analysis
+module: c2-090
 level: C2
-sequence: 86
+sequence: 90
 version: '1.2'
 title: Аналіз помилок та культура мовлення
 subtitle: Аналіз помилок і культура мовлення

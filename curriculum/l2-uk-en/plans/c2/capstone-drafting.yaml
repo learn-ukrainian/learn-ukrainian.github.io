@@ -1,6 +1,6 @@
-module: capstone-drafting
+module: c2-101
 level: C2
-sequence: 97
+sequence: 101
 version: '1.2'
 title: 'Написання чернетки проєкту: Стилістика та аргументація'
 subtitle: 'Написання проєкту: стиль і аргументація'

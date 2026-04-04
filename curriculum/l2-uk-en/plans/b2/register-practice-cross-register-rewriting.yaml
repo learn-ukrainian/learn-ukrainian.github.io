@@ -1,6 +1,6 @@
-module: b2-037
+module: b2-043
 level: B2
-sequence: 37
+sequence: 43
 slug: register-practice-cross-register-rewriting
 version: '1.2'
 title: "Практикум: Стилістична трансформація та перекодування"

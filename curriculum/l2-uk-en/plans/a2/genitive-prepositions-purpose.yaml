@@ -1,8 +1,8 @@
-module: a2-009
+module: a2-010
 level: A2
-sequence: 9
+sequence: 10
 slug: genitive-prepositions-purpose
-version: '1.0'
+version: '1.1'
 title: Для кого? Без чого? Біля чого?
 subtitle: Прийменники для, без, біля, навпроти, коло з родовим відмінком
 focus: grammar
@@ -26,16 +26,16 @@ dialogue_situations:
     motivation: 'Для/без/біля + genitive: ковдра(f), ліхтарик(m), річка(f), намет(m)'
 content_outline:
   - section: 'Для кого це? Для + родовий (Who Is It For? Для + Genitive)'
-    words: 550
+    words: 600
     points:
       - 'Purpose: для здоров''я (for health), для роботи (for work), для навчання
         (for studying).'
       - 'Recipient: для мами (for mom), для друга (for a friend), для дітей (for children).'
       - 'Practice with all genders: для брата (hard masc.), для вчителя (soft masc.
-        -ар group), для сестри (hard fem.), для Марії (-ія fem.), для щастя (-тя neuter).'
+        -тель group), для сестри (hard fem.), для Марії (-ія fem.), для щастя (-тя neuter).'
       - 'Common phrases: подарунок для тебе, час для відпочинку, це важливо для мене.'
   - section: 'Без чого? Без + родовий (Without What? Без + Genitive)'
-    words: 550
+    words: 600
     points:
       - 'Core meaning: кава без цукру (coffee without sugar), чай без молока (tea
         without milk), день без дощу (a day without rain).'
@@ -48,7 +48,7 @@ content_outline:
         без нього.'
   - section: 'Де це? Біля, навпроти, коло + родовий (Where Is It? Біля, навпроти,
       коло + Genitive)'
-    words: 900
+    words: 800
     points:
       - 'Біля (near, next to): біля школи, біля будинку, біля річки. The most common
         ''near'' preposition.'

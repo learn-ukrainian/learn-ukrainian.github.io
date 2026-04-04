@@ -1,6 +1,6 @@
-module: complete-grammar-review
+module: c2-084
 level: C2
-sequence: 80
+sequence: 84
 version: '1.1'
 title: 'Повний граматичний огляд рівня С2: Системність та нюанси'
 subtitle: 'Повний огляд граматики C2'

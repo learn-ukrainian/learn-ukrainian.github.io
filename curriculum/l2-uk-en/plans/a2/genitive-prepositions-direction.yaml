@@ -1,8 +1,8 @@
-module: a2-010
+module: a2-011
 level: A2
-sequence: 10
+sequence: 11
 slug: genitive-prepositions-direction
-version: '1.0'
+version: '1.1'
 title: Куди? До якого часу?
 subtitle: Прийменник до з родовим відмінком для напрямку, мети та часу
 focus: grammar
@@ -34,8 +34,9 @@ content_outline:
       - 'Destination as a person: до друга (to a friend''s place), до бабусі (to grandma''s),
         до лікаря (to the doctor). До + person = going to see them / to their place.'
       - 'Contrast до vs. в/на + Accusative: ''Іду до магазину'' vs. ''Іду в магазин''
-        — до emphasizes direction toward, в/на emphasizes entering/arriving. Both
-        are correct, but до is often preferred in standard Ukrainian.'
+        — до emphasizes the direction/journey, в/на emphasizes the destination itself.
+        Both are equally standard in Ukrainian. No hierarchy — use whichever fits
+        the context.'
       - 'Hard and soft stems: до будинку (hard masc.), до музею (soft masc.), до школи
         (hard fem.), до станції (-ія fem.), до моря (soft neuter).'
   - section: 'До якого часу? До + родовий для часу (Until When? До + Genitive for

@@ -2,7 +2,7 @@ module: a2-002
 level: A2
 sequence: 2
 slug: aspect-concept
-version: '1.0'
+version: '1.1'
 title: Зроблено чи в процесі? Вступ до виду дієслів
 subtitle: Концепція доконаного та недоконаного виду
 focus: grammar
@@ -37,7 +37,7 @@ content_outline:
       - 'Analogy: Imperfective is like watching a movie; perfective is like seeing
         the ''The End'' screen.'
   - section: 'Недоконаний вид: Процес і повторення (Imperfective: Process & Repetition)'
-    words: 700
+    words: 600
     points:
       - 'Focus on the uses of imperfective: describing an action in progress (''Я
         читав, коли ти подзвонив''), a repeated action (''Я читав цю книгу три рази''),
@@ -56,10 +56,11 @@ content_outline:
       - 'Perfective verbs have no true present tense. Their ''present'' form has a
         future meaning (e.g., ''зроблю'' means ''I will do''). We will focus on the
         past tense for now: ''зробив'', ''написала''.'
-      - 'Key signal words: вчора (yesterday, for a single event), раптом (suddenly),
-        нарешті (finally).'
+      - 'Key signal words: раптом (suddenly), нарешті (finally), вже (already). Note:
+        вчора (yesterday) works with BOTH aspects — Вчора я читав (impf) vs Вчора
+        я прочитав (pf).'
   - section: 'Порівняння пар: Бачимо різницю (Comparing Pairs: Seeing the Difference)'
-    words: 200
+    words: 300
     points:
       - 'Side-by-side comparison of simple pairs: ''Він писав лист'' (He was writing
         a letter) vs. ''Він написав лист'' (He wrote a letter).'

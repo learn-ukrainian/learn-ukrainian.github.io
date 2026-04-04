@@ -1,8 +1,8 @@
-module: a2-005
+module: a2-006
 level: A2
-sequence: 5
+sequence: 6
 slug: genitive-dates-numbers
-version: '1.0'
+version: '1.1'
 title: Скільки? Котра година? Яке число?
 subtitle: Родовий відмінок з числами, датами та запереченням
 focus: grammar
@@ -11,8 +11,8 @@ phase: A2.1 [Foundation and Aspect Introduction]
 word_target: 2000
 objectives:
   - Learner can use the Genitive singular of months to state the date.
-  - Learner can apply the '1, 2-4, 5+' rule for noun agreement with cardinal 
-    numbers, using Nominative singular, Genitive singular, and Genitive plural 
+  - Learner can apply the '1, 2-4, 5+' rule for noun agreement with cardinal
+    numbers, using Nominative singular, Nominative plural, and Genitive plural
     accordingly.
   - Learner can use the Genitive case for the direct object in a negated 
     sentence.
@@ -35,8 +35,9 @@ content_outline:
       - 'How to ask the date: ''Яке сьогодні число?'''
       - 'How to answer: The day is an ordinal numeral (перше, друге), and the month
         is a noun in the Genitive singular.'
-      - 'Examples: перше січня, друге лютого, двадцять п''яте грудня. Note that ''вересня''
-        and ''листопада'' have the -а ending.'
+      - 'Examples: перше січня, друге лютого, двадцять п''яте грудня. All month names
+        are masculine and take the standard genitive endings: -я (січня, лютого, березня...)
+        or -а (листопада).'
       - Practice with all 12 months, asking and answering about important dates 
         (birthdays, holidays).
   - section: 'Рахуємо предмети: правило ''1, 2-4, 5+'' (Counting Items: The ''1, 2-4,
@@ -45,7 +46,7 @@ content_outline:
     points:
       - 'The fundamental rule for counting in Ukrainian:'
       - '1 (+21, 31..): Nominative Singular (один стіл).'
-      - '2, 3, 4 (+22-24..): Genitive Singular (два столи, три столи, чотири столи).'
+      - '2, 3, 4 (+22-24..): Nominative Plural (два столи, три столи, чотири столи).'
       - '5-20 (+25-30..): Genitive Plural (п''ять столів).'
       - Provide extensive practice with masculine, feminine, and neuter nouns. 
         'одна книга, дві книги, п'ять книг'; 'одне вікно, два вікна, п'ять 

@@ -2,7 +2,7 @@ module: a2-003
 level: A2
 sequence: 3
 slug: aspect-in-vocabulary
-version: '1.0'
+version: '1.1'
 title: Дієслова ходять парами
 subtitle: Як утворюються та вивчаються видові пари
 focus: grammar
@@ -63,7 +63,10 @@ content_outline:
       - Some of the most common verbs have suppletive pairs that must be 
         memorized.
       - 'Essential pairs: брати / взяти (to take); говорити / сказати (to say/tell);
-        ловити / зловити (to catch); шукати / знайти (to look for / to find).'
+        ловити / піймати (to catch); класти / покласти (to put).'
+      - 'Note: шукати (to search) and знайти (to find) are often presented together,
+        but they are different actions, not a true aspect pair. The perfective of
+        шукати is пошукати or відшукати.'
       - Present a list of the 20 most important aspectual pairs for A2 learners 
         to memorize, covering all three formation types.
 vocabulary_hints:
@@ -91,8 +94,8 @@ activity_hints:
   - type: match-up
     focus: Fill in the Blanks with the Correct Pair
     items: 8
-  - type: match-up
-    focus: Sentence Translation (Aspect Focus)
+  - type: fill-in
+    focus: Choose the Correct Aspect Partner
     items: 8
 references:
   - title: Заболотний Grade 6, §52-54

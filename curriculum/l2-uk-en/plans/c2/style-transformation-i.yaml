@@ -1,4 +1,4 @@
-module: style-transformation-i
+module: c2-010
 level: C2
 sequence: 10
 version: '1.3'

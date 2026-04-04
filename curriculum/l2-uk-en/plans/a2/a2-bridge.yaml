@@ -2,7 +2,7 @@ module: a2-001
 level: A2
 sequence: 1
 slug: a2-bridge
-version: '1.1'
+version: '1.2'
 title: Ласкаво просимо до рівня А2
 subtitle: Огляд граматики А1 та підготовка до нових тем
 focus: review
@@ -21,8 +21,8 @@ objectives:
     introduction of the Genitive, Dative, and Instrumental cases.
 dialogue_situations:
   - setting: 'Arrival at a Kyiv language school on the first day of A2 — reviewing
-      what you know: Я з Канади (genitive). Мені 25 (dative). Я вивчаю українську
-      мову (accusative). Я живу в Києві (locative).'
+      what you know: Я — студент (nominative). Я вивчаю українську мову
+      (accusative). Я живу в Києві (locative). Привіт, Оксано! (vocative).'
     speakers:
       - Новий студент
       - Викладач (teacher)
@@ -51,7 +51,7 @@ content_outline:
         voiced consonants: просьба → [проз''ба], боротьба → [бород''ба], вокзал →
         [воґзал].'
       - 'Mobile stress in noun paradigms: stress shifts between stem and ending across
-        cases — вода́/во́ду, рука́/ру́ки, голова́/го́лову, нога́/но́гу. Recognizing
+        cases — вода/воду, рука/руки, голова/голову, нога/ногу. Recognizing
         this pattern helps predict pronunciation of new nouns.'
   - section: 'Милозвучність мови: евфонія (The Melody of Language: Euphony)'
     words: 400
@@ -94,7 +94,9 @@ activity_hints:
   - type: match-up
     focus: Euphony Choice Exercise
     items: 8
-  - error-correction
+  - type: error-correction
+    focus: Euphony Error Correction
+    items: 6
 references:
   - title: Заболотний Grade 5, §1-10
     notes: Повторення вивченого в початкових класах

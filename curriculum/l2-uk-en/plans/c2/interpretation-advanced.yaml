@@ -1,6 +1,6 @@
-module: interpretation-advanced
+module: c2-098
 level: C2
-sequence: 94
+sequence: 98
 version: '1.2'
 title: 'Поглиблене усне перекладання: Послідовний та синхронний методи'
 subtitle: 'Просунутий переклад: послідовний і синхронний'

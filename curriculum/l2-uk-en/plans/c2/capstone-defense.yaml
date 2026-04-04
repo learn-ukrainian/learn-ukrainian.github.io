@@ -1,6 +1,6 @@
-module: capstone-defense
+module: c2-104
 level: C2
-sequence: 100
+sequence: 104
 version: '1.2'
 title: 'Захист дипломного проєкту: Вершина майстерності'
 subtitle: Захист кваліфікаційного проєкту

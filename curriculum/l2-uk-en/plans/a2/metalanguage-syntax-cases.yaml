@@ -1,6 +1,6 @@
-module: a2-060
+module: a2-066
 level: A2
-sequence: 60
+sequence: 66
 slug: metalanguage-syntax-cases
 version: '3.0'
 title: "Синтаксис і відмінки"

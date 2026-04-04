@@ -1,8 +1,8 @@
-module: a2-006
+module: a2-007
 level: A2
-sequence: 6
+sequence: 7
 slug: foundations-practice
-version: '1.0'
+version: '1.1'
 title: Перші кроки в А2
 subtitle: Практикуємо видові пари та родовий відмінок у діалогах
 focus: communication
@@ -76,7 +76,7 @@ vocabulary_hints:
     - замовляти / замовити (to order)
 activity_hints:
   - type: quiz
-    focus: 'Role-play: Planning a Trip'
+    focus: 'Role-play: Planning a Party (aspect in future tense)'
     items: 8
   - type: fill-in
     focus: 'Role-play: Shopping for Groceries'

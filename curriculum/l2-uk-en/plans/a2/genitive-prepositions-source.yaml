@@ -1,8 +1,8 @@
-module: a2-008
+module: a2-009
 level: A2
-sequence: 8
+sequence: 9
 slug: genitive-prepositions-source
-version: '1.0'
+version: '1.1'
 title: Звідки ти? З чого це зроблено?
 subtitle: Прийменники з/із/зі, від, після з родовим відмінком
 focus: grammar
@@ -30,9 +30,11 @@ content_outline:
     points:
       - 'Origin and source: з Києва, з України, зі Львова, зі Швеції. The core meaning
         is ''from'' a place, person, or source.'
-      - 'Phonetic variants: з before vowels and single consonants (з Одеси, з університету),
-        із before consonant clusters (із Закарпаття), зі before зл-, зм-, зн-, сп-,
-        ст-, шт- clusters (зі Львова, зі школи, зі стола).'
+      - 'Phonetic variants: з before vowels and single consonants (з Одеси, з університету);
+        із before single sibilants [з], [с], [ц], [ж], [ч], [ш] (із золота, із села)
+        and between two consonants (лист із Бразилії); зі before clusters starting
+        with з-, с-, ш- (зі Львова, зі школи, зі стола). General principle: euphony
+        (милозвучність) — choose the variant that''s easier to pronounce.'
       - 'Material and composition: склянка з молока (a glass of milk), сік з яблук
         (apple juice), сукня з шовку (a dress made of silk).'
       - 'Time starting point: з ранку (since morning), з понеділка (since Monday),

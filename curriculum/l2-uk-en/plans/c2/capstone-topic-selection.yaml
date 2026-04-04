@@ -1,6 +1,6 @@
-module: capstone-topic-selection
+module: c2-099
 level: C2
-sequence: 95
+sequence: 99
 version: '1.2'
 title: 'Вибір теми дипломного проєкту: Від ідеї до концепції'
 subtitle: 'Вибір теми проєкту'

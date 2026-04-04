@@ -1,8 +1,8 @@
-module: a2-011
+module: a2-013
 level: A2
-sequence: 11
+sequence: 13
 slug: genitive-adjectives-pronouns
-version: '1.0'
+version: '1.1'
 title: Мого друга, цієї книги
 subtitle: Узгодження прикметників, присвійних та вказівних займенників у 
   родовому відмінку
@@ -45,12 +45,14 @@ content_outline:
     words: 650
     points:
       - 'Masculine/neuter Genitive forms: мого, твого, його (unchanged), нашого, вашого,
-        їхнього (unchanged). Examples: для мого брата, біля нашого будинку, без твого
+        їхнього. Examples: для мого брата, біля нашого будинку, без твого
         дозволу.'
-      - 'Feminine Genitive forms: моєї, твоєї, її (unchanged), нашої, вашої, їхньої
-        (unchanged). Examples: від моєї сестри, для нашої вчительки, біля вашої школи.'
-      - 'Note: його, її, їхній/їхня/їхнє do not change for case when they are possessives
-        (його книги = his book''s, not him).'
+      - 'Feminine Genitive forms: моєї, твоєї, її (unchanged), нашої, вашої, їхньої.
+        Examples: від моєї сестри, для нашої вчительки, біля вашої школи.'
+      - 'Note: його and її do not change for case when they are possessives
+        (його книга → його книги; її сумка → її сумки). But їхній declines
+        like a soft-group adjective: їхнього друга (gen masc), їхньої школи
+        (gen fem), їхнього міста (gen neut).'
       - 'Practice with prepositions from M08-M10: з мого міста, без твоєї допомоги,
         для нашого вчителя, до вашої лікарні.'
   - section: 'Цього, того: вказівні займенники та повні фрази (Цього, того: Demonstratives

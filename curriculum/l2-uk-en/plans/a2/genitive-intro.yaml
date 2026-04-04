@@ -1,8 +1,8 @@
-module: a2-004
+module: a2-005
 level: A2
-sequence: 4
+sequence: 5
 slug: genitive-intro
-version: '1.0'
+version: '1.1'
 title: У мене немає...
 subtitle: Родовий відмінок для вираження відсутності та кількості
 focus: grammar
@@ -35,8 +35,7 @@ content_outline:
         Чого?'.
       - 'Its first key function: expressing absence or non-existence with the construction
         `(У мене) немає + Genitive`.'
-      - 'Contrast: ''У мене є брат'' (Accusative implied, but Nom. form used) vs.
-        ''У мене немає брата'' (Genitive).'
+      - 'Contrast: ''У мене є брат'' (Nominative) vs. ''У мене немає брата'' (Genitive).'
       - 'Practice with simple sentences: ''Тут є стіл.'' -> ''Тут немає стола.'''
   - section: Закінчення родового відмінка однини (Genitive Singular Endings)
     words: 700
@@ -55,8 +54,8 @@ content_outline:
       - 'Introducing quantity words that require the Genitive plural: багато (a lot),
         мало (a little, few), кілька/декілька (a few, some), скільки (how many).'
       - 'Genitive Plural Endings: a tricky topic. Masculine: often -ів (столів, братів).
-        Feminine/Neuter: often a zero ending with a possible vowel insertion (книг,
-        сестер, вікон). Feminine soft stems: -ей (пісень).'
+        Feminine/Neuter: often a zero ending, sometimes with a fleeting vowel (книг → книжок,
+        сестер, вікон). A small group of masculine/neuter nouns takes -ей (гостей, коней, очей).'
       - 'Lots of examples: багато друзів, мало грошей, кілька книжок, скільки студентів?'
       - Focus on recognizing and using the most common forms, not memorizing 
         every exception.

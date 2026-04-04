@@ -1,6 +1,6 @@
-module: c1-071
+module: c1-087
 level: C1
-sequence: 71
+sequence: 87
 slug: analiz-poezii
 version: '1.1'
 title: "Аналіз поетичного тексту: версифікація та семантика"

@@ -1,6 +1,6 @@
-module: capstone-revision
+module: c2-102
 level: C2
-sequence: 98
+sequence: 102
 version: '1.2'
 title: 'Редагування та перегляд проєкту: Критичний аналіз та вдосконалення'
 subtitle: Редакція кваліфікаційного проєкту

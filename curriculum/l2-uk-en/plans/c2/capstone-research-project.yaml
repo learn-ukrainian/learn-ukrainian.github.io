@@ -1,6 +1,6 @@
-module: capstone-research-project
+module: c2-100
 level: C2
-sequence: 96
+sequence: 100
 version: '1.2'
 title: 'Дослідницький проєкт: Збір та аналіз даних'
 subtitle: Дослідницький кваліфікаційний проєкт

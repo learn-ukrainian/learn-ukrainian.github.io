@@ -1,6 +1,6 @@
-module: c1-010
+module: c1-011
 level: C1
-sequence: 10
+sequence: 11
 slug: counterarguments
 version: '1.1'
 title: "Робота з контраргументами та спростування"

@@ -1,8 +1,8 @@
-module: a2-007
+module: a2-008
 level: A2
-sequence: 7
+sequence: 8
 slug: checkpoint-foundations
-version: '1.0'
+version: '1.1'
 title: 'Контрольна точка: Основи А2'
 subtitle: 'Перевірка знань: вид дієслова та родовий відмінок'
 focus: review
@@ -19,13 +19,14 @@ objectives:
   - Learner can synthesize the new grammar in a short paragraph describing plans
     or past events.
 dialogue_situations:
-  - setting: 'Language test preparation — a tutor quizzes the student: Утвори родовий
-      від ''книга''. Книги! А від ''стілець''? Стільця! Який вид: ''читав'' чи ''прочитав''?
-      Перший — недоконаний, другий — доконаний.'
+  - setting: 'Friends studying together before a Ukrainian class — quizzing each
+      other from notes, one struggles with genitive plural, the other explains.
+      Скільки у тебе братів? Двох братів... ні, два брати! Ох, я завжди плутаю.'
     speakers:
-      - Репетитор (tutor)
-      - Студент
-    motivation: 'Consolidation: genitive forms, aspect recognition in quiz format'
+      - Олена (студентка)
+      - Марко (студент)
+    motivation: 'Natural peer study scenario — genitive and aspect review through
+      friendly conversation, not interrogation'
 content_outline:
   - section: 'Частина 1: Вправи на розпізнавання (Part 1: Recognition Exercises)'
     words: 400
@@ -74,9 +75,9 @@ activity_hints:
   - type: fill-in
     focus: Sentence Transformation Drill
     items: 8
-  - type: match-up
-    focus: Short written response
-    items: 8
+  - type: fill-in
+    focus: Short written responses using genitive and aspect
+    items: 6
   - type: error-correction
     focus: Find and fix mixed grammar errors — wrong aspect choice, wrong 
       genitive endings, agreement mistakes

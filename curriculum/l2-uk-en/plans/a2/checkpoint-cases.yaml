@@ -1,6 +1,6 @@
-module: a2-034
+module: a2-039
 level: A2
-sequence: 34
+sequence: 39
 slug: checkpoint-cases
 version: '1.0'
 title: 'Контрольна точка: Відмінки та множина'
