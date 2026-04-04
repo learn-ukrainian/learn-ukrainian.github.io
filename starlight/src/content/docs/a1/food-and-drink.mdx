@@ -8,6 +8,7 @@ build_status: draft
 ---
 
 import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import GroupSort from '@site/src/components/GroupSort';
@@ -16,115 +17,220 @@ import OddOneOut from '@site/src/components/OddOneOut';
 import Quiz from '@site/src/components/Quiz';
 import Translate from '@site/src/components/Translate';
 import TrueFalse from '@site/src/components/TrueFalse';
-import Unjumble from '@site/src/components/Unjumble';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 <Tabs syncKey="module-tab">
 <TabItem label="Урок">
 
-## Діало́ги
-Food (**ї́жа**) is woven into Ukrainian daily life, from morning **ка́ва** (coffee) to evening **вече́ря** (dinner). The two dialogues below put this module's vocabulary into real use — ordering breakfast at home and discussing what you eat at each meal.
+## Діало́ги (Dialogues)
+
+It's a weekday morning. Oksana and her roommate Daria are in the kitchen, deciding what to eat. In Ukrainian homes, breakfast is a ritual — every person has their go-to combination of food and drink, and they say it as a single phrase: **ка́ва з молоко́м** (coffee with milk), **хліб з ма́слом** (bread with butter). Listen to how naturally these pairings flow.
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Марко́:</span> Що ти хо́чеш на сніда́нок? *(What do you want for breakfast?)*</div>
+<div class="dialogue-line"><span class="speaker">Окса́на:</span> Що ти хо́чеш на сніда́нок? *(What do you want for breakfast?)*</div>
 
 
-<div class="dialogue-line"><span class="speaker">Оле́нка:</span> Ка́ву з молоко́м і хліб з ма́слом. *(Coffee with milk and bread with butter.)*</div>
+<div class="dialogue-line"><span class="speaker">Да́рія:</span> Ка́ву з молоком і хліб з маслом. *(Coffee with milk and bread with butter.)*</div>
 
 
-<div class="dialogue-line"><span class="speaker">Марко:</span> А я хо́чу чай з цу́кром і ка́шу. *(And I want tea with sugar and porridge.)*</div>
+<div class="dialogue-line"><span class="speaker">Оксана:</span> А я хо́чу чай з цу́кром і ка́шу. *(And I want tea with sugar and porridge.)*</div>
 
 
-<div class="dialogue-line"><span class="speaker">Оленка:</span> До́бре. Ка́ша на плиті́. *(Good. The porridge is on the stove.)*</div>
+<div class="dialogue-line"><span class="speaker">Дарія:</span> Кашу з молоком чи без? *(Porridge with milk or without?)*</div>
 
 
-<div class="dialogue-line"><span class="speaker">Марко:</span> Су́пер! Дякую. *(Super! Thanks.)*</div>
+<div class="dialogue-line"><span class="speaker">Оксана:</span> З молоком, звича́йно! *(With milk, of course!)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Дарія:</span> До́бре. Я теж хочу яйце́. *(Good. I also want an egg.)*</div>
 
 
 </div>
-Notice the phrases **каву з молоком**, **хліб з маслом**, **чай з цукром** — each one is a memorized chunk. Do not try to analyze the endings yet. Think of **кава з молоком** the way you think of "coffee with milk" in English — as one unit.
-:::tip Memorized chunks
-**Кава з молоком**, **чай з цукром**, **хліб з маслом** — learn each phrase as a single block. The ending on the second word changes (молоко́ → молоком, цу́кор → цукром), but you will study WHY in A2. For now, repeat each phrase until it feels automatic.
-:::
+
+The key words here: **кава** (coffee, f), **молоко́** (milk, n), **хліб** (bread, m), **ма́сло** (butter, n), **чай** (tea, m), **цу́кор** (sugar, m), **ка́ша** (porridge, f), **яйце** (egg, n). Notice how Daria doesn't say "I want coffee, and then I want milk" — she says **каву з молоком** as one unit, like a single word. That's how Ukrainians order food.
+
+Ukrainians eat three meals a day: **сніданок** (breakfast, m), **обід** (lunch, m), **вече́ря** (dinner, f). Each meal has its own character — сніданок is light and quick, обід is the biggest meal, and вечеря is relaxed. The next dialogue shows how Ukrainians talk about обід and вечеря.
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Оленка:</span> Що ти зазвича́й їси́ на обід? *(What do you usually eat for lunch?)*</div>
+<div class="dialogue-line"><span class="speaker">Марко́:</span> Що ти зазвича́й їси́ на обід? *(What do you usually eat for lunch?)*</div>
 
 
-<div class="dialogue-line"><span class="speaker">Марко:</span> Зазвичай суп і сала́т. І́ноді пі́цу. *(Usually soup and salad. Sometimes pizza.)*</div>
+<div class="dialogue-line"><span class="speaker">Соломі́я:</span> Суп і сала́т. І́ноді м'я́со з карто́плею. *(Soup and salad. Sometimes meat with potatoes.)*</div>
 
 
-<div class="dialogue-line"><span class="speaker">Оленка:</span> А на вече́рю? *(And for dinner?)*</div>
+<div class="dialogue-line"><span class="speaker">Марко:</span> Яке́ м'ясо ти лю́биш? *(What meat do you like?)*</div>
 
 
-<div class="dialogue-line"><span class="speaker">Марко:</span> М'я́со з карто́плею або́ ри́бу з ри́сом. А ти? *(Meat with potato or fish with rice. And you?)*</div>
+<div class="dialogue-line"><span class="speaker">Соломія:</span> Ку́рку або́ ри́бу. А ти? *(Chicken or fish. And you?)*</div>
 
 
-<div class="dialogue-line"><span class="speaker">Оленка:</span> Я люблю́ варе́ники або кашу. *(I like dumplings or porridge.)*</div>
+<div class="dialogue-line"><span class="speaker">Марко:</span> Я теж люблю́ рибу з ри́сом. *(I also like fish with rice.)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Соломія:</span> А на вече́рю? *(And for dinner?)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Марко:</span> Зазвичай суп, омле́т або пі́цу. *(Usually soup, an omelette or pizza.)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Соломія:</span> А ти п'єш каву чи чай? *(Do you drink coffee or tea?)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Марко:</span> Вве́чері — чай з лимо́ном. *(In the evening — tea with lemon.)*</div>
 
 
 </div>
-Three meal names appear naturally here: **сніданок** (breakfast, from Dialogue 1), **обід** (lunch), and **вечеря** (dinner). Each meal anchors to a time of day: **сніданок** happens **вра́нці** (in the morning), **обід** — **вдень** (in the afternoon), **вечеря** — **вве́чері** (in the evening). These time words appear in later activities — note them now.
-## Їжа
-Ukrainian cuisine is rooted in the land — fields of wheat, gardens full of vegetables, orchards heavy with apples. Core staples fall into clear categories. **Хліб і каша**: **хліб** (bread) is the daily staple — no Ukrainian meal is complete without it. **Каша** (porridge) — **греча́на каша** (buckwheat porridge) is the most characteristically Ukrainian. **Рис** (rice) and **макаро́ни** (pasta) round out the group. **М'ясо і ри́ба**: **м'ясо** (meat) is the umbrella word, **ку́рка** (chicken) is the most commonly eaten, and **риба** (fish) is especially popular on fasting days.
-**О́вочі** (vegetables): **карто́пля** (potato) is the most eaten vegetable in Ukraine — it appears in **борщ**, **вареники**, and **деруни́**. **Мо́рква** (carrot), **цибу́ля** (onion), **помідо́р** (tomato), **огіро́к** (cucumber) complete the basics. Memory hook: **картопля** is everywhere — if you remember one vegetable, remember this one. **Фру́кти** (fruit): **я́блуко** (apple) — Ukrainian gardens are famous for apple trees. **Бана́н** (banana) is imported but very popular. **Апельси́н** (orange). **Лимо́н** (lemon) — goes straight into **чай**.
-:::note Dairy and pantry basics
-**Моло́чне** (dairy): **молоко** (milk), **сир** (cheese — this word also means cottage cheese; hard cheese is **тверди́й сир**), **ма́сло** (butter), **смета́на** (sour cream — essential on борщ), **йо́гурт** (yogurt). **І́нше** (other): **яйце́** (egg), **цукор** (sugar), **сіль** (salt), **олі́я** (vegetable oil — **со́няшникова олія**, sunflower oil, is the Ukrainian kitchen staple).
+
+New vocabulary: **суп** (soup, m), **салат** (salad, m), **м'ясо** (meat, n), **карто́пля** (potato, f), **ку́рка** (chicken, f), **ри́ба** (fish, f), **рис** (rice, m), **лимо́н** (lemon, m). The word **зазвичай** means "usually" — it's how you talk about habits.
+
+:::tip Chunk Pattern
+Notice **кава з молоком**, **чай з цукром**, **риба з рисом** — all use the same pattern: **[food/drink] з [addition]**. Learn these as whole phrases for now, like single words. You'll learn the grammar reason behind the endings (-ом, -ою) in A2.
 :::
-**Борщ** — the national dish, a rich beet soup made with **буря́к** (beetroot), **картопля**, **капу́ста** (cabbage), **морква**, **цибуля**, and **м'ясо**, served with a generous spoonful of **сметана**. UNESCO recognized Ukrainian борщ as part of the Intangible Cultural Heritage list in 2022. As Ukrainian textbooks say: *«Украї́на за́вжди́ сла́вилася своє́ю ку́хнею. Усі́м відо́мі украї́нські борщ, галушки́, вареники.»*
-**Вареники** — half-moon dumplings filled with **картопля** and **сир** (the most beloved filling), or with **ви́шня** (cherry) for dessert. Families make вареники together at the kitchen table — it is a ritual passed from grandmother to grandchild. As one textbook puts it: *«Вареники в украї́нській культу́рі — си́мвол замо́жного, щасли́вого життя́.»*
-**Са́ло** — cured pork fat, eaten thinly sliced with **хліб** and **часни́к** (garlic). It appears in folk humor and proverbs as the ultimate Ukrainian food. **Галушки** — soft dumplings from the Poltava region, immortalized in Kotliarevsky's *Енеї́да*. **Деруни** — potato pancakes, crisp and golden, served with **сметана**. Knowing these dishes is a first step into Ukrainian culture.
-:::caution Борщ is Ukrainian
-Борщ is a Ukrainian national dish. Its origins are Ukrainian, and UNESCO listed specifically Ukrainian борщ culture. This is not a matter of opinion — it is documented cultural heritage.
+
+## Ї́жа (Food)
+
+Ukrainian food vocabulary falls into six clear categories. Once you know these groups, you can describe almost any meal. Think of them as your food toolkit — six drawers, each with essential items.
+
+**Хліб і каша** (Bread and porridge): **хліб** (bread, m), **каша** (porridge, f), **рис** (rice, m), **макаро́ни** (pasta, pl)
+- «Я їм кашу щора́нку.» — *I eat porridge every morning.*
+
+**М'ясо і риба** (Meat and fish): **м'ясо** (meat, n), **курка** (chicken, f), **риба** (fish, f)
+- «Вона́ їсть курку на обід.» — *She eats chicken for lunch.*
+
+**О́вочі** (Vegetables): **картопля** (potato, f), **мо́рква** (carrot, f), **цибу́ля** (onion, f), **помідо́р** (tomato, m), **огіро́к** (cucumber, m)
+- «Картопля — популя́рний о́воч в Украї́ні.» — *Potato is a popular vegetable in Ukraine.*
+
+**Фру́кти** (Fruit): **я́блуко** (apple, n), **бана́н** (banana, m), **апельси́н** (orange, m)
+- «Він їсть яблуко щодня́.» — *He eats an apple every day.*
+
+**Моло́чне** (Dairy): **молоко** (milk, n), **сир** (cheese, m), **масло** (butter, n), **смета́на** (sour cream, f), **йо́гурт** (yogurt, m)
+- «Сметана — важли́вий проду́кт.» — *Sour cream is an important product.*
+
+**І́нше** (Other): **яйце** (egg, n), **цукор** (sugar, m), **сіль** (salt, f), **олі́я** (oil, f)
+- «Без со́лі їжа несмачна́.» — *Without salt, food is tasteless.*
+
+### Ukrainian iconic dishes
+
+These five dishes are not just vocabulary — they are cultural identity. When a Ukrainian hears a foreigner name these dishes correctly, it signals respect.
+
+**Борщ** (m) — Ukraine's national soup, made with **буря́к** (beetroot), **картопля**, **капу́ста** (cabbage), **м'ясо**, **морква**, **цибуля**, and always served with a spoonful of **сметана**. Ukrainian Grade 1 textbooks already teach children to name its ingredients: «Ви́бери проду́кти для борщу́.» Борщ is a symbol of home.
+
+:::note Cultural Identity
+Борщ is Ukrainian — not "Eastern European" and not Russian. In 2022, UNESCO recognized Ukrainian borshch culture as intangible cultural heritage. When you say **борщ**, you say something deeply Ukrainian.
 :::
-## Напо́ї
-**Напі́й** (drink, masculine) is the general Ukrainian word for any beverage — hot or cold, alcoholic or not. The plural is **напої** (drinks). When someone asks *«Яки́й напій ти хочеш?»* (What drink do you want?), they mean anything from **кава** to **сік**. This section covers the most common **напої** in Ukrainian daily life.
-**Гаря́чі напої** (hot drinks) rule the Ukrainian morning and evening. **Кава** (coffee) is drunk strong — often **еспре́со** or **туре́цька кава** (Turkish-style coffee). **Чай** (tea) is even more common: **чо́рний чай** (black tea) and **зеле́ний чай** (green tea) are the main varieties. Both are drunk **з цукром** (with sugar), **з лимо́ном** (with lemon), or **з ме́дом** (with honey — a natural Ukrainian sweetener).
-**Холо́дні напої** (cold drinks): **вода́** (water) — note the difference between **вода без га́зу** (still water) and **вода з га́зом** (sparkling water). **Сік** (juice) comes in many kinds: **апельси́новий сік** (orange juice), **я́блучний сік** (apple juice), **тома́тний сік** (tomato juice). **Компо́т** — a traditional Ukrainian напій made from fruit (**вишня**, **яблуко**, **сли́ва**) boiled with water and **цукор**; every Ukrainian grandmother makes it. **Лимона́д** (lemonade or soft drink). **Моло́чні напої** (dairy drinks): **молоко** and **кефі́р** (fermented milk — popular, healthy, drunk daily). **Алкого́льні напої** (for recognition only): **пи́во** (beer), **вино́** (wine).
-<MatchUp client:only="react" pairs={[{"left": "хліб", "right": "bread"}, {"left": "м'ясо", "right": "meat"}, {"left": "риба", "right": "fish"}, {"left": "молоко", "right": "milk"}, {"left": "вода", "right": "water"}, {"left": "сік", "right": "juice"}, {"left": "сніданок", "right": "breakfast"}, {"left": "обід", "right": "lunch"}, {"left": "вечеря", "right": "dinner"}, {"left": "суп", "right": "soup"}]} instruction={"З'єднайте українські слова з англійськими перекладами (Match Ukrainian words to English translations)"} />
-<GroupSort client:only="react" groups={{"Їжа (Food)": ["хліб", "м'ясо", "риба", "суп", "каша"], "Напої (Drinks)": ["кава", "чай", "вода", "сік", "молоко"]}} instruction={"Розподіліть слова за категоріями (Sort words into categories)"} />
-### How «з + noun» works at A1
-In English you say "coffee with milk." In Ukrainian: **кава з молоком**. The word after **з** changes its ending:
-- молоко → **молоком**
-- цукор → **цукром**
-- лимон → **лимоном**
-- газ → **газом**
-- масло → **маслом**
-- картопля → **картоплею**
-This ending change is called the instrumental case (**ору́дний відмі́нок**) — you will study it systematically in A2. At A1, learn each phrase as ONE fixed unit:
-- **кава з молоком** · **чай з цукром** · **чай з лимоном**
-- **вода з газом** · **хліб з маслом** · **м'ясо з картоплею**
-Say each phrase as a single breath. Do not try to produce new combinations yet — just recognize and reproduce these six.
-:::tip Ordering at a café
-A Kyiv café menu reads: кава з молоком — 65 грн, чай з лимоном — 40 грн, вода з газом — 30 грн. When ordering, say:
-- **Будь ла́ска, каву з молоком.** *(Coffee with milk, please.)*
-- **Да́йте, будь ласка, чай з лимоном.** *(Give me tea with lemon, please.)*
-- **Ме́ні воду́ з газом.** *(Sparkling water for me.)*
-Notice **кава** becomes **каву** and **вода** becomes **воду** when you order — that is the accusative case (**знахі́дний відмінок**), also for A2. For now, memorize the ordering phrases whole. Recognizing the pattern is enough at A1.
+
+**Варе́ники** (pl, **варе́ник** m) — filled dumplings made from **ті́сто** (dough), stuffed with **картопля і сир** or cherries. Always eaten with **сметана**. As the textbook says: «Вареники в украї́нській культу́рі — си́мвол замо́жного, щасли́вого життя́.» They are a symbol of a prosperous, happy life.
+
+**Са́ло** (n) — cured pork fat, eaten with **хліб**. Iconic, deeply embedded in Ukrainian cultural humor and everyday life. If you want to make a Ukrainian smile, mention **сало з хлі́бом**.
+
+**Деруни́** (pl) — potato pancakes made from grated **картопля**, often served with **сметана**.
+
+**Галушки́** (pl) — soft dough dumplings boiled in water or broth, a staple of central Ukrainian cuisine.
+
+Now imagine a real kitchen moment — **Бабу́ся** (grandma) teaching her **ону́чка** (granddaughter) to make борщ:
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Бабуся:</span> Зварі́мо борщ. Буряк, картопля, капуста... *(Let's make borshch. Beetroot, potato, cabbage...)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Онучка:</span> А м'ясо? *(And meat?)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Бабуся:</span> Так! І морква, цибуля, сметана. *(Yes! And carrot, onion, sour cream.)*</div>
+
+
+</div>
+
+## Напо́ї (Drinks)
+
+Ukrainian drinks split into four groups: **гаря́чі** (hot), **холо́дні** (cold), **моло́чні** (dairy), and **алкого́льні** (alcoholic — for recognition only). At a Ukrainian table, you will always find **чай**, **кава**, **компо́т**, or **вода́**.
+
+**Гарячі** (Hot): **кава** (coffee, f), **чай** (tea, m)
+- «Я п'ю каву вра́нці, чай ввечері.» — *I drink coffee in the morning, tea in the evening.*
+
+**Холодні** (Cold): **вода** (water, f), **сік** (juice, m), **компот** (compote, m), **лимона́д** (lemonade, m)
+- «Компот — дома́шній напі́й з фру́ктів.» — *Compote is a homemade drink from fruit.*
+
+**Молочні** (Dairy): **молоко** (milk, n), **кефі́р** (kefir, m)
+- «Кефір ко́ри́сний для здоро́в'я.» — *Kefir is good for health.*
+
+**Алкогольні** (Alcoholic — recognition only): **пи́во** (beer, n), **вино́** (wine, n)
+
+:::caution Компот ≠ Western Compote
+Ukrainian **компот** is not the thick fruit stew you might know. It's a drink — fruit boiled in water with sugar, then served warm or cold. Every Ukrainian grandmother makes it. You'll find it in school canteens, at home, and at celebrations. It's closer to fruit punch than to jam.
 :::
-<FillIn client:only="react" items={[{"sentence": "Я хочу каву ____.", "answer": "з молоком", "options": ["з молоком", "з цукром", "з газом"]}, {"sentence": "Вона п'є чай ____.", "answer": "з цукром", "options": ["з маслом", "з цукром", "з лимоном"]}, {"sentence": "Він їсть хліб ____.", "answer": "з маслом", "options": ["з молоком", "з картоплею", "з маслом"]}, {"sentence": "Я люблю чай ____.", "answer": "з лимоном", "options": ["з лимоном", "з газом", "з цукром"]}, {"sentence": "Дайте, будь ласка, воду ____.", "answer": "з газом", "options": ["з молоком", "з газом", "з лимоном"]}, {"sentence": "Ми їмо м'ясо ____.", "answer": "з картоплею", "options": ["з маслом", "з картоплею", "з цукром"]}]} instruction={"Вставте правильний вираз (Fill in the correct phrase)"} />
-<Quiz client:only="react" questions={[{"question": "Що ми їмо вранці?", "options": [{"text": "обід", "correct": false}, {"text": "сніданок", "correct": true}, {"text": "вечерю", "correct": false}]}, {"question": "Що ми їмо ввечері?", "options": [{"text": "сніданок", "correct": false}, {"text": "обід", "correct": false}, {"text": "вечерю", "correct": true}]}, {"question": "Традиційний український суп — це...", "options": [{"text": "каша", "correct": false}, {"text": "борщ", "correct": true}, {"text": "вода", "correct": false}]}, {"question": "Українська страва з тіста і картоплі або сиру:", "options": [{"text": "сало", "correct": false}, {"text": "хліб", "correct": false}, {"text": "вареники", "correct": true}]}, {"question": "Популярний холодний напій з фруктів:", "options": [{"text": "борщ", "correct": false}, {"text": "компот", "correct": true}, {"text": "кава", "correct": false}]}, {"question": "Що ми їмо вдень?", "options": [{"text": "сніданок", "correct": false}, {"text": "вечерю", "correct": false}, {"text": "обід", "correct": true}]}]} instruction={"Оберіть правильний варіант (Choose the correct option)"} />
+
+### The з + noun pattern — chunks, not grammar
+
+When you say **кава з молоком**, the word **молоком** ends in **-ом**. When you say **чай з лимоном**, the word **лимоном** ends in **-ом**. When you say **вода з га́зом**, the word **газом** ends in **-ом**. This ending comes from the instrumental case — a grammar concept you will study properly in A2.
+
+For now, treat these as memorized phrases, like single words. Say **кавазмолоком** as one chunk. You don't need to know WHY **молоко** becomes **молоком** — just remember the whole phrase. Ukrainian Grade 1 textbooks use exactly this approach: «Та́то пив чай із пиріжка́ми. Ма́ма пила́ чай із пе́чивом.» Children memorize the whole phrase first, grammar comes later.
+
+Your chunk list to memorize:
+
+- **кава з молоком** — coffee with milk
+- **чай з цукром** — tea with sugar
+- **чай з лимоном** — tea with lemon
+- **вода з газом** — sparkling water (lit. water with gas)
+- **хліб з маслом** — bread with butter
+- **м'ясо з картоплею** — meat with potatoes
+- **риба з рисом** — fish with rice
+
+<FillIn client:only="react" items={[{"sentence": "Я хочу каву ___.", "answer": "з молоком", "options": ["з молоком", "з цукром", "з газом"]}, {"sentence": "Вона п'є чай ___.", "answer": "з цукром", "options": ["з лимоном", "з молоком", "з цукром"]}, {"sentence": "Він їсть хліб ___.", "answer": "з маслом", "options": ["з маслом", "з цукром", "з лимоном"]}, {"sentence": "Я люблю чай ___.", "answer": "з лимоном", "options": ["з молоком", "з лимоном", "з газом"]}, {"sentence": "Дайте, будь ласка, воду ___.", "answer": "з газом", "options": ["з газом", "з молоком", "з цукром"]}, {"sentence": "Ми їмо м'ясо ___.", "answer": "з картоплею", "options": ["з маслом", "з картоплею", "з лимоном"]}]} instruction={"Вставте правильний варіант (Fill in the correct з+noun chunk)"} />
+
+### Reading Practice
+
+Read each sentence aloud. What does each person drink?
+
+1. «Я п'ю каву з молоком щоранку.» — *I drink coffee with milk every morning.*
+2. «Вона лю́бить чай з лимоном.» — *She likes tea with lemon.*
+3. «Ді́ти п'ють компот або воду́.» — *Children drink compote or water.*
+4. «Він не п'є каву — ті́льки чай.» — *He doesn't drink coffee — only tea.*
+5. «На столі́ є сік, вода і кефір.» — *On the table there is juice, water, and kefir.*
+
+Now try: what do YOU drink in the morning? And in the evening?
+
+<MatchUp client:only="react" pairs={[{"left": "хліб", "right": "bread"}, {"left": "м'ясо", "right": "meat"}, {"left": "риба", "right": "fish"}, {"left": "молоко", "right": "milk"}, {"left": "вода", "right": "water"}, {"left": "сік", "right": "juice"}, {"left": "сніданок", "right": "breakfast"}, {"left": "обід", "right": "lunch"}, {"left": "вечеря", "right": "dinner"}, {"left": "суп", "right": "soup"}]} instruction={"З'єднайте українські слова з англійськими перекладами (Match Ukrainian food and drink words to their English translations)"} />
+
+<GroupSort client:only="react" groups={{"Їжа (Food)": ["хліб", "м'ясо", "риба", "суп", "каша"], "Напої (Drinks)": ["кава", "чай", "вода", "сік", "молоко"]}} instruction={"Розподіліть слова за категоріями (Sort the words into the correct category)"} />
+
 ## Підсумок — Summary
-Here are the key patterns in action:
-- **Що ти хочеш?** — **Каву з молоком.** *(What do you want? — Coffee with milk.)*
-- **Що ти їси на сніданок?** — **Кашу і хліб з маслом.** *(What do you eat for breakfast? — Porridge and bread with butter.)*
-- **Що ти їси на обід?** — **Суп і салат.** *(What do you eat for lunch? — Soup and salad.)*
-- **Що ти їси на вечерю?** — **М'ясо з картоплею або рибу з рисом.** *(What do you eat for dinner? — Meat with potato or fish with rice.)*
-You have learned 25+ food and drink words across six categories: **хліб/каша** (bread/porridge), **м'ясо/риба** (meat/fish), **овочі** (vegetables), **фрукти** (fruit), **молочне** (dairy), and **напої** (drinks). The word **напій** (drink) is the singular form — you will see it on menus, in questions, and in everyday conversation. You have memorized six **з + noun** chunks as fixed expressions. And you know the three meal names with their time anchors: **сніданок** — **вранці**, **обід** — **вдень**, **вечеря** — **ввечері**.
-Ukrainian food is more than vocabulary — it is cultural identity. **Борщ** is more than a soup: it is a symbol of home, family, and the Ukrainian land. When a Ukrainian says *«як ма́мин борщ»* (like mom's борщ), they mean something irreplaceable and deeply personal. **Вареники** made together at the table are a family ritual — hands covered in flour, laughter, stories. **Сало**, often misunderstood by outsiders, is eaten with deep cultural pride — it appears in proverbs, folk songs, and humor. Learning to recognize **борщ**, **вареники**, **сало** on a menu or in conversation is not just vocabulary: it is your first step into Ukrainian cultural identity.
+
+Two question patterns cover almost any food conversation at A1:
+
+- «Що ти хочеш?» → **Каву з молоком.** / **Хліб з маслом.** / **Суп і салат.**
+- «Що ти їси на сніданок / обід / вечерю?» → **На сніданок — кашу і чай.** **На обід — суп.** **На вечерю — рибу з рисом.**
+
+Practice saying these aloud — swap in your own favorite foods from the vocabulary above.
+
+### Three meals — quick reference
+
+| Час | Прийо́м ї́жі | Що типо́во їдя́ть |
+|-----|-----------|----------------|
+| Вранці | **сніданок** | каша, яйце, хліб, кава/чай |
+| Вдень | **обід** | суп, м'ясо, салат, сік/вода |
+| Ввечері | **вечеря** | риба, омлет, сир, чай |
+
+The time words **вранці** (in the morning), **вдень** (during the day), **ввечері** (in the evening) appeared throughout both dialogues. Now they are connected to the three meals. When someone asks «Що ти їси вранці?», you know they mean **сніданок**.
+
+<Quiz client:only="react" questions={[{"question": "Що ми їмо вранці?", "options": [{"text": "сніданок", "correct": true}, {"text": "обід", "correct": false}, {"text": "вечерю", "correct": false}]}, {"question": "Що ми їмо ввечері?", "options": [{"text": "вечерю", "correct": true}, {"text": "сніданок", "correct": false}, {"text": "обід", "correct": false}]}, {"question": "Традиційний український суп — це...", "options": [{"text": "борщ", "correct": true}, {"text": "каша", "correct": false}, {"text": "вода", "correct": false}]}, {"question": "Українська страва з тіста і картоплі або сиру:", "options": [{"text": "вареники", "correct": true}, {"text": "сало", "correct": false}, {"text": "хліб", "correct": false}]}, {"question": "Популярний холодний напій з фруктів:", "options": [{"text": "компот", "correct": true}, {"text": "борщ", "correct": false}, {"text": "кава", "correct": false}]}, {"question": "Що ми їмо вдень?", "options": [{"text": "обід", "correct": true}, {"text": "сніданок", "correct": false}, {"text": "вечерю", "correct": false}]}]} instruction={"Оберіть правильний варіант (Choose the correct option)"} />
+
+:::tip Your Cultural Passport
+Knowing **борщ**, **вареники**, **сало**, **галушки**, and **деруни** shows respect for Ukrainian culture. Every Ukrainian who hears a foreigner name these dishes correctly will respond warmly. Quick summary: **борщ** = буряк + картопля + сметана. **Вареники** = тісто + картопля або сир. **Сало** = свини́на + хліб. **Деруни** = картопля + сметана. **Галушки** = тісто + вода.
+:::
+
 ### Self-check
-Test yourself — can you answer these without scrolling back?
-- Як украї́нською "breakfast"? → **сніданок**
-- Як українською "lunch"? → **обід**
-- Як українською "dinner"? → **вечеря**
-- На́зви 5 страв або проду́ктів, які́ ти лю́биш. → (напри́клад: **борщ, картопля, хліб, яблуко, сир**)
-- Назви 3 напої, які ти любиш. → (наприклад: **кава, вода, сік**)
-- Назви одну́ украї́нську стра́ву. Чо́му вона́ важли́ва? → наприклад, **борщ** (націона́льна спа́дщина ЮНЕ́СКО)
-- Як сказа́ти "tea with lemon"? → **чай з лимоном**
-- Як сказати "sparkling water"? → **вода з газом**
-- Яка украї́нська стра́ва з ті́ста і карто́плі? → **вареники**
-- Як українською "drink" (noun)? → **напій**
+
+Before moving on, test yourself:
+
+- Can you name 5 foods? (e.g., **хліб**, **м'ясо**, **риба**, **картопля**, **яйце**)
+- Can you name 3 drinks? (e.g., **кава**, **чай**, **вода**)
+- Can you say what you eat at each meal? → «На сніданок я їм...» / «На обід я їм...» / «На вечерю я їм...»
+- Can you say one **з + noun** chunk from memory? (**кава з молоком** / **чай з цукром**)
+- Can you name one Ukrainian dish and one ingredient it contains? (e.g., **борщ** — **буряк**)
+
+If you answered yes to all five — you have a solid food and drink toolkit in Ukrainian. Next up: **M37 — I Eat, I Drink**, where you'll learn the full present tense conjugation of **ї́сти** (to eat) and **пи́ти** (to drink).
 
 </TabItem>
 <TabItem label="Словник">
@@ -134,8 +240,7 @@ Test yourself — can you answer these without scrolling back?
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
 | **ї́жа** | food | ім. | ж. |
-| **напі́й** | drink (noun, masculine) | ім. | ч. |
-| **напо́ї** | drinks (plural) | ім. | ч. |
+| **напі́й** | drink | ім. | ч. |
 | **ка́ва** | coffee | ім. | ж. |
 | **вода́** | water | ім. | ж. |
 | **молоко́** | milk | ім. | с. |
@@ -145,16 +250,15 @@ Test yourself — can you answer these without scrolling back?
 | **сніда́нок** | breakfast | ім. | ч. |
 | **обід** | lunch | ім. | ч. |
 | **вече́ря** | dinner | ім. | ж. |
-| **варе́ник** | dumpling (half-moon shaped, with savoury or sweet filling) | ім. | ч. |
-| **варе́ники** | dumplings (plural) | ім. |  |
+| **варе́ник** | dumpling (filled with potato, cheese, or cherries) | ім. | ч. |
 | **ка́ша** | porridge | ім. | ж. |
-| **сир** | cheese (also cottage cheese; hard cheese = твердий сир) | ім. | ч. |
-| **ма́сло** | butter (also oil, depending on context) | ім. | с. |
+| **сир** | cheese | ім. | ч. |
+| **ма́сло** | butter | ім. | с. |
 | **яйце́** | egg | ім. | с. |
 | **карто́пля** | potato | ім. | ж. |
 | **цу́кор** | sugar | ім. | ч. |
 | **смета́на** | sour cream | ім. | ж. |
-| **компо́т** | compote (traditional drink of fruit boiled with water and sugar) | ім. | ч. |
+| **компо́т** | compote (homemade fruit drink) | ім. | ч. |
 | **ку́рка** | chicken | ім. | ж. |
 | **сала́т** | salad | ім. | ч. |
 | **пі́ца** | pizza | ім. | ж. |
@@ -165,85 +269,74 @@ Test yourself — can you answer these without scrolling back?
 | **лимо́н** | lemon | ім. | ч. |
 | **рис** | rice | ім. | ч. |
 | **макаро́ни** | pasta | ім. |  |
-| **о́вочі** | vegetables | ім. | ч. |
-| **фру́кти** | fruit | ім. |  |
 | **мо́рква** | carrot | ім. | ж. |
 | **цибу́ля** | onion | ім. | ж. |
 | **апельси́н** | orange | ім. | ч. |
-| **моло́чне** | dairy (category noun) | прикм. |  |
 | **йо́гурт** | yogurt | ім. | ч. |
-| **олі́я** | vegetable oil | ім. | ж. |
+| **олі́я** | oil | ім. | ж. |
 | **буря́к** | beetroot | ім. | ч. |
 | **капу́ста** | cabbage | ім. | ж. |
-| **ви́шня** | cherry | прикм. |  |
+| **ті́сто** | dough | ім. | с. |
 | **са́ло** | cured pork fat (Ukrainian cultural staple) | ім. | с. |
-| **часни́к** | garlic | ім. | ч. |
-| **галушки́** | soft dumplings (from Poltava region) | ім. | ж. |
 | **деруни́** | potato pancakes | ім. |  |
-| **мед** | honey | ім. | ч. |
-| **кефі́р** | fermented milk (kefir) | ім. | ч. |
-| **лимона́д** | lemonade / soft drink | ім. | ч. |
+| **омле́т** | omelette | ім. | ч. |
+| **лимона́д** | lemonade | ім. | ч. |
+| **кефі́р** | kefir | ім. | ч. |
 | **пи́во** | beer | ім. | с. |
 | **вино́** | wine | ім. | ж. |
-| **плита́** | stove, cooker | ім. | ж. |
+| **о́воч** | vegetable | ім. | ч. |
+| **фрукт** | fruit | ім. | ч. |
+| **проду́кт** | product, ingredient | ім. | ч. |
+| **бабу́ся** | grandmother | ім. | ж. |
+| **ону́чка** | granddaughter | ім. | ж. |
 | **зазвича́й** | usually | присл. |  |
-| **і́ноді** | sometimes | присл. |  |
-| **сма́чно** | delicious, tasty | присл. |  |
 | **вра́нці** | in the morning | присл. |  |
 | **вве́чері** | in the evening | присл. |  |
-| **еспре́со** | espresso | ім. | с. |
+| **щора́нку** | every morning | присл. |  |
+| **щодня́** | every day | присл. |  |
+| **і́ноді** | sometimes | присл. |  |
+| **ті́льки** | only | присл. |  |
+| **звича́йно** | of course | присл. |  |
+| **популя́рний** | popular | прикм. |  |
+| **несмачна́** | tasteless, not delicious | прикм. |  |
+| **ко́ри́сний** | healthy, beneficial | прикм. |  |
+| **гаря́чий** | hot | прикм. |  |
+| **холо́дний** | cold | прикм. |  |
 
 ### Вирази
 
 | Вираз | Переклад |
 |-------|----------|
-| **гречана каша** | buckwheat porridge |
-| **твердий сир** | hard cheese |
-| **соняшникова олія** | sunflower oil |
-| **гарячі напої** | hot drinks |
-| **холодні напої** | cold drinks |
-| **чорний чай** | black tea |
-| **зелений чай** | green tea |
-| **турецька кава** | Turkish-style coffee |
-| **вода без газу** | still water |
-| **вода з газом** | sparkling water |
-| **апельсиновий сік** | orange juice |
-| **яблучний сік** | apple juice |
-| **томатний сік** | tomato juice |
 | **кава з молоком** | coffee with milk |
+| **хліб з маслом** | bread with butter |
 | **чай з цукром** | tea with sugar |
 | **чай з лимоном** | tea with lemon |
-| **чай з медом** | tea with honey |
-| **хліб з маслом** | bread with butter |
-| **м'ясо з картоплею** | meat with potato |
-| **рибу з рисом** | fish with rice |
-| **Що ти хочеш?** | What do you want? |
-| **Що ти їси на сніданок?** | What do you eat for breakfast? |
+| **вода з газом** | sparkling water |
+| **м'ясо з картоплею** | meat with potatoes |
+| **риба з рисом** | fish with rice |
+| **Що ти хочеш на сніданок?** | What do you want for breakfast? |
 | **Що ти їси на обід?** | What do you eat for lunch? |
-| **Що ти їси на вечерю?** | What do you eat for dinner? |
-| **Будь ласка, каву з молоком.** | Coffee with milk, please. |
-| **Дайте, будь ласка, чай з лимоном.** | Give me tea with lemon, please. |
-| **Мені воду з газом.** | Sparkling water for me. |
-| **як мамин борщ** | like mom's borscht (meaning something irreplaceable and deeply personal) |
+| **На сніданок я їм...** | For breakfast I eat... |
+| **Давай варити борщ.** | Let's make borshch. |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "ї́жа", back: "food", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "напі́й", back: "drink (noun, masculine)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "напо́ї", back: "drinks (plural)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ка́ва", back: "coffee", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вода́", back: "water", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "молоко́", back: "milk", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "сік", back: "juice", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "м'я́со", back: "meat", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ри́ба", back: "fish", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "сніда́нок", back: "breakfast", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "обід", back: "lunch", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вече́ря", back: "dinner", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "варе́ник", back: "dumpling (half-moon shaped, with savoury or sweet filling)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "варе́ники", back: "dumplings (plural)", subtitle: "ім." }, { front: "ка́ша", back: "porridge", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "сир", back: "cheese (also cottage cheese; hard cheese = твердий сир)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ма́сло", back: "butter (also oil, depending on context)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "яйце́", back: "egg", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "карто́пля", back: "potato", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "цу́кор", back: "sugar", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "смета́на", back: "sour cream", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "компо́т", back: "compote (traditional drink of fruit boiled with water and sugar)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ку́рка", back: "chicken", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "сала́т", back: "salad", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "пі́ца", back: "pizza", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "помідо́р", back: "tomato", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "огіро́к", back: "cucumber", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "я́блуко", back: "apple", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "бана́н", back: "banana", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лимо́н", back: "lemon", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "рис", back: "rice", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "макаро́ни", back: "pasta", subtitle: "ім." }, { front: "о́вочі", back: "vegetables", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "фру́кти", back: "fruit", subtitle: "ім." }, { front: "мо́рква", back: "carrot", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "цибу́ля", back: "onion", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "апельси́н", back: "orange", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "моло́чне", back: "dairy (category noun)", subtitle: "прикм." }, { front: "йо́гурт", back: "yogurt", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "олі́я", back: "vegetable oil", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "буря́к", back: "beetroot", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "капу́ста", back: "cabbage", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ви́шня", back: "cherry", subtitle: "прикм." }, { front: "са́ло", back: "cured pork fat (Ukrainian cultural staple)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "часни́к", back: "garlic", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "галушки́", back: "soft dumplings (from Poltava region)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "деруни́", back: "potato pancakes", subtitle: "ім." }, { front: "мед", back: "honey", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кефі́р", back: "fermented milk (kefir)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лимона́д", back: "lemonade / soft drink", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "пи́во", back: "beer", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "вино́", back: "wine", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "плита́", back: "stove, cooker", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "зазвича́й", back: "usually", subtitle: "присл." }, { front: "і́ноді", back: "sometimes", subtitle: "присл." }, { front: "сма́чно", back: "delicious, tasty", subtitle: "присл." }, { front: "вра́нці", back: "in the morning", subtitle: "присл." }, { front: "вве́чері", back: "in the evening", subtitle: "присл." }, { front: "еспре́со", back: "espresso", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "ї́жа", back: "food", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "напі́й", back: "drink", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ка́ва", back: "coffee", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вода́", back: "water", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "молоко́", back: "milk", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "сік", back: "juice", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "м'я́со", back: "meat", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ри́ба", back: "fish", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "сніда́нок", back: "breakfast", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "обід", back: "lunch", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вече́ря", back: "dinner", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "варе́ник", back: "dumpling (filled with potato, cheese, or cherries)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ка́ша", back: "porridge", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "сир", back: "cheese", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ма́сло", back: "butter", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "яйце́", back: "egg", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "карто́пля", back: "potato", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "цу́кор", back: "sugar", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "смета́на", back: "sour cream", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "компо́т", back: "compote (homemade fruit drink)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ку́рка", back: "chicken", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "сала́т", back: "salad", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "пі́ца", back: "pizza", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "помідо́р", back: "tomato", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "огіро́к", back: "cucumber", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "я́блуко", back: "apple", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "бана́н", back: "banana", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лимо́н", back: "lemon", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "рис", back: "rice", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "макаро́ни", back: "pasta", subtitle: "ім." }, { front: "мо́рква", back: "carrot", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "цибу́ля", back: "onion", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "апельси́н", back: "orange", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "йо́гурт", back: "yogurt", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "олі́я", back: "oil", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "буря́к", back: "beetroot", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "капу́ста", back: "cabbage", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ті́сто", back: "dough", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "са́ло", back: "cured pork fat (Ukrainian cultural staple)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "деруни́", back: "potato pancakes", subtitle: "ім." }, { front: "омле́т", back: "omelette", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лимона́д", back: "lemonade", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кефі́р", back: "kefir", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "пи́во", back: "beer", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "вино́", back: "wine", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "о́воч", back: "vegetable", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "фрукт", back: "fruit", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "проду́кт", back: "product, ingredient", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "бабу́ся", back: "grandmother", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ону́чка", back: "granddaughter", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "зазвича́й", back: "usually", subtitle: "присл." }, { front: "вра́нці", back: "in the morning", subtitle: "присл." }, { front: "вве́чері", back: "in the evening", subtitle: "присл." }, { front: "щора́нку", back: "every morning", subtitle: "присл." }, { front: "щодня́", back: "every day", subtitle: "присл." }, { front: "і́ноді", back: "sometimes", subtitle: "присл." }, { front: "ті́льки", back: "only", subtitle: "присл." }, { front: "звича́йно", back: "of course", subtitle: "присл." }, { front: "популя́рний", back: "popular", subtitle: "прикм." }, { front: "несмачна́", back: "tasteless, not delicious", subtitle: "прикм." }, { front: "ко́ри́сний", back: "healthy, beneficial", subtitle: "прикм." }, { front: "гаря́чий", back: "hot", subtitle: "прикм." }, { front: "холо́дний", back: "cold", subtitle: "прикм." }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<MatchUp client:only="react" pairs={[{"left": "борщ", "right": "beet soup"}, {"left": "вареники", "right": "dumplings"}, {"left": "каша", "right": "porridge"}, {"left": "картопля", "right": "potato"}, {"left": "яблуко", "right": "apple"}, {"left": "лимон", "right": "lemon"}, {"left": "помідор", "right": "tomato"}, {"left": "огірок", "right": "cucumber"}, {"left": "сметана", "right": "sour cream"}, {"left": "компот", "right": "compote"}]} instruction={"З'єднайте слова з перекладами (Match words to their translations)"} />
+<TrueFalse client:only="react" items={[{"statement": "Борщ — це традиційний український суп.", "isTrue": true, "explanation": "Борщ — це національна страва України з буряком, картоплею і сметаною. UNESCO визнало борщ українською культурною спадщиною у 2022 році."}, {"statement": "Вареники — це тісто з картоплею або сиром.", "isTrue": true, "explanation": "Вареники — страва з тіста, наповнена картоплею, сиром або вишнями. Символ заможного, щасливого життя в Україні."}, {"statement": "Компот — це гарячий напій, як кава.", "isTrue": false, "explanation": "Компот — це холодний (або кімнатної температури) напій із фруктів, зварених у воді. Кава — гаряча, а компот — ні."}, {"statement": "На сніданок українці зазвичай їдять суп.", "isTrue": false, "explanation": "Суп зазвичай їдять на обід. На сніданок типово їдять кашу, яйце, хліб, п'ють каву або чай."}, {"statement": "Сметана — це молочний продукт.", "isTrue": true, "explanation": "Сметана — молочний продукт, важливий в українській кухні. Її додають до борщу, вареників і деруниів."}, {"statement": "Деруни — це вареники з тертої картоплі.", "isTrue": false, "explanation": "Деруни — це картопляні оладки (pancakes) з тертої картоплі. Вареники — це зовсім інша страва з тіста."}]} instruction={"Правда чи ні? (True or false?)"} />
 
-<TrueFalse client:only="react" items={[{"statement": "Борщ — це традиційний український суп.", "isTrue": true, "explanation": "Борщ — національна страва України з буряком та овочами. UNESCO включив його до списку нематеріальної культурної спадщини."}, {"statement": "Вечерю ми їмо вранці.", "isTrue": false, "explanation": "Вечерю ми їмо ввечері. Вранці — сніданок."}, {"statement": "Сніданок ми їмо вранці.", "isTrue": true, "explanation": "Сніданок — вранці, обід — вдень, вечеря — ввечері."}, {"statement": "Компот — це традиційний напій з фруктів.", "isTrue": true, "explanation": "Компот варять з вишні, яблук або слив з водою та цукром."}, {"statement": "Молоко — це напій.", "isTrue": true, "explanation": "Молоко належить до молочних напоїв (молочні напої) разом із кефіром."}, {"statement": "Вареники — символ щасливого життя в українській культурі.", "isTrue": true, "explanation": "У підручнику: «Вареники в українській культурі — символ заможного, щасливого життя.»"}, {"statement": "Хліб — це напій.", "isTrue": false, "explanation": "Хліб — це їжа (food). Напій — це drink: вода, кава, сік."}]} instruction={"Правда чи ні? (True or false?)"} />
+<Anagram client:only="react" items={[{"scrambled": "о р б щ", "answer": "борщ", "hint": "traditional Ukrainian beetroot soup"}, {"scrambled": "а к а ш", "answer": "каша", "hint": "porridge"}, {"scrambled": "у б к о л я", "answer": "яблуко", "hint": "apple"}, {"scrambled": "б а р и", "answer": "риба", "hint": "fish"}, {"scrambled": "р к а к у", "answer": "курка", "hint": "chicken"}, {"scrambled": "н а б н а", "answer": "банан", "hint": "banana"}, {"scrambled": "р с и", "answer": "сир", "hint": "cheese"}, {"scrambled": "а л с т а", "answer": "салат", "hint": "salad"}]} instruction={"Склади слово з літер (Rearrange the letters to form a Ukrainian food word)"} />
 
-<Anagram client:only="react" items={[{"scrambled": "о р щ б", "answer": "борщ", "hint": "traditional Ukrainian beet soup"}, {"scrambled": "а к а в", "answer": "кава", "hint": "coffee"}, {"scrambled": "о л о м к о", "answer": "молоко", "hint": "milk"}, {"scrambled": "н а б а н", "answer": "банан", "hint": "banana"}, {"scrambled": "а л с а т", "answer": "салат", "hint": "salad"}, {"scrambled": "о п к м о т", "answer": "компот", "hint": "traditional Ukrainian fruit drink"}]} instruction={"Складіть слово з літер (Rearrange the letters to form a word)"} />
+<OddOneOut client:only="react" items={[{"words": ["кава", "чай", "хліб", "компот"], "correct": 2, "explanation": "Хліб — це їжа, а кава, чай і компот — напої."}, {"words": ["картопля", "помідор", "огірок", "молоко"], "correct": 3, "explanation": "Молоко — це молочний продукт, а картопля, помідор і огірок — овочі."}, {"words": ["яблуко", "банан", "лимон", "суп"], "correct": 3, "explanation": "Суп — це страва, а яблуко, банан і лимон — фрукти."}, {"words": ["сніданок", "обід", "вечеря", "вода"], "correct": 3, "explanation": "Вода — це напій, а сніданок, обід і вечеря — прийоми їжі."}, {"words": ["масло", "сметана", "сир", "риба"], "correct": 3, "explanation": "Риба — це м'ясний продукт, а масло, сметана і сир — молочні продукти."}, {"words": ["борщ", "вареники", "деруни", "кефір"], "correct": 3, "explanation": "Кефір — це напій, а борщ, вареники і деруни — традиційні українські страви."}]} instruction={"Знайдіть зайве слово (Find the word that doesn't belong)"} />
 
-<OddOneOut client:only="react" items={[{"words": ["кава", "чай", "борщ", "молоко"], "correct": 2, "explanation": "Борщ — це їжа (суп). Кава, чай і молоко — це напої."}, {"words": ["хліб", "вода", "каша", "картопля"], "correct": 1, "explanation": "Вода — це напій. Хліб, каша і картопля — це їжа."}, {"words": ["борщ", "сніданок", "обід", "вечеря"], "correct": 0, "explanation": "Борщ — це страва (dish). Сніданок, обід і вечеря — це прийоми їжі (meal times)."}, {"words": ["яблуко", "огірок", "лимон", "банан"], "correct": 1, "explanation": "Огірок — це овоч (vegetable). Яблуко, лимон і банан — це фрукти."}, {"words": ["кава", "помідор", "огірок", "картопля"], "correct": 0, "explanation": "Кава — це напій (drink). Помідор, огірок і картопля — це овочі."}, {"words": ["сир", "компот", "масло", "сметана"], "correct": 1, "explanation": "Компот — це напій з фруктів. Сир, масло і сметана — це молочні продукти (dairy)."}]} instruction={"Знайдіть зайве слово (Find the word that doesn't belong)"} />
+<Translate client:only="react" questions={[{"source": "coffee with milk", "options": [{"text": "кава з молоком", "correct": true}, {"text": "кава з цукром", "correct": false}, {"text": "чай з молоком", "correct": false}]}, {"source": "bread with butter", "options": [{"text": "хліб з маслом", "correct": true}, {"text": "хліб з цукром", "correct": false}, {"text": "каша з маслом", "correct": false}]}, {"source": "meat with potatoes", "options": [{"text": "м'ясо з картоплею", "correct": true}, {"text": "риба з картоплею", "correct": false}, {"text": "м'ясо з рисом", "correct": false}]}, {"source": "tea with lemon", "options": [{"text": "чай з лимоном", "correct": true}, {"text": "кава з лимоном", "correct": false}, {"text": "чай з цукром", "correct": false}]}, {"source": "sparkling water", "options": [{"text": "вода з газом", "correct": true}, {"text": "вода з цукром", "correct": false}, {"text": "сік з газом", "correct": false}]}, {"source": "fish with rice", "options": [{"text": "риба з рисом", "correct": true}, {"text": "курка з рисом", "correct": false}, {"text": "риба з картоплею", "correct": false}]}]} instruction={"Оберіть правильний переклад (Choose the correct Ukrainian translation)"} />
 
-<Unjumble client:only="react" items={[{"words": "хочу / Я / молоком. / з / каву", "answer": "Я хочу каву з молоком."}, {"words": "їм / вранці. / Я / кашу", "answer": "Я їм кашу вранці."}, {"words": "п'є / Вона / цукром. / чай / з", "answer": "Вона п'є чай з цукром."}, {"words": "їсть / Він / обід. / суп / на", "answer": "Він їсть суп на обід."}]} instruction={"Складіть правильне речення зі слів (Build a correct sentence from the words)"} />
+<ErrorCorrection client:only="react" items={[{"sentence": "Борщ — це традиційний польський суп.", "errorWord": "польський", "correctForm": "український", "options": ["український", "французький", "іспанський"], "explanation": "Борщ — це традиційний UKRAINIAN суп. У 2022 році UNESCO визнало борщ українською культурною спадщиною."}, {"sentence": "Вареники готують з тіста з рибою або сиром.", "errorWord": "рибою", "correctForm": "картоплею", "options": ["картоплею", "рисом", "морквою"], "explanation": "Традиційна начинка вареників — картопля або сир, а не риба."}, {"sentence": "Компот — це гарячий напій із фруктів.", "errorWord": "гарячий", "correctForm": "холодний", "options": ["холодний", "молочний", "алкогольний"], "explanation": "Компот — це холодний (або кімнатної температури) напій із фруктів, зварених у воді. Не гарячий, як кава."}, {"sentence": "Вечеря — це ранковий прийом їжі.", "errorWord": "ранковий", "correctForm": "вечірній", "options": ["вечірній", "денний", "традиційний"], "explanation": "Вечеря — це вечірній прийом їжі (ввечері). Ранковий — це сніданок."}, {"sentence": "Сало — це популярна українська страва з курки.", "errorWord": "курки", "correctForm": "свинини", "options": ["свинини", "риби", "картоплі"], "explanation": "Сало — це солона свиняча (pork) жирна тканина. Не курка і не риба."}, {"sentence": "Кефір — це овоч.", "errorWord": "овоч", "correctForm": "напій", "options": ["напій", "фрукт", "страва"], "explanation": "Кефір — це молочний напій (milk drink). Овочі — це картопля, помідор, огірок."}]} instruction={"Знайдіть і виправте помилку (Find and correct the error)"} />
 
-<Translate client:only="react" questions={[{"source": "каша", "options": [{"text": "porridge", "correct": true}, {"text": "salad", "correct": false}, {"text": "soup", "correct": false}]}, {"source": "вечеря", "options": [{"text": "breakfast", "correct": false}, {"text": "lunch", "correct": false}, {"text": "dinner", "correct": true}]}, {"source": "сметана", "options": [{"text": "butter", "correct": false}, {"text": "sour cream", "correct": true}, {"text": "milk", "correct": false}]}, {"source": "вареники", "options": [{"text": "pancakes", "correct": false}, {"text": "dumplings", "correct": true}, {"text": "porridge", "correct": false}]}, {"source": "компот", "options": [{"text": "juice", "correct": false}, {"text": "tea", "correct": false}, {"text": "compote (fruit drink)", "correct": true}]}, {"source": "картопля", "options": [{"text": "tomato", "correct": false}, {"text": "cucumber", "correct": false}, {"text": "potato", "correct": true}]}]} instruction={"Оберіть правильний переклад (Choose the correct translation)"} />
+<Quiz client:only="react" questions={[{"question": "Яке слово означає 'egg' по-українськи?", "options": [{"text": "яйце", "correct": true}, {"text": "яблуко", "correct": false}, {"text": "масло", "correct": false}, {"text": "сіль", "correct": false}]}, {"question": "Яке слово означає 'sour cream' по-українськи?", "options": [{"text": "молоко", "correct": false}, {"text": "масло", "correct": false}, {"text": "сметана", "correct": true}, {"text": "кефір", "correct": false}]}, {"question": "Що таке 'огірок' по-англійськи?", "options": [{"text": "cucumber", "correct": true}, {"text": "tomato", "correct": false}, {"text": "onion", "correct": false}, {"text": "potato", "correct": false}]}, {"question": "Яке слово означає 'butter' по-українськи?", "options": [{"text": "сіль", "correct": false}, {"text": "масло", "correct": true}, {"text": "цукор", "correct": false}, {"text": "сметана", "correct": false}]}, {"question": "Що таке 'каша' по-англійськи?", "options": [{"text": "porridge", "correct": true}, {"text": "soup", "correct": false}, {"text": "salad", "correct": false}, {"text": "bread", "correct": false}]}, {"question": "Яке слово означає 'sugar' по-українськи?", "options": [{"text": "сіль", "correct": false}, {"text": "картопля", "correct": false}, {"text": "масло", "correct": false}, {"text": "цукор", "correct": true}]}]} instruction={"Оберіть правильний варіант (Choose the correct option)"} />
 
 
 </TabItem>
