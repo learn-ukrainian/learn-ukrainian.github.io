@@ -40,10 +40,10 @@ CACHE_DIR = PROJECT_ROOT / "data" / "external_articles"
 EXT_RESOURCES = PROJECT_ROOT / "docs" / "resources" / "external_resources.yaml"
 
 # Rate limiting — YouTube is aggressive about rate limiting
-BLOG_DELAY = 1.5       # seconds between blog requests
-YOUTUBE_DELAY = 5.0    # seconds between YouTube requests (be gentle)
-YOUTUBE_BATCH_PAUSE = 30  # pause every N videos to avoid rate limit
-YOUTUBE_BATCH_SIZE = 20
+BLOG_DELAY = 1.5        # seconds between blog requests
+YOUTUBE_DELAY = 10.0    # seconds between YouTube requests
+YOUTUBE_BATCH_PAUSE = 90  # pause every N videos to avoid rate limit
+YOUTUBE_BATCH_SIZE = 10
 
 
 def load_external_urls() -> dict[str, list[str]]:
