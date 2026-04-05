@@ -8,6 +8,9 @@ This module adds relevant textbook chunks, literary texts, local data files,
 and cross-references to build a rich context for wiki article compilation.
 """
 
+import json
+from pathlib import Path
+
 import yaml
 
 from .config import LITERARY_DIR, PROJECT_ROOT, TEXTBOOK_CHUNKS_DIR
@@ -332,6 +335,24 @@ def _load_relevant_chunks(filenames: list[str], slug: str,
 
 # Cached external resources (loaded once per process)
 _EXT_RESOURCES: dict | None = None
+_EXT_ARTICLE_CACHE: dict[str, dict] | None = None  # URL → article content
+
+# Where fetched articles are cached (local or Google Drive)
+_CACHE_DIR_LOCAL = PROJECT_ROOT / "data" / "external_articles"
+_CACHE_DIR_GDRIVE = (
+    Path.home()
+    / "Library/CloudStorage/GoogleDrive-krisztian.koos@gmail.com"
+    / "My Drive/Projects/learn-ukrainian-data/external_articles"
+)
+
+
+def _get_cache_dir() -> Path | None:
+    """Find where cached JSONL files live (local first, then Google Drive)."""
+    if _CACHE_DIR_LOCAL.exists() and list(_CACHE_DIR_LOCAL.glob("*.jsonl")):
+        return _CACHE_DIR_LOCAL
+    if _CACHE_DIR_GDRIVE.exists() and list(_CACHE_DIR_GDRIVE.glob("*.jsonl")):
+        return _CACHE_DIR_GDRIVE
+    return None
 
 
 def _get_external_resources() -> dict:
@@ -348,12 +369,45 @@ def _get_external_resources() -> dict:
     return _EXT_RESOURCES
 
 
-def _load_external_resources(track: str, slug: str) -> list[dict]:
-    """Load external resource references for a module.
+def _get_article_cache() -> dict[str, dict]:
+    """Load and cache all fetched articles as URL → content dict."""
+    global _EXT_ARTICLE_CACHE
+    if _EXT_ARTICLE_CACHE is not None:
+        return _EXT_ARTICLE_CACHE
 
-    Reads docs/resources/external_resources.yaml and returns article titles,
-    URLs, YouTube channels, and ULP references as source chunks. These give
-    Gemini awareness of the pedagogical landscape for the topic.
+    _EXT_ARTICLE_CACHE = {}
+    cache_dir = _get_cache_dir()
+    if not cache_dir:
+        return _EXT_ARTICLE_CACHE
+
+    for jsonl_name in ["ulp_blogs.jsonl", "other_blogs.jsonl"]:
+        jsonl_path = cache_dir / jsonl_name
+        if not jsonl_path.exists():
+            continue
+        with open(jsonl_path, encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                entry = json.loads(line)
+                url = entry.get("url", "")
+                if url:
+                    # Index under both www and non-www variants
+                    _EXT_ARTICLE_CACHE[url] = entry
+                    if "://www." in url:
+                        _EXT_ARTICLE_CACHE[url.replace("://www.", "://")] = entry
+                    else:
+                        _EXT_ARTICLE_CACHE[url.replace("://", "://www.")] = entry
+
+    return _EXT_ARTICLE_CACHE
+
+
+def _load_external_resources(track: str, slug: str) -> list[dict]:
+    """Load external resources for a module — fetched content when available.
+
+    Reads docs/resources/external_resources.yaml to find which articles/videos
+    are relevant for this module. Then looks up the cached JSONL files for
+    actual content. Falls back to reference metadata if not cached.
 
     Keys in the YAML are formatted as "{level}-{slug}" (e.g. "a1-sounds-letters-and-hello").
     """
@@ -363,29 +417,41 @@ def _load_external_resources(track: str, slug: str) -> list[dict]:
     if not entry:
         return []
 
+    article_cache = _get_article_cache()
     chunks = []
 
-    # Articles
+    # Articles — inject full cached content when available
     for article in entry.get("articles", []):
         if article.get("relevance") != "high":
             continue
-        title = article.get("title", "")
         url = article.get("url", "")
+        title = article.get("title", "")
         source = article.get("source", "")
-        text = (
-            f"External pedagogical reference: {title}\n"
-            f"Source: {source}\n"
-            f"URL: {url}\n"
-            f"Note: This is a reference for HOW other teachers approach this topic. "
-            f"Study the pedagogical approach, not the specific wording."
-        )
+
+        cached = article_cache.get(url)
+        if cached and cached.get("text"):
+            # Full article content available
+            text = (
+                f"External pedagogical article: {cached.get('title', title)}\n"
+                f"Source: {cached.get('domain', source)}\n"
+                f"URL: {url}\n\n"
+                f"{cached['text']}"
+            )
+        else:
+            # Reference only (not fetched yet)
+            text = (
+                f"External pedagogical reference: {title}\n"
+                f"Source: {source} | URL: {url}\n"
+                f"Note: Study the pedagogical approach, not the specific wording."
+            )
+
         chunks.append({
-            "text": text,
+            "text": text[:8000],  # Cap per article to leave room for others
             "chunk_id": f"ext-article-{len(chunks)}",
             "source_type": "external_article",
         })
 
-    # YouTube
+    # YouTube — reference only for now (subtitles wired in later)
     for video in entry.get("youtube", []):
         if video.get("relevance") != "high":
             continue
@@ -395,8 +461,7 @@ def _load_external_resources(track: str, slug: str) -> list[dict]:
         text = (
             f"External video reference: {title}\n"
             f"Channel: {channel}\n"
-            f"URL: {url}\n"
-            f"Note: Reference for pedagogical approach and presentation style."
+            f"URL: {url}"
         )
         chunks.append({
             "text": text,
