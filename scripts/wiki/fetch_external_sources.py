@@ -197,35 +197,23 @@ def fetch_youtube_subtitle(video_url: str) -> dict | None:
     if not video_id:
         return None
 
-    # Try youtube_transcript_api first (faster, no download)
+    # youtube_transcript_api v1.2+ uses instance methods
     try:
         from youtube_transcript_api import YouTubeTranscriptApi
 
-        # Try Ukrainian first, then English, then auto-generated
+        api = YouTubeTranscriptApi()
+
+        # Try Ukrainian first, then English
         transcript = None
-        for lang in ["uk", "en", "uk-auto", "en-auto"]:
+        for lang in ["uk", "en"]:
             try:
-                lang_code = lang.replace("-auto", "")
-                transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
-                try:
-                    transcript = transcript_list.find_transcript([lang_code])
-                except Exception:
-                    # Try auto-generated
-                    try:
-                        transcript = transcript_list.find_generated_transcript([lang_code])
-                    except Exception:
-                        continue
+                transcript = api.fetch(video_id, languages=[lang])
                 break
             except Exception:
                 continue
 
-        if transcript:
-            entries = transcript.fetch()
-            # Join subtitle entries into coherent text
-            text = " ".join(
-                entry.get("text", entry.text if hasattr(entry, "text") else str(entry))
-                for entry in entries
-            )
+        if transcript and transcript.snippets:
+            text = " ".join(s.text for s in transcript.snippets)
             # Clean up
             text = re.sub(r"\[.*?\]", "", text)  # Remove [Music], [Applause] etc.
             text = re.sub(r"\s+", " ", text).strip()
@@ -233,21 +221,20 @@ def fetch_youtube_subtitle(video_url: str) -> dict | None:
             if len(text) < 30:
                 return None
 
-            # Get video title via yt-dlp (fast metadata only)
             title = _get_video_title(video_url)
 
             return {
                 "video_id": video_id,
                 "url": f"https://www.youtube.com/watch?v={video_id}",
                 "title": title,
-                "language": transcript.language_code if hasattr(transcript, "language_code") else "unknown",
+                "language": transcript.language_code,
                 "text": text[:15000],  # Cap at 15K chars
                 "char_count": len(text),
             }
     except ImportError:
-        pass  # Fall through to yt-dlp
+        pass
     except Exception:
-        pass  # Fall through to yt-dlp
+        pass
 
     return None
 
