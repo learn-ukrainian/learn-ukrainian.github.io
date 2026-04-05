@@ -711,7 +711,7 @@ LEVEL_CONFIG = {
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # 100% Ukrainian immersion (English only in vocab table)
         'transliteration_allowed': False,
-        'priority_types': {'match-up', 'mark-the-words', 'translate', 'quiz'}
+        'priority_types': {'reading', 'match-up', 'mark-the-words', 'translate', 'quiz'}  # Added reading
     },
     'B1': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
@@ -735,7 +735,7 @@ LEVEL_CONFIG = {
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # 100% Ukrainian immersion (English only in vocab table)
         'transliteration_allowed': False,
-        'priority_types': {'fill-in', 'match-up', 'reading', 'quiz'}  # Reading-focused
+        'priority_types': {'reading', 'essay-response', 'fill-in', 'match-up', 'quiz'}  # Hybrid: seminar + core
     },
     'B1-skills': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
@@ -747,7 +747,7 @@ LEVEL_CONFIG = {
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # 100% Ukrainian immersion
         'transliteration_allowed': False,
-        'priority_types': {'fill-in', 'cloze', 'mark-the-words'}
+        'priority_types': {'reading', 'essay-response', 'cloze', 'fill-in', 'mark-the-words'}  # Hybrid
     },
     'B1-checkpoint': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
@@ -794,7 +794,7 @@ LEVEL_CONFIG = {
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
-        'priority_types': {'match-up', 'mark-the-words', 'translate', 'quiz'}
+        'priority_types': {'reading', 'match-up', 'mark-the-words', 'translate', 'quiz'}  # Added reading
     },
     'B2': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
@@ -836,7 +836,7 @@ LEVEL_CONFIG = {
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
-        'priority_types': {'cloze', 'fill-in', 'true-false', 'quiz'}
+        'priority_types': {'reading', 'essay-response', 'cloze', 'fill-in'}  # Seminar hybrid
     },
     'B2-checkpoint': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
@@ -851,18 +851,17 @@ LEVEL_CONFIG = {
         'priority_types': {'quiz', 'fill-in', 'error-correction', 'cloze'}
     },
     'B2-skills': {
-        # Communication skills modules (M85-94: B2.4 phase)
-        # Focus on practical language use in professional/real-world contexts
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
+        # Communication skills modules — seminar style at B2
+        'target_words': 4000,
+        'min_activities': 0,
         'min_items_per_activity': 14,
-        'min_types_unique': 5,  # Variety important for skills practice
-        'min_vocab': 20,  # Context-specific vocabulary
+        'min_types_unique': 4,
+        'min_vocab': 20,
         'min_engagement': 6,
         'min_immersion': 90,
         'max_immersion': 100,
         'transliteration_allowed': False,
-        'priority_types': {'cloze', 'fill-in', 'translate', 'quiz'}  # Practical application focus
+        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'cloze', 'fill-in'}  # Seminar + core
     },
     'B2-synthesis': {
         # Synthesis modules replace checkpoints in B2.3 History (M83, M107, M119, M125, M131)
@@ -876,7 +875,7 @@ LEVEL_CONFIG = {
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
-        'priority_types': {'quiz', 'select', 'cloze', 'true-false'}  # Analysis-focused
+        'priority_types': {'reading', 'critical-analysis', 'essay-response', 'cloze'}  # Seminar
     },
     'B2-capstone': {
         'target_words': 4000,  # Raised from 2714 (Mar 2026) — module content needs expansion
@@ -917,7 +916,7 @@ LEVEL_CONFIG = {
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
-        'priority_types': {'fill-in', 'unjumble', 'error-correction'}
+        'priority_types': {'reading', 'essay-response', 'fill-in', 'error-correction'}  # Seminar hybrid
     },
     'C1-academic': {
         'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
@@ -929,7 +928,7 @@ LEVEL_CONFIG = {
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
-        'priority_types': {'fill-in', 'cloze', 'error-correction'}
+        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'error-correction'}  # Seminar + grammar
     },
     'C1-professional': {
         # C1-PRO Professional Mastery Track (M01-50) - Seminar style
@@ -958,19 +957,19 @@ LEVEL_CONFIG = {
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
-        'priority_types': {'fill-in', 'error-correction', 'cloze'}
+        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'}  # Seminar
     },
     'C1-folk': {
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
+        'target_words': 4000,
+        'min_activities': 0,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
         'min_vocab': 24,
         'min_engagement': 5,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,  # FULL IMMERSION - no English in body text
+        'min_immersion': 90,
+        'max_immersion': 100,
         'transliteration_allowed': False,
-        'priority_types': {'cloze', 'fill-in', 'mark-the-words'}
+        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'comparative-study'}  # Seminar
     },
     'biography': {
         # BIO Track: Biography seminar style (C1 level)
@@ -1022,23 +1021,23 @@ LEVEL_CONFIG = {
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
-        'priority_types': {'cloze', 'fill-in', 'quiz'}
+        'priority_types': {'reading', 'essay-response', 'critical-analysis', 'authorial-intent'}  # Seminar
     },
     'C1-checkpoint': {
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
+        'target_words': 4000,
+        'min_activities': 0,
         'min_items_per_activity': 14,
         'min_types_unique': 4,
         'min_vocab': 15,
         'min_engagement': 4,
-        'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
-        'max_immersion': 100,  # FULL IMMERSION - no English in body text
+        'min_immersion': 90,
+        'max_immersion': 100,
         'transliteration_allowed': False,
-        'priority_types': {'quiz', 'fill-in', 'error-correction', 'cloze'}
+        'priority_types': {'reading', 'essay-response', 'quiz', 'error-correction'}  # Seminar + core for assessment
     },
     'C1-capstone': {
-        'target_words': 4000,  # Feb 2026: raised to 4000 minimum for all B1+
-        'min_activities': 0,  # Mar 2026: dropped — plan guides count (#969)
+        'target_words': 4000,
+        'min_activities': 0,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
         'min_vocab': 15,
@@ -1046,7 +1045,7 @@ LEVEL_CONFIG = {
         'min_immersion': 90,  # Relaxed to 90% to allow necessary English context
         'max_immersion': 100,  # FULL IMMERSION - no English in body text
         'transliteration_allowed': False,
-        'priority_types': {'cloze', 'fill-in', 'error-correction'}
+        'priority_types': {'reading', 'essay-response', 'critical-analysis'}  # Seminar
     },
     'C2': {
         # C2 Track: Seminar style - production-focused
