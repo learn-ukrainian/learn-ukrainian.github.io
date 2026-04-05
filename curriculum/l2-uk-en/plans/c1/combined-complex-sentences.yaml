@@ -115,21 +115,18 @@ vocabulary:
     - системність
 
 activity_hints:
-  - type: critical-analysis
-    description: "Build a structural diagram of a multi-clause sentence from a philosophical
-      text, identifying all types of connections (сурядний, підрядний, безсполучниковий)."
-  - type: error-correction
-    description: "Fix punctuation and structural errors in multi-clause sentences
-      — missing commas at conjunction boundaries, dangling subordinate clauses."
+  - type: reading
+    focus: "Прочитайте текст про типологія речень з різними видами зв'язку і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Пунктуація у складних синтаксичних конструкціях»."
   - type: fill-in
-    description: "Complete multi-clause sentences with appropriate conjunctions at
-      the boundaries between different connection types."
+    focus: "Вставте правильну граматичну форму у реченнях на тему типологія речень з різними видами зв'язку."
+  - type: error-correction
+    focus: "Знайдіть і виправте помилки у реченнях на тему пунктуація у складних синтаксичних конструкціях."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Типологія речень з різними видами зв'язку»."
   - type: match-up
-    description: "Match structural diagrams of complex sentences with their written
-      forms and identify the type of connection in each block."
-  - type: select
-    description: "Identify the hierarchical structure of multi-clause sentences —
-      which clauses are at the same level and which are subordinated."
+    focus: "З'єднайте терміни з розділу «Пунктуація у складних синтаксичних конструкціях» з їхніми визначеннями."
 
 activities:
   types_required:

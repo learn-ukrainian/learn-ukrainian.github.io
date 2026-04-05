@@ -111,21 +111,16 @@ vocabulary:
     - адекватність
 
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про феноменологія академічного слова і дайте відповіді на запитання щодо ключових понять."
+  - type: essay-response
+    focus: "Напишіть короткий текст (100-150 слів) про граматика об'єктивності: номіналізація, використовуючи нову лексику модуля."
   - type: critical-analysis
-    description: "Analyze a fragment of a Ukrainian dissertation — identify nominalization
-      patterns, impersonal constructions, and evaluate objectivity markers."
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Феноменологія академічного слова». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Rewrite colloquial/journalistic sentences into proper academic register,
-      fixing non-academic vocabulary and emotional markers."
-  - type: match-up
-    description: "Match academic style markers (номіналізація, безособовість, термін)
-      with examples from scientific Ukrainian texts."
-  - type: select
-    description: "Choose the most appropriate academic formulation from multiple options
-      for expressing the same idea."
-  - type: fill-in
-    description: "Complete academic sentences with nominalized verb forms and appropriate
-      terminological collocations."
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему феноменологія академічного слова."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до феноменологія академічного слова: Лексичні маркери науковості: терміни, дефініції, професіоналізми. Визначте спільне та відмінне."
 
 activities:
   types_required:

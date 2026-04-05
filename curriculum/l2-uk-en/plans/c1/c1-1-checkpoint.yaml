@@ -106,22 +106,16 @@ vocabulary:
     - досконалість
 
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про повторення та систематизація лексики і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a comprehensive academic essay (500-600 words) demonstrating
-      all C1.1 skills — complex punctuation, passive constructions, hedging, and rich
-      terminology."
+    focus: "Напишіть короткий текст (100-150 слів) про синтаксис та пунктуація: фінальний огляд, використовуючи нову лексику модуля."
   - type: critical-analysis
-    description: "Analyze a complex Ukrainian text on globalization and culture —
-      evaluate argument structure, academic register, and author position."
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Повторення та систематизація лексики». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Fix syntactic, morphological, and stylistic errors in a mixed-register
-      text — enforce academic norms consistently."
-  - type: fill-in
-    description: "Complete a comprehensive academic text with appropriate terminology,
-      discourse markers, and citation formulas from the entire C1.1 program."
-  - type: select
-    description: "Choose correct forms across all C1.1 grammar topics — complex sentences,
-      punctuation, verb paradigms, academic clichés."
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему повторення та систематизація лексики."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до повторення та систематизація лексики: Академічний вокабуляр: від абстрактних понять до вузької термінології. Визначте спільне та відмінне."
 
 activities:
   types_required:

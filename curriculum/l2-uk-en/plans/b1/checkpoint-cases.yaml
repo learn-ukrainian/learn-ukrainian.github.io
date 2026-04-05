@@ -128,24 +128,18 @@ vocabulary_hints:
     - "аналіз помилок (error analysis)"
     - "прогалина (gap — in knowledge)"
 activity_hints:
-  - type: quiz
-    focus: "Comprehensive case/preposition/numeral/pronoun quiz (all Phase 6 topics)"
-    items: 12
+  - type: reading
+    focus: "Прочитайте текст про повторення: відмінки і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Повторення: прийменники»."
   - type: fill-in
-    focus: "Mixed exercises across cases, prepositions, numerals, pronouns"
-    items: 10
+    focus: "Вставте правильну граматичну форму у реченнях на тему повторення: відмінки."
   - type: error-correction
-    focus: "Find and fix errors across ALL Phase 6 topics"
-    items: 10
+    focus: "Знайдіть і виправте помилки у реченнях на тему повторення: прийменники."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Повторення: відмінки»."
   - type: match-up
-    focus: "Match grammatical construction to its semantic function"
-    items: 10
-  - type: free-write
-    focus: "Write a formal email about housing using all Phase 6 grammar"
-    items: 6
-  - type: dialogue-completion
-    focus: "Complete housing negotiation dialogue with Phase 6 constructions"
-    items: 6
+    focus: "З'єднайте терміни з розділу «Повторення: прийменники» з їхніми визначеннями."
 connects_to:
   - "b1-046 through b1-055 (all Phase 6 modules)"
   - "b1-057 (Активні дієприкметники — first module of Phase 7)"

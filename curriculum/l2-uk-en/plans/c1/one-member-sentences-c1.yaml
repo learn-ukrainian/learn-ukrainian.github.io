@@ -113,21 +113,18 @@ vocabulary:
     - контекстуалізація
 
 activity_hints:
-  - type: critical-analysis
-    description: "Analyze a scientific text and a literary passage — compare how безособові
-      речення function differently in each (objectivity vs. emotional state)."
-  - type: error-correction
-    description: "Fix stylistic errors where one-member sentence types are used inappropriately
-      — e.g., називне речення in a legal document, безособове in informal speech."
-  - type: select
-    description: "Identify the type of one-member sentence (означено-особове, неозначено-особове,
-      узагальнено-особове, безособове, називне) in excerpts from different registers."
+  - type: reading
+    focus: "Прочитайте текст про типологія та стилістика односкладних речень і дайте відповіді на запитання."
   - type: essay-response
-    description: "Rewrite a text passage first using only називні речення for a static,
-      contemplative effect, then using дієслівні односкладні for dynamic impact."
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Безособовість як категорія об'єктивного викладу»."
   - type: fill-in
-    description: "Complete text passages with appropriate one-member sentence constructions
-      matching the required register and stylistic effect."
+    focus: "Вставте правильну граматичну форму у реченнях на тему типологія та стилістика односкладних речень."
+  - type: error-correction
+    focus: "Знайдіть і виправте помилки у реченнях на тему безособовість як категорія об'єктивного викладу."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Типологія та стилістика односкладних речень»."
+  - type: match-up
+    focus: "З'єднайте терміни з розділу «Безособовість як категорія об'єктивного викладу» з їхніми визначеннями."
 
 activities:
   types_required:

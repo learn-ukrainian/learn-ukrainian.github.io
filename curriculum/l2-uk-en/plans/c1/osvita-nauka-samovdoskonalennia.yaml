@@ -113,21 +113,16 @@ vocabulary:
     - інтернаціоналізація
 
 activity_hints:
-  - type: fill-in
-    description: "Complete texts about education and research with appropriate C1
-      vocabulary — academic degrees, institutions, procedures."
-  - type: match-up
-    description: "Match educational institutions, degrees, and procedures with their
-      descriptions and Ukrainian terminology."
+  - type: reading
+    focus: "Прочитайте текст про система освіти в україні і дайте відповіді на запитання щодо ключових понять."
+  - type: essay-response
+    focus: "Напишіть короткий текст (100-150 слів) про наука та дослідження, використовуючи нову лексику модуля."
   - type: critical-analysis
-    description: "Analyze an essay about educational reform — evaluate arguments,
-      evidence, and use of academic register."
-  - type: select
-    description: "Choose correct Ukrainian educational terms over anglicisms where
-      appropriate (e.g., навчальний план vs курикулум — context-dependent)."
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Система освіти в Україні». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Fix terminological and stylistic errors in an academic text —
-      wrong degree names, calques from English academic discourse."
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему система освіти в україні."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до система освіти в україні: Структура: дошкільна, шкільна, фахова передвища, вища освіта. Визначте спільне та відмінне."
 
 activities:
   types_required:

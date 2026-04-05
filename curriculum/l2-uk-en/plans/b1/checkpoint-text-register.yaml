@@ -144,30 +144,18 @@ vocabulary_hints:
     - "оцінювання (evaluation)"
     - "завдання (task/exercise)"
 activity_hints:
-  - type: quiz
-    focus: "Mixed quiz across all Phase 9 topics: style identification, абревіатури,
-      negation patterns, вставні слова classification."
-    items: 12
+  - type: reading
+    focus: "Прочитайте текст про вступ: як працювати з контрольною і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Блок 1: Стилі мовлення»."
   - type: fill-in
-    focus: "Complete texts with correct register vocabulary, negation forms, вставні
-      слова, and nature vocabulary."
-    items: 10
+    focus: "Вставте правильну граматичну форму у реченнях на тему вступ: як працювати з контрольною."
   - type: error-correction
-    focus: "Find and correct errors across all Phase 9 areas: register mixing, wrong
-      скорочення, negation errors, вставні commas."
-    items: 8
+    focus: "Знайдіть і виправте помилки у реченнях на тему блок 1: стилі мовлення."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Вступ: як працювати з контрольною»."
   - type: match-up
-    focus: "Match style excerpts to стилі мовлення, художні засоби to definitions,
-      абревіатури to full forms."
-    items: 10
-  - type: group-sort
-    focus: "Sort mixed vocabulary and expressions by register, negation type, вставне
-      group, and nature category."
-    items: 12
-  - type: free-write
-    focus: "Integrated writing: describe a nature scene using художні засоби, then
-      write a formal oголошення about an environmental event."
-    items: 6
+    focus: "З'єднайте терміни з розділу «Блок 1: Стилі мовлення» з їхніми визначеннями."
 connects_to:
   - "b1-077 to b1-083 (all Phase 9 modules — this checkpoint tests them)"
   - "b1-085 (narrative-mastery — first module of Phase 10)"

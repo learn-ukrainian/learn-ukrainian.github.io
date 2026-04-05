@@ -135,21 +135,16 @@ vocabulary:
     - коректність
 
 activity_hints:
-  - type: select
-    description: "Choose the appropriate politeness strategy (позитивна/негативна
-      ввічливість, хеджування, евфемізація) for given professional and personal scenarios."
-  - type: error-correction
-    description: "Fix politeness violations in professional texts — inappropriate
-      Ти/Ви usage, missing courtesy formulas, passive-aggressive phrasing."
-  - type: critical-analysis
-    description: "Analyze a TV interview where a diplomat navigates uncomfortable
-      questions — identify all face-saving strategies and evasion techniques."
+  - type: reading
+    focus: "Прочитайте текст про теоретичні засади лінгвістичної ввічливості і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a polite disagreement (100-150 words) in a professional meeting
-      context, using appropriate hedging and face-saving formulas."
-  - type: group-sort
-    description: "Classify Ukrainian address forms (Вельмишановний, Пане, Друже, колего,
-      хлопці) by formality level and appropriate usage context."
+    focus: "Напишіть короткий текст (100-150 слів) про засоби вираження ввічливості в українській мові, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Теоретичні засади лінгвістичної ввічливості». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему теоретичні засади лінгвістичної ввічливості."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до теоретичні засади лінгвістичної ввічливості: Принцип кооперації Грайса та максими ввічливості Ліча. Визначте спільне та відмінне."
 
 activities:
   types_required:

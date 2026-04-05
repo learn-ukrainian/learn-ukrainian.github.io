@@ -116,22 +116,16 @@ vocabulary:
     - модальність
 
 activity_hints:
-  - type: critical-analysis
-    description: "Analyze a Ukrainian literary manifesto — identify all syntactic
-      figures (anaphora, epiphora, parallelism, chiasmus, antithesis) and their persuasive
-      function."
-  - type: select
-    description: "Identify the syntactic figure used in given sentences from Ukrainian
-      poetry and oratory — distinguish градація from паралелізм, еліпсис from апозіопеза."
-  - type: match-up
-    description: "Match syntactic figures (інверсія, еліпсис, асиндетон, полісиндетон,
-      анафора, градація) with definitions, examples, and emotional effects."
+  - type: reading
+    focus: "Прочитайте текст про порядок слів та логічний наголос і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a programmatic paragraph (100-150 words) on 'Україна майбутнього'
-      using at least 4 different syntactic figures."
+    focus: "Напишіть короткий текст (100-150 слів) про фігури зменшення та збільшення синтаксичного обсягу, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Порядок слів та логічний наголос». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Fix texts where syntactic figures are misused — ineffective parallelism,
-      broken anaphora patterns, anticlimax where gradation was intended."
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему порядок слів та логічний наголос."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до порядок слів та логічний наголос: Прямий та зворотний порядок слів (інверсія) в українській мові. Визначте спільне та відмінне."
 
 activities:
   types_required:

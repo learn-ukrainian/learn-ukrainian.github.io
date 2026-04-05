@@ -114,22 +114,18 @@ vocabulary:
     - умовність
 
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про умовний спосіб: утворення та місце в системі і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Типи умовних конструкцій»."
   - type: fill-in
-    description: "Complete conditional sentences by choosing the correct verb form:
-      real condition (якщо + future) vs unreal (якби + conditional mood)."
+    focus: "Вставте правильну граматичну форму у реченнях на тему умовний спосіб: утворення та місце в системі."
   - type: error-correction
-    description: "Fix errors in conditional constructions — wrong particle position,
-      confusion between якщо/якби, tense mismatch in condition and result clauses."
-  - type: select
-    description: "Identify the type of conditional construction in each sentence:
-      real, unreal present, unreal past, concessive, polite request."
-  - type: unjumble
-    description: "Reorder words in conditional sentences — practice correct placement
-      of particle 'би'/'б' after the first stressed word."
-  - type: critical-analysis
-    description: "Analyze Леся Українка's monologues — identify all instances of
-      conditional mood and explain what each reveals about the character's desires
-      and regrets."
+    focus: "Знайдіть і виправте помилки у реченнях на тему типи умовних конструкцій."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Умовний спосіб: утворення та місце в системі»."
+  - type: match-up
+    focus: "З'єднайте терміни з розділу «Типи умовних конструкцій» з їхніми визначеннями."
 
 activities:
   types_required:

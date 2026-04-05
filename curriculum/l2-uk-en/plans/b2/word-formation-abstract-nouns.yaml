@@ -139,16 +139,14 @@ activities:
   total_min_items: 40
 
 activity_hints:
-  - type: fill-in
-    description: "Form abstract nouns from adjectives (e.g., сміливий→сміливість,
-      мудрий→мудрість)"
-  - type: match-up
-    description: "Match adjective/verb to its abstract noun form"
-  - type: group-sort
-    description: "Sort abstract nouns by suffix type: -ість / -ство / -ння / -ізм"
+  - type: reading
+    focus: "Прочитайте текст про суфікс -ість: назви якостей і дайте відповіді на запитання щодо ключових понять."
+  - type: essay-response
+    focus: "Напишіть короткий текст (100-150 слів) про суфікси -ств(о), -цтв(о): збірність та діяльність, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Суфікс -ість: Назви якостей». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Fix wrong suffix choice in abstract noun formation (e.g., 'людяність'
-      vs 'людськість')"
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему суфікс -ість: назви якостей."
 
 references:
   - "Караман, 10 клас (2018): §55-60 — Словотвір"

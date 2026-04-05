@@ -134,23 +134,18 @@ vocabulary_hints:
     - "дисертація (dissertation)"
     - "науковий керівник (academic advisor)"
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про система освіти в україні і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Навчальні дисципліни та спеціальності»."
   - type: fill-in
-    focus: "Complete academic sentences using participle phrases and gerund constructions"
-    items: 12
-  - type: quiz
-    focus: "Choose the correct Phase 7 form for academic contexts (participle vs gerund
-      vs clause)"
-    items: 12
-  - type: match-up
-    focus: "Match academic vocabulary to definitions and contexts"
-    items: 12
-  - type: sentence-builder
-    focus: "Transform informal study descriptions into formal academic register using
-      Phase 7 grammar"
-    items: 12
+    focus: "Вставте правильну граматичну форму у реченнях на тему система освіти в україні."
   - type: error-correction
-    focus: "Fix Russian calque participles and register mismatches in academic texts"
-    items: 12
+    focus: "Знайдіть і виправте помилки у реченнях на тему навчальні дисципліни та спеціальності."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Система освіти в Україні»."
+  - type: match-up
+    focus: "З'єднайте терміни з розділу «Навчальні дисципліни та спеціальності» з їхніми визначеннями."
 connects_to:
   - "b1-057 to b1-063 (all Phase 7 grammar modules)"
   - "b1-065 (Контрольна робота 7 — Phase 7 review)"

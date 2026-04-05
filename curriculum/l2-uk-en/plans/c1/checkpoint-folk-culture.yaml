@@ -113,23 +113,16 @@ vocabulary:
     - репрезентація
 
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про матеріальний світ: підсумковий огляд і дайте відповіді на запитання щодо ключових понять."
+  - type: essay-response
+    focus: "Напишіть короткий текст (100-150 слів) про духовна вертикаль: фольклор та обряди, використовуючи нову лексику модуля."
   - type: critical-analysis
-    description: "Analyze a complex ethnographic text — evaluate arguments about the
-      role of traditional culture in modern nation-building, identifying strengths
-      and weaknesses."
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Матеріальний світ: підсумковий огляд». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Fix factual and stylistic errors in a text about Ukrainian folk
-      traditions — mixed regional traditions, anachronisms, incorrect terminology."
-  - type: match-up
-    description: "Match traditional Ukrainian cultural elements (вишиванка, писанка,
-      хата, колядка) with their regional variants, symbolic meanings, and historical
-      contexts."
-  - type: true-false
-    description: "Evaluate statements about Ukrainian folk culture — distinguish accurate
-      ethnographic facts from common misconceptions and stereotypes."
-  - type: select
-    description: "Identify the ethnographic region (Галичина, Полісся, Подоляни, Гуцульщина)
-      based on descriptions of traditional customs, architecture, or costume elements."
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему матеріальний світ: підсумковий огляд."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до матеріальний світ: підсумковий огляд: Архітектура та інтер'єр: сакральна геометрія хати. Визначте спільне та відмінне."
 
 activities:
   types_required:

@@ -110,21 +110,16 @@ vocabulary:
     - мовленнєвий акт
 
 activity_hints:
-  - type: quiz
-    description: "Test knowledge of key linguistics concepts — language as a sign
-      system, levels of language structure, Ukrainian language family classification."
-  - type: error-correction
-    description: "Fix orthographic and punctuation errors based on Правопис 2019 rules
-      — варіантність, фемінітиви, compound words."
+  - type: reading
+    focus: "Прочитайте текст про вступ до загального мовознавства і дайте відповіді на запитання щодо ключових понять."
+  - type: essay-response
+    focus: "Напишіть короткий текст (100-150 слів) про історія та походження української мови, використовуючи нову лексику модуля."
   - type: critical-analysis
-    description: "Analyze a media text for violations of lexical and grammatical norms
-      — identify surzhyk, calques, and unjustified borrowings."
-  - type: fill-in
-    description: "Complete sentences about the history of Ukrainian literary language
-      with correct dates, names, and terminology."
-  - type: match-up
-    description: "Match linguistic branches (фонетика, морфологія, синтаксис, лексикологія)
-      with their objects of study and key terminology."
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Вступ до загального мовознавства». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему вступ до загального мовознавства."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до вступ до загального мовознавства: Об'єкт і предмет мовознавства. Основні розділи лінгвістики. Визначте спільне та відмінне."
 
 activities:
   types_required:

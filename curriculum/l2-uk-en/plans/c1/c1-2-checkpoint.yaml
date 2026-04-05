@@ -113,21 +113,16 @@ vocabulary:
     - рефлексія
 
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про професійна комунікація: підсумок і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a formal business proposal letter (300 words) for an educational
-      partnership — demonstrate official register and argumentation."
+    focus: "Напишіть короткий текст (100-150 слів) про суспільно-політична лексика, використовуючи нову лексику модуля."
   - type: critical-analysis
-    description: "Analyze a media text — identify manipulation techniques, evaluate
-      arguments, and assess compliance with journalistic standards."
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Професійна комунікація: підсумок». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Fix канцеляризми, calques, and register inconsistencies in a
-      mixed professional/journalistic text."
-  - type: fill-in
-    description: "Complete sentences across C1.2 thematic fields (politics, economics,
-      media, sports, health) with appropriate terminology."
-  - type: match-up
-    description: "Match C1.2 key concepts (медіаграмотність, діловий етикет, суспільний
-      дискурс) with definitions and contextual examples."
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему професійна комунікація: підсумок."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до професійна комунікація: підсумок: Ділове листування: від резюме до пропозиції про співпрацю. Визначте спільне та відмінне."
 
 activities:
   types_required:

@@ -111,21 +111,16 @@ vocabulary:
     - верифікація
 
 activity_hints:
-  - type: critical-analysis
-    description: "Evaluate the analytical depth of a Ukrainian cultural studies text
-      — identify key analytical terms and assess argument structure."
-  - type: match-up
-    description: "Match analytical vocabulary (релевантний, валідний, каузальність)
-      with definitions and contextual usage examples."
-  - type: error-correction
-    description: "Fix imprecise word choices in analytical texts — replace vague terms
-      with precise analytical vocabulary."
+  - type: reading
+    focus: "Прочитайте текст про структура та декомпозиція явища і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a short analytical synthesis (150-200 words) on the impact
-      of digital technologies on Ukrainian identity using analysis/synthesis vocabulary."
-  - type: fill-in
-    description: "Complete sentences with appropriate terms for decomposition, evaluation,
-      and synthesis processes."
+    focus: "Напишіть короткий текст (100-150 слів) про оцінка та верифікація інформації, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Структура та декомпозиція явища». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему структура та декомпозиція явища."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до структура та декомпозиція явища: Аналіз компонентів: складник, елемент, сегмент, фрагмент. Визначте спільне та відмінне."
 
 activities:
   types_required:

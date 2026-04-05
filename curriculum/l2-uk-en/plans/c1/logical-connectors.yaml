@@ -114,21 +114,18 @@ vocabulary:
     - відповідно до
 
 activity_hints:
-  - type: error-correction
-    description: "Fix misused logical connectors in academic paragraphs — replace
-      inappropriate cause/effect/concession markers."
-  - type: fill-in
-    description: "Complete academic texts with appropriate connectors of cause (зважаючи
-      на), result (отже), and concession (попри те що)."
-  - type: select
-    description: "Choose the correct logical connector from multiple options to maintain
-      coherence in an argumentative text."
+  - type: reading
+    focus: "Прочитайте текст про конектори причини та наслідку і дайте відповіді на запитання."
   - type: essay-response
-    description: "Write an analytical note (200-250 words) about challenges in Ukrainian
-      education using at least 8 different logical connectors."
-  - type: cloze
-    description: "Fill in missing discourse markers in a political analysis text about
-      European integration."
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Протиставлення, допустовість та градація»."
+  - type: fill-in
+    focus: "Вставте правильну граматичну форму у реченнях на тему конектори причини та наслідку."
+  - type: error-correction
+    focus: "Знайдіть і виправте помилки у реченнях на тему протиставлення, допустовість та градація."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Конектори причини та наслідку»."
+  - type: match-up
+    focus: "З'єднайте терміни з розділу «Протиставлення, допустовість та градація» з їхніми визначеннями."
 
 activities:
   types_required:

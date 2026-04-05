@@ -170,30 +170,18 @@ vocabulary_hints:
     - "ні за що (under no circumstances)"
     - "неозначений (indefinite — contrasting pronoun category)"
 activity_hints:
-  - type: quiz
-    focus: "Choose correct negation patterns: подвійне заперечення vs English single
-      negation, разом vs окремо for не/ні."
-    items: 10
+  - type: reading
+    focus: "Прочитайте текст про заперечення в українській мові: принцип подвійності і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Заперечні займенники»."
   - type: fill-in
-    focus: "Complete Ukrainian sentences with correct заперечні займенники and прислівники,
-      ensuring не is present with the verb."
-    items: 8
+    focus: "Вставте правильну граматичну форму у реченнях на тему заперечення в українській мові: принцип подвійності."
   - type: error-correction
-    focus: "Find and fix negation errors: missing не, wrong написання (разом/окремо),
-      English-influenced single negation."
-    items: 8
+    focus: "Знайдіть і виправте помилки у реченнях на тему заперечні займенники."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Заперечення в українській мові: принцип подвійності»."
   - type: match-up
-    focus: "Match заперечні forms to their неозначені counterparts (ніхто ↔ хтось,
-      ніде ↔ десь, ніколи ↔ колись)."
-    items: 8
-  - type: group-sort
-    focus: "Sort ні- words into займенники vs прислівники, and sort не/ні examples
-      into разом vs окремо."
-    items: 10
-  - type: free-write
-    focus: "Write a short narrative (8-10 sentences) about a day when everything went
-      wrong, using multiple подвійні заперечення."
-    items: 6
+    focus: "З'єднайте терміни з розділу «Заперечні займенники» з їхніми визначеннями."
 connects_to:
   - "b1-054 (advanced-pronouns — заперечні as a pronoun category)"
   - "b1-081 (Вставні слова — both modify sentence meaning without being core members)"

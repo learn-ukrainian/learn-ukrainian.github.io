@@ -118,22 +118,16 @@ vocabulary:
     - субстрат
 
 activity_hints:
-  - type: critical-analysis
-    description: "Analyze Shevelov's periodization of Ukrainian language development
-      — evaluate evidence for proto-Ukrainian dialects and critique 'cradle of three
-      brotherly nations' theory."
-  - type: match-up
-    description: "Match historical periods (праслов'янська доба, Київська Русь, ВКЛ,
-      козацька доба) with key linguistic developments and written monuments."
   - type: reading
-    description: "Read excerpts from historical Ukrainian texts (Руська правда, Пересопницьке
-      Євангеліє) and identify language evolution markers."
+    focus: "Прочитайте текст про джерела та витоки української мови і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write an essay (400+ words) on the role of Ukrainian language as
-      a state-building factor across historical epochs."
-  - type: select
-    description: "Identify the correct historical period for specific linguistic phenomena
-      (палаталізація, редукція голосних, поява ї)."
+    focus: "Напишіть короткий текст (100-150 слів) про писемна мова київської русі та великого князівства литовського, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Джерела та витоки української мови». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему джерела та витоки української мови."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до джерела та витоки української мови: Проблема походження слов'ян: мовний аспект. Визначте спільне та відмінне."
 
 activities:
   types_required:

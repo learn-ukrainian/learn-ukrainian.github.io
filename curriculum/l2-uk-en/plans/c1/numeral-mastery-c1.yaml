@@ -120,21 +120,18 @@ vocabulary:
     - варіантність
 
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про морфологія кількісних числівників і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Дробові та збірні числівники»."
   - type: fill-in
-    description: "Complete financial/statistical sentences with correctly declined
-      compound numerals (e.g., 'семисот п'ятдесяти чотирьох гривень')."
+    focus: "Вставте правильну граматичну форму у реченнях на тему морфологія кількісних числівників."
   - type: error-correction
-    description: "Fix incorrect numeral declension in official documents and media
-      excerpts (e.g., 'п'ятидесяти' → 'п'ятдесяти')."
-  - type: select
-    description: "Choose the correct case form of numerals in context — instrumental,
-      genitive, or dative in date/time expressions."
+    focus: "Знайдіть і виправте помилки у реченнях на тему дробові та збірні числівники."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Морфологія кількісних числівників»."
   - type: match-up
-    description: "Match numeral types (збірний, дробовий, порядковий, кількісний)
-      with their usage rules and example sentences."
-  - type: critical-analysis
-    description: "Analyze a financial report excerpt and identify all numeral agreement
-      patterns, explaining why each case form is used."
+    focus: "З'єднайте терміни з розділу «Дробові та збірні числівники» з їхніми визначеннями."
 
 activities:
   types_required:

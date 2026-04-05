@@ -147,24 +147,18 @@ vocabulary_hints:
     - "собою (with oneself — Ор.в. of себе)"
     - "свій (one's own — reflexive possessive)"
 activity_hints:
-  - type: quiz
-    focus: "Choose correct pronoun type and form for given contexts"
-    items: 8
+  - type: reading
+    focus: "Прочитайте текст про питально-відносні займенники і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Зворотний займенник себе»."
   - type: fill-in
-    focus: "Decline pronouns (себе, хтось, ніхто) in sentence contexts"
-    items: 8
-  - type: match-up
-    focus: "Match indefinite pronoun to its semantic meaning (specific, any, hypothetical)"
-    items: 8
+    focus: "Вставте правильну граматичну форму у реченнях на тему питально-відносні займенники."
   - type: error-correction
-    focus: "Fix spelling errors: *нізким → ні з ким, *хто-сь → хтось"
-    items: 6
-  - type: group-sort
-    focus: "Sort pronouns into type categories: indefinite, negative, reflexive, relative"
-    items: 10
-  - type: sentence-builder
-    focus: "Build sentences using negative pronouns with split prepositions"
-    items: 6
+    focus: "Знайдіть і виправте помилки у реченнях на тему зворотний займенник себе."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Питально-відносні займенники»."
+  - type: match-up
+    focus: "З'єднайте терміни з розділу «Зворотний займенник себе» з їхніми визначеннями."
 connects_to:
   - "b1-067 (Означальні речення — relative clauses use який/котрий)"
   - "b1-066 (З'ясувальні речення — object clauses use що, хто, куди)"

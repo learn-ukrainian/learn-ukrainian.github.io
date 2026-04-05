@@ -152,26 +152,18 @@ vocabulary_hints:
     - "стратегія (strategy — approach to a task)"
     - "висновок (conclusion — inference from text)"
 activity_hints:
-  - type: quiz
-    focus: "Exam-format multiple choice and true/false questions on reading and listening
-      comprehension across all text types."
-    items: 15
+  - type: reading
+    focus: "Прочитайте текст про вступ: формат екзамену і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Читання 1: Публіцистичний текст»."
   - type: fill-in
-    focus: "Gap-fill exercises from listening and reading texts: complete missing
-      words based on context."
-    items: 10
+    focus: "Вставте правильну граматичну форму у реченнях на тему вступ: формат екзамену."
+  - type: error-correction
+    focus: "Знайдіть і виправте помилки у реченнях на тему читання 1: публіцистичний текст."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Вступ: формат екзамену»."
   - type: match-up
-    focus: "Match vocabulary to definitions, statements to speakers, events to correct
-      sequence."
-    items: 10
-  - type: group-sort
-    focus: "Sort text features by стиль мовлення, categorize errors by type (vocabulary,
-      grammar, comprehension)."
-    items: 8
-  - type: free-write
-    focus: "Write a brief personal response (5-7 sentences) to one of the reading
-      texts, demonstrating comprehension and opinion."
-    items: 6
+    focus: "З'єднайте терміни з розділу «Читання 1: Публіцистичний текст» з їхніми визначеннями."
 connects_to:
   - "b1-088 (comprehensive-b1-review — preparation for this exam)"
   - "b1-090 (practice-exam-writing — productive skills exam)"

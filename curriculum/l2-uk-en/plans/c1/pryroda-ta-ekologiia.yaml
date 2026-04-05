@@ -114,21 +114,16 @@ vocabulary:
     - відновлюваний
 
 activity_hints:
-  - type: fill-in
-    description: "Complete ecological texts with appropriate C1 vocabulary — pollution
-      types, conservation terms, sustainable development concepts."
-  - type: match-up
-    description: "Match Ukrainian natural reserves and national parks with their
-      locations, features, and conservation significance."
+  - type: reading
+    focus: "Прочитайте текст про природа україни: ландшафти та біорізноманіття і дайте відповіді на запитання щодо ключових понять."
+  - type: essay-response
+    focus: "Напишіть короткий текст (100-150 слів) про екологічні проблеми, використовуючи нову лексику модуля."
   - type: critical-analysis
-    description: "Analyze a scientific report on wartime environmental damage in
-      Ukraine — evaluate terminology, evidence, and proposed solutions."
-  - type: select
-    description: "Choose the correct Ukrainian ecological term: довкілля vs
-      навколишнє середовище, сміття vs відходи (context-dependent)."
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Природа України: ландшафти та біорізноманіття». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Fix calques and Russianisms in an environmental text:
-      окружающая среда→довкілля, заповедник→заповідник."
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему природа україни: ландшафти та біорізноманіття."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до природа україни: ландшафти та біорізноманіття: Природні зони: Полісся, Лісостеп, Степ, Карпати, Крим. Визначте спільне та відмінне."
 
 activities:
   types_required:

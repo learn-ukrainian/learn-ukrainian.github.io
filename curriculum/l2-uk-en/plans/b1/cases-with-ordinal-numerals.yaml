@@ -136,24 +136,18 @@ vocabulary_hints:
     - "в першу чергу (first of all)"
     - "двадцять перше століття (twenty-first century)"
 activity_hints:
-  - type: quiz
-    focus: "Choose correct ordinal form for dates, times, and contexts"
-    items: 8
+  - type: reading
+    focus: "Прочитайте текст про відмінювання порядкових числівників і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Дати»."
   - type: fill-in
-    focus: "Write dates and times in full Ukrainian word form"
-    items: 8
-  - type: match-up
-    focus: "Match digital clock time to written Ukrainian expression"
-    items: 8
+    focus: "Вставте правильну граматичну форму у реченнях на тему відмінювання порядкових числівників."
   - type: error-correction
-    focus: "Fix Russicisms in time and date expressions (*без десяти)"
-    items: 6
-  - type: sentence-builder
-    focus: "Build sentences about schedules using ordinals in correct cases"
-    items: 6
-  - type: dialogue-completion
-    focus: "Complete appointment-making dialogue with dates and times"
-    items: 6
+    focus: "Знайдіть і виправте помилки у реченнях на тему дати."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Відмінювання порядкових числівників»."
+  - type: match-up
+    focus: "З'єднайте терміни з розділу «Дати» з їхніми визначеннями."
 connects_to:
   - "b1-053 (Кількісні вирази — quantity expressions with cases)"
   - "b1-046 (Родовий відмінок — dates use Р.в.)"

@@ -111,21 +111,16 @@ vocabulary:
     - дедлайн
 
 activity_hints:
-  - type: critical-analysis
-    description: "Read a historical case study (e.g., Просвіта movement) and evaluate
-      the strategic decisions using cause-effect analysis in Ukrainian."
+  - type: reading
+    focus: "Прочитайте текст про методологія аналізу кейсів і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a structured case analysis (150-200 words) of a modern Ukrainian
-      business success story using the 'проблема-рішення-результат' framework."
+    focus: "Напишіть короткий текст (100-150 слів) про історичні кейси: державотворення та економіка, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Методологія аналізу кейсів». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Fix logical and stylistic errors in a draft analytical report —
-      broken cause-effect chains, mixed registers, imprecise terminology."
-  - type: match-up
-    description: "Match strategic planning terms (SWOT-аналіз, місія, візія, стейкголдери)
-      with their Ukrainian definitions and usage examples."
-  - type: fill-in
-    description: "Complete sentences in a case study with appropriate causal connectors
-      and analytical vocabulary (внаслідок, з огляду на, відповідно до)."
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему методологія аналізу кейсів."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до методологія аналізу кейсів: Структура кейс-методу в академічному середовищі. Визначте спільне та відмінне."
 
 activities:
   types_required:

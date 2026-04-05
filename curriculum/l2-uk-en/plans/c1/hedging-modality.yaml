@@ -117,21 +117,18 @@ vocabulary:
     - безсумнівно
 
 activity_hints:
-  - type: critical-analysis
-    description: "Analyze hedging strategies in a Ukrainian scientific debate about
-      Proto-Slavic origins — identify epistemic modality markers."
-  - type: error-correction
-    description: "Transform overly categorical academic statements into appropriately
-      hedged formulations using modal verbs and adverbs."
-  - type: select
-    description: "Choose the most appropriate hedging expression for different levels
-      of certainty in scientific claims."
+  - type: reading
+    focus: "Прочитайте текст про поняття хеджування в академічному дискурсі і дайте відповіді на запитання."
   - type: essay-response
-    description: "Write a critical review (200-250 words) using hedging strategies
-      — express doubt and alternative interpretations without direct criticism."
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Граматичні засоби модальності та умовний спосіб»."
   - type: fill-in
-    description: "Complete scientific sentences with appropriate modal markers of
-      probability (імовірно, видається, можна припустити)."
+    focus: "Вставте правильну граматичну форму у реченнях на тему поняття хеджування в академічному дискурсі."
+  - type: error-correction
+    focus: "Знайдіть і виправте помилки у реченнях на тему граматичні засоби модальності та умовний спосіб."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Поняття хеджування в академічному дискурсі»."
+  - type: match-up
+    focus: "З'єднайте терміни з розділу «Граматичні засоби модальності та умовний спосіб» з їхніми визначеннями."
 
 activities:
   types_required:

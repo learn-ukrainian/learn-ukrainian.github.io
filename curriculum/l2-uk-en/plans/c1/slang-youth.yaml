@@ -131,23 +131,16 @@ vocabulary:
     - мейнстрим
 
 activity_hints:
-  - type: critical-analysis
-    description: "Analyze a TikTok/YouTube comment section — classify the slang terms
-      by source (англіцизми, комп'ютерний жаргон, метафоризація) and assess their
-      integration into Ukrainian."
-  - type: match-up
-    description: "Match sociolect types (жаргон, арго, сленг) with their defining
-      features, social functions, and examples from Ukrainian youth culture."
-  - type: select
-    description: "Determine whether a given slang term has been adapted to Ukrainian
-      morphology (кринжити, хайпанути) or remains a raw borrowing, and assess its
-      longevity."
+  - type: reading
+    focus: "Прочитайте текст про феноменологія сленгу в лінгвістиці і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a youth magazine article (100-150 words) about a cultural
-      event, naturally integrating appropriate slang without overdoing it."
+    focus: "Напишіть короткий текст (100-150 слів) про джерела та механізми творення українського сленгу, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Феноменологія сленгу в лінгвістиці». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Identify and fix texts where slang is used in inappropriate registers
-      — academic papers with colloquialisms, or formal letters with youth slang."
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему феноменологія сленгу в лінгвістиці."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до феноменологія сленгу в лінгвістиці: Визначення сленгу та його місце в системі національної мови. Визначте спільне та відмінне."
 
 activities:
   types_required:

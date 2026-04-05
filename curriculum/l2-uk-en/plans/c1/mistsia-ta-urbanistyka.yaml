@@ -111,21 +111,16 @@ vocabulary:
     - набережна
 
 activity_hints:
-  - type: fill-in
-    description: "Complete texts about urban planning and city development with
-      appropriate C1 vocabulary — infrastructure, zoning, transport, architecture."
-  - type: match-up
-    description: "Match urban elements (площа, набережна, мікрорайон, промзона) with
-      their functions, characteristics, and examples from Ukrainian cities."
+  - type: reading
+    focus: "Прочитайте текст про місто як простір: базова урбаністична лексика і дайте відповіді на запитання щодо ключових понять."
+  - type: essay-response
+    focus: "Напишіть короткий текст (100-150 слів) про транспорт та мобільність, використовуючи нову лексику модуля."
   - type: critical-analysis
-    description: "Analyze an article about post-war urban reconstruction — evaluate
-      arguments about preservation vs modernization."
-  - type: select
-    description: "Choose the correct Ukrainian urban planning term over
-      Russian-influenced alternatives."
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Місто як простір: базова урбаністична лексика». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Fix Russianisms in urban and architectural vocabulary:
-      подъезд→під'їзд, этаж→поверх, площадка→майданчик."
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему місто як простір: базова урбаністична лексика."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до місто як простір: базова урбаністична лексика: Структура міста: центр, мікрорайон, передмістя, промзона. Визначте спільне та відмінне."
 
 activities:
   types_required:

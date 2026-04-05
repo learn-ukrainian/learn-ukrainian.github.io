@@ -106,21 +106,16 @@ vocabulary:
     - клієнтоорієнтованість
 
 activity_hints:
-  - type: critical-analysis
-    description: "Evaluate a Ukrainian CV and cover letter — assess professional vocabulary,
-      action verbs usage, and compliance with business register norms."
-  - type: error-correction
-    description: "Fix канцелярит, passive voice overuse, and non-professional formulations
-      in CV descriptions and cover letters."
-  - type: match-up
-    description: "Match professional competency descriptions with appropriate action
-      verbs in perfective aspect."
-  - type: select
-    description: "Choose the most effective formulation for describing professional
-      achievements with metrics and results."
+  - type: reading
+    focus: "Прочитайте текст про архітектоніка професійного портфоліо і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a cover letter (250+ words) for a humanitarian mission position
-      — demonstrate professional Ukrainian with cultural sensitivity."
+    focus: "Напишіть короткий текст (100-150 слів) про граматика успіху: дієслова дії, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Архітектоніка професійного портфоліо». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему архітектоніка професійного портфоліо."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до архітектоніка професійного портфоліо: Хронологічне vs функціональне резюме: вибір стратегії. Визначте спільне та відмінне."
 
 activities:
   types_required:

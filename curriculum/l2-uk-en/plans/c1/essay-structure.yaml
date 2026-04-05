@@ -108,21 +108,16 @@ vocabulary:
     - концептуальний
 
 activity_hints:
-  - type: critical-analysis
-    description: "Analyze the structure of a model Ukrainian academic essay about
-      Шістдесятництво — evaluate thesis, argument hierarchy, and transitions."
+  - type: reading
+    focus: "Прочитайте текст про вступна частина: проблематизація та теза і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a detailed essay outline (100-150 words) with thesis, three
-      key arguments, and conclusion on a Ukrainian cultural topic."
-  - type: fill-in
-    description: "Complete transition sentences between essay paragraphs with appropriate
-      cohesion devices."
-  - type: match-up
-    description: "Match essay components (вступ, теза, аргумент, висновок) with their
-      functions and example sentences."
-  - type: cloze
-    description: "Fill in missing structural elements and transition phrases in a
-      partially written essay about urban decolonization."
+    focus: "Напишіть короткий текст (100-150 слів) про аргументація: структура абзацу, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Вступна частина: Проблематизація та теза». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему вступна частина: проблематизація та теза."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до вступна частина: проблематизація та теза: Функції вступу: контекстуалізація, актуалізація, фокусування. Визначте спільне та відмінне."
 
 activities:
   types_required:

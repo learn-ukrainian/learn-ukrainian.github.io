@@ -135,29 +135,18 @@ vocabulary_hints:
     - "прогалина (gap — area of missing knowledge)"
     - "готовність (readiness — preparedness for exam)"
 activity_hints:
-  - type: quiz
-    focus: "Comprehensive mixed quiz covering grammar from all 10 phases: чергування,
-      вид, рухові дієслова, відмінки, дієприкметники, стилі."
-    items: 15
+  - type: reading
+    focus: "Прочитайте текст про фонетика та морфологія і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Дієслова та рух»."
   - type: fill-in
-    focus: "Complete a comprehensive text requiring grammar from multiple phases:
-      correct verb forms, case endings, word formation."
-    items: 10
+    focus: "Вставте правильну граматичну форму у реченнях на тему фонетика та морфологія."
   - type: error-correction
-    focus: "Find and correct errors across all B1 grammar areas in a Ukrainian text
-      containing deliberate mistakes."
-    items: 10
-  - type: group-sort
-    focus: "Sort grammar concepts by phase/category: verb forms by тип, речення by
-      складність, words by стиль."
-    items: 12
+    focus: "Знайдіть і виправте помилки у реченнях на тему дієслова та рух."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Фонетика та морфологія»."
   - type: match-up
-    focus: "Match metalanguage terms to examples across all phases."
-    items: 10
-  - type: free-write
-    focus: "Write an integrated text (200+ words) combining narrative, description,
-      and argument, demonstrating B1 grammar range."
-    items: 6
+    focus: "З'єднайте терміни з розділу «Дієслова та рух» з їхніми визначеннями."
 connects_to:
   - "All B1 modules (comprehensive review)"
   - "b1-089 (practice-exam-reading — exam simulation)"

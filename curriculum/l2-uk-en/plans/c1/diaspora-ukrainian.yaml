@@ -120,21 +120,16 @@ vocabulary:
     - рееміграція
 
 activity_hints:
-  - type: critical-analysis
-    description: "Analyze language features of Canadian Ukrainian — identify anglicisms,
-      archaic forms preserved from Skrypnykivka, and assess language vitality."
-  - type: match-up
-    description: "Match diaspora waves (перша, друга, третя, сучасна) with their sociolinguistic
-      characteristics and institutions."
-  - type: select
-    description: "Identify whether a given language feature is an archaism, anglicism,
-      or dialectal preservation in diaspora speech."
-  - type: fill-in
-    description: "Replace diaspora-specific forms (anglicisms, archaic spellings)
-      with contemporary standard Ukrainian equivalents."
+  - type: reading
+    focus: "Прочитайте текст про історія та хвилі української еміграції і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a journalistic report (350+ words) about a conference on Ukrainian
-      language worldwide — cover perspectives from Canada, Europe, and Australia."
+    focus: "Напишіть короткий текст (100-150 слів) про лінгвістичний портрет діаспорного мовлення, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Історія та хвилі української еміграції». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему історія та хвилі української еміграції."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до історія та хвилі української еміграції: Перша хвиля (кінець XIX – поч. XX ст.): соціально-економічні причини та збережен. Визначте спільне та відмінне."
 
 activities:
   types_required:

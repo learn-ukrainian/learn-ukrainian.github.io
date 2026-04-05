@@ -146,17 +146,14 @@ activities:
   total_min_items: 32
 
 activity_hints:
-  - type: fill-in
-    description: "Complete an economic report with correct terms (e.g., 'ВВП зріс
-      на ___%, інфляція становить ___')"
-  - type: match-up
-    description: "Match economic term to its explanation (e.g., рентабельність↔відношення
-      прибутку до витрат)"
-  - type: group-sort
-    description: "Sort terms into мікроекономіка vs макроекономіка categories"
-  - type: select
-    description: "Choose the correct business term in context (e.g., 'капіталовкладення'
-      vs 'інвестиції' vs 'вклади')"
+  - type: reading
+    focus: "Прочитайте текст про макроекономіка та державні фінанси і дайте відповіді на запитання щодо ключових понять."
+  - type: essay-response
+    focus: "Напишіть короткий текст (100-150 слів) про банківська справа та фінансові ринки, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Макроекономіка та державні фінанси». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему макроекономіка та державні фінанси."
 
 references:
   - "Глазова, 11 клас (2019): §11-15 — Лексична норма, термінологія, професійна лексика"

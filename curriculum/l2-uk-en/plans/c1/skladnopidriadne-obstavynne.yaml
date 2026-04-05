@@ -112,21 +112,18 @@ vocabulary:
     - аналогічно
 
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про підрядні речення місця та часу і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Підрядні причини, мети, умови та наслідку»."
   - type: fill-in
-    description: "Complete sentences with appropriate subordinating conjunctions for
-      different adverbial clause types (аби, якби, оскільки, незважаючи на те що)."
+    focus: "Вставте правильну граматичну форму у реченнях на тему підрядні речення місця та часу."
   - type: error-correction
-    description: "Fix errors in adverbial clauses — incorrect conjunction choice,
-      wrong mood in conditional clauses, punctuation with compound conjunctions."
+    focus: "Знайдіть і виправте помилки у реченнях на тему підрядні причини, мети, умови та наслідку."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Підрядні речення місця та часу»."
   - type: match-up
-    description: "Match adverbial clause types (причини, мети, умови, наслідку, допустове)
-      with their conjunctions and example sentences."
-  - type: critical-analysis
-    description: "Analyze a legal document excerpt and identify all adverbial clauses,
-      explaining how they construct the logical argument."
-  - type: select
-    description: "Choose between real condition (якщо) and unreal condition (якби)
-      based on context, and identify the correct verb mood."
+    focus: "З'єднайте терміни з розділу «Підрядні причини, мети, умови та наслідку» з їхніми визначеннями."
 
 activities:
   types_required:

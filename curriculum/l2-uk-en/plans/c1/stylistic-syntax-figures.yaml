@@ -113,21 +113,16 @@ vocabulary:
     - інверсія
 
 activity_hints:
-  - type: select
-    description: "Identify the syntactic figure in each excerpt: period, antithesis,
-      chiasmus, anaphora, epiphora, asyndeton, or polysyndeton."
-  - type: match-up
-    description: "Match definitions of syntactic figures with examples from Ukrainian
-      literature and public speeches."
-  - type: critical-analysis
-    description: "Analyze a speech by Іван Франко — identify all syntactic figures,
-      explain their persuasive function, and evaluate their effectiveness."
-  - type: unjumble
-    description: "Reorder sentence elements to create specific syntactic figures:
-      chiasmus from parallel structure, antithesis from neutral statements."
+  - type: reading
+    focus: "Прочитайте текст про період: архітектоніка складного висловлення і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a short rhetorical text (150-200 words) using at least 4
-      different syntactic figures, marking each one."
+    focus: "Напишіть короткий текст (100-150 слів) про антитеза та хіазм, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Період: архітектоніка складного висловлення». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему період: архітектоніка складного висловлення."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до період: архітектоніка складного висловлення: Структура періоду: протасис (наростання) та аподосис (спадання). Визначте спільне та відмінне."
 
 activities:
   types_required:

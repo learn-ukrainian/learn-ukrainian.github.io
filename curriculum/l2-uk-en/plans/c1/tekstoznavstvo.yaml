@@ -116,21 +116,16 @@ vocabulary:
     - прецедентність
 
 activity_hints:
-  - type: critical-analysis
-    description: "Analyze the cohesion mechanisms in a Ukrainian academic paragraph
-      — identify all referential chains, lexical repetitions, and logical connectors."
   - type: reading
-    description: "Read a complex Ukrainian essay and map its theme-rheme progression
-      across paragraphs, identifying breaks in coherence."
-  - type: error-correction
-    description: "Fix coherence and cohesion errors in a poorly structured text —
-      misplaced paragraphs, broken referential chains, missing connectors."
-  - type: match-up
-    description: "Match text-linguistics terms (когезія, когерентність, архітектоніка,
-      актуальне членування) with definitions and textual examples."
+    focus: "Прочитайте текст про категорії та ознаки тексту і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Rewrite a given text excerpt to improve its thematic unity and logical
-      flow, using at least 5 different cohesion devices."
+    focus: "Напишіть короткий текст (100-150 слів) про механізми текстової зв'язності, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Категорії та ознаки тексту». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему категорії та ознаки тексту."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до категорії та ознаки тексту: Текст як система: цілісність, завершеність, контентність. Визначте спільне та відмінне."
 
 activities:
   types_required:

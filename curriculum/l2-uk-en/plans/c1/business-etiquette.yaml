@@ -113,21 +113,16 @@ vocabulary:
     - конструктивність
 
 activity_hints:
-  - type: critical-analysis
-    description: "Analyze corporate ethics codes from Ukrainian companies — evaluate
-      formality level, inclusivity language, and cultural sensitivity."
-  - type: error-correction
-    description: "Fix etiquette violations in business communication examples — correct
-      forms of address, inappropriate familiarity, and protocol breaches."
-  - type: match-up
-    description: "Match business situations (знайомство, нарада, конфлікт) with appropriate
-      Ukrainian etiquette formulas and register choices."
-  - type: select
-    description: "Choose the most appropriate etiquette formula for various business
-      contexts — formal invitations, polite refusals, diplomatic apologies."
+  - type: reading
+    focus: "Прочитайте текст про мовна формула ввічливості: теорія та практика і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a formal invitation letter to international partners for a
-      company event — demonstrate diplomatic protocol in Ukrainian."
+    focus: "Напишіть короткий текст (100-150 слів) про протокол ділової взаємодії, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Мовна формула ввічливості: теорія та практика». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему мовна формула ввічливості: теорія та практика."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до мовна формула ввічливості: теорія та практика: Етикетні парадигми: від 'Пане/Пані' до сучасних форм. Визначте спільне та відмінне."
 
 activities:
   types_required:

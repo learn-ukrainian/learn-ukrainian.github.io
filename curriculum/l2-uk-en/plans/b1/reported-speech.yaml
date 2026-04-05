@@ -117,21 +117,18 @@ vocabulary_hints:
     - "переказ (retelling)"
     - "авторська ремарка (author's remark in dialogue)"
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про пряма мова: будова і розділові знаки і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Непряма мова: перетворення»."
   - type: fill-in
-    focus: "Punctuate sentences with пряма мова in all four patterns"
-    items: 10
-  - type: sentence-builder
-    focus: "Transform пряма мова to непряма and vice versa"
-    items: 10
-  - type: quiz
-    focus: "Choose correct conjunction for indirect speech (що/щоб/чи/question word)"
-    items: 8
+    focus: "Вставте правильну граматичну форму у реченнях на тему пряма мова: будова і розділові знаки."
   - type: error-correction
-    focus: "Fix punctuation and pronoun/tense shift errors in reported speech"
-    items: 8
+    focus: "Знайдіть і виправте помилки у реченнях на тему непряма мова: перетворення."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Пряма мова: будова і розділові знаки»."
   - type: match-up
-    focus: "Match пряма мова sentences to their непряма мова equivalents"
-    items: 8
+    focus: "З'єднайте терміни з розділу «Непряма мова: перетворення» з їхніми визначеннями."
 connects_to:
   - "b1-067 (З'ясувальні речення — непряма мова uses з'ясувальні)"
   - "b1-072 (Речення мети — щоб after imperative in indirect speech)"

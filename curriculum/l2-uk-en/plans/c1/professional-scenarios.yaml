@@ -116,21 +116,16 @@ vocabulary:
     - консенсус
 
 activity_hints:
-  - type: critical-analysis
-    description: "Analyze a political talk-show transcript — identify rhetorical manipulation
-      techniques, logical fallacies, and evasion strategies."
-  - type: select
-    description: "Choose the most appropriate communication strategy for different
-      professional crisis scenarios (press conference, investor meeting, media interview)."
-  - type: match-up
-    description: "Match negotiation strategies (Win-Win, жорсткий стиль, компроміс)
-      with their linguistic markers and example phrases."
-  - type: error-correction
-    description: "Fix diplomatic protocol errors in a business letter — wrong register,
-      inappropriate directness, missing courtesy formulas."
+  - type: reading
+    focus: "Прочитайте текст про психологія та лінгвістика перемовин і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a crisis communication press release (150-200 words) responding
-      to a reputational challenge, using appropriate hedging and factual language."
+    focus: "Напишіть короткий текст (100-150 слів) про публічний виступ та ораторське мистецтво, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Психологія та лінгвістика перемовин». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему психологія та лінгвістика перемовин."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до психологія та лінгвістика перемовин: Стратегії перемовин: 'Win-Win', жорсткий стиль, компроміс. Визначте спільне та відмінне."
 
 activities:
   types_required:

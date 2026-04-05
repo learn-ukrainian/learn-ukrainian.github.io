@@ -113,21 +113,16 @@ vocabulary:
     - акцентування
 
 activity_hints:
-  - type: critical-analysis
-    description: "Analyze a Cossack chronicle excerpt — identify all hyperboles, explain
-      their function in heroic narrative, and compare with modern media hyperbole."
-  - type: select
-    description: "Identify whether excerpts use гіпербола, літота, мейозис, or градація
-      — and classify their pragmatic function (persuasion, humor, politeness)."
-  - type: match-up
-    description: "Match examples of hyperbole and litotes from different registers
-      (folklore, academic, diplomatic, media) with their stylistic function."
+  - type: reading
+    focus: "Прочитайте текст про гіпербола: від епічної величі до гротеску і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Rewrite a neutral news report using hyperbole for dramatic effect,
-      then rewrite the same report using litotes for diplomatic understatement."
-  - type: mark-the-words
-    description: "Identify all instances of quantitative tropes (гіпербола, літота,
-      градація) in a literary and a journalistic text."
+    focus: "Напишіть короткий текст (100-150 слів) про літота: сила применшення, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Гіпербола: від епічної величі до гротеску». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему гіпербола: від епічної величі до гротеску."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до гіпербола: від епічної величі до гротеску: Генезис гіперболи в міфологічному мисленні та фольклорі. Визначте спільне та відмінне."
 
 activities:
   types_required:

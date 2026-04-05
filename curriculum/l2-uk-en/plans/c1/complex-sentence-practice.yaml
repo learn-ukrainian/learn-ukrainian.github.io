@@ -112,22 +112,18 @@ vocabulary:
     - інтелектуальність
 
 activity_hints:
-  - type: error-correction
-    description: "Fix all types of syntactic and punctuation errors in a complex academic
-      text — including nested clauses, conjunction clashes, and run-on sentences."
-  - type: critical-analysis
-    description: "Compare two versions of the same text — one using simple sentences
-      and one using complex syntax — and analyze how complexity affects persuasiveness
-      and register."
+  - type: reading
+    focus: "Прочитайте текст про комплексне повторення типів складних речей і дайте відповіді на запитання."
   - type: essay-response
-    description: "Write a structured academic paragraph (150-200 words) using at least
-      one example of each complex sentence type (ССР, СПР, БСР, змішане)."
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Пунктуаційний інтенсив»."
+  - type: fill-in
+    focus: "Вставте правильну граматичну форму у реченнях на тему комплексне повторення типів складних речей."
+  - type: error-correction
+    focus: "Знайдіть і виправте помилки у реченнях на тему пунктуаційний інтенсив."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Комплексне повторення типів складних речей»."
   - type: match-up
-    description: "Match sentence types with their most common functional contexts
-      (науковий стиль, публіцистика, офіційно-діловий)."
-  - type: select
-    description: "Choose the most stylistically appropriate sentence structure for
-      given communicative situations (academic paper, news article, official letter)."
+    focus: "З'єднайте терміни з розділу «Пунктуаційний інтенсив» з їхніми визначеннями."
 
 activities:
   types_required:

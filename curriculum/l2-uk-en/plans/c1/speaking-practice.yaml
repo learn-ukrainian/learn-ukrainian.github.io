@@ -114,21 +114,16 @@ vocabulary:
     - лаконічність
 
 activity_hints:
-  - type: critical-analysis
-    description: "Analyze a recorded debate — identify the strongest and weakest arguments,
-      rhetorical techniques used, and moments of logical fallacy."
-  - type: error-correction
-    description: "Fix register and style errors in a debate preparation script — inappropriate
-      colloquialisms, weak argumentation phrases, missing hedging."
-  - type: match-up
-    description: "Match rhetorical figures (анафора, антитеза, градація) with their
-      definitions and examples from Ukrainian political speeches."
+  - type: reading
+    focus: "Прочитайте текст про основи риторики та ораторського мистецтва і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write an opening statement (100-150 words) for a debate on a given
-      topic, using at least 3 different rhetorical devices."
-  - type: select
-    description: "Choose the most effective counter-argument strategy for given debate
-      scenarios — refutation, reframing, or concession."
+    focus: "Напишіть короткий текст (100-150 слів) про стратегії ведення дебатів, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Основи риторики та ораторського мистецтва». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему основи риторики та ораторського мистецтва."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до основи риторики та ораторського мистецтва: Побудова логічної структури публічного виступу. Визначте спільне та відмінне."
 
 activities:
   types_required:

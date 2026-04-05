@@ -145,24 +145,18 @@ vocabulary_hints:
     - "основа (stem — the part of a word without the ending)"
     - "мотивувальне слово (motivating word — base of derivation)"
 activity_hints:
-  - type: quiz
-    focus: "Identify the suffix and formation method for agent and place nouns"
-    items: 8
+  - type: reading
+    focus: "Прочитайте текст про назви осіб за діяльністю і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Творення назв місць і приміщень»."
   - type: fill-in
-    focus: "Form agent nouns (m. and f.) from verbs and nouns"
-    items: 8
-  - type: match-up
-    focus: "Match agent noun to its workplace (лікар-лікарня, пекар-пекарня)"
-    items: 8
-  - type: group-sort
-    focus: "Sort derived nouns by formation method: suffixal, prefixal-suffixal, zero-derivation"
-    items: 10
-  - type: sentence-builder
-    focus: "Build sentences about professions using agent + place nouns"
-    items: 6
+    focus: "Вставте правильну граматичну форму у реченнях на тему назви осіб за діяльністю."
   - type: error-correction
-    focus: "Fix errors in agent noun feminine forms and place noun suffixes"
-    items: 6
+    focus: "Знайдіть і виправте помилки у реченнях на тему творення назв місць і приміщень."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Назви осіб за діяльністю»."
+  - type: match-up
+    focus: "З'єднайте терміни з розділу «Творення назв місць і приміщень» з їхніми визначеннями."
 connects_to:
   - "b1-042 (Творення прикметників — adjective formation methods)"
   - "b1-044 (Покупки і послуги — applying word formation in shopping context)"

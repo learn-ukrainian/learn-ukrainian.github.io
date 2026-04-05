@@ -118,23 +118,18 @@ vocabulary:
     - дедукція
 
 activity_hints:
-  - type: select
-    description: "Choose the appropriate epistemic modal marker (безперечно, імовірно,
-      навряд чи, можливо) for given academic and professional contexts."
-  - type: critical-analysis
-    description: "Analyze a scientific article and classify all hedging devices on
-      a certainty scale from categorical assertion to complete doubt."
+  - type: reading
+    focus: "Прочитайте текст про система засобів вираження модальності в українській мові і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Градація впевненості: від категоричності до сумніву»."
   - type: fill-in
-    description: "Complete academic sentences with appropriate hedging expressions
-      — вставні слова, модальні дієслова, частки — matching the required certainty
-      level."
+    focus: "Вставте правильну граматичну форму у реченнях на тему система засобів вираження модальності в українській мові."
   - type: error-correction
-    description: "Fix texts with inappropriate certainty levels — remove excessive
-      hedging in assertive contexts, add hedging where categorical statements need
-      softening."
+    focus: "Знайдіть і виправте помилки у реченнях на тему градація впевненості: від категоричності до сумніву."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Система засобів вираження модальності в українській мові»."
   - type: match-up
-    description: "Match Ukrainian epistemic markers with their English equivalents
-      and certainty levels (high: безумовно; medium: ймовірно; low: навряд чи)."
+    focus: "З'єднайте терміни з розділу «Градація впевненості: від категоричності до сумніву» з їхніми визначеннями."
 
 activities:
   types_required:

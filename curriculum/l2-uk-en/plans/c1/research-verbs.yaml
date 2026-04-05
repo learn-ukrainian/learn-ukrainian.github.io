@@ -108,21 +108,16 @@ vocabulary:
     - деконструювати
 
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про дієслова ініціації та планування і дайте відповіді на запитання щодо ключових понять."
+  - type: essay-response
+    focus: "Напишіть короткий текст (100-150 слів) про аналітичний та операційний інструментарій, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Дієслова ініціації та планування». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Fix incorrect verb government (керування) in academic sentences
-      — e.g., опанувати (що?) vs володіти (чим?)."
-  - type: fill-in
-    description: "Complete methodology descriptions with appropriate research verbs
-      (обґрунтовувати, з'ясовувати, систематизувати) in correct forms."
-  - type: match-up
-    description: "Match research process stages (ініціація, аналіз, верифікація) with
-      their corresponding verb sets."
-  - type: select
-    description: "Choose the correct research verb and its grammatical form for describing
-      specific academic activities."
-  - type: cloze
-    description: "Fill in missing research verbs in a methodology section of a Ukrainian
-      scientific article."
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему дієслова ініціації та планування."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до дієслова ініціації та планування: Формулювання проблеми: окреслити, визначити, актуалізувати. Визначте спільне та відмінне."
 
 activities:
   types_required:

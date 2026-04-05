@@ -134,25 +134,18 @@ vocabulary_hints:
     - "стилістика (stylistics — appropriate register usage)"
     - "канцелярит (bureaucratese — overuse of participial/gerund phrases)"
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про дієприслівниковий зворот: будова і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Правила відокремлення»."
   - type: fill-in
-    focus: "Place commas in sentences with дієприслівникові звороти, including exceptions"
-    items: 10
-  - type: quiz
-    focus: "Classify: дієприкметниковий зворот чи дієприслівниковий зворот?"
-    items: 10
+    focus: "Вставте правильну граматичну форму у реченнях на тему дієприслівниковий зворот: будова."
   - type: error-correction
-    focus: "Fix dangling gerunds, missing commas, and overloaded gerund chains"
-    items: 8
-  - type: mark-the-words
-    focus: "In a passage, mark all дієприслівникові звороти and place commas"
-    items: 6
-  - type: sentence-builder
-    focus: "Combine pairs of sentences using gerund phrases with correct punctuation"
-    items: 6
-  - type: free-write
-    focus: "Write a narrative using both дієприкметникові and дієприслівникові звороти
-      with correct punctuation"
-    items: 6
+    focus: "Знайдіть і виправте помилки у реченнях на тему правила відокремлення."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Дієприслівниковий зворот: будова»."
+  - type: match-up
+    focus: "З'єднайте терміни з розділу «Правила відокремлення» з їхніми визначеннями."
 connects_to:
   - "b1-061 (Дієприслівники недоконаного виду)"
   - "b1-062 (Дієприслівники доконаного виду)"

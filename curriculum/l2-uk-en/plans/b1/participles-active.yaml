@@ -159,25 +159,18 @@ vocabulary_hints:
     - "мийний (washing/cleaning — replaces Russian calque миючий)"
     - "завідувач (head/manager — replaces Russian calque завідуючий)"
 activity_hints:
-  - type: quiz
-    focus: "Identify дієприкметники in sentences: is it active or passive? present
-      or past?"
-    items: 10
+  - type: reading
+    focus: "Прочитайте текст про що таке дієприкметник? і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Активні дієприкметники теперішнього часу (-уч-/-юч-, -ач-/-яч-)»."
   - type: fill-in
-    focus: "Form active participles from given verbs using correct suffixes"
-    items: 8
+    focus: "Вставте правильну граматичну форму у реченнях на тему що таке дієприкметник?."
   - type: error-correction
-    focus: "Replace Russian calque participles with natural Ukrainian equivalents"
-    items: 8
+    focus: "Знайдіть і виправте помилки у реченнях на тему активні дієприкметники теперішнього часу (-уч-/-юч-, -ач-/-яч-)."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Що таке дієприкметник?»."
   - type: match-up
-    focus: "Match active participles to their base verbs and meanings"
-    items: 8
-  - type: group-sort
-    focus: "Sort participles into categories: natural Ukrainian vs Russian calque"
-    items: 12
-  - type: sentence-builder
-    focus: "Write sentences using past active participles to describe nature"
-    items: 6
+    focus: "З'єднайте терміни з розділу «Активні дієприкметники теперішнього часу (-уч-/-юч-, -ач-/-яч-)» з їхніми визначеннями."
 connects_to:
   - "b1-058 (Пасивні дієприкметники — passive participles)"
   - "b1-059 (Дієприкметниковий зворот — participle phrases)"

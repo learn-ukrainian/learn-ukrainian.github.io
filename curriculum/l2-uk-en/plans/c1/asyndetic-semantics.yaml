@@ -112,21 +112,18 @@ vocabulary:
     - редукція
 
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про природа безсполучникового зв'язку і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Смислові відношення та пунктуація: Кома та крапка з комою»."
   - type: fill-in
-    description: "Insert the correct punctuation mark (comma, semicolon, colon, or
-      dash) in asyndetic complex sentences based on semantic relations."
+    focus: "Вставте правильну граматичну форму у реченнях на тему природа безсполучникового зв'язку."
   - type: error-correction
-    description: "Fix punctuation errors in asyndetic sentences — wrong choice between
-      colon and dash, missing semicolons in extended constructions."
+    focus: "Знайдіть і виправте помилки у реченнях на тему смислові відношення та пунктуація: кома та крапка з комою."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Природа безсполучникового зв'язку»."
   - type: match-up
-    description: "Match punctuation marks in asyndetic sentences with the semantic
-      relations they signal (пояснення → двокрапка, наслідок → тире)."
-  - type: critical-analysis
-    description: "Analyze proverbs and aphorisms as examples of asyndetic sentences
-      — identify the semantic relation and explain the stylistic effect."
-  - type: select
-    description: "Choose the correct interpretation of ambiguous asyndetic sentences
-      where the semantic relation could be causal, conditional, or contrastive."
+    focus: "З'єднайте терміни з розділу «Смислові відношення та пунктуація: Кома та крапка з комою» з їхніми визначеннями."
 
 activities:
   types_required:

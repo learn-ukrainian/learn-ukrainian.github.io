@@ -178,26 +178,18 @@ vocabulary_hints:
     - "план (plan — outline before writing/speaking)"
     - "зв'язкові слова (connecting words — cohesion markers)"
 activity_hints:
-  - type: free-write
-    focus: "Complete both writing tasks: creative text (200+ words) and formal document
-      (100-150 words) under timed conditions."
-    items: 6
-  - type: role-play
-    focus: "Complete both speaking tasks: monologue (2-3 minutes) and dialogue (3-4
-      minutes) on given topics."
-    items: 6
-  - type: quiz
-    focus: "Self-evaluation quiz: assess own writing and speaking against B1 criteria,
-      identify strengths and weaknesses."
-    items: 8
+  - type: reading
+    focus: "Прочитайте текст про вступ: формат екзамену і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Письмо 1: Творчий текст»."
+  - type: fill-in
+    focus: "Вставте правильну граматичну форму у реченнях на тему вступ: формат екзамену."
   - type: error-correction
-    focus: "Review and correct errors in own writing: grammar, vocabulary, register,
-      coherence."
-    items: 6
+    focus: "Знайдіть і виправте помилки у реченнях на тему письмо 1: творчий текст."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Вступ: формат екзамену»."
   - type: match-up
-    focus: "Match evaluation criteria to specific features in model texts: which sentences
-      demonstrate граматична правильність, which show лексичне багатство."
-    items: 8
+    focus: "З'єднайте терміни з розділу «Письмо 1: Творчий текст» з їхніми визначеннями."
 connects_to:
   - "b1-089 (practice-exam-reading — receptive skills exam)"
   - "b1-088 (comprehensive-b1-review — preparation for exams)"

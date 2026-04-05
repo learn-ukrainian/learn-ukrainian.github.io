@@ -114,22 +114,16 @@ vocabulary:
     - юрисдикція
 
 activity_hints:
-  - type: error-correction
-    description: "Fix register violations in official documents — replace colloquial
-      language with formal equivalents, fix канцелярит where it obscures meaning."
-  - type: critical-analysis
-    description: "Analyze a Presidential Decree and a diplomatic note — compare their
-      syntactic structures, courtesy formulas, and degree of formality."
-  - type: match-up
-    description: "Match official document types (указ, комюніке, конвенція, резолюція,
-      нота) with their structural features and characteristic language."
+  - type: reading
+    focus: "Прочитайте текст про стилістичні домінанти офіційно-ділового стилю і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a formal letter (150-200 words) from an institutional head
-      proposing international cooperation, using appropriate protocol language."
-  - type: select
-    description: "Choose the appropriate formality level for given professional situations
-      — distinguish high official (дипломатичний протокол) from standard business
-      (ділове листування)."
+    focus: "Напишіть короткий текст (100-150 слів) про синтаксис офіційного документа, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Стилістичні домінанти офіційно-ділового стилю». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему стилістичні домінанти офіційно-ділового стилю."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до стилістичні домінанти офіційно-ділового стилю: Лексична одноманітність та точність як гарантія однозначності. Визначте спільне та відмінне."
 
 activities:
   types_required:

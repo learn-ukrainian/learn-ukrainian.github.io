@@ -112,21 +112,16 @@ vocabulary:
     - стагнація
 
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про макроекономіка та державне регулювання і дайте відповіді на запитання щодо ключових понять."
+  - type: essay-response
+    focus: "Напишіть короткий текст (100-150 слів) про банківська система та фінансові ринки, використовуючи нову лексику модуля."
   - type: critical-analysis
-    description: "Analyze a Ukrainian economic report on investment attractiveness
-      — evaluate use of macroeconomic terminology and SWOT methodology."
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Макроекономіка та державне регулювання». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Fix imprecise economic terminology and calques from English/Russian
-      in a financial analysis text."
-  - type: match-up
-    description: "Match economic concepts (інфляція, ліквідність, рентабельність,
-      диверсифікація) with definitions and contextual usage."
-  - type: select
-    description: "Choose the correct Ukrainian economic term in context — distinguish
-      between similar concepts (прибуток vs дохід, актив vs капітал)."
-  - type: fill-in
-    description: "Complete economic analysis sentences with appropriate financial
-      terminology and discourse markers."
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему макроекономіка та державне регулювання."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до макроекономіка та державне регулювання: ВВП, інфляція та безробіття: як читати статистику. Визначте спільне та відмінне."
 
 activities:
   types_required:

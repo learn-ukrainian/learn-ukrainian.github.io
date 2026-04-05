@@ -136,24 +136,18 @@ vocabulary_hints:
     - "листування (correspondence)"
     - "панове (gentlemen — plural formal address)"
 activity_hints:
-  - type: quiz
-    focus: "Choose correct vocative form for names, patronymics, and titles"
-    items: 8
+  - type: reading
+    focus: "Прочитайте текст про повторення: кличний відмінок і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Офіційні звертання»."
   - type: fill-in
-    focus: "Form vocative for given names with patronymics in formal address"
-    items: 8
-  - type: match-up
-    focus: "Match formality level to correct address pattern"
-    items: 8
+    focus: "Вставте правильну граматичну форму у реченнях на тему повторення: кличний відмінок."
   - type: error-correction
-    focus: "Fix vocative errors in formal letters and emails"
-    items: 6
-  - type: free-write
-    focus: "Write a formal letter opening with correct vocative address"
-    items: 6
-  - type: sentence-builder
-    focus: "Build formal greetings and introductions using vocative"
-    items: 6
+    focus: "Знайдіть і виправте помилки у реченнях на тему офіційні звертання."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Повторення: кличний відмінок»."
+  - type: match-up
+    focus: "З'єднайте терміни з розділу «Офіційні звертання» з їхніми визначеннями."
 connects_to:
   - "b1-046 through b1-048 (case nuances — genitive, dative, instrumental)"
   - "b1-082 (Офіційне спілкування — formal communication in Phase 9)"

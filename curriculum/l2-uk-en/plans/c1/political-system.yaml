@@ -113,21 +113,16 @@ vocabulary:
     - ініціатива
 
 activity_hints:
-  - type: critical-analysis
-    description: "Analyze constitutional provisions about presidential and parliamentary
-      powers — evaluate legal terminology and argumentation structure."
-  - type: error-correction
-    description: "Fix imprecise political terminology and register violations in a
-      political analysis text."
-  - type: match-up
-    description: "Match Ukrainian state institutions (Верховна Рада, Кабінет Міністрів,
-      Конституційний Суд) with their constitutional functions and terminology."
-  - type: select
-    description: "Choose correct legal and political terms in context — distinguish
-      between similar concepts (суверенітет vs незалежність, легітимність vs законність)."
+  - type: reading
+    focus: "Прочитайте текст про державна архітектура україни і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write an analytical essay (300+ words) about the role of electronic
-      democracy (Дія, e-petitions) in Ukrainian political life."
+    focus: "Напишіть короткий текст (100-150 слів) про політичний процес та виборче право, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Державна архітектура України». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему державна архітектура україни."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до державна архітектура україни: Законодавча, виконавча та судова гілки влади: взаємодія та контроль. Визначте спільне та відмінне."
 
 activities:
   types_required:

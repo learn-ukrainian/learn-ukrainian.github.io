@@ -113,21 +113,18 @@ vocabulary:
     - валентність
 
 activity_hints:
-  - type: select
-    description: "Classify the meaning of dative case in each sentence: addressee,
-      beneficiary, ethical dative, state, possessive, or purpose."
+  - type: reading
+    focus: "Прочитайте текст про давальний адресата та бенефіціара і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Безособові конструкції з давальним»."
   - type: fill-in
-    description: "Complete impersonal constructions with the correct dative form
-      and predicate: мені/тобі/їй + холодно/болить/треба/можна."
+    focus: "Вставте правильну граматичну форму у реченнях на тему давальний адресата та бенефіціара."
   - type: error-correction
-    description: "Fix errors in dative case usage — wrong case after безособові
-      конструкції, confusion with accusative or genitive."
-  - type: critical-analysis
-    description: "Analyze dative case usage in a prose passage by Іван Франко —
-      classify each instance and explain its stylistic function."
+    focus: "Знайдіть і виправте помилки у реченнях на тему безособові конструкції з давальним."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Давальний адресата та бенефіціара»."
   - type: match-up
-    description: "Match dative functions (адресат, бенефіціар, етичний, стан,
-      присвійний) with example sentences."
+    focus: "З'єднайте терміни з розділу «Безособові конструкції з давальним» з їхніми визначеннями."
 
 activities:
   types_required:

@@ -113,21 +113,18 @@ vocabulary:
     - генітивний
 
 activity_hints:
-  - type: select
-    description: "Classify the meaning of genitive case in each sentence: subjective,
-      objective, partitive, possessive, attributive, or quantitative."
+  - type: reading
+    focus: "Прочитайте текст про суб'єктне та присвійне значення родового і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Об'єктне та партитивне значення»."
   - type: fill-in
-    description: "Complete sentences with the correct preposition + genitive form,
-      choosing from spatial, temporal, and logical prepositions."
+    focus: "Вставте правильну граматичну форму у реченнях на тему суб'єктне та присвійне значення родового."
   - type: error-correction
-    description: "Fix errors in genitive case usage — wrong ending (-а/-у choice),
-      stacking of genitives, incorrect preposition government."
-  - type: critical-analysis
-    description: "Analyze genitive case usage in a fragment of the Ukrainian Constitution,
-      classifying each instance by semantic type."
+    focus: "Знайдіть і виправте помилки у реченнях на тему об'єктне та партитивне значення."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Суб'єктне та присвійне значення родового»."
   - type: match-up
-    description: "Match prepositions (від, для, без, після, замість, щодо) with their
-      semantic groups and example phrases in genitive."
+    focus: "З'єднайте терміни з розділу «Об'єктне та партитивне значення» з їхніми визначеннями."
 
 activities:
   types_required:

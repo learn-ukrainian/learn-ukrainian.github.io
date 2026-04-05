@@ -144,24 +144,18 @@ vocabulary_hints:
     - "зранку (from the morning — temporal adverb)"
     - "о (at — clock time: о п'ятій годині)"
 activity_hints:
-  - type: quiz
-    focus: "Choose correct temporal preposition + case for given time expressions"
-    items: 8
+  - type: reading
+    focus: "Прочитайте текст про через + зн.в. та за + зн.в. і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Перед, після, до, під час»."
   - type: fill-in
-    focus: "Complete sentences with через/за/протягом/перед/після + correct case"
-    items: 8
-  - type: match-up
-    focus: "Match temporal preposition to its governed case and meaning"
-    items: 8
+    focus: "Вставте правильну граматичну форму у реченнях на тему через + зн.в. та за + зн.в.."
   - type: error-correction
-    focus: "Fix Russicisms and preposition errors in temporal sentences"
-    items: 6
-  - type: sentence-builder
-    focus: "Build a daily schedule using various temporal prepositions"
-    items: 6
-  - type: group-sort
-    focus: "Sort temporal expressions by preposition + case pattern"
-    items: 10
+    focus: "Знайдіть і виправте помилки у реченнях на тему перед, після, до, під час."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Через + Зн.в. та за + Зн.в.»."
+  - type: match-up
+    focus: "З'єднайте терміни з розділу «Перед, після, до, під час» з їхніми визначеннями."
 connects_to:
   - "b1-051 (Прийменники причини і мети — cause and purpose prepositions)"
   - "b1-046 (Родовий відмінок деталі — genitive used with most temporal preps)"

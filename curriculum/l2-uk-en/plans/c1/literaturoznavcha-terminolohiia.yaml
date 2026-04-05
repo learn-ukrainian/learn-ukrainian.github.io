@@ -119,22 +119,16 @@ vocabulary:
     - екзегеза
 
 activity_hints:
-  - type: critical-analysis
-    description: "Analyze a contemporary Ukrainian novel excerpt — identify literary
-      devices (сюжет, фабула, композиція, хронотоп, нарація) and write a structured
-      literary analysis."
-  - type: match-up
-    description: "Match literary terms (експозиція, зав'язка, кульмінація, розв'язка,
-      епілог) with their definitions and examples from Ukrainian literature."
-  - type: select
-    description: "Identify the narrative perspective (наратор від першої/третьої особи,
-      фокалізація) in literary excerpts and explain its effect on reader perception."
-  - type: essay-response
-    description: "Write a literary review (150-200 words) of a Ukrainian work using
-      at least 10 literary analysis terms correctly."
   - type: reading
-    description: "Read a literary criticism article about Софія Андрухович's prose
-      and identify how the critic uses literary terminology to build their argument."
+    focus: "Прочитайте текст про поняття про літературознавство як науку і дайте відповіді на запитання щодо ключових понять."
+  - type: essay-response
+    focus: "Напишіть короткий текст (100-150 слів) про архітектоніка художнього твору, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Поняття про літературознавство як науку». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему поняття про літературознавство як науку."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до поняття про літературознавство як науку: Основні галузі: теорія літератури, історія літератури, літературна критика. Визначте спільне та відмінне."
 
 activities:
   types_required:

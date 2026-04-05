@@ -107,26 +107,18 @@ vocabulary_hints:
     - "класифікація (classification)"
     - "перетворення (transformation)"
 activity_hints:
-  - type: quiz
-    focus: "Mixed: classify sentence types, choose conjunctions, identify subordinate
-      clause types"
-    items: 12
+  - type: reading
+    focus: "Прочитайте текст про вступ: як працювати з контрольною і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Блок 1: Складносурядне речення»."
   - type: fill-in
-    focus: "Insert correct conjunctions and forms of який in complex sentences"
-    items: 10
-  - type: sentence-builder
-    focus: "Transform пряма мова ↔ непряма мова"
-    items: 8
+    focus: "Вставте правильну граматичну форму у реченнях на тему вступ: як працювати з контрольною."
   - type: error-correction
-    focus: "Fix conjunction, punctuation, and pronoun-shift errors in complex sentences"
-    items: 8
+    focus: "Знайдіть і виправте помилки у реченнях на тему блок 1: складносурядне речення."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Вступ: як працювати з контрольною»."
   - type: match-up
-    focus: "Match sentence types to their definitions and example patterns"
-    items: 10
-  - type: free-write
-    focus: "Write an opinion paragraph using all Phase 8 syntax types about Ukrainian
-      culture"
-    items: 6
+    focus: "З'єднайте терміни з розділу «Блок 1: Складносурядне речення» з їхніми визначеннями."
 connects_to:
   - "b1-066 to b1-075 (all Phase 8 modules)"
   - "b1-077 (Лексична стилістика — first module of Phase 9)"

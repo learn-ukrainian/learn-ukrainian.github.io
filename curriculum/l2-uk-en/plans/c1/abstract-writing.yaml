@@ -105,21 +105,16 @@ vocabulary:
     - лаконізм
 
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про жанрові особливості анотації і дайте відповіді на запитання щодо ключових понять."
+  - type: essay-response
+    focus: "Напишіть короткий текст (100-150 слів) про мовні кліше наукового викладу, використовуючи нову лексику модуля."
   - type: critical-analysis
-    description: "Evaluate a Ukrainian conference abstract — assess completeness of
-      structural elements (мета, методи, новизна, практичне значення)."
-  - type: select
-    description: "Choose the most appropriate academic cliché for describing research
-      purpose, novelty, and results in an abstract."
-  - type: fill-in
-    description: "Complete abstract sentences with standardized Ukrainian academic
-      formulas (У статті розкрито..., встановлено що..., обґрунтовано доцільність...)."
-  - type: match-up
-    description: "Match abstract components (мета, об'єкт, предмет, новизна) with
-      example formulations."
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Жанрові особливості анотації». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Fix wordiness, tautology, and non-standard formulations in a draft
-      Ukrainian abstract."
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему жанрові особливості анотації."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до жанрові особливості анотації: Функції анотації: пошукова, ознайомча та рекламна. Визначте спільне та відмінне."
 
 activities:
   types_required:

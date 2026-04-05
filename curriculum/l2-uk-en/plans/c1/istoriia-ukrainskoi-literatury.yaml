@@ -130,21 +130,16 @@ vocabulary:
     - інтертекстуальність
 
 activity_hints:
-  - type: critical-analysis
-    description: "Compare two literary epochs (e.g., Бароко and Романтизм) — analyze
-      how each treats the image of the individual and their relationship with society."
-  - type: match-up
-    description: "Match literary periods (давня, романтизм, реалізм, модернізм, постмодернізм)
-      with their key authors, programmatic works, and defining features."
-  - type: essay-response
-    description: "Write a comparative analysis paragraph (150-200 words) about two
-      literary movements, using appropriate literary history terminology."
   - type: reading
-    description: "Read a modernist manifesto excerpt and identify ideological positions,
-      aesthetic principles, and their historical context."
-  - type: select
-    description: "Identify the literary epoch and movement of given textual excerpts
-      based on their style, vocabulary, and thematic concerns."
+    focus: "Прочитайте текст про витоки та давня література і дайте відповіді на запитання щодо ключових понять."
+  - type: essay-response
+    focus: "Напишіть короткий текст (100-150 слів) про xix століття: від котляревського до франка, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Витоки та давня література». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему витоки та давня література."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до витоки та давня література: Києворуська спадщина: літописи та 'Слово о полку Ігоревім'. Визначте спільне та відмінне."
 
 activities:
   types_required:

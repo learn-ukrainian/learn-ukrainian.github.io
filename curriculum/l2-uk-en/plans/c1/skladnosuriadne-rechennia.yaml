@@ -112,21 +112,18 @@ vocabulary:
     - конструкція
 
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про поняття про складносурядне речення (сср) і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Смислові зв'язки між частинами ССР»."
   - type: fill-in
-    description: "Complete compound sentences with appropriate coordinating conjunctions
-      (єднальні, протиставні, розділові) based on semantic context."
+    focus: "Вставте правильну граматичну форму у реченнях на тему поняття про складносурядне речення (сср)."
   - type: error-correction
-    description: "Fix punctuation errors in compound sentences — missing commas, incorrect
-      semicolons, wrong dash placement."
+    focus: "Знайдіть і виправте помилки у реченнях на тему смислові зв'язки між частинами сср."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Поняття про складносурядне речення (ССР)»."
   - type: match-up
-    description: "Match types of semantic relations in compound sentences (одночасність,
-      послідовність, протиставлення) with example sentences."
-  - type: critical-analysis
-    description: "Analyze a literary passage by Коцюбинський and identify all compound
-      sentences, classifying their semantic and stylistic functions."
-  - type: select
-    description: "Identify cases where commas are NOT required between parts of compound
-      sentences (shared secondary member, common adverbial clause)."
+    focus: "З'єднайте терміни з розділу «Смислові зв'язки між частинами ССР» з їхніми визначеннями."
 
 activities:
   types_required:

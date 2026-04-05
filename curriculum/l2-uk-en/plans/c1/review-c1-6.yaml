@@ -113,21 +113,16 @@ vocabulary:
     - текстознавство
 
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про література: підсумковий огляд і дайте відповіді на запитання щодо ключових понять."
+  - type: essay-response
+    focus: "Напишіть короткий текст (100-150 слів) про стилістичні засоби: інтеграція, використовуючи нову лексику модуля."
   - type: critical-analysis
-    description: "Perform a comprehensive analysis of a literary passage — lexical,
-      grammatical, and stylistic levels simultaneously."
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Література: підсумковий огляд». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Fix errors across all C1.6 topics in a single text: case usage,
-      complex sentences, stylistic figures, literary terminology."
-  - type: match-up
-    description: "Match C1.6 key concepts (стилістичні фігури, відмінкові функції,
-      літературні напрями) with definitions and examples."
-  - type: fill-in
-    description: "Complete sentences using grammatical structures from the entire
-      C1.3-C1.6 program: cases, conditional mood, complex syntax."
-  - type: select
-    description: "Choose the correct grammatical form or stylistic device in each
-      context — integrative quiz across all C1.6 topics."
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему література: підсумковий огляд."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до література: підсумковий огляд: Історія української літератури: від Нестора до Жадана. Визначте спільне та відмінне."
 
 activities:
   types_required:

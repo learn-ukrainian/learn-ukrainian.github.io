@@ -105,21 +105,16 @@ vocabulary:
     - інтелектуальний
 
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про архітектура академічного есе і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a complete academic essay (400-500 words) on digital humanities
-      and Ukrainian history, with thesis, arguments, counterarguments, and citations."
+    focus: "Напишіть короткий текст (100-150 слів) про робота з джерелами та доказовою базою, використовуючи нову лексику модуля."
   - type: critical-analysis
-    description: "Evaluate a model essay by Yuriy Shevelov — analyze thesis clarity,
-      argument structure, source integration, and academic voice."
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Архітектура академічного есе». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Edit a draft essay for logical coherence, academic style violations,
-      and citation format errors."
-  - type: match-up
-    description: "Match essay evaluation criteria (логічність, когерентність, стилістика,
-      аргументація) with specific strengths/weaknesses in sample texts."
-  - type: fill-in
-    description: "Complete essay framework sentences with appropriate hedging, citation
-      introductions, and concluding formulas."
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему архітектура академічного есе."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до архітектура академічного есе: Формулювання сильної тези: від задуму до речення. Визначте спільне та відмінне."
 
 activities:
   types_required:

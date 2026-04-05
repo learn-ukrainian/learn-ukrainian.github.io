@@ -111,20 +111,15 @@ vocabulary:
 
 activity_hints:
   - type: reading
-    description: "Read a poem by Василь Стус or Ліна Костенко and perform a complete
-      versification analysis — meter, rhyme scheme, strophic structure."
-  - type: critical-analysis
-    description: "Analyze the unity of form and content in a Ukrainian poem — how
-      does the rhythmic pattern support the emotional and semantic content?"
-  - type: select
-    description: "Identify the verse meter (ямб, хорей, дактиль, амфібрахій, анапест,
-      верлібр) in given poetic excerpts and mark stressed/unstressed syllables."
+    focus: "Прочитайте текст про основи версифікації (віршознавства) і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a comprehensive literary analysis (150-200 words) of a Ukrainian
-      poem covering versification, tropes, and interpretation."
-  - type: match-up
-    description: "Match types of lyric poetry (інтимна, пейзажна, громадянська, філософська)
-      with their defining features and representative poems."
+    focus: "Напишіть короткий текст (100-150 слів) про звукова та строфічна організація поезії, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Основи версифікації (віршознавства)». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему основи версифікації (віршознавства)."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до основи версифікації (віршознавства): Системи віршування: народна, силабічна, силабо-тонічна. Визначте спільне та відмінне."
 
 activities:
   types_required:

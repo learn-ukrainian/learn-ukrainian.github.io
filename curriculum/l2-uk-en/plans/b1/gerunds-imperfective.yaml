@@ -164,21 +164,18 @@ vocabulary_hints:
     - "сидячи (while sitting — from сидіти)"
     - "хвилюючись (while worrying — reflexive gerund)"
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про що таке дієприслівник? і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Творення дієприслівників недоконаного виду»."
   - type: fill-in
-    focus: "Form imperfective gerunds from given verbs using correct suffixes"
-    items: 10
-  - type: quiz
-    focus: "Is the gerund used correctly? Check logical subject alignment"
-    items: 8
-  - type: match-up
-    focus: "Match gerunds to their base verbs and identify the дієвідміна"
-    items: 8
+    focus: "Вставте правильну граматичну форму у реченнях на тему що таке дієприслівник?."
   - type: error-correction
-    focus: "Fix dangling gerund errors by aligning logical subjects"
-    items: 8
-  - type: sentence-builder
-    focus: "Combine two actions into one sentence using a gerund for simultaneity"
-    items: 6
+    focus: "Знайдіть і виправте помилки у реченнях на тему творення дієприслівників недоконаного виду."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Що таке дієприслівник?»."
+  - type: match-up
+    focus: "З'єднайте терміни з розділу «Творення дієприслівників недоконаного виду» з їхніми визначеннями."
 connects_to:
   - "b1-062 (Дієприслівники доконаного виду — perfective gerunds)"
   - "b1-063 (Дієприслівниковий зворот — gerund phrases)"

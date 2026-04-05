@@ -112,23 +112,16 @@ vocabulary:
     - системність
 
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про контроль лексико-фразеологічної компетенції і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write an academic essay (200-250 words) synthesizing knowledge from
-      C1.5 modules — stylistics, syntax, register — on a given topic about language
-      and technology."
+    focus: "Напишіть короткий текст (100-150 слів) про синтаксичний та пунктуаційний практикум, використовуючи нову лексику модуля."
   - type: critical-analysis
-    description: "Analyze a complex text and perform full linguistic evaluation —
-      identify register, stylistic devices, syntactic patterns, and evaluate argumentation
-      quality."
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Контроль лексико-фразеологічної компетенції». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Fix all types of errors in a deliberately flawed academic text —
-      lexical calques, register mixing, syntactic errors, punctuation mistakes."
-  - type: fill-in
-    description: "Complete a cloze passage from a scientific article with missing
-      modal markers, connectors, and complex syntactic constructions."
-  - type: select
-    description: "Choose the most appropriate stylistic variant for given communicative
-      situations — from high formal to intimate register."
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему контроль лексико-фразеологічної компетенції."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до контроль лексико-фразеологічної компетенції: Вживання паронімів та омонімів у науковому стилі. Визначте спільне та відмінне."
 
 activities:
   types_required:

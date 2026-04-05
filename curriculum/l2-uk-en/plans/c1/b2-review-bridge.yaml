@@ -113,21 +113,16 @@ vocabulary:
     - верифікація
 
 activity_hints:
-  - type: critical-analysis
-    description: "Evaluate the strength of arguments in a Ukrainian academic text
-      about Розстріляне відродження — identify thesis, evidence, and logical gaps."
-  - type: error-correction
-    description: "Fix morphological and syntactic errors in sentences using complex
-      subordinate clauses and participial phrases from B2-level grammar."
+  - type: reading
+    focus: "Прочитайте текст про синтаксичний міст і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a structured paragraph (100-150 words) arguing whether language
-      can be a tool for decolonization, using complex syntax."
-  - type: fill-in
-    description: "Complete sentences with appropriate discourse markers and logical
-      connectors from academic Ukrainian register."
-  - type: match-up
-    description: "Match abstract academic terms (парадигма, дискурс, контекст) with
-      their definitions and example sentences."
+    focus: "Напишіть короткий текст (100-150 слів) про лексична ретроспектива та перспектива, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Синтаксичний міст». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему синтаксичний міст."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до синтаксичний міст: Ревізія складних речень із кількома підрядними. Визначте спільне та відмінне."
 
 activities:
   types_required:

@@ -115,21 +115,16 @@ vocabulary:
     - архівація
 
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про музичний фольклор: підсумковий огляд і дайте відповіді на запитання щодо ключових понять."
+  - type: essay-response
+    focus: "Напишіть короткий текст (100-150 слів) про народний танець та інструментальна музика, використовуючи нову лексику модуля."
   - type: critical-analysis
-    description: "Analyze the role of кобзарська tradition in national memory —
-      historical context, Soviet destruction, modern revival."
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Музичний фольклор: підсумковий огляд». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Fix factual and stylistic errors in a text about folk arts —
-      misattributed regional styles, chronological errors, terminology."
-  - type: match-up
-    description: "Match folk art forms (писанка, вишиванка, гопак, дума, колядка) with
-      their regions, features, and cultural significance."
-  - type: true-false
-    description: "Evaluate statements about Ukrainian folk music and arts — distinguish
-      facts from myths and stereotypes."
-  - type: select
-    description: "Identify the folk genre or art form based on descriptions of
-      characteristics, structure, and regional origin."
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему музичний фольклор: підсумковий огляд."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до музичний фольклор: підсумковий огляд: Кобзарство та бандуристика: традиція, знищення, відродження. Визначте спільне та відмінне."
 
 activities:
   types_required:

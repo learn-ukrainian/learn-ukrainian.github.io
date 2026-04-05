@@ -146,18 +146,14 @@ activities:
   total_min_items: 32
 
 activity_hints:
-  - type: match-up
-    description: "Match legal term to its definition (e.g., презумпція невинуватості↔особа
-      вважається невинною, доки її вину не доведено)"
-  - type: cloze
-    description: "Fill in a legal document template with correct terms (позовна заява,
-      клопотання, вердикт)"
-  - type: fill-in
-    description: "Complete legal formulas and standard phrases (e.g., 'Суд ухвалив
-      ___ про ___')"
+  - type: reading
+    focus: "Прочитайте текст про правоохоронна система та судочинство і дайте відповіді на запитання щодо ключових понять."
+  - type: essay-response
+    focus: "Напишіть короткий текст (100-150 слів) про кримінальне та процесуальне право, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Правоохоронна система та судочинство». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Fix non-standard or Russianized legal terms (e.g., 'слідчий комітет'→'слідчий
-      відділ', 'заключення'→'висновок')"
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему правоохоронна система та судочинство."
 
 references:
   - "Глазова, 11 клас (2019): §11-15 — Лексична норма, термінологія, професійна лексика"

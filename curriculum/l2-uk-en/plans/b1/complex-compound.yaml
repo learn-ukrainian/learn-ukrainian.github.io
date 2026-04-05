@@ -131,22 +131,18 @@ vocabulary_hints:
     - "а втім (but then again)"
     - "зате (but on the other hand)"
 activity_hints:
-  - type: quiz
-    focus: "Classify сполучники and смислові зв'язки in складносурядних реченнях"
-    items: 10
+  - type: reading
+    focus: "Прочитайте текст про що таке складносурядне речення? і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Єднальні сполучники»."
   - type: fill-in
-    focus: "Insert correct сполучник (єднальний/протиставний/розділовий) and punctuation"
-    items: 10
-  - type: match-up
-    focus: "Match складносурядні речення to their смислові зв'язки types"
-    items: 8
+    focus: "Вставте правильну граматичну форму у реченнях на тему що таке складносурядне речення?."
   - type: error-correction
-    focus: "Fix punctuation errors in compound sentences, including shared-member
-      exceptions"
-    items: 8
-  - type: sentence-builder
-    focus: "Combine simple sentences into compound using appropriate сполучники"
-    items: 8
+    focus: "Знайдіть і виправте помилки у реченнях на тему єднальні сполучники."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Що таке складносурядне речення?»."
+  - type: match-up
+    focus: "З'єднайте терміни з розділу «Єднальні сполучники» з їхніми визначеннями."
 connects_to:
   - "b1-067 (З'ясувальні речення — first subordinate type)"
   - "b1-003 (Синтаксис і відмінки — basic sentence structure from Phase 1)"

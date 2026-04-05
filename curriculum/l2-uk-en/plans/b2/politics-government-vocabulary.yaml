@@ -148,17 +148,14 @@ activities:
   total_min_items: 32
 
 activity_hints:
-  - type: match-up
-    description: "Ukrainian political term matched to its definition (e.g., суверенітет↔повна
-      незалежність держави)"
-  - type: fill-in
-    description: "Complete a political news text with correct terms (e.g., Верховна
-      Рада ухвалила ___)"
-  - type: group-sort
-    description: "Sort vocabulary into суспільно-політична vs побутова лексика"
+  - type: reading
+    focus: "Прочитайте текст про державний устрій та влада і дайте відповіді на запитання щодо ключових понять."
+  - type: essay-response
+    focus: "Напишіть короткий текст (100-150 слів) про виборчий процес та політичні партії, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Державний устрій та влада». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Fix Russianisms in political language (e.g., 'вибори пройшли'→'вибори
-      відбулися', 'рішаючий голос'→'вирішальний голос')"
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему державний устрій та влада."
 
 references:
   - "Глазова, 11 клас (2019): §11-15 — Лексична норма, термінологія, професійна лексика"

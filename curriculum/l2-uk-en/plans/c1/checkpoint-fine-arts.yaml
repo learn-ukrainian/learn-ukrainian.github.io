@@ -110,21 +110,16 @@ vocabulary:
     - постмодернізм
 
 activity_hints:
-  - type: critical-analysis
-    description: "Analyze one Ukrainian artist's contribution to world art — contextualize
-      their work within both Ukrainian and international traditions."
-  - type: match-up
-    description: "Match Ukrainian artists and composers with their periods, styles,
-      key works, and contributions."
-  - type: error-correction
-    description: "Fix errors in art criticism text — wrong attributions, anachronisms,
-      stylistic inconsistencies in academic register."
-  - type: true-false
-    description: "Evaluate statements about Ukrainian art — distinguish facts from
-      common misconceptions (e.g., Malevich's nationality)."
+  - type: reading
+    focus: "Прочитайте текст про образотворче мистецтво: підсумковий огляд і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a short art review (150-200 words) of a specific Ukrainian
-      artwork, using appropriate art criticism vocabulary."
+    focus: "Напишіть короткий текст (100-150 слів) про класична та сучасна музика, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Образотворче мистецтво: підсумковий огляд». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему образотворче мистецтво: підсумковий огляд."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до образотворче мистецтво: підсумковий огляд: Від ікони до станкового живопису: еволюція українського мистецтва. Визначте спільне та відмінне."
 
 activities:
   types_required:

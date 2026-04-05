@@ -110,21 +110,16 @@ vocabulary:
     - етнографічний
 
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про календарні обряди: підсумок і дайте відповіді на запитання щодо ключових понять."
+  - type: essay-response
+    focus: "Напишіть короткий текст (100-150 слів) про родинні обряди, використовуючи нову лексику модуля."
   - type: critical-analysis
-    description: "Compare winter and spring ritual cycles — analyze shared archetypes,
-      differing symbolism, and regional variations."
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Календарні обряди: підсумок». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Fix factual errors in a text about folk traditions — misattributed
-      regions, wrong ritual sequences, confused terminology."
-  - type: match-up
-    description: "Match folk rituals (Коляда, Купала, весілля, хрестини) with their
-      seasons, symbols, and regional specifics."
-  - type: true-false
-    description: "Evaluate statements about Ukrainian folk traditions — separate
-      ethnographic facts from popular misconceptions."
-  - type: select
-    description: "Identify the ethnographic region based on described ritual practices,
-      costume elements, or linguistic features."
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему календарні обряди: підсумок."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до календарні обряди: підсумок: Зимовий цикл: Різдво, Коляда, Водохреще, Маланка. Визначте спільне та відмінне."
 
 activities:
   types_required:

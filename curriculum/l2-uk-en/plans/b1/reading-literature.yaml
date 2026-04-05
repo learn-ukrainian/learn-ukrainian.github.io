@@ -185,30 +185,18 @@ vocabulary_hints:
     - "контекст (context — surrounding text that helps meaning)"
     - "відгук (review/response — written reaction to a text)"
 activity_hints:
-  - type: quiz
-    focus: "Identify художні засоби in literary excerpts: name the device and explain
-      its function in the text."
-    items: 12
-  - type: match-up
-    focus: "Match художні засоби terms to their definitions and to concrete examples
-      from Ukrainian literature."
-    items: 12
+  - type: reading
+    focus: "Прочитайте текст про художній стиль мовлення і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Художні засоби»."
   - type: fill-in
-    focus: "Complete literary analysis sentences: identify the художній засіб and
-      its effect in given excerpts."
-    items: 12
-  - type: mark-the-words
-    focus: "In a literary passage, mark all instances of a specific художній засіб
-      (e.g., mark all епітети, or all порівняння)."
-    items: 12
-  - type: free-write
-    focus: "Write a structured response (відгук) to a literary excerpt: враження,
-      аналіз засобів, особисте ставлення (10-12 sentences)."
-    items: 12
-  - type: group-sort
-    focus: "Sort text excerpts by стиль мовлення: художній, науковий, публіцистичний,
-      офіційно-діловий."
-    items: 12
+    focus: "Вставте правильну граматичну форму у реченнях на тему художній стиль мовлення."
+  - type: error-correction
+    focus: "Знайдіть і виправте помилки у реченнях на тему художні засоби."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Художній стиль мовлення»."
+  - type: match-up
+    focus: "З'єднайте терміни з розділу «Художні засоби» з їхніми визначеннями."
 connects_to:
   - "b1-077 (Офіційний стиль — contrast with художній стиль)"
   - "b1-078 (Розмовний стиль — dialogue in художніх текстах)"

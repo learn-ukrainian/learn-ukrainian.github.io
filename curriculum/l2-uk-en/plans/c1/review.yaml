@@ -110,21 +110,16 @@ vocabulary:
     - синтез
 
 activity_hints:
-  - type: error-correction
-    description: "Fix morphological, syntactic, and stylistic errors in a mixed-style
-      text — including surzhyk forms, calques, and incorrect participial phrases."
-  - type: match-up
-    description: "Match linguistic terms from C1.1-C1.4 modules (парадигма, когерентність,
-      предикативність) with correct definitions and example sentences."
-  - type: critical-analysis
-    description: "Analyze a student essay and provide structured feedback — identify
-      3 strengths and 3 areas for improvement with specific textual evidence."
+  - type: reading
+    focus: "Прочитайте текст про систематизація морфологічних норм і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a synthesis paragraph connecting language, identity, and culture
-      using at least 5 complex sentence types studied in C1."
-  - type: fill-in
-    description: "Complete a review exercise with correct morphological forms — numeral
-      declension, participial phrases, and complex punctuation."
+    focus: "Напишіть короткий текст (100-150 слів) про синтаксичний практикум, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Систематизація морфологічних норм». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему систематизація морфологічних норм."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до систематизація морфологічних норм: Складні випадки відмінювання іменників та числівників. Визначте спільне та відмінне."
 
 activities:
   types_required:

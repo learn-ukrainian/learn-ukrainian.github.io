@@ -113,21 +113,16 @@ vocabulary:
     - універсалія
 
 activity_hints:
-  - type: critical-analysis
-    description: "Analyze Potebnia's concept of 'inner form of the word' — evaluate
-      philosophical terminology and argumentation in Ukrainian linguistic tradition."
-  - type: match-up
-    description: "Match linguistic schools and scholars (структуралізм, когнітивістика,
-      Потебня, Шевельов) with their key concepts and contributions."
-  - type: select
-    description: "Identify the correct sociolinguistic phenomenon (білінгвізм, диглосія,
-      мовна стійкість) described in different Ukrainian language situations."
-  - type: error-correction
-    description: "Fix terminological imprecision in a linguistics essay — ensure correct
-      usage of terms like семіотика, прагматика, когнітивістика."
+  - type: reading
+    focus: "Прочитайте текст про мовознавство як система наук і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write an essay (300+ words) on 'Language as the house of being'
-      through the lens of the Ukrainian language struggle."
+    focus: "Напишіть короткий текст (100-150 слів) про мова як знакова система та когнітивний інструмент, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Мовознавство як система наук». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему мовознавство як система наук."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до мовознавство як система наук: Предмет і завдання загального мовознавства: рівні мовної структури. Визначте спільне та відмінне."
 
 activities:
   types_required:

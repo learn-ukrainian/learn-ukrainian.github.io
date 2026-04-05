@@ -144,25 +144,18 @@ vocabulary_hints:
     - "гідний (worthy of — governs genitive)"
     - "вартий (worth — governs genitive)"
 activity_hints:
-  - type: quiz
-    focus: "Identify the semantic role of genitive in sentences (partitive, negation,
-      etc.)"
-    items: 8
+  - type: reading
+    focus: "Прочитайте текст про частковий родовий і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Родовий бажання, пошуку, досягнення»."
   - type: fill-in
-    focus: "Put nouns into correct genitive form, choosing -а/-я or -у/-ю"
-    items: 8
-  - type: match-up
-    focus: "Match quantifier/container to its genitive-governed noun"
-    items: 8
+    focus: "Вставте правильну граматичну форму у реченнях на тему частковий родовий."
   - type: error-correction
-    focus: "Fix case errors in genitive constructions (wrong ending, wrong case)"
-    items: 6
-  - type: sentence-builder
-    focus: "Build sentences using genitive for dates, negation, and partitive"
-    items: 6
-  - type: group-sort
-    focus: "Sort masculine nouns by genitive ending category: -а/-я vs -у/-ю"
-    items: 10
+    focus: "Знайдіть і виправте помилки у реченнях на тему родовий бажання, пошуку, досягнення."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Частковий родовий»."
+  - type: match-up
+    focus: "З'єднайте терміни з розділу «Родовий бажання, пошуку, досягнення» з їхніми визначеннями."
 connects_to:
   - "b1-047 (Давальний відмінок деталі — dative nuances)"
   - "b1-048 (Орудний відмінок деталі — instrumental nuances)"

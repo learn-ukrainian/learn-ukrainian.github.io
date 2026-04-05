@@ -112,21 +112,18 @@ vocabulary_hints:
     - "хай/нехай (even if — literary concessive)"
     - "зате (but on the other hand — correlative)"
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про підрядні обставинні допусту і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Хоч/хоча — основний сполучник»."
   - type: fill-in
-    focus: "Complete concessive sentences with correct conjunction and correlative"
-    items: 10
-  - type: quiz
-    focus: "Classify: причинне, умовне, чи допустове речення?"
-    items: 10
-  - type: sentence-builder
-    focus: "Construct concessive sentences from given contrasting facts"
-    items: 8
-  - type: match-up
-    focus: "Match допустові сполучники to register levels and usage patterns"
-    items: 6
+    focus: "Вставте правильну граматичну форму у реченнях на тему підрядні обставинні допусту."
   - type: error-correction
-    focus: "Fix misused conjunctions (допуст vs причина vs умова confusion)"
-    items: 6
+    focus: "Знайдіть і виправте помилки у реченнях на тему хоч/хоча — основний сполучник."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Підрядні обставинні допусту»."
+  - type: match-up
+    focus: "З'єднайте терміни з розділу «Хоч/хоча — основний сполучник» з їхніми визначеннями."
 connects_to:
   - "b1-072 (Речення мети)"
   - "b1-074 (Пряма і непряма мова)"

@@ -107,21 +107,16 @@ vocabulary:
     - маніпуляція
 
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про підготовка та структура виступу і дайте відповіді на запитання щодо ключових понять."
+  - type: essay-response
+    focus: "Напишіть короткий текст (100-150 слів) про мовні засоби презентації, використовуючи нову лексику модуля."
   - type: critical-analysis
-    description: "Evaluate a Ukrainian academic presentation transcript — assess structure,
-      audience engagement techniques, and Q&A handling."
-  - type: fill-in
-    description: "Complete presentation scripts with appropriate transition phrases
-      (Перейдемо до..., Як ілюструє цей графік..., Підбиваючи підсумки...)."
-  - type: match-up
-    description: "Match presentation sections (вступ, основна частина, висновки, Q&A)
-      with their characteristic discourse markers."
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Підготовка та структура виступу». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Fix register errors in a presentation script — replace informal
-      language with appropriate professional Ukrainian."
-  - type: select
-    description: "Choose the most effective rhetorical technique for different presentation
-      situations (opening hook, data commentary, audience question)."
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему підготовка та структура виступу."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до підготовка та структура виступу: Аналіз аудиторії та адаптація змісту. Визначте спільне та відмінне."
 
 activities:
   types_required:

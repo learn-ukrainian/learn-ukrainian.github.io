@@ -110,21 +110,16 @@ vocabulary:
     - епіфора
 
 activity_hints:
-  - type: critical-analysis
-    description: "Analyze a UN speech by a Ukrainian official — identify ethos, pathos,
-      and logos elements, rhetorical figures, and their persuasive effectiveness."
-  - type: error-correction
-    description: "Fix a poorly structured persuasive speech — weak thesis, missing
-      call to action, logical fallacies, ineffective rhetorical devices."
-  - type: essay-response
-    description: "Write a persuasive speech opening (100-150 words) on environmental
-      or social justice in Ukraine, using at least 5 different rhetorical figures."
   - type: reading
-    description: "Read an excerpt from Ukrainian Baroque oratory (Феофан Прокопович)
-      and identify the classical rhetorical structure (inventio, dispositio, elocutio)."
-  - type: match-up
-    description: "Match rhetorical concepts (етос, пафос, логос, інвенція, елокуція)
-      with their definitions, functions, and examples from Ukrainian speeches."
+    focus: "Прочитайте текст про класична риторика та сучасний контекст і дайте відповіді на запитання щодо ключових понять."
+  - type: essay-response
+    focus: "Напишіть короткий текст (100-150 слів) про риторичний інструментарій: фігури та тропи, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Класична риторика та сучасний контекст». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему класична риторика та сучасний контекст."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до класична риторика та сучасний контекст: Три кити риторики: Етос (авторитет), Пафос (емоції), Логос (логіка). Визначте спільне та відмінне."
 
 activities:
   types_required:

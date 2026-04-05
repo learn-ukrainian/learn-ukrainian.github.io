@@ -111,22 +111,16 @@ vocabulary:
     - репрезентація
 
 activity_hints:
-  - type: critical-analysis
-    description: "Analyze metaphorical systems in a poem by Богдан-Ігор Антонич —
-      identify donor and recipient domains, classify metaphor types (мовна, мовленнєва,
-      авторська)."
-  - type: match-up
-    description: "Match stylistic devices (метафора, метонімія, синекдоха, персоніфікація,
-      катахреза) with their definitions and literary examples."
-  - type: select
-    description: "Identify the type of figurative language in excerpts from Ukrainian
-      literature and media — distinguish metaphor from simile, metonymy, and personification."
+  - type: reading
+    focus: "Прочитайте текст про метафора як фундаментальна когнітивна категорія і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a comparative analysis (150-200 words) of metaphor use in
-      two different registers — literary and political/business discourse."
-  - type: mark-the-words
-    description: "Identify all metaphors and similes in a literary passage, classifying
-      each as розгорнуте порівняння, заперечне порівняння, or метафора-епітет."
+    focus: "Напишіть короткий текст (100-150 слів) про порівняння: від структури до художнього образу, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Метафора як фундаментальна когнітивна категорія». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему метафора як фундаментальна когнітивна категорія."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до метафора як фундаментальна когнітивна категорія: Теорія метафоричного перенесення: подібність та суміжність. Визначте спільне та відмінне."
 
 activities:
   types_required:

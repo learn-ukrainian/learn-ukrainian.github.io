@@ -117,21 +117,16 @@ vocabulary:
     - парадигма
 
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про композиція наукової статті і дайте відповіді на запитання щодо ключових понять."
+  - type: essay-response
+    focus: "Напишіть короткий текст (100-150 слів) про мовні особливості академічного стилю, використовуючи нову лексику модуля."
   - type: critical-analysis
-    description: "Evaluate IMRAD structure of a Ukrainian scientific article — assess
-      methodology description, results presentation, and conclusion quality."
-  - type: fill-in
-    description: "Complete research article sections with appropriate academic clichés
-      and discourse markers for each IMRAD component."
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Композиція наукової статті». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Fix stylistic and structural errors in a draft research article
-      — ensure impersonality, terminological precision, and logical transitions."
-  - type: match-up
-    description: "Match research article sections (вступ, методи, результати, обговорення)
-      with their characteristic language markers."
-  - type: cloze
-    description: "Fill in missing methodological verbs and transitional phrases in
-      a research article about Ukrainian dialectal heritage."
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему композиція наукової статті."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до композиція наукової статті: Заголовок, анотація та ключові слова: як привернути увагу читача. Визначте спільне та відмінне."
 
 activities:
   types_required:

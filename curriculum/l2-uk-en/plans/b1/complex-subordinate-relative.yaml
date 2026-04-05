@@ -114,21 +114,18 @@ vocabulary_hints:
     - "антецедент (antecedent — formal term for означуване слово)"
     - "постпозиція (postposition — clause always after the noun)"
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про означальні підрядні речення і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Який у різних відмінках»."
   - type: fill-in
-    focus: "Insert correct form of який (gender + case) in означальних реченнях"
-    items: 12
-  - type: quiz
-    focus: "Choose between який/що/де/куди/коли as the connector"
-    items: 8
-  - type: sentence-builder
-    focus: "Construct означальні речення to describe given nouns"
-    items: 8
-  - type: match-up
-    focus: "Match sentence halves: main clause + correct означальне"
-    items: 8
+    focus: "Вставте правильну граматичну форму у реченнях на тему означальні підрядні речення."
   - type: error-correction
-    focus: "Fix case/gender errors in який and punctuation mistakes"
-    items: 6
+    focus: "Знайдіть і виправте помилки у реченнях на тему який у різних відмінках."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Означальні підрядні речення»."
+  - type: match-up
+    focus: "З'єднайте терміни з розділу «Який у різних відмінках» з їхніми визначеннями."
 connects_to:
   - "b1-067 (З'ясувальні речення — first subordinate type)"
   - "b1-059 (Дієприкметниковий зворот — alternative means of expressing attributes)"

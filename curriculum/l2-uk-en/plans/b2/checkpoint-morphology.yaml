@@ -125,20 +125,14 @@ activities:
   total_min_items: 20
 
 activity_hints:
-  - type: cloze
-    description: "Complete a mixed morphology text testing aspect, conditionals, numerals,
-      and word formation"
-  - type: group-sort
-    description: "Classify word forms by morphological category (вид дієслова / відмінок
-      числівника / спосіб словотвору)"
-  - type: error-correction
-    description: "Find and fix all morphological errors in a paragraph (aspect, case,
-      suffix, particle placement)"
+  - type: reading
+    focus: "Прочитайте текст про іменні частини мови: систематизація винятків і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a text using specified morphological forms (давноминулий час,
-      умовний спосіб, складені числівники)"
-  - type: fill-in
-    description: "Comprehensive morphology exercise covering all topics from M43-M55"
+    focus: "Напишіть короткий текст (100-150 слів) про дієслівна система: від аспекта до способу, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Іменні частини мови: Систематизація винятків». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему іменні частини мови: систематизація винятків."
 
 references:
   - "Караман, 10 клас (2018): §55-60 (словотвір), §68-70 (числівник), §71-74 (дієслово)"

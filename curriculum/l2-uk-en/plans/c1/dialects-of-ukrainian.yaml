@@ -115,21 +115,16 @@ vocabulary:
     - континіум
 
 activity_hints:
-  - type: critical-analysis
-    description: "Analyze dialect features in Kotsyubynsky's 'Shadows of Forgotten
-      Ancestors' — identify Hutsul lexical, phonetic, and morphological markers."
-  - type: match-up
-    description: "Match Ukrainian dialect groups (північне, південно-західне, південно-східне
-      наріччя) with their characteristic features and geographic areas."
-  - type: select
-    description: "Identify the dialect origin of specific linguistic features — distinguish
-      between Polisian archaic forms, Galician influences, and Steppe innovations."
-  - type: error-correction
-    description: "Identify dialectal forms in a text and provide their literary Ukrainian
-      equivalents with linguistic explanation."
   - type: reading
-    description: "Read a passage containing dialectal features and answer comprehension
-      questions about the linguistic phenomena present."
+    focus: "Прочитайте текст про основи української діалектології і дайте відповіді на запитання щодо ключових понять."
+  - type: essay-response
+    focus: "Напишіть короткий текст (100-150 слів) про північне та південно-західне наріччя, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Основи української діалектології». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему основи української діалектології."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до основи української діалектології: Предмет діалектології та основні поняття: територіальний та соціальний діалект. Визначте спільне та відмінне."
 
 activities:
   types_required:

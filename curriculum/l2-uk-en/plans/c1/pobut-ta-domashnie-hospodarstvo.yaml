@@ -111,21 +111,16 @@ vocabulary:
     - інструмент
 
 activity_hints:
-  - type: fill-in
-    description: "Complete household and utility-related texts with appropriate
-      vocabulary: repair terms, communal services, home organization."
-  - type: match-up
-    description: "Match household items, rooms, and services with their functions,
-      descriptions, and contexts of use."
+  - type: reading
+    focus: "Прочитайте текст про житло та облаштування і дайте відповіді на запитання щодо ключових понять."
+  - type: essay-response
+    focus: "Напишіть короткий текст (100-150 слів) про комунальні послуги та жкг, використовуючи нову лексику модуля."
   - type: critical-analysis
-    description: "Analyze an ethnographic text about the traditional Ukrainian хата —
-      identify cultural codes embedded in household vocabulary."
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Житло та облаштування». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Fix Russianisms and surzhyk in household vocabulary: підʼїзд→під'їзд,
-      кран→кран (correct), ковьор→килим, кастрюля→каструля."
-  - type: select
-    description: "Choose the correct Ukrainian household term over Russian-influenced
-      alternatives in everyday contexts."
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему житло та облаштування."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до житло та облаштування: Типи житла: квартира, будинок, котедж, гуртожиток. Визначте спільне та відмінне."
 
 activities:
   types_required:

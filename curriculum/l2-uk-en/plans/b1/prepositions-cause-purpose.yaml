@@ -145,24 +145,18 @@ vocabulary_hints:
     - "навіщо (what for — purpose question word)"
     - "чому (why — cause question word)"
 activity_hints:
-  - type: quiz
-    focus: "Choose correct cause/purpose preposition (through vs thanks to, etc.)"
-    items: 8
+  - type: reading
+    focus: "Прочитайте текст про причина: через та завдяки і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Причина: від та з»."
   - type: fill-in
-    focus: "Complete sentences with через/завдяки/від/для/заради + correct case"
-    items: 8
-  - type: match-up
-    focus: "Match preposition to its semantic function (positive cause, purpose, etc.)"
-    items: 8
+    focus: "Вставте правильну граматичну форму у реченнях на тему причина: через та завдяки."
   - type: error-correction
-    focus: "Fix errors: *завдяки хворобі, *через допомозі, wrong case"
-    items: 6
-  - type: sentence-builder
-    focus: "Build complex sentences with compound cause/purpose constructions"
-    items: 6
-  - type: group-sort
-    focus: "Sort sentences into CAUSE vs PURPOSE categories"
-    items: 10
+    focus: "Знайдіть і виправте помилки у реченнях на тему причина: від та з."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Причина: через та завдяки»."
+  - type: match-up
+    focus: "З'єднайте терміни з розділу «Причина: від та з» з їхніми визначеннями."
 connects_to:
   - "b1-050 (Часові прийменники — temporal prepositions)"
   - "b1-069 (Речення причини — cause clauses in Phase 8)"

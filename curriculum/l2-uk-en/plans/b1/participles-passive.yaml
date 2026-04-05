@@ -146,26 +146,18 @@ vocabulary_hints:
     - "зварений (boiled/cooked — perfective participle)"
     - "варений (cooked — lexicalized adjective from варити)"
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про пасивні дієприкметники: значення і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Творення пасивних дієприкметників»."
   - type: fill-in
-    focus: "Form passive participles from given verbs with correct suffixes and alternations"
-    items: 10
-  - type: quiz
-    focus: "Choose the correct passive participle form (testing suffix choice and
-      alternations)"
-    items: 10
-  - type: match-up
-    focus: "Match passive participles to their base verbs, identifying alternations"
-    items: 8
+    focus: "Вставте правильну граматичну форму у реченнях на тему пасивні дієприкметники: значення."
   - type: error-correction
-    focus: "Fix incorrectly formed passive participles (wrong suffix, missing alternation)"
-    items: 6
-  - type: group-sort
-    focus: "Sort passive participles by suffix type: -н- vs -ен-/-єн- vs -т-"
-    items: 12
-  - type: sentence-builder
-    focus: "Use passive participles with correct agreement to describe objects and
-      places"
-    items: 6
+    focus: "Знайдіть і виправте помилки у реченнях на тему творення пасивних дієприкметників."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Пасивні дієприкметники: значення»."
+  - type: match-up
+    focus: "З'єднайте терміни з розділу «Творення пасивних дієприкметників» з їхніми визначеннями."
 connects_to:
   - "b1-057 (Активні дієприкметники — active participles)"
   - "b1-059 (Дієприкметниковий зворот — participle phrases)"

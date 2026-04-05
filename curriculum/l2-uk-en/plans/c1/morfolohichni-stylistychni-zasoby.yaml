@@ -120,21 +120,16 @@ vocabulary:
     - інтенція
 
 activity_hints:
-  - type: critical-analysis
-    description: "Analyze a literary passage — identify the morphological dominant
-      (noun-heavy = static, verb-heavy = dynamic) and explain its stylistic effect."
-  - type: match-up
-    description: "Match morphological stylistic devices (субстантивація, теперішній
-      історичний, експресивні суфікси) with their functions and example sentences."
-  - type: error-correction
-    description: "Fix morphological style errors — inappropriate diminutives in official
-      text, nominalization where verbs would be clearer, wrong variant case endings."
-  - type: select
-    description: "Choose the stylistically appropriate variant form for a given register
-      (e.g., -у/-а in genitive singular, -ові/-у in dative, -ію/-ею in instrumental)."
+  - type: reading
+    focus: "Прочитайте текст про стилістика іменних частин мови і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write two versions of a winter evening description — one noun-dominated
-      (static) and one verb-dominated (dynamic) — then analyze the difference."
+    focus: "Напишіть короткий текст (100-150 слів) про дієслово: енергія та динаміка тексту, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Стилістика іменних частин мови». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему стилістика іменних частин мови."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до стилістика іменних частин мови: Експресивні можливості категорії роду та числа іменників. Визначте спільне та відмінне."
 
 activities:
   types_required:

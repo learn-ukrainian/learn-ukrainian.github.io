@@ -117,21 +117,18 @@ vocabulary:
     - морфема
 
 activity_hints:
-  - type: error-correction
-    description: "Fix morphological norm violations — incorrect genitive endings (-а/-я
-      vs -у/-ю), degree of comparison errors (найбільш кращий), participle calques."
+  - type: reading
+    focus: "Прочитайте текст про складні випадки іменникових форм і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Прикметники та займенники: норма та узус»."
   - type: fill-in
-    description: "Complete official document sentences with correct vocative case
-      forms, abbreviation agreements, and indeclinable noun genders."
-  - type: select
-    description: "Choose the normative morphological form from variants — parallel
-      endings, compound adjective spellings, pronoun usage."
+    focus: "Вставте правильну граматичну форму у реченнях на тему складні випадки іменникових форм."
+  - type: error-correction
+    focus: "Знайдіть і виправте помилки у реченнях на тему прикметники та займенники: норма та узус."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Складні випадки іменникових форм»."
   - type: match-up
-    description: "Match morphological categories (рід, відмінок, ступінь порівняння)
-      with their problematic cases and correct resolution rules."
-  - type: group-sort
-    description: "Categorize masculine genitive nouns by ending pattern (-а/-я for
-      concrete/countable vs -у/-ю for abstract/collective/mass)."
+    focus: "З'єднайте терміни з розділу «Прикметники та займенники: норма та узус» з їхніми визначеннями."
 
 activities:
   types_required:

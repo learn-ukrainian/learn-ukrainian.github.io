@@ -196,26 +196,18 @@ vocabulary_hints:
     - "пишатися (to be proud — pride in achievement)"
     - "сертифікат (certificate — proof of completion)"
 activity_hints:
-  - type: free-write
-    focus: "Write the extended essay (300+ words) on chosen topic, demonstrating full
-      B1 grammatical range."
-    items: 6
-  - type: role-play
-    focus: "Deliver oral presentation (3-5 minutes) on chosen topic. Self-record and
-      evaluate."
-    items: 6
-  - type: free-write
-    focus: "Write personal reflection (150-200 words) on B1 journey: achievements,
-      challenges, goals for B2."
-    items: 6
+  - type: reading
+    focus: "Прочитайте текст про підсумковий проєкт: вступ і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Розгорнуте есе»."
+  - type: fill-in
+    focus: "Вставте правильну граматичну форму у реченнях на тему підсумковий проєкт: вступ."
+  - type: error-correction
+    focus: "Знайдіть і виправте помилки у реченнях на тему розгорнуте есе."
   - type: quiz
-    focus: "Final self-assessment quiz covering all B1 grammar areas: identify own
-      confidence level per topic."
-    items: 15
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Підсумковий проєкт: вступ»."
   - type: match-up
-    focus: "Match B1 skills to CEFR descriptors: what the learner can now do in reading,
-      writing, listening, speaking."
-    items: 8
+    focus: "З'єднайте терміни з розділу «Розгорнуте есе» з їхніми визначеннями."
 connects_to:
   - "b1-088 to b1-090 (review and exam modules — preparation for capstone)"
   - "b2-001 (first B2 module — the journey continues)"

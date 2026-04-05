@@ -108,22 +108,16 @@ vocabulary:
     - дисфемізм
 
 activity_hints:
-  - type: critical-analysis
-    description: "Analyze a newspaper article — identify all phraseological units,
-      classify their stylistic register (книжна, розмовна, нейтральна), and evaluate
-      their effectiveness."
-  - type: select
-    description: "Identify whether a given phraseological unit is authentic Ukrainian
-      or a calque from Russian — choose the correct Ukrainian equivalent."
-  - type: match-up
-    description: "Match phraseological units with their sources (біблеїзми, античні
-      ремінісценції, козацький фольклор, крилаті вислови класиків)."
-  - type: error-correction
-    description: "Fix phraseological errors in texts — contaminated idioms, pleonastic
-      combinations, calqued expressions from Russian."
+  - type: reading
+    focus: "Прочитайте текст про класифікація фразеологізмів за стилістичним забарвленням і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a critical review paragraph (100-150 words) integrating at
-      least 5 Ukrainian book-style phraseological units naturally."
+    focus: "Напишіть короткий текст (100-150 слів) про джерела та походження української фразеології, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Класифікація фразеологізмів за стилістичним забарвленням». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему класифікація фразеологізмів за стилістичним забарвленням."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до класифікація фразеологізмів за стилістичним забарвленням: Нейтральна фразеологія: основа комунікації. Визначте спільне та відмінне."
 
 activities:
   types_required:

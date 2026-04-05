@@ -133,21 +133,18 @@ vocabulary_hints:
     - "трансформація (transformation — converting between structures)"
     - "стилістика (stylistics — choice between phrase and clause)"
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про що таке дієприкметниковий зворот? і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Правила відокремлення»."
   - type: fill-in
-    focus: "Place commas correctly in sentences with participle phrases"
-    items: 10
-  - type: quiz
-    focus: "Does this participle phrase need commas? Choose correct punctuation"
-    items: 8
-  - type: sentence-builder
-    focus: "Transform який-clauses into participle phrases and vice versa"
-    items: 8
+    focus: "Вставте правильну граматичну форму у реченнях на тему що таке дієприкметниковий зворот?."
   - type: error-correction
-    focus: "Fix punctuation and dangling participle errors"
-    items: 8
-  - type: mark-the-words
-    focus: "In a passage, mark all дієприкметникові звороти and their означувані слова"
-    items: 6
+    focus: "Знайдіть і виправте помилки у реченнях на тему правила відокремлення."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Що таке дієприкметниковий зворот?»."
+  - type: match-up
+    focus: "З'єднайте терміни з розділу «Правила відокремлення» з їхніми визначеннями."
 connects_to:
   - "b1-057 (Активні дієприкметники)"
   - "b1-058 (Пасивні дієприкметники)"

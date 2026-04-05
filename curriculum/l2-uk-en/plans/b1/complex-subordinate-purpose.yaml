@@ -112,22 +112,18 @@ vocabulary_hints:
     - "навіщо (what for — question word for purpose)"
     - "для чого (what for — question phrase for purpose)"
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про підрядні обставинні мети і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Щоб + інфінітив vs щоб + особова форма»."
   - type: fill-in
-    focus: "Complete purpose sentences: щоб + infinitive or щоб + past-tense form"
-    items: 10
-  - type: quiz
-    focus: "Classify: з'ясувальне чи обставинне мети?"
-    items: 8
-  - type: sentence-builder
-    focus: "Construct purpose sentences for given goals (same and different subjects)"
-    items: 8
+    focus: "Вставте правильну граматичну форму у реченнях на тему підрядні обставинні мети."
   - type: error-correction
-    focus: "Fix verb form errors after щоб (future → past-tense correction)"
-    items: 6
+    focus: "Знайдіть і виправте помилки у реченнях на тему щоб + інфінітив vs щоб + особова форма."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Підрядні обставинні мети»."
   - type: match-up
-    focus: "Match purpose clauses to their prepositional equivalents (щоб ↔ для +
-      Р.в.)"
-    items: 6
+    focus: "З'єднайте терміни з розділу «Щоб + інфінітив vs щоб + особова форма» з їхніми визначеннями."
 connects_to:
   - "b1-071 (Речення умови)"
   - "b1-073 (Речення допусту)"

@@ -114,21 +114,16 @@ vocabulary:
     - пріоритет
 
 activity_hints:
-  - type: critical-analysis
-    description: "Analyze the Budapest Memorandum and its implications — evaluate
-      legal terminology, argument structure, and precedent formation."
-  - type: error-correction
-    description: "Fix diplomatic protocol violations and terminology errors in a draft
-      diplomatic note."
-  - type: match-up
-    description: "Match international organizations (ООН, Рада Європи, ОБСЄ, НАТО)
-      with their functions, Ukrainian terminology, and Ukraine's role."
-  - type: select
-    description: "Choose appropriate diplomatic formulations for different contexts
-      — official requests, declarations of support, expressions of concern."
+  - type: reading
+    focus: "Прочитайте текст про основи міжнародного права та інституцій і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a diplomatic note (250+ words) requesting international support
-      for cultural heritage restoration in Ukraine."
+    focus: "Напишіть короткий текст (100-150 слів) про дипломатичний протокол та етикет, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Основи міжнародного права та інституцій». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему основи міжнародного права та інституцій."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до основи міжнародного права та інституцій: Україна в ООН, Раді Європи та ОБСЄ: досвід та перспективи. Визначте спільне та відмінне."
 
 activities:
   types_required:

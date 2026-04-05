@@ -114,21 +114,18 @@ vocabulary_hints:
     - "з тієї причини що (for the reason that)"
     - "кореляція (correlation — тому in main clause)"
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про підрядні обставинні причини і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Сполучники причини»."
   - type: fill-in
-    focus: "Insert correct causal conjunction based on register and context"
-    items: 10
-  - type: quiz
-    focus: "Classify: причинне чи умовне речення?"
-    items: 8
-  - type: sentence-builder
-    focus: "Construct causal sentences from given events and reasons"
-    items: 8
+    focus: "Вставте правильну граматичну форму у реченнях на тему підрядні обставинні причини."
   - type: error-correction
-    focus: "Fix punctuation errors in причинних реченнях (split vs unsplit)"
-    items: 6
+    focus: "Знайдіть і виправте помилки у реченнях на тему сполучники причини."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Підрядні обставинні причини»."
   - type: match-up
-    focus: "Match causal conjunctions to their register level and usage patterns"
-    items: 8
+    focus: "З'єднайте терміни з розділу «Сполучники причини» з їхніми визначеннями."
 connects_to:
   - "b1-069 (Часові речення)"
   - "b1-071 (Речення умови)"

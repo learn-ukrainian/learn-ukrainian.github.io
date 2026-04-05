@@ -111,21 +111,18 @@ vocabulary:
     - експресія
 
 activity_hints:
-  - type: select
-    description: "Identify the syntactic function of the nominative case in each sentence:
-      subject, predicate, apposition, vocative, or nominative of theme."
-  - type: error-correction
-    description: "Fix sentences where nominative case is incorrectly used instead of
-      an oblique case — distinguish citation form from syntactic function."
-  - type: critical-analysis
-    description: "Analyze a passage by Олесь Гончар — identify all nominative case functions
-      and explain their stylistic effect."
+  - type: reading
+    focus: "Прочитайте текст про називний відмінок у системі відмінків і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Синтаксичні функції називного відмінка»."
   - type: fill-in
-    description: "Complete sentences using nominative case in various syntactic roles,
-      choosing between nominative and oblique forms."
-  - type: unjumble
-    description: "Reorder sentence elements to create stylistic inversion with the
-      nominative subject, comparing neutral and emphatic word order."
+    focus: "Вставте правильну граматичну форму у реченнях на тему називний відмінок у системі відмінків."
+  - type: error-correction
+    focus: "Знайдіть і виправте помилки у реченнях на тему синтаксичні функції називного відмінка."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Називний відмінок у системі відмінків»."
+  - type: match-up
+    focus: "З'єднайте терміни з розділу «Синтаксичні функції називного відмінка» з їхніми визначеннями."
 
 activities:
   types_required:

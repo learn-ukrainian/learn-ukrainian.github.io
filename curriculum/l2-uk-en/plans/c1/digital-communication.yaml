@@ -114,21 +114,16 @@ vocabulary:
     - копірайтинг
 
 activity_hints:
-  - type: critical-analysis
-    description: "Analyze a Ukrainian social media crisis case — evaluate communication
-      failures, tone of voice issues, and propose response strategies."
-  - type: error-correction
-    description: "Fix tone and register violations in professional digital messages
-      — adjust for appropriate platform (email vs Telegram vs LinkedIn)."
-  - type: match-up
-    description: "Match digital communication platforms (email, Slack, LinkedIn) with
-      appropriate register, formality level, and message structure."
-  - type: select
-    description: "Choose the most effective formulation for different digital contexts
-      — cold messages to recruiters, crisis responses, professional posts."
+  - type: reading
+    focus: "Прочитайте текст про епістолярний жанр: електронна пошта та месенджери і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a post-mortem report (250+ words) analyzing a brand's communication
-      failure in social media — use analytical vocabulary."
+    focus: "Напишіть короткий текст (100-150 слів) про тон голосу та особистий бренд, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Епістолярний жанр: електронна пошта та месенджери». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему епістолярний жанр: електронна пошта та месенджери."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до епістолярний жанр: електронна пошта та месенджери: Структура ділового листа в цифрову епоху: від теми до підпису. Визначте спільне та відмінне."
 
 activities:
   types_required:

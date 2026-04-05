@@ -141,14 +141,14 @@ activities:
   total_min_items: 40
 
 activity_hints:
-  - type: fill-in
-    description: "Form place/object names from verbs (e.g., пекти→пекарня, читати→читальня)"
-  - type: match-up
-    description: "Match verb/noun to the derived place name"
-  - type: group-sort
-    description: "Sort words by suffix: -ня / -ище / -арня / -ач / -ник"
-  - type: select
-    description: "Choose the correct derivation for a given meaning"
+  - type: reading
+    focus: "Прочитайте текст про назви приміщень та виробничих локацій і дайте відповіді на запитання щодо ключових понять."
+  - type: essay-response
+    focus: "Напишіть короткий текст (100-150 слів) про місця за ознакою чи дією: -ище та -исько, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Назви приміщень та виробничих локацій». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему назви приміщень та виробничих локацій."
 
 references:
   - "Караман, 10 клас (2018): §55-60 — Словотвір"

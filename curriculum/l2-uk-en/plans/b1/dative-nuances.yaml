@@ -142,24 +142,18 @@ vocabulary_hints:
     - "заважати (to bother/disturb — governs Д.в.)"
     - "завдячувати (to owe gratitude — governs Д.в.)"
 activity_hints:
-  - type: quiz
-    focus: "Identify why dative is used in each sentence (state, age, recipient, etc.)"
-    items: 8
+  - type: reading
+    focus: "Прочитайте текст про давальний суб'єкта стану і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Давальний у виразах віку»."
   - type: fill-in
-    focus: "Put pronouns/nouns into correct dative form in impersonal constructions"
-    items: 8
-  - type: match-up
-    focus: "Match impersonal predicate/verb to its dative experiencer sentence"
-    items: 8
-  - type: sentence-builder
-    focus: "Transform personal sentences to impersonal with dative experiencer"
-    items: 6
+    focus: "Вставте правильну граматичну форму у реченнях на тему давальний суб'єкта стану."
   - type: error-correction
-    focus: "Fix case errors: wrong case after verbs governing dative"
-    items: 6
-  - type: dialogue-completion
-    focus: "Complete advice dialogue using Д.в. constructions (тобі варто, тобі потрібно)"
-    items: 6
+    focus: "Знайдіть і виправте помилки у реченнях на тему давальний у виразах віку."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Давальний суб'єкта стану»."
+  - type: match-up
+    focus: "З'єднайте терміни з розділу «Давальний у виразах віку» з їхніми визначеннями."
 connects_to:
   - "b1-046 (Родовий відмінок деталі — genitive nuances)"
   - "b1-048 (Орудний відмінок деталі — instrumental nuances)"

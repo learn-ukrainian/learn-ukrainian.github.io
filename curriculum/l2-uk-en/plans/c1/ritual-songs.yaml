@@ -109,23 +109,16 @@ vocabulary:
     - рефрен
 
 activity_hints:
-  - type: critical-analysis
-    description: "Analyze a колядка or щедрівка text — identify archaic language layers,
-      pagan vs. Christian elements, and classify the song's ritual function (величання,
-      побажання, заклинання)."
-  - type: match-up
-    description: "Match ritual song types (колядки, щедрівки, веснянки, гаївки, жниварські,
-      купальські) with their calendar period, function, and characteristic features."
-  - type: fill-in
-    description: "Complete ritual song texts with traditional formulas, symbols (калина,
-      барвінок, зозуля, сокіл), and parallelism patterns."
-  - type: select
-    description: "Identify the calendar cycle (зимовий, весняний, літній) and ritual
-      function of given folk song excerpts based on their content and imagery."
+  - type: reading
+    focus: "Прочитайте текст про зимовий цикл: космогонія та благопожелання і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write an analytical paragraph (150-200 words) evaluating whether
-      modern ethno-music adaptations (Go_A, Onuka) preserve or profane the ritual
-      song tradition."
+    focus: "Напишіть короткий текст (100-150 слів) про весняний цикл: закликання весни та пробудження природи, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Зимовий цикл: космогонія та благопожелання». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему зимовий цикл: космогонія та благопожелання."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до зимовий цикл: космогонія та благопожелання: Колядки та щедрівки: відмінності в генезисі та часі виконання. Визначте спільне та відмінне."
 
 activities:
   types_required:

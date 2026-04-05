@@ -181,30 +181,18 @@ vocabulary_hints:
     - "навпаки (on the contrary — contrast)"
     - "уяви собі (imagine — attention-drawing)"
 activity_hints:
-  - type: quiz
-    focus: "Classify вставні слова by semantic group and identify which words are
-      always вставні, never вставні, or context-dependent."
-    items: 10
+  - type: reading
+    focus: "Прочитайте текст про однорідні члени речення і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Що таке вставні слова?»."
   - type: fill-in
-    focus: "Insert appropriate вставні слова into Ukrainian sentences to express specified
-      attitudes (certainty, doubt, emotion, source)."
-    items: 8
+    focus: "Вставте правильну граматичну форму у реченнях на тему однорідні члени речення."
   - type: error-correction
-    focus: "Fix punctuation errors: add missing commas around вставні слова, remove
-      incorrect commas from non-вставні words (адже, навіть)."
-    items: 8
+    focus: "Знайдіть і виправте помилки у реченнях на тему що таке вставні слова?."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Однорідні члени речення»."
   - type: match-up
-    focus: "Match вставні слова to their semantic groups and to their communicative
-      functions."
-    items: 8
-  - type: group-sort
-    focus: "Sort words into three categories: завжди вставні, ніколи не вставні, залежить
-      від контексту."
-    items: 12
-  - type: free-write
-    focus: "Write an opinion paragraph (10-12 sentences) on a given topic using at
-      least 5 different вставні слова from different semantic groups."
-    items: 6
+    focus: "З'єднайте терміни з розділу «Що таке вставні слова?» з їхніми визначеннями."
 connects_to:
   - "b1-078 (Розмовний стиль — вставні слова as discourse markers)"
   - "b1-080 (Подвійне заперечення — both modify sentence meaning)"

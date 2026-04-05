@@ -174,31 +174,18 @@ vocabulary_hints:
     - "чистовий варіант (final version — clean copy)"
     - "пряма мова (direct speech — quoted dialogue)"
 activity_hints:
-  - type: quiz
-    focus: "Identify narrative structure elements (зачин, кульмінація, розв'язка)
-      and tense/aspect choices in text excerpts."
-    items: 12
+  - type: reading
+    focus: "Прочитайте текст про будова розповіді і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Часи та вид у розповіді»."
   - type: fill-in
-    focus: "Complete a narrative with correct tense, aspect, and motion verb forms.
-      Insert connecting words in appropriate positions."
-    items: 12
+    focus: "Вставте правильну граматичну форму у реченнях на тему будова розповіді."
   - type: error-correction
-    focus: "Fix tense inconsistencies, incorrect aspect choices, and missing connecting
-      words in a draft narrative."
-    items: 12
+    focus: "Знайдіть і виправте помилки у реченнях на тему часи та вид у розповіді."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Будова розповіді»."
   - type: match-up
-    focus: "Match narrative structure terms to their definitions and connecting words
-      to their functions."
-    items: 12
-  - type: free-write
-    focus: "Write a complete narrative (150-200 words) with зачин, основна частина,
-      кінцівка, using motion verbs, aspect alternation, and at least one dialogue
-      fragment."
-    items: 12
-  - type: group-sort
-    focus: "Sort дієслова by вид (ДВ/НДВ) and sort connecting words by function (послідовність,
-      одночасність, несподіваність)."
-    items: 12
+    focus: "З'єднайте терміни з розділу «Часи та вид у розповіді» з їхніми визначеннями."
 connects_to:
   - "b1-086 (Аргументація — structured writing, different purpose)"
   - "b1-073 (reported-speech — embedding speech in narrative)"

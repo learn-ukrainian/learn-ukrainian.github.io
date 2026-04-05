@@ -111,21 +111,16 @@ vocabulary:
     - фізіотерапія
 
 activity_hints:
-  - type: match-up
-    description: "Match sports terminology (types of competitions, training methods,
-      body parts, injuries) with definitions and example contexts."
-  - type: fill-in
-    description: "Complete sentences about sports, health, and fitness with appropriate
-      C1-level vocabulary — anatomical terms, training concepts, medical procedures."
-  - type: select
-    description: "Choose the correct Ukrainian sports term over anglicisms where native
-      equivalents exist (e.g., вболівальник vs фанат)."
+  - type: reading
+    focus: "Прочитайте текст про спортивний лексикон рівня c1 і дайте відповіді на запитання щодо ключових понять."
+  - type: essay-response
+    focus: "Напишіть короткий текст (100-150 слів) про людське тіло та фізична культура, використовуючи нову лексику модуля."
   - type: critical-analysis
-    description: "Analyze a journalistic article about Ukrainian athletes — evaluate
-      the use of sports terminology, argumentative structure, and register."
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Спортивний лексикон рівня C1». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Fix anglicisms, Russianisms, and stylistic errors in a sports
-      commentary text."
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему спортивний лексикон рівня c1."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до спортивний лексикон рівня c1: Види спорту та дисципліни: від легкої атлетики до єдиноборств. Визначте спільне та відмінне."
 
 activities:
   types_required:

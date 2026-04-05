@@ -184,31 +184,18 @@ vocabulary_hints:
     - "сортувати (to sort — waste sorting)"
     - "екосистема (ecosystem — biological community)"
 activity_hints:
-  - type: quiz
-    focus: "Identify погода vocabulary from descriptions, match тварини/рослини to
-      their Ukrainian names, and classify environmental terms."
-    items: 12
-  - type: match-up
-    focus: "Match Ukrainian рослини/тварини to their descriptions or images, match
-      weather terms to weather phenomena."
-    items: 12
+  - type: reading
+    focus: "Прочитайте текст про погода та пори року і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Рослинний світ»."
   - type: fill-in
-    focus: "Complete a weather forecast and nature description with appropriate vocabulary,
-      using correct gender agreement and cases."
-    items: 12
-  - type: group-sort
-    focus: "Sort vocabulary into categories: погода, дерева, квіти, дикі тварини,
-      свійські тварини, екологія."
-    items: 12
-  - type: free-write
-    focus: "Write a description of your favorite season or place in nature (10-12
-      sentences) using weather, plant, and animal vocabulary with образні засоби."
-    items: 12
-  - type: role-play
-    focus: "Discuss environmental protection: one person argues for сортування відходів,
-      the other questions whether individual actions matter. Use вставні слова and
-      аргументація."
-    items: 12
+    focus: "Вставте правильну граматичну форму у реченнях на тему погода та пори року."
+  - type: error-correction
+    focus: "Знайдіть і виправте помилки у реченнях на тему рослинний світ."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Погода та пори року»."
+  - type: match-up
+    focus: "З'єднайте терміни з розділу «Рослинний світ» з їхніми визначеннями."
 connects_to:
   - "b1-081 (Вставні слова — expressing opinions about nature and ecology)"
   - "b1-083 (Читання художніх текстів — literary nature descriptions)"

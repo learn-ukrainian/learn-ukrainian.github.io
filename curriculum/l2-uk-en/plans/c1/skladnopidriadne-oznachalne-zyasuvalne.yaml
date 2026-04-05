@@ -115,21 +115,18 @@ vocabulary:
     - гіпотеза
 
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про складнопідрядне означальне речення і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Складнопідрядне з'ясувальне речення»."
   - type: fill-in
-    description: "Complete complex sentences with appropriate relative pronouns (який,
-      що, чий, котрий) and conjunctions (що, як, щоб, чи)."
+    focus: "Вставте правильну граматичну форму у реченнях на тему складнопідрядне означальне речення."
   - type: error-correction
-    description: "Fix errors in attributive and object clauses — wrong conjunction/relative
-      pronoun choice, misplaced subordinate clause, punctuation."
+    focus: "Знайдіть і виправте помилки у реченнях на тему складнопідрядне з'ясувальне речення."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Складнопідрядне означальне речення»."
   - type: match-up
-    description: "Match the function of 'що' in different sentences — as a conjunction
-      (сполучник) vs. as a relative pronoun (сполучне слово)."
-  - type: critical-analysis
-    description: "Transform a passage of direct speech into indirect speech using
-      object clauses, then analyze how meaning shifts."
-  - type: select
-    description: "Identify the type of subordinate clause (означальне vs з'ясувальне)
-      in complex sentences from academic and literary texts."
+    focus: "З'єднайте терміни з розділу «Складнопідрядне з'ясувальне речення» з їхніми визначеннями."
 
 activities:
   types_required:

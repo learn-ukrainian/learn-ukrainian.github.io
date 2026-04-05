@@ -106,21 +106,16 @@ vocabulary:
     - переконливо
 
 activity_hints:
-  - type: critical-analysis
-    description: "Evaluate the quality of a paraphrased Ukrainian academic text —
-      identify mosaic plagiarism, assess accuracy of content preservation."
-  - type: match-up
-    description: "Match paraphrase techniques (lexical substitution, grammatical transformation,
-      semantic retelling) with examples."
-  - type: error-correction
-    description: "Fix paraphrases that are too close to the original — apply proper
-      lexical and syntactic transformations."
+  - type: reading
+    focus: "Прочитайте текст про основи наукового реферування і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a concise summary (150-200 words) of a text about Ukrainian
-      cybernetics history using at least 3 different paraphrase methods."
-  - type: fill-in
-    description: "Complete summary sentences with appropriate introductory phrases
-      for indirect citations (автор наголошує, у дослідженні зазначається)."
+    focus: "Напишіть короткий текст (100-150 слів) про техніки ефективного перефразування, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Основи наукового реферування». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему основи наукового реферування."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до основи наукового реферування: Види рефератів: інформативні, індикативні та критичні. Визначте спільне та відмінне."
 
 activities:
   types_required:

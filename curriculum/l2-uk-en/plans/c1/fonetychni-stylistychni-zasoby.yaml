@@ -114,21 +114,16 @@ vocabulary:
     - звуконаслідування
 
 activity_hints:
-  - type: critical-analysis
-    description: "Analyze a poem by Павло Тичина — identify all instances of alliteration,
-      assonance, and onomatopoeia, explaining their contribution to the poem's mood."
-  - type: select
-    description: "Identify which euphony rule (чергування у/в, і/й, з/із/зі) is violated
-      in given sentences and choose the correct variant."
-  - type: error-correction
-    description: "Fix euphony violations in a text — restore proper consonant/vowel
-      alternation patterns according to Ukrainian phonotactic rules."
-  - type: match-up
-    description: "Match phonetic stylistic devices (алітерація, асонанс, ономатопея,
-      какофонія) with their definitions and examples from Ukrainian poetry."
+  - type: reading
+    focus: "Прочитайте текст про естетика звуку: милозвучність (евфонія) і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a short descriptive passage (100-150 words) about a natural
-      scene, deliberately using alliteration and assonance to create a sound landscape."
+    focus: "Напишіть короткий текст (100-150 слів) про звукопис: алітерація та асонанс, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Естетика звуку: милозвучність (евфонія)». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему естетика звуку: милозвучність (евфонія)."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до естетика звуку: милозвучність (евфонія): Закони милозвучності: чергування голосних та приголосних. Визначте спільне та відмінне."
 
 activities:
   types_required:

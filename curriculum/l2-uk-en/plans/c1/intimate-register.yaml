@@ -116,22 +116,16 @@ vocabulary:
     - інтимність
 
 activity_hints:
-  - type: select
-    description: "Identify the register level (офіційний, розмовний, інтимний) of
-      given text excerpts and explain the linguistic markers that signal each level."
-  - type: match-up
-    description: "Match types of diminutive suffixes (-очк-, -ечк-, -еньк-, -ісіньк-)
-      with their emotional coloring and usage contexts (ніжність, іронія, зменшення)."
-  - type: critical-analysis
-    description: "Analyze an excerpt from Леся Українка's personal letters — identify
-      intimate register markers (пестливі форми, неповні речення, сімейний лексикон)."
+  - type: reading
+    focus: "Прочитайте текст про морфологія ніжності: демінутиви в українській мові і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a personal letter (100-150 words) to a close friend about
-      a life change, using the full range of Ukrainian diminutive forms and intimate
-      vocabulary."
+    focus: "Напишіть короткий текст (100-150 слів) про епістолярна культура та приватний простір, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Морфологія ніжності: демінутиви в українській мові». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Fix inappropriate register mixing — identify where intimate language
-      intrudes into professional contexts and vice versa."
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему морфологія ніжності: демінутиви в українській мові."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до морфологія ніжності: демінутиви в українській мові: Специфіка українського словотвору: багатство суфіксів суб'єктивної оцінки. Визначте спільне та відмінне."
 
 activities:
   types_required:

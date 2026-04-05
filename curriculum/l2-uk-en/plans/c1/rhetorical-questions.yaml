@@ -114,22 +114,16 @@ vocabulary:
     - легітимізація
 
 activity_hints:
-  - type: critical-analysis
-    description: "Analyze a political speech — identify all rhetorical questions and
-      exclamations, classify their pragmatic function (ствердження, заперечення, сумнів,
-      заклик)."
-  - type: select
-    description: "Determine whether a given question is genuine or rhetorical based
-      on context, and explain the intended communicative effect."
-  - type: match-up
-    description: "Match rhetorical figures (риторичне питання, риторичний оклик, апострофа)
-      with their definitions, functions, and literary examples."
+  - type: reading
+    focus: "Прочитайте текст про риторичне питання: семантична інверсія і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a persuasive manifesto paragraph (100-150 words) using at
-      least 3 rhetorical questions and 2 rhetorical exclamations as structural elements."
+    focus: "Напишіть короткий текст (100-150 слів) про риторичний оклик та звертання: модальність почуттів, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Риторичне питання: семантична інверсія». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Fix inappropriate use of rhetorical questions in academic texts
-      — replace where they weaken argumentation, keep where they strengthen it."
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему риторичне питання: семантична інверсія."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до риторичне питання: семантична інверсія: Граматична природа риторичного питання: від форми до змісту. Визначте спільне та відмінне."
 
 activities:
   types_required:

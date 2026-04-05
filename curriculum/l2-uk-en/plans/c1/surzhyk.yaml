@@ -116,21 +116,16 @@ vocabulary:
     - просторіччя
 
 activity_hints:
-  - type: error-correction
-    description: "Identify surzhyk features at phonetic, lexical, and grammatical
-      levels in text samples — provide correct Ukrainian equivalents."
+  - type: reading
+    focus: "Прочитайте текст про походження та генезис суржику і дайте відповіді на запитання щодо ключових понять."
+  - type: essay-response
+    focus: "Напишіть короткий текст (100-150 слів) про структурний аналіз змішаного мовлення, використовуючи нову лексику модуля."
   - type: critical-analysis
-    description: "Analyze Masenko's arguments about surzhyk as a postcolonial identity
-      marker — evaluate sociolinguistic evidence and conclusions."
-  - type: match-up
-    description: "Match surzhyk types (фонетичний, лексичний, граматичний) with example
-      sentences and their corrected Ukrainian versions."
-  - type: select
-    description: "Identify whether a given language sample represents dialect, surzhyk,
-      or colloquial Ukrainian — justify the classification."
-  - type: fill-in
-    description: "Replace surzhyk forms with normative Ukrainian in sentences about
-      everyday and professional situations."
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Походження та генезис суржику». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему походження та генезис суржику."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до походження та генезис суржику: Етимологія терміна та історичні умови виникнення явища. Визначте спільне та відмінне."
 
 activities:
   types_required:

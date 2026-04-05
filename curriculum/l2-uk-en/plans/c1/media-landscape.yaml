@@ -114,22 +114,16 @@ vocabulary:
     - акредитація
 
 activity_hints:
-  - type: critical-analysis
-    description: "Compare coverage of the same event across different Ukrainian media
-      (state, oligarchic, independent) — identify framing, bias, and manipulation
-      techniques."
-  - type: error-correction
-    description: "Identify and correct manipulative language techniques in news headlines
-      — replace clickbait and emotional markers with neutral formulations."
-  - type: match-up
-    description: "Match media manipulation techniques (фреймінг, клікбейт, дискредитація)
-      with real-world examples and countermeasures."
-  - type: select
-    description: "Choose the correct fact-checking approach for different types of
-      misinformation (фейк, маніпуляція, ІПСО)."
+  - type: reading
+    focus: "Прочитайте текст про структура медіаринку україни і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write an analytical note (250+ words) about freedom of speech during
-      martial law — balance security concerns with democratic principles."
+    focus: "Напишіть короткий текст (100-150 слів) про психологія сприйняття та маніпуляції, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Структура медіаринку України». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему структура медіаринку україни."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до структура медіаринку україни: Суспільне мовлення vs приватні медіахолдинги: моделі фінансування та впливу. Визначте спільне та відмінне."
 
 activities:
   types_required:

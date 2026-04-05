@@ -121,24 +121,18 @@ vocabulary_hints:
     - "рубрика (rubric — assessment criteria)"
     - "аналіз помилок (error analysis)"
 activity_hints:
-  - type: quiz
-    focus: "Comprehensive comparison formation quiz (all types, including suppletive)"
-    items: 10
+  - type: reading
+    focus: "Прочитайте текст про повторення: ступені порівняння і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Повторення: словотвір»."
   - type: fill-in
-    focus: "Mixed word formation and comparison exercises"
-    items: 8
+    focus: "Вставте правильну граматичну форму у реченнях на тему повторення: ступені порівняння."
   - type: error-correction
-    focus: "Find and fix errors across all Phase 5 topics"
-    items: 8
+    focus: "Знайдіть і виправте помилки у реченнях на тему повторення: словотвір."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Повторення: ступені порівняння»."
   - type: match-up
-    focus: "Match base forms to comparatives, superlatives, derived nouns"
-    items: 10
-  - type: free-write
-    focus: "Write a product comparison review (10+ sentences)"
-    items: 6
-  - type: dialogue-completion
-    focus: "Complete shopping dialogues using Phase 5 grammar and vocabulary"
-    items: 6
+    focus: "З'єднайте терміни з розділу «Повторення: словотвір» з їхніми визначеннями."
 connects_to:
   - "b1-038 through b1-044 (all Phase 5 modules)"
   - "b1-046 (Родовий відмінок деталі — first module of Phase 6)"

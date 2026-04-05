@@ -110,21 +110,16 @@ vocabulary:
     - гастрономічний
 
 activity_hints:
-  - type: fill-in
-    description: "Complete travel planning dialogues and descriptions with appropriate
-      C1-level vocabulary — booking, complaints, impressions, recommendations."
-  - type: match-up
-    description: "Match types of tourism (зелений, культурний, екстремальний,
-      гастрономічний) with their characteristics, activities, and Ukrainian destinations."
+  - type: reading
+    focus: "Прочитайте текст про планування подорожі і дайте відповіді на запитання щодо ключових понять."
+  - type: essay-response
+    focus: "Напишіть короткий текст (100-150 слів) про транспорт та інфраструктура, використовуючи нову лексику модуля."
   - type: critical-analysis
-    description: "Analyze a travel essay about Ukraine — evaluate descriptive techniques,
-      vocabulary richness, and cultural sensitivity."
-  - type: select
-    description: "Choose correct Ukrainian travel terminology over anglicisms and
-      Russianisms (e.g., мандрівка vs тур, проживання vs розміщення)."
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Планування подорожі». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Fix stylistic and lexical errors in a tourist brochure text —
-      Russianisms, calques, register inconsistencies."
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему планування подорожі."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до планування подорожі: Вибір маршруту, транспорту та проживання. Визначте спільне та відмінне."
 
 activities:
   types_required:

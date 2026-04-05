@@ -162,23 +162,18 @@ vocabulary:
     - інтерференція
 
 activity_hints:
+  - type: reading
+    focus: "Прочитайте текст про система видових пар: типи творення та продуктивні моделі і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Вибір виду в академічному та науковому письмі»."
   - type: fill-in
-    description: "Complete academic sentences by choosing the correct aspect form
-      — e.g., 'Дослідники ___ (вивчати/вивчити) це питання протягом десятиліть' —
-      testing aspect in context."
-  - type: match-up
-    description: "Match infinitive pairs to their formation type: prefix-based (писати→написати),
-      suffix-based (кидати→кинути), suppletive (брати→взяти)."
+    focus: "Вставте правильну граматичну форму у реченнях на тему система видових пар: типи творення та продуктивні моделі."
   - type: error-correction
-    description: "Fix aspect errors in academic and literary texts — wrong aspect
-      with modals, double-prefixed forms, interference-based mistakes."
-  - type: select
-    description: "Choose the correct aspect form in narrative contexts — identify
-      whether the context requires completed action, ongoing process, or repeated
-      action."
-  - type: group-sort
-    description: "Categorize verbs into видова пара formation types and identify двовидові/одновидові
-      дієслова from a mixed list."
+    focus: "Знайдіть і виправте помилки у реченнях на тему вибір виду в академічному та науковому письмі."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Система видових пар: типи творення та продуктивні моделі»."
+  - type: match-up
+    focus: "З'єднайте терміни з розділу «Вибір виду в академічному та науковому письмі» з їхніми визначеннями."
 
 activities:
   types_required:

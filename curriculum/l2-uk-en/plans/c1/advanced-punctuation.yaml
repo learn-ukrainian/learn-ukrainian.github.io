@@ -107,21 +107,18 @@ vocabulary:
     - пунктограма
 
 activity_hints:
-  - type: error-correction
-    description: "Fix punctuation errors in complex Ukrainian sentences — commas at
-      conjunction boundaries, dashes in asyndetic constructions, parenthetical expressions."
-  - type: critical-analysis
-    description: "Analyze authorial punctuation in Vinhranovsky's poetry — evaluate
-      how punctuation marks affect rhythm and meaning."
+  - type: reading
+    focus: "Прочитайте текст про пунктуація у складному реченні і дайте відповіді на запитання."
+  - type: essay-response
+    focus: "Напишіть 5 речень, використовуючи нову лексику з розділу «Відокремлені та уточнювальні члени речення»."
   - type: fill-in
-    description: "Insert correct punctuation marks in complex academic sentences with
-      embedded clauses, citations, and parenthetical constructions."
+    focus: "Вставте правильну граматичну форму у реченнях на тему пунктуація у складному реченні."
+  - type: error-correction
+    focus: "Знайдіть і виправте помилки у реченнях на тему відокремлені та уточнювальні члени речення."
+  - type: quiz
+    focus: "Оберіть правильний варіант: лексика та граматика з розділу «Пунктуація у складному реченні»."
   - type: match-up
-    description: "Match punctuation rules (відокремлення, вставність, парантеза) with
-      sentence examples requiring specific punctuation."
-  - type: select
-    description: "Choose the correct punctuation variant for ambiguous cases (тире
-      vs двокрапка, кома vs крапка з комою)."
+    focus: "З'єднайте терміни з розділу «Відокремлені та уточнювальні члени речення» з їхніми визначеннями."
 
 activities:
   types_required:

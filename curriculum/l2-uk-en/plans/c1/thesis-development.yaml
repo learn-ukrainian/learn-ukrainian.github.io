@@ -112,22 +112,16 @@ vocabulary:
     - переконливий
 
 activity_hints:
-  - type: critical-analysis
-    description: "Evaluate thesis statements from Ukrainian academic texts — assess
-      specificity, arguability, and depth of analysis."
+  - type: reading
+    focus: "Прочитайте текст про анатомія успішної тези і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Formulate a complex thesis about the role of Ukrainian language
-      in national identity and develop it with two types of argumentation (250-300
-      words)."
-  - type: fill-in
-    description: "Complete thesis development sentences with appropriate expansion
-      markers (ба більше, варто також зазначити, це зумовлює)."
-  - type: match-up
-    description: "Match thesis types (описова, аналітична, аргументаційна) with examples
-      and characteristics."
+    focus: "Напишіть короткий текст (100-150 слів) про стратегії розгортання аргументів, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Анатомія успішної тези». Обґрунтуйте свою позицію прикладами з тексту."
   - type: error-correction
-    description: "Transform weak descriptive theses into strong analytical ones with
-      clear argumentation potential."
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему анатомія успішної тези."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до анатомія успішної тези: Характеристики тези на рівні C1: фокус, спірність, глибина. Визначте спільне та відмінне."
 
 activities:
   types_required:

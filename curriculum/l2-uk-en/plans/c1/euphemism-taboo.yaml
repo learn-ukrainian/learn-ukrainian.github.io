@@ -119,23 +119,16 @@ vocabulary:
     - контекстуальність
 
 activity_hints:
-  - type: critical-analysis
-    description: "Analyze a diplomatic communique and identify all euphemisms — explain
-      what each replaces and evaluate whether it serves transparency or concealment."
-  - type: select
-    description: "Choose the appropriate euphemism for professional contexts — identify
-      which euphemisms are constructive (ввічливість) and which are manipulative (вуалювання
-      правди)."
-  - type: error-correction
-    description: "Fix register violations in a professional text — replace inappropriate
-      direct language with euphemisms, and remove manipulative euphemisms that obscure
-      facts."
-  - type: match-up
-    description: "Match euphemistic expressions with their direct equivalents and
-      classify by sphere (дипломатія, медицина, військова справа, бізнес)."
+  - type: reading
+    focus: "Прочитайте текст про табу як культурний та мовний феномен і дайте відповіді на запитання щодо ключових понять."
   - type: essay-response
-    description: "Write a professional rejection letter (100-150 words) using appropriate
-      euphemisms, then analyze how the euphemisms soften the negative message."
+    focus: "Напишіть короткий текст (100-150 слів) про евфемізація як стратегія гармонізації спілкування, використовуючи нову лексику модуля."
+  - type: critical-analysis
+    focus: "Проаналізуйте взаємозв'язок між поняттями у розділі «Табу як культурний та мовний феномен». Обґрунтуйте свою позицію прикладами з тексту."
+  - type: error-correction
+    focus: "Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему табу як культурний та мовний феномен."
+  - type: comparative-study
+    focus: "Порівняйте різні підходи до табу як культурний та мовний феномен: Природа табу: від магічного захисту до соціальної норми. Визначте спільне та відмінне."
 
 activities:
   types_required:
