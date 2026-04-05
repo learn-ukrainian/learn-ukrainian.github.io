@@ -10,17 +10,17 @@ and cross-references to build a rich context for wiki article compilation.
 
 import yaml
 
-from .config import LITERARY_DIR, PROJECT_ROOT
-from .sources import load_literary_jsonl
+from .config import LITERARY_DIR, PROJECT_ROOT, TEXTBOOK_CHUNKS_DIR
+from .sources import load_literary_jsonl, load_textbook_jsonl
 
-# Core tracks that should be enriched via textbook RAG search.
-# No grade filtering — the RAG's semantic relevance scoring finds the
-# right textbook content regardless of which grade teaches it.
+# ── Core track textbook source mappings ───────────────────────
+# Maps core tracks to textbook JSONL files (Ukrainian language only).
+# Same approach as seminar tracks use literary JSONLs.
+# All files searched — keyword relevance scoring picks the right chunks.
 CORE_TRACKS = {"a1", "a2", "b1", "b2", "c1", "c2"}
 
 # ── Track-specific literary source mappings ──────────────────────
-# Maps tracks to literary JSONL files known to contain relevant content.
-# These supplement whatever the discovery file already found.
+# Maps seminar tracks to literary JSONL files known to contain relevant content.
 
 FOLK_LITERARY_SOURCES = [
     "wave7-kostomarov-slovyanska-mifolohiia.jsonl",
@@ -96,70 +96,76 @@ KEYWORD_SOURCE_MAP: dict[str, list[str]] = {
 }
 
 
-def _search_textbook_rag(ukr_keywords: set[str],
-                         max_results: int = 20) -> list[dict]:
-    """Search textbook RAG for relevant chunks using Ukrainian keywords.
+def _list_textbook_files(*, include_literature: bool = False) -> list[str]:
+    """List textbook JSONL filenames across all grades.
 
-    No grade filtering — the RAG's semantic relevance scoring finds the
-    right textbook content regardless of which grade teaches it.
-    Runs multiple queries (phrase + individual keywords), deduplicates
-    by chunk_id, and returns the best results.
+    Args:
+        include_literature: If True, also include ukrlit/ukrajinska-literatura
+            textbooks (useful for C1/C2 which analyze literary style).
+            By default only Ukrainian language textbooks (ukrmova/bukvar).
     """
-    try:
-        from rag.query import search_text
-    except ImportError:
-        print("  ⚠️  RAG search unavailable (qdrant not running?)")
+    if not TEXTBOOK_CHUNKS_DIR.exists():
         return []
 
-    if not ukr_keywords:
+    lang_patterns = ("ukrmova", "ukrajinska-mova", "bukvar")
+    lit_patterns = ("ukrlit", "ukrajinska-literatura")
+
+    files = []
+    for grade_dir in sorted(TEXTBOOK_CHUNKS_DIR.iterdir()):
+        if not grade_dir.is_dir():
+            continue
+        for jsonl in sorted(grade_dir.glob("*.jsonl")):
+            stem = jsonl.stem.lower()
+            if any(p in stem for p in lang_patterns) or (include_literature and any(p in stem for p in lit_patterns)):
+                files.append(str(jsonl.relative_to(TEXTBOOK_CHUNKS_DIR)))
+    return files
+
+
+def _load_textbook_chunks(filenames: list[str], ukr_keywords: set[str],
+                          max_total: int = 40) -> list[dict]:
+    """Load and score textbook chunks by Ukrainian keyword overlap.
+
+    Scans all files, scores every chunk globally, returns the top N.
+    Requires minimum 2 keyword hits to filter out noise from generic words.
+    """
+    ukr_kw = ukr_keywords or set()
+    if not ukr_kw:
         return []
 
-    seen_ids: set[str] = set()
-    all_hits: list[dict] = []
+    all_scored: list[tuple[int, dict]] = []
 
-    # Build search queries from keywords — group related keywords for better recall
-    # Take the most specific keywords (longer = more specific)
-    sorted_kw = sorted(ukr_keywords, key=len, reverse=True)
-
-    # Run 2-3 searches: first with the topic phrase, then individual keywords
-    queries = []
-
-    # Query 1: Combine top 3 keywords into a phrase (most semantic coverage)
-    if len(sorted_kw) >= 2:
-        queries.append(" ".join(sorted_kw[:3]))
-
-    # Query 2-3: Individual top keywords (catch different textbook formulations)
-    for kw in sorted_kw[:2]:
-        if kw not in queries:
-            queries.append(kw)
-
-    for query in queries[:3]:
-        try:
-            results = search_text(query, limit=max_results // len(queries))
-        except Exception as e:
-            print(f"  ⚠️  RAG search error: {e}")
+    for filename in filenames:
+        filepath = TEXTBOOK_CHUNKS_DIR / filename
+        if not filepath.exists():
             continue
 
-        for hit in results:
-            cid = hit.get("chunk_id", "")
-            if cid and cid not in seen_ids:
-                seen_ids.add(cid)
-                all_hits.append(hit)
+        try:
+            chunks = load_textbook_jsonl(filepath)
+        except Exception as e:
+            print(f"  ⚠️  Error loading {filename}: {e}")
+            continue
 
-    # Sort by score (if available) and cap
-    all_hits.sort(key=lambda h: h.get("score", 0), reverse=True)
-    return all_hits[:max_results]
+        for chunk in chunks:
+            text_lower = chunk.get("text", "").lower()
+            score = sum(1 for w in ukr_kw if w in text_lower)
+            if score >= 2:  # Minimum 2 keyword hits to filter noise
+                all_scored.append((score, chunk))
+
+    # Global sort by score — best chunks from any grade/textbook
+    all_scored.sort(key=lambda x: -x[0])
+    return [chunk for _score, chunk in all_scored[:max_total]]
 
 
 def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
     """Enrich source chunks for a module with track-specific data.
 
-    Core tracks (A1-C2): search textbook RAG with Ukrainian keywords.
-    Seminar tracks: search literary JSONL files on Google Drive.
+    Core tracks (A1-C2): load textbook JSONL files directly, score by keyword.
+    Seminar tracks: load literary JSONL files from Google Drive.
+    Same approach for both — no RAG, direct JSONL keyword matching.
 
     Combines:
     1. Discovery inline chunks (rag_literary, rag_chunks)
-    2. Core tracks: RAG textbook search (Grades 1-11 Ukrainian language textbooks)
+    2. Core tracks: textbook JSONL files (40 ukrmova + bukvar + ukrlit for C1/C2)
     3. Seminar tracks: literary JSONL files + keyword-matched sources
     4. Local data files (e.g., folk_micro_genres.yaml)
 
@@ -176,13 +182,16 @@ def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
     # (the slug is Latin transliteration — useless for searching Ukrainian text)
     ukr_keywords = _extract_ukrainian_keywords(sources_info)
 
-    # 2. Core tracks: search textbook RAG
+    # 2. Core tracks: load textbook JSONL files directly (same as seminars use literary JSONLs)
     if track in CORE_TRACKS:
-        rag_chunks = _search_textbook_rag(ukr_keywords, max_results=20)
-        if rag_chunks:
-            print(f"  📖 +{len(rag_chunks)} chunks from textbook RAG "
-                  f"({len(ukr_keywords)} keywords)")
-            all_chunks.extend(rag_chunks)
+        include_lit = track in ("c1", "c2")  # C1/C2 also use literature textbooks
+        tb_files = _list_textbook_files(include_literature=include_lit)
+        if tb_files:
+            tb_chunks = _load_textbook_chunks(tb_files, ukr_keywords, max_total=40)
+            if tb_chunks:
+                print(f"  📖 +{len(tb_chunks)} chunks from {len(tb_files)} textbook files "
+                      f"({len(ukr_keywords)} keywords)")
+                all_chunks.extend(tb_chunks)
 
     # 3. Seminar tracks: literary JSONL files
     track_files = TRACK_LITERARY_MAP.get(track, [])
