@@ -348,7 +348,7 @@ def show_status() -> None:
 YOUTUBE_CHANNELS = [
     ("ulp", "https://www.youtube.com/@UkrainianLessons/videos",
      "ulp_youtube.jsonl", "Ukrainian Lessons (Anna Ohoiko) — A1-B2 pedagogy, FMU, podcasts"),
-    ("realna-istoria", "https://www.youtube.com/@RealnaIstoria/videos",
+    ("realna-istoria", "https://www.youtube.com/channel/UCdlVTngmxbh0oNE1pCwS64g/videos",
      "realna_istoria.jsonl", "Реальна Історія — Ukrainian history, decolonization"),
     ("imtgsh", "https://www.youtube.com/@imtgsh/videos",
      "imtgsh.jsonl", "imtgsh — history content"),
