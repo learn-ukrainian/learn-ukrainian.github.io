@@ -343,47 +343,130 @@ def show_status() -> None:
 # ── CLI ───────────────────────────────────────────────────────
 
 
+# ── YouTube channels to ingest ────────────────────────────────
+# Each entry: (flag_name, channel_url, output_filename, description)
+YOUTUBE_CHANNELS = [
+    ("ulp", "https://www.youtube.com/@UkrainianLessons/videos",
+     "ulp_youtube.jsonl", "Ukrainian Lessons (Anna Ohoiko) — A1-B2 pedagogy, FMU, podcasts"),
+    ("realna-istoria", "https://www.youtube.com/@RealnaIstoria/videos",
+     "realna_istoria.jsonl", "Реальна Історія — Ukrainian history, decolonization"),
+    ("imtgsh", "https://www.youtube.com/@imtgsh/videos",
+     "imtgsh.jsonl", "imtgsh — history content"),
+    ("istoria-movy", "https://www.youtube.com/@Istoria-Movy/videos",
+     "istoria_movy.jsonl", "Istoria-Movy — history of Ukrainian language"),
+    ("speak-ukrainian", "https://www.youtube.com/@SpeakUkrainian/videos",
+     "speak_ukrainian.jsonl", "Speak Ukrainian — A1-A2 pedagogy"),
+    ("red-purple", "https://www.youtube.com/@RedPurpleUkrainian/videos",
+     "red_purple.jsonl", "Red Purple Ukrainian — A1 pedagogy"),
+]
+
+
+def _fetch_channel(name: str, channel_url: str, output_file: Path,
+                   description: str) -> None:
+    """Scrape a single YouTube channel and fetch subtitles."""
+    print(f"\n📺 {description}")
+    video_urls = get_channel_video_urls(channel_url)
+    if video_urls:
+        print(f"  📺 {len(video_urls)} videos found")
+        fetch_youtube_subtitles(video_urls, output_file)
+    else:
+        print(f"  ❌ Channel scrape failed for {name}")
+
+
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Fetch external sources for wiki enrichment")
+    parser = argparse.ArgumentParser(
+        description="Fetch external sources for wiki enrichment",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "YouTube channels:\n"
+            + "\n".join(f"  --yt-{c[0]:<20s} {c[3]}" for c in YOUTUBE_CHANNELS)
+        ),
+    )
     parser.add_argument("--ulp-blogs", action="store_true", help="Fetch ULP blog articles")
-    parser.add_argument("--ulp-youtube", action="store_true",
-                        help="Fetch ALL ULP YouTube subtitles (channel scrape)")
     parser.add_argument("--other-blogs", action="store_true", help="Fetch non-ULP articles")
-    parser.add_argument("--all", action="store_true", help="Fetch everything")
+    parser.add_argument("--all-blogs", action="store_true", help="Fetch all blog articles")
+
+    # Add a flag per YouTube channel
+    for name, _url, _file, desc in YOUTUBE_CHANNELS:
+        parser.add_argument(f"--yt-{name}", action="store_true", help=desc)
+    parser.add_argument("--all-youtube", action="store_true", help="Fetch ALL YouTube channels")
+
+    parser.add_argument("--all", action="store_true", help="Fetch everything (blogs + all YouTube)")
     parser.add_argument("--status", action="store_true", help="Show cache status")
+    parser.add_argument("--backup", action="store_true",
+                        help="Copy data/external_articles/ to Google Drive, delete local")
     args = parser.parse_args()
 
     if args.status:
         show_status()
         return
 
-    if not any([args.ulp_blogs, args.ulp_youtube, args.other_blogs, args.all]):
-        parser.error("Specify what to fetch: --ulp-blogs, --ulp-youtube, --other-blogs, or --all")
+    if args.backup:
+        _backup_to_gdrive()
+        return
+
+    # Check if any fetch flag is set
+    fetch_flags = [args.ulp_blogs, args.other_blogs, args.all_blogs,
+                   args.all_youtube, args.all]
+    fetch_flags += [getattr(args, f"yt_{name.replace('-', '_')}") for name, *_ in YOUTUBE_CHANNELS]
+    if not any(fetch_flags):
+        parser.error("Specify what to fetch (use --help to see options)")
 
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     urls = load_external_urls()
 
-    if args.ulp_blogs or args.all:
+    # Blogs
+    if args.ulp_blogs or args.all_blogs or args.all:
         print(f"\n🌐 Fetching {len(urls['ulp_blogs'])} ULP blog articles...")
         fetch_blogs(urls["ulp_blogs"], CACHE_DIR / "ulp_blogs.jsonl")
 
-    if args.other_blogs or args.all:
+    if args.other_blogs or args.all_blogs or args.all:
         print(f"\n🌐 Fetching {len(urls['other_blogs'])} other blog articles...")
         fetch_blogs(urls["other_blogs"], CACHE_DIR / "other_blogs.jsonl")
 
-    if args.ulp_youtube or args.all:
-        print("\n📺 Fetching ULP YouTube subtitles...")
-        # Scrape full channel — gets ALL videos including podcasts and FMU
-        channel_urls = get_channel_video_urls("https://www.youtube.com/@UkrainianLessons/videos")
-        if channel_urls:
-            print(f"  📺 {len(channel_urls)} videos found on channel")
-            fetch_youtube_subtitles(channel_urls, CACHE_DIR / "ulp_youtube.jsonl")
-        else:
-            # Fallback to URLs from external_resources.yaml
-            print("  ⚠️  Channel scrape failed, using URLs from external_resources.yaml")
-            fetch_youtube_subtitles(urls["youtube"], CACHE_DIR / "ulp_youtube.jsonl")
+    # YouTube channels
+    for name, channel_url, output_file, description in YOUTUBE_CHANNELS:
+        flag = getattr(args, f"yt_{name.replace('-', '_')}")
+        if flag or args.all_youtube or args.all:
+            _fetch_channel(name, channel_url, CACHE_DIR / output_file, description)
 
     show_status()
+
+
+def _backup_to_gdrive() -> None:
+    """Copy cached external articles to Google Drive, then delete local copies."""
+    import shutil
+
+    gdrive_target = Path.home() / (
+        "Library/CloudStorage/GoogleDrive-krisztian.koos@gmail.com"
+        "/My Drive/Projects/learn-ukrainian-data/external_articles"
+    )
+
+    if not CACHE_DIR.exists():
+        print("❌ Nothing to back up — data/external_articles/ doesn't exist")
+        return
+
+    files = list(CACHE_DIR.glob("*.jsonl"))
+    if not files:
+        print("❌ No JSONL files to back up")
+        return
+
+    print(f"\n📦 Backing up {len(files)} files to Google Drive...")
+    gdrive_target.mkdir(parents=True, exist_ok=True)
+
+    for f in files:
+        dest = gdrive_target / f.name
+        shutil.copy2(f, dest)
+        size = f.stat().st_size
+        print(f"  ✅ {f.name} ({size:,} bytes) → Google Drive")
+
+    print("\n🗑️  Deleting local copies...")
+    for f in files:
+        f.unlink()
+        print(f"  🗑️  {f.name}")
+
+    print("\n✅ Backup complete. Files on Google Drive at:")
+    print(f"   {gdrive_target}")
 
 
 if __name__ == "__main__":
