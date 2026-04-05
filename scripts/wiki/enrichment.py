@@ -18,8 +18,8 @@ from .sources import load_literary_jsonl
 # Based on Ukrainian State Standard 2024 + textbook analysis.
 # Multiple grades searched to capture progression (intro → mastery).
 CORE_TRACK_GRADES: dict[str, list[int]] = {
-    "a1": [1, 2, 3],       # Alphabet, basic sounds, simple sentences
-    "a2": [4, 5, 6],       # Cases, verb aspects, basic grammar
+    "a1": [1, 2, 3, 4],    # Alphabet, sounds, simple sentences, intro cases
+    "a2": [3, 4, 5, 6],    # Cases, verb aspects, basic grammar
     "b1": [5, 6, 7],       # Complex grammar, syntax, advanced cases
     "b2": [7, 8, 9],       # Stylistics, complex syntax, literary analysis
     "c1": [9, 10, 11],     # Academic writing, advanced stylistics
