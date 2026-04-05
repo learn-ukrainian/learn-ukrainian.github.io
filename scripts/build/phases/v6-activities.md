@@ -39,10 +39,7 @@ The plan specifies these exercises to create:
 
 {PLAN_ACTIVITY_HINTS}
 
-You MUST create activities that cover all these hints. **Respect the `placement` field:**
-- Hints with `placement: inline` go in the `inline:` array. They MUST have an `id` matching one of the injection markers above (e.g., `comprehension-check` or `reading-check`). If the marker id doesn't match exactly, use the closest match.
-- Hints with `placement: workbook` go in the `workbook:` array.
-- If no `placement` field, use this rule: quiz and reading go inline (2-3 max), everything else goes to workbook.
+You MUST create activities that cover all these hints. Distribute them between inline and workbook as appropriate: focused checks go inline, extended practice goes to workbook.
 
 ---
 
@@ -207,45 +204,11 @@ workbook:
 - **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
 - **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
 
-### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH, FOLK):
-
-**Core seminar types (use for ALL seminar tracks):**
-- **critical-analysis**: Analyze a claim, argument, or source. Required: id, prompt. Optional: target_text, questions[], model_answers[], evaluation_criteria[]
-- **essay-response**: Extended written response. Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
-- **reading**: Passage with comprehension questions. Required: id, passage, questions[]. Optional: source
-- **source-evaluation**: Evaluate a primary/secondary source. Required: id, source_text, criteria[], guiding_questions[]. Optional: source_metadata, model_evaluation
-- **comparative-study**: Compare 2+ items/perspectives. Required: id, items_to_compare[], criteria[], prompt. Optional: model_answer
-- **authorial-intent**: Analyze author's purpose/perspective. Required: id, excerpt, questions[]. Optional: model_answer
-- **debate**: Structured debate exercise. Required: id, debate_question, positions[{label, arguments[]}]. Optional: analysis_tasks[]
-
-**Linguistics types (OES, RUTH, and linguistic analysis in any track):**
-- **etymology-trace**: Trace word evolution across periods. Required: id, instruction, stages[{period, form}]
-- **translation-critique**: Evaluate translations. Required: id, original, translations[{text}]. Optional: focus_points[]
-- **transcription**: Transcribe historical text. Required: id, original, answer. Optional: hints[]
-- **paleography-analysis**: Analyze historical script. Required: id, instruction, image_url, hotspots[{x, y, label}]
-- **dialect-comparison**: Compare dialect features. Required: id, text_a, text_b, features[{feature, variant_a, variant_b}]
-
-**Also allowed in seminars (for testing language comprehension):**
-- **quiz**: Multiple choice comprehension check. Required: id, instruction, items[{question, options[], correct}]. Use for testing understanding of debates, source arguments, not factual recall.
-- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct, explanation}]. Good for testing understanding of historiographic positions.
-
-**FORBIDDEN in seminar tracks** (these test mechanics, not comprehension):
-match-up, fill-in, cloze, group-sort, unjumble, anagram, mark-the-words, error-correction, translate, order
-
-### Seminar activity rules
-
-1. **3-9 activities per seminar module.** Not more.
-2. **Required types:** Every seminar module MUST have at least one `reading` + one `essay-response` + one `critical-analysis`.
-3. **The golden rule:** Can the learner answer without reading the Ukrainian text? If YES → rewrite the activity. Activities test COMPREHENSION and CRITICAL THINKING, never factual recall.
-4. **All instructions in Ukrainian.** Seminar learners are B2+.
-5. **Follow the plan's activity_hints for CONTENT FOCUS, but choose TYPES based on level:**
-   - **A1-A2, B1 grammar (M01-M43):** Use core types from the plan (quiz, fill-in, error-correction, group-sort, etc.)
-   - **B1 M44+ (syntax, register, participles):** Use hybrid — reading + essay-response alongside core types. The plan's `focus:` tells you WHAT to test; adapt it to a reading comprehension or short essay format.
-   - **B2 non-grammar modules:** Use seminar types — reading, essay-response, critical-analysis. Convert the plan's focus into a reading passage with comprehension questions or an essay prompt.
-   - **C1 all modules (except pure grammar):** Full seminar — reading, essay-response, critical-analysis, comparative-study, authorial-intent. The plan's focus becomes the analytical question or essay theme.
-   - **C2:** Full seminar — reading, essay-response, critical-analysis, comparative-study, authorial-intent.
-   
-   **The plan's `type:` field may be outdated (e.g., `quiz` for a C1 literature module). Override the type but keep the focus description as your content guide.**
+### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
+- **critical-analysis**: Required: id, prompt. Optional: evaluation_criteria[]
+- **essay-response**: Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
+- **reading**: Required: id, passage, questions[]
+- **source-evaluation**: Required: id, source_text, criteria[], guiding_questions[]
 
 ---
 
