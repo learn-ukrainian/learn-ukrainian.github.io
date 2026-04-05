@@ -119,7 +119,7 @@ activity_hints:
   - type: error-correction
     description: "Fix imprecise political terminology and register violations in a
       political analysis text."
-  - type: comparative-study
+  - type: match-up
     description: "Match Ukrainian state institutions (Верховна Рада, Кабінет Міністрів,
       Конституційний Суд) with their constitutional functions and terminology."
   - type: select

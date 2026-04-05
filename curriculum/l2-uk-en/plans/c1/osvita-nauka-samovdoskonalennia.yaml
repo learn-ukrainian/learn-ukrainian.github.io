@@ -113,10 +113,10 @@ vocabulary:
     - інтернаціоналізація
 
 activity_hints:
-  - type: essay-response
+  - type: fill-in
     description: "Complete texts about education and research with appropriate C1
       vocabulary — academic degrees, institutions, procedures."
-  - type: comparative-study
+  - type: match-up
     description: "Match educational institutions, degrees, and procedures with their
       descriptions and Ukrainian terminology."
   - type: critical-analysis

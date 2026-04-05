@@ -118,7 +118,7 @@ activity_hints:
   - type: error-correction
     description: "Fix paronym confusion (дільниця↔ділянка, ефектний↔ефективний) and
       tautology in academic and professional Ukrainian texts."
-  - type: comparative-study
+  - type: match-up
     description: "Match synonymic rows with their dominant word and differentiate
       by connotation, register, and context."
   - type: critical-analysis
@@ -127,7 +127,7 @@ activity_hints:
   - type: select
     description: "Choose the contextually appropriate synonym from a synonymic row
       for academic, journalistic, and colloquial registers."
-  - type: essay-response
+  - type: fill-in
     description: "Complete sentences with correct paronyms, avoiding common confusion
       in scientific and official texts."
 

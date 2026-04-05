@@ -123,7 +123,7 @@ activity_hints:
     description: "Analyze a contemporary Ukrainian novel excerpt — identify literary
       devices (сюжет, фабула, композиція, хронотоп, нарація) and write a structured
       literary analysis."
-  - type: comparative-study
+  - type: match-up
     description: "Match literary terms (експозиція, зав'язка, кульмінація, розв'язка,
       епілог) with their definitions and examples from Ukrainian literature."
   - type: select

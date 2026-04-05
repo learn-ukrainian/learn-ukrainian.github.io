@@ -147,19 +147,19 @@ vocabulary_hints:
     - "собою (with oneself — Ор.в. of себе)"
     - "свій (one's own — reflexive possessive)"
 activity_hints:
-  - type: reading
+  - type: quiz
     focus: "Choose correct pronoun type and form for given contexts"
     items: 8
-  - type: essay-response
+  - type: fill-in
     focus: "Decline pronouns (себе, хтось, ніхто) in sentence contexts"
     items: 8
-  - type: comparative-study
+  - type: match-up
     focus: "Match indefinite pronoun to its semantic meaning (specific, any, hypothetical)"
     items: 8
   - type: error-correction
     focus: "Fix spelling errors: *нізким → ні з ким, *хто-сь → хтось"
     items: 6
-  - type: critical-analysis
+  - type: group-sort
     focus: "Sort pronouns into type categories: indefinite, negative, reflexive, relative"
     items: 10
   - type: sentence-builder

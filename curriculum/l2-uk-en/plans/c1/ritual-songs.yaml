@@ -113,10 +113,10 @@ activity_hints:
     description: "Analyze a колядка or щедрівка text — identify archaic language layers,
       pagan vs. Christian elements, and classify the song's ritual function (величання,
       побажання, заклинання)."
-  - type: comparative-study
+  - type: match-up
     description: "Match ritual song types (колядки, щедрівки, веснянки, гаївки, жниварські,
       купальські) with their calendar period, function, and characteristic features."
-  - type: essay-response
+  - type: fill-in
     description: "Complete ritual song texts with traditional formulas, symbols (калина,
       барвінок, зозуля, сокіл), and parallelism patterns."
   - type: select

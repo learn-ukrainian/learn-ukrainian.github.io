@@ -139,7 +139,7 @@ activity_hints:
   - type: essay-response
     focus: Написати репортаж з використанням діалектної лексики для передачі 
       атмосфери регіону
-  - type: comparative-study
+  - type: match-up
     focus: 'Зіставити діалектні слова з їхніми літературними відповідниками: гуцульські,
       бойківські, лемківські форми'
   - type: error-correction

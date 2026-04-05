@@ -162,11 +162,11 @@ vocabulary:
     - інтерференція
 
 activity_hints:
-  - type: essay-response
+  - type: fill-in
     description: "Complete academic sentences by choosing the correct aspect form
       — e.g., 'Дослідники ___ (вивчати/вивчити) це питання протягом десятиліть' —
       testing aspect in context."
-  - type: comparative-study
+  - type: match-up
     description: "Match infinitive pairs to their formation type: prefix-based (писати→написати),
       suffix-based (кидати→кинути), suppletive (брати→взяти)."
   - type: error-correction
@@ -176,7 +176,7 @@ activity_hints:
     description: "Choose the correct aspect form in narrative contexts — identify
       whether the context requires completed action, ongoing process, or repeated
       action."
-  - type: critical-analysis
+  - type: group-sort
     description: "Categorize verbs into видова пара formation types and identify двовидові/одновидові
       дієслова from a mixed list."
 

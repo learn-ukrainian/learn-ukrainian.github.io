@@ -147,7 +147,7 @@ activity_hints:
   - type: essay-response
     description: "Write a polite disagreement (100-150 words) in a professional meeting
       context, using appropriate hedging and face-saving formulas."
-  - type: critical-analysis
+  - type: group-sort
     description: "Classify Ukrainian address forms (Вельмишановний, Пане, Друже, колего,
       хлопці) by formality level and appropriate usage context."
 

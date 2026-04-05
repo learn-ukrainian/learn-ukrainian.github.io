@@ -170,9 +170,9 @@ activities:
   total_min_items: 25
 
 activity_hints:
-  - type: critical-analysis
+  - type: unjumble
     focus: "Відновити правильний порядок елементів презентації"
-  - type: essay-response
+  - type: fill-in
     focus: "Вставити фрази-переходи та риторичні засоби"
   - type: essay-response
     focus: "Написати сценарій промови з методом 'проблема — рішення'"

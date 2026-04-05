@@ -133,10 +133,10 @@ vocabulary_hints:
     - "трансформація (transformation — converting between structures)"
     - "стилістика (stylistics — choice between phrase and clause)"
 activity_hints:
-  - type: essay-response
+  - type: fill-in
     focus: "Place commas correctly in sentences with participle phrases"
     items: 10
-  - type: reading
+  - type: quiz
     focus: "Does this participle phrase need commas? Choose correct punctuation"
     items: 8
   - type: sentence-builder

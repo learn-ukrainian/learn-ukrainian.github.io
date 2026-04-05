@@ -142,14 +142,14 @@ vocabulary_hints:
     - "білісінький (absolutely white — emphatic suffix -ісіньк-)"
     - "занадто (too much — degree word showing excess)"
 activity_hints:
-  - type: reading
+  - type: quiz
     focus: "Choose correct superlative form and identify errors (*самий, *найбільш
       найкращий)"
     items: 8
-  - type: essay-response
+  - type: fill-in
     focus: "Form the complete comparison chain: base → comparative → superlative"
     items: 8
-  - type: comparative-study
+  - type: match-up
     focus: "Match проста superlative to its складена equivalent"
     items: 8
   - type: error-correction

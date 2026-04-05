@@ -173,14 +173,14 @@ activities:
   total_min_items: 25
 
 activity_hints:
-  - type: essay-response
+  - type: fill-in
     focus: "Вставити спортивну термінологію та однорідні члени в репортаж"
   - type: error-correction
     focus: "Виправити русизми у спортивній лексиці (болельщик→вболівальник,
       соревнование→змагання)"
   - type: select
     focus: "Обрати доречну фразу для запрошення на спортивну подію чи дозвілля"
-  - type: comparative-study
+  - type: match-up
     focus: "Зіставити вид спорту з відповідною лексикою та обладнанням"
 
 references:

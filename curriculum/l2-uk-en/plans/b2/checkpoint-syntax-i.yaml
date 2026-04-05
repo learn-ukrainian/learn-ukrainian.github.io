@@ -158,10 +158,10 @@ activity_hints:
   - type: error-correction
     focus: "Знайти та виправити пунктуаційні помилки в простому ускладненому
       реченні"
-  - type: essay-response
+  - type: fill-in
     focus: "Розставити розділові знаки в реченнях з однорідними та відокремленими
       членами"
-  - type: critical-analysis
+  - type: group-sort
     focus: "Класифікувати речення за типами: просте / ускладнене / односкладне"
   - type: select
     focus: "Визначити тип другорядного члена речення"

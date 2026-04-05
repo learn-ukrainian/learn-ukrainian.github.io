@@ -159,7 +159,7 @@ activities:
   total_min_items: 40
 
 activity_hints:
-  - type: critical-analysis
+  - type: group-sort
     focus: "Класифікувати уривки за стилем та термінологію за доменом"
   - type: error-correction
     focus: "Знайти стилістичні помилки та змішування регістрів"

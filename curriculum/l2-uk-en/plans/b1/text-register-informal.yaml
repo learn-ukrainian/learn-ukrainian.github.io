@@ -172,15 +172,15 @@ vocabulary_hints:
     - "бувай (bye/see you — informal farewell)"
     - "коротше кажучи (in short — Ukrainian replacement for суржик 'короче')"
 activity_hints:
-  - type: reading
+  - type: quiz
     focus: "Identify розмовний стиль markers in text excerpts and distinguish from
       офіційно-діловий and публіцистичний."
     items: 8
-  - type: comparative-study
+  - type: match-up
     focus: "Match фразеологізми to their meanings and match суржик forms to correct
       Ukrainian розмовна лексика."
     items: 10
-  - type: essay-response
+  - type: fill-in
     focus: "Complete everyday dialogues with appropriate вигуки, частки, and colloquial
       constructions."
     items: 8
@@ -188,7 +188,7 @@ activity_hints:
     focus: "Identify суржик elements in dialogues and replace with genuine Ukrainian
       розмовна лексика."
     items: 6
-  - type: critical-analysis
+  - type: group-sort
     focus: "Sort vocabulary and expressions into розмовний vs офіційно-діловий register
       categories."
     items: 10

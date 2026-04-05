@@ -170,7 +170,7 @@ activity_hints:
   - type: critical-analysis
     focus: Оцінити аргументацію у тексті про джентрифікацію та конфлікт інтересів
       у житловій політиці
-  - type: essay-response
+  - type: fill-in
     focus: 'Доповнити текст архітектурною термінологією: ревіталізація,
       містобудування, благоустрій'
   - type: error-correction

@@ -135,11 +135,11 @@ vocabulary_hints:
     - "прогалина (gap — area of missing knowledge)"
     - "готовність (readiness — preparedness for exam)"
 activity_hints:
-  - type: reading
+  - type: quiz
     focus: "Comprehensive mixed quiz covering grammar from all 10 phases: чергування,
       вид, рухові дієслова, відмінки, дієприкметники, стилі."
     items: 15
-  - type: essay-response
+  - type: fill-in
     focus: "Complete a comprehensive text requiring grammar from multiple phases:
       correct verb forms, case endings, word formation."
     items: 10
@@ -147,11 +147,11 @@ activity_hints:
     focus: "Find and correct errors across all B1 grammar areas in a Ukrainian text
       containing deliberate mistakes."
     items: 10
-  - type: critical-analysis
+  - type: group-sort
     focus: "Sort grammar concepts by phase/category: verb forms by тип, речення by
       складність, words by стиль."
     items: 12
-  - type: comparative-study
+  - type: match-up
     focus: "Match metalanguage terms to examples across all phases."
     items: 10
   - type: free-write

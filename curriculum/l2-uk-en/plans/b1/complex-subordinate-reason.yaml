@@ -114,10 +114,10 @@ vocabulary_hints:
     - "з тієї причини що (for the reason that)"
     - "кореляція (correlation — тому in main clause)"
 activity_hints:
-  - type: essay-response
+  - type: fill-in
     focus: "Insert correct causal conjunction based on register and context"
     items: 10
-  - type: reading
+  - type: quiz
     focus: "Classify: причинне чи умовне речення?"
     items: 8
   - type: sentence-builder
@@ -126,7 +126,7 @@ activity_hints:
   - type: error-correction
     focus: "Fix punctuation errors in причинних реченнях (split vs unsplit)"
     items: 6
-  - type: comparative-study
+  - type: match-up
     focus: "Match causal conjunctions to their register level and usage patterns"
     items: 8
 connects_to:

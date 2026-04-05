@@ -120,7 +120,7 @@ activity_hints:
   - type: critical-analysis
     description: "Analyze a Presidential Decree and a diplomatic note — compare their
       syntactic structures, courtesy formulas, and degree of formality."
-  - type: comparative-study
+  - type: match-up
     description: "Match official document types (указ, комюніке, конвенція, резолюція,
       нота) with their structural features and characteristic language."
   - type: essay-response

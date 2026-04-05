@@ -152,13 +152,13 @@ vocabulary_hints:
     - "вважатися (to be considered — + Ор.в.)"
     - "агент (agent — the doer in passive constructions)"
 activity_hints:
-  - type: reading
+  - type: quiz
     focus: "Identify the semantic role of instrumental in each sentence"
     items: 8
-  - type: essay-response
+  - type: fill-in
     focus: "Put nouns into correct instrumental form with verbs governing Ор.в."
     items: 8
-  - type: comparative-study
+  - type: match-up
     focus: "Match verb to its instrumental-governed complement"
     items: 8
   - type: sentence-builder

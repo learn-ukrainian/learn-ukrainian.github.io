@@ -148,7 +148,7 @@ activity_hints:
   - type: error-correction
     focus: "Знайти змішування стилів у тексті (канцеляризми в розмові, сленг у науковому
       тексті) та виправити"
-  - type: critical-analysis
+  - type: group-sort
     focus: "Розподілити уривки текстів за функціональним стилем"
   - type: critical-analysis
     focus: "Порівняти дві стилістичні трансформації одного тексту та оцінити їхню

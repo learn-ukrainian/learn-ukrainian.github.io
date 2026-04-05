@@ -119,10 +119,10 @@ activity_hints:
     description: "Formulate a complex thesis about the role of Ukrainian language
       in national identity and develop it with two types of argumentation (250-300
       words)."
-  - type: essay-response
+  - type: fill-in
     description: "Complete thesis development sentences with appropriate expansion
       markers (ба більше, варто також зазначити, це зумовлює)."
-  - type: comparative-study
+  - type: match-up
     description: "Match thesis types (описова, аналітична, аргументаційна) with examples
       and characteristics."
   - type: error-correction

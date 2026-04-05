@@ -164,13 +164,13 @@ vocabulary_hints:
     - "сидячи (while sitting — from сидіти)"
     - "хвилюючись (while worrying — reflexive gerund)"
 activity_hints:
-  - type: essay-response
+  - type: fill-in
     focus: "Form imperfective gerunds from given verbs using correct suffixes"
     items: 10
-  - type: reading
+  - type: quiz
     focus: "Is the gerund used correctly? Check logical subject alignment"
     items: 8
-  - type: comparative-study
+  - type: match-up
     focus: "Match gerunds to their base verbs and identify the дієвідміна"
     items: 8
   - type: error-correction

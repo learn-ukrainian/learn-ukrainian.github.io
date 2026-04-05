@@ -174,14 +174,14 @@ activities:
   total_min_items: 25
 
 activity_hints:
-  - type: essay-response
+  - type: fill-in
     focus: "Доповнити рецепт кулінарними дієсловами та прислівниками"
   - type: error-correction
     focus: "Виправити русизми в кулінарній лексиці (жарить→смажити,
       картошка→картопля)"
   - type: select
     focus: "Обрати правильний спосіб приготування для страви"
-  - type: comparative-study
+  - type: match-up
     focus: "Зіставити продукт із його категорією та способом обробки"
 
 references:

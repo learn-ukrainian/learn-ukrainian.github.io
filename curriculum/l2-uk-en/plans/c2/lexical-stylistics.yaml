@@ -130,7 +130,7 @@ activity_hints:
   - type: critical-analysis
     hint: Проаналізуйте лексичні засоби створення психологічного портрета в 
       поданому художньому уривку
-  - type: essay-response
+  - type: fill-in
     hint: Доберіть найточніший синонім з поданого синонімічного ряду для кожного
       контексту
   - type: authorial-intent

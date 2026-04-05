@@ -110,7 +110,7 @@ vocabulary:
     - мовленнєвий акт
 
 activity_hints:
-  - type: reading
+  - type: quiz
     description: "Test knowledge of key linguistics concepts — language as a sign
       system, levels of language structure, Ukrainian language family classification."
   - type: error-correction
@@ -119,10 +119,10 @@ activity_hints:
   - type: critical-analysis
     description: "Analyze a media text for violations of lexical and grammatical norms
       — identify surzhyk, calques, and unjustified borrowings."
-  - type: essay-response
+  - type: fill-in
     description: "Complete sentences about the history of Ukrainian literary language
       with correct dates, names, and terminology."
-  - type: comparative-study
+  - type: match-up
     description: "Match linguistic branches (фонетика, морфологія, синтаксис, лексикологія)
       with their objects of study and key terminology."
 

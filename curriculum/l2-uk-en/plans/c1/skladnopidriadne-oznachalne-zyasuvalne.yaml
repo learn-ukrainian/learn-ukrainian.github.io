@@ -115,13 +115,13 @@ vocabulary:
     - гіпотеза
 
 activity_hints:
-  - type: essay-response
+  - type: fill-in
     description: "Complete complex sentences with appropriate relative pronouns (який,
       що, чий, котрий) and conjunctions (що, як, щоб, чи)."
   - type: error-correction
     description: "Fix errors in attributive and object clauses — wrong conjunction/relative
       pronoun choice, misplaced subordinate clause, punctuation."
-  - type: comparative-study
+  - type: match-up
     description: "Match the function of 'що' in different sentences — as a conjunction
       (сполучник) vs. as a relative pronoun (сполучне слово)."
   - type: critical-analysis

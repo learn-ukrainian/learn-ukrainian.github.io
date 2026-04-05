@@ -146,13 +146,13 @@ activities:
   total_min_items: 32
 
 activity_hints:
-  - type: comparative-study
+  - type: match-up
     description: "Match legal term to its definition (e.g., презумпція невинуватості↔особа
       вважається невинною, доки її вину не доведено)"
-  - type: reading
+  - type: cloze
     description: "Fill in a legal document template with correct terms (позовна заява,
       клопотання, вердикт)"
-  - type: essay-response
+  - type: fill-in
     description: "Complete legal formulas and standard phrases (e.g., 'Суд ухвалив
       ___ про ___')"
   - type: error-correction

@@ -120,7 +120,7 @@ activity_hints:
   - type: error-correction
     description: "Fix anglicisms and calques in a Ukrainian technology text — propose
       native Ukrainian equivalents where appropriate."
-  - type: comparative-study
+  - type: match-up
     description: "Match scientific domains (ШІ, біомедицина, кібербезпека, екотехнології)
       with their Ukrainian terminology sets."
   - type: select

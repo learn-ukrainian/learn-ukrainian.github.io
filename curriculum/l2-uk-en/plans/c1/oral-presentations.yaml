@@ -110,10 +110,10 @@ activity_hints:
   - type: critical-analysis
     description: "Evaluate a Ukrainian academic presentation transcript — assess structure,
       audience engagement techniques, and Q&A handling."
-  - type: essay-response
+  - type: fill-in
     description: "Complete presentation scripts with appropriate transition phrases
       (Перейдемо до..., Як ілюструє цей графік..., Підбиваючи підсумки...)."
-  - type: comparative-study
+  - type: match-up
     description: "Match presentation sections (вступ, основна частина, висновки, Q&A)
       with their characteristic discourse markers."
   - type: error-correction

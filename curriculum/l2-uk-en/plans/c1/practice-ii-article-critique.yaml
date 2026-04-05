@@ -112,13 +112,13 @@ activity_hints:
   - type: error-correction
     description: "Fix inappropriate tone in a draft review — replace aggressive criticism
       with mitigated academic formulations."
-  - type: comparative-study
+  - type: match-up
     description: "Match types of logical fallacies (підміна понять, поспішне узагальнення,
       ad hominem) with examples from academic texts."
   - type: essay-response
     description: "Write a critical review (250-300 words) evaluating an article about
       AI in education — balance positive assessment with substantiated criticism."
-  - type: essay-response
+  - type: fill-in
     description: "Complete review sentences with diplomatic criticism phrases (водночас
       варто зауважити..., автор залишає поза увагою...)."
 

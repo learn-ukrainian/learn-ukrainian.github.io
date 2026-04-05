@@ -116,7 +116,7 @@ activity_hints:
   - type: error-correction
     description: "Fix syntactic, morphological, and stylistic errors in a mixed-register
       text — enforce academic norms consistently."
-  - type: essay-response
+  - type: fill-in
     description: "Complete a comprehensive academic text with appropriate terminology,
       discourse markers, and citation formulas from the entire C1.1 program."
   - type: select

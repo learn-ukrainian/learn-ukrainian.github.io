@@ -128,16 +128,16 @@ vocabulary_hints:
     - "дієслово мовлення (verb of speech — сказати, запитати)"
     - "дієслово мислення (verb of thought — думати, знати)"
 activity_hints:
-  - type: essay-response
+  - type: fill-in
     focus: "Complete sentences with correct conjunction (що/щоб/чи/де/куди/хто)"
     items: 10
-  - type: reading
+  - type: quiz
     focus: "Is що a conjunction or a relative word in this sentence?"
     items: 8
   - type: sentence-builder
     focus: "Construct з'ясувальні речення from given main clauses and information"
     items: 8
-  - type: comparative-study
+  - type: match-up
     focus: "Match пояснювані слова (verbs) to the type of з'ясувальне they typically
       take"
     items: 8

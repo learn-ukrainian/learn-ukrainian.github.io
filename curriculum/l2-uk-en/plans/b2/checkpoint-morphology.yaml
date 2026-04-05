@@ -125,10 +125,10 @@ activities:
   total_min_items: 20
 
 activity_hints:
-  - type: reading
+  - type: cloze
     description: "Complete a mixed morphology text testing aspect, conditionals, numerals,
       and word formation"
-  - type: critical-analysis
+  - type: group-sort
     description: "Classify word forms by morphological category (вид дієслова / відмінок
       числівника / спосіб словотвору)"
   - type: error-correction
@@ -137,7 +137,7 @@ activity_hints:
   - type: essay-response
     description: "Write a text using specified morphological forms (давноминулий час,
       умовний спосіб, складені числівники)"
-  - type: essay-response
+  - type: fill-in
     description: "Comprehensive morphology exercise covering all topics from M43-M55"
 
 references:

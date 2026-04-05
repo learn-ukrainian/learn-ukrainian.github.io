@@ -119,7 +119,7 @@ activity_hints:
     description: "Analyze a Ukrainian historiographical literature review about Kozak
       origins — evaluate source grouping, critical analysis quality, and research
       gap identification."
-  - type: comparative-study
+  - type: match-up
     description: "Match literature review organizational strategies (хронологічний,
       тематичний, методологічний) with example text structures."
   - type: error-correction
@@ -128,7 +128,7 @@ activity_hints:
   - type: essay-response
     description: "Write a synthesis paragraph (150-200 words) comparing views of different
       Ukrainian scholars on a linguistic topic."
-  - type: essay-response
+  - type: fill-in
     description: "Complete comparison sentences with appropriate phrases for agreement,
       disagreement, and alternative viewpoints."
 

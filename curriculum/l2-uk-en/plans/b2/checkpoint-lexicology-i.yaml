@@ -155,13 +155,13 @@ activities:
   total_min_items: 25
 
 activity_hints:
-  - type: comparative-study
+  - type: match-up
     focus: "Зіставити прислів'я з ситуацією та синонім із контекстом"
   - type: error-correction
     focus: "Виправити спотворені фразеологізми та неточні синоніми"
-  - type: essay-response
+  - type: fill-in
     focus: "Вставити доречний фразеологізм або точний синонім у текст"
-  - type: critical-analysis
+  - type: group-sort
     focus: "Класифікувати: синонім / фразеологізм / прислів'я / калька"
 
 references:

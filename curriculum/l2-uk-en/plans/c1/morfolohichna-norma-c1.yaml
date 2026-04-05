@@ -120,16 +120,16 @@ activity_hints:
   - type: error-correction
     description: "Fix morphological norm violations — incorrect genitive endings (-а/-я
       vs -у/-ю), degree of comparison errors (найбільш кращий), participle calques."
-  - type: essay-response
+  - type: fill-in
     description: "Complete official document sentences with correct vocative case
       forms, abbreviation agreements, and indeclinable noun genders."
   - type: select
     description: "Choose the normative morphological form from variants — parallel
       endings, compound adjective spellings, pronoun usage."
-  - type: comparative-study
+  - type: match-up
     description: "Match morphological categories (рід, відмінок, ступінь порівняння)
       with their problematic cases and correct resolution rules."
-  - type: critical-analysis
+  - type: group-sort
     description: "Categorize masculine genitive nouns by ending pattern (-а/-я for
       concrete/countable vs -у/-ю for abstract/collective/mass)."
 

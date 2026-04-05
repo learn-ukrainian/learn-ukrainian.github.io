@@ -122,13 +122,13 @@ activity_hints:
   - type: critical-analysis
     description: "Analyze Masenko's arguments about surzhyk as a postcolonial identity
       marker — evaluate sociolinguistic evidence and conclusions."
-  - type: comparative-study
+  - type: match-up
     description: "Match surzhyk types (фонетичний, лексичний, граматичний) with example
       sentences and their corrected Ukrainian versions."
   - type: select
     description: "Identify whether a given language sample represents dialect, surzhyk,
       or colloquial Ukrainian — justify the classification."
-  - type: essay-response
+  - type: fill-in
     description: "Replace surzhyk forms with normative Ukrainian in sentences about
       everyday and professional situations."
 

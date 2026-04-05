@@ -111,16 +111,16 @@ activity_hints:
   - type: error-correction
     description: "Fix incorrect verb government (керування) in academic sentences
       — e.g., опанувати (що?) vs володіти (чим?)."
-  - type: essay-response
+  - type: fill-in
     description: "Complete methodology descriptions with appropriate research verbs
       (обґрунтовувати, з'ясовувати, систематизувати) in correct forms."
-  - type: comparative-study
+  - type: match-up
     description: "Match research process stages (ініціація, аналіз, верифікація) with
       their corresponding verb sets."
   - type: select
     description: "Choose the correct research verb and its grammatical form for describing
       specific academic activities."
-  - type: reading
+  - type: cloze
     description: "Fill in missing research verbs in a methodology section of a Ukrainian
       scientific article."
 

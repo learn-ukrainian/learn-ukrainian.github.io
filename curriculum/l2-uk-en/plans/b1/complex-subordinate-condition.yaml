@@ -110,10 +110,10 @@ vocabulary_hints:
     - "то (then — correlative in main clause)"
     - "тоді (then — correlative, emphatic)"
 activity_hints:
-  - type: essay-response
+  - type: fill-in
     focus: "Complete conditional sentences with correct conjunction and verb form"
     items: 10
-  - type: reading
+  - type: quiz
     focus: "Real or unreal condition? Temporal or conditional коли?"
     items: 10
   - type: sentence-builder
@@ -122,7 +122,7 @@ activity_hints:
   - type: error-correction
     focus: "Fix verb form errors in conditionals (aspect, mood, б/би placement)"
     items: 6
-  - type: critical-analysis
+  - type: group-sort
     focus: "Sort conditional conjunctions by register: colloquial → neutral → formal"
     items: 8
 connects_to:

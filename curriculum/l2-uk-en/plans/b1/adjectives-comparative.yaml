@@ -152,13 +152,13 @@ vocabulary_hints:
     - "значно (considerably — degree modifier)"
     - "дещо (somewhat — degree modifier)"
 activity_hints:
-  - type: reading
+  - type: quiz
     focus: "Choose correct comparative form: проста or складена, with alternations"
     items: 8
-  - type: essay-response
+  - type: fill-in
     focus: "Form the comparative from the base adjective (including alternation cases)"
     items: 8
-  - type: comparative-study
+  - type: match-up
     focus: "Match base adjective to its correct comparative form"
     items: 8
   - type: error-correction
@@ -167,7 +167,7 @@ activity_hints:
   - type: sentence-builder
     focus: "Build comparison sentences using за/від/ніж constructions"
     items: 6
-  - type: critical-analysis
+  - type: group-sort
     focus: "Sort adjectives into 'can form comparatives' vs 'cannot form comparatives'"
     items: 10
 connects_to:

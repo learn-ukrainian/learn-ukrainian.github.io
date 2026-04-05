@@ -123,7 +123,7 @@ activity_hints:
   - type: error-correction
     description: "Fix all types of errors in a deliberately flawed academic text —
       lexical calques, register mixing, syntactic errors, punctuation mistakes."
-  - type: essay-response
+  - type: fill-in
     description: "Complete a cloze passage from a scientific article with missing
       modal markers, connectors, and complex syntactic constructions."
   - type: select

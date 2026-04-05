@@ -121,10 +121,10 @@ activities:
   total_min_items: 20
 
 activity_hints:
-  - type: essay-response
+  - type: fill-in
     focus: "Доповнити речення правильним українським технічним терміном (замість англіцизму
       або кальки)."
-  - type: comparative-study
+  - type: match-up
     focus: "Зіставити українській технічний термін із його англійським еквівалентом."
   - type: select
     focus: "Обрати правильний українській відповідник замість англіцизму-кальки у

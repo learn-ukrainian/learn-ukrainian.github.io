@@ -127,7 +127,7 @@ activity_hints:
   - type: error-correction
     description: "Rewrite sentences where intended irony fails — fix cases where the
       ironic meaning is unclear or the tone shifts to unintended aggression."
-  - type: comparative-study
+  - type: match-up
     description: "Match literary examples of irony (from Котляревський, Шевченко,
       Бу-Ба-Бу) with the type of comic effect and the social target."
 

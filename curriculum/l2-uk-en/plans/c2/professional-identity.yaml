@@ -141,7 +141,7 @@ activity_hints:
   - type: error-correction
     focus: Виправити порушення регістру та стилістичної доречності у тексті про 
       професійну етику
-  - type: essay-response
+  - type: fill-in
     focus: 'Доповнити текст термінологією професійної ідентичності: доброчесність,
       асертивність, візіонерство, наставництво'
 phase: C2.3 [Professional Specialization]

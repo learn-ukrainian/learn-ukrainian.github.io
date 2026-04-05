@@ -136,16 +136,16 @@ vocabulary_hints:
     - "праворуч (to the right — compound adverb)"
     - "помалу (slowly, gradually — prefixed adverb, no hyphen)"
 activity_hints:
-  - type: reading
+  - type: quiz
     focus: "Choose correct adverb comparison form; distinguish adverb from adjective"
     items: 8
-  - type: essay-response
+  - type: fill-in
     focus: "Form adverbs from adjectives and then form their comparatives"
     items: 8
-  - type: comparative-study
+  - type: match-up
     focus: "Match adverb to its formation method (суфіксальний, пр.-суф., etc.)"
     items: 8
-  - type: critical-analysis
+  - type: group-sort
     focus: "Sort adverbs into 'can form comparison' vs 'cannot'"
     items: 10
   - type: error-correction

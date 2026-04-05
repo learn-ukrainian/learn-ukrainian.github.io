@@ -111,10 +111,10 @@ vocabulary:
     - інструмент
 
 activity_hints:
-  - type: essay-response
+  - type: fill-in
     description: "Complete household and utility-related texts with appropriate
       vocabulary: repair terms, communal services, home organization."
-  - type: comparative-study
+  - type: match-up
     description: "Match household items, rooms, and services with their functions,
       descriptions, and contexts of use."
   - type: critical-analysis

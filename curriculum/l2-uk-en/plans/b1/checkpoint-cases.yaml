@@ -128,16 +128,16 @@ vocabulary_hints:
     - "аналіз помилок (error analysis)"
     - "прогалина (gap — in knowledge)"
 activity_hints:
-  - type: reading
+  - type: quiz
     focus: "Comprehensive case/preposition/numeral/pronoun quiz (all Phase 6 topics)"
     items: 12
-  - type: essay-response
+  - type: fill-in
     focus: "Mixed exercises across cases, prepositions, numerals, pronouns"
     items: 10
   - type: error-correction
     focus: "Find and fix errors across ALL Phase 6 topics"
     items: 10
-  - type: comparative-study
+  - type: match-up
     focus: "Match grammatical construction to its semantic function"
     items: 10
   - type: free-write

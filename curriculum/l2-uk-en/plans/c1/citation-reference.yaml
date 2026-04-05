@@ -119,13 +119,13 @@ activity_hints:
   - type: error-correction
     description: "Fix citation formatting errors and transform poorly paraphrased
       passages into proper academic paraphrases."
-  - type: comparative-study
+  - type: match-up
     description: "Match introductory citation phrases (за словами, як зазначає, згідно
       з позицією) with appropriate contexts."
   - type: essay-response
     description: "Write a short analysis (150-200 words) integrating two direct quotes
       and one paraphrase from a Ukrainian literary work."
-  - type: essay-response
+  - type: fill-in
     description: "Complete sentences with appropriate verbs of declaration (стверджувати,
       зауважувати, акцентувати) for introducing citations."
 

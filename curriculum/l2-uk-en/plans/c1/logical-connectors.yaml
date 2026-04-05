@@ -117,7 +117,7 @@ activity_hints:
   - type: error-correction
     description: "Fix misused logical connectors in academic paragraphs — replace
       inappropriate cause/effect/concession markers."
-  - type: essay-response
+  - type: fill-in
     description: "Complete academic texts with appropriate connectors of cause (зважаючи
       на), result (отже), and concession (попри те що)."
   - type: select
@@ -126,7 +126,7 @@ activity_hints:
   - type: essay-response
     description: "Write an analytical note (200-250 words) about challenges in Ukrainian
       education using at least 8 different logical connectors."
-  - type: reading
+  - type: cloze
     description: "Fill in missing discourse markers in a political analysis text about
       European integration."
 

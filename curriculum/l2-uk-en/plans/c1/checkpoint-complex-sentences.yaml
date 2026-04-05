@@ -119,10 +119,10 @@ activity_hints:
   - type: select
     description: "Choose the correct punctuation and conjunction in sentences where
       multiple clause types intersect."
-  - type: essay-response
+  - type: fill-in
     description: "Complete a passage from a scientific article with missing conjunctions,
       relative pronouns, and punctuation marks."
-  - type: comparative-study
+  - type: match-up
     description: "Match sentence analysis tasks — given structural diagrams, identify
       the corresponding written sentences and their semantic relationships."
 

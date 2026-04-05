@@ -135,7 +135,7 @@ activity_hints:
   - type: critical-analysis
     focus: Оцінити аргументацію у тексті про права людини та інклюзивність в 
       українському суспільстві
-  - type: essay-response
+  - type: fill-in
     focus: 'Доповнити текст суспільно-політичною термінологією: адвокація, соціальний
       капітал, підзвітність'
   - type: error-correction

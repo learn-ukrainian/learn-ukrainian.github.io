@@ -134,14 +134,14 @@ vocabulary_hints:
     - "дисертація (dissertation)"
     - "науковий керівник (academic advisor)"
 activity_hints:
-  - type: essay-response
+  - type: fill-in
     focus: "Complete academic sentences using participle phrases and gerund constructions"
     items: 12
-  - type: reading
+  - type: quiz
     focus: "Choose the correct Phase 7 form for academic contexts (participle vs gerund
       vs clause)"
     items: 12
-  - type: comparative-study
+  - type: match-up
     focus: "Match academic vocabulary to definitions and contexts"
     items: 12
   - type: sentence-builder

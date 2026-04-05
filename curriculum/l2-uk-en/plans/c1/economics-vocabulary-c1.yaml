@@ -118,13 +118,13 @@ activity_hints:
   - type: error-correction
     description: "Fix imprecise economic terminology and calques from English/Russian
       in a financial analysis text."
-  - type: comparative-study
+  - type: match-up
     description: "Match economic concepts (інфляція, ліквідність, рентабельність,
       диверсифікація) with definitions and contextual usage."
   - type: select
     description: "Choose the correct Ukrainian economic term in context — distinguish
       between similar concepts (прибуток vs дохід, актив vs капітал)."
-  - type: essay-response
+  - type: fill-in
     description: "Complete economic analysis sentences with appropriate financial
       terminology and discourse markers."
 

@@ -128,21 +128,21 @@ vocabulary_hints:
     - "непрямий відмінок (oblique case — where full adjective forms appear)"
     - "коротка форма (short form — nominative of присвійні прикметники)"
 activity_hints:
-  - type: essay-response
+  - type: fill-in
     focus: "Утворіть присвійний прикметник від іменника і поставте у правильну форму:
       [Тітка] хустка → тітчина хустка"
     items: 10
-  - type: reading
+  - type: quiz
     focus: "Визначте, який суфікс потрібен (-ів/-їв чи -ин/-ін/-їн) та поясніть чому"
     items: 10
-  - type: critical-analysis
+  - type: group-sort
     focus: "Розподіліть прикметники за типом: якісні, відносні, присвійні"
     items: 12
   - type: error-correction
     focus: "Знайдіть і виправте помилки у формі присвійних прикметників: *тіткин →
       тітчин, *Олегін → Олегів"
     items: 8
-  - type: comparative-study
+  - type: match-up
     focus: "З'єднайте іменник із правильним присвійним прикметником: батько → батьків,
       тітка → тітчин"
     items: 10

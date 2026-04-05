@@ -181,11 +181,11 @@ vocabulary_hints:
     - "навпаки (on the contrary — contrast)"
     - "уяви собі (imagine — attention-drawing)"
 activity_hints:
-  - type: reading
+  - type: quiz
     focus: "Classify вставні слова by semantic group and identify which words are
       always вставні, never вставні, or context-dependent."
     items: 10
-  - type: essay-response
+  - type: fill-in
     focus: "Insert appropriate вставні слова into Ukrainian sentences to express specified
       attitudes (certainty, doubt, emotion, source)."
     items: 8
@@ -193,11 +193,11 @@ activity_hints:
     focus: "Fix punctuation errors: add missing commas around вставні слова, remove
       incorrect commas from non-вставні words (адже, навіть)."
     items: 8
-  - type: comparative-study
+  - type: match-up
     focus: "Match вставні слова to their semantic groups and to their communicative
       functions."
     items: 8
-  - type: critical-analysis
+  - type: group-sort
     focus: "Sort words into three categories: завжди вставні, ніколи не вставні, залежить
       від контексту."
     items: 12

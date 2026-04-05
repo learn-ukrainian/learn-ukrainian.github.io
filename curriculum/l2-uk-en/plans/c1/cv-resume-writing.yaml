@@ -112,7 +112,7 @@ activity_hints:
   - type: error-correction
     description: "Fix канцелярит, passive voice overuse, and non-professional formulations
       in CV descriptions and cover letters."
-  - type: comparative-study
+  - type: match-up
     description: "Match professional competency descriptions with appropriate action
       verbs in perfective aspect."
   - type: select

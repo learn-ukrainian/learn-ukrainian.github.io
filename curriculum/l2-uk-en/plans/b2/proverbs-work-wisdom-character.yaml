@@ -129,13 +129,13 @@ activities:
   total_min_items: 20
 
 activity_hints:
-  - type: comparative-study
+  - type: match-up
     focus: "Зіставити прислів'я з його тлумаченням (значенням)."
-  - type: essay-response
+  - type: fill-in
     focus: "Доповнити прислів'я пропущеним словом або другою частиною."
   - type: select
     focus: "Обрати доречне прислів'я для описаної комунікативної ситуації."
-  - type: reading
+  - type: cloze
     focus: "Вставити правильне прислів'я у контекст оповідного тексту."
 
 references:

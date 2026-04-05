@@ -122,7 +122,7 @@ activity_hints:
   - type: essay-response
     description: "Write a comprehensive literary analysis (150-200 words) of a Ukrainian
       poem covering versification, tropes, and interpretation."
-  - type: comparative-study
+  - type: match-up
     description: "Match types of lyric poetry (інтимна, пейзажна, громадянська, філософська)
       with their defining features and representative poems."
 

@@ -123,13 +123,13 @@ activity_hints:
   - type: critical-analysis
     description: "Analyze language features of Canadian Ukrainian — identify anglicisms,
       archaic forms preserved from Skrypnykivka, and assess language vitality."
-  - type: comparative-study
+  - type: match-up
     description: "Match diaspora waves (перша, друга, третя, сучасна) with their sociolinguistic
       characteristics and institutions."
   - type: select
     description: "Identify whether a given language feature is an archaism, anglicism,
       or dialectal preservation in diaspora speech."
-  - type: essay-response
+  - type: fill-in
     description: "Replace diaspora-specific forms (anglicisms, archaic spellings)
       with contemporary standard Ukrainian equivalents."
   - type: essay-response

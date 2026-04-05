@@ -146,13 +146,13 @@ activities:
   total_min_items: 32
 
 activity_hints:
-  - type: essay-response
+  - type: fill-in
     description: "Complete an economic report with correct terms (e.g., 'ВВП зріс
       на ___%, інфляція становить ___')"
-  - type: comparative-study
+  - type: match-up
     description: "Match economic term to its explanation (e.g., рентабельність↔відношення
       прибутку до витрат)"
-  - type: critical-analysis
+  - type: group-sort
     description: "Sort terms into мікроекономіка vs макроекономіка categories"
   - type: select
     description: "Choose the correct business term in context (e.g., 'капіталовкладення'

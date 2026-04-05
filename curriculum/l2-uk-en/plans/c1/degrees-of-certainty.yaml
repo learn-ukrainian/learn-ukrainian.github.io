@@ -124,7 +124,7 @@ activity_hints:
   - type: critical-analysis
     description: "Analyze a scientific article and classify all hedging devices on
       a certainty scale from categorical assertion to complete doubt."
-  - type: essay-response
+  - type: fill-in
     description: "Complete academic sentences with appropriate hedging expressions
       — вставні слова, модальні дієслова, частки — matching the required certainty
       level."
@@ -132,7 +132,7 @@ activity_hints:
     description: "Fix texts with inappropriate certainty levels — remove excessive
       hedging in assertive contexts, add hedging where categorical statements need
       softening."
-  - type: comparative-study
+  - type: match-up
     description: "Match Ukrainian epistemic markers with their English equivalents
       and certainty levels (high: безумовно; medium: ймовірно; low: навряд чи)."
 

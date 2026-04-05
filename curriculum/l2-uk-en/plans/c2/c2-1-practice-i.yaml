@@ -135,7 +135,7 @@ activity_hints:
   - type: critical-analysis
     focus: 'Проаналізувати стилістичні правки у рукописах Коцюбинського: виявити критерії
       вибору слова'
-  - type: reading
+  - type: cloze
     focus: Вставити пропущені фразеологізми та питомі українські звороти замість
       калькованих конструкцій
 phase: C2.1 [Stylistic Perfection]

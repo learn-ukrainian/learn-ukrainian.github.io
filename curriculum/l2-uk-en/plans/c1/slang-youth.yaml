@@ -135,7 +135,7 @@ activity_hints:
     description: "Analyze a TikTok/YouTube comment section — classify the slang terms
       by source (англіцизми, комп'ютерний жаргон, метафоризація) and assess their
       integration into Ukrainian."
-  - type: comparative-study
+  - type: match-up
     description: "Match sociolect types (жаргон, арго, сленг) with their defining
       features, social functions, and examples from Ukrainian youth culture."
   - type: select

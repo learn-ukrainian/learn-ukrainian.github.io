@@ -123,17 +123,17 @@ vocabulary_hints:
     - "перевірка (check/verification)"
     - "впевнено (confidently)"
 activity_hints:
-  - type: reading
+  - type: quiz
     focus: "Mixed: participle classification, gerund вид choice, comma rules, calque
       identification"
     items: 12
-  - type: essay-response
+  - type: fill-in
     focus: "Form participles and gerunds with correct suffixes and alternations"
     items: 10
   - type: error-correction
     focus: "Fix errors: Russian calques, dangling gerunds, wrong commas, wrong вид"
     items: 8
-  - type: comparative-study
+  - type: match-up
     focus: "Match Phase 7 terms to definitions and examples"
     items: 10
   - type: mark-the-words

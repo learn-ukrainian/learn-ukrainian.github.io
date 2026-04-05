@@ -129,7 +129,7 @@ activity_hints:
   - type: essay-response
     description: "Write a critical review (200-250 words) using hedging strategies
       — express doubt and alternative interpretations without direct criticism."
-  - type: essay-response
+  - type: fill-in
     description: "Complete scientific sentences with appropriate modal markers of
       probability (імовірно, видається, можна припустити)."
 

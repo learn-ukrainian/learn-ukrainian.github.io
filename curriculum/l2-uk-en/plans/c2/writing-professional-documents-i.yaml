@@ -142,7 +142,7 @@ activity_hints:
   - type: critical-analysis
     focus: 'Проаналізувати мовну культуру ділових листів Грушевського: визначити етикетні
       формули та стиль'
-  - type: essay-response
+  - type: fill-in
     focus: 'Доповнити текст нормативного акта юридичною термінологією: диспозиція,
       регламентація, коректура'
 phase: C2.3 [Professional Specialization]

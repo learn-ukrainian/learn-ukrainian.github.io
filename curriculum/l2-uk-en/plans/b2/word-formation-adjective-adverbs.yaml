@@ -177,14 +177,14 @@ activities:
   total_min_items: 40
 
 activity_hints:
-  - type: essay-response
+  - type: fill-in
     focus: "Утворити прикметник від іменника та прислівник від прикметника"
   - type: error-correction
     focus: "Виправити помилки в суфіксах -ський/-зький/-цький та правописі
       прислівників"
-  - type: comparative-study
+  - type: match-up
     focus: "Зіставити іменник з правильно утвореним прикметником"
-  - type: critical-analysis
+  - type: group-sort
     focus: "Класифікувати прислівники за способом творення та написанням"
 
 references:

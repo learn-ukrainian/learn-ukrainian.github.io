@@ -120,16 +120,16 @@ activity_hints:
   - type: critical-analysis
     description: "Evaluate IMRAD structure of a Ukrainian scientific article — assess
       methodology description, results presentation, and conclusion quality."
-  - type: essay-response
+  - type: fill-in
     description: "Complete research article sections with appropriate academic clichés
       and discourse markers for each IMRAD component."
   - type: error-correction
     description: "Fix stylistic and structural errors in a draft research article
       — ensure impersonality, terminological precision, and logical transitions."
-  - type: comparative-study
+  - type: match-up
     description: "Match research article sections (вступ, методи, результати, обговорення)
       with their characteristic language markers."
-  - type: reading
+  - type: cloze
     description: "Fill in missing methodological verbs and transitional phrases in
       a research article about Ukrainian dialectal heritage."
 

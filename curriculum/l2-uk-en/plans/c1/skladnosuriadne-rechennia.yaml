@@ -112,13 +112,13 @@ vocabulary:
     - конструкція
 
 activity_hints:
-  - type: essay-response
+  - type: fill-in
     description: "Complete compound sentences with appropriate coordinating conjunctions
       (єднальні, протиставні, розділові) based on semantic context."
   - type: error-correction
     description: "Fix punctuation errors in compound sentences — missing commas, incorrect
       semicolons, wrong dash placement."
-  - type: comparative-study
+  - type: match-up
     description: "Match types of semantic relations in compound sentences (одночасність,
       послідовність, протиставлення) with example sentences."
   - type: critical-analysis

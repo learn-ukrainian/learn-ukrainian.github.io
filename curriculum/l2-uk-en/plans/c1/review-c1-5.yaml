@@ -114,13 +114,13 @@ activity_hints:
   - type: error-correction
     description: "Fix lexical calques, surzhyk forms, and stylistic errors in a professional
       text — apply knowledge from all C1.5 modules."
-  - type: comparative-study
+  - type: match-up
     description: "Match C1.5 key concepts (хеджинг, когерентність, експресивний синтаксис,
       стилістична норма) with definitions and textual examples."
   - type: essay-response
     description: "Write a structured paragraph (150-200 words) on the role of language
       policy in national identity, using complex syntax and appropriate hedging."
-  - type: essay-response
+  - type: fill-in
     description: "Complete sentences with appropriate discourse markers, connectors,
       and hedging expressions from academic Ukrainian register."
 

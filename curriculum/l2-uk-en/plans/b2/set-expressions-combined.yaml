@@ -118,13 +118,13 @@ activities:
   total_min_items: 20
 
 activity_hints:
-  - type: comparative-study
+  - type: match-up
     focus: "Зіставити сталий вираз із його значенням (фразеологізм → тлумачення)."
-  - type: essay-response
+  - type: fill-in
     focus: "Вставити правильний сталий вираз у контекст речення."
   - type: error-correction
     focus: "Виправити спотворені сталі вирази (перекручений компонент або русизм)."
-  - type: critical-analysis
+  - type: group-sort
     focus: "Класифікувати вирази за семантичним полем: праця, емоції, характер, стосунки."
 
 references:

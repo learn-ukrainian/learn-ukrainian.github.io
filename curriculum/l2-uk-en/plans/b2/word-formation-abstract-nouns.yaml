@@ -139,12 +139,12 @@ activities:
   total_min_items: 40
 
 activity_hints:
-  - type: essay-response
+  - type: fill-in
     description: "Form abstract nouns from adjectives (e.g., сміливий→сміливість,
       мудрий→мудрість)"
-  - type: comparative-study
+  - type: match-up
     description: "Match adjective/verb to its abstract noun form"
-  - type: critical-analysis
+  - type: group-sort
     description: "Sort abstract nouns by suffix type: -ість / -ство / -ння / -ізм"
   - type: error-correction
     description: "Fix wrong suffix choice in abstract noun formation (e.g., 'людяність'

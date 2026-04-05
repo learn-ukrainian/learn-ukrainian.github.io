@@ -123,7 +123,7 @@ activity_hints:
   - type: critical-analysis
     description: "Analyze a literary passage — identify the morphological dominant
       (noun-heavy = static, verb-heavy = dynamic) and explain its stylistic effect."
-  - type: comparative-study
+  - type: match-up
     description: "Match morphological stylistic devices (субстантивація, теперішній
       історичний, експресивні суфікси) with their functions and example sentences."
   - type: error-correction

@@ -121,7 +121,7 @@ activity_hints:
   - type: error-correction
     description: "Fix factual and stylistic errors in a text about folk arts —
       misattributed regional styles, chronological errors, terminology."
-  - type: comparative-study
+  - type: match-up
     description: "Match folk art forms (писанка, вишиванка, гопак, дума, колядка) with
       their regions, features, and cultural significance."
   - type: true-false

@@ -109,7 +109,7 @@ activity_hints:
   - type: critical-analysis
     description: "Evaluate the quality of a paraphrased Ukrainian academic text —
       identify mosaic plagiarism, assess accuracy of content preservation."
-  - type: comparative-study
+  - type: match-up
     description: "Match paraphrase techniques (lexical substitution, grammatical transformation,
       semantic retelling) with examples."
   - type: error-correction
@@ -118,7 +118,7 @@ activity_hints:
   - type: essay-response
     description: "Write a concise summary (150-200 words) of a text about Ukrainian
       cybernetics history using at least 3 different paraphrase methods."
-  - type: essay-response
+  - type: fill-in
     description: "Complete summary sentences with appropriate introductory phrases
       for indirect citations (автор наголошує, у дослідженні зазначається)."
 

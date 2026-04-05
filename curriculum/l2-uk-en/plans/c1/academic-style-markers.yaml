@@ -117,13 +117,13 @@ activity_hints:
   - type: error-correction
     description: "Rewrite colloquial/journalistic sentences into proper academic register,
       fixing non-academic vocabulary and emotional markers."
-  - type: comparative-study
+  - type: match-up
     description: "Match academic style markers (номіналізація, безособовість, термін)
       with examples from scientific Ukrainian texts."
   - type: select
     description: "Choose the most appropriate academic formulation from multiple options
       for expressing the same idea."
-  - type: essay-response
+  - type: fill-in
     description: "Complete academic sentences with nominalized verb forms and appropriate
       terminological collocations."
 

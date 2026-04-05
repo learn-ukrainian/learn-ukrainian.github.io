@@ -157,9 +157,9 @@ activities:
 activity_hints:
   - type: error-correction
     focus: "Знайти та виправити всі пунктуаційні помилки в складному тексті"
-  - type: essay-response
+  - type: fill-in
     focus: "Розставити розділові знаки в багатокомпонентних реченнях"
-  - type: critical-analysis
+  - type: group-sort
     focus: "Класифікувати речення: складносурядне / складнопідрядне /
       безсполучникове / з різними видами зв'язку"
   - type: critical-analysis

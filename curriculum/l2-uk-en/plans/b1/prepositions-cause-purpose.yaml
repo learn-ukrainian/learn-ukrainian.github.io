@@ -145,13 +145,13 @@ vocabulary_hints:
     - "навіщо (what for — purpose question word)"
     - "чому (why — cause question word)"
 activity_hints:
-  - type: reading
+  - type: quiz
     focus: "Choose correct cause/purpose preposition (through vs thanks to, etc.)"
     items: 8
-  - type: essay-response
+  - type: fill-in
     focus: "Complete sentences with через/завдяки/від/для/заради + correct case"
     items: 8
-  - type: comparative-study
+  - type: match-up
     focus: "Match preposition to its semantic function (positive cause, purpose, etc.)"
     items: 8
   - type: error-correction
@@ -160,7 +160,7 @@ activity_hints:
   - type: sentence-builder
     focus: "Build complex sentences with compound cause/purpose constructions"
     items: 6
-  - type: critical-analysis
+  - type: group-sort
     focus: "Sort sentences into CAUSE vs PURPOSE categories"
     items: 10
 connects_to:

@@ -142,7 +142,7 @@ activity_hints:
   - type: essay-response
     focus: Написати аналітичне есе про роль деколонізації топонімії у формуванні
       сучасної ідентичності
-  - type: comparative-study
+  - type: match-up
     focus: Зіставити етапи мовних репресій з їхніми наслідками для сучасного 
       стану мови
   - type: error-correction

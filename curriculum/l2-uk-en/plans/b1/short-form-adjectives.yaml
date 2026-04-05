@@ -140,19 +140,19 @@ vocabulary_hints:
     - "присудковий (predicative — used as predicate)"
     - "якісний прикметник (qualitative adjective — the only type with short forms)"
 activity_hints:
-  - type: reading
+  - type: quiz
     focus: "Identify short-form adjectives and distinguish from full forms in context"
     items: 8
-  - type: essay-response
+  - type: fill-in
     focus: "Complete sentences with correct short-form adjective (потрібен/певен/годен/ладен)"
     items: 8
-  - type: comparative-study
+  - type: match-up
     focus: "Match short forms to their full forms and meanings"
     items: 8
   - type: mark-the-words
     focus: "In folk song and literary excerpts, mark all short-form adjectives"
     items: 6
-  - type: critical-analysis
+  - type: group-sort
     focus: "Sort: поетична коротка форма (зелен) vs сучасна предикативна (потрібен)
       vs повна форма"
     items: 12

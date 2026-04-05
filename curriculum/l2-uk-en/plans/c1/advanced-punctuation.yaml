@@ -113,10 +113,10 @@ activity_hints:
   - type: critical-analysis
     description: "Analyze authorial punctuation in Vinhranovsky's poetry — evaluate
       how punctuation marks affect rhythm and meaning."
-  - type: essay-response
+  - type: fill-in
     description: "Insert correct punctuation marks in complex academic sentences with
       embedded clauses, citations, and parenthetical constructions."
-  - type: comparative-study
+  - type: match-up
     description: "Match punctuation rules (відокремлення, вставність, парантеза) with
       sentence examples requiring specific punctuation."
   - type: select

@@ -107,11 +107,11 @@ vocabulary_hints:
     - "класифікація (classification)"
     - "перетворення (transformation)"
 activity_hints:
-  - type: reading
+  - type: quiz
     focus: "Mixed: classify sentence types, choose conjunctions, identify subordinate
       clause types"
     items: 12
-  - type: essay-response
+  - type: fill-in
     focus: "Insert correct conjunctions and forms of який in complex sentences"
     items: 10
   - type: sentence-builder
@@ -120,7 +120,7 @@ activity_hints:
   - type: error-correction
     focus: "Fix conjunction, punctuation, and pronoun-shift errors in complex sentences"
     items: 8
-  - type: comparative-study
+  - type: match-up
     focus: "Match sentence types to their definitions and example patterns"
     items: 10
   - type: free-write

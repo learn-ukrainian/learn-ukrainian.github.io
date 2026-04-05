@@ -144,14 +144,14 @@ vocabulary_hints:
     - "гідний (worthy of — governs genitive)"
     - "вартий (worth — governs genitive)"
 activity_hints:
-  - type: reading
+  - type: quiz
     focus: "Identify the semantic role of genitive in sentences (partitive, negation,
       etc.)"
     items: 8
-  - type: essay-response
+  - type: fill-in
     focus: "Put nouns into correct genitive form, choosing -а/-я or -у/-ю"
     items: 8
-  - type: comparative-study
+  - type: match-up
     focus: "Match quantifier/container to its genitive-governed noun"
     items: 8
   - type: error-correction
@@ -160,7 +160,7 @@ activity_hints:
   - type: sentence-builder
     focus: "Build sentences using genitive for dates, negation, and partitive"
     items: 6
-  - type: critical-analysis
+  - type: group-sort
     focus: "Sort masculine nouns by genitive ending category: -а/-я vs -у/-ю"
     items: 10
 connects_to:

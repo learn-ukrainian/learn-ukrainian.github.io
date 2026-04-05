@@ -172,14 +172,14 @@ activities:
   total_min_items: 25
 
 activity_hints:
-  - type: essay-response
+  - type: fill-in
     focus: "Вставити медичні терміни та дієприкметники в контексті лікарського
       прийому"
   - type: error-correction
     focus: "Виправити русизми в медичній лексиці (больніца→лікарня, врач→лікар)"
   - type: select
     focus: "Обрати правильний варіант медичної поради або діагнозу"
-  - type: comparative-study
+  - type: match-up
     focus: "Зіставити симптом із відповідною лікарською спеціальністю"
 
 references:

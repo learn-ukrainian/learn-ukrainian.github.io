@@ -137,13 +137,13 @@ activities:
   total_min_items: 40
 
 activity_hints:
-  - type: comparative-study
+  - type: match-up
     description: "Match suffix to its meaning (e.g., -тель→agent of action, -ник→occupation/role,
       -ець→person with quality)"
-  - type: essay-response
+  - type: fill-in
     description: "Form agent nouns from verbs using correct suffix (e.g., вчити→вчитель,
       водити→водій)"
-  - type: critical-analysis
+  - type: group-sort
     description: "Sort suffixes by category: професія / характеристика / мешканець
       / фемінітив"
   - type: select

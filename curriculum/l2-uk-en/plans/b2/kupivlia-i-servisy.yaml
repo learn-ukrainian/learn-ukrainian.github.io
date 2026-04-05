@@ -173,14 +173,14 @@ activities:
   total_min_items: 25
 
 activity_hints:
-  - type: essay-response
+  - type: fill-in
     focus: "Доповнити офіційну скаргу юридичними формулами (згідно з, на підставі)"
   - type: error-correction
     focus: "Виправити русизми в торговельній лексиці (магазін→магазин,
       скідка→знижка)"
   - type: select
     focus: "Обрати доречну мовну формулу для ситуації (повернення, скарга, замовлення)"
-  - type: comparative-study
+  - type: match-up
     focus: "Зіставити тип послуги з відповідним фахівцем та лексикою"
 
 references:

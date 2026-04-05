@@ -118,7 +118,7 @@ activity_hints:
   - type: critical-analysis
     description: "Analyze dialect features in Kotsyubynsky's 'Shadows of Forgotten
       Ancestors' — identify Hutsul lexical, phonetic, and morphological markers."
-  - type: comparative-study
+  - type: match-up
     description: "Match Ukrainian dialect groups (північне, південно-західне, південно-східне
       наріччя) with their characteristic features and geographic areas."
   - type: select

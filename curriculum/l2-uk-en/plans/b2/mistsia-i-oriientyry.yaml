@@ -173,13 +173,13 @@ activities:
   total_min_items: 25
 
 activity_hints:
-  - type: essay-response
+  - type: fill-in
     focus: "Вставити стилістичні засоби (епітети, метафори) в опис місцевості"
   - type: error-correction
     focus: "Виправити помилки в прикметниках від географічних назв (-ський/-зький/-цький)"
   - type: select
     focus: "Обрати правильний напрямок руху за описом маршруту"
-  - type: comparative-study
+  - type: match-up
     focus: "Зіставити пам'ятку з містом та архітектурним стилем"
 
 references:

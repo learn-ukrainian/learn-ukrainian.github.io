@@ -109,7 +109,7 @@ vocabulary:
     - деконструкція
 
 activity_hints:
-  - type: essay-response
+  - type: fill-in
     description: "Complete consumer rights texts and shopping dialogues with appropriate
       C1-level vocabulary — legal terms, complaint formulas, advertising language."
   - type: critical-analysis
@@ -118,7 +118,7 @@ activity_hints:
   - type: error-correction
     description: "Fix Russianisms and calques in shopping/services vocabulary:
       магАзін→магазИн, кассир→касир, чек→чек (correct)."
-  - type: comparative-study
+  - type: match-up
     description: "Match consumer rights terms (гарантія, рекламація, повернення,
       компенсація) with their legal definitions and procedures."
   - type: select

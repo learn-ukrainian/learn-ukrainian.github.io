@@ -136,13 +136,13 @@ vocabulary_hints:
     - "в першу чергу (first of all)"
     - "двадцять перше століття (twenty-first century)"
 activity_hints:
-  - type: reading
+  - type: quiz
     focus: "Choose correct ordinal form for dates, times, and contexts"
     items: 8
-  - type: essay-response
+  - type: fill-in
     focus: "Write dates and times in full Ukrainian word form"
     items: 8
-  - type: comparative-study
+  - type: match-up
     focus: "Match digital clock time to written Ukrainian expression"
     items: 8
   - type: error-correction
