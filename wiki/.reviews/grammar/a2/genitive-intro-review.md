@@ -1,17 +1,17 @@
-✅ Message sent to Gemini (ID: 28079) [auto-acked: self-addressed]
+✅ Message sent to Gemini (ID: 28081) [auto-acked: self-addressed]
 
-🚀 Invoking Gemini to process message #28079...
-📨 Message #28079
+🚀 Invoking Gemini to process message #28081...
+📨 Message #28081
    From: gemini → To: gemini
    Type: query
-   Task: wiki-review-a2-genitive-intro-final
-   Time: 2026-04-05T18:55:48.145658+00:00
+   Task: wiki-review-a2-genitive-intro-r1
+   Time: 2026-04-05T19:30:34.690892+00:00
 
 ============================================================
 
 You are a HARSH adversarial reviewer of a grammar brief for the Ukrainian language curriculum wiki. Your job is to find problems, not praise.
 
-Track: a2, Slug: genitive-intro, Round: final
+Track: a2, Slug: genitive-intro, Round: 1
 
 ## Review Rubric (score EACH dimension 1-10, then average)
 
@@ -88,7 +88,7 @@ The genitive case is used to show the absence of an object when using `нема�
 The endings depend on the noun's gender and declension.
 
 **Masculine (Чоловічий рід)**
-This is the most complex gender in the genitive, with two possible endings for inanimate nouns: **-а/-я** and **-у/-ю**. The choice is lexical and often a point of difficulty. (See Decolonization Notes for the key difference from Russian).
+This is the most complex gender in the genitive. All animate nouns take **-а/-я** (брата, кота). For inanimate nouns, there are two possible endings: **-а/-я** and **-у/-ю**. The choice is lexical and often a point of difficulty.
 
 | Nominative | Genitive (-а/-я) - *Concrete* | Genitive (-у/-ю) - *Abstract/Mass* | Example Sentence |
 | :--- | :--- | :--- | :--- |
@@ -111,7 +111,7 @@ Much more regular than masculine.
 | мама | **мами** | **Мами** немає вдома. |
 | книга | **книги** | У мене немає цієї **книги**. |
 | пісня | **пісні** | Тут немає цієї **пісні**. |
-| ніч | **ночі** | У мене немає вільної **ночі**. |
+| відповідь | **відповіді** | У мене немає **відповіді** на це питання. |
 | сіль | **солі** | У супі немає **солі**. |
 
 **Neuter (Середній рід)**
@@ -123,16 +123,14 @@ Much more regular than masculine.
 | море | **моря** | Поблизу немає **моря**. |
 | ім'я | **імені** | Його **імені** немає у списку. |
 
-**Plural (Множина)**
-The genitive plural is used to express the absence of multiple items.
+**Plural (Множина) - *Preview / Lexical Chunks***
+The full genitive plural paradigm (-ів, -їв, empty ending, -ей) is generally taught later in B1. For A2, only introduce it as fixed lexical chunks when strictly necessary for high-frequency phrases.
 
-| Nominative Plural | Genitive Plural | Example Sentence |
+| Nominative Plural | Genitive Plural Chunk | Example Sentence |
 | :--- | :--- | :--- |
-| столи | **столів** | У класі немає **столів**. |
-| книги | **книг** | На полиці немає **книг**. |
-| вікна | **вікон** | У будинку немає **вікон**. |
-| друзі | **друзів** | У мене немає **друзів** у цьому місті. |
-| місця | **місць** | У театрі немає вільних **місць**. |
+| місця | **місць** | У нас немає вільних **місць**. (No vacancies/seats) |
+| гроші | **грошей** | У мене немає **грошей**. (No money) |
+| проблеми | **проблем** | Немає **проблем**. (No problem) |
 
 ### II. Adjectives & Pronouns
 
@@ -143,7 +141,6 @@ These must also be in the genitive case, agreeing in gender and number with the 
 | Masculine | новий | **нового** | цей | **цього** | У мене немає **нового/цього** стола. |
 | Feminine | нова | **нової** | ця | **цієї** | У мене немає **нової/цієї** книги. |
 | Neuter | нове | **нового** | це | **цього** | У мене немає **нового/цього** вікна. |
-| Plural | нові | **нових** | ці | **цих** | У мене немає **нових/цих** друзів. |
 
 ## Частотність і пріоритети (Frequency & Priorities)
 
@@ -232,51 +229,26 @@ Teaching the Ukrainian genitive must be done on its own terms, without treating 
 {"to_model": "gemini-3.1-pro-preview"}
 
 🤖 Processing with Gemini (gemini-3.1-pro-preview) [sync, 30 min timeout]...
-  [gemini] attempt 1/5, model=gemini-3.1-pro-preview, prompt=13866 chars: You are Gemini, participating in a collaboration with Claude. This is a message from Claude to you:  --- You are a HARSH adversarial reviewer of a grammar brief for the Ukrainian language curriculum w...
+  [gemini] attempt 1/5, model=gemini-3.1-pro-preview, prompt=13881 chars: You are Gemini, participating in a collaboration with Claude. This is a message from Claude to you:  --- You are a HARSH adversarial reviewer of a grammar brief for the Ukrainian language curriculum w...
 Dimension scores:
-1. **Factual: 9/10** — The linguistic facts are overwhelmingly correct, including the `-а` ending for devices like `телефон`. However, the claim that Grade 5 students learn this "once [they] have a firm grasp of the nominative case" projects L2 acquisition onto L1 native speakers. Native Ukrainian 5th graders already speak fluently; they are simply learning formal syntactic parsing (синтаксичний розбір) and identifying the genitive object (додаток).
-2. **Language: 9/10** — Extremely clean Ukrainian without Russianisms. "Гадки не маю" is a superb, native choice. However, the drill sentence "У мене немає вільної ночі" is highly unnatural phrasing. Ukrainians would say "У мене немає вільної хвилини" or use a word like "можливість" to express lack of time/availability. While grammatically correct, it is poor pedagogical input. 
-3. **Decolonization: 10/10** — Flawless execution. Explicitly framing the masculine `-у` ending as a core, productive feature of Ukrainian rather than a "partitive exception" correctly dismantles Russian-centric linguistic mental models. The warning against the calque "немає жодного уявлення" is precisely what is needed.
-4. **Completeness: 7/10** — The "Full Paradigm" is missing three absolutely critical, high-frequency patterns for A2 learners: 1) The feminine `-ї` ending for soft/mixed nouns (e.g., `сім'я -> сім'ї`, `надія -> надії`). 2) Neuter nouns ending in `-я` where the Nominative and Genitive singular are identical (`життя -> життя`)—this is a major relief for learners and must be mentioned. 3) While it rightly pushes full Genitive Plural to B1, it completely misses the A1/A2 ultra-high-frequency `-ей` exceptions like `грошей`, `людей`, and `дітей`.
-5. **Actionable: 9/10** — The "Frequency & Priorities" section gives a very clear sequence for the module writer to follow. The "Common L2 Errors" section provides excellent preventative measures. The only deduction is due to the missing paradigm parts, which limits the writer's ability to build truly comprehensive drills.
+1. Factual: 10/10 — The grammatical rules, case government (`немає` + Genitive), and paradigms for singular nouns and modifiers are perfectly accurate. The examples of masculine noun endings (`-а`/`-у`) are correctly categorized.
+2. Language: 7/10 — Contains a semantic Russianism: `відповідь на це питання`. In Russian, "вопрос" serves as both "issue" and "query." Proper Ukrainian style distinguishes `питання` (issue/problem/topic) from `запитання` (a direct query requiring an answer). Conflating them is an imperial calque.
+3. Decolonization: 10/10 — Exceptional framing. Explicitly calling out the masculine `-у/-ю` ending as a core, productive feature of the Ukrainian genitive rather than a "partitive exception" (which reflects Russian grammar models) is superb decolonized instruction.
+4. Completeness: 8/10 — Covers the singular forms and priorities well, but explicitly pushes the full Genitive Plural paradigm to B1. Since the master curriculum states A2 must cover "All 7 cases", deferring the plural entirely leaves a structural gap. Furthermore, it fails to explicitly mention the `і -> о/е` vowel alternation (e.g., `стіл` -> `стола`, `сіль` -> `солі`), which appears in the examples but is never explained for the writer.
+5. Actionable: 10/10 — The "Frequency & Priorities" list and the "Error -> Correction -> Prevention" structure in the Common L2 Errors section provide exactly the kind of concrete blueprint a curriculum writer needs to build targeted drills.
 
-**Overall: 8.8/10**
+**Overall: 9/10**
 
 <fixes>
-old: introduced early in Ukrainian schools, typically around Grade 5, once students have a firm grasp of the nominative case and basic sentence structure.
-new: introduced in Ukrainian schools during syntax parsing (usually Grade 5), where students learn to formally identify it as an object (додаток) governed by the impersonal word "немає".
----
-old: | пісня | **пісні** | Тут немає цієї **пісні**. |
-| ніч | **ночі** | У мене немає вільної **ночі**. |
-| сіль | **солі** | У супі немає **солі**. |
-new: | пісня | **пісні** | Тут немає цієї **пісні**. |
-| сім'я | **сім'ї** | У нього немає **сім'ї**. |
-| можливість | **можливості** | У мене немає такої **можливості**. |
-| сіль | **солі** | У супі немає **солі**. |
----
-old: | море | **моря** | Поблизу немає **моря**. |
-| ім'я | **імені** | Його **імені** немає у списку. |
-new: | море | **моря** | Поблизу немає **моря**. |
-| життя | **життя** | На Марсі немає **життя**. |
-| ім'я | **імені** | Його **імені** немає у списку. |
----
-old: | місця | **місць** | У театрі немає вільних **місць**. |
-new: | місця | **місць** | У театрі немає вільних **місць**. |
-| гроші | **грошей** | У мене зараз немає **грошей**. |
-| люди | **людей** | На вулиці зовсім немає **людей**. |
----
-old: *   **Feminine `-и/-і`:** `води`, `кави`, `роботи`, `машини`, `гривні`. This is the most common and regular pattern.
-new: *   **Feminine `-и/-і/-ї`:** `води`, `кави`, `роботи`, `машини`, `гривні`, `сім'ї`. This is the most common and regular pattern.
----
-old: The genitive plural (`-ів`, `-їв`, empty ending, `-ей`) can wait until B1, except for very high-frequency phrases like `немає проблем`.
-new: The genitive plural (`-ів`, `-їв`, empty ending, `-ей`) can wait until B1, except for very high-frequency phrases like `немає проблем`, `немає грошей`, and `немає людей/дітей`.
+old: | відповідь | **відповіді** | У мене немає **відповіді** на це питання. |
+new: | відповідь | **відповіді** | У мене немає **відповіді** на це запитання. |
 </fixes>
 
 
 ────────────────────────────────────────
-✅ Gemini finished (3897 chars)
-✅ Message sent to Claude (ID: 28080)
-✓ Message 28080 acknowledged
-   Auto-acknowledged reply #28080 (stdout delivery — no inbox accumulation)
-   ℹ️  No issue number in task_id 'wiki-review-a2-genitive-intro-final' — skipping GH posting (review saved to orchestration/)
-✓ Message 28079 acknowledged
+✅ Gemini finished (1696 chars)
+✅ Message sent to Claude (ID: 28082)
+✓ Message 28082 acknowledged
+   Auto-acknowledged reply #28082 (stdout delivery — no inbox accumulation)
+   ℹ️  No issue number in task_id 'wiki-review-a2-genitive-intro-r1' — skipping GH posting (review saved to orchestration/)
+✓ Message 28081 acknowledged

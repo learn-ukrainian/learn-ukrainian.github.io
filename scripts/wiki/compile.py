@@ -190,21 +190,401 @@ def cmd_compile_one(track: str, slug: str, *, force: bool = False,
     return dry_run  # dry_run returns None but isn't a failure
 
 
-def _review_article(article_path: Path, track: str, slug: str,
-                    max_rounds: int = 4) -> None:
-    """Review a wiki article and auto-fix issues. Up to max_rounds of review+fix.
+def _parse_review_scores(review_text: str) -> dict[str, float]:
+    """Parse all review scores: 5 dimensions + overall. Handles decimals.
 
-    Flow: Gemini reviews → Gemini fixes (with review as guide) → re-review.
-    Stops when score ≥ 8 or max_rounds reached.
+    Returns dict like:
+        {"factual": 9.0, "language": 9.0, "decolonization": 10.0,
+         "completeness": 7.0, "actionable": 9.0, "overall": 8.8}
+
+    Missing dimensions default to 0.0. Overall is parsed from the explicit
+    "Overall:" line, NOT averaged from dimensions (reviewer may weight them).
+    """
+    import re
+
+    scores: dict[str, float] = {}
+
+    # Parse individual dimensions: "1. **Factual: 9/10**" or "Factual: 9.5/10"
+    dimension_names = {
+        "factual": r"factual",
+        "language": r"(?:language|ukrainian\s+language)",
+        "decolonization": r"decolonization",
+        "completeness": r"completeness",
+        "actionable": r"actionable",
+    }
+    for key, pattern in dimension_names.items():
+        match = re.search(
+            rf"{pattern}[:\s]*\**\s*(\d+(?:\.\d+)?)\s*/\s*10",
+            review_text, re.IGNORECASE,
+        )
+        scores[key] = float(match.group(1)) if match else 0.0
+
+    # Parse overall score
+    overall_match = re.search(
+        r"(?:overall|score|verdict|підсумок)[:\s]*\**\s*(\d+(?:\.\d+)?)\s*/\s*10",
+        review_text, re.IGNORECASE,
+    )
+    if overall_match:
+        scores["overall"] = float(overall_match.group(1))
+    else:
+        # Fallback: last X/10 in the text
+        all_scores = re.findall(r"(\d+(?:\.\d+)?)\s*/\s*10", review_text)
+        scores["overall"] = float(all_scores[-1]) if all_scores else 0.0
+
+    return scores
+
+
+def _parse_review_score(review_text: str) -> float:
+    """Parse just the overall score. Convenience wrapper for _parse_review_scores."""
+    return _parse_review_scores(review_text)["overall"]
+
+
+def _build_review_prompt(article_text: str, article_type: str,
+                         track: str, slug: str, round_label: str) -> str:
+    """Build a review prompt with the CURRENT article text."""
+    return (
+        f"You are a HARSH adversarial reviewer of a {article_type} for the Ukrainian "
+        "language curriculum wiki. Your job is to find problems, not praise.\n\n"
+        f"Track: {track}, Slug: {slug}, Round: {round_label}\n\n"
+        "## Review Rubric (score EACH dimension 1-10, then average)\n\n"
+        "1. **Factual accuracy** — every claim must have evidence from sources. "
+        "Vague or unsourced claims → deduct points.\n"
+        "2. **Ukrainian language quality** — check for Russianisms (кон→кін), "
+        "surzhyk (шо→що), calques (приймати душ→брати душ). Even ONE Russianism = max 7/10.\n"
+        "3. **Decolonization** — is Ukrainian presented on its own terms? Any "
+        "'like Russian but...' framing = max 6/10.\n"
+        "4. **Completeness** — does it cover ALL aspects a module writer needs? "
+        "Missing sections or shallow treatment → deduct.\n"
+        "5. **Actionable guidance** — can a writer actually USE this? Generic advice "
+        "like 'teach it well' = max 5/10. Must have specific examples, sequences, exercises.\n\n"
+        "## Rules\n"
+        "- Score each dimension separately, then give weighted average.\n"
+        "- Be honest. If the article is excellent, say so. 10/10 IS possible.\n"
+        "- 9/10 = excellent with minor issues. 8/10 = good. 7/10 = needs work.\n"
+        "- Output a <fixes> block with specific changes. "
+        "If the article is clean, output <fixes></fixes> (empty).\n"
+        "- Do NOT invent problems. Fabricated issues waste rebuild cycles.\n\n"
+        "## Fix syntax\n\n"
+        "Two formats are available:\n\n"
+        "**1. Replace existing text** (for corrections, rewording):\n"
+        "Use a SHORT anchor (1-2 sentences max) for the old: text. "
+        "Do NOT paste massive paragraphs — they break exact matching.\n"
+        "```\n"
+        "old: short exact text to find\n"
+        "new: replacement text\n"
+        "```\n\n"
+        "**2. Insert new content** (for missing sections, added examples):\n"
+        "Use INSERT AFTER with a short anchor from the article, then the new text to add.\n"
+        "```\n"
+        "INSERT AFTER: short anchor text that exists in the article\n"
+        "NEW TEXT: the new content to insert after the anchor\n"
+        "```\n\n"
+        "Separate multiple fixes with `---`.\n\n"
+        "## Output format\n\n"
+        "Dimension scores:\n"
+        "1. Factual: X/10 — [evidence]\n"
+        "2. Language: X/10 — [evidence]\n"
+        "3. Decolonization: X/10 — [evidence]\n"
+        "4. Completeness: X/10 — [evidence]\n"
+        "5. Actionable: X/10 — [evidence]\n\n"
+        "**Overall: X/10**\n\n"
+        "<fixes>\n"
+        "old: exact text to find in the article\n"
+        "new: replacement text\n"
+        "---\n"
+        "INSERT AFTER: anchor text in article\n"
+        "NEW TEXT: content to add after the anchor\n"
+        "</fixes>\n\n"
+        f"## Article to review\n\n{article_text[:15000]}"
+    )
+
+
+def _normalize_whitespace(text: str) -> str:
+    """Normalize whitespace for fuzzy matching: collapse runs, strip line-trailing."""
+    import re
+    # Strip trailing whitespace per line
+    text = "\n".join(line.rstrip() for line in text.split("\n"))
+    # Collapse multiple spaces (but not newlines — those are structural)
+    text = re.sub(r" {2,}", " ", text)
+    return text
+
+
+def _map_norm_pos_to_orig(article_text: str, norm_article: str,
+                          norm_target: int) -> int:
+    """Map a position in normalized text back to the corresponding position in original.
+
+    Walks both strings in parallel: characters that match advance the normalized
+    cursor; characters that were collapsed (extra spaces, trailing whitespace)
+    only advance the original cursor.
+    """
+    orig_pos = 0
+    norm_pos = 0
+    while norm_pos < norm_target and orig_pos < len(article_text):
+        if article_text[orig_pos] == norm_article[norm_pos]:
+            norm_pos += 1
+        orig_pos += 1
+    return orig_pos
+
+
+def _fuzzy_replace(article_text: str, old: str, new: str) -> str | None:
+    """Try whitespace-normalized matching when exact match fails.
+
+    Returns updated text on success, None on failure.
+    """
+    norm_article = _normalize_whitespace(article_text)
+    norm_old = _normalize_whitespace(old)
+
+    if norm_old not in norm_article:
+        return None
+
+    # Find match boundaries in normalized text
+    norm_start = norm_article.index(norm_old)
+    norm_end = norm_start + len(norm_old)
+
+    # Map both boundaries back to original text independently
+    orig_start = _map_norm_pos_to_orig(article_text, norm_article, norm_start)
+    orig_end = _map_norm_pos_to_orig(article_text, norm_article, norm_end)
+
+    # Replace the original span
+    return article_text[:orig_start] + new + article_text[orig_end:]
+
+
+def _extract_and_apply_fixes(review_text: str, article_text: str) -> tuple[str, int, int]:
+    """Extract fixes from review and apply them to article text.
+
+    Supports two fix types:
+    - old:/new: — find and replace (with whitespace-normalized fallback)
+    - INSERT AFTER:/NEW TEXT: — insert new content after an anchor
+
+    Returns: (updated_article_text, total_fixes, applied_count)
+    """
+    import re
+
+    # Strip markdown code fences before searching for <fixes> tags
+    clean_review = re.sub(r"```\w*\n?", "", review_text)
+    # Use findall + take LAST match — earlier matches may be from the prompt template
+    fixes_matches = re.findall(r"<fixes>(.*?)</fixes>", clean_review, re.DOTALL)
+    fixes_content = fixes_matches[-1].strip() if fixes_matches else ""
+
+    if not fixes_content:
+        return article_text, 0, 0
+
+    # Parse both old:/new: pairs and INSERT AFTER:/NEW TEXT: directives
+    fix_pairs = _parse_wiki_fixes(fixes_content)
+    insert_directives = _parse_insert_directives(fixes_content)
+    total = len(fix_pairs) + len(insert_directives)
+
+    if total == 0:
+        return article_text, 0, 0
+
+    applied = 0
+
+    # Apply old:/new: replacements (exact match first, then fuzzy)
+    for old, new in fix_pairs:
+        if old in article_text:
+            article_text = article_text.replace(old, new, 1)
+            applied += 1
+        else:
+            # Fuzzy fallback: whitespace-normalized matching
+            result = _fuzzy_replace(article_text, old, new)
+            if result is not None:
+                article_text = result
+                applied += 1
+
+    # Apply INSERT AFTER: directives
+    for anchor, new_text in insert_directives:
+        if anchor in article_text:
+            pos = article_text.index(anchor) + len(anchor)
+            article_text = article_text[:pos] + "\n" + new_text + article_text[pos:]
+            applied += 1
+        else:
+            # Fuzzy anchor matching
+            norm_article = _normalize_whitespace(article_text)
+            norm_anchor = _normalize_whitespace(anchor)
+            if norm_anchor in norm_article:
+                # Find original position of anchor end
+                result = _fuzzy_replace(article_text, anchor, anchor + "\n" + new_text)
+                if result is not None:
+                    article_text = result
+                    applied += 1
+
+    return article_text, total, applied
+
+
+def _parse_insert_directives(fixes_text: str) -> list[tuple[str, str]]:
+    """Parse INSERT AFTER:/NEW TEXT: pairs from a <fixes> block.
+
+    Returns list of (anchor_text, new_text) tuples.
+    """
+    pairs = []
+    lines = fixes_text.split("\n")
+    anchor_lines: list[str] = []
+    new_lines: list[str] = []
+    current: str | None = None
+
+    def _flush():
+        anchor = "\n".join(anchor_lines).strip()
+        new = "\n".join(new_lines).strip()
+        if anchor and new:
+            pairs.append((anchor, new))
+        anchor_lines.clear()
+        new_lines.clear()
+
+    for line in lines:
+        stripped = line.strip()
+        if stripped == "---":
+            _flush()
+            current = None
+            continue
+        if stripped.upper().startswith("INSERT AFTER:"):
+            if anchor_lines and new_lines:
+                _flush()
+            current = "anchor"
+            anchor_lines.append(stripped[len("INSERT AFTER:"):].strip())
+        elif stripped.upper().startswith("NEW TEXT:"):
+            current = "new"
+            new_lines.append(stripped[len("NEW TEXT:"):].strip())
+        elif current == "anchor":
+            anchor_lines.append(line)
+        elif current == "new":
+            new_lines.append(line)
+
+    _flush()
+    return pairs
+
+
+def _needs_structural_rewrite(scores: dict[str, float]) -> bool:
+    """Check if any dimension is below 8 — requires targeted rewrite, not copyedit."""
+    for key in ("factual", "language", "decolonization", "completeness", "actionable"):
+        if scores.get(key, 0) < 8.0:
+            return True
+    return scores.get("overall", 0) < 8.0
+
+
+def _send_review(track: str, slug: str, review_prompt: str,
+                 round_label: str, project_root: str) -> str | None:
+    """Send a review prompt to Gemini via agent bridge. Returns stdout or None."""
+    import subprocess
+
+    try:
+        result = subprocess.run(
+            [
+                sys.executable, "scripts/ai_agent_bridge/__main__.py",
+                "ask-gemini", review_prompt,
+                "--task-id", f"wiki-review-{track}-{slug}-{round_label}",
+                "--model", "gemini-3.1-pro-preview",
+            ],
+            capture_output=True, text=True, timeout=300,
+            cwd=project_root,
+        )
+    except Exception as e:
+        print(f"  ⚠️  Review error: {e}")
+        return None
+
+    if result.returncode != 0:
+        print(f"  ⚠️  Review failed: {result.stderr[:200]}")
+        return None
+
+    return result.stdout
+
+
+def _targeted_rewrite(article_path: Path, article_text: str,
+                      article_type: str,
+                      track: str, slug: str, review_text: str,
+                      scores: dict[str, float],
+                      project_root: str) -> bool:
+    """Send article + critique to Gemini for targeted section rewrite.
+
+    Does NOT recompile from scratch — preserves existing high-quality text.
+    Returns True if rewrite succeeded.
     """
     import subprocess
 
+    # Identify weak dimensions for the rewrite directive
+    weak = [k for k in ("factual", "language", "decolonization", "completeness", "actionable")
+            if scores.get(k, 0) < 8.0]
+    weak_str = ", ".join(weak) if weak else "overall quality"
+
+    rewrite_prompt = (
+        f"You are rewriting specific sections of a {article_type} for the Ukrainian "
+        "language curriculum wiki. This is NOT a full rewrite — preserve all existing "
+        "high-quality text. Only rewrite the sections that need improvement.\n\n"
+        f"Track: {track}, Slug: {slug}\n\n"
+        f"## Weak dimensions: {weak_str}\n\n"
+        "## Reviewer critique\n\n"
+        f"{review_text[:5000]}\n\n"
+        "## Instructions\n"
+        "1. Read the critique carefully.\n"
+        "2. Identify which SPECIFIC sections need rewriting to address the critique.\n"
+        "3. Output the COMPLETE article with those sections rewritten.\n"
+        "4. Do NOT remove or degrade sections that scored well.\n"
+        "5. Do NOT add commentary — output ONLY the article markdown.\n\n"
+        f"## Current article\n\n{article_text[:15000]}"
+    )
+
+    try:
+        result = subprocess.run(
+            [
+                sys.executable, "scripts/ai_agent_bridge/__main__.py",
+                "ask-gemini", rewrite_prompt,
+                "--task-id", f"wiki-rewrite-{track}-{slug}",
+                "--model", "gemini-3.1-pro-preview",
+            ],
+            capture_output=True, text=True, timeout=600,
+            cwd=project_root,
+        )
+    except Exception as e:
+        print(f"  ⚠️  Rewrite error: {e}")
+        return False
+
+    if result.returncode != 0:
+        print(f"  ⚠️  Rewrite failed: {result.stderr[:200]}")
+        return False
+
+    response = result.stdout.strip()
+
+    # Validate: response should be markdown starting with #, and not dramatically shorter
+    if not response or len(response) < 100:
+        print("  ⚠️  Rewrite returned empty/short response — keeping original")
+        return False
+
+    # Extract markdown from Gemini response (may have wrapper text)
+    # Find the first # heading and take everything from there
+    import re
+    md_match = re.search(r"^(#\s+.+)", response, re.MULTILINE)
+    if md_match:
+        response = response[md_match.start():]
+
+    # Safety: don't accept if new article is <70% of original length (regression guard)
+    if len(response) < len(article_text) * 0.7:
+        print(f"  ⚠️  Rewrite too short ({len(response)} vs {len(article_text)} chars)"
+              " — keeping original")
+        return False
+
+    article_path.write_text(response + "\n", "utf-8")
+    new_words = len(response.split())
+    print(f"  ✏️  Rewrite applied ({new_words} words)")
+    return True
+
+
+def _review_article(article_path: Path, track: str, slug: str,
+                    max_rounds: int = 4) -> None:
+    """Review a wiki article with split-path fix strategy.
+
+    Flow:
+    1. Review → parse dimension scores
+    2. If all dimensions ≥ 8: COPYEDIT path (old:/new: + INSERT AFTER:)
+    3. If any dimension < 8: TARGETED REWRITE path (Gemini rewrites weak sections)
+    4. If no fixes and score < 9: route to rewrite (lazy reviewer = structural problem)
+    5. After last round, final scoring pass with fix application
+
+    Max 4 rounds total (copyedit + rewrite combined).
+    """
     from wiki.config import DEFAULT_PROMPT, TRACK_PROMPT, WIKI_DIR
 
     print(f"  🔍 Reviewing: {track}/{slug}")
 
-    article_text = article_path.read_text("utf-8")
-    if len(article_text) < 100:
+    if article_path.stat().st_size < 100:
         print("  ⚠️  Article too short to review")
         return
 
@@ -220,168 +600,124 @@ def _review_article(article_path: Path, track: str, slug: str,
     review_dir.mkdir(parents=True, exist_ok=True)
     project_root = str(Path(__file__).resolve().parents[2])
 
-    score = 0
+    score = 0.0
+    scores: dict[str, float] = {}
     review_text = ""
-    applied = 0
+    last_applied = 0
 
     for round_num in range(1, max_rounds + 1):
-        # Step 1: Review
+        # Step 1: Build prompt with FRESH article text every round
         article_text = article_path.read_text("utf-8")
-        review_prompt = (
-            f"You are a HARSH adversarial reviewer of a {article_type} for the Ukrainian "
-            "language curriculum wiki. Your job is to find problems, not praise.\n\n"
-            f"Track: {track}, Slug: {slug}, Round: {round_num}\n\n"
-            "## Review Rubric (score EACH dimension 1-10, then average)\n\n"
-            "1. **Factual accuracy** — every claim must have evidence from sources. "
-            "Vague or unsourced claims → deduct points.\n"
-            "2. **Ukrainian language quality** — check for Russianisms (кон→кін), "
-            "surzhyk (шо→що), calques (приймати душ→брати душ). Even ONE Russianism = max 7/10.\n"
-            "3. **Decolonization** — is Ukrainian presented on its own terms? Any "
-            "'like Russian but...' framing = max 6/10.\n"
-            "4. **Completeness** — does it cover ALL aspects a module writer needs? "
-            "Missing sections or shallow treatment → deduct.\n"
-            "5. **Actionable guidance** — can a writer actually USE this? Generic advice "
-            "like 'teach it well' = max 5/10. Must have specific examples, sequences, exercises.\n\n"
-            "## Rules\n"
-            "- Score each dimension separately, then give weighted average.\n"
-            "- Be honest. If the article is excellent, say so. 10/10 IS possible.\n"
-            "- 9/10 = excellent with minor issues. 8/10 = good. 7/10 = needs work.\n"
-            "- Output a <fixes> block ONLY if there are real issues to fix. "
-            "If the article is clean, output <fixes></fixes> (empty) and the review stops.\n"
-            "- Do NOT invent problems. Fabricated issues waste rebuild cycles.\n\n"
-            "## Output format\n\n"
-            "Dimension scores:\n"
-            "1. Factual: X/10 — [evidence]\n"
-            "2. Language: X/10 — [evidence]\n"
-            "3. Decolonization: X/10 — [evidence]\n"
-            "4. Completeness: X/10 — [evidence]\n"
-            "5. Actionable: X/10 — [evidence]\n\n"
-            "**Overall: X/10**\n\n"
-            "<fixes>\n"
-            "old: exact text to find in the article\n"
-            "new: replacement text\n"
-            "---\n"
-            "old: another exact find\n"
-            "new: another replacement\n"
-            "</fixes>\n\n"
-            f"## Article to review\n\n{article_text[:15000]}"
+        review_prompt = _build_review_prompt(
+            article_text, article_type, track, slug, str(round_num),
         )
 
-        try:
-            result = subprocess.run(
-                [
-                    sys.executable, "scripts/ai_agent_bridge/__main__.py",
-                    "ask-gemini", review_prompt,
-                    "--task-id", f"wiki-review-{track}-{slug}-r{round_num}",
-                    "--model", "gemini-3.1-pro-preview",
-                ],
-                capture_output=True, text=True, timeout=300,
-                cwd=project_root,
-            )
-        except Exception as e:
-            print(f"  ⚠️  Review error: {e}")
-            return
+        # Step 2: Send to Gemini for review
+        new_review = _send_review(
+            track, slug, review_prompt, f"r{round_num}", project_root,
+        )
+        if not new_review:
+            break  # Preserve review_text from last successful round
+        review_text = new_review
 
-        if result.returncode != 0:
-            print(f"  ⚠️  Review failed: {result.stderr[:200]}")
-            return
-
-        review_text = result.stdout
         review_path = review_dir / f"{slug}-review-r{round_num}.md"
         review_path.write_text(review_text, "utf-8")
 
-        # Parse score — find the OVERALL score, not per-dimension scores
-        import re
-        # Look for "Overall: X/10" or "Score: X/10" (the final verdict)
-        overall_match = re.search(
-            r"(?:overall|score|verdict|підсумок)[:\s]*\**\s*(\d+)\s*/\s*10",
-            review_text, re.IGNORECASE,
+        # Step 3: Parse ALL dimension scores
+        scores = _parse_review_scores(review_text)
+        score = scores["overall"]
+        dim_summary = " | ".join(
+            f"{k[:4]}:{v}" for k, v in scores.items() if k != "overall"
         )
-        if overall_match:
-            score = int(overall_match.group(1))
-        else:
-            # Fallback: take the LAST X/10 in the text (usually the overall)
-            all_scores = re.findall(r"(\d+)\s*/\s*10", review_text)
-            score = int(all_scores[-1]) if all_scores else 0
-        print(f"  📋 Round {round_num}: {score}/10")
+        print(f"  📋 Round {round_num}: {score}/10 [{dim_summary}]")
 
-        # Step 2: Extract and apply fixes (always — even if score >= 9)
-        # Strip markdown code fences before searching for <fixes> tags
-        clean_review = re.sub(r"```\w*\n?", "", review_text)
-        # Use findall + take LAST match — earlier matches may be from the prompt template
-        fixes_matches = re.findall(r"<fixes>(.*?)</fixes>", clean_review, re.DOTALL)
-        fixes_content = fixes_matches[-1].strip() if fixes_matches else ""
-        fix_pairs = _parse_wiki_fixes(fixes_content) if fixes_content else []
-
-        if fix_pairs:
-            applied = 0
-            for old, new in fix_pairs:
-                if old in article_text:
-                    article_text = article_text.replace(old, new, 1)
-                    applied += 1
-            if applied:
-                article_path.write_text(article_text, "utf-8")
-                print(f"  🔧 Applied {applied}/{len(fix_pairs)} fixes")
-        else:
-            print("  ✅ No fixes needed — article is clean")
-
-        # Step 3: Check if we're done
-        if not fix_pairs or score >= 9:
-            print(f"  ✅ Review PASSED ({score}/10)")
+        # Step 4: Check if we're done
+        if score >= 9.0:
+            print(f"  �� Review PASSED ({score}/10)")
             final_path = review_dir / f"{slug}-review.md"
             final_path.write_text(review_text, "utf-8")
             return
 
-        if not fix_pairs:
-            print("  ⚠️  No fixes to apply — cannot improve further")
-            break
+        # Step 5: Route — copyedit or structural rewrite?
+        if _needs_structural_rewrite(scores):
+            # STRUCTURAL REWRITE PATH: any dimension < 8
+            weak = [k for k in ("factual", "language", "decolonization",
+                                "completeness", "actionable")
+                    if scores.get(k, 0) < 8.0]
+            print(f"  🔨 Structural rewrite needed (weak: {', '.join(weak) or 'overall'})")
+            success = _targeted_rewrite(
+                article_path, article_text, article_type, track, slug,
+                review_text, scores, project_root,
+            )
+            if success:
+                last_applied = 1  # Flag that we changed the article
+                print("  🔄 Re-reviewing after rewrite...")
+                continue
+            else:
+                print("  ⚠️  Rewrite failed — stopping")
+                break
+        else:
+            # COPYEDIT PATH: all dimensions ≥ 8, just needs localized fixes
+            article_text, total_fixes, last_applied = _extract_and_apply_fixes(
+                review_text, article_text,
+            )
 
-        if fix_pairs and applied == 0:
-            print(f"  ⚠️  0/{len(fix_pairs)} fixes matched — stopping")
-            break
+            if last_applied > 0:
+                article_path.write_text(article_text, "utf-8")
+                print(f"  🔧 Applied {last_applied}/{total_fixes} fixes")
+            elif total_fixes > 0:
+                print(f"  ⚠️  0/{total_fixes} fixes matched — stopping")
+                break
+            else:
+                # No fixes + score < 9 = lazy reviewer = structural problem
+                print(f"  🔨 No fixes but score {score}/10 — routing to rewrite")
+                success = _targeted_rewrite(
+                    article_path, article_text, article_type, track, slug,
+                    review_text, scores, project_root,
+                )
+                if success:
+                    last_applied = 1
+                    print("  🔄 Re-reviewing after rewrite...")
+                    continue
+                else:
+                    print("  ⚠️  Rewrite failed — stopping")
+                    break
 
         print("  🔄 Re-reviewing after fixes...")
 
-    # If fixes were applied in the last round, do one final re-review
-    # so the score reflects the actual state of the article
-    if applied > 0:
-        print("  🔄 Final re-review after last round's fixes...")
+    # After the loop: if we changed the article in the last round, do a final
+    # scoring review on the CURRENT article to get an accurate final score
+    if last_applied > 0:
+        print("  🔄 Final scoring review on fixed article...")
         article_text = article_path.read_text("utf-8")
-        # Reuse the same review prompt pattern (just change round number)
-        try:
-            result = subprocess.run(
-                [
-                    sys.executable, "scripts/ai_agent_bridge/__main__.py",
-                    "ask-gemini", review_prompt.replace(
-                        f"Round: {max_rounds}", "Round: final"
-                    ),
-                    "--task-id", f"wiki-review-{track}-{slug}-final",
-                    "--model", "gemini-3.1-pro-preview",
-                ],
-                capture_output=True, text=True, timeout=300,
-                cwd=project_root,
-            )
-            if result.returncode == 0:
-                review_text = result.stdout
-                final_score = re.search(
-                    r"(?:overall|score|verdict)[:\s]*\**\s*(\d+)\s*/\s*10",
-                    review_text, re.IGNORECASE,
-                )
-                if final_score:
-                    score = int(final_score.group(1))
-                else:
-                    all_scores = re.findall(r"(\d+)\s*/\s*10", review_text)
-                    if all_scores:
-                        score = int(all_scores[-1])
-                print(f"  📋 Final: {score}/10")
-                review_path = review_dir / f"{slug}-review-final.md"
-                review_path.write_text(review_text, "utf-8")
-        except Exception as e:
-            print(f"  ⚠️  Final review error: {e}")
+        review_prompt = _build_review_prompt(
+            article_text, article_type, track, slug, "final",
+        )
 
-    # Save final review
-    final_path = review_dir / f"{slug}-review.md"
-    final_path.write_text(review_text, "utf-8")
+        final_review = _send_review(
+            track, slug, review_prompt, "final", project_root,
+        )
+        if final_review:
+            review_text = final_review  # Only update if API succeeded
+            scores = _parse_review_scores(review_text)
+            score = scores["overall"]
+            print(f"  📋 Final: {score}/10")
+
+            # Apply any remaining fixes from the final review too
+            article_text, total_fixes, final_applied = _extract_and_apply_fixes(
+                review_text, article_text,
+            )
+            if final_applied > 0:
+                article_path.write_text(article_text, "utf-8")
+                print(f"  🔧 Applied {final_applied}/{total_fixes} final fixes")
+
+            review_path = review_dir / f"{slug}-review-final.md"
+            review_path.write_text(review_text, "utf-8")
+
+    # Save final review (from last successful round — never empty)
+    if review_text:
+        final_path = review_dir / f"{slug}-review.md"
+        final_path.write_text(review_text, "utf-8")
     print(f"  📝 Final score: {score}/10 after review loop")
 
 
