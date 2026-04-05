@@ -1,14 +1,30 @@
 """Source enrichment — supplements discovery data with track-specific sources.
 
+Core tracks (A1-C2): enriched via RAG textbook search (23K chunks, Grades 1-11).
+Seminar tracks (FOLK, HIST, etc.): enriched via literary JSONL files on Google Drive.
+
 Discovery files often have thin source refs (just a few textbook page fragments).
-This module adds relevant literary texts, local data files, and cross-references
-to build a rich context for wiki article compilation.
+This module adds relevant textbook chunks, literary texts, local data files,
+and cross-references to build a rich context for wiki article compilation.
 """
 
 import yaml
 
 from .config import LITERARY_DIR, PROJECT_ROOT
 from .sources import load_literary_jsonl
+
+# ── Core track grade mapping ──────────────────────────────────
+# Which school grades teach the grammar concepts at each CEFR level.
+# Based on Ukrainian State Standard 2024 + textbook analysis.
+# Multiple grades searched to capture progression (intro → mastery).
+CORE_TRACK_GRADES: dict[str, list[int]] = {
+    "a1": [1, 2, 3],       # Alphabet, basic sounds, simple sentences
+    "a2": [4, 5, 6],       # Cases, verb aspects, basic grammar
+    "b1": [5, 6, 7],       # Complex grammar, syntax, advanced cases
+    "b2": [7, 8, 9],       # Stylistics, complex syntax, literary analysis
+    "c1": [9, 10, 11],     # Academic writing, advanced stylistics
+    "c2": [10, 11],        # Mastery, literary criticism, professional
+}
 
 # ── Track-specific literary source mappings ──────────────────────
 # Maps tracks to literary JSONL files known to contain relevant content.
@@ -88,13 +104,73 @@ KEYWORD_SOURCE_MAP: dict[str, list[str]] = {
 }
 
 
+def _search_textbook_rag(ukr_keywords: set[str], grades: list[int],
+                         max_results: int = 20) -> list[dict]:
+    """Search textbook RAG for relevant chunks using Ukrainian keywords.
+
+    Runs multiple queries (one per top keyword) across the specified grades,
+    deduplicates by chunk_id, and returns the best results.
+    """
+    try:
+        from rag.query import search_text
+    except ImportError:
+        print("  ⚠️  RAG search unavailable (qdrant not running?)")
+        return []
+
+    if not ukr_keywords:
+        return []
+
+    seen_ids: set[str] = set()
+    all_hits: list[dict] = []
+
+    # Build search queries from keywords — group related keywords for better recall
+    # Take the most specific keywords (longer = more specific)
+    sorted_kw = sorted(ukr_keywords, key=len, reverse=True)
+
+    # Run 2-3 searches: first with the topic phrase, then individual keywords
+    queries = []
+
+    # Query 1: Combine top 3 keywords into a phrase (most semantic coverage)
+    if len(sorted_kw) >= 2:
+        queries.append(" ".join(sorted_kw[:3]))
+
+    # Query 2-3: Individual top keywords (catch different textbook formulations)
+    for kw in sorted_kw[:2]:
+        if kw not in queries:
+            queries.append(kw)
+
+    for query in queries[:3]:
+        for grade in grades:
+            try:
+                results = search_text(
+                    query, grade=grade,
+                    limit=max_results // len(grades),
+                )
+            except Exception as e:
+                print(f"  ⚠️  RAG search error for grade {grade}: {e}")
+                continue
+
+            for hit in results:
+                cid = hit.get("chunk_id", "")
+                if cid and cid not in seen_ids:
+                    seen_ids.add(cid)
+                    all_hits.append(hit)
+
+    # Sort by score (if available) and cap
+    all_hits.sort(key=lambda h: h.get("score", 0), reverse=True)
+    return all_hits[:max_results]
+
+
 def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
     """Enrich source chunks for a module with track-specific data.
 
+    Core tracks (A1-C2): search textbook RAG with Ukrainian keywords.
+    Seminar tracks: search literary JSONL files on Google Drive.
+
     Combines:
     1. Discovery inline chunks (rag_literary, rag_chunks)
-    2. Track-specific literary source files (searched with Ukrainian keywords)
-    3. Keyword-matched literary files
+    2. Core tracks: RAG textbook search (Grades 1-11 Ukrainian language textbooks)
+    3. Seminar tracks: literary JSONL files + keyword-matched sources
     4. Local data files (e.g., folk_micro_genres.yaml)
 
     Returns a list of chunk dicts ready for the compiler.
@@ -110,7 +186,16 @@ def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
     # (the slug is Latin transliteration — useless for searching Ukrainian text)
     ukr_keywords = _extract_ukrainian_keywords(sources_info)
 
-    # 2. Track-specific literary sources — search with Ukrainian keywords
+    # 2. Core tracks: search textbook RAG
+    if track in CORE_TRACK_GRADES:
+        grades = CORE_TRACK_GRADES[track]
+        rag_chunks = _search_textbook_rag(ukr_keywords, grades, max_results=20)
+        if rag_chunks:
+            print(f"  📖 +{len(rag_chunks)} chunks from textbook RAG "
+                  f"(grades {grades}, {len(ukr_keywords)} keywords)")
+            all_chunks.extend(rag_chunks)
+
+    # 3. Seminar tracks: literary JSONL files
     track_files = TRACK_LITERARY_MAP.get(track, [])
     if track_files:
         track_chunks = _load_relevant_chunks(
@@ -120,7 +205,7 @@ def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
             print(f"  📚 +{len(track_chunks)} chunks from track literary sources")
             all_chunks.extend(track_chunks)
 
-    # 3. Keyword-matched sources from the slug
+    # 4. Keyword-matched sources from the slug
     slug_words = slug.replace("-", " ").lower().split()
     for keyword, files in KEYWORD_SOURCE_MAP.items():
         if keyword in slug_words or keyword in slug:
@@ -131,13 +216,13 @@ def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
                 print(f"  🔑 +{len(kw_chunks)} chunks from keyword '{keyword}'")
                 all_chunks.extend(kw_chunks)
 
-    # 4. Local data enrichment
+    # 5. Local data enrichment
     local_chunks = _load_local_data(track, slug)
     if local_chunks:
         print(f"  📄 +{len(local_chunks)} chunks from local data")
         all_chunks.extend(local_chunks)
 
-    # 5. Literary files found by keyword search in sources.py
+    # 6. Literary files found by keyword search in sources.py
     if len(all_chunks) < 10 and sources_info.get("literary_files"):
         for lit_path in sources_info["literary_files"][:3]:
             chunks = load_literary_jsonl(lit_path)
@@ -190,8 +275,8 @@ def _extract_ukrainian_keywords(sources_info: dict) -> set[str]:
         for word in kw.split():
             # Check if word has Cyrillic characters
             if any("\u0400" <= c <= "\u04FF" for c in word) and len(word) >= 4:
-                # Strip punctuation
-                clean = word.strip(".,;:!?\"'«»()—–-")
+                # Strip punctuation and markdown formatting
+                clean = word.strip(".,;:!?\"'«»()—–-`*_")
                 if len(clean) >= 4:
                     keywords.add(clean.lower())
 
