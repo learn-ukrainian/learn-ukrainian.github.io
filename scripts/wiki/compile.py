@@ -605,6 +605,8 @@ def _review_article(article_path: Path, track: str, slug: str,
     review_text = ""
     last_applied = 0
     rewrite_used = False  # Only allow ONE structural rewrite per article
+    best_score = 0.0
+    best_article = ""  # Snapshot of article text at peak score
 
     for round_num in range(1, max_rounds + 1):
         # Step 1: Build prompt with FRESH article text every round
@@ -632,14 +634,25 @@ def _review_article(article_path: Path, track: str, slug: str,
         )
         print(f"  📋 Round {round_num}: {score}/10 [{dim_summary}]")
 
-        # Step 4: Check if we're done
+        # Step 4: Track peak score — if we regress, revert to best version
+        if score > best_score:
+            best_score = score
+            best_article = article_text
+        elif score < best_score - 0.5 and round_num > 2:
+            # Score dropped significantly — revert to peak and stop
+            print(f"  ⚠️  Score regressed ({best_score} → {score}) — reverting to peak")
+            article_path.write_text(best_article, "utf-8")
+            score = best_score
+            break
+
+        # Step 5: Check if we're done
         if score >= 9.0:
             print(f"  ✅ Review PASSED ({score}/10)")
             final_path = review_dir / f"{slug}-review.md"
             final_path.write_text(review_text, "utf-8")
             return
 
-        # Step 5: Route — copyedit or structural rewrite?
+        # Step 6: Route — copyedit or structural rewrite?
         # Structural rewrite allowed ONCE. Multiple rewrites cause oscillation
         # (fix one dimension, break another — observed: 8.4→7.4→7.8→7.0→6.2).
         needs_rewrite = _needs_structural_rewrite(scores) and not rewrite_used
