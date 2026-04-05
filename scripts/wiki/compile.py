@@ -604,6 +604,7 @@ def _review_article(article_path: Path, track: str, slug: str,
     scores: dict[str, float] = {}
     review_text = ""
     last_applied = 0
+    rewrite_used = False  # Only allow ONE structural rewrite per article
 
     for round_num in range(1, max_rounds + 1):
         # Step 1: Build prompt with FRESH article text every round
@@ -633,31 +634,39 @@ def _review_article(article_path: Path, track: str, slug: str,
 
         # Step 4: Check if we're done
         if score >= 9.0:
-            print(f"  �� Review PASSED ({score}/10)")
+            print(f"  ✅ Review PASSED ({score}/10)")
             final_path = review_dir / f"{slug}-review.md"
             final_path.write_text(review_text, "utf-8")
             return
 
         # Step 5: Route — copyedit or structural rewrite?
-        if _needs_structural_rewrite(scores):
-            # STRUCTURAL REWRITE PATH: any dimension < 8
+        # Structural rewrite allowed ONCE. Multiple rewrites cause oscillation
+        # (fix one dimension, break another — observed: 8.4→7.4→7.8→7.0→6.2).
+        needs_rewrite = _needs_structural_rewrite(scores) and not rewrite_used
+
+        if needs_rewrite:
+            # STRUCTURAL REWRITE PATH: any dimension < 8 (first time only)
             weak = [k for k in ("factual", "language", "decolonization",
                                 "completeness", "actionable")
                     if scores.get(k, 0) < 8.0]
-            print(f"  🔨 Structural rewrite needed (weak: {', '.join(weak) or 'overall'})")
+            print(f"  🔨 Structural rewrite (weak: {', '.join(weak) or 'overall'})")
             success = _targeted_rewrite(
                 article_path, article_text, article_type, track, slug,
                 review_text, scores, project_root,
             )
+            rewrite_used = True
             if success:
-                last_applied = 1  # Flag that we changed the article
+                last_applied = 1
                 print("  🔄 Re-reviewing after rewrite...")
                 continue
             else:
                 print("  ⚠️  Rewrite failed — stopping")
                 break
         else:
-            # COPYEDIT PATH: all dimensions ≥ 8, just needs localized fixes
+            # COPYEDIT PATH: localized fixes (also used after rewrite is exhausted)
+            if _needs_structural_rewrite(scores) and rewrite_used:
+                print("  ℹ️  Structural issues remain — rewrite exhausted, trying copyedit")
+
             article_text, total_fixes, last_applied = _extract_and_apply_fixes(
                 review_text, article_text,
             )
@@ -668,13 +677,14 @@ def _review_article(article_path: Path, track: str, slug: str,
             elif total_fixes > 0:
                 print(f"  ⚠️  0/{total_fixes} fixes matched — stopping")
                 break
-            else:
-                # No fixes + score < 9 = lazy reviewer = structural problem
+            elif not rewrite_used:
+                # No fixes + score < 9 + no rewrite yet = try rewrite once
                 print(f"  🔨 No fixes but score {score}/10 — routing to rewrite")
                 success = _targeted_rewrite(
                     article_path, article_text, article_type, track, slug,
                     review_text, scores, project_root,
                 )
+                rewrite_used = True
                 if success:
                     last_applied = 1
                     print("  🔄 Re-reviewing after rewrite...")
@@ -682,6 +692,9 @@ def _review_article(article_path: Path, track: str, slug: str,
                 else:
                     print("  ⚠️  Rewrite failed — stopping")
                     break
+            else:
+                print(f"  ⚠️  No fixes, rewrite exhausted — stopping at {score}/10")
+                break
 
         print("  🔄 Re-reviewing after fixes...")
 
