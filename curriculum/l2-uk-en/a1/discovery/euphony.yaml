@@ -1,0 +1,22 @@
+discovered_at: '2026-04-05T17:18:51.210572+00:00'
+error: null
+query_keywords:
+- Euphony
+- Діалоги (Dialogues)
+- У чи В? (У or В?)
+- І чи Й? З, із, чи зі?
+- Підсумок — Summary
+- Apply у/в alternation based on surrounding sounds
+- Apply і/й alternation in conjunctions
+- Use з/із/зі correctly before different consonant clusters
+- у/в
+- і/й
+- з/із/зі
+- Київ
+- Львів
+- офіс
+- парк
+- театр
+rag_chunks: []
+rag_literary: []
+warning: Auto-generated from plan

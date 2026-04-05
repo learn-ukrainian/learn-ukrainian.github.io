@@ -1,0 +1,32 @@
+discovered_at: '2026-04-05T17:18:51.210572+00:00'
+error: null
+query_keywords:
+- Shopping
+- Діалоги (Dialogues)
+- Скільки коштує? (How Much?)
+- Де купити? (Where to Buy)
+- Підсумок — Summary
+- Ask and understand prices (Скільки коштує?)
+- Use Ukrainian currency (гривня, копійка) and numbers with prices
+- Express quantities (кілограм, літр, пачка, пляшка)
+- коштувати
+- скільки
+- гривня
+- ціна
+- магазин
+- ринок
+- купувати
+- дорого
+- дешево
+- копійка
+- кілограм
+- літр
+- пляшка
+- пачка
+- знижка
+- супермаркет
+- гроші
+- готівка
+rag_chunks: []
+rag_literary: []
+warning: Auto-generated from plan

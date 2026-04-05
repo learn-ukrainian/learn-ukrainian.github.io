@@ -199,11 +199,18 @@ def _check_vocabulary(content: str, plan: dict) -> list[QuickVerifyError]:
     missing = []
 
     for item in required:
-        if not isinstance(item, str):
+        # Handle v4 dict items {word, pos, definition}
+        if isinstance(item, dict):
+            word_str = item.get("word", "")
+            if not word_str:
+                continue
+        elif isinstance(item, str):
+            word_str = item
+        else:
             continue
         # Skip descriptive/meta entries (checkpoint modules, etc.)
         # These describe the vocab policy, not actual words to check
-        item_lower = str(item).lower()
+        item_lower = word_str.lower()
         if any(skip in item_lower for skip in (
             "recycled", "no new", "all vocabulary from", "revision",
             "checkpoint", "no required", "see m0",
@@ -211,7 +218,7 @@ def _check_vocabulary(content: str, plan: dict) -> list[QuickVerifyError]:
             continue
         # Extract the Ukrainian word (before parenthetical translation)
         # e.g., "стіл (table, m)" → "стіл"
-        word = re.split(r"\s*\(", str(item))[0].strip().lower()
+        word = re.split(r"\s*\(", word_str)[0].strip().lower()
         # For multi-word items like "він, вона, воно", check each
         parts = [p.strip() for p in word.split(",")]
         found = any(p in content_lower for p in parts if len(p) > 1)

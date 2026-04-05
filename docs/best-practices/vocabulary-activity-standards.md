@@ -8,28 +8,38 @@
 
 ## Activity YAML Format
 
-### Root structure: bare list (CRITICAL)
+### Root structure: object with version/module/level + inline/workbook arrays
 
 ```yaml
-# ✅ CORRECT — bare list at root
-- type: quiz
-  title: Тест з теми
+# ✅ CORRECT — activity-v2 schema format
+version: "1.0"
+module: koliadky-shchedrivky
+level: folk
 
-- type: reading
-  title: Читання тексту
+inline:
+  - id: reading-comprehension
+    type: reading
+    passage: "..."
+    questions: ["..."]
+
+workbook:
+  - id: essay-analysis
+    type: essay-response
+    prompt: "..."
+    min_words: 150
 ```
 
 ```yaml
-# ❌ WRONG — dictionary wrapper causes schema validation failure
-activities:
-  - type: quiz
+# ❌ WRONG — bare list (old format, no longer valid)
+- type: quiz
+  title: Тест з теми
 ```
 
 ### Property names must match schema exactly
 
 | Activity type | Correct property | Wrong property |
 |--------------|-----------------|----------------|
-| `mark-the-words` | `text` + `answers` array | `passage` + `correct_words` |
+| `mark-the-words` | `text` + `target_words` array | `passage` + `correct_words` + `answers` |
 | `fill-in` | `sentence` | `text`, `prompt` |
 | `unjumble` | `words` array + `answer` | `jumbled`, `scrambled` |
 | `cloze` | `passage` | `text` |

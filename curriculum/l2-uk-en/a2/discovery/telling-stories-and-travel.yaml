@@ -1,0 +1,29 @@
+discovered_at: '2026-04-05T17:18:58.228875+00:00'
+error: null
+query_keywords:
+- Розповіді та подорожі
+- 'Сценарій 1: Що вчора трапилось? (Scenario 1: What Happened Yesterday?)'
+- 'Сценарій 2: Плануємо подорож (Scenario 2: Planning a Trip)'
+- 'Сценарій 3: Розкажи про поїздку! (Scenario 3: Tell Me About Your Trip!)'
+- 'Мовленнєве завдання: Моя подорож (Speaking Task: My Journey)'
+- Learner can describe travel plans using motion verbs (іти/ходити, їхати/їздити,
+  летіти/літати) with appropriate prepositions and cases for origin, destination,
+  and route.
+- подорож
+- розповідати / розповісти
+- трапитися
+- квиток
+- потяг
+- вокзал
+- зупинитися
+- доїхати
+- сподобатися
+- враження
+- спочатку
+- потім
+- нарешті
+- тим часом
+- сувенір
+rag_chunks: []
+rag_literary: []
+warning: Auto-generated from plan

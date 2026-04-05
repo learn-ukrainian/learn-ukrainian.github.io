@@ -2698,6 +2698,76 @@ For core tracks, use the 4-phase full-rebuild workflow that chains research, bui
 
 Auto-detects Core A vs Core B workflow. See `claude_extensions/commands/full-rebuild-core.md` for full details.
 
+### Wiki Knowledge Base Compilation
+
+Compiles curated wiki articles from textbook sources using Gemini. These articles are injected as context when building module content (replaces raw RAG search for A2+ and all seminars).
+
+Each track type uses a different prompt:
+- **A1**: Pedagogical briefs (methodology, phonetic guardrails, vocabulary boundaries)
+- **A2-B2**: Grammar briefs (paradigms, frequency, L2 errors, textbook approaches)
+- **C1-C2**: Academic briefs (scholarly register, stylistic nuances)
+- **Seminars**: Knowledge articles (primary sources, decolonization, historiography)
+
+**Review loop:** `--review` enables adversarial review after compilation. Gemini reviews, outputs `<fixes>` with find/replace pairs, fixes are applied automatically, then re-reviewed. Target: 9/10. Hard stop at 4 rounds. Reviews saved to `wiki/.reviews/{domain}/`.
+
+```bash
+# ── Status & exploration ──
+
+# Check status — what's compiled across all tracks
+.venv/bin/python scripts/wiki/compile.py --status
+
+# List available modules for a track
+.venv/bin/python scripts/wiki/compile.py --track a1 --list
+.venv/bin/python scripts/wiki/compile.py --track folk --list
+
+# ── Compile articles ──
+
+# Compile one article (dry run first to check prompt)
+.venv/bin/python scripts/wiki/compile.py --track a1 --slug sounds-letters-and-hello --dry-run
+.venv/bin/python scripts/wiki/compile.py --track a1 --slug sounds-letters-and-hello
+
+# Compile one article + auto-review (up to 4 rounds, target 9/10)
+.venv/bin/python scripts/wiki/compile.py --track a2 --slug a2-bridge --review
+
+# Compile all articles for a track
+.venv/bin/python scripts/wiki/compile.py --track a1 --all
+
+# Compile all + review (recommended for production)
+.venv/bin/python scripts/wiki/compile.py --track a2 --all --review
+
+# Compile with limit (useful for testing)
+.venv/bin/python scripts/wiki/compile.py --track b1 --all --limit 5 --review
+
+# Force recompile (overwrites existing articles)
+.venv/bin/python scripts/wiki/compile.py --track folk --slug dumy-lytsarski --force
+
+# ── Review existing articles (no recompilation) ──
+
+# Review all FOLK articles (already compiled)
+.venv/bin/python scripts/wiki/compile.py --track folk --review-only
+
+# Review one specific article
+.venv/bin/python scripts/wiki/compile.py --track folk --slug dumy-lytsarski --review-only
+
+# Review first 5 only
+.venv/bin/python scripts/wiki/compile.py --track folk --review-only --limit 5
+
+# ── Maintenance ──
+
+# Regenerate the wiki index
+.venv/bin/python scripts/wiki/compile.py --update-index
+```
+
+**Discovery files** are auto-generated from plans if they don't exist. No separate step needed.
+
+**Build priority:** A1 → A2 → B1 (for current module building), then seminars (FOLK done, HIST/BIO pending).
+
+**Output:** Articles written to `wiki/{domain}/{slug}.md`. Reviews in `wiki/.reviews/{domain}/`. The build pipeline reads articles via `step_research` in `v6_build.py`.
+
+**Tracks:** a1, a2, b1, b2, c1, c2, folk, hist, bio, istorio, lit, lit-essay, lit-war, lit-hist-fic, lit-youth, lit-fantastika, lit-humor, lit-drama, lit-doc, lit-crimea, oes, ruth.
+
+---
+
 ### Seminar Track Full Rebuild
 
 For seminar tracks (hist, bio, istorio, lit, oes, ruth), use the 6-phase full-rebuild workflow that chains research, content generation, audit, and deep review:

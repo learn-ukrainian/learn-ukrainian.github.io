@@ -95,13 +95,90 @@ def load_discovery(track: str, slug: str) -> dict | None:
 
 
 def list_discovery_slugs(track: str) -> list[str]:
-    """List all module slugs that have discovery files for a track."""
+    """List all module slugs that have discovery files for a track.
+
+    If no discovery files exist but plans do, auto-generates discovery
+    files from plan data (extracting keywords from title, sections, vocab).
+    """
     discovery_dir = CURRICULUM_DIR / track / "discovery"
-    if not discovery_dir.exists():
-        return []
-    return sorted(
-        p.stem for p in discovery_dir.glob("*.yaml")
-    )
+    plans_dir = CURRICULUM_DIR / "plans" / track
+
+    # If discovery files exist, use them
+    if discovery_dir.exists():
+        slugs = sorted(p.stem for p in discovery_dir.glob("*.yaml"))
+        if slugs:
+            return slugs
+
+    # Auto-generate from plans if no discovery files
+    if plans_dir.exists():
+        plan_files = sorted(
+            p for p in plans_dir.glob("*.yaml")
+            if not p.name.startswith(".") and not p.name.endswith(".bak")
+        )
+        if plan_files:
+            _auto_generate_discovery(track, plan_files, discovery_dir)
+            return sorted(p.stem for p in discovery_dir.glob("*.yaml"))
+
+    return []
+
+
+def _auto_generate_discovery(
+    track: str, plan_files: list, discovery_dir: Path
+) -> None:
+    """Generate discovery files from plan data when none exist.
+
+    Extracts keywords from plan title, section names, objectives,
+    and vocabulary hints to create minimal discovery files.
+    """
+    from datetime import UTC, datetime
+
+    from pipeline.vocab_helpers import extract_vocab_words
+
+    discovery_dir.mkdir(parents=True, exist_ok=True)
+    now = datetime.now(UTC).isoformat()
+    count = 0
+
+    for plan_path in plan_files:
+        slug = plan_path.stem
+        disc_path = discovery_dir / f"{slug}.yaml"
+        if disc_path.exists():
+            continue
+
+        plan = yaml.safe_load(plan_path.read_text("utf-8"))
+        if not plan or not isinstance(plan, dict):
+            continue
+
+        # Extract keywords
+        keywords = []
+        title = plan.get("title", "")
+        if title:
+            keywords.append(title)
+        for section in (plan.get("content_outline") or []):
+            if isinstance(section, dict):
+                name = section.get("section", "")
+                if name:
+                    keywords.append(name)
+        for obj in (plan.get("objectives") or []):
+            if any("\u0400" <= c <= "\u04FF" for c in str(obj)):
+                keywords.append(str(obj))
+        for word in extract_vocab_words(plan.get("vocabulary_hints") or []):
+            keywords.append(word)
+
+        discovery = {
+            "discovered_at": now,
+            "query_keywords": keywords,
+            "error": None,
+            "warning": "Auto-generated from plan",
+            "rag_chunks": [],
+            "rag_literary": [],
+        }
+
+        with open(disc_path, "w", encoding="utf-8") as f:
+            yaml.dump(discovery, f, allow_unicode=True, default_flow_style=False)
+        count += 1
+
+    if count:
+        print(f"  📝 Auto-generated {count} discovery files for {track}")
 
 
 def extract_source_refs(discovery: dict) -> dict[str, list[str]]:

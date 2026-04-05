@@ -137,7 +137,11 @@ def scan_plan_for_russianisms(plan_path: Path) -> list[dict]:
     vocab = plan.get("vocabulary_hints", {})
     if isinstance(vocab, list):
         for item in vocab:
-            if isinstance(item, str):
+            if isinstance(item, dict):
+                word = item.get("word", "")
+                if word:
+                    _check_vocab_entry(word, "vocabulary_hints", findings)
+            elif isinstance(item, str):
                 _check_vocab_entry(item, "vocabulary_hints", findings)
     elif isinstance(vocab, dict):
         for category in ["required", "recommended", "sight_words"]:

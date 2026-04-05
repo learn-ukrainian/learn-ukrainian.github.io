@@ -27,6 +27,7 @@ def compile_article(
     slug: str,
     domain: str,
     sources: list[dict],
+    track: str = "",
     force: bool = False,
     dry_run: bool = False,
 ) -> Path | None:
@@ -37,6 +38,7 @@ def compile_article(
         slug: URL-safe article identifier (e.g., "dumy-lytsarski").
         domain: Wiki domain path (e.g., "folk/genres").
         sources: List of source chunk dicts with 'text', 'chunk_id', etc.
+        track: Track name (e.g., "a1", "folk") — selects the prompt template.
         force: Recompile even if already compiled.
         dry_run: Print prompt but don't call Gemini.
 
@@ -49,8 +51,8 @@ def compile_article(
         print(f"  ⏭️  Already compiled: {article_key}")
         return WIKI_DIR / domain / f"{slug}.md"
 
-    # Build the prompt
-    prompt = _build_prompt(topic=topic, slug=slug, domain=domain, sources=sources)
+    # Build the prompt (track selects the right template)
+    prompt = _build_prompt(topic=topic, slug=slug, domain=domain, sources=sources, track=track)
 
     if dry_run:
         print(f"\n{'═' * 60}")
@@ -95,9 +97,18 @@ def compile_article(
 
 
 def _build_prompt(*, topic: str, slug: str, domain: str,
-                  sources: list[dict]) -> str:
-    """Build the Gemini prompt from template + source material."""
-    template_path = PROMPTS_DIR / "compile_article.md"
+                  sources: list[dict], track: str = "") -> str:
+    """Build the Gemini prompt from template + source material.
+
+    Uses track-specific prompt when available (A1 pedagogy, A2-B2 grammar,
+    C1-C2 academic). Falls back to the default seminar article prompt.
+    """
+    from .config import DEFAULT_PROMPT, TRACK_PROMPT
+
+    prompt_name = TRACK_PROMPT.get(track, DEFAULT_PROMPT)
+    template_path = PROMPTS_DIR / prompt_name
+    if not template_path.exists():
+        template_path = PROMPTS_DIR / DEFAULT_PROMPT
     template = template_path.read_text(encoding="utf-8")
 
     # Find which tracks this domain serves

@@ -20,11 +20,18 @@ def strip_stray_quotes(s: str) -> str:
 _VOCAB_HINT_RE = re.compile(r"(.+?)\s*\((.+?)\)")
 
 
-def parse_vocab_hint(hint: str) -> tuple[str, str]:
-    """Parse a vocabulary hint like 'мама (mother)' into (word, translation).
+def parse_vocab_hint(hint: str | dict) -> tuple[str, str]:
+    """Parse a vocabulary hint into (word, translation).
 
-    Returns (word, "") if no translation in parentheses.
+    Handles both v3 string format 'мама (mother)' and v4 dict format
+    {word: 'мама', pos: 'noun', definition: 'mother'}.
+
+    Returns (word, "") if no translation found.
     """
+    if isinstance(hint, dict):
+        word = hint.get("word", "")
+        definition = hint.get("definition", "")
+        return str(word).strip(), str(definition).strip()
     hint = str(hint).strip()
     match = _VOCAB_HINT_RE.match(hint)
     if match:

@@ -239,15 +239,20 @@ def check_yaml_safety(plan: dict) -> list[PlanIssue]:
     issues = []
     # Check vocabulary hints for bare colons
     hints = plan.get("vocabulary_hints", {})
+    # Handle both v3 dict {required: [...]} and v4 flat list [{word, pos, definition}]
+    items_to_check: list = []
     if isinstance(hints, dict):
         for category in ("required", "recommended"):
-            for item in hints.get(category, []):
-                if isinstance(item, dict):
-                    # Dict items are OK
-                    continue
-                if isinstance(item, str) and ": " in item:
-                    # Could be a YAML issue but most are quoted properly
-                    pass
+            items_to_check.extend(hints.get(category, []))
+    elif isinstance(hints, list):
+        items_to_check = hints
+    for item in items_to_check:
+        if isinstance(item, dict):
+            # Dict items are OK
+            continue
+        if isinstance(item, str) and ": " in item:
+            # Could be a YAML issue but most are quoted properly
+            pass
     return issues
 
 
@@ -284,18 +289,18 @@ def check_vesum_vocabulary(plan: dict) -> list[PlanIssue]:
     """Check vocabulary hints against VESUM (if available)."""
     issues = []
     hints = plan.get("vocabulary_hints", {})
-    if not isinstance(hints, dict):
+    if not hints:
         return issues
 
+    # Handle both v3 dict {required: [...]} and v4 flat list [{word, pos, definition}]
+    from pipeline.vocab_helpers import extract_vocab_words
+    raw_words = extract_vocab_words(hints)
     words_to_check = []
-    for category in ("required", "recommended"):
-        for item in hints.get(category, []):
-            if isinstance(item, str):
-                # Extract first Ukrainian word
-                word = item.split("(")[0].strip().split("—")[0].strip().split(" ")[0].strip()
-                word = word.replace(STRESS_MARK, "").strip(",").strip()
-                if word and re.search(r'[\u0400-\u04ff]', word) and len(word) > 1:
-                    words_to_check.append(word)
+    for word in raw_words:
+        word = word.split("(")[0].strip().split("—")[0].strip().split(" ")[0].strip()
+        word = word.replace(STRESS_MARK, "").strip(",").strip()
+        if word and re.search(r'[\u0400-\u04ff]', word) and len(word) > 1:
+            words_to_check.append(word)
 
     if not words_to_check:
         return issues

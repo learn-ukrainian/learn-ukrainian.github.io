@@ -1,0 +1,987 @@
+# V4 Seminar Section Templates
+# ================================
+# Defines the mandatory section structure for each seminar track.
+# Used by convert_plans_v4.py to restructure v3 plans into v4 format.
+#
+# Architecture:
+#   - UNIVERSAL sections: Розминка (first), Конфліктна карта (second), Дискусія та підсумок (last)
+#   - MIDDLE sections: track-specific (defined below)
+#   - word_target (5000) is a MINIMUM, not a cap.
+#   - Section word budgets sum to ≥ 5000 for every track.
+#   - Pedagogical annotations: [!epistemic-humility], [!decolonization], [!anti-hagiography],
+#     [!myth-buster], [!biography] — applied per section where relevant
+#
+# Reference implementation: FOLK plans in curriculum/l2-uk-en/plans/folk/
+# Issue: #1139
+
+# ─────────────────────────────────────────────────────────────────────────────
+# FOLK — Ukrainian Oral Literary Tradition (27 modules, C1)
+# Already converted to v4. Included here as the canonical reference.
+# ─────────────────────────────────────────────────────────────────────────────
+folk:
+  cefr_min: C1
+  word_target: 5000
+  pedagogy: CBI
+  primary_annotations:
+    - '[!epistemic-humility]'
+    - '[!decolonization]'
+    - '[!anti-hagiography]'
+    - '[!myth-buster]'
+  differentiator: >
+    Folk modules center on PERFORMANCE and RITUAL FUNCTION — not just literary analysis.
+    Every text is treated as a living practice (or recently living), not a museum artifact.
+    The Конфліктна карта always includes a "who owns this tradition?" debate.
+    Global synchronicity compares Ukrainian folk genres with parallel traditions worldwide.
+  sections:
+    - section: Розминка
+      words: 400
+      content: >
+        Provocative question or mystery fragment from a primary folk text.
+        Student formulates initial hypothesis. NOT a summary or overview.
+      annotations: []
+
+    - section: 'Конфліктна карта: {debate_title}'
+      words: 1000
+      content: >
+        Two historiographical/folkloristic debates (Дебат 1, Дебат 2).
+        Always includes [!epistemic-humility] — present positions as ongoing discussion.
+        Global synchronicity — compare with parallel folk traditions from other cultures.
+      annotations:
+        - '[!epistemic-humility]'
+
+    - section: 'Читання: {primary_text_title}'
+      words: 1600
+      content: >
+        Full primary folk text (or substantial excerpt) with structural analysis.
+        Literary devices identified. Pre-Christian / mythological layers excavated.
+        [!decolonization] — Ukrainian tradition presented on its own terms.
+      annotations:
+        - '[!decolonization]'
+
+    - section: 'Аналіз: Поетика та ритуальна функція'
+      words: 1600
+      content: >
+        Literary devices (parallelism, formulae, refrains) analyzed not as decoration
+        but as functional elements (magical, ritual, mnemonic).
+        Performance context — who sang this, when, why.
+        [!myth-buster] — correct popular misconceptions about the genre.
+      annotations:
+        - '[!myth-buster]'
+
+    - section: Дискусія та підсумок
+      words: 600
+      content: >
+        Return to opening question — student now has evidence to answer.
+        Modern relevance — is this tradition alive? How has it transformed?
+        [!anti-hagiography] — acknowledge problematic elements (xenophobia, stereotypes).
+      annotations:
+        - '[!anti-hagiography]'
+
+  section_sum: 5200
+
+# ─────────────────────────────────────────────────────────────────────────────
+# HIST — Ukrainian History, Trypillians → Present (140 modules, B2)
+# ─────────────────────────────────────────────────────────────────────────────
+hist:
+  cefr_min: C1
+  word_target: 5000
+  pedagogy: CBI
+  primary_annotations:
+    - '[!decolonization]'
+    - '[!epistemic-humility]'
+    - '[!myth-buster]'
+  differentiator: >
+    HIST is the backbone decolonization track. Every module MUST challenge at least one
+    imperial/Soviet narrative about the event. The middle sections follow a SOURCE → IMPACT
+    arc: first read primary sources from the period, then analyze consequences and legacy.
+    Global synchronicity is mandatory — what was happening elsewhere at the same time.
+    B2-level language means slightly less academic register than C1 tracks, but still
+    100% Ukrainian immersion.
+  sections:
+    - section: Розминка
+      words: 400
+      content: >
+        A provocative question that challenges the student's assumptions about the event.
+        Often a "what would you have done?" or "which version is true?" framing.
+        May include a brief primary source excerpt without context.
+      annotations: []
+
+    - section: 'Конфліктна карта: {debate_title}'
+      words: 900
+      content: >
+        Two historiographical debates about this event/period.
+        Дебат 1: typically Ukrainian vs. imperial/Soviet interpretation.
+        Дебат 2: internal Ukrainian debate or modern scholarly controversy.
+        [!epistemic-humility] — acknowledge gaps in evidence, show where scholars disagree.
+        Global synchronicity — what was happening in the rest of the world simultaneously.
+      annotations:
+        - '[!epistemic-humility]'
+
+    - section: 'Джерела: {primary_source_description}'
+      words: 1600
+      content: >
+        Primary source analysis — chronicles, letters, treaties, memoirs, archaeological evidence.
+        Actual excerpts from sources (translated to modern Ukrainian where needed).
+        Source criticism: who wrote this? When? With what purpose? What biases?
+        [!decolonization] — imperial sources read against the grain. Ukrainian agency highlighted.
+      annotations:
+        - '[!decolonization]'
+
+    - section: 'Аналіз: Наслідки та значення'
+      words: 1600
+      content: >
+        Cause-and-effect analysis. Short-term vs. long-term consequences.
+        How this event shaped Ukrainian identity, statehood, or culture.
+        [!myth-buster] — correct specific popular myths about this period.
+        Compare different historians' assessments (Hrushevsky, Subtelny, Plokhy, etc.).
+      annotations:
+        - '[!myth-buster]'
+
+    - section: Дискусія та підсумок
+      words: 700
+      content: >
+        Return to opening question — student formulates evidence-based answer.
+        Connection to present day — how does this history matter now?
+        [!anti-hagiography] where relevant — no "golden age" nostalgia.
+      annotations:
+        - '[!anti-hagiography]'
+
+  section_sum: 5200
+
+# ─────────────────────────────────────────────────────────────────────────────
+# BIO — Biographies of Key Ukrainian Figures (180 modules, C1)
+# ─────────────────────────────────────────────────────────────────────────────
+bio:
+  cefr_min: C1
+  word_target: 5000
+  pedagogy: CBI
+  primary_annotations:
+    - '[!anti-hagiography]'
+    - '[!decolonization]'
+    - '[!biography]'
+  differentiator: >
+    BIO's defining principle is ANTI-HAGIOGRAPHY. Every biography must show the person as
+    a complex human — failures, contradictions, moral ambiguities alongside achievements.
+    The Конфліктна карта focuses on conflicting interpretations of the person's legacy.
+    Middle sections follow a LIFE ARC: formation → achievement → crisis/failure → legacy.
+    The "Тінь" (Shadow) section is unique to BIO — it's where we examine what the person
+    got wrong, the price others paid, or the aspects hagiography suppresses.
+    Living people: "Значення" not "Спадщина". Deceased: "Спадщина" not "Значення".
+  sections:
+    - section: Розминка
+      words: 400
+      content: >
+        A paradox, contradiction, or surprising fact about the person that disrupts
+        the standard narrative. NOT a birth-date-and-place introduction.
+        Example: "Mazepa was Europe's most famous Ukrainian — but Ukrainians themselves
+        couldn't decide if he was a hero or traitor for 300 years."
+      annotations:
+        - '[!biography]'
+
+    - section: 'Конфліктна карта: {interpretive_debate}'
+      words: 900
+      content: >
+        Two debates about how this person is interpreted:
+        Дебат 1: conflicting assessments during their lifetime or immediately after death.
+        Дебат 2: how their legacy was appropriated or distorted (Soviet, Russian, Western
+        narratives vs. Ukrainian scholarship).
+        [!epistemic-humility] — acknowledge legitimate disagreements, not just propaganda vs. truth.
+      annotations:
+        - '[!epistemic-humility]'
+        - '[!decolonization]'
+
+    - section: 'Формування: {early_period_title}'
+      words: 1000
+      content: >
+        Background, education, early influences that shaped the person.
+        Social and historical context — what world did they grow up in?
+        NOT a chronological list of dates. Focus on formative experiences and turning points.
+        Show what was unique about their trajectory, not what was typical.
+      annotations: []
+
+    - section: 'Діяльність: {achievement_title}'
+      words: 1300
+      content: >
+        Major accomplishments and contributions — the reason we study this person.
+        Primary sources: their own words (letters, speeches, works) wherever possible.
+        Place achievements in context — what existed before, what changed because of them.
+      annotations: []
+
+    - section: 'Тінь: {shadow_title}'
+      words: 900
+      content: >
+        THE DEFINING SECTION OF BIO. What hagiography hides:
+        Failures, compromises, moral ambiguities, contested decisions.
+        How their actions affected others negatively. What critics said — and whether
+        those criticisms had merit.
+        [!anti-hagiography] — mandatory. No person is an icon.
+        [!myth-buster] — correct specific myths (positive OR negative) about the person.
+      annotations:
+        - '[!anti-hagiography]'
+        - '[!myth-buster]'
+
+    - section: 'Дискусія та підсумок: Спадщина / Значення'
+      words: 700
+      content: >
+        Return to opening paradox — student now has nuance to address it.
+        Legacy assessment: what endures, what was forgotten, what was distorted.
+        For living people: use "Значення" (significance). For deceased: "Спадщина" (legacy).
+        Modern relevance — how is this person invoked today, and is that invocation honest?
+      annotations:
+        - '[!decolonization]'
+
+  section_sum: 5200
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ISTORIO — Historiography (136 modules, C1)
+# How history is written, by whom, and why. Counter-propaganda through source criticism.
+# ─────────────────────────────────────────────────────────────────────────────
+istorio:
+  cefr_min: C1
+  word_target: 5000
+  pedagogy: CBI
+  primary_annotations:
+    - '[!epistemic-humility]'
+    - '[!decolonization]'
+    - '[!myth-buster]'
+  differentiator: >
+    ISTORIO is the most intellectually demanding seminar track. It doesn't teach WHAT
+    happened — it teaches HOW WE KNOW what happened, and WHO CONTROLS THE NARRATIVE.
+    Every module compares at minimum 3 perspectives on the same topic: Ukrainian, Russian
+    imperial/Soviet, and Western. The student reads excerpts from actual historians and
+    learns to detect bias, methodology, and agenda.
+    The unique "Зіткнення наративів" section is a structured comparison table of
+    how different historiographical traditions present the same event.
+    Higher linguistic sophistication than HIST — academic register, historiographical
+    metalanguage (дискурс, наратив, метанаратив, агентність, суб'єктність).
+  sections:
+    - section: Розминка
+      words: 400
+      content: >
+        Present the SAME event described by two different sources — without identifying
+        which is which. Student must guess which is the Ukrainian account and which is
+        the imperial/Soviet one, and explain their reasoning.
+        Alternatively: a quote from a historian that seems reasonable but contains a
+        buried assumption the module will unpack.
+      annotations: []
+
+    - section: 'Конфліктна карта: {methodological_debate}'
+      words: 900
+      content: >
+        Two methodological/interpretive debates:
+        Дебат 1: fundamental disagreement between schools (e.g., statist vs. populist,
+        primordialist vs. modernist, genocide vs. famine).
+        Дебат 2: specific contested claim with evidence for both sides.
+        [!epistemic-humility] — the goal is not "our side wins" but "the student can
+        evaluate evidence and detect manipulation."
+      annotations:
+        - '[!epistemic-humility]'
+
+    - section: 'Зіткнення наративів: {topic}'
+      words: 1700
+      content: >
+        THE DEFINING SECTION OF ISTORIO. Structured comparison of 3+ historiographical
+        positions on the same topic:
+        1. Російський імперський / радянський наратив — what does it claim? What evidence
+           does it use? What does it omit?
+        2. Український наратив — what does it claim? What primary sources support it?
+        3. Західний наратив — how do non-Ukrainian, non-Russian scholars see this?
+        For each: identify the METHODOLOGY (what kind of evidence), the AGENDA (who benefits
+        from this version), and the BLIND SPOTS (what gets left out).
+        [!decolonization] — expose the mechanics of imperial narrative construction.
+      annotations:
+        - '[!decolonization]'
+        - '[!myth-buster]'
+
+    - section: 'Джерельна критика: {source_analysis_title}'
+      words: 1500
+      content: >
+        Close reading of 1-2 actual historiographical texts (excerpts).
+        Source criticism methodology applied: author's background, institutional affiliation,
+        funding, access to archives, methodological framework.
+        Student learns to read historians the way historians read primary sources.
+        Compare earlier vs. later editions of the same work where relevant.
+      annotations:
+        - '[!epistemic-humility]'
+
+    - section: Дискусія та підсумок
+      words: 700
+      content: >
+        Return to opening exercise — can the student now identify the sources and explain
+        the assumptions embedded in each?
+        Meta-reflection: what did this module teach about HOW to read history, not just
+        WHAT happened?
+        Connection to current events — how do the narrative patterns analyzed in this
+        module show up in contemporary propaganda/discourse?
+      annotations:
+        - '[!decolonization]'
+
+  section_sum: 5200
+
+# ─────────────────────────────────────────────────────────────────────────────
+# LIT — Ukrainian Literature Analysis (232 modules, C1+)
+# Base template for the main LIT track. Sub-tracks inherit and modify.
+# ─────────────────────────────────────────────────────────────────────────────
+lit:
+  cefr_min: C1
+  word_target: 5000
+  pedagogy: CBI
+  primary_annotations:
+    - '[!decolonization]'
+    - '[!epistemic-humility]'
+    - '[!myth-buster]'
+  differentiator: >
+    LIT modules are centered on CLOSE READING of actual Ukrainian literary texts.
+    The student must engage with the original Ukrainian text — not summaries or
+    paraphrases. Every module includes substantial quotation from the work.
+    The Конфліктна карта explores literary-critical debates, not just historical ones.
+    The unique "Мова і поетика" section analyzes how the author uses language as an
+    artistic medium — stylistic innovation, sound patterning, syntax as meaning.
+    100% Ukrainian. No grammar scaffolding. Full literary/academic register.
+  sections:
+    - section: Розминка
+      words: 400
+      content: >
+        A striking quote from the work without context. Or a question that the text
+        answers in an unexpected way. Or a modern parallel that makes the text feel urgent.
+        NOT a biographical introduction to the author (that's BIO's job).
+      annotations: []
+
+    - section: 'Конфліктна карта: {literary_debate}'
+      words: 900
+      content: >
+        Two literary-critical debates:
+        Дебат 1: competing interpretations of the work (formalist vs. biographical,
+        postcolonial vs. aesthetic, feminist vs. national-canon readings).
+        Дебат 2: the work's place in the canon — was it always canonical? Who elevated it?
+        What does inclusion/exclusion from canon tell us?
+        [!epistemic-humility] — literary criticism has no "correct answers," only
+        better-argued positions.
+      annotations:
+        - '[!epistemic-humility]'
+
+    - section: 'Читання: {text_title_or_excerpt}'
+      words: 1700
+      content: >
+        THE CORE OF EVERY LIT MODULE. Extended quotation from the primary text with
+        close-reading commentary. For poetry: full poems or substantial excerpts.
+        For prose: key passages with contextual framing.
+        Analysis of plot/structure, character system, narrative voice.
+        How the text relates to the author's other works and to the literary period.
+        [!decolonization] — situate the work in UKRAINIAN literary tradition, not as
+        an appendix to Russian literature.
+      annotations:
+        - '[!decolonization]'
+
+    - section: 'Мова і поетика: {stylistic_focus}'
+      words: 1500
+      content: >
+        THE DEFINING SECTION OF LIT. How the author uses language:
+        Stylistic innovations, neologisms, dialectal elements, archaisms.
+        Sound patterning (alliteration, assonance, rhythm, meter).
+        Syntax as meaning — sentence structure serving artistic purpose.
+        Intertextuality — references to other Ukrainian and world literature.
+        [!myth-buster] — challenge reductive readings ("Shevchenko is just a patriotic poet").
+      annotations:
+        - '[!myth-buster]'
+
+    - section: Дискусія та підсумок
+      words: 700
+      content: >
+        Return to opening provocation with textual evidence.
+        Reception history — how was this text read when published vs. now?
+        Modern relevance — what does this text say to contemporary Ukraine?
+        Student reflection prompt: what changed in your reading after this analysis?
+      annotations:
+        - '[!anti-hagiography]'
+
+  section_sum: 5200
+
+# ─────────────────────────────────────────────────────────────────────────────
+# LIT Sub-Track Variations
+# All inherit the base LIT template. Only DIFFERENCES are listed.
+# The conversion script merges these overrides onto the LIT base.
+# ─────────────────────────────────────────────────────────────────────────────
+
+lit-essay:
+  inherits: lit
+  cefr_min: C1
+  differentiator: >
+    Essay modules analyze ARGUMENTATIVE PROSE — political essays, literary criticism,
+    philosophical writing. The "Читання" section focuses on argument structure rather
+    than literary devices. The "Мова і поетика" section becomes "Риторика та аргументація"
+    analyzing persuasive strategies, logical structure, rhetorical moves.
+  section_overrides:
+    - original: 'Мова і поетика: {stylistic_focus}'
+      replace_with: 'Риторика та аргументація: {rhetorical_focus}'
+      words: 1200
+      content: >
+        Argument structure: thesis, evidence, counterargument, conclusion.
+        Rhetorical strategies: ethos/pathos/logos, metaphor as argument, irony.
+        How the essay intervenes in a specific debate — what position does it take
+        and how does it make that position compelling?
+        Comparison with other essayists arguing the opposite position.
+      annotations:
+        - '[!epistemic-humility]'
+
+lit-hist-fic:
+  inherits: lit
+  cefr_min: C1
+  differentiator: >
+    Historical fiction modules add a mandatory HISTORY vs. FICTION analysis.
+    The student must identify what is documented history and what is the author's
+    invention, and evaluate whether the fiction serves or distorts understanding.
+  section_overrides:
+    - original: 'Мова і поетика: {stylistic_focus}'
+      replace_with: 'Історія vs. Вигадка: {historical_analysis}'
+      words: 1200
+      content: >
+        What is historically documented vs. what the author invented.
+        Does the fiction illuminate or distort the historical period?
+        How does the author handle gaps in historical record — responsibly or
+        sensationally?
+        [!myth-buster] — does this novel perpetuate historical myths?
+      annotations:
+        - '[!myth-buster]'
+        - '[!epistemic-humility]'
+
+lit-fantastika:
+  inherits: lit
+  cefr_min: C1
+  differentiator: >
+    Ukrainian sci-fi/fantasy analyzed as a vehicle for social commentary and national
+    imagination. The "Мова і поетика" section becomes "Світобудова та алегорія" —
+    how the speculative world reflects Ukrainian reality.
+  section_overrides:
+    - original: 'Мова і поетика: {stylistic_focus}'
+      replace_with: 'Світобудова та алегорія: {worldbuilding_focus}'
+      words: 1200
+      content: >
+        World-building analysis: what rules govern the fictional world?
+        Allegorical reading: what aspects of Ukrainian reality does the speculative
+        world encode? (colonialism, resistance, identity, language)
+        Genre conventions: how does this work relate to global sci-fi/fantasy traditions
+        while remaining distinctly Ukrainian?
+      annotations:
+        - '[!decolonization]'
+
+lit-war:
+  inherits: lit
+  cefr_min: C1
+  differentiator: >
+    War literature requires special ethical sensitivity. The unique section is
+    "Етика зображення" — how does the author handle violence, trauma, and death?
+    Does the text aestheticize war or bear witness? The student must confront the
+    tension between literary craft and ethical responsibility.
+  section_overrides:
+    - original: 'Мова і поетика: {stylistic_focus}'
+      replace_with: 'Етика зображення: {ethical_analysis}'
+      words: 1200
+      content: >
+        How does the text represent violence — graphically, metaphorically, through silence?
+        Witness literature vs. fiction: what are the ethical obligations of each?
+        The body in war literature — how is suffering rendered without exploitation?
+        Reader's position: does the text create empathy, outrage, numbness?
+        [!anti-hagiography] — war literature must not glorify. Show the cost.
+      annotations:
+        - '[!anti-hagiography]'
+        - '[!epistemic-humility]'
+
+lit-humor:
+  inherits: lit
+  cefr_min: C1
+  differentiator: >
+    Humor/satire modules analyze comic mechanisms as tools of resistance and social
+    critique. The unique section is "Механіка сміху" — what makes this funny and
+    WHO is the target? Ukrainian humor as a weapon against empire.
+  section_overrides:
+    - original: 'Мова і поетика: {stylistic_focus}'
+      replace_with: 'Механіка сміху: {comic_analysis}'
+      words: 1200
+      content: >
+        Comic mechanisms: irony, parody, grotesque, absurdist logic, word play.
+        Target analysis: who/what is being mocked — power, empire, conformity, self?
+        Social function: humor as resistance, coping mechanism, or social critique.
+        Cultural specificity: what makes this humor specifically Ukrainian vs. universal?
+        Language of humor: dialectal play, macaronic mixing, neologisms for comic effect.
+      annotations:
+        - '[!decolonization]'
+        - '[!myth-buster]'
+
+lit-youth:
+  inherits: lit
+  cefr_min: C1
+  differentiator: >
+    Youth literature modules analyze how Ukrainian identity is transmitted to the
+    next generation. The unique section is "Ідентичність та дорослішання" —
+    the coming-of-age narrative as a metaphor for national becoming.
+  section_overrides:
+    - original: 'Мова і поетика: {stylistic_focus}'
+      replace_with: 'Ідентичність та дорослішання: {identity_analysis}'
+      words: 1200
+      content: >
+        Coming-of-age arc: what does "growing up" mean in this text's world?
+        Identity formation: language, culture, nation as elements of adolescent self-discovery.
+        Intended audience vs. actual readership — is this "for teens" or "about teens"?
+        Pedagogical function: what values does the text transmit? Critically examined.
+        [!anti-hagiography] — youth literature can be propagandistic. Examine honestly.
+      annotations:
+        - '[!anti-hagiography]'
+        - '[!decolonization]'
+
+lit-drama:
+  inherits: lit
+  cefr_min: C1
+  differentiator: >
+    Drama modules must account for the TEXT/PERFORMANCE duality. The unique section
+    is "Сцена та текст" — analyzing the play as a performance script, not just
+    a literary text. Stage directions, actor's body, audience reception.
+  section_overrides:
+    - original: 'Мова і поетика: {stylistic_focus}'
+      replace_with: 'Сцена та текст: {performance_analysis}'
+      words: 1200
+      content: >
+        Text vs. performance: what can only be understood on stage?
+        Stage directions as authorial voice — what the playwright controls beyond dialogue.
+        Dialogue analysis: how characters reveal themselves through speech patterns,
+        register shifts, silence.
+        Production history: notable stagings and how they reinterpreted the text.
+        Ukrainian theater tradition: Kurbas, Zankovetska, contemporary productions.
+      annotations:
+        - '[!decolonization]'
+
+lit-crimea:
+  inherits: lit
+  cefr_min: C1
+  differentiator: >
+    Crimean literature modules (Crimean Tatar + Ukrainian) explore literature of
+    displacement, exile, and return. The unique section is "Вигнання та повернення" —
+    how deportation, occupation, and resistance shape literary voice.
+  section_overrides:
+    - original: 'Мова і поетика: {stylistic_focus}'
+      replace_with: 'Вигнання та повернення: {displacement_analysis}'
+      words: 1200
+      content: >
+        Literature of displacement: how exile reshapes language, memory, identity.
+        Crimean Tatar and Ukrainian parallel experiences of erasure.
+        Landscape as character: Crimea as lost homeland, imagined space, contested territory.
+        Multilingual literary space: Crimean Tatar / Ukrainian / Russian interaction.
+        [!decolonization] — Crimea as a case study of Russian colonial erasure.
+      annotations:
+        - '[!decolonization]'
+        - '[!epistemic-humility]'
+
+lit-doc:
+  inherits: lit
+  cefr_min: C1
+  differentiator: >
+    Documentary literature modules analyze testimony, memoir, and non-fiction as
+    literary forms. The unique section is "Свідчення як жанр" — the ethics and
+    aesthetics of bearing witness.
+  section_overrides:
+    - original: 'Мова і поетика: {stylistic_focus}'
+      replace_with: 'Свідчення як жанр: {testimony_analysis}'
+      words: 1200
+      content: >
+        Testimony vs. fiction: what can testimony do that fiction cannot, and vice versa?
+        The aesthetics of witness: when does literary craft serve testimony and when
+        does it distort it?
+        Archival work: how does the author use documents, interviews, photographs?
+        Memory and trauma: the gap between experience and narration.
+        [!epistemic-humility] — testimony is evidence, but it is also a constructed narrative.
+      annotations:
+        - '[!epistemic-humility]'
+        - '[!anti-hagiography]'
+
+# ─────────────────────────────────────────────────────────────────────────────
+# OES — Old East Slavic Language and Texts (102 modules, C2)
+# University-level philological track. LINGUISTICS, not just history.
+# ─────────────────────────────────────────────────────────────────────────────
+oes:
+  cefr_min: C2
+  word_target: 5000
+  pedagogy: CBI
+  primary_annotations:
+    - '[!epistemic-humility]'
+    - '[!decolonization]'
+    - '[!myth-buster]'
+  differentiator: >
+    OES is a LINGUISTICS track disguised as a history track. The student doesn't just
+    learn ABOUT Old East Slavic — they learn to READ it. Every module includes actual
+    OES text that the student must parse. Grammar is not scaffolding — it IS the content.
+    The unique sections are "Текст: Читання та переклад" (guided reading of OES text
+    with grammatical parsing) and "Мовна лабораторія" (hands-on grammar/phonology/
+    etymology exercises using the module's primary text as material).
+    The Конфліктна карта in OES focuses on PHILOLOGICAL debates — text attribution,
+    dating, authenticity, linguistic classification — not just political history.
+    [!decolonization] is critical: challenge "Old Russian" / "Ancient Russian" terminology.
+    The language is Old EAST SLAVIC — it belongs to the ancestors of Ukrainians, Belarusians,
+    and Russians equally. Russian imperial scholarship's claim of exclusive inheritance
+    is a political act, not a linguistic fact.
+  sections:
+    - section: Розминка
+      words: 400
+      content: >
+        A short OES sentence or phrase presented without gloss. Student attempts to
+        decode it using their knowledge of modern Ukrainian + previously learned OES.
+        Alternatively: a modern Ukrainian word traced back to its OES ancestor — the
+        student guesses the connection.
+      annotations: []
+
+    - section: 'Конфліктна карта: {philological_debate}'
+      words: 800
+      content: >
+        Two philological/historiographical debates:
+        Дебат 1: scholarly disagreement about the text (authorship, dating, authenticity,
+        textual transmission).
+        Дебат 2: linguistic classification debate (how "Ukrainian" are the features in
+        this text? Proto-Ukrainian vs. Common East Slavic vs. Church Slavonic layer).
+        [!decolonization] — challenge "Ancient Russian" framing. Use "давньосхіднослов'янська".
+        [!epistemic-humility] — philological evidence is often ambiguous.
+      annotations:
+        - '[!epistemic-humility]'
+        - '[!decolonization]'
+
+    - section: 'Текст: Читання та переклад'
+      words: 1700
+      content: >
+        THE DEFINING SECTION OF OES. Extended primary source in Old East Slavic with:
+        - Original text (in Cyrillic, normalized where necessary)
+        - Word-by-word or phrase-by-phrase glossing
+        - Grammatical parsing of key forms (case, number, tense, aspect)
+        - Modern Ukrainian parallel translation
+        - Notes on Church Slavonic vs. vernacular features
+        The student reads the actual ancient text, not a summary.
+      annotations:
+        - '[!decolonization]'
+
+    - section: 'Мовна лабораторія: {grammar_or_phonology_focus}'
+      words: 1700
+      content: >
+        THE SECOND DEFINING SECTION OF OES. Hands-on linguistic analysis using the
+        module's primary text as material. Types of labs:
+        - Grammar lab: paradigm analysis, declension/conjugation patterns, dual number,
+          aorist/imperfect, participles
+        - Phonology lab: yer fall, pleophony, palatalization, vowel shifts traced in
+          the text's spelling
+        - Etymology trace: tracing words from OES through Middle Ukrainian to modern
+          Ukrainian — showing the chain of inheritance
+        - Paleography: script analysis where relevant (uncial, semi-uncial)
+        Each lab includes worked examples + exercises the student completes.
+      annotations:
+        - '[!myth-buster]'
+
+    - section: Дискусія та підсумок
+      words: 600
+      content: >
+        Return to opening decoding challenge — student should now parse it fully.
+        Linguistic takeaway: what did this text teach about how OES worked?
+        Connection to modern Ukrainian: which features survived, which were lost,
+        which evolved into something new?
+      annotations: []
+
+  section_sum: 5200
+
+# ─────────────────────────────────────────────────────────────────────────────
+# RUTH — Ruthenian / Middle Ukrainian, XIV-XVIII c. (115 modules, C2)
+# The bridge between OES and modern Ukrainian. Legal, religious, literary texts.
+# ─────────────────────────────────────────────────────────────────────────────
+ruth:
+  cefr_min: C2
+  word_target: 5000
+  pedagogy: CBI
+  primary_annotations:
+    - '[!epistemic-humility]'
+    - '[!decolonization]'
+    - '[!myth-buster]'
+  differentiator: >
+    RUTH covers the period when the Ukrainian language was BECOMING itself — separating
+    from Church Slavonic above and from Common East Slavic behind, absorbing Polish and
+    Latin influences, developing its own literary register. The texts are legal (Lithuanian
+    Statute, Cossack documents), religious (Peresopnytsia Gospel, polemics), and literary
+    (baroque poetry, drama, Skovoroda).
+    Like OES, this is a LINGUISTICS track — the student reads original texts. But RUTH
+    texts are closer to modern Ukrainian, so the focus shifts from basic decoding to
+    REGISTER ANALYSIS and LANGUAGE CONTACT. The unique "Мовний контакт" section analyzes
+    Polonisms, Latinisms, Church Slavonicisms in the text — and how the author navigates
+    between registers.
+    The Конфліктна карта in RUTH often addresses the "was there a Ukrainian language
+    before Kotliarevsky?" debate — every text is evidence that YES, there was.
+  sections:
+    - section: Розминка
+      words: 400
+      content: >
+        A Ruthenian sentence or phrase next to its modern Ukrainian equivalent.
+        Student identifies what changed and what stayed the same.
+        Alternatively: a legal/religious term from the period — student guesses
+        its modern equivalent or discovers it has no modern equivalent (and why).
+      annotations: []
+
+    - section: 'Конфліктна карта: {sociolinguistic_debate}'
+      words: 700
+      content: >
+        Two philological/sociolinguistic debates:
+        Дебат 1: language classification — is this text "Ukrainian," "Ruthenian,"
+        "prosta mova," or "Church Slavonic with vernacular elements"? What do the
+        labels mean politically?
+        Дебат 2: specific textual/historical controversy (attribution, influence,
+        intended audience, relationship to power).
+        [!decolonization] — the very EXISTENCE of these texts refutes the claim that
+        Ukrainian is a "peasant dialect" invented in the 19th century.
+        [!epistemic-humility] — language boundaries in this period are genuinely blurry.
+      annotations:
+        - '[!epistemic-humility]'
+        - '[!decolonization]'
+
+    - section: 'Текст: Читання та переклад'
+      words: 1300
+      content: >
+        Primary source text in Ruthenian / prosta mova / bookish Ukrainian with:
+        - Original text (normalized orthography where needed)
+        - Guided reading with glosses for archaic or borrowed forms
+        - Grammatical notes on forms that differ from modern Ukrainian
+        - Modern Ukrainian parallel where the gap is significant
+        - Context: what kind of document is this? Who wrote it? For whom?
+      annotations:
+        - '[!decolonization]'
+
+    - section: 'Мовний контакт: {contact_analysis_title}'
+      words: 1200
+      content: >
+        THE DEFINING SECTION OF RUTH. Analysis of language contact phenomena in the text:
+        - Polonisms: lexical borrowings, syntactic calques, administrative terminology
+        - Latinisms: legal and academic vocabulary, rhetorical structures
+        - Church Slavonicisms: liturgical register, bookish prestige forms
+        - Turkisms: Cossack-era military and trade vocabulary
+        For each borrowing type: is it a conscious choice (register), an unconscious
+        habit (bilingualism), or a technical necessity (no Ukrainian equivalent)?
+        How does modern Ukrainian handle these same domains?
+        [!myth-buster] — borrowing is normal, not contamination. Every language borrows.
+        But WHICH borrowings survived into modern Ukrainian tells us about power and culture.
+      annotations:
+        - '[!myth-buster]'
+
+    - section: 'Мовна лабораторія: {lab_focus}'
+      words: 1000
+      content: >
+        Hands-on linguistic work with the module's text. Types of labs:
+        - Grammar lab: verbal forms (Ruthenian past tenses, conditional, imperative),
+          nominal morphology (how declensions shifted from OES patterns)
+        - Comparative lab: same concept expressed in Church Slavonic, Ruthenian, and
+          modern Ukrainian side by side — trace the evolution
+        - Paleography lab: skoropys script reading (Cossack-era cursive)
+        - Etymology trace: a Ruthenian word's journey to or from modern Ukrainian
+        - Stylistic lab: register analysis — identifying which layer each word belongs to
+      annotations: []
+
+    - section: Дискусія та підсумок
+      words: 600
+      content: >
+        Return to opening comparison — student now understands the historical forces
+        that produced the differences.
+        Linguistic takeaway: what does this text reveal about the state of Ukrainian
+        in this period?
+        Connection forward: how do the features analyzed here evolve into modern Ukrainian?
+      annotations: []
+
+  section_sum: 5200
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SUMMARY: What makes each track unique
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# ─────────────────────────────────────────────────────────────────────────────
+# ACTIVITY PROFILES — track-specific inline + workbook splits
+# Used by update_plan_activities.py to generate activity_hints per track.
+#
+# Inline: quick checks placed in the Урок tab at <!-- INJECT_ACTIVITY --> markers.
+# Workbook: deeper analysis in the Зошит tab.
+# Total: 5-8 activities per module (2-3 inline + 3-5 workbook).
+# ─────────────────────────────────────────────────────────────────────────────
+
+activity_profiles:
+  folk:
+    inline:
+      - type: quiz
+        after_section: Конфліктна карта
+        focus: Перевірка розуміння дебатів — чия це позиція?
+      - type: reading
+        after_section: Читання
+        focus: Розуміння первинного фольклорного тексту
+    workbook:
+      - type: source-evaluation
+        focus: Аналіз первинного джерела (запис етнографа, текст пісні)
+      - type: comparative-study
+        focus: Порівняння з паралельними традиціями інших народів (глобальна синхронність)
+      - type: critical-analysis
+        focus: Критичний аналіз наукової інтерпретації жанру
+      - type: essay-response
+        focus: Есе на тему сучасного значення традиції
+
+  hist:
+    inline:
+      - type: quiz
+        after_section: Конфліктна карта
+        focus: Перевірка розуміння історіографічних дебатів
+      - type: reading
+        after_section: Джерела
+        focus: Розуміння первинного історичного джерела
+    workbook:
+      - type: source-evaluation
+        focus: Оцінка первинного джерела — хто написав, навіщо, що упущено?
+      - type: debate
+        focus: Дебат — оцінка значення та наслідків події
+      - type: comparative-study
+        focus: Порівняння української та імперської інтерпретацій
+      - type: essay-response
+        focus: Есе на тему зв'язку з сучасністю
+
+  bio:
+    inline:
+      - type: quiz
+        after_section: Конфліктна карта
+        focus: Перевірка розуміння інтерпретацій постаті
+      - type: true-false
+        after_section: Тінь
+        focus: Правда чи міф — перевірка стереотипів про постать
+    workbook:
+      - type: debate
+        focus: Дебат — герой чи складна постать? Обидві позиції з аргументами
+      - type: critical-analysis
+        focus: Критичний аналіз спадщини — що залишилось, що спотворено?
+      - type: authorial-intent
+        focus: Чому біографи зображували постать саме так?
+      - type: essay-response
+        focus: Есе-рефлексія про Тінь (антиагіографічний аналіз)
+
+  istorio:
+    inline:
+      - type: quiz
+        after_section: Конфліктна карта
+        focus: Перевірка розуміння методологічних дебатів
+      - type: reading
+        after_section: Зіткнення наративів
+        focus: Розуміння історіографічного тексту
+    workbook:
+      - type: source-evaluation
+        focus: Джерельна критика — методологія, упередження, сліпі плями
+      - type: comparative-study
+        focus: Порівняння 3+ наративів про одну подію
+      - type: debate
+        focus: Який наратив найбільш підкріплений доказами?
+      - type: essay-response
+        focus: Мета-рефлексія — як ми читаємо історію?
+
+  lit:
+    inline:
+      - type: quiz
+        after_section: Конфліктна карта
+        focus: Перевірка розуміння літературно-критичних дебатів
+      - type: reading
+        after_section: Читання
+        focus: Розуміння літературного тексту (уривок з твору)
+    workbook:
+      - type: authorial-intent
+        focus: Аналіз авторського задуму — мова як мистецтво
+      - type: critical-analysis
+        focus: Літературна критика — оцінка інтерпретації
+      - type: comparative-study
+        focus: Порівняння з іншими творами або інтерпретаціями
+      - type: essay-response
+        focus: Есе-аналіз рецепції та сучасного значення
+
+  lit-essay:
+    inherits_activities: lit
+    workbook_override:
+      - type: authorial-intent
+        focus: Аналіз риторичних стратегій та аргументації
+  lit-hist-fic:
+    inherits_activities: lit
+    workbook_override:
+      - type: source-evaluation
+        focus: Історія vs. вигадка — що задокументовано, що винайдено?
+  lit-fantastika:
+    inherits_activities: lit
+  lit-war:
+    inherits_activities: lit
+    workbook_override:
+      - type: debate
+        focus: Етика зображення — чи текст естетизує війну чи свідчить?
+  lit-humor:
+    inherits_activities: lit
+  lit-youth:
+    inherits_activities: lit
+    workbook_override:
+      - type: debate
+        focus: Ідентичність та дорослішання — які цінності передає текст?
+  lit-drama:
+    inherits_activities: lit
+  lit-doc:
+    inherits_activities: lit
+    workbook_override:
+      - type: source-evaluation
+        focus: Свідчення як жанр — етика та естетика свідка
+  lit-crimea:
+    inherits_activities: lit
+    workbook_override:
+      - type: source-evaluation
+        focus: Вигнання та повернення — аналіз голосу зсередини
+
+  oes:
+    inline:
+      - type: quiz
+        after_section: Конфліктна карта
+        focus: Перевірка розуміння філологічних дебатів
+      - type: transcription
+        after_section: Текст
+        focus: Транскрипція давньосхіднослов'янського фрагменту
+    workbook:
+      - type: etymology-trace
+        focus: Простежити еволюцію слова від давньосхіднослов'янської до сучасної
+      - type: comparative-study
+        focus: Порівняння давньосхіднослов'янських форм із сучасними українськими
+      - type: critical-analysis
+        focus: Критичний аналіз лінгвістичної класифікації тексту
+      - type: essay-response
+        focus: Есе — що цей текст розповідає про стан мови в цю добу?
+
+  ruth:
+    inline:
+      - type: quiz
+        after_section: Конфліктна карта
+        focus: Перевірка розуміння соціолінгвістичних дебатів
+      - type: transcription
+        after_section: Текст
+        focus: Транскрипція руського/староукраїнського фрагменту
+    workbook:
+      - type: etymology-trace
+        focus: Простежити еволюцію слова від руської доби до сучасної
+      - type: dialect-comparison
+        focus: Порівняння мовних контактів — полонізми, латинізми, церковнослов'янізми
+      - type: comparative-study
+        focus: Порівняння — те саме поняття церковнослов'янською, руською та сучасною
+      - type: essay-response
+        focus: Есе — як цей текст доводить існування української мови до Котляревського?
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SUMMARY
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# Track        | Unique middle section              | Primary annotation      | Register
+# -------------|-------------------------------------|------------------------|----------
+# FOLK         | Аналіз: Поетика та ритуальна функція| [!myth-buster]         | Academic-folk
+# HIST         | Джерела + Аналіз: Наслідки          | [!decolonization]      | Academic-accessible (B2)
+# BIO          | Формування + Діяльність + Тінь      | [!anti-hagiography]    | Academic-biographical
+# ISTORIO      | Зіткнення наративів + Джерельна критика | [!epistemic-humility] | Academic-meta
+# LIT          | Читання + Мова і поетика            | [!decolonization]      | Literary-academic
+# LIT-ESSAY    | Читання + Риторика та аргументація   | [!epistemic-humility]  | Essayistic-academic
+# LIT-HIST-FIC | Читання + Історія vs. Вигадка       | [!myth-buster]         | Literary-academic
+# LIT-FANTASTIKA| Читання + Світобудова та алегорія   | [!decolonization]      | Literary-academic
+# LIT-WAR      | Читання + Етика зображення          | [!anti-hagiography]    | Literary-ethical
+# LIT-HUMOR    | Читання + Механіка сміху            | [!decolonization]      | Literary-academic
+# LIT-YOUTH    | Читання + Ідентичність та дорослішання| [!anti-hagiography]   | Literary-accessible
+# LIT-DRAMA    | Читання + Сцена та текст            | [!decolonization]      | Literary-performance
+# LIT-CRIMEA   | Читання + Вигнання та повернення    | [!decolonization]      | Literary-testimonial
+# LIT-DOC      | Читання + Свідчення як жанр         | [!epistemic-humility]  | Documentary-academic
+# OES          | Текст: Читання та переклад + Мовна лабораторія | [!decolonization] | Philological
+# RUTH         | Текст + Мовний контакт + Мовна лабораторія | [!decolonization] | Philological

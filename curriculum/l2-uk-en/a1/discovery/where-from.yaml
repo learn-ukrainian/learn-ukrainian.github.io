@@ -1,0 +1,26 @@
+discovered_at: '2026-04-05T17:18:51.210572+00:00'
+error: null
+query_keywords:
+- Where From?
+- Діалоги (Dialogues)
+- Звідки? (Where From?)
+- Країни і міста (Countries and Cities)
+- Підсумок — Summary
+- Ask and answer Звідки? (Where from?) using з/із + country/city
+- '{''Complete the location trio'': ''Де? / Куди? / Звідки?''}'
+- звідки
+- з/із/зі
+- Україна
+- Київ
+- Львів
+- Канада
+- Одеса
+- Харків
+- США
+- Англія
+- Німеччина
+- Польща
+- додому
+rag_chunks: []
+rag_literary: []
+warning: Auto-generated from plan

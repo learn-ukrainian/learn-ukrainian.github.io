@@ -4917,11 +4917,7 @@ def main():
         prev_score = score
 
         while not passed and fix_round <= max_fix_rounds:
-            # Early exit: score already high enough, severity gate is just Gemini being conservative
-            if score >= 9.0:
-                _log(f"\n✅ Score {score}/10 ≥ 9.0 — accepting (severity gate override)")
-                break
-
+            # Always apply fixes first, THEN decide whether to accept or re-review
             fixes_applied, fix_count = _apply_review_fixes(review_text, content_path)
 
             if fixes_applied:
@@ -4949,6 +4945,13 @@ def main():
                 _log(f"\n✅ Review PASSED after round {fix_round} ({score}/10)")
                 break
 
+            # Score gate: if score is high enough after re-review, accept
+            # The reviewer may say REVISE for minor style issues at 9.5/10 —
+            # that's Gemini being conservative, not a real quality problem.
+            if score >= 9.0:
+                _log(f"\n✅ Score {score}/10 ≥ 9.0 after re-review — accepting (severity gate override)")
+                break
+
             # Style-specific fix: if engagement is the weak dimension and other
             # scores are strong, run deterministic intensifier cleanup + accept.
             # More LLM rounds won't fix a systemic style habit.
@@ -4974,17 +4977,14 @@ def main():
             prev_score = score
 
             fix_round += 1
-        # GUARANTEE: Always apply the latest review's <fixes> before accepting.
-        # This catches typos, tone issues, and minor fixes from ANY review round.
-        # Even PASSED reviews may have minor <fixes> worth applying.
-        latest_fixes = _parse_review_fixes(review_text)
-        total_fixes = len(latest_fixes) if latest_fixes else 0
-        if total_fixes > 0:
-            final_applied, final_count = _apply_review_fixes(review_text, content_path)
-            if final_applied:
-                _log(f"\n🔧 Final fix pass: applied {final_count}/{total_fixes} fix(es) from latest review")
-            else:
-                _log(f"\n⚠️  Final fix pass: {total_fixes} fix(es) requested but none matched")
+        # Apply any remaining fixes from the final review (even PASS verdicts
+        # may have minor style suggestions worth applying).
+        if passed:
+            latest_fixes = _parse_review_fixes(review_text)
+            if latest_fixes:
+                final_applied, final_count = _apply_review_fixes(review_text, content_path)
+                if final_applied:
+                    _log(f"\n🔧 Post-PASS fix pass: applied {final_count}/{len(latest_fixes)} minor fix(es)")
 
         # 2. Check for remaining known issues (Russianisms, calques)
         if content_path.exists():

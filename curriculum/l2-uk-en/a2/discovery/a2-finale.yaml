@@ -1,0 +1,25 @@
+discovered_at: '2026-04-05T17:18:58.228875+00:00'
+error: null
+query_keywords:
+- Фінал A2
+- 'Ранок: прибуття та орієнтація (Morning: Arrival and Orientation)'
+- 'День: ринок, кав''ярня, прогулянка (Day: Market, Cafe, Walk)'
+- 'Вечір: друзі, розмови, плани (Evening: Friends, Conversations, Plans)'
+- 'Підсумок: від A2 до B1 (Summary: From A2 to B1)'
+- прибуття
+- вокзал
+- квиток
+- ринок
+- замовити
+- порадити
+- будівля
+- враження
+- підсумок
+- вітаємо
+- маршрутка
+- прогулянка
+- дізнатися
+- готовий
+rag_chunks: []
+rag_literary: []
+warning: Auto-generated from plan

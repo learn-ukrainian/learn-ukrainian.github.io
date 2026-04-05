@@ -1,0 +1,28 @@
+discovered_at: '2026-04-05T17:18:58.228875+00:00'
+error: null
+query_keywords:
+- Для кого? Без чого? Біля чого?
+- Для кого це? Для + родовий (Who Is It For? Для + Genitive)
+- Без чого? Без + родовий (Without What? Без + Genitive)
+- Де це? Біля, навпроти, коло + родовий (Where Is It? Біля, навпроти, коло + Genitive)
+- Learner can use для + Genitive to express purpose or intended recipient.
+- Learner can use без + Genitive to express absence or lack of something.
+- Learner can use біля, навпроти, and коло + Genitive to describe location near a
+  reference point.
+- призначення
+- відпочинок
+- допомога
+- сумнів
+- будинок
+- зупинка
+- бібліотека
+- лікарня
+- площа
+- станція
+- навчання
+- церква
+- вокзал
+- річка
+rag_chunks: []
+rag_literary: []
+warning: Auto-generated from plan

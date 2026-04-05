@@ -1,0 +1,27 @@
+discovered_at: '2026-04-05T17:18:51.210572+00:00'
+error: null
+query_keywords:
+- Transport
+- Діалоги (Dialogues)
+- Транспорт (Transport Types)
+- Корисні фрази (Useful Phrases)
+- Підсумок — Summary
+- Name common transport types (автобус, метро, таксі, потяг, трамвай)
+- Use їхати + transport expressions (їхати автобусом / на метро)
+- Combine transport with direction (куди) and locative (де) from M29-31
+- автобус
+- метро
+- таксі
+- потяг
+- квиток
+- зупинка
+- трамвай
+- маршрутка
+- літак
+- направо
+- наліво
+- прямо
+- дістатися
+rag_chunks: []
+rag_literary: []
+warning: Auto-generated from plan

@@ -1,4 +1,8 @@
-"""Configuration for the wiki compiler."""
+"""Configuration for the wiki compiler.
+
+Supports ALL tracks: core levels (A1-C2) and seminar tracks.
+Each track maps to wiki domains where its articles live.
+"""
 
 from pathlib import Path
 
@@ -26,6 +30,14 @@ GEMINI_MODEL = "gemini-2.5-pro"
 
 # ── Wiki structure ─────────────────────────────────────────────────
 WIKI_DOMAINS = [
+    # Core level domains
+    "pedagogy/a1",
+    "grammar/a2",
+    "grammar/b1",
+    "grammar/b2",
+    "academic/c1",
+    "mastery/c2",
+    # Seminar domains
     "periods",
     "figures",
     "literature/movements",
@@ -37,8 +49,16 @@ WIKI_DOMAINS = [
     "folk",
 ]
 
-# Track → which wiki domains it reads
+# Track → which wiki domains it READS (for context injection)
 TRACK_DOMAINS: dict[str, list[str]] = {
+    # Core levels — each reads its own domain
+    "a1": ["pedagogy/a1"],
+    "a2": ["grammar/a2", "pedagogy/a1"],  # A2 can also read A1 pedagogy
+    "b1": ["grammar/b1", "grammar/a2"],
+    "b2": ["grammar/b2", "grammar/b1"],
+    "c1": ["academic/c1", "grammar/b2"],
+    "c2": ["mastery/c2", "academic/c1"],
+    # Seminar tracks
     "folk": ["folk"],
     "hist": ["periods", "figures", "historiography"],
     "bio": ["figures", "periods"],
@@ -51,16 +71,49 @@ TRACK_DOMAINS: dict[str, list[str]] = {
     "lit-fantastika": ["literature/works", "figures"],
     "lit-humor": ["literature/works", "figures"],
     "lit-drama": ["literature/works", "figures"],
-    "lit-doc": ["literature/works", "figures"],
-    "lit-crimea": ["literature/works", "figures", "periods"],
+    # lit-doc and lit-crimea: not in curriculum.yaml yet — add when official
     "oes": ["linguistics/oes", "periods"],
     "ruth": ["linguistics/ruthenian", "periods"],
 }
 
-# Seminar tracks (ordered by build priority)
-SEMINAR_TRACKS = [
+# Track → which wiki domain it WRITES TO (for compilation)
+TRACK_WRITE_DOMAIN: dict[str, str] = {
+    # Core levels
+    "a1": "pedagogy/a1",
+    "a2": "grammar/a2",
+    "b1": "grammar/b1",
+    "b2": "grammar/b2",
+    "c1": "academic/c1",
+    "c2": "mastery/c2",
+    # Seminars use _get_domain() logic in compile.py (per-slug mapping)
+}
+
+# Track → which compilation prompt to use
+TRACK_PROMPT: dict[str, str] = {
+    "a1": "compile_pedagogy_brief.md",
+    "a2": "compile_grammar_brief.md",
+    "b1": "compile_grammar_brief.md",
+    "b2": "compile_grammar_brief.md",
+    "c1": "compile_academic.md",
+    "c2": "compile_academic.md",
+    # All seminar tracks use the default
+}
+DEFAULT_PROMPT = "compile_article.md"
+
+# All supported tracks (ordered by build priority)
+# Source of truth: curriculum/l2-uk-en/curriculum.yaml
+# Only tracks that exist in curriculum.yaml belong here.
+ALL_TRACKS = [
+    # Core (priority: A1 first, then A2, then B1+)
+    "a1", "a2", "b1", "b2", "c1", "c2",
+    # Seminar (priority: FOLK first, then HIST+BIO, then rest)
     "folk", "hist", "bio", "istorio",
     "lit", "lit-essay", "lit-war", "lit-hist-fic", "lit-youth",
-    "lit-fantastika", "lit-humor", "lit-drama", "lit-doc", "lit-crimea",
+    "lit-fantastika", "lit-humor", "lit-drama",
     "oes", "ruth",
+    # NOT included: lit-doc, lit-crimea (plans exist but not in curriculum.yaml yet)
+    # NOT included: b2-pro, c1-pro (professional tracks, no wiki needed)
 ]
+
+# Legacy alias
+SEMINAR_TRACKS = ALL_TRACKS[6:]  # Everything after c2

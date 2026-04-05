@@ -1,0 +1,27 @@
+discovered_at: '2026-04-05T17:18:51.210572+00:00'
+error: null
+query_keywords:
+- How Many?
+- Діалоги (Dialogues)
+- Числа 1-20 (Numbers 1-20)
+- Десятки і сотні (Tens and Hundreds)
+- Підсумок — Summary
+- Say prices using гривня and round numbers up to 1000
+- Give age using Мені ... років (as memorized chunk — NO case grammar)
+- один, два, три, чотири, п'ять
+- шість, сім, вісім, дев'ять, десять
+- двадцять, тридцять, сорок
+- сто, тисяча
+- скільки
+- коштує
+- гривня
+- рік, роки, років
+- п'ятдесят, шістдесят, сімдесят
+- вісімдесят, дев'яносто
+- двісті, триста, п'ятсот
+- копійка
+- номер
+- нуль
+rag_chunks: []
+rag_literary: []
+warning: Auto-generated from plan

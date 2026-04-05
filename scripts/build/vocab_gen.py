@@ -155,14 +155,13 @@ def get_previous_vocab(level: str, current_seq: int) -> set[str]:
                         previous.add(entry.get("word", "").lower())
                 continue
 
-            # Fall back to plan vocabulary_hints
+            # Fall back to plan vocabulary_hints (v3 dict or v4 list)
+            from pipeline.vocab_helpers import extract_vocab_words
             hints = plan.get("vocabulary_hints", {})
-            for category in ("required", "recommended"):
-                for item in hints.get(category, []):
-                    # Parse "мама (mother)" format
-                    word = str(item).split("(")[0].strip().lower()
-                    if word:
-                        previous.add(word)
+            for word in extract_vocab_words(hints):
+                word_lower = word.lower()
+                if word_lower:
+                    previous.add(word_lower)
         except Exception:
             continue
 
@@ -307,5 +306,5 @@ def build_slovnyk_markdown(
 
 
 def _esc(s: str) -> str:
-    """Escape quotes for JSX string props."""
-    return s.replace("\\", "\\\\").replace('"', '\\"')
+    """Escape quotes and apostrophes for JSX string props."""
+    return s.replace("\\", "\\\\").replace('"', '\\"').replace("'", "&#39;")

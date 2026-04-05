@@ -115,17 +115,20 @@ IMMERSION_RULES: dict[str, str] = {
         "All cases allowed. Simple subordinate clauses only (який/що/коли). Aspect pairs introduced. No participles."
     ),
     "a2-ramp": (
-        "TARGET: 30-50% Ukrainian. Transition from bridge to full A2 immersion.\n"
+        "TARGET: 30-50% Ukrainian. ⚠️ HARD GATE — the audit REJECTS modules below 30%.\n"
         "LANGUAGE ROLES:\n"
-        "- THEORY: English prose for grammar explanations — keep SHORT (2-3 sentences per concept).\n"
+        "- THEORY: English prose for grammar explanations — keep SHORT (2-3 sentences per concept, then IMMEDIATELY show Ukrainian examples).\n"
         "- EXAMPLES & CONTEXT: Ukrainian — dialogues, example sentences, cultural context.\n"
         "- HEADERS: Ukrainian with English in parentheses.\n"
         "- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English — never mix.\n"
+        "⚠️ CRITICAL: You MUST write at least 30% Ukrainian text or the module will be REJECTED.\n"
         "HOW TO REACH 30-50% UKRAINIAN:\n"
-        "1. Include 2-3 multi-turn dialogues (6+ lines each) spread through the module.\n"
-        "2. After grammar explanations, show Ukrainian pattern boxes: «стіл → стола → на столі».\n"
-        "3. Use :::tip callouts with Ukrainian mnemonic phrases.\n"
-        "4. Example lists and paradigm tables count as Ukrainian content.\n"
+        "1. Include 2-3 multi-turn dialogues (8+ lines each) spread through the module — these are your biggest Ukrainian contributors.\n"
+        "2. After EVERY grammar explanation (max 2-3 English sentences), IMMEDIATELY show 5+ Ukrainian example sentences with translations.\n"
+        "3. Add a '### Читаємо українською (Reading Practice)' block in EACH section — 5-8 connected Ukrainian sentences forming a mini-narrative.\n"
+        "4. Use :::tip callouts with Ukrainian mnemonic phrases and cultural notes.\n"
+        "5. Paradigm tables with Ukrainian content (not just endings but full phrases).\n"
+        "SELF-CHECK: Before finishing, count Ukrainian text. If it feels like less than 1/3 of the module, add more Ukrainian dialogues and reading practice blocks.\n"
         "A2 register ONLY. Concrete everyday vocabulary. No literary/poetic language. "
         "Ukrainian sentences max 15 words. Max 2 clauses. "
         "All cases allowed. Simple subordinate clauses only (який/що/коли). Aspect pairs introduced. No participles."
@@ -550,20 +553,10 @@ def _build_vocabulary_bank(ctx) -> str:
         return "(No vocabulary bank available)"
     hints = ctx.plan.get("vocabulary_hints", {})
     if not hints:
-        return "(No vocabulary hints in plan)"
+        return "(No vocabulary bank available)"
 
-    words = []
-    for category in ("required", "recommended", "sight_words"):
-        for hint in hints.get(category, []):
-            if isinstance(hint, str):
-                # Extract first word: "мама (mom) — ..." → "мама"
-                word = hint.split("(")[0].strip().split("—")[0].strip().split(" ")[0].strip()
-                if word and _re.search(r'[\u0400-\u04ff]', word):
-                    words.append(word)
-            elif isinstance(hint, dict):
-                word = hint.get("word") or hint.get("lemma") or ""
-                if word:
-                    words.append(str(word).strip())
+    from pipeline.vocab_helpers import extract_vocab_words
+    words = extract_vocab_words(hints)
 
     if not words:
         return "(No Ukrainian vocabulary found in plan)"

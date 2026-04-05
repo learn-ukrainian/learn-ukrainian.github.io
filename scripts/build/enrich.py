@@ -169,8 +169,8 @@ def _build_slovnyk(plan: dict, content: str = "", slug: str = "") -> str:
     for item in all_items:
         word, translation = parse_vocab_hint(item)
         pos, gender = _vesum_lookup(word)
-        front = word.replace('"', '\\"')
-        back = translation.replace('"', '\\"')
+        front = word.replace('"', '\\"').replace("'", "&#39;")
+        back = translation.replace('"', '\\"').replace("'", "&#39;")
         parts = [f'front: "{front}", back: "{back}"']
         if pos:
             parts.append(f'subtitle: "{pos}"')

@@ -129,8 +129,10 @@ def normalize_plan(file_path: Path, dry_run: bool = False) -> tuple[bool, list[s
 
     # 7. Validate vocabulary_hints exists
     vocab = data.get("vocabulary_hints", {})
-    if not vocab or not vocab.get("required", []):
-        changes.append("WARNING: no vocabulary_hints.required")
+    # Handle both v3 dict {required: [...]} and v4 flat list [{word, pos, definition}]
+    from pipeline.vocab_helpers import extract_vocab_words
+    if not extract_vocab_words(vocab):
+        changes.append("WARNING: no vocabulary_hints words")
 
     # 8. Validate content_outline has word budgets
     outline = data.get("content_outline", [])

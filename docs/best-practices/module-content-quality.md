@@ -126,10 +126,10 @@ HOOK → TENSION → JOURNEY → CLIMAX → RESOLUTION → CALL TO ACTION
 | A1 | 750w (M11+) | — |
 | A2 | 1000w | — |
 | B1 | 1500w | — |
-| B2 | 1750w | 5000w (hist) |
-| C1 | 3000w | 5000w (bio, istorio) |
+| B2 | 1750w | — |
+| C1 | 3000w | — |
 | C2 | 3000w | — |
-| LIT | — | 2500w |
+| All seminar tracks | — | 5000w (HIST, BIO, ISTORIO, LIT, FOLK, OES, RUTH) |
 
 **Never lower a word target to match thin content. Expand the content.**
 

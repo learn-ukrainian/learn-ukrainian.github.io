@@ -1,0 +1,36 @@
+discovered_at: '2026-04-05T17:18:58.228875+00:00'
+error: null
+query_keywords:
+- Компас відмінків
+- 'Дієслово вирішує: Який відмінок після дієслова? (The Verb Decides: Which Case After
+  a Verb?)'
+- 'Прийменник вирішує: Один прийменник — різні відмінки (The Preposition Decides:
+  One Preposition, Different Cases)'
+- 'Особливі випадки: Час, характеристика, шлях (Special Uses: Time, Characteristics,
+  Path)'
+- Алгоритм вибору відмінка (The Case Selection Algorithm)
+- Learner can select the correct case for a noun based on the governing verb (e.g.,
+  допомагати + Dat., бачити + Acc., користуватися + Instr.).
+- Learner can select the correct case after common prepositions, including prepositions
+  that govern different cases depending on meaning (на + Acc. for direction vs. на
+  + Loc. for location).
+- Learner can use Accusative for time expressions (у четвер, у середу), with про (думати
+  про майбутнє), and recognize Locative for characteristics (хлопець у червоному светрі),
+  path (бігати по кімнаті), and years (у 2014 році).
+- відмінок
+- прийменник
+- дієслово
+- напрямок
+- місце
+- час
+- характеристика
+- думати
+- боятися
+- користуватися
+- алгоритм
+- контекст
+- керувати
+- майбутнє
+rag_chunks: []
+rag_literary: []
+warning: Auto-generated from plan

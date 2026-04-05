@@ -342,10 +342,47 @@ def _review_article(article_path: Path, track: str, slug: str,
 
         print("  🔄 Re-reviewing after fixes...")
 
-    # Exhausted rounds — save final review
+    # If fixes were applied in the last round, do one final re-review
+    # so the score reflects the actual state of the article
+    if applied > 0:
+        print("  🔄 Final re-review after last round's fixes...")
+        article_text = article_path.read_text("utf-8")
+        # Reuse the same review prompt pattern (just change round number)
+        try:
+            result = subprocess.run(
+                [
+                    sys.executable, "scripts/ai_agent_bridge/__main__.py",
+                    "ask-gemini", review_prompt.replace(
+                        f"Round: {max_rounds}", "Round: final"
+                    ),
+                    "--task-id", f"wiki-review-{track}-{slug}-final",
+                    "--model", "gemini-3.1-pro-preview",
+                ],
+                capture_output=True, text=True, timeout=300,
+                cwd=project_root,
+            )
+            if result.returncode == 0:
+                review_text = result.stdout
+                final_score = re.search(
+                    r"(?:overall|score|verdict)[:\s]*\**\s*(\d+)\s*/\s*10",
+                    review_text, re.IGNORECASE,
+                )
+                if final_score:
+                    score = int(final_score.group(1))
+                else:
+                    all_scores = re.findall(r"(\d+)\s*/\s*10", review_text)
+                    if all_scores:
+                        score = int(all_scores[-1])
+                print(f"  📋 Final: {score}/10")
+                review_path = review_dir / f"{slug}-review-final.md"
+                review_path.write_text(review_text, "utf-8")
+        except Exception as e:
+            print(f"  ⚠️  Final review error: {e}")
+
+    # Save final review
     final_path = review_dir / f"{slug}-review.md"
     final_path.write_text(review_text, "utf-8")
-    print(f"  📝 Final score: {score}/10 after {max_rounds} round(s)")
+    print(f"  📝 Final score: {score}/10 after review loop")
 
 
 def _parse_wiki_fixes(fixes_text: str) -> list[tuple[str, str]]:

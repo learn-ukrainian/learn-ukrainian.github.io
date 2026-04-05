@@ -1,0 +1,29 @@
+discovered_at: '2026-04-05T17:18:58.228875+00:00'
+error: null
+query_keywords:
+- На ринку та у лікаря
+- 'На ринку: скільки вам? (At the Market: How Much Do You Want?)'
+- 'У лікаря: що вас турбує? (At the Doctor: What Troubles You?)'
+- В аптеці та повсякденне здоров'я (At the Pharmacy and Everyday Health)
+- Learner can request specific quantities of food items at a market using Genitive
+  (кілограм яблук, пів кіло сиру, пляшка води).
+- Learner can describe symptoms and health complaints using Genitive constructions
+  (немає температури, болить від холоду, ліки від кашлю).
+- ринок
+- кілограм
+- пляшка
+- здоров'я
+- температура
+- рецепт
+- аптека
+- ліки
+- кашель
+- апетит
+- помідор
+- нежить
+- алергія
+- таблетка
+- шматок
+rag_chunks: []
+rag_literary: []
+warning: Auto-generated from plan

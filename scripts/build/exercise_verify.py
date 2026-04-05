@@ -266,16 +266,13 @@ def extract_prose_words(content: str) -> set[str]:
 
 def extract_plan_vocab(plan: dict) -> set[str]:
     """Extract Ukrainian words from plan vocabulary_hints."""
+    from pipeline.vocab_helpers import extract_vocab_words
+
     words = set()
-    vocab = plan.get("vocabulary_hints", {})
-    for category in ("required", "recommended"):
-        for item in vocab.get(category, []):
-            item_str = str(item)
-            # vocabulary_hints entries look like: "яблуко (apple) — note"
-            # Extract the Ukrainian part (before parenthesis or dash)
-            uk_part = re.split(r"[(\—–-]", item_str)[0].strip()
-            for w in _UK_WORD_RE.findall(uk_part):
-                words.add(w.lower())
+    vocab_hints = plan.get("vocabulary_hints", {})
+    for word in extract_vocab_words(vocab_hints):
+        for w in _UK_WORD_RE.findall(word):
+            words.add(w.lower())
     return words
 
 

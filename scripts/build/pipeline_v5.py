@@ -675,7 +675,8 @@ def _load_rag_for_review(ctx: ModuleContext) -> dict[str, list]:
     if total == 0:
         log("  review-gemini: No RAG in discovery.yaml — trying live search")
         try:
-            keywords = ctx.plan.get("vocabulary_hints", {}).get("required", [])
+            from pipeline.vocab_helpers import extract_vocab_words
+            keywords = extract_vocab_words(ctx.plan.get("vocabulary_hints"))
             if not keywords:
                 keywords = [ctx.slug.replace("-", " ")]
             level = ctx.track.split("-")[0] if "-" in ctx.track else ctx.track

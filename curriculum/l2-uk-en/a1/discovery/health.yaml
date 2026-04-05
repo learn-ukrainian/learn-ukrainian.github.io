@@ -1,0 +1,30 @@
+discovered_at: '2026-04-05T17:18:51.210572+00:00'
+error: null
+query_keywords:
+- Health
+- Dialogues
+- Тіло (The Body)
+- У мене болить... (It Hurts...)
+- Summary
+- Name basic body parts in Ukrainian (голова, рука, нога, живіт, горло, спина)
+- Describe symptoms using "У мене болить..." as a chunk
+- голова
+- горло
+- живіт
+- рука
+- нога
+- лікар
+- аптека
+- спина
+- око
+- вухо
+- зуб
+- ніс
+- температура
+- кашель
+- нежить
+- таблетка
+- хворий
+rag_chunks: []
+rag_literary: []
+warning: Auto-generated from plan
