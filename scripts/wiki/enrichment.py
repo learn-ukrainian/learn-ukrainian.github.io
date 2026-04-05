@@ -13,18 +13,10 @@ import yaml
 from .config import LITERARY_DIR, PROJECT_ROOT
 from .sources import load_literary_jsonl
 
-# ── Core track grade mapping ──────────────────────────────────
-# Which school grades teach the grammar concepts at each CEFR level.
-# Based on Ukrainian State Standard 2024 + textbook analysis.
-# Multiple grades searched to capture progression (intro → mastery).
-CORE_TRACK_GRADES: dict[str, list[int]] = {
-    "a1": [1, 2, 3, 4],    # Alphabet, sounds, simple sentences, intro cases
-    "a2": [3, 4, 5, 6],    # Cases, verb aspects, basic grammar
-    "b1": [5, 6, 7],       # Complex grammar, syntax, advanced cases
-    "b2": [7, 8, 9],       # Stylistics, complex syntax, literary analysis
-    "c1": [9, 10, 11],     # Academic writing, advanced stylistics
-    "c2": [9, 10, 11],     # Mastery, literary criticism, professional
-}
+# Core tracks that should be enriched via textbook RAG search.
+# No grade filtering — the RAG's semantic relevance scoring finds the
+# right textbook content regardless of which grade teaches it.
+CORE_TRACKS = {"a1", "a2", "b1", "b2", "c1", "c2"}
 
 # ── Track-specific literary source mappings ──────────────────────
 # Maps tracks to literary JSONL files known to contain relevant content.
@@ -104,12 +96,14 @@ KEYWORD_SOURCE_MAP: dict[str, list[str]] = {
 }
 
 
-def _search_textbook_rag(ukr_keywords: set[str], grades: list[int],
+def _search_textbook_rag(ukr_keywords: set[str],
                          max_results: int = 20) -> list[dict]:
     """Search textbook RAG for relevant chunks using Ukrainian keywords.
 
-    Runs multiple queries (one per top keyword) across the specified grades,
-    deduplicates by chunk_id, and returns the best results.
+    No grade filtering — the RAG's semantic relevance scoring finds the
+    right textbook content regardless of which grade teaches it.
+    Runs multiple queries (phrase + individual keywords), deduplicates
+    by chunk_id, and returns the best results.
     """
     try:
         from rag.query import search_text
@@ -140,21 +134,17 @@ def _search_textbook_rag(ukr_keywords: set[str], grades: list[int],
             queries.append(kw)
 
     for query in queries[:3]:
-        for grade in grades:
-            try:
-                results = search_text(
-                    query, grade=grade,
-                    limit=max_results // len(grades),
-                )
-            except Exception as e:
-                print(f"  ⚠️  RAG search error for grade {grade}: {e}")
-                continue
+        try:
+            results = search_text(query, limit=max_results // len(queries))
+        except Exception as e:
+            print(f"  ⚠️  RAG search error: {e}")
+            continue
 
-            for hit in results:
-                cid = hit.get("chunk_id", "")
-                if cid and cid not in seen_ids:
-                    seen_ids.add(cid)
-                    all_hits.append(hit)
+        for hit in results:
+            cid = hit.get("chunk_id", "")
+            if cid and cid not in seen_ids:
+                seen_ids.add(cid)
+                all_hits.append(hit)
 
     # Sort by score (if available) and cap
     all_hits.sort(key=lambda h: h.get("score", 0), reverse=True)
@@ -187,12 +177,11 @@ def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
     ukr_keywords = _extract_ukrainian_keywords(sources_info)
 
     # 2. Core tracks: search textbook RAG
-    if track in CORE_TRACK_GRADES:
-        grades = CORE_TRACK_GRADES[track]
-        rag_chunks = _search_textbook_rag(ukr_keywords, grades, max_results=20)
+    if track in CORE_TRACKS:
+        rag_chunks = _search_textbook_rag(ukr_keywords, max_results=20)
         if rag_chunks:
             print(f"  📖 +{len(rag_chunks)} chunks from textbook RAG "
-                  f"(grades {grades}, {len(ukr_keywords)} keywords)")
+                  f"({len(ukr_keywords)} keywords)")
             all_chunks.extend(rag_chunks)
 
     # 3. Seminar tracks: literary JSONL files
