@@ -308,8 +308,10 @@ def _review_article(article_path: Path, track: str, slug: str,
         # Step 2: Extract and apply fixes (always — even if score >= 9)
         # Strip markdown code fences before searching for <fixes> tags
         clean_review = re.sub(r"```\w*\n?", "", review_text)
-        fixes_match = re.search(r"<fixes>(.*?)</fixes>", clean_review, re.DOTALL)
-        fix_pairs = _parse_wiki_fixes(fixes_match.group(1).strip()) if fixes_match else []
+        # Use findall + take LAST match — earlier matches may be from the prompt template
+        fixes_matches = re.findall(r"<fixes>(.*?)</fixes>", clean_review, re.DOTALL)
+        fixes_content = fixes_matches[-1].strip() if fixes_matches else ""
+        fix_pairs = _parse_wiki_fixes(fixes_content) if fixes_content else []
 
         if fix_pairs:
             applied = 0
