@@ -40,12 +40,13 @@ Be SPECIFIC about what each paragraph covers — not "explain grammar" but "expl
 ## Section Title (~XXX words total)
 - P1 (~XX words): [specific content — what concept, what examples, what comparison]
 - P2 (~XX words): [specific content]
-- Exercise: [type from activity_hints, focus, number of items]
+- <!-- INJECT_ACTIVITY: activity-id --> [type from activity_hints, focus, number of items]
 - P3 (~XX words): [specific content]
 ...
 
 ## Section Title (~XXX words total)
 - P1 (~XX words): [specific content]
+- <!-- INJECT_ACTIVITY: activity-id --> [type, focus]
 ...
 
 ## {SUMMARY_HEADING} (~150 words)
@@ -60,7 +61,7 @@ Grand total: ~{WORD_TARGET} words
 1. **Every paragraph has ONE clear purpose.** If you can't describe it in one sentence, split it.
 2. **Word budgets must sum to {WORD_TARGET}+.** Aim for ~10% overshoot ({WORD_OVERSHOOT} words) — writers tend to undershoot.
 3. **Section budgets must match the plan's `content_outline` word allocations** (±10%).
-4. **Place exercises in the correct section.** Each activity hint in the plan may have a `section:` field that tells you which section it belongs in. Place that exercise AFTER the teaching content of that section, never before. If no `section:` is specified, place the exercise after the most relevant teaching point. **CRITICAL: An exercise must ONLY test concepts already taught above it. Never test a concept from a later section.**
+4. **Place exercise injection markers in the correct section.** Each activity hint in the plan may have a `section:` field that tells you which section it belongs in. Place `<!-- INJECT_ACTIVITY: descriptive-id -->` AFTER the teaching content of that section, never before. Use a descriptive kebab-case id (e.g., `fill-in-genitive`, `quiz-aspect-choice`). If no `section:` is specified, place the marker after the most relevant teaching point. **CRITICAL: An exercise must ONLY test concepts already taught above it. Never test a concept from a later section. Every plan `activity_hints` entry MUST have a corresponding `<!-- INJECT_ACTIVITY: id -->` marker in the skeleton.**
 5. **Name specific Ukrainian examples** you plan to use in each paragraph. This prevents vague skeletons that produce vague content.
 6. **Dialogues count as paragraphs.** Budget 80-120 words per multi-turn dialogue.
 7. **No meta-commentary.** Output only the `<skeleton>` block, nothing else.
