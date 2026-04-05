@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'Plan Section 1 explicitly requires: "Compare with Genitive (Кого? Чого?)
+    and Accusative (Кого? Що?) — each case has its own question and function." The
+    module compares only with Nominative and Accusat'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: 'All 308 verified words pass VESUM. All dative forms correct (братові,
+    сестрі, мамі, коту, продавцеві, студенту, etc.). "Писати листа" confirmed valid
+    per Антоненко-Давидович. No Russianisms, Surzhyk, '
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: situations (birthday gifts, cinema, security guard)
+    → pattern extraction (paradigm table, tip box formula) → practice (reading blocks
+    + activity markers). 6+ examples per grammar poin'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 10 required vocab used naturally in prose: давальний відмінок (intro
+    paragraph), мені/тобі/йому/їй/нам/вам/їм (paradigm + every dialogue), холодно
+    (Section 3 opening + throughout), потрібно (Secti'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 4 plan activity_hints have matching markers, correct types and focus.
+    Well-placed after teaching content. Cannot evaluate generated exercise content
+    (separate YAML step), but marker placement logi
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: '**Strengths:** Birthday gift dialogue is lively and culturally grounded.
+    Cinema dialogue (Катерина/Тарас) feels natural with distinct voices. Security
+    guard scene is practical. Humorous "Я ніколи не д'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All 4 planned H2 sections present in correct order. Clean markdown throughout.
+    Summary section well-structured with self-check questions. Word count 3542 vs.
+    2000 target — 177% of minimum. No stray ta
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Fully decolonized — Ukrainian presented on its own terms. No "like Russian
+    but..." comparisons. Cultural details (birthday family gathering, борщ, бабуся,
+    квіти) are authentically Ukrainian. Grammar t
+- dimension: 9
+  name: Dialogue quality
+  score: 10
+  evidence: '8 distinct dialogues with named speakers (Олена/Марко, Тарас/Анна, Ігор/Марія,
+    Іменинник/Мама/Батько, Олена/Антон, Охоронець/Студент, Катерина/Тарас, Олег/Ірина,
+    Анна/Марко). Natural situations: birth'
+findings: []

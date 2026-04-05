@@ -1,0 +1,100 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння літературно-критичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Читання
+  focus: Розуміння літературного тексту (уривок з твору)
+  placement: inline
+  type: reading
+- focus: Етика зображення — чи текст естетизує війну чи свідчить?
+  placement: workbook
+  type: debate
+- focus: Літературна критика — оцінка інтерпретації
+  placement: workbook
+  type: critical-analysis
+- focus: 'Порівняння з іншими творами або інтерпретаціями (Богдан Жолдак: Укри)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе-аналіз рецепції та сучасного значення (Богдан Жолдак: Укри)'
+  placement: workbook
+  type: essay-response
+connects_to:
+- zhadan-internat-war
+- izdryk-votsatsek
+- deresh-cult
+content_outline:
+- points:
+  - Богдан Жолдак (1948–2018) — біографія, Київ, богемний нонконформізм
+  - Жолдак у контексті українського постмодернізму (Андрухович, Іздрик, Забужко)
+  - Еволюція від «Мудрості сили» до «Укрів» — від гри до війни
+  section: Вступ та культурний контекст
+  words: 850
+- points:
+  - Сюжет та структура — фрагментарність, поліфонія голосів
+  - Назва «Укри» — іронічне привласнення пейоративу
+  - Гротеск і абсурд як засоби осмислення війни
+  section: '«Укри»: аналіз роману'
+  words: 900
+- points:
+  - Суржик у Жолдака — не стигма, а мовна реальність війни
+  - Військовий жаргон та його художня функція
+  - Поліглосія тексту — літературна українська, суржик, сленг, ненормативна лексика
+  section: Суржик та військовий сленг як літературна мова
+  words: 850
+- points:
+  - Карнавальна поетика — сміх крізь сльози
+  - Монтажна техніка — кінематографічність прози
+  - Вплив Рабле та Гоголя — гротескне тіло війни
+  section: Мова, стиль та поетика
+  words: 800
+- points:
+  - «Укри» як відповідь на російську пропаганду — деконструкція ворожого стереотипу
+  - Суржик не як ознака неповноцінності, а як мовна ідентичність
+  - Сміх як зброя — українська традиція комічного спротиву (від Котляревського до Жолдака)
+  section: Деколонізаційний вимір
+  words: 800
+- points:
+  - Смерть Жолдака 2018 та незавершений проект
+  - Місце «Укрів» у каноні воєнної літератури
+  - Питання для дискусії
+  section: Підсумок та рецепція
+  words: 800
+focus: literature
+grammar: []
+immersion: 100% Ukrainian
+level: LIT-WAR
+module: lit-war-029
+module_type: literature
+objectives:
+- Проаналізувати роман «Укри» як зразок гротескного воєнного наративу
+- Дослідити художнє використання суржику та військового сленгу як літературних засобів
+- Зрозуміти трагікомічний метод Жолдака в контексті українського постмодернізму
+pedagogy: Seminar
+persona:
+  role: Jester of the Trenches
+  voice: Senior Philologist & Critic
+phase: WAR.2
+references:
+- name: Богдан Жолдак — проза
+  notes: Основне джерело
+  type: primary
+  url: https://www.ukrlib.com.ua/
+register: академічний
+sequence: 29
+slug: bohdan-zholdak-ukry
+subtitle: Tragicomic grotesque war narrative with surzhyk and military slang
+title: 'Богдан Жолдак: Укри'
+version: '3.0'
+vocabulary_hints:
+  recommended:
+  - поліглосія (polyphony of languages)
+  - карнавальність (carnivalesque)
+  - пейоратив (pejorative)
+  required:
+  - гротеск (grotesque)
+  - суржик (surzhyk)
+  - трагікомедія (tragicomedy)
+  - постмодернізм (postmodernism)
+word_target: 5000

@@ -1,0 +1,116 @@
+module: istorio-133
+level: ISTORIO
+sequence: 133
+slug: syntez-ahentsnist
+version: '3.0'
+title: 'Синтез: Від жертви до суб''єкта'
+focus: history
+pedagogy: seminar
+word_target: 5000
+objectives:
+- 'Analyze the causes and consequences of синтез: від жертви до суб''єкта'
+- Evaluate the historical significance of наратив агентності
+content_outline:
+- section: Вступ — Наратив агентності
+  points:
+  - Огляд модулів 126-132
+  - Україна — не лише жертва
+  - Активне творення історії
+  - Мета синтезу
+  words: 850
+- section: Стратегії виживання
+  points:
+  - Культурна резистенція
+  - Громадянське суспільство
+  - Революційна традиція
+  - Накопичення досвіду
+  words: 850
+- section: Поворотні моменти агентності
+  points:
+  - Гранітна революція 1990
+  - Помаранчева 2004
+  - Євромайдан 2014
+  - 24 лютого 2022
+  words: 850
+- section: Хто будував Україну
+  points:
+  - Не лише еліти
+  - Жінки — прихована історія
+  - Волонтери — нова сила
+  - Звичайні люди — герої
+  words: 850
+- section: Від об'єкта до суб'єкта
+  points:
+  - Імперська історія — Україна як об'єкт
+  - Власна історія — Україна як суб'єкт
+  - 2022 — точка переходу
+  - Що це означає
+  words: 850
+- section: Підсумок
+  points:
+  - Агентність — ключ до розуміння
+  - Україна — творець власної долі
+  - Перехід до фінального синтезу
+  words: 750
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+vocabulary:
+- синтез
+- агентність
+- суб'єкт
+- об'єкт
+- жертва
+- творець
+- стратегія виживання
+- поворотний момент
+- ідентичність
+- самовизначення
+- наратив
+- деколонізація
+- історична свідомість
+- колективна пам'ять
+- національне будівництво
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+activities:
+- type: essay-response
+  focus: Map Ukrainian agency across 500 years
+- type: critical-analysis
+  focus: Connect all turning points of agency
+- type: critical-analysis
+  focus: Who built Ukraine — beyond elites
+- type: essay-response
+  focus: Як Україна стала суб'єктом історії?
+persona:
+  voice: Academic Historiographer
+  role: Philosophy of History Scholar
+prerequisites:
+- ukrainska-m-iaka-syla
+connects_to:
+- ukrainske-pytannia-xxi
+references:
+- name: Історія України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Історія_України
+  type: reference
+  notes: History overview
+- name: Українська ідентичність (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_національна_ідентичність
+  type: reference
+  notes: National identity
+register: академічний
+grammar: []

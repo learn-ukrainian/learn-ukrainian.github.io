@@ -1,0 +1,337 @@
+vocabulary:
+- word: зда́ча
+  translation: change (money returned)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ткани́на
+  translation: fabric
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: доста́вка
+  translation: delivery
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: пере́каз
+  translation: money transfer
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: раху́нок
+  translation: bill/account
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: стри́жка
+  translation: haircut
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ательє́
+  translation: tailor's shop
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: кав'я́рня
+  translation: coffee shop
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: обслуго́вування
+  translation: service (customer service)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: зни́жка
+  translation: discount
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: готі́вка
+  translation: cash
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ка́ртка
+  translation: payment card
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: чек
+  translation: receipt
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пове́рнення
+  translation: return (of a product)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: гара́нтія
+  translation: guarantee/warranty
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: розмір
+  translation: size
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: примі́рочна
+  translation: fitting room
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: поси́лка
+  translation: parcel
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: обмін валют
+  translation: currency exchange
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: курс
+  translation: exchange rate
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ремо́нт
+  translation: repair
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: брако́ваний
+  translation: defective
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: база́р
+  translation: market (informal/traditional)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: торгува́тися
+  translation: to bargain
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ри́нок
+  translation: market (formal)
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: півкіла
+  translation: half a kilo
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: ва́ги
+  translation: scales
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: скинути ціну
+  translation: to lower the price
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ре́шта
+  translation: change
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: книга́рня
+  translation: bookstore
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пека́рня
+  translation: bakery
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ТРЦ
+  translation: shopping mall
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: апте́ка
+  translation: pharmacy
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: хімчи́стка
+  translation: dry cleaner
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: продаве́ць-консульта́нт
+  translation: sales assistant
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: каси́р
+  translation: cashier
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: розрахо́вуватися
+  translation: to pay/settle up
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: а́кція
+  translation: sale/promotion
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: бандеро́ль
+  translation: small parcel
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: відді́лення
+  translation: branch (post/bank)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: номер накладної
+  translation: tracking number
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: відкрити рахунок
+  translation: to open an account
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: перука́р
+  translation: hairdresser
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ма́йстер
+  translation: technician/repairman
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: краве́ць
+  translation: tailor
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: записатися на прийом
+  translation: to make an appointment
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: че́рга́
+  translation: queue/line
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: за́пис
+  translation: appointment/booking
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: захист прав споживачів
+  translation: consumer rights protection
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: поверніть мені гроші
+  translation: refund my money
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Скільки коштує один кілограм?
+  translation: How much does one kilogram cost?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Який сьогодні курс долара?
+  translation: What is the dollar rate today?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Коли буде готово?
+  translation: When will it be ready?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Згідно з законом
+  translation: according to the law
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: за́ти́шний
+  translation: cozy
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: приві́тний
+  translation: friendly
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true

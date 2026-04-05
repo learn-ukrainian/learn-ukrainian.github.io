@@ -2,5 +2,62 @@
   "mode": "v6",
   "track": "b1",
   "slug": "motion-prefixes-transit",
-  "phases": {}
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-04T09:44:39.254159+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-04T09:45:55.053175+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-04T09:46:27.862821+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-04T09:48:54.835341+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-04T09:54:45.198543+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-04T09:54:45.198786+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-04T10:01:14.319405+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-04T10:01:14.329870+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-04T10:03:08.988705+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-04T10:03:08.988848+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-04T10:03:09.384113+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-04T10:35:13.629669+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-04T10:35:21.086477+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-04T10:35:23.546509+00:00"
+    }
+  }
 }

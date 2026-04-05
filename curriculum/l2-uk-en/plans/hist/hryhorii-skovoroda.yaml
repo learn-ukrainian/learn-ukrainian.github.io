@@ -1,128 +1,132 @@
-module: hist-068
-level: HIST
-sequence: 68
-slug: hryhorii-skovoroda
-version: '3.0'
-title: 'Григорій Сковорода: Мандрівний філософ'
-subtitle: 'Hryhorii Skovoroda: The Wandering Philosopher'
-focus: history
-pedagogy: CBI
-phase: HIST.7 [Mazepa & End of Hetmanate]
-word_target: 5000
-objectives:
-- 'Analyze the causes and consequences of григорій сковорода: мандрівний філософ'
-- Evaluate the historical significance of український сократ
-- 'Trace the development of деколонізаційний погляд: не «русский философ»'
-content_outline:
-- section: 'Вступ: Український Сократ'
-  points:
-  - Skovoroda as a symbol of intellectual freedom — called 'Ukrainian Socrates' for his dialogic method and ethical 
-    focus; epitaph 'The world caught me, but did not catch me' (Світ ловив мене, та не впіймав) — маніфест духовної 
-    незалежності
-  - His refusal of worldly goods and titles — chose personal freedom over church career or secular positions; refused 
-    Catherine II's offers
-  - 'The legend of his life — apocryphal reply to Catherine II: ''My flute and sheep are more precious to me than a royal
-    crown'' (Мені моя сопілка і вівця дорожчі царського вінця)'
-  - 'Engagement Hook: [!quote] — «Світ ловив мене, та не впіймав» як символ свободи від мирських спокус'
-  words: 700
-- section: 'Життєвий шлях: Від академії до дороги'
-  points:
-  - Studies at Kyiv-Mohyla Academy — 1734–1753; intellectual center of Eastern Europe; studied Latin, Greek, Hebrew, 
-    poetics
-  - Court choir service in St. Petersburg (1741–1744) — exposure to imperial court life
-  - Travels in Europe (Vienna, Bratislava, Tokaj) — 1745–1750; used time to visit libraries and scholars in Hungary, 
-    Austria, Slovakia
-  - The 'Tokaj Commission' and wine — officially buying wine for the Tsar's court, but likely had diplomatic functions
-  - Teaching at Pereiaslav and Kharkiv Collegiums — 1759–1769; conflict due to innovative methods ('did not teach as is 
-    customary')
-  - '1769: Final break with official service — beginning of wandering life'
-  - 'Engagement Hook: [!history-bite] — «Токайська комісія» офіційно займалася закупівлею вина, але ймовірно виконувала й
-    дипломатичні/розвідувальні функції'
-  words: 700
-- section: 'Філософія серця: Сродна праця'
-  points:
-  - 'Concept of ''affinity labor'' (srodna pratsia) — happiness through natural inclination; include quote: «Сродна праця
-    — це найсолодша в світі річ»'
-  - 'The theory of two natures (visible and invisible) — material/perishable vs. spiritual/eternal (God); include quote: «Без
-    ядра горіх ніщо, так само, як і людина без серця»'
-  - The three worlds (macrocosm, microcosm, symbolic) — Universe, Human, Bible
-  - Happiness through self-knowledge — 'Nosce te ipsum' (Пізнай себе); finding the 'true human' within
-  - 'Engagement Hook: [!context] — Концепція «сродної праці» як предтеча профорієнтації та психології самореалізації'
-  words: 700
-- section: 'Літературна спадщина: Сад божественних пісень'
-  points:
-  - 'Basni Kharkovskie (Kharkiv Fables) — 30 fables; structure: fable (plot) + power (moral/sila)'
-  - Garden of Divine Songs — 30 poems; religious lyrics and personal experiences; 'Every city has its customs and laws' 
-    (Song 10) — satire on social vices, later used by I. Kotliarevsky in 'Natalka Poltavka'
-  - Style and language (Baroque influence) — metaphors, antitheses, symbolism, bookish Ukrainian language 
-    (Sloveno-Ruthenian) with folk elements
-  - 'Engagement Hook: [!culture] — Вплив барокової естетики: алегорії, символи, емблеми'
-  words: 700
-- section: 'Читання: Байки та афоризми'
-  points:
-  - 'Analysis of ''The Bee and the Hornet'' — Bee = srodna pratsia (joy in work), Hornet = consumerism; include quote: «Нам
-    незрівнянно більша радість збирати мед, аніж його споживати»'
-  - Interpretation of key aphorisms — 'Take the top and you will have the middle', 'Loss of time is the heaviest loss', 
-    «Любов виникає з любові; коли хочу, щоб мене любили, я сам перший люблю»
-  - 'Engagement Hook: [!source] — Оригінальний текст байки «Бджола та Шершень»'
-  words: 700
-- section: 'Первинні джерела: Листи до Михайла Ковалинського'
-  points:
-  - Friendship as a philosophical category — Kovalynsky as favorite student and first biographer; spiritual unity
-  - Pedagogy views of Skovoroda — moderation, health, reading with taste ('не їж без смаку'), 'cheerfulness of heart' 
-    (веселість серця)
-  words: 700
-- section: 'Деколонізаційний погляд: Не «русский философ»'
-  points:
-  - Skovoroda's Ukrainian roots and identity — product of KMA and Ukrainian Baroque, not Russian Orthodoxy; language is 
-    Sloveno-Ruthenian (Old Ukrainian)
-  - Distinction from Russian philosophical tradition — refuting V. Ern's 'First Russian Philosopher' myth (1912) and 
-    Soviet 'peasant democrat-atheist' tropes
-  - Geographic reality — lived in Hetmanate and Slobozhanshchyna, never in Moscow; European orientation
-  - Impact on Ukrainian national revival — Shevchenko's admiration; 2022 destruction of Skovorodynivka museum as symbol 
-    of empire's fear
-  - 'Engagement Hook: [!myth-buster] — Спростування радянського міфу про Сковороду як «селянського просвітителя» чи «першого
-    російського філософа»'
-  words: 800
-vocabulary_hints:
-  required:
-  - 'сродна праця (congenial labor/affinity work) — key philosophical concept; collocations: знайти сродну працю, займатися
-    сродною працею; quote: «Сродна праця — це найсолодша в світі річ»'
-  - 'мандрівний (wandering) — collocations: мандрівний філософ, мандрівне життя, мандрівний спосіб життя'
-  - 'байка (fable) — genre; collocations: повчальна байка, сила байки, «Байки Харківські»'
-  - сила (moral/power) — specific term for the moral of a fable in Skovoroda's works (сюжет і сила)
-  - 'пізнання (cognition/knowledge) — collocations: самопізнання, пізнай себе (know yourself), шлях пізнання'
-  - 'серце (heart) — philosophical concept of inner self/spirit; collocations: філософія серця, веселість серця'
-  - 'спокуса (temptation) — context: світ спокус, уникати спокус, боротьба зі спокусами'
-  - 'марнота (vanity) — context: світська марнота, марнота світу, «вся світська марнота»'
-  recommended:
-  - 'бароко (Baroque) — cultural style; collocations: українське бароко, барокова естетика, барокова література'
-  - 'академія (academy) — context: Києво-Могилянська академія (КМА), спудей академії'
-  - 'епітафія (epitaph) — inscription on tombstone: «Світ ловив мене, та не впіймав»'
-  - 'свобода (freedom) — key value; collocations: духовна свобода, особиста свобода, внутрішня свобода'
 activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: critical-analysis
-  focus: Аналіз причинно-наслідкових зв'язків між подіями
-  items: 3
-- type: critical-analysis
-  focus: Критична оцінка історичних тверджень та міфів
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння історіографічних дебатів
   items: 5
-prerequisites:
-- 'hist-64: Іван Мазепа II'
-persona:
-  voice: Senior Professor of History
-  role: Scholar of Ukrainian Baroque Culture
-learning_outcomes:
-- Учень розуміє концепцію 'сродної праці' та її значення
-- Учень може описати життєвий шлях Сковороди та його вибір свободи
-- Учень знає основні байки та філософські твори Сковороди
+  placement: inline
+  type: quiz
+- after_section: Джерела
+  focus: Розуміння первинного історичного джерела
+  placement: inline
+  type: reading
+- focus: Оцінка первинного джерела — хто написав, навіщо, що упущено?
+  placement: workbook
+  type: source-evaluation
+- focus: Дебат — оцінка значення та наслідків події
+  placement: workbook
+  type: debate
+- focus: 'Порівняння української та імперської інтерпретацій (Григорій Сковорода: Мандрівний філософ)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе на тему зв''язку з сучасністю (Григорій Сковорода: Мандрівний філософ)'
+  placement: workbook
+  type: essay-response
+cefr_min: C1
 connects_to:
 - pavlo-polubotok
-references: []
-register: академічний
-grammar: []
+- ivan-kotliarevskyi
+content_outline:
+- points:
+  - 'Провокація: «Світ ловив мене, та не впіймав». Як людина, що відмовилася від кар''єри, посад і майна, змогла стати одним
+    із найвпливовіших українських мислителів?'
+  - Що означає ця епітафія? Запрошення до роздумів про справжню свободу та ціну, яку за неї платять.
+  section: Розминка
+  words: 400
+- points:
+  - 'Дебат 1: Сковорода в боротьбі імперій. Українська vs російська/радянська інтерпретація. [!decolonization] Спростування
+    міфу про «першого російського філософа» (В. Ерн, 1912) та радянського образу «селянського демократа-атеїста».'
+  - 'Дебат 2: Традиціоналіст чи інноватор? Чи був Сковорода останнім представником українського бароко, чи першим просвітителем?
+    Конфлікти через «нестандартні» методи викладання в колегіумах.'
+  - '[!epistemic-humility] Визнання, що Сковорода — перехідна фігура, яка поєднувала барокову символіку з просвітницькими
+    ідеями про самопізнання.'
+  - 'Глобальна синхронність: Сковорода і європейське Просвітництво. Його ідеї «сродної праці» та самопізнання в контексті
+    думок Руссо, Канта та Лейбніца.'
+  section: 'Конфліктна карта: Український Сократ чи «русский философ»?'
+  words: 900
+- points:
+  - '«Сад божественних пісень»: аналіз Пісні 10 («Всякому городу нрав і права»). Сатира на соціальні вади, яку пізніше використав
+    І. Котляревський. Мова — книжна українська з елементами народної.'
+  - '«Байки Харківські»: структура «фабула + сила (мораль)». Аналіз байки «Бджола та Шершень» як апології «сродної праці».
+    Бджола — радість у праці, Шершень — гедонізм і паразитизм.'
+  - 'Листи до Михайла Ковалинського: погляд на приватне життя філософа. Педагогічні погляди: «веселість серця», помірність,
+    «не їсти без смаку» (читати з розумінням).'
+  - '[!decolonization] Підкреслення, що Сковорода — продукт Києво-Могилянської академії та українського бароко, а не російського
+    православ''я. Його мова — словено-рутенська, а не російська.'
+  section: 'Джерела: Байки, пісні та листи'
+  words: 1600
+- points:
+  - 'Філософія серця: детальний розбір ключових концептів. «Сродна праця» як шлях до щастя. Вчення про дві натури (видима/невидима)
+    та три світи (макрокосм, мікрокосм, світ символів/Біблія).'
+  - «Пізнай себе» (Nosce te ipsum) як центральний принцип. Щастя через самопізнання та знаходження «істинної людини» всередині
+    себе.
+  - '[!myth-buster] Сковорода не був атеїстом чи пантеїстом. Його «невидима натура» — це Бог, але не в догматичному, а в духовно-символічному
+    сенсі.'
+  - 'Вплив на українську культуру: від Котляревського та Шевченка до сучасних мислителів. Сковорода як вічний символ нонконформізму
+    та духовної незалежності України.'
+  section: 'Аналіз: Наслідки та значення'
+  words: 1600
+- points:
+  - 'Повернення до розминки: Сформулюйте власну відповідь: що насправді означає «Світ ловив мене, та не впіймав», спираючись
+    на філософію «сродної праці» та відмову від світської марноти?'
+  - '[!anti-hagiography] Чи не є образ «мандрівного філософа» романтизацією втечі від соціальної відповідальності? Критична
+    дискусія.'
+  - 'Зв''язок із сьогоденням: Знищення музею Сковороди в Сковородинівці російською ракетою у 2022 році. Чому імперія через
+    300 років все ще боїться ідей Сковороди про свободу?'
+  section: Дискусія та підсумок
+  words: 700
+focus: Філософія свободи та "сродної праці", спростування імперських міфів, аналіз ключових творів, вплив на українську культуру
+level: HIST
+module: hist-068
+objectives:
+- Аналізувати ключові концепції філософії Сковороди («сродна праця», «нерівна рівність», «філософія серця»)
+- Критично оцінювати місце Сковороди в українській та європейській культурі, розрізняючи барокові та просвітницькі елементи
+  його творчості
+- Спростовувати імперські та радянські міфи про Сковороду, аргументуючи його приналежність до українського культурного простору
+- Інтерпретувати первинні джерела (байки, вірші, листи) для розуміння світогляду мислителя
+pedagogy: CBI
+persona:
+  role: Scholar of Ukrainian Baroque Culture
+  voice: Senior Professor of History
+references:
+- note: Compiled from primary sources (Skovoroda's works) and research by Shevchuk, Ushkalov, Popovich
+  path: wiki/hist/people/hryhorii-skovoroda.md
+  type: wiki
+- author: Григорій Сковорода
+  note: Основне джерело для аналізу байок, пісень та філософських трактатів
+  type: primary
+  work: Повне зібрання творів
+- author: Дмитро Чижевський
+  note: Класична праця з аналізу філософської системи Сковороди в європейському контексті
+  type: primary
+  work: Філософія Г. С. Сковороди
+sequence: 68
+slug: hryhorii-skovoroda
+subtitle: 'Hryhorii Skovoroda: The Wandering Philosopher'
+title: 'Григорій Сковорода: Мандрівний філософ'
+version: '4.0'
+vocabulary_hints:
+- definition: 'ключове поняття філософії Сковороди: діяльність, що відповідає природним нахилам людини і тому приносить щастя'
+  pos: ж.
+  word: сродна праця
+- definition: сталий епітет Сковороди, що описує його спосіб життя після 1769 року
+  pos: ч.
+  word: мандрівний філософ
+- definition: коротке алегоричне оповідання з повчальним висновком («силою»)
+  pos: ж.
+  word: байка
+- definition: у Сковороди — мораль, філософський висновок байки
+  pos: ж.
+  word: сила
+- definition: процес пізнання власної внутрішньої природи («істинної людини»), що є шляхом до щастя
+  pos: с.
+  word: самопізнання
+- definition: кордоцентрична філософська система, де серце — центр духовного життя та символ «невидимої натури»
+  pos: ж.
+  word: філософія серця
+- definition: напис на надгробку; у Сковороди — «Світ ловив мене, та не впіймав»
+  pos: ж.
+  word: епітафія
+- definition: культурний стиль кінця XVI–XVIII ст., до якого належить творчість Сковороди; характеризується символізмом, алегоричністю,
+    контрастами
+  pos: с.
+  word: бароко
+word_target: 5000

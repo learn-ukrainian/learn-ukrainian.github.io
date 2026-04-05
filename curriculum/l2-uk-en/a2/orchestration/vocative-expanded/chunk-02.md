@@ -1,0 +1,20 @@
+## Професійні звертання (Professional Vocative)
+
+Masculine professions in the vocative case have specific endings. Українська мова розділяє чоловічі професії на дві групи. Це залежить від останнього приголосного звука. The distinction is based on whether the noun stem is hard or soft. If a masculine profession ends in a soft consonant, it takes the ending **-ю** in the vocative case. Наприклад, ми кажемо **«лікарю»** *(doctor)* замість **«лікар»**. Слово **«вчитель»** *(teacher)* змінюється на **«вчителю»**. Слово **«водій»** *(driver)* стає **«водію»**. Слово **«секретар»** *(secretary)* стає **«секретарю»**. Nouns ending in -р that take soft endings follow this rule. If a masculine profession ends in a hard consonant, it takes the ending **-е**. Наприклад, ми кажемо **«професоре»** *(professor)* замість **«професор»**. Слово **«інженер»** *(engineer)* стає **«інженере»**. Слово **«директор»** *(director)* стає **«директоре»**. Слово **«студент»** *(student)* стає **«студенте»**. Ці закінчення дуже важливі для ввічливого спілкування. They show respect to the person's professional role. Коли ви говорите з чоловіком, завжди вибирайте правильне закінчення. 
+
+Feminine professions have a much simpler rule in the vocative case. Більшість жіночих професій в українській мові закінчується на літеру **«-а»**. In the vocative case, this ending almost always changes to **«-о»**. Це правило дуже стабільне і легке. Наприклад, називний відмінок — **«лікарка»** *(female doctor)*. Кличний відмінок — **«лікарко»**. Слово **«вчителька»** *(female teacher)* змінюється на **«вчителько»**. Слово **«журналістка»** *(female journalist)* стає **«журналістко»**. Слово **«директорка»** *(female director)* стає **«директорко»**. Слово **«студентка»** *(female student)* стає **«студентко»**. This consistent pattern makes it easy to address women professionally. Ви завжди знаєте, яке закінчення треба використовувати. Просто замініть літеру «-а» на літеру «-о». Це звучить дуже природно і ввічливо. Українці часто використовують ці форми.
+
+There are a few special cases and common gender nouns to remember. Деякі слова можуть означати і чоловіка, і жінку. Слово **«колега»** *(colleague)* — це одне з таких слів. It ends in -а, so it changes to -о in the vocative case for both men and women. Ми завжди кажемо **«колего»**. Інше цікаве слово — **«суддя»** *(judge)*. It ends in -я, which is a soft vowel. In the vocative case, it takes the ending **-ю**. Ми кажемо **«пане суддю»** *(Mr. Judge)* або **«пані суддю»** *(Madam Judge)*. Також є слово **«майстер»** *(master, craftsman)*. It is a hard stem noun, but it loses the vowel 'е' when it declines. У кличному відмінку це слово стає **«майстре»**. Це дуже популярне професійне звертання в Україні. Ви можете сказати «пане майстре» людині, яка робить ремонт.
+
+<!-- INJECT_ACTIVITY: fill-in, Form the correct vocative of professional titles and names (пане _____, пані _____), 8 items: (директор, вчителька, водій, професор, журналістка, Коваленко (m), Шевченко (f), секретар). -->
+
+<!-- INJECT_ACTIVITY: match-up, Match nominative forms of professions to their vocative equivalents, 8 items: (лікар → лікарю, вчитель → вчителю, інженер → інженере, майстер → майстре, директорка → директорко, колега → колего, професор → професоре, водій → водію). -->
+
+У школі почався перший урок.
+
+> — **Вчителька:** Добрий день, діти! *(Good day, children!)* **Маріє** *(Maria)*, читай текст. **Андрію** *(Andrii)*, не розмовляй на уроці.
+> — **Андрій:** Вибачте. *(I am sorry.)* Я більше не буду. *(I will not do it anymore.)*
+> — **Марія:** **Пані вчителько** *(Mrs. Teacher)*, можна запитати? *(May I ask?)* Я не зрозуміла слово «звертання». *(I did not understand the word 'address'.)*
+> — **Вчителька:** Добре, зараз поясню правило ще раз. *(Good, I will explain the rule again now.)*
+> — **Андрій:** **Пані вчителько**, а що означає слово «колега»? *(Mrs. Teacher, and what does the word 'colleague' mean?)*
+> — **Вчителька:** Це людина, з якою ти працюєш. *(This is a person with whom you work.)*

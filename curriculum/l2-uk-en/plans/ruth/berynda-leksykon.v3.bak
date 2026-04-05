@@ -1,0 +1,74 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння соціолінгвістичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Текст
+  focus: Транскрипція руського/староукраїнського фрагменту
+  placement: inline
+  type: transcription
+- focus: Простежити еволюцію слова від руської доби до сучасної
+  placement: workbook
+  type: etymology-trace
+- focus: Порівняння мовних контактів — полонізми, латинізми, церковнослов'янізми (Лексикон словенороський Памва Беринди (1627))
+  placement: workbook
+  type: dialect-comparison
+- focus: Порівняння — те саме поняття церковнослов'янською, руською та сучасною (Лексикон словенороський Памва Беринди (1627))
+  placement: workbook
+  type: comparative-study
+- focus: Есе — як цей текст доводить існування української мови до Котляревського? (Лексикон словенороський Памва Беринди
+    (1627))
+  placement: workbook
+  type: essay-response
+connects_to:
+- uzhevych-hramatyka
+content_outline:
+- points:
+  - 'Pamvo Berynda: monk, scholar, printer at Kyiv-Pechersk Lavra. Context: why a 7000-entry dictionary was needed — the gap
+    between liturgical and spoken language.'
+  section: Вступ
+  words: 1250
+- points:
+  - Structure and methodology of the Lexicon. Sample entries showing multiple Ukrainian synonyms for single CS terms. Evidence
+    of dialectal variation. Botanical, medical, everyday vocabulary.
+  section: Основний матеріал
+  words: 1250
+- points:
+  - Working with actual Lexicon entries. Tracing words from Berynda through to modern Ukrainian dictionaries. Identifying
+    lost words and surviving ones.
+  section: Практика
+  words: 1250
+- points:
+  - 'Berynda''s legacy: establishing Ukrainian lexicographic tradition. The Lexicon as a snapshot of living Ukrainian in the
+    1620s.'
+  section: Підсумок
+  words: 1250
+focus: The most comprehensive pre-modern Ukrainian dictionary — 7000+ entries mapping Church Slavonic to living Ukrainian
+level: RUTH
+module: ruth-102
+objectives:
+- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
+- Продукувати тексти академічного та професійного рівня за тематикою модуля
+- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- Застосовувати знання з теми «Практика» у власній мовній практиці
+persona:
+  role: Lavra Scholar
+  voice: Lexicographer
+phase: 5
+prerequisites:
+- zyzaniy-leksys
+sequence: 102
+slug: berynda-leksykon
+source_url: http://litopys.org.ua/berlex/be.htm
+subtitle: Berynda's Slaveno-Ruthenian Lexicon (1627)
+title: Лексикон словенороський Памва Беринди (1627)
+version: '2.0'
+vocabulary_hints:
+- лексикон
+- словник
+- славенороський
+- тлумачний
+- гасло
+- реєстрове слово
+word_target: 5000

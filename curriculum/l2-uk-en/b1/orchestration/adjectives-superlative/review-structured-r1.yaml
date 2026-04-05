@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: '**Covered well:** All 7 content_outline sections present in correct order.
+    10-12 adjective chains in "Проста форма" (високий→вищий→найвищий, вузький→вужчий→найвужчий,
+    etc. — count: 11). Full declensio'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: '**Critical errors:** (1) Phonological alternation rule "приголосні г,
+    з, ж змінюються на ж, а к, т — на ч" is factually wrong — confirmed by Литвінова
+    Grade 6 p.199 which states с,ст+ш→щ, г,ж,з+ш→жч, '
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: '**Strong PPP flow:** Situation (geography lesson) → Pattern (formation
+    rules with chains) → Practice (activities). Each grammar point has 3+ examples.
+    Reading practice text integrates superlatives nat'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: '**Required vocab present:** найвищий ступінь ✓, префікс ✓, найбільш ✓,
+    найменш ✓, щонайкращий ✓, якнайшвидший ✓, вельми ✓, вкрай ✓, надзвичайно ✓. **Recommended
+    vocab present:** підсилений ✓, синонімі'
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: '6 activity markers matching 6 activity hints. Markers properly placed
+    after relevant teaching sections. Types align with plan: fill-in for chains, match-up
+    for проста↔складена, sentence-builder for що'
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: '**Strengths:** Geography lesson dialogue is engaging with named speakers
+    (Пані Олена, Тарас, Оксана, Максим), real Ukrainian landmarks (Говерла, Дніпро,
+    Світязь), and natural multi-turn exchange. Cult'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: All 7 H2 sections + intro present and correctly ordered. Word count 4219
+    meets 4000 target ✓. Clean markdown, no stray tags or formatting artifacts. Activity
+    markers well-formatted. **Minor:** Підсумо
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Fully decolonized — Ukrainian presented on its own terms. No "like Russian
+    but..." framing. The module correctly identifies "самий" as a Russicism from Russian
+    "самый лучший." Cultural references are '
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Geography lesson dialogue is natural, culturally grounded, and pedagogically
+    effective. Named speakers (Пані Олена, Тарас, Оксана, Максим) with distinct voices.
+    Multi-turn exchange flows naturally — t
+findings: []

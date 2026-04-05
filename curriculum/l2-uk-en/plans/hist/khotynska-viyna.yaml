@@ -1,111 +1,136 @@
-module: hist-046
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння історіографічних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Джерела
+  focus: Розуміння первинного історичного джерела
+  placement: inline
+  type: reading
+- focus: Оцінка первинного джерела — хто написав, навіщо, що упущено?
+  placement: workbook
+  type: source-evaluation
+- focus: Дебат — оцінка значення та наслідків події
+  placement: workbook
+  type: debate
+- focus: 'Порівняння української та імперської інтерпретацій (Хотинська війна 1621: Козацький щит Європи)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе на тему зв''язку з сучасністю (Хотинська війна 1621: Козацький щит Європи)'
+  placement: workbook
+  type: essay-response
+cefr_min: C1
+connects_to:
+- petro-sahaidachnyi
+- kozatska-kultura
+content_outline:
+- points:
+  - 'Провокаційне питання: Чому король Речі Посполитої Зигмунт III був готовий тікати зі столиці ще до початку битви? Що він
+    знав про османську армію та власні сили?'
+  - 'Фрагмент без контексту: «...справжніми переможцями та нашою обороною були козаки, про що я незабаром розповім, аби не
+    применшити їхньої слави...». Хто і з яким почуттям міг написати ці слова у 1621 році?'
+  section: Розминка
+  words: 400
+- points:
+  - 'Дебат 1: Чия це перемога? [!decolonization] Польська історіографія традиційно приписує перемогу коронному війську та
+    гусарії. Українська — наголошує на вирішальній ролі козацької піхоти, яка витримала основний удар.'
+  - 'Дебат 2: За що воювали козаки? За гроші та привілеї як найманці, чи за віру та права українського народу як свідомі політичні
+    актори? Аналіз вимог, висунутих Сагайдачним у Сухій Діброві.'
+  - '[!epistemic-humility] Точна кількість військ з обох боків є предметом дискусій. Цифри коливаються від 150 до 200 тисяч
+    для османів та від 70 до 80 тисяч для союзників. Оцінки втрат також значно різняться у джерелах.'
+  - 'Глобальна синхронність: поки під Хотином тримали оборону проти Османів, у Центральній Європі палала Тридцятирічна війна
+    (1618–1648). Битва під Хотином фактично убезпечила східний фланг Європи.'
+  section: 'Конфліктна карта: Рятівники чи найманці?'
+  words: 900
+- points:
+  - 'Погляд союзника: Щоденник Якуба Собеського. Аналіз описів «дощу зі свинцю» та неприступного козацького табору. Чому польський
+    шляхтич визнав, що «справжніми переможцями були козаки»?'
+  - 'Погляд переможених: Османські хроніки (Наїма). Як описували козаків вороги? «Принесені шайтаном невірні», що сіяли паніку
+    нічними вилазками.'
+  - 'Погляд козацький: Літопис Григорія Граб''янки та «Вірші на жалісний погреб...» Касіяна Саковича. Героїзація Сагайдачного
+    та козацтва. Створення національного міфу.'
+  - '[!decolonization] Політичний документ: Лист Сагайдачного до короля. Вимога легітимізації православної ієрархії та розширення
+    козацьких прав. Це не прохання, а ультиматум рівного партнера.'
+  section: 'Джерела: Щоденники, листи, літописи'
+  words: 1600
+- points:
+  - 'Військова тактика: Чому козацький табір виявився неприступним для яничар? Аналіз тактики «шеренг», нічних «вилазок» та
+    ефективності козацької артилерії.'
+  - 'Лідерство та жертва: Роль Петра Сагайдачного, який командував військом, будучи смертельно пораненим. Його смерть після
+    битви як символ ціни перемоги.'
+  - '[!myth-buster] Парадокс перемоги: Хотинська битва не зміцнила, а прискорила розпад Речі Посполитої. Невиконання обіцянок,
+    даних козакам, призвело до серії повстань, що завершились Хмельниччиною.'
+  - 'Геополітичний зсув: Поразка під Хотином стала початком кінця для Османської імперії, спричинивши бунт яничар та вбивство
+    султана Османа II. Україна вперше заявила про себе як про суб''єкт, здатний впливати на долю Європи.'
+  section: 'Аналіз: Наслідки та значення'
+  words: 1600
+- points:
+  - 'Повернення до розминки: Чому перемога під Хотином стала «початком кінця» для Речі Посполитої, а не початком «золотого
+    віку»?'
+  - 'Спадщина: Концепція «Україна — щит Європи». Наскільки це уявлення, що народилося під Хотином, актуальне сьогодні? Провести
+    паралелі з сучасною російсько-українською війною.'
+  - '[!anti-hagiography] "Зрада" після перемоги. Аналіз причин, чому польська шляхта відмовилася виконувати обіцянки, дані
+    козакам, і до яких трагічних наслідків це призвело для обох народів.'
+  section: Дискусія та підсумок
+  words: 700
+focus: The Battle of Khotyn (1621), the decisive role of Cossack infantry under Petro Sahaidachnyi, and the decolonization
+  of the "Polish victory" myth.
 level: HIST
+module: hist-046
+objectives:
+- Описувати причини, масштаби та ключові етапи Хотинської війни 1621 року
+- Аналізувати тактичну роль козацької піхоти та її вирішальне значення у перемозі
+- Оцінювати геополітичні наслідки битви для Османської імперії, Речі Посполитої та майбутнього України
+- Критично аналізувати першоджерела (хроніки, щоденники, листи) для деколонізації міфу про «польську перемогу»
+pedagogy: CBI
+persona:
+  role: Реконструктор битви, що ставить під сумнів офіційні літописи, спираючись на свідчення очевидців та аналіз тактики.
+  voice: Eyewitness-Historian
+references:
+- note: Compiled research based on Hrushevsky, Subtelny, Plokhy, and primary sources like Sobieski's diary.
+  path: wiki/hist/khotyn-war-1621.md
+  type: wiki
+- author: Якуб Собеський
+  note: Ключове першоджерело від очевидця-шляхтича, який визнав вирішальну роль козаків.
+  type: primary
+  work: Commentariorum chotinensis belli libri tres (Щоденник Хотинської війни)
+- author: Григорій Граб'янка
+  note: Приклад козацької історіографії, що героїзує учасників битви.
+  type: primary
+  work: Літопис Граб'янки
+- author: Сергій Плохій
+  note: Сучасний погляд на місце битви в історії України та Східної Європи.
+  type: academic
+  work: 'The Gates of Europe: A History of Ukraine'
 sequence: 46
 slug: khotynska-viyna
-version: '3.0'
-title: 'Хотинська війна 1621: Козацький щит Європи'
 subtitle: The Battle That Saved Christian Civilization
-focus: history
-pedagogy: CBI
-phase: HIST.5 [Rise of Cossacks]
-word_target: 5000
-objectives:
-- Learner can describe the causes and scale of the Khotyn War of 1621
-- Learner can analyze the tactical role of cossack infantry in the victory
-- Learner can understand the geopolitical consequences of the battle for Europe
-content_outline:
-- section: Вступ
-  points:
-  - 'The geopolitical context: Ottoman expansion — Ambition of Osman II: revival of Suleiman''s grandeur; ''breakfast in Vienna,
-    lunch in Rome'' context'
-  - The disaster at Cecora (1620) as a prelude — Stanisław Żółkiewski's defeat and death; panic in Warsaw; King 
-    Sigismund III ready to flee; [!context] Пояснити масштаб загрози
-  words: 600
-- section: 'Мобілізація сил: Підготовка до апокаліпсису'
-  points:
-  - Sultan Osman II's grand army — 150-200k troops (Ottomans + Tatars) vs 76k allies (41k Cossacks)
-  - The desperate situation of Poland-Lithuania — The mission of Patriarch Theophanes; legitimization of Cossack 
-    hierarchy
-  - The cossack council and Sahaidachnyi's decision — Council at Sukha Dibrova (June 1621); 40k Cossacks; demand for 
-    religious rights; Sahaidachnyi's breakthrough to Warsaw; [!myth-buster] Козаки не були 'найманцями'
-  words: 600
-- section: 'Тактика і Стратегія: Секрети перемоги'
-  points:
-  - The layout of the camp and fortifications — Cossacks entrenched faster than Poles; the 'tabor' wagon fort 
-    impregnable to cavalry; [!history-bite] 'Табір' як неприступна фортеця
-  - The decisive role of the cossack 'tabor' and artillery — Volley fire tactics (шеренги); night raids ('вилагазки') 
-    creating psychological terror
-  - 'Logistics and survival in the camp — Contrast: Ottoman luxury vs Ally asceticism; disease and hunger in besieged camp
-    (eating horses, lack of water)'
-  words: 600
-- section: 'Читання: Свідчення очевидця'
-  points:
-  - 'Analysis of Jakub Sobieski''s diary — Quote: ''True victors were Cossacks''; description of ''rain of lead''; [!quote]
-    Яків Собеський про ''дощ зі свинцю'''
-  words: 600
-- section: 'Герої та Жертви: Ціна перемоги'
-  points:
-  - The leadership of Petro Sahaidachnyi — Commanded while mortally wounded (poisoned arrow); effective leader after 
-    Chodkiewicz's death (Sept 24); [!biography] Петро Сагайдачний
-  - 'The psychological breaking point of the Ottoman army — Janissary mutiny; Osman II''s shock: ''I can only destroy them,
-    not defeat them'' (apocryphal)'
-  words: 600
-- section: Геополітичні наслідки та пам'ять
-  points:
-  - The decline of the Ottoman Empire — Start of Janissary corps decline; assassination of Osman II in Istanbul
-  - The rise of the Cossack myth in Europe — Ivan Gundulić's poem 'Osman'; Europe applauded 'Polish victory' ignoring 
-    Cossacks
-  - Khotyn in Ukrainian literature and art — Kasiyan Sakovych's 'Verses on the Sorrowful Funeral of Sahaidachnyi'
-  words: 600
-- section: Первинні джерела
-  points:
-  - Excerpts from the Khotyn Chronicle — Hryhoriy Hrubyanka's chronicle; descriptions of Cossack valor
-  - Letters of the Sultan — Ottoman chronicles (Naima) about 'infidel Cossacks brought by Shaitan'
-  - 'Cossack chronicles on Khotyn — Sahaidachnyi''s letter to the King: demand for Orthodox rights; [!source] Уривок з листа
-    Сагайдачного до короля'
-  words: 600
-- section: Деколонізаційний погляд
-  points:
-  - Ukraine as a subject of international politics — Sahaidachnyi as equal partner to the King; 'Shield of Europe' 
-    concept
-  - 'Debunking the myth of ''Polish victory'' — Polish historiography credits Chodkiewicz/Hussars; reality: Cossack infantry
-    bore the brunt'
-  - 'European context: The Thirty Years'' War — While Europe destroyed itself, Ukraine held the Eastern front; ''Betrayal''
-    after victory led to Khmelnytsky Uprising; [!analysis] Чому перемога під Хотином стала початком кінця Речі Посполитої?'
-  words: 800
+title: 'Хотинська війна 1621: Козацький щит Європи'
+version: '4.0'
 vocabulary_hints:
-  required:
-  - історія (history) — історія війн (history of wars)
-  - держава (state) — козацька держава (cossack state)
-  - народ (people) — український народ (Ukrainian people)
-  - влада (power) — військова влада (military power)
-  - період (period) — історичний період (historical period)
-  - подія (event) — вирішальна подія (decisive event)
-  - джерело (source) — первинне джерело (primary source)
-  - спадщина (heritage) — героїчна спадщина (heroic heritage)
-  recommended:
-  - аналіз (analysis) — критичний аналіз (critical analysis)
-  - контекст (context) — історичний контекст (historical context)
-  - вплив (influence) — геополітичний вплив (geopolitical influence)
-  - наслідки (consequences) — трагічні наслідки (tragic consequences)
-activity_hints:
-- type: reading
-  focus: Eye-witness accounts of the battle intensity
-- type: essay-response
-  focus: The strategic importance of the cossack factor in the victory
-- type: comparative-study
-  focus: Ottoman vs. Cossack military tactics
-- type: critical-analysis
-  focus: 'The political aftermath: Peace treaty and broken promises'
-persona:
-  voice: Senior Professor of History
-  role: Infantry Commander
-grammar:
-- 'Historical narrative: detailed battle descriptions'
-- Military terminology and formations
-register: публіцистичний
-prerequisites:
-- petro-sahaidachnyi
-connects_to:
-- kozatska-kultura
-references: []
+- definition: укріплений військовий табір, оточений возами, який козаки використовували як неприступну фортецю
+  pos: ч.
+  word: табір
+- definition: елітні піхотні війська Османської імперії, які зазнали нищівної поразки від козацької тактики
+  pos: ч. (мн.)
+  word: яничари
+- definition: раптовий нічний напад або рейд, який козаки здійснювали зі свого табору для деморалізації ворога
+  pos: ж.
+  word: вилазка
+- definition: визнання законності; одна з ключових вимог козаків щодо православної церкви
+  pos: ж.
+  word: легітимізація
+- definition: честь, гідність; ключове поняття для розуміння мотивації як козацької, так і польської шляхти
+  pos: ч.
+  word: гонор
+- definition: елітна важка кіннота Речі Посполитої, яка виявилася неефективною проти козацького табору
+  pos: ж.
+  word: гусарія
+- definition: полон, бранці; одна з причин постійних конфліктів між козаками та татарами, союзниками Османів
+  pos: ч.
+  word: ясир
+- definition: найвища військова та політична посада у козаків, яку обіймав Петро Сагайдачний
+  pos: ч.
+  word: гетьман
+word_target: 5200

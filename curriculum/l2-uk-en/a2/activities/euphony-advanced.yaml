@@ -1,0 +1,232 @@
+version: '1.0'
+module: euphony-advanced
+level: a2
+inline:
+- id: activity-4
+  type: quiz
+  instruction: Оберіть правильний варіант (у/в, з/із/зі, і/й, та)
+  items:
+  - question: Він зараз живе _____ Львові.
+    options:
+    - у
+    - в
+    - із
+    - зі
+    correct: 0
+  - question: Я люблю каву _____ молоком.
+    options:
+    - з
+    - із
+    - зі
+    - в
+    correct: 0
+  - question: Діти повертаються _____ школи.
+    options:
+    - зі
+    - з
+    - із
+    - у
+    correct: 0
+  - question: Світить сонце, _____ пташки співають.
+    options:
+    - і
+    - й
+    - з
+    - в
+    correct: 0
+  - question: Вона піде в театр _____ мною.
+    options:
+    - зі
+    - з
+    - із
+    - у
+    correct: 0
+  - question: Ми зараз _____ університеті.
+    options:
+    - в
+    - у
+    - з
+    - із
+    correct: 0
+  - question: Тарас робить це _____ задоволенням.
+    options:
+    - із
+    - з
+    - зі
+    - в
+    correct: 0
+  - question: Брат вийшов _____ кімнати.
+    options:
+    - із
+    - з
+    - зі
+    - у
+    correct: 0
+workbook:
+- id: workbook-fill-in
+  type: fill-in
+  instruction: Вставте правильну форму прийменника або сполучника
+  items:
+  - sentence: Ми часто говоримо ___ Оленою.
+    answer: з
+    options:
+    - з
+    - із
+    - зі
+    - в
+  - sentence: Я навчаюся ___ університеті.
+    answer: в
+    options:
+    - у
+    - в
+    - з
+    - із
+  - sentence: Свіжі гриби принесли ___ лісу.
+    answer: з
+    options:
+    - з
+    - із
+    - зі
+    - у
+  - sentence: Діти йдуть ___ школи.
+    answer: зі
+    options:
+    - з
+    - із
+    - зі
+    - в
+  - sentence: ___ Україні дуже гарно.
+    answer: В
+    options:
+    - У
+    - В
+    - З
+    - Із
+  - sentence: Завтра буде тепло, ___ ми поїдемо в ліс.
+    answer: і
+    options:
+    - і
+    - й
+    - з
+    - у
+  - sentence: Вона хоче говорити ___ мною.
+    answer: зі
+    options:
+    - з
+    - із
+    - зі
+    - в
+  - sentence: Він походить ___ гарної сім'ї.
+    answer: із
+    options:
+    - з
+    - із
+    - зі
+    - у
+- id: workbook-error-correction
+  type: error-correction
+  instruction: Знайдіть і виправте помилку в милозвучності
+  items:
+  - sentence: Я навчаюся у університеті.
+    error: у
+    correction: в
+    error_type: word
+    options:
+    - в
+    - зі
+    - із
+    - з
+    explanation: Українська мова уникає збігу однакових голосних (у-у). Потрібно вживати
+      «в».
+  - sentence: Ми поїдемо в Львів на вихідні.
+    error: в
+    correction: у
+    error_type: word
+    options:
+    - у
+    - з
+    - із
+    - зі
+    explanation: Перед важким збігом приголосних (Льв) потрібно вживати «у».
+  - sentence: Я роблю це з задоволенням.
+    error: з
+    correction: із
+    error_type: word
+    options:
+    - із
+    - зі
+    - в
+    - у
+    explanation: Між двома подібними приголосними (з-з) вживаємо «із» для легшої вимови.
+  - sentence: Діти йдуть з школи.
+    error: з
+    correction: зі
+    error_type: word
+    options:
+    - зі
+    - із
+    - у
+    - в
+    explanation: Перед збігом приголосних, який починається на «ш», вживаємо «зі».
+  - sentence: Вона хоче піти в кіно з мною.
+    error: з
+    correction: зі
+    error_type: word
+    options:
+    - зі
+    - із
+    - у
+    - в
+    explanation: Перед займенником «мною» завжди вживається форма «зі».
+  - sentence: Й він прийшов на зустріч вчасно.
+    error: Й
+    correction: І
+    error_type: word
+    options:
+    - І
+    - Та
+    - Зі
+    - У
+    explanation: На початку речення не можна вживати «й», завжди пишемо «І».
+  - sentence: Я працюю зі ним кожен день.
+    error: зі
+    correction: з
+    error_type: word
+    options:
+    - з
+    - із
+    - в
+    - у
+    explanation: Слово «ним» починається з одного приголосного, тому форма «зі» є
+      зайвою.
+  - sentence: Ми їдемо у автобусі.
+    error: у
+    correction: в
+    error_type: word
+    options:
+    - в
+    - зі
+    - із
+    - з
+    explanation: Перед словом, що починається на голосний (а), вживаємо «в», щоб уникнути
+      збігу голосних.
+- id: workbook-match-up
+  type: match-up
+  instruction: З'єднайте початок речення з правильним і милозвучним закінченням
+  pairs:
+  - left: Ми поїдемо відпочивати
+    right: в Карпати.
+  - left: Мої друзі живуть
+    right: у Львові.
+  - left: На сніданок я п'ю каву
+    right: з молоком.
+  - left: Після уроків діти йдуть
+    right: зі школи.
+  - left: Він допомагає мені
+    right: із задоволенням.
+  - left: Вчора Оксана
+    right: й Марко пішли в кіно.
+  - left: Завтра буде тепло,
+    right: і ми підемо в ліс.
+  - left: Він багато працює
+    right: та мало відпочиває.

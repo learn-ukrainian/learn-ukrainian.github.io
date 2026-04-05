@@ -1,0 +1,67 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння філологічних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Текст
+  focus: Транскрипція давньосхіднослов'янського фрагменту
+  placement: inline
+  type: transcription
+- focus: Простежити еволюцію слова від давньосхіднослов'янської до сучасної
+  placement: workbook
+  type: etymology-trace
+- focus: Порівняння давньосхіднослов'янських форм із сучасними українськими (Розграбування Києва)
+  placement: workbook
+  type: comparative-study
+- focus: Критичний аналіз лінгвістичної класифікації тексту
+  placement: workbook
+  type: critical-analysis
+- focus: Есе — що цей текст розповідає про стан мови в цю добу? (Розграбування Києва)
+  placement: workbook
+  type: essay-response
+connects_to:
+- ihor-campaign-chronicle
+content_outline:
+- points:
+  - Introduction to Sack of Kyiv
+  section: Вступ
+  words: 1250
+- points:
+  - Primary source analysis and grammar focus
+  section: Основний матеріал
+  words: 1250
+- points:
+  - Exercises and activities
+  section: Практика
+  words: 1250
+- points:
+  - Summary and connection to next module
+  section: Підсумок
+  words: 1250
+focus: Bogolyubsky — The shift of power
+grammar: []
+level: OES
+module: oes-042
+objectives:
+- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
+- Продукувати тексти академічного та професійного рівня за тематикою модуля
+- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- Застосовувати знання з теми «Практика» у власній мовній практиці
+persona:
+  role: Refugee
+  voice: Senior Paleographer
+phase: 2
+prerequisites:
+- izyaslav-mstyslavych
+references: []
+register: академічний
+sequence: 42
+slug: sack-of-kyiv
+subtitle: Sack of Kyiv
+title: Розграбування Києва
+version: '3.0'
+vocabulary_hints:
+  recommended: []
+  required: []
+word_target: 5000

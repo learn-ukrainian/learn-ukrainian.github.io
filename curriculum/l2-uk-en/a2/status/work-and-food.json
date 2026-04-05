@@ -1,0 +1,59 @@
+{
+  "module": "work-and-food",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-04-05T10:05:09.871636Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-04-05T04:56:29.138676Z",
+    "meta": null,
+    "activities": "2026-04-05T04:41:31.988751Z",
+    "vocabulary": "2026-04-05T04:42:03.141358Z",
+    "research": null,
+    "plan": "2026-04-04T22:04:59.973325Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 2,
+      "message": "2296/2000 (raw: 2346) | engagement: 0/3 | immersion: 40.2% LOW (target 50-80% (A2.2))"
+    },
+    "activities": {
+      "status": "fail",
+      "violations": 1,
+      "message": "12/0 | density: 7 < 8"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "72/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "warn",
+      "violations": 0,
+      "message": "Refresh recommended: Research has 2+ cultural hooks but content has no cultural section"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 3,
+    "fail_count": 2,
+    "deferred_count": 0
+  }
+}

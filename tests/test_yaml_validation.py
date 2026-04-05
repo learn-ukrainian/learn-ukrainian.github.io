@@ -27,6 +27,7 @@ def base_schema():
 @pytest.fixture
 def valid_quiz_data():
     return {
+        "id": "test-quiz",
         "type": "quiz",
         "instruction": "Choose the correct answer",
         "items": [

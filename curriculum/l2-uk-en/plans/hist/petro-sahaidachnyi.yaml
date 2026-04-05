@@ -1,111 +1,137 @@
-module: hist-045
-level: HIST
-sequence: 45
-slug: petro-sahaidachnyi
-version: '3.0'
-title: 'Петро Сагайдачний: Гетьман і меценат'
-subtitle: The Knight of Orthodox Culture and Naval Glory
-focus: history
-pedagogy: CBI
-phase: HIST.5 [Rise of Cossacks]
-word_target: 5000
-objectives:
-- Learner can analyze the military and cultural reforms of Petro Sahaidachnyi
-- Learner can explain the significance of the Battle of Khotyn (1621)
-- Learner can understand the role of the Kyiv Epiphany Brotherhood School
-content_outline:
-- section: Вступ
-  points:
-  - Sahaidachnyi as a statesman-leader — architect of Cossack statehood; combining Sich energy with discipline and 
-    education
-  - The transition to a professional cossack army — from disorganized bands to a regular army; symbol of transformation 
-    into a political nation
-  words: 600
-- section: Шлях від Кульчиць до Січі
-  points:
-  - Origins and education in Ostroh — noble birth (Pobuh coat of arms); contemporary of Meletiy Smotrytskyi; 
-    [!history-bite] intellectual with a sword
-  - 'Military reforms: discipline and training — division into regiments/hundreds; firearms drills; ban on alcohol during
-    campaigns (''overboard if caught'')'
-  - 'The ''Marine'' strategy: Campaigns against Istanbul — turning Cossacks into Europe''s special forces; intellect winning
-    over brute force'
-  words: 600
-- section: 'Військова слава: Кафа та Москва — шлях переможця'
-  points:
-  - The liberation of slaves in Caffa (1616) — blow to heart of slave trade; destruction of Turkish fleet; psychological
-    impact on Ottomans
-  - The campaign of 1618 and the siege of Moscow — saving Prince Wladyslaw; lightning march (Livny, Yelets); standing at
-    Arbat gates; [!military] wolf pack tactics
-  - Tactical innovations of the cossack fleet — night assaults; Deulino Truce triumph as Polish victory by Ukrainian 
-    hands
-  words: 600
-- section: 'Читання: Голос барокової епохи'
-  points:
-  - 'Analysis of ''The Lament over the Grave of Sahaidachnyi'' by Sakovych — [!source] Cossacks as heirs to Kyivan Rus princes;
-    legitimization through history and faith; quote analysis: ''freedom bought with blood'''
-  words: 600
-- section: 'Меценатство та Освіта: Революція духу'
-  points:
-  - Support for the Kyiv Brotherhood — enrollment of entire Zaporozhian Host; protection of culture/school; 
-    [!myth-buster] Cossacks as collective patron
-  - Restoration of the Orthodox hierarchy (1620) — Patriarch Theophanes III; consecration of Job Boretsky; restoration 
-    of spiritual statehood
-  - The union of the 'sword and the book' — alliance of military force and intellectual elite; legitimizing Cossacks as 
-    'knights' of the people
-  words: 600
-- section: 'Хотинська епопея (1621): Битва за майбутнє Європи'
-  points:
-  - The clash of civilizations at Khotyn — Sultan Osman II vs Poland; stopping largest army in the world; [!context] 
-    Khotyn as 17th-century Thermopylae
-  - The decisive role of cossacks in saving Europe — wagon fort (wagenburg) tactics; night raids; sniper fire; saving 
-    Europe from Islamic expansion
-  - The fatal wound and death of the Hetman — poisoned arrow wound; death in Kyiv (1622); burial at Bratsky Monastery
-  words: 600
-- section: 'Первинні джерела: Свідчення очевидців та славослів''я'
-  points:
-  - 'Excerpts from contemporary panegyrics — Kyiv Brotherhood school texts; Sahaidachnyi''s will: patron to the last breath'
-  - 'Foreign accounts of Khotyn — Jakub Sobieski quote: ''Real winners were Cossacks'''
-  words: 600
-- section: 'Деколонізаційний погляд: Повернення справжнього гетьмана'
-  points:
-  - Sahaidachnyi as a European-style knight, not an imperial servant — autonomous geopolitical player; blackmailing 
-    Warsaw; building Hetmanate foundation
-  - Reclaiming the naval heritage of Ukraine — [!decolonization] dominance of Black Sea before Russian Empire; scale of 
-    Cromwell or Wallenstein
-  words: 800
-vocabulary_hints:
-  required:
-  - 'гетьман (hetman) — collocations: кошовий отаман, булава гетьмана'
-  - 'меценат (patron) — context: підтримка освіти, церков'
-  - 'січ (Sich) — context: Запорозька Січ, козацька республіка'
-  - 'братство (brotherhood) — context: Київське братство, вступ війська'
-  - 'військо (army/host) — collocations: Військо Запорозьке, реєстрове козацтво'
-  - 'кампанія (campaign) — context: Московська кампанія, морські походи'
-  - 'угода (agreement/truce) — context: Деулінське перемир''я, Хотинський мир'
-  - 'ієрархія (hierarchy) — context: відновлення православної ієрархії'
-  recommended:
-  - 'лицар (knight) — context: лицарі православ''я, milites christi'
-  - 'чайка (chaika boat) — context: козацький флот, морські походи'
-  - 'панегірик (panegyric) — context: вірші на похвалу, Сакович'
-  - 'експансія (expansion) — context: османська експансія, зупинити ворога'
 activity_hints:
-- type: reading
-  focus: Kassian Sakovych's panegyric analysis
-- type: essay-response
-  focus: The concept of 'Knightly Ethos' in Sahaidachnyi's leadership
-- type: comparative-study
-  focus: Sahaidachnyi vs. previous cossack leaders (Nalyvaiko, Vyshnevetskyi)
-- type: critical-analysis
-  focus: The impact of the Khotyn victory on the Ottoman Empire
-persona:
-  voice: Senior Professor of History
-  role: Keeper of the Kyiv Brotherhood Archives
-grammar:
-- 'Historical narrative: sophisticated causal structures'
-- Participles in historical descriptions
-register: публіцистичний
-prerequisites:
-- kozatski-povstannia-16
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння історіографічних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Джерела
+  focus: Розуміння первинного історичного джерела
+  placement: inline
+  type: reading
+- focus: Оцінка первинного джерела — хто написав, навіщо, що упущено?
+  placement: workbook
+  type: source-evaluation
+- focus: Дебат — оцінка значення та наслідків події
+  placement: workbook
+  type: debate
+- focus: 'Порівняння української та імперської інтерпретацій (Петро Сагайдачний: Гетьман і меценат)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе на тему зв''язку з сучасністю (Петро Сагайдачний: Гетьман і меценат)'
+  placement: workbook
+  type: essay-response
+cefr_min: C1
 connects_to:
 - khotynska-viyna
-references: []
+- kozatski-povstannia-16
+content_outline:
+- points:
+  - 'Провокація: Сагайдачний — європейський лицар-інтелектуал чи жорстокий козацький ватажок? Чи міг він одночасно бути рятівником
+    православ''я і тим, хто стояв біля воріт Москви з вогнем і мечем?'
+  section: Розминка
+  words: 400
+- points:
+  - 'Дебат 1: [!decolonization] Сагайдачний — автономний геополітичний гравець, що будував підвалини Гетьманату, чи лояльний
+    підданий Речі Посполитої, що рятував королевича Владислава під Москвою?'
+  - 'Дебат 2: Еволюція козацького лідерства. Сагайдачний як «гетьман-державник» vs попередники (Наливайко, Вишневецький) як
+    «ватажки-повстанці». У чому принципова різниця їхніх стратегій?'
+  - '[!epistemic-humility] Оцінки московського походу 1618 року — це був блискучий рейд на порятунок союзника чи найманство,
+    що підривало ідею «православного братерства»?'
+  - 'Глобальна синхронність: Поки Сагайдачний реформував козацтво, в Європі тривала Тридцятилітня війна. Його можна порівняти
+    з Альбрехтом фон Валленштейном чи Олівером Кромвелем як творця армії нового типу.'
+  section: 'Конфліктна карта: Створення держави чи служіння короні?'
+  words: 900
+- points:
+  - 'Першоджерело 1: Аналіз «Віршів на жалосний погреб зацного рицаря Петра Конашевича-Сагайдачного» Касіяна Саковича. Як
+    барокова поезія створює образ ідеального правителя, спадкоємця київських князів?'
+  - 'Лінгвістичний аналіз: поняття «лицар», «слава», «свобода, куплена кров''ю» в панегіриках. Легітимізація козацтва через
+    віру та історію.'
+  - 'Першоджерело 2: Свідчення Якуба Собеського (батька короля Яна III) про Хотинську битву. Чому він, учасник битви, писав,
+    що «справжніми переможцями були козаки»?'
+  - '[!decolonization] Читання між рядками: іноземні джерела підтверджують домінування козацького флоту на Чорному морі задовго
+    до Російської імперії, руйнуючи імперський міф про «освоєння» півдня.'
+  section: 'Джерела: Панегірики та іноземні хроніки'
+  words: 1600
+- points:
+  - 'Військова революція: Перетворення козацьких ватаг на професійну армію (полки, сотні, дисципліна, вогнева підготовка,
+    заборона алкоголю). Тактика нічних атак та «вагенбург» під Хотином.'
+  - 'Культурна революція: Вступ усього Війська Запорозького до Київського братства. Союз «меча і книги» — військовий захист
+    освіти, друкарень та православної віри.'
+  - 'Духовна революція: Відновлення православної ієрархії в 1620 році за допомогою патріарха Феофана III. Відновлення духовної
+    державності України, що було неможливим без військової сили Сагайдачного.'
+  - '[!myth-buster] Сагайдачний — не просто меценат, а архітектор нової моделі суспільства, де козацтво стає колективним патроном
+    нації, її «лицарським орденом», що захищає не лише територію, але й ідентичність.'
+  section: 'Аналіз: Наслідки та значення'
+  words: 1600
+- points:
+  - 'Повернення до розминки: Отже, ким був Сагайдачний — лицарем, стратегом чи державником? Сформулюйте відповідь, спираючись
+    на докази з модуля.'
+  - '[!anti-hagiography] Чи не була його жорстокість під час московського походу та безкомпромісна дисципліна («п''яних —
+    за борт») необхідною ціною за створення боєздатної армії та збереження суб''єктності?'
+  - 'Зв''язок із сьогоденням: Як досвід Сагайдачного у створенні армії європейського зразка та його дипломатія «силою» актуальні
+    для сучасної України?'
+  section: Дискусія та підсумок
+  words: 700
+focus: The transformation of Cossackdom under Hetman Petro Sahaidachnyi from a loose military force into a disciplined political
+  power, his role as a patron of Orthodox culture, and his military genius in naval campaigns and the Battle of Khotyn.
+level: HIST
+module: hist-045
+objectives:
+- Аналізувати військові, політичні та культурні реформи Петра Сагайдачного
+- Пояснювати значення Хотинської битви (1621) для України та Європи
+- Розуміти роль Київського братства як центру союзу військової та інтелектуальної еліт
+- Критично оцінювати постать Сагайдачного, розрізняючи історичні факти та панегіричні міфи
+pedagogy: CBI
+persona:
+  role: Keeper of the Kyiv Brotherhood Archives
+  voice: Senior Professor of History
+phase: HIST.5 [Rise of Cossacks]
+references:
+- note: Compiled from Plokhy, Subtelny, Hrushevsky — life, reforms, military campaigns.
+  path: wiki/hist/figures/petro-sahaidachnyi.md
+  type: wiki
+- author: Касіян Сакович
+  note: Key panegyric establishing the heroic image of the hetman.
+  type: primary
+  work: Вірші на жалосний погреб зацного рицаря Петра Конашевича-Сагайдачного
+- author: Jakub Sobieski
+  note: Eyewitness account of the Battle of Khotyn highlighting the decisive role of the Cossacks.
+  type: primary
+  work: Commentariorum chotinensis belli libri tres
+sequence: 45
+slug: petro-sahaidachnyi
+subtitle: The Knight of Orthodox Culture and Naval Glory
+title: 'Петро Сагайдачний: Гетьман і меценат'
+version: '4.0'
+vocabulary_hints:
+- definition: найвища виборна посада у Війську Запорозькому, глава козацької держави
+  pos: ч.
+  word: гетьман
+- definition: багатий покровитель наук і мистецтв; Сагайдачний підтримував церкви та школи
+  pos: ч.
+  word: меценат
+- definition: центр, столиця і військова база Війська Запорозького; козацька республіка
+  pos: ж.
+  word: січ
+- definition: громадсько-релігійна організація православних міщан; Київське братство було інтелектуальним центром
+  pos: с.
+  word: братство
+- definition: козацький бойовий човен, основа флоту для морських походів на Стамбул і Кафу
+  pos: ж.
+  word: чайка
+- definition: хвалебна промова або вірш на честь видатної особи, поширений жанр в епоху бароко
+  pos: ч.
+  word: панегірик
+- definition: система церковного управління (митрополит, єпископи); Сагайдачний відновив православну ієрархію
+  pos: ж.
+  word: ієрархія
+- definition: у контексті епохи — благородний воїн, захисник віри; Сагайдачного називали «православним лицарем»
+  pos: ч.
+  word: лицар
+- definition: тактика ведення бою з використанням возового табору як рухомої фортеці; ключовий елемент перемоги під Хотином
+  pos: ч.
+  word: вагенбург
+- definition: здатність бути самостійним, активним діячем у політиці, а не об'єктом чужої волі
+  pos: ж.
+  word: суб''єктність
+word_target: 5200

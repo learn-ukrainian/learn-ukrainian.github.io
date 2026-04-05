@@ -1,0 +1,61 @@
+{
+  "module": "instrumental-profession",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-04-05T10:05:02.157000Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-04-05T03:14:43.562617Z",
+    "meta": null,
+    "activities": null,
+    "vocabulary": null,
+    "research": null,
+    "plan": "2026-04-04T22:04:59.963117Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "fail",
+      "violations": 1,
+      "message": "Missing '## Activities' header OR activities sidecar"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 1,
+      "message": "2981/2000 (raw: 3096) | engagement: 0/3"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "0/0"
+    },
+    "vocabulary": {
+      "status": "warn",
+      "violations": 0,
+      "message": "0 < 1 (soft target)"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Content aligned with research"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [
+      "Structure: Missing '## Activities' header OR activities sidecar"
+    ],
+    "pass_count": 3,
+    "fail_count": 2,
+    "deferred_count": 0
+  }
+}

@@ -55,29 +55,24 @@ def check_frontmatter_spacing(content: str) -> list[dict]:
 
 def check_heading_levels(content: str, level_code: str | None = None) -> list[dict]:
     """
-    Check that section headings follow the hierarchy from docs/MARKDOWN-FORMAT.md.
+    Check that section headings follow the hierarchy.
 
     1. Page Title must be H1 (#)
-    2. Main Sections (Activities, Summary, Vocabulary) must be H1 (#)
-    3. Subsection headers (warm-up, exercises, etc.) must be H2 (##)
+    2. Injected Sections (Activities, Vocabulary) are H1 (#) — added by enrich step
+    3. Content sections (including Summary/Підсумок) are H2 (##) — written by LLM
+    4. Subsection headers are H3 (###)
 
-    Note: Seminar tracks (bio, hist, istorio, lit, oes, ruth) use a different
-    structure where Підсумок is H2, not H1, since all content sections are at H2 level.
+    Summary/Підсумок is H2 for all tracks — the write prompt generates ## Summary
+    and all existing modules (A1, A2) use H2 consistently.
     """
     violations = []
 
-    # Seminar tracks use flat H2 structure for all content sections
-    seminar_tracks = ['bio', 'hist', 'istorio', 'lit', 'oes', 'ruth']
-    is_seminar = level_code and any(track in level_code.lower() for track in seminar_tracks)
-
-    # Main Sections that MUST be H1 (#) - but not for seminar tracks
+    # Main Sections that MUST be H1 (#) — only injected sections, not writer-generated
     h1_required_sections = [
         'activities', 'vocabulary',  # English
-        'вправи', 'словник'          # Ukrainian (always H1)
+        'вправи', '��ловник'          # Ukrainian (always H1)
     ]
-    # Summary and Підсумок are H1 only for core, H2 for seminar
-    if not is_seminar:
-        h1_required_sections.extend(['summary', 'підсумок'])
+    # Summary/Підсумок is H2 for ALL tracks — writer generates ## Summary
 
     # Content sub-sections that SHOULD be H2 (##)
     h2_preferred_sections = [
@@ -126,7 +121,7 @@ def check_heading_levels(content: str, level_code: str | None = None) -> list[di
                     'type': 'HEADING_LEVEL',
                     'line': line_num,
                     'issue': f"Non-standard H1 heading: '{clean_heading}' should be H2 (##)",
-                    'fix': f"Only Title and Main Sections (Activities/Summary/Vocabulary) should be H1. Change '# {heading}' to '## {heading}'"
+                    'fix': f"Only Title and injected sections (Activities/Vocabulary) should be H1. Change '# {heading}' to '## {heading}'"
                 })
 
         # Check for H2 compliance (Sections that should NOT be H1)

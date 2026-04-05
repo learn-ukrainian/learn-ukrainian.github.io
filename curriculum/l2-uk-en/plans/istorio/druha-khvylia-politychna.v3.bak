@@ -1,0 +1,129 @@
+module: istorio-065
+level: ISTORIO
+sequence: 65
+slug: druha-khvylia-politychna
+version: '3.0'
+title: 'Друга хвиля: Політична (1920-1923)'
+focus: history
+pedagogy: seminar
+word_target: 5000
+objectives:
+- 'Analyze the causes and consequences of друга хвиля: політична (1920-1923)'
+- Evaluate the historical significance of поразка і відступ
+content_outline:
+- section: Вступ — Поразка і відступ
+  points:
+  - 1920-1921 — кінець визвольних змагань
+  - Хто опинився за кордоном
+  - Від армії до еміграції
+  - Структура модуля
+  words: 700
+- section: Табори інтернованих
+  points:
+  - Польща — Каліш, Вадовиці
+  - Умови життя
+  - Культурне життя в таборах
+  - Шлях до цивільного життя
+  words: 700
+- section: Прага — столиця еміграції
+  points:
+  - Чому Чехословаччина?
+  - Масарик і «Руська акція»
+  - Українські інституції
+  - Академічна еміграція
+  words: 700
+- section: Уряд в екзилі
+  points:
+  - УНР — безперервна державність
+  - Президенти в екзилі
+  - Дипломатична діяльність
+  - Символічне значення
+  words: 700
+- section: Інші центри
+  points:
+  - Відень — ранній центр
+  - Берлін — до 1933
+  - Париж — Петлюра
+  - Варшава — складні відносини
+  words: 700
+- section: Політичні течії
+  points:
+  - Петлюрівці vs. гетьманці
+  - ОУН — нове покоління
+  - Демократи vs. націоналісти
+  - Конфлікти і розколи
+  words: 700
+- section: Підсумок
+  points:
+  - Політична еміграція — хто вижив
+  - Збереження ідеї
+  - Підготовка до третьої хвилі
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+vocabulary:
+- політична еміграція
+- уряд в екзилі
+- інтернований
+- табір
+- Руська акція
+- дипломатія
+- екзил
+- легітимність
+- безперервність
+- течія
+- реваншизм
+- інтелігенція в еміграції
+- культурна місія
+- політичний розкол
+- державницька ідея
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+activities:
+- type: critical-analysis
+  focus: Ukrainian institutions in Prague — inventory
+- type: reading
+  focus: Paths of UNR leaders after 1921
+- type: critical-analysis
+  focus: Czech \"Russian Action\" — why support Ukrainians?
+- type: critical-analysis
+  focus: Map emigre political factions and conflicts
+- type: essay-response
+  focus: Чому Прага стала 'столицею' української еміграції?
+persona:
+  voice: Academic Historiographer
+  role: Diaspora Archivist
+prerequisites:
+- persha-khvylia-emihratsiyi
+connects_to:
+- tretia-khvylia-dipivtsi
+references:
+- name: Еміграція УНР (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_еміграція
+  type: reference
+  notes: Political emigration
+- name: Уряд УНР в екзилі (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Уряд_Української_Народної_Республіки_в_екзилі
+  type: reference
+  notes: Government in exile
+- name: Табори інтернованих (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Табори_інтернованих_вояків_Армії_УНР
+  type: reference
+  notes: Internment camps
+register: академічний
+grammar: []

@@ -1,0 +1,100 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння літературно-критичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Читання
+  focus: Розуміння літературного тексту (уривок з твору)
+  placement: inline
+  type: reading
+- focus: Аналіз авторського задуму — мова як мистецтво
+  placement: workbook
+  type: authorial-intent
+- focus: Літературна критика — оцінка інтерпретації
+  placement: workbook
+  type: critical-analysis
+- focus: Порівняння з іншими творами або інтерпретаціями (Tychyna Soviet Period)
+  placement: workbook
+  type: comparative-study
+- focus: Есе-аналіз рецепції та сучасного значення (Tychyna Soviet Period)
+  placement: workbook
+  type: essay-response
+connects_to:
+- lit-84
+content_outline:
+- points:
+  - Історичні умови появи твору/автора
+  - Місце в літературному каноні
+  - Чому цей текст важливий сьогодні
+  section: Вступ та культурний контекст
+  words: 850
+- points:
+  - Ключові етапи життя/розвитку сюжету
+  - Впливи та джерела
+  - Конфлікт як рушійна сила
+  section: 'Аналіз твору: Сюжет та структура'
+  words: 850
+- points:
+  - Детальний розбір символіки
+  - Система персонажів та їхня еволюція
+  - Архетипи та міфологічні підтексти
+  section: Герменевтика та ключові образи
+  words: 850
+- points:
+  - Стилістичні інновації автора
+  - Робота з народною мовою або оказіоналізмами
+  - Особливості ритміки та синтаксису
+  section: Мова, стиль та поетика
+  words: 850
+- points:
+  - Який імперський міф руйнує цей текст?
+  - Агентність українського героя
+  - Опір асиміляції та культурне самоствердження
+  section: Деколонізаційний вимір
+  words: 850
+- points:
+  - Вплив на наступні покоління письменників
+  - Світовий контекст твору
+  - Питання для дискусії
+  section: Підсумок та рецепція
+  words: 750
+focus: literature
+grammar: []
+immersion: 100% Ukrainian
+level: LIT
+module: lit-084
+module_type: literature
+objectives:
+- Проаналізувати твір Tychyna Soviet Period у контексті епохи
+- Дослідити стилістичні особливості тексту
+- Зрозуміти деколонізаційне значення автора
+pedagogy: Seminar
+persona:
+  role: State Bard
+  voice: Senior Philologist & Critic
+phase: LIT.3 Executed Renaissance 1917-1933
+prerequisites:
+- lit-82
+references:
+- name: Tychyna Soviet Period — тексти та аналіз
+  notes: Основне джерело
+  type: primary
+  url: https://www.ukrlib.com.ua/
+register: академічний
+sequence: 84
+slug: tychyna-soviet-period
+subtitle: Tychyna Soviet Period
+title: Tychyna Soviet Period
+version: '3.0'
+vocabulary_hints:
+  recommended:
+  - алегорія (allegory)
+  - контекст (context)
+  - рецепція (reception)
+  required:
+  - канон (canon)
+  - метафора (metaphor)
+  - дискурс (discourse)
+  - інтерпретація (interpretation)
+word_target: 5000

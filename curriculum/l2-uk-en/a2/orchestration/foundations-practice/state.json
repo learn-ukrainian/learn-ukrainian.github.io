@@ -3,13 +3,21 @@
   "track": "a2",
   "slug": "foundations-practice",
   "phases": {
-    "stress": {
+    "check": {
       "status": "complete",
-      "ts": "2026-04-02T14:56:54.318768+00:00"
+      "ts": "2026-04-05T09:55:54.673493+00:00"
     },
-    "publish": {
+    "research": {
       "status": "complete",
-      "ts": "2026-04-02T14:56:54.319079+00:00"
+      "ts": "2026-04-05T09:56:28.348103+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-05T09:56:53.024820+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-05T09:57:21.577466+00:00"
     }
   }
 }

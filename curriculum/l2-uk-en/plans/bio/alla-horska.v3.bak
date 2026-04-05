@@ -1,0 +1,102 @@
+module: bio-136
+level: BIO
+sequence: 136
+slug: alla-horska
+version: '3.0'
+title: 'Алла Горська: Художниця-дисидентка'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of алла горська: художниця-дисидентка'
+- Evaluate the contributions of вітраж, розбитий владою
+- Trace the career and influence of душа українського модернізму
+content_outline:
+- section: Вступ — Вітраж, розбитий владою
+  points:
+  - Художниця-монументалістка з яскравим талантом
+  - Ключова постать руху шістдесятників
+  - Загадкова загибель у 1970 році
+  words: 850
+- section: Формування художниці (1929-1952)
+  points:
+  - Народження в Ялті у родині інженера
+  - Евакуація під час війни
+  - Навчання в Київському художньому інституті
+  - Вплив вчителів на формування стилю
+  words: 850
+- section: Монументальне мистецтво (1952-1962)
+  points:
+  - Робота над мозаїками та вітражами
+  - Співпраця з чоловіком Віктором Зарецьким
+  - Пошук національного стилю
+  - Знамениті роботи в Києві та інших містах
+  words: 850
+- section: Шістдесятництво та опір (1962-1968)
+  points:
+  - Участь у русі шістдесятників
+  - Знищений вітраж у Київському університеті
+  - Підписання правозахисних листів
+  - Дружба з Василем Симоненком та іншими
+  words: 850
+- section: Переслідування та загибель (1968-1970)
+  points:
+  - Виключення зі Спілки художників
+  - Постійний нагляд КДБ
+  - Загадкові обставини смерті
+  - Версії про вбивство
+  words: 850
+- section: Спадщина — Душа українського модернізму
+  points:
+  - Збережені твори в музеях
+  - Вшанування пам'яті після незалежності
+  - Вплив на сучасне українське мистецтво
+  - Горська як символ незламності духу
+  words: 750
+vocabulary_hints:
+  required:
+  - монументальне мистецтво (monumental art)
+  - вітраж (stained glass)
+  - мозаїка (mosaic)
+  - шістдесятництво (Sixtiers movement)
+  - дисидент (dissident)
+  - правозахисник (human rights defender)
+  - переслідування (persecution)
+  - КДБ (KGB)
+  - спілка художників (artists' union)
+  - творча спадщина (creative legacy)
+  recommended:
+  - авангард (avant-garde)
+  - національний стиль (national style)
+  - репресований (repressed)
+  - символіка (symbolism)
+  - мученик (martyr)
+activity_hints:
+- type: reading
+  focus: Мистецтво шістдесятників
+  source: Art criticism sources
+  items: 3 passages
+- type: essay-response
+  focus: Чому влада боялася мистецтва Горської?
+  output: Analytical essay
+connects_to:
+- bio-75
+- bio-77
+prerequisites:
+- bio-71
+persona:
+  voice: Senior Biographer
+  role: Mosaicist
+module_type: biography
+immersion: 100% Ukrainian
+references:
+- name: Алла Горська (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Горська_Алла_Олександрівна
+  type: primary
+  notes: Biography covering artistic career and dissident activity
+- name: Музей шістдесятництва
+  url: https://60museum.org.ua/
+  type: reference
+  notes: Archives of Shistdesiatnyky movement
+register: академічний
+grammar: []

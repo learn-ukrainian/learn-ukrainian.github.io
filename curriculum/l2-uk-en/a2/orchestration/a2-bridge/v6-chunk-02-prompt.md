@@ -1,34 +1,22 @@
-# Section-by-Section Generation — Section 2/4
+# Section-by-Section Generation — Section 2/5
 
 You are writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 1: Ласкаво просимо до рівня А2 (A2, A2.1 [Foundation and Aspect Introduction])
-**Section to write:** Магія української фонології (The Magic of Ukrainian Phonology) (~770 words total)
-**Word target for this section:** 770 words (aim for 847 to account for undershoot)
+**Section to write:** Магія української фонології (The Magic of Ukrainian Phonology) (~700 words total)
+**Word target for this section:** 700 words (aim for 770 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Магія української фонології (The Magic of Ukrainian Phonology) (~770 words total)
-
-- P1 (~75 words): Introduction frame. Ukrainian phonology follows precise, systematic rules — what looks like an "exception" is almost always a pattern with a name. In A1 you may have noticed that стіл becomes стола, or that рука becomes ручка. These are not random — they follow two types of alternation: чергування голосних (vowel alternation) and чергування приголосних (consonant alternation). Knowing these rules lets you predict forms you've never seen before.
-
-- P2 (~130 words): Vowel alternation о/е → і in closed syllables. The rule: when a syllable becomes closed (ends in a consonant), the vowel о or е shifts to і. Compare: стіл (closed: стіл) vs. стола (open: сто-ла). More pairs: ніж / ножа, кінь / коня, лід / льоду. The test: look at the genitive singular. If the о/е disappears into the next syllable's vowel, the nominative has і. Київ / Києва demonstrates this for proper nouns. Practice reading the minimal pairs aloud — the vowel shift is audible: ніж sounds higher and tighter than ножа. This alternation is one reason Ukrainian sounds so melodic — stressed syllables shift to accommodate the word's shape.
-
-- P3 (~110 words): More vowel alternation — piч/печі, сіль/солі, піч/у печі. Introduce the full paradigm for стіл in nominative/genitive/locative: стіл → стола → у столі. Point out that місцевий always has і/і — a helpful memory anchor. Another pattern: е → і. Ліс / лісу, сік / соку (here о → і in other direction — note: this is a different historical process). Focus learners on the practical skill: before declining, ask «open or closed syllable in this form?»
-
-- P4 (~130 words): Consonant alternation — first palatalization г/ж, к/ч, х/ш. When certain suffixes or case endings follow г, к, х, these consonants "soften" into their palatal counterparts. Diminutive examples: нога → ніжка (little leg / foot), рука → ручка (little hand / pen), муха → мушка (little fly). The pattern г→ж, к→ч, х→ш applies before -к- in diminutives. Same alternation appears in the vocative: Ольга → Ольго (no mutation here — vocative uses -о), but in older forms: Ольже (less common). Practical tip: when you see ручка in a text, you know its root is рука. When you see книжечка, you know книга. This turns an obstacle into a reading superpower.
-
-- P5 (~125 words): Consonant alternation in the locative — second palatalization г→з, к→ц, х→с. When the locative ending -і follows these consonants, they shift: книга → у книзі (г→з), рука → у руці (к→ц), вухо → у вусі (х→с). More examples: дорога → на дорозі, нога → на нозі, аптека → в аптеці, потік → у потоці. This is why «в Луцьку» sounds different from «Луцьк» — к→ц before locative -і. Contrast with genitive, which keeps the original consonant: книги, руки, вуха. Summary rule: locative -і triggers the alternation; other cases do not (with some exceptions in dative, which A2 will cover).
-
-- P6 (~110 words): Stress patterns — наголос as a tool. Ukrainian stress is free and mobile — it can fall on any syllable and can shift within a paradigm. Two key functions: (1) distinguishing words — за́мок (castle, stress on first syllable) vs. замо́к (lock, stress on second). До́рога (expensive, adj.) vs. доро́га (road, noun). (2) Shifting within declension — вода́ / во́ди / во́ду, земля́ / зе́млі, рука́ / ру́ки. Mobile stress is one reason stress dictionaries (like Горох) matter — memorize stress with the word, not just the word's shape. Авраменко's Grade 5 stress dictionary lists over 200 commonly mispronounced words — revisit it whenever uncertain.
-
-- P7 (~90 words): Synthesis paragraph. These three systems — vowel alternation, consonant alternation, stress — work together. When you see the locative «у книзі», you can unpack it: root книг- (г→з before -і), ending -і (locative soft), stress stays on the root. Nothing is arbitrary. Every "strange" form is a predictable output of phonological rules operating on a stem. The learner's job at A2 is not to memorize every form, but to internalize the rules so the forms generate themselves. This is how native speakers think — not as a list, but as a system.
-
-- Exercise: Fill-in — Phonological Alternation Pairs (8 items). Each item: base form given (e.g., стіл, рука, книга, кінь, нога, піч, лід, дорога), learner fills in the specified declined form (genitive or locative) that triggers the alternation. Answers tested: стола, у руці, у книзі, коня, на нозі, у печі, льоду, на дорозі.
-
----
+## Магія української фонології (The Magic of Ukrainian Phonology) (~700 words total)
+- P1 (~140 words): [Explain the "Closed Syllable Rule" for vowel alternations *о/і* and *е/і*. Use *стіл/стола*, *Київ/Києва*, and *осінь/осені* to show how vowels change when an ending is added. Explain that this is the most common reason learners struggle with word roots.]
+- P2 (~140 words): [Explain the first palatalization of consonants (г/ж, к/ч, х/ш). Show how this affects diminutives and case forms. Examples: *нога/ніжка*, *рука/ручка*, *вухо/вушко*. Mention that these changes are historical and help the language sound softer.]
+- P3 (~140 words): [Discuss affricates *дж* and *дз* as single units of sound. Use examples like *джерело* and *дзвінок*. Contrast this with voicing assimilation, where a voiceless consonant becomes voiced before a voiced one, e.g., *просьба* [проз'ба] or *вокзал* [воґзал].]
+- P4 (~140 words): [Discuss the critical role of stress (наголос) in Ukrainian. Explain how stress can change meaning (*замок* "castle" vs. *замок* "lock") and how it often shifts in plural forms (*вода* vs. *води*). Use the "stress patterns" concept to help learners predict pronunciation.]
+- P5 (~140 words): [Explain "Mobile Stress" in noun paradigms. Show how the stress shifts from the stem to the ending or vice versa across cases, using *голова/голову* and *нога/ногу*. Explain that rhythmic balance is the driver behind these shifts.]
+- Exercise: [Fill-in, Phonological Alternation Pairs, 8 items: Provide the basic form and ask for the shifted form, e.g., "Кіт -> (К_та)", "Рік -> (Р_ку)".]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -36,7 +24,7 @@ You are writing ONE SECTION of a Ukrainian language module. Write ONLY this sect
 <previous_context>
 [...previous sections truncated...]
 
-— at the university - «у школі» — in school - «на уроці» — in a lesson - «на концерті» — at a concert - «на роботі» — at work The ending pattern for nouns follows a general rule: hard stems take -і (місто → у місті, університет → в університеті), and soft stems also take -і or -ї (земля → на землі). Adjectives change too: «новий» becomes «у новому місті» (neuter/masculine), and «нова» becomes «у новій школі» (feminine). Whenever you describe where something is located, you are using the locative case. ### Кличний відмінок (Vocative — звертання) The vocative case is used when you address someone directly — it is the case of **звертання** (direct address). You form it from the nominative: - «Марія → Маріє!» - «Тарас → Тарасе!» - «Олексій → Олексію!» - «Оксана → Оксано!» - «Надія → Надіє!» The basic patterns: masculine nouns with hard stems take -е (Тарасе); masculine nouns with soft stems take -ю (Олексію); feminine nouns ending in -а take -о (Оксано); feminine nouns ending in -я take -е (Маріє, Надіє). Ukrainian uses the vocative where English simply uses the nominative. Compare: «Оксано, де ти?» means "Oksana, where are you?" — but Ukrainian changes the name itself. As the textbook puts it: «Сідайте, будь ласка, бабусю» (Заболотний, Grade 5) — even «бабуся» (grandmother) shifts to the vocative «бабусю» when you speak to her directly. ### Повна карта відмінків (The Full Case Map) Now you can see all seven Ukrainian cases together. You already know the first four — the remaining three are your goal for A2: 1. **Називний** (Хто? Що?) — суб'єкт: who does the action. 2. **Знахідний** (Кого? Що?) — прямий об'єкт: what is acted upon. 3. **Місцевий** (Де? На кому? На чому?) — місце: location, always with a preposition. 4. **Кличний** (звертання) — адресат: the person you address directly. 5. **Родовий** (Кого? Чого?) — belonging, absence, origin. «Я з Канади» — you already used it! 6. **Давальний** (Кому? Чому?) — the recipient. «Мені двадцять п'ять» — you used this one too! 7. **Орудний** (Ким? Чим?) — instrument, accompaniment. How something is done or who accompanies. Look back at the dialogue. «Я з Канади» uses the родовий. «Мені двадцять п'ять» uses the давальний. You have been touching these cases in real speech since A1 — A2 is where you learn to use them consciously and confidently. Ви вже знаєте чотири. Три нових — це ваша ціль на рівні А2. <!-- INJECT_ACTIVITY: quiz, Case Identification Drill — 8 items: identify which of the 4 A1 cases (називний, знахідний, місцевий, кличний) is used by an underlined noun, and which question it answers. Draw sentences from the dialogue and paragraphs: «Я вивчаю *українську мову*.» (знахідний — Що?), «Ми живемо *в Канаді*.» (місцевий — Де?), «*Маріє*, де твій зошит?» (кличний — звертання), «*Студент* читає книгу.» (називний — Хто?), «Я п'ю *каву*.» (знахідний — Що?), «Алекс живе *в Києві*.» (місцевий — Де?), «*Оксано*, добрий день!» (кличний — звертання), «*Книга* лежить на столі.» (називний — Що?) -->
+window)*. However, feminine nouns undergo a clear change: the ending **-а** becomes **-у**, and **-я** becomes **-ю**. You learned to say **читати книгу** *(to read a book)*, **пити каву** *(to drink coffee)*, and **писати статтю** *(to write an article)*. We also use the Accusative case with verbs of motion to show destination, like **іти в школу** *(to go to school)*. The Locative case (**Місцевий відмінок** *(Locative case)*) answers the questions **Де?** *(Where?)*, **На кому?** *(On whom?)*, and **На чому?** *(On what?)*. We use it to describe static location, answering where someone or something is situated. This case is unique because it is never used without a preposition; you must always use it with **в/у** *(in)* or **на** *(on/at)*. For most regular nouns across all three genders, the Locative ending is simply **-і**. This makes it one of the easiest cases to form. You already know how to say **у місті** *(in the city)*, **в аптеці** *(in the pharmacy)*, **на роботі** *(at work)*, and **на столі** *(on the table)*. Remember that it contrasts with the Accusative: **я йду на роботу** *(I am going to work)* uses the Accusative for motion, while **я на роботі** *(I am at work)* uses the Locative for position. The Vocative case (**Кличний відмінок** *(Vocative case)*) is used for addressing someone directly (**звертання** *(addressing)*). In Ukrainian culture, it is highly unnatural to call someone by their Nominative name; the Vocative is essential for polite and natural communication. For masculine names and titles, the endings are typically **-у**, **-ю**, or **-е**. For example, you say **Сергію** *(Serhiy!)*, **друже** *(friend!)*, and **Павле** *(Pavlo!)*. For feminine names, the endings change to **-о** or **-е**, as in **Маріє** *(Mariya!)*, **Оксано** *(Oksana!)*, and **мамо** *(mom!)*. Using this case immediately makes your Ukrainian sound authentic. Now that we have reviewed your foundation, let's look at the "Great Map" of the Ukrainian case system. There are seven cases in total. You have mastered four, and in the A2 level, we will conquer the remaining three "frontier" cases. The table below shows the complete system. | Відмінок *(Case)* | Питання *(Questions)* | Функція *(Function)* | Рівень *(Level)* | | --- | --- | --- | --- | | Називний *(Nominative)* | Хто? Що? | Subject, dictionary form | A1 | | Знахідний *(Accusative)* | Кого? Що? | Direct object, destination | A1 | | Місцевий *(Locative)* | Де? На кому/чому? | Static location | A1 | | Кличний *(Vocative)* | (Звертання) | Addressing someone | A1 | | Родовий *(Genitive)* | Кого? Чого? | Possession, absence, quantity | **A2** | | Давальний *(Dative)* | Кому? Чому? | Indirect object, to/for whom | **A2** | | Орудний *(Instrumental)* | Ким? Чим? | Instrument, with whom/what | **A2** | The Genitive case (**Родовий відмінок** *(Genitive case)*) will be your first major milestone in A2. It is incredibly versatile and is used for possession, expressing lack or absence, and counting quantities. Soon, you will be able to navigate the entire map! <!-- INJECT_ACTIVITY: quiz, Case Identification Drill -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -49,7 +37,7 @@ module: a2-001
 level: A2
 sequence: 1
 slug: a2-bridge
-version: '1.0'
+version: '1.2'
 title: Ласкаво просимо до рівня А2
 subtitle: Огляд граматики А1 та підготовка до нових тем
 focus: review
@@ -57,84 +45,96 @@ pedagogy: PPP
 phase: A2.1 [Foundation and Aspect Introduction]
 word_target: 2000
 objectives:
-- Learner can confidently recall and use the Nominative, Accusative, Locative, and
-  Vocative cases for nouns and adjectives learned in A1.
-- Learner can recognize and predict common vowel alternations (e.g., о/і, е/і in closed
-  syllables) and consonant mutations (г/з/ж, к/ц/ч) in noun and verb stems.
-- Learner can actively apply basic euphonic rules (у/в, і/й, з/зі/із) to produce more
-  natural-sounding Ukrainian.
-- Learner can understand the roadmap for the A2 level, including the introduction
-  of the Genitive, Dative, and Instrumental cases.
+  - Learner can confidently recall and use the Nominative, Accusative, Locative,
+    and Vocative cases for nouns and adjectives learned in A1.
+  - Learner can recognize and predict common vowel alternations (e.g., о/і, е/і 
+    in closed syllables) and consonant mutations (г/з/ж, к/ц/ч) in noun and verb
+    stems.
+  - Learner can actively apply basic euphonic rules (у/в, і/й, з/зі/із) to 
+    produce more natural-sounding Ukrainian.
+  - Learner can understand the roadmap for the A2 level, including the 
+    introduction of the Genitive, Dative, and Instrumental cases.
 dialogue_situations:
-- setting: 'Arrival at a Kyiv language school on the first day of A2 — reviewing what
-    you know: Я з Канади (genitive). Мені 25 (dative). Я вивчаю українську мову (accusative).
-    Я живу в Києві (locative).'
-  speakers:
-  - Новий студент
-  - Викладач (teacher)
-  motivation: Review all A1 cases in a natural intro conversation
+  - setting: 'Arrival at a Kyiv language school on the first day of A2 — reviewing
+      what you know: Я — студент (nominative). Я вивчаю українську мову
+      (accusative). Я живу в Києві (locative). Привіт, Оксано! (vocative).'
+    speakers:
+      - Новий студент
+      - Викладач (teacher)
+    motivation: Review all A1 cases in a natural intro conversation
 content_outline:
-- section: Пригадуємо відмінки (Reviewing Cases)
-  words: 600
-  points:
-  - 'Quick review of the four A1 cases: Nominative (Хто? Що?), Accusative (Кого? Що?),
-    Locative (Де? На кому? На чому?), and Vocative (звертання).'
-  - 'Practice exercises: identifying case usage in sentences and declining familiar
-    noun-adjective pairs.'
-  - 'Introducing the full case system map: showing all seven cases and highlighting
-    the three new ones for A2 (Genitive, Dative, Instrumental).'
-- section: Магія української фонології (The Magic of Ukrainian Phonology)
-  words: 700
-  points:
-  - 'Revisiting key vowel alternations: о/і, е/і (e.g., стіл/стола, Київ/Києва). Explaining
-    the ''closed syllable'' rule.'
-  - 'Revisiting key consonant alternations: the first palatalization (г/ж, к/ч, х/ш)
-    and its effect on noun and verb forms (нога/ніжка, рука/ручка).'
-  - 'Introduction to stress patterns: identifying common patterns and using stress
-    to disambiguate words (e.g., замок "castle" vs. замок "lock").'
-- section: 'Милозвучність мови: евфонія (The Melody of Language: Euphony)'
-  words: 400
-  points:
-  - Formalizing the rules for у/в and і/й alternation based on surrounding sounds
-    (vowel vs. consonant).
-  - Explaining the use of з/зі/із before difficult consonant clusters.
-  - Practice creating fluid sentences by choosing the correct euphonic particle.
-- section: Що нас чекає на рівні А2? (What Awaits Us in A2?)
-  words: 300
-  points:
-  - 'A clear roadmap of the A2 curriculum: introduction to aspect, mastering all seven
-    noun cases, verb conjugation patterns, and verbs of motion.'
-  - 'Setting expectations: A2 is where learners begin to express more complex ideas
-    and move beyond simple statements.'
+  - section: Пригадуємо відмінки (Reviewing Cases)
+    words: 600
+    points:
+      - 'Quick review of the four A1 cases: Nominative (Хто? Що?), Accusative (Кого?
+        Що?), Locative (Де? На кому? На чому?), and Vocative (звертання).'
+      - 'Practice exercises: identifying case usage in sentences and declining familiar
+        noun-adjective pairs.'
+      - 'Introducing the full case system map: showing all seven cases and highlighting
+        the three new ones for A2 (Genitive, Dative, Instrumental).'
+  - section: Магія української фонології (The Magic of Ukrainian Phonology)
+    words: 700
+    points:
+      - 'Revisiting key vowel alternations: о/і, е/і (e.g., стіл/стола, Київ/Києва).
+        Explaining the ''closed syllable'' rule.'
+      - 'Revisiting key consonant alternations: the first palatalization (г/ж, к/ч,
+        х/ш) and its effect on noun and verb forms (нога/ніжка, рука/ручка).'
+      - 'Introduction to stress patterns: identifying common patterns and using stress
+        to disambiguate words (e.g., замок "castle" vs. замок "lock").'
+      - 'Consonant assimilation: дж and дз as single sounds (affricates), not two
+        separate consonants — джерело, дзвінок, бджола. Voicing assimilation before
+        voiced consonants: просьба → [проз''ба], боротьба → [бород''ба], вокзал →
+        [воґзал].'
+      - 'Mobile stress in noun paradigms: stress shifts between stem and ending across
+        cases — вода/воду, рука/руки, голова/голову, нога/ногу. Recognizing
+        this pattern helps predict pronunciation of new nouns.'
+  - section: 'Милозвучність мови: евфонія (The Melody of Language: Euphony)'
+    words: 400
+    points:
+      - Formalizing the rules for у/в and і/й alternation based on surrounding 
+        sounds (vowel vs. consonant).
+      - Explaining the use of з/зі/із before difficult consonant clusters.
+      - Practice creating fluid sentences by choosing the correct euphonic 
+        particle.
+  - section: Що нас чекає на рівні А2? (What Awaits Us in A2?)
+    words: 300
+    points:
+      - 'A clear roadmap of the A2 curriculum: introduction to aspect, mastering all
+        seven noun cases, verb conjugation patterns, and verbs of motion.'
+      - 'Setting expectations: A2 is where learners begin to express more complex
+        ideas and move beyond simple statements.'
 vocabulary_hints:
   required:
-  - відмінок (case)
-  - називний (nominative)
-  - знахідний (accusative)
-  - місцевий (locative)
-  - кличний (vocative)
-  - чергування (alternation)
-  - голосний (vowel)
-  - приголосний (consonant)
-  - наголос (stress (accent))
+    - відмінок (case)
+    - називний (nominative)
+    - знахідний (accusative)
+    - місцевий (locative)
+    - кличний (vocative)
+    - чергування (alternation)
+    - голосний (vowel)
+    - приголосний (consonant)
+    - наголос (stress (accent))
   recommended:
-  - милозвучність (euphony, melodiousness)
-  - огляд (review, overview)
-  - система (system)
-  - правило (rule)
+    - милозвучність (euphony, melodiousness)
+    - огляд (review, overview)
+    - система (system)
+    - правило (rule)
 activity_hints:
-- type: quiz
-  focus: Case Identification Drill
-  items: 8
-- type: fill-in
-  focus: Phonological Alternation Pairs
-  items: 8
-- type: match-up
-  focus: Euphony Choice Exercise
-  items: 8
+  - type: quiz
+    focus: Case Identification Drill
+    items: 8
+  - type: fill-in
+    focus: Phonological Alternation Pairs
+    items: 8
+  - type: match-up
+    focus: Euphony Choice Exercise
+    items: 8
+  - type: error-correction
+    focus: Euphony Error Correction
+    items: 6
 references:
-- title: Заболотний Grade 5, §1-10
-  notes: Повторення вивченого в початкових класах
+  - title: Заболотний Grade 5, §1-10
+    notes: Повторення вивченого в початкових класах
 
 </plan_content>
 
@@ -486,6 +486,8 @@ references:
 </knowledge_packet>
 
 ---
+
+
 
 ## Rules
 

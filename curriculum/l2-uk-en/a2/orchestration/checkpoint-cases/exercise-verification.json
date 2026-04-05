@@ -1,0 +1,550 @@
+{
+  "total_items": 192,
+  "grounded_items": 87,
+  "ungrounded": [
+    {
+      "word": "називний",
+      "exercise_type": "group-sort",
+      "context": "Називний"
+    },
+    {
+      "word": "родовий",
+      "exercise_type": "group-sort",
+      "context": "Родовий"
+    },
+    {
+      "word": "давальний",
+      "exercise_type": "group-sort",
+      "context": "Давальний"
+    },
+    {
+      "word": "знахідний",
+      "exercise_type": "group-sort",
+      "context": "Знахідний"
+    },
+    {
+      "word": "орудний",
+      "exercise_type": "group-sort",
+      "context": "Орудний"
+    },
+    {
+      "word": "місцевий",
+      "exercise_type": "group-sort",
+      "context": "Місцевий"
+    },
+    {
+      "word": "кличний",
+      "exercise_type": "group-sort",
+      "context": "Кличний"
+    },
+    {
+      "word": "студенти",
+      "exercise_type": "quiz",
+      "context": "Я бачу нових *студенти*."
+    },
+    {
+      "word": "студентам",
+      "exercise_type": "quiz",
+      "context": "студентам"
+    },
+    {
+      "word": "студентами",
+      "exercise_type": "quiz",
+      "context": "студентами"
+    },
+    {
+      "word": "студентах",
+      "exercise_type": "quiz",
+      "context": "студентах"
+    },
+    {
+      "word": "брату",
+      "exercise_type": "quiz",
+      "context": "брату"
+    },
+    {
+      "word": "братом",
+      "exercise_type": "quiz",
+      "context": "братом"
+    },
+    {
+      "word": "браті",
+      "exercise_type": "quiz",
+      "context": "браті"
+    },
+    {
+      "word": "робота",
+      "exercise_type": "quiz",
+      "context": "робота"
+    },
+    {
+      "word": "роботою",
+      "exercise_type": "quiz",
+      "context": "роботою"
+    },
+    {
+      "word": "роботах",
+      "exercise_type": "quiz",
+      "context": "роботах"
+    },
+    {
+      "word": "історія",
+      "exercise_type": "quiz",
+      "context": "Ми цікавимося *історія*."
+    },
+    {
+      "word": "історії",
+      "exercise_type": "quiz",
+      "context": "історії"
+    },
+    {
+      "word": "історію",
+      "exercise_type": "quiz",
+      "context": "історію"
+    },
+    {
+      "word": "історіях",
+      "exercise_type": "quiz",
+      "context": "історіях"
+    },
+    {
+      "word": "молоко",
+      "exercise_type": "quiz",
+      "context": "Я п'ю каву з *молоко*."
+    },
+    {
+      "word": "молока",
+      "exercise_type": "quiz",
+      "context": "молока"
+    },
+    {
+      "word": "молоку",
+      "exercise_type": "quiz",
+      "context": "молоку"
+    },
+    {
+      "word": "молоці",
+      "exercise_type": "quiz",
+      "context": "молоці"
+    },
+    {
+      "word": "гроші",
+      "exercise_type": "quiz",
+      "context": "У мене багато *гроші*."
+    },
+    {
+      "word": "грошам",
+      "exercise_type": "quiz",
+      "context": "грошам"
+    },
+    {
+      "word": "грошима",
+      "exercise_type": "quiz",
+      "context": "грошима"
+    },
+    {
+      "word": "грошах",
+      "exercise_type": "quiz",
+      "context": "грошах"
+    },
+    {
+      "word": "вікнам",
+      "exercise_type": "quiz",
+      "context": "вікнам"
+    },
+    {
+      "word": "вікнами",
+      "exercise_type": "quiz",
+      "context": "вікнами"
+    },
+    {
+      "word": "вчитель",
+      "exercise_type": "quiz",
+      "context": "Учні дякують *вчитель*."
+    },
+    {
+      "word": "вчителя",
+      "exercise_type": "quiz",
+      "context": "вчителя"
+    },
+    {
+      "word": "вчителем",
+      "exercise_type": "quiz",
+      "context": "вчителем"
+    },
+    {
+      "word": "вчителі",
+      "exercise_type": "quiz",
+      "context": "вчителі"
+    },
+    {
+      "word": "нове",
+      "exercise_type": "error-correction",
+      "context": "нове"
+    },
+    {
+      "word": "нова",
+      "exercise_type": "error-correction",
+      "context": "нова"
+    },
+    {
+      "word": "київ",
+      "exercise_type": "error-correction",
+      "context": "Ми їдемо у Київ автобус."
+    },
+    {
+      "word": "автобус",
+      "exercise_type": "error-correction",
+      "context": "Ми їдемо у Київ автобус."
+    },
+    {
+      "word": "автобуса",
+      "exercise_type": "error-correction",
+      "context": "автобуса"
+    },
+    {
+      "word": "автобусу",
+      "exercise_type": "error-correction",
+      "context": "автобусу"
+    },
+    {
+      "word": "сестри",
+      "exercise_type": "error-correction",
+      "context": "сестри"
+    },
+    {
+      "word": "готелі",
+      "exercise_type": "error-correction",
+      "context": "У місті немає готелі."
+    },
+    {
+      "word": "готель",
+      "exercise_type": "error-correction",
+      "context": "готель"
+    },
+    {
+      "word": "готелям",
+      "exercise_type": "error-correction",
+      "context": "готелям"
+    },
+    {
+      "word": "допомагає",
+      "exercise_type": "error-correction",
+      "context": "Вона завжди допомагає мама."
+    },
+    {
+      "word": "мама",
+      "exercise_type": "error-correction",
+      "context": "Вона завжди допомагає мама."
+    },
+    {
+      "word": "маму",
+      "exercise_type": "error-correction",
+      "context": "маму"
+    },
+    {
+      "word": "мамою",
+      "exercise_type": "error-correction",
+      "context": "мамою"
+    },
+    {
+      "word": "друзів",
+      "exercise_type": "fill-in",
+      "context": "друзів"
+    },
+    {
+      "word": "друзям",
+      "exercise_type": "fill-in",
+      "context": "друзям"
+    },
+    {
+      "word": "ручка",
+      "exercise_type": "fill-in",
+      "context": "Я пишу синьою ____ (ручка)."
+    },
+    {
+      "word": "ручку",
+      "exercise_type": "fill-in",
+      "context": "ручку"
+    },
+    {
+      "word": "ручки",
+      "exercise_type": "fill-in",
+      "context": "ручки"
+    },
+    {
+      "word": "йде",
+      "exercise_type": "fill-in",
+      "context": "Вона йде на ____ (робота)."
+    },
+    {
+      "word": "школа",
+      "exercise_type": "fill-in",
+      "context": "Ми зараз у ____ (школа)."
+    },
+    {
+      "word": "школою",
+      "exercise_type": "fill-in",
+      "context": "школою"
+    },
+    {
+      "word": "цікавляться",
+      "exercise_type": "fill-in",
+      "context": "Вони цікавляться ____ (історія)."
+    },
+    {
+      "word": "студент",
+      "exercise_type": "fill-in",
+      "context": "Я бачу нових ____ (студент)."
+    },
+    {
+      "word": "велике",
+      "exercise_type": "match-up",
+      "context": "велике місто"
+    },
+    {
+      "word": "закінчення",
+      "exercise_type": "group-sort",
+      "context": "Закінчення -ів"
+    },
+    {
+      "word": "нульове",
+      "exercise_type": "group-sort",
+      "context": "Нульове закінчення"
+    },
+    {
+      "word": "напрямку",
+      "exercise_type": "true-false",
+      "context": "Для напрямку руху (куди?) з прийменниками «в» і «на» ми вико"
+    },
+    {
+      "word": "руху",
+      "exercise_type": "true-false",
+      "context": "Для напрямку руху (куди?) з прийменниками «в» і «на» ми вико"
+    },
+    {
+      "word": "куди",
+      "exercise_type": "true-false",
+      "context": "Для напрямку руху (куди?) з прийменниками «в» і «на» ми вико"
+    },
+    {
+      "word": "прийменниками",
+      "exercise_type": "true-false",
+      "context": "Для напрямку руху (куди?) з прийменниками «в» і «на» ми вико"
+    },
+    {
+      "word": "використовуємо",
+      "exercise_type": "true-false",
+      "context": "Для напрямку руху (куди?) з прийменниками «в» і «на» ми вико"
+    },
+    {
+      "word": "дієслова",
+      "exercise_type": "true-false",
+      "context": "Дієслова «допомагати» і «дякувати» вимагають Родового відмін"
+    },
+    {
+      "word": "вимагають",
+      "exercise_type": "true-false",
+      "context": "Дієслова «допомагати» і «дякувати» вимагають Родового відмін"
+    },
+    {
+      "word": "родового",
+      "exercise_type": "true-false",
+      "context": "Дієслова «допомагати» і «дякувати» вимагають Родового відмін"
+    },
+    {
+      "word": "відмінка",
+      "exercise_type": "true-false",
+      "context": "Дієслова «допомагати» і «дякувати» вимагають Родового відмін"
+    },
+    {
+      "word": "після",
+      "exercise_type": "true-false",
+      "context": "Після слова «багато» та цифр 5 і більше завжди використовуєт"
+    },
+    {
+      "word": "слова",
+      "exercise_type": "true-false",
+      "context": "Після слова «багато» та цифр 5 і більше завжди використовуєт"
+    },
+    {
+      "word": "та",
+      "exercise_type": "true-false",
+      "context": "Після слова «багато» та цифр 5 і більше завжди використовуєт"
+    },
+    {
+      "word": "цифр",
+      "exercise_type": "true-false",
+      "context": "Після слова «багато» та цифр 5 і більше завжди використовуєт"
+    },
+    {
+      "word": "більше",
+      "exercise_type": "true-false",
+      "context": "Після слова «багато» та цифр 5 і більше завжди використовуєт"
+    },
+    {
+      "word": "використовується",
+      "exercise_type": "true-false",
+      "context": "Після слова «багато» та цифр 5 і більше завжди використовуєт"
+    },
+    {
+      "word": "знахідному",
+      "exercise_type": "true-false",
+      "context": "У Знахідному відмінку множини неживі предмети мають таку ж ф"
+    },
+    {
+      "word": "відмінку",
+      "exercise_type": "true-false",
+      "context": "У Знахідному відмінку множини неживі предмети мають таку ж ф"
+    },
+    {
+      "word": "неживі",
+      "exercise_type": "true-false",
+      "context": "У Знахідному відмінку множини неживі предмети мають таку ж ф"
+    },
+    {
+      "word": "предмети",
+      "exercise_type": "true-false",
+      "context": "У Знахідному відмінку множини неживі предмети мають таку ж ф"
+    },
+    {
+      "word": "мають",
+      "exercise_type": "true-false",
+      "context": "У Знахідному відмінку множини неживі предмети мають таку ж ф"
+    },
+    {
+      "word": "таку",
+      "exercise_type": "true-false",
+      "context": "У Знахідному відмінку множини неживі предмети мають таку ж ф"
+    },
+    {
+      "word": "форму",
+      "exercise_type": "true-false",
+      "context": "У Знахідному відмінку множини неживі предмети мають таку ж ф"
+    },
+    {
+      "word": "як",
+      "exercise_type": "true-false",
+      "context": "У Знахідному відмінку множини неживі предмети мають таку ж ф"
+    },
+    {
+      "word": "родовому",
+      "exercise_type": "true-false",
+      "context": "У Знахідному відмінку множини неживі предмети мають таку ж ф"
+    },
+    {
+      "word": "часто",
+      "exercise_type": "true-false",
+      "context": "Орудний відмінок часто використовується без прийменника для "
+    },
+    {
+      "word": "без",
+      "exercise_type": "true-false",
+      "context": "Орудний відмінок часто використовується без прийменника для "
+    },
+    {
+      "word": "прийменника",
+      "exercise_type": "true-false",
+      "context": "Орудний відмінок часто використовується без прийменника для "
+    },
+    {
+      "word": "транспорту",
+      "exercise_type": "true-false",
+      "context": "Орудний відмінок часто використовується без прийменника для "
+    },
+    {
+      "word": "чи",
+      "exercise_type": "true-false",
+      "context": "Орудний відмінок часто використовується без прийменника для "
+    },
+    {
+      "word": "інструменту",
+      "exercise_type": "true-false",
+      "context": "Орудний відмінок часто використовується без прийменника для "
+    },
+    {
+      "word": "прийменник",
+      "exercise_type": "true-false",
+      "context": "Прийменник «з» завжди використовується тільки з Орудним відм"
+    },
+    {
+      "word": "тільки",
+      "exercise_type": "true-false",
+      "context": "Прийменник «з» завжди використовується тільки з Орудним відм"
+    },
+    {
+      "word": "орудним",
+      "exercise_type": "true-false",
+      "context": "Прийменник «з» завжди використовується тільки з Орудним відм"
+    },
+    {
+      "word": "відмінком",
+      "exercise_type": "true-false",
+      "context": "Прийменник «з» завжди використовується тільки з Орудним відм"
+    },
+    {
+      "word": "сестрою",
+      "exercise_type": "quiz",
+      "context": "сестрою"
+    },
+    {
+      "word": "допомагаємо",
+      "exercise_type": "quiz",
+      "context": "Ми часто допомагаємо _____"
+    },
+    {
+      "word": "професійно",
+      "exercise_type": "quiz",
+      "context": "Він професійно займається _____"
+    },
+    {
+      "word": "спорт",
+      "exercise_type": "quiz",
+      "context": "спорт"
+    },
+    {
+      "word": "спорту",
+      "exercise_type": "quiz",
+      "context": "спорту"
+    },
+    {
+      "word": "спорті",
+      "exercise_type": "quiz",
+      "context": "спорті"
+    },
+    {
+      "word": "будинку",
+      "exercise_type": "quiz",
+      "context": "будинку"
+    },
+    {
+      "word": "будинком",
+      "exercise_type": "quiz",
+      "context": "будинком"
+    },
+    {
+      "word": "будинки",
+      "exercise_type": "quiz",
+      "context": "будинки"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 13,
+    "tested_in_exercises": 1,
+    "not_tested": [
+      "виправити",
+      "вихідний",
+      "впевнено",
+      "день",
+      "завдання",
+      "контрольна",
+      "множина",
+      "однина",
+      "перевірка",
+      "помилка",
+      "самоперевірка",
+      "точка"
+    ]
+  },
+  "all_grounded": false
+}

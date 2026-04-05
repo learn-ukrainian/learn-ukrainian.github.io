@@ -1,0 +1,109 @@
+module: bio-121
+level: BIO
+sequence: 121
+slug: serhiy-korolyov
+version: '3.0'
+title: 'Сергій Корольов: Батько космічної ери'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of сергій корольов: батько космічної ери'
+- Evaluate the contributions of українець, який відкрив космос
+- Trace the career and influence of спадщина та повернення в україну
+content_outline:
+- section: Вступ — Українець, який відкрив космос
+  points:
+  - Корольов як творець радянської космічної програми
+  - Українське походження та приховане ім'я
+  - Жертва ГУЛАГу, що став "головним конструктором"
+  words: 850
+- section: Українське коріння
+  points:
+  - Народження в Житомирі (1907)
+  - Дитинство в українській родині
+  - Мати — вчителька, говорила українською
+  - Освіта в Київському політехнічному інституті
+  words: 850
+- section: Ракетна мрія
+  points:
+  - Захоплення авіацією з молодості
+  - Перші ракетні експерименти
+  - Створення ракетного науково-дослідного інституту
+  - Арешт і вирок (1938)
+  words: 850
+- section: ГУЛАГ і виживання
+  points:
+  - 6 років у таборах та "шарашках"
+  - Робота у в'язничних конструкторських бюро
+  - Підірване здоров'я
+  - Звільнення та реабілітація
+  words: 850
+- section: Творець космічної ери
+  points:
+  - Перша міжконтинентальна ракета (1957)
+  - Перший супутник (Спутник-1)
+  - Перший космонавт (Гагарін, 1961)
+  - Секретне ім'я "Головний конструктор"
+  words: 850
+- section: Спадщина та повернення в Україну
+  points:
+  - Рання смерть (1966)
+  - Музей у Житомирі
+  - Визнання українського походження
+  - Корольов як символ повернутої спадщини
+  words: 750
+vocabulary_hints:
+  required:
+  - конструктор (designer/engineer)
+  - ракета (rocket)
+  - космонавт (cosmonaut)
+  - супутник (satellite)
+  - ГУЛАГ (Gulag)
+  - '"шарашка" (prison lab)'
+  - секретний (secret)
+  - походження (origin)
+  - спадщина (heritage)
+  - реабілітація (rehabilitation)
+  recommended:
+  - траєкторія (trajectory)
+  - орбіта (orbit)
+  - запуск (launch)
+  - міжконтинентальний (intercontinental)
+  - конструкторське бюро (design bureau)
+activity_hints:
+- type: reading
+  focus: Korolyov's letters and memoirs
+  source: Historical archives
+  items: 3 passages
+- type: essay-response
+  focus: Why is Korolyov considered Ukrainian heritage?
+  output: Analysis of reclaimed identity
+connects_to:
+- bio-109 (Kondratiuk - intellectual predecessor)
+- bio-49 (Puliui - earlier reclaimed figure)
+- bio-69 (Yevhen Paton - contemporary engineer)
+prerequisites:
+- Space race historical context
+- Soviet repression understanding
+- bio-109 (Kondratiuk - space theorist)
+persona:
+  voice: Senior Biographer
+  role: Chief Constructor
+module_type: biography
+immersion: 100% Ukrainian
+references:
+- name: Сергій Корольов (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Корольов_Сергій_Павлович
+  type: primary
+  notes: Biography, space achievements, Ukrainian origins
+- name: Музей космонавтики Корольова в Житомирі
+  url: https://uk.wikipedia.org/wiki/Житомирський_меморіальний_музей_космонавтики_імені_Сергія_Павловича_Корольова
+  type: reference
+  notes: Museum in his birthplace
+- name: ГУЛАГ
+  url: https://uk.wikipedia.org/wiki/ГУЛАГ
+  type: reference
+  notes: His imprisonment
+register: академічний
+grammar: []

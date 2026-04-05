@@ -1,0 +1,132 @@
+module: istorio-068
+level: ISTORIO
+sequence: 68
+slug: diaspora-naukovtsi
+version: '3.0'
+title: 'Діаспорні науковці: Збереження спадщини'
+focus: history
+pedagogy: seminar
+word_target: 5000
+objectives:
+- 'Analyze the causes and consequences of діаспорні науковці: збереження спадщини'
+- Evaluate the historical significance of наука в еміграції
+content_outline:
+- section: Вступ — Наука в еміграції
+  points:
+  - Чому потрібні наукові інституції
+  - Науковці серед ДіПі
+  - Створення альтернативного простору
+  - Структура модуля
+  words: 700
+- section: Гарвардський український інститут (HURI)
+  points:
+  - Заснування — 1973
+  - Омелян Пріцак — візія
+  - Кафедра українознавства
+  - Видання — Harvard Ukrainian Studies
+  - Вплив на західну науку
+  words: 700
+- section: УВАН — Українська вільна академія наук
+  points:
+  - Заснування — 1945, Аугсбург
+  - Переїзд до Нью-Йорка
+  - Наукова діяльність
+  - Видання і публікації
+  - Збереження традиції
+  words: 700
+- section: НТШ в діаспорі
+  points:
+  - Історія — від Львова до еміграції
+  - Відновлення в діаспорі
+  - Наукові осередки — США, Канада, Європа
+  - Енциклопедія українознавства
+  words: 700
+- section: Ключові постаті
+  points:
+  - Омелян Пріцак — орієнталіст
+  - Ярослав Пеленський — політолог
+  - Джон-Пол Химка — історик
+  - Роман Шпорлюк — націолог
+  - Оксана Забужко — письменниця-науковиця
+  words: 700
+- section: Спадщина для України
+  points:
+  - Що зберегли — бібліотеки, архіви
+  - Вплив після 1991
+  - Повернення знань
+  - Сучасна співпраця
+  words: 700
+- section: Підсумок
+  points:
+  - Діаспора — «інтелектуальний ковчег»
+  - Без діаспори — що б втратили
+  - Зв'язок з незалежною Україною
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+vocabulary:
+- науковець
+- інститут
+- академія
+- кафедра
+- українознавство
+- енциклопедія
+- бібліотека
+- архів
+- публікація
+- спадщина
+- орієнталістика
+- націологія
+- джерелознавство
+- історіографія
+- рецепція
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+activities:
+- type: comparative-study
+  focus: Compare HURI, UVAN, NTSh — missions and methods
+- type: reading
+  focus: Pritsak's vision for Ukrainian studies
+- type: critical-analysis
+  focus: Key diaspora publications and their impact
+- type: critical-analysis
+  focus: How diaspora knowledge returned to Ukraine after 1991
+- type: essay-response
+  focus: Що українська наука втратила б без діаспори?
+persona:
+  voice: Academic Historiographer
+  role: History of Science Scholar
+prerequisites:
+- diaspora-orhanizatsiyi
+connects_to:
+- syntez-diaspora
+references:
+- name: Український науковий інститут Гарварду (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Український_науковий_інститут_Гарвардського_університету
+  type: reference
+  notes: HURI history
+- name: УВАН (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_вільна_академія_наук
+  type: reference
+  notes: UVAN history
+- name: НТШ (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Наукове_товариство_імені_Шевченка
+  type: reference
+  notes: Shevchenko Society
+register: академічний
+grammar: []

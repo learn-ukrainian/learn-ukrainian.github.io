@@ -1,0 +1,230 @@
+version: '1.0'
+module: dative-nouns
+level: a2
+workbook:
+- id: fill-in-dative
+  type: fill-in
+  instruction: Поставте іменник у давальному відмінку
+  items:
+  - sentence: Я хочу написати листа [брат].
+    answer: братові
+    options:
+    - братові
+    - брата
+    - братом
+    - браті
+  - sentence: Вона подарувала квіти [мама].
+    answer: мамі
+    options:
+    - мамі
+    - мамою
+    - маму
+    - мама
+  - sentence: Студент відповів [вчитель].
+    answer: вчителеві
+    options:
+    - вчителеві
+    - вчителя
+    - вчителем
+    - вчителі
+  - sentence: Він допомагає своїй [сестра].
+    answer: сестрі
+    options:
+    - сестрі
+    - сестрою
+    - сестру
+    - сестра
+  - sentence: Ми часто телефонуємо [дідусь].
+    answer: дідусеві
+    options:
+    - дідусеві
+    - дідуся
+    - дідусем
+    - дідусі
+  - sentence: Дівчинка дала воду [курча].
+    answer: курчаті
+    options:
+    - курчаті
+    - курчам
+    - курчати
+    - курча
+  - sentence: Вони дали нову назву [місто].
+    answer: місту
+    options:
+    - місту
+    - містом
+    - міста
+    - місті
+  - sentence: Я купив книгу [друг].
+    answer: другові
+    options:
+    - другові
+    - друга
+    - другом
+    - друзі
+- id: group-sort-gender
+  type: group-sort
+  instruction: Розподіліть іменники в давальному відмінку за родом
+  groups:
+  - label: Чоловічий рід
+    items:
+    - студентові
+    - братові
+    - вчителеві
+    - другові
+  - label: Жіночий рід
+    items:
+    - мамі
+    - сестрі
+    - подрузі
+    - книзі
+  - label: Середній рід
+    items:
+    - місту
+    - морю
+    - немовляті
+    - сонцю
+- id: quiz-alternation
+  type: quiz
+  instruction: Оберіть правильне закінчення давального відмінка
+  items:
+  - question: Я хочу подарувати книгу _____ (подруга).
+    options:
+    - подрузі
+    - подругі
+    - подружі
+    - подруці
+    correct: 0
+  - question: Хлопець написав повідомлення _____ (донька).
+    options:
+    - доньці
+    - донькі
+    - доньчі
+    - донька
+    correct: 0
+  - question: Турист подякував _____ (Ольга) за допомогу.
+    options:
+    - Ользі
+    - Ольгі
+    - Ольжі
+    - Ольці
+    correct: 0
+  - question: Кіт не дає спокою _____ (муха).
+    options:
+    - мусі
+    - мухі
+    - муші
+    - муці
+    correct: 0
+  - question: Він купив подарунок _____ (жінка).
+    options:
+    - жінці
+    - жінкі
+    - жінчі
+    - жінка
+    correct: 0
+  - question: Він зрадів новій _____ (книга).
+    options:
+    - книзі
+    - книгі
+    - книжі
+    - книці
+    correct: 0
+  - question: Діти радіють _____ (черепаха).
+    options:
+    - черепасі
+    - черепахі
+    - черепаші
+    - черепаці
+    correct: 0
+  - question: Ми йдемо назустріч _____ (епоха).
+    options:
+    - епосі
+    - епохі
+    - епоші
+    - епоці
+    correct: 0
+- id: match-up-phrases
+  type: match-up
+  instruction: З'єднайте українські фрази з англійськими перекладами
+  pairs:
+  - left: допомагати студентові
+    right: to help the student
+  - left: подарувати сестрі
+    right: to give a gift to the sister
+  - left: розповісти другові
+    right: to tell the friend
+  - left: дати немовляті
+    right: to give to the infant
+  - left: написати вчителеві
+    right: to write to the teacher
+  - left: пояснити братові
+    right: to explain to the brother
+  - left: показати мамі
+    right: to show to the mom
+  - left: відповісти батькові
+    right: to answer the father
+- id: unjumble-sentences
+  type: unjumble
+  instruction: Складіть правильне речення зі слів
+  items:
+  - words:
+    - Тетяна
+    - братові
+    - подарувала
+    - книгу.
+    correct_order:
+    - Тетяна
+    - подарувала
+    - братові
+    - книгу.
+  - words:
+    - Вчитель
+    - студентам
+    - показав
+    - карту.
+    correct_order:
+    - Вчитель
+    - показав
+    - студентам
+    - карту.
+  - words:
+    - Мама
+    - казку.
+    - дитині
+    - читає
+    correct_order:
+    - Мама
+    - читає
+    - дитині
+    - казку.
+  - words:
+    - Дідусь
+    - онукові
+    - купив
+    - велосипед.
+    correct_order:
+    - Дідусь
+    - купив
+    - онукові
+    - велосипед.
+  - words:
+    - квіти.
+    - мамі
+    - дарує
+    - Батько
+    correct_order:
+    - Батько
+    - дарує
+    - мамі
+    - квіти.
+  - words:
+    - Ми
+    - сестрі
+    - пишемо
+    - листа.
+    correct_order:
+    - Ми
+    - пишемо
+    - сестрі
+    - листа.

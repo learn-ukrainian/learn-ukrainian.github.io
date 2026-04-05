@@ -1,0 +1,88 @@
+module: bio-005
+level: BIO
+sequence: 5
+slug: knyazhna-anna-yaroslavna
+version: '3.0'
+title: 'Анна Ярославна: Королева Франції'
+focus: biography
+pedagogy: seminar
+phase: BIO
+word_target: 5000
+objectives:
+- Оцінити роль Анни Ярославни у зміцненні міжнародного авторитету Русі
+- Проаналізувати культурні відмінності між Києвом та Парижем XI ст.
+- Дослідити легенди про "Реймське Євангеліє"
+content_outline:
+- section: Вступ — Руська княжна на престолі Франції
+  points:
+  - Анна як символ культурних зв'язків Русі та Європи
+  - Значення її постаті для міжнародного престижу династії
+  - Реймське Євангеліє
+  words: 700
+- section: Життєпис
+  points:
+  - Дитинство в Києві, освіта при дворі Ярослава
+  - Дипломатичне посольство Генріха I
+  - Подорож до Франції
+  - Коронація та життя в Парижі
+  words: 700
+- section: Історичний контекст
+  points:
+  - Династія Ярослава Мудрого - "тесть Європи"
+  - Стан Франції в XI ст.
+  words: 700
+- section: Внесок
+  points:
+  - Культурний вплив на французький двір
+  - Заснування монастиря святого Вікентія в Санлісі
+  words: 700
+- section: Останні роки
+  points:
+  - Регентство при синові Філіпові I
+  - Другий шлюб з Раулем де Крепі
+  - Смерть та вшанування пам'яті
+  words: 700
+- section: Спадщина
+  points:
+  - Образ Анни у французькій та українській культурі
+  - Династичні зв'язки Капетингів з Руссю
+  words: 700
+- section: Підсумок
+  points:
+  - Анна як міст між цивілізаціями
+  words: 800
+vocabulary_hints:
+  required:
+  - королева (queen)
+  - регент (regent)
+  - Капетинги (Capetians)
+activity_hints:
+- type: reading
+  focus: Аналіз підписів Анни (латина та кирилиця)
+  source: Diplomatic documents
+- type: creative-writing
+  focus: Лист Анни до батька (уявний)
+connects_to:
+- bio-05 (Knyazhna Anna Yaroslavna)
+- hist kyivan-rus-europe module
+prerequisites:
+- bio-01 (Knyahynia Olha)
+- hist anna-yaroslavna module
+persona:
+  voice: Senior Biographer
+  role: Queen of France
+grammar:
+- Опис історичних портретів
+- Епістолярний стиль (реальний та легендарний)
+module_type: biography
+immersion: 100% Ukrainian
+references:
+- name: Анна Ярославна (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Анна_Ярославна
+  type: primary
+  notes: Основні факти
+- name: Реймське Євангеліє
+  url: https://archives.marne.fr/
+  type: reference
+  notes: Артефакт
+register: академічний

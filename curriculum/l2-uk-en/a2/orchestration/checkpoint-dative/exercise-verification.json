@@ -1,0 +1,426 @@
+{
+  "total_items": 198,
+  "grounded_items": 116,
+  "ungrounded": [
+    {
+      "word": "мене",
+      "exercise_type": "quiz",
+      "context": "Мене"
+    },
+    {
+      "word": "мною",
+      "exercise_type": "quiz",
+      "context": "Мною"
+    },
+    {
+      "word": "подарунок",
+      "exercise_type": "quiz",
+      "context": "Ми купуємо подарунок _____."
+    },
+    {
+      "word": "шеф",
+      "exercise_type": "quiz",
+      "context": "шеф"
+    },
+    {
+      "word": "шефа",
+      "exercise_type": "quiz",
+      "context": "шефа"
+    },
+    {
+      "word": "шефом",
+      "exercise_type": "quiz",
+      "context": "шефом"
+    },
+    {
+      "word": "студент",
+      "exercise_type": "quiz",
+      "context": "Студент вірить _____."
+    },
+    {
+      "word": "вірить",
+      "exercise_type": "quiz",
+      "context": "Студент вірить _____."
+    },
+    {
+      "word": "лікарем",
+      "exercise_type": "quiz",
+      "context": "лікарем"
+    },
+    {
+      "word": "діти",
+      "exercise_type": "quiz",
+      "context": "Діти"
+    },
+    {
+      "word": "дітей",
+      "exercise_type": "quiz",
+      "context": "Дітей"
+    },
+    {
+      "word": "дітьми",
+      "exercise_type": "quiz",
+      "context": "Дітьми"
+    },
+    {
+      "word": "мамою",
+      "exercise_type": "quiz",
+      "context": "мамою"
+    },
+    {
+      "word": "картину",
+      "exercise_type": "quiz",
+      "context": "Я малюю картину _____."
+    },
+    {
+      "word": "сестра",
+      "exercise_type": "quiz",
+      "context": "сестра"
+    },
+    {
+      "word": "сестрою",
+      "exercise_type": "quiz",
+      "context": "сестрою"
+    },
+    {
+      "word": "сьогодні",
+      "exercise_type": "quiz",
+      "context": "_____ дуже сумно сьогодні."
+    },
+    {
+      "word": "нею",
+      "exercise_type": "quiz",
+      "context": "Нею"
+    },
+    {
+      "word": "вчитель",
+      "exercise_type": "quiz",
+      "context": "вчитель"
+    },
+    {
+      "word": "вчителем",
+      "exercise_type": "quiz",
+      "context": "вчителем"
+    },
+    {
+      "word": "старшій",
+      "exercise_type": "fill-in",
+      "context": "Я хочу надіслати лист моїй старшій _____ (сестра)."
+    },
+    {
+      "word": "колегу",
+      "exercise_type": "fill-in",
+      "context": "колегу"
+    },
+    {
+      "word": "колегою",
+      "exercise_type": "fill-in",
+      "context": "колегою"
+    },
+    {
+      "word": "директор",
+      "exercise_type": "fill-in",
+      "context": "Треба дати документи панові _____ (директор)."
+    },
+    {
+      "word": "директора",
+      "exercise_type": "fill-in",
+      "context": "директора"
+    },
+    {
+      "word": "директорові",
+      "exercise_type": "fill-in",
+      "context": "директорові"
+    },
+    {
+      "word": "сусід",
+      "exercise_type": "fill-in",
+      "context": "Ми дуже дякуємо нашому доброму _____ (сусід)."
+    },
+    {
+      "word": "сусіда",
+      "exercise_type": "fill-in",
+      "context": "сусіда"
+    },
+    {
+      "word": "сусідом",
+      "exercise_type": "fill-in",
+      "context": "сусідом"
+    },
+    {
+      "word": "молодшому",
+      "exercise_type": "fill-in",
+      "context": "Моєму молодшому _____ (брат) вже десять років."
+    },
+    {
+      "word": "брат",
+      "exercise_type": "fill-in",
+      "context": "Моєму молодшому _____ (брат) вже десять років."
+    },
+    {
+      "word": "десять",
+      "exercise_type": "fill-in",
+      "context": "Моєму молодшому _____ (брат) вже десять років."
+    },
+    {
+      "word": "брата",
+      "exercise_type": "fill-in",
+      "context": "брата"
+    },
+    {
+      "word": "братом",
+      "exercise_type": "fill-in",
+      "context": "братом"
+    },
+    {
+      "word": "пацієнт",
+      "exercise_type": "fill-in",
+      "context": "Лікар радить _____ (пацієнт) більше спати."
+    },
+    {
+      "word": "пацієнта",
+      "exercise_type": "fill-in",
+      "context": "пацієнта"
+    },
+    {
+      "word": "пацієнтом",
+      "exercise_type": "fill-in",
+      "context": "пацієнтом"
+    },
+    {
+      "word": "родина",
+      "exercise_type": "fill-in",
+      "context": "Я щиро співчуваю вашій _____ (родина)."
+    },
+    {
+      "word": "родину",
+      "exercise_type": "fill-in",
+      "context": "родину"
+    },
+    {
+      "word": "родиною",
+      "exercise_type": "fill-in",
+      "context": "родиною"
+    },
+    {
+      "word": "будівля",
+      "exercise_type": "fill-in",
+      "context": "Скільки років цій історичній _____ (будівля)?"
+    },
+    {
+      "word": "будівлю",
+      "exercise_type": "fill-in",
+      "context": "будівлю"
+    },
+    {
+      "word": "будівлею",
+      "exercise_type": "fill-in",
+      "context": "будівлею"
+    },
+    {
+      "word": "своїй",
+      "exercise_type": "match-up",
+      "context": "своїй вчительці."
+    },
+    {
+      "word": "студенту",
+      "exercise_type": "match-up",
+      "context": "новому студенту."
+    },
+    {
+      "word": "відпочивати",
+      "exercise_type": "match-up",
+      "context": "пацієнту більше відпочивати."
+    },
+    {
+      "word": "співчуваємо",
+      "exercise_type": "match-up",
+      "context": "Ми дуже співчуваємо"
+    },
+    {
+      "word": "твоєму",
+      "exercise_type": "match-up",
+      "context": "твоєму братові?"
+    },
+    {
+      "word": "допомогу",
+      "exercise_type": "error-correction",
+      "context": "Я щиро дякую тебе за допомогу."
+    },
+    {
+      "word": "ти",
+      "exercise_type": "error-correction",
+      "context": "ти"
+    },
+    {
+      "word": "тобою",
+      "exercise_type": "error-correction",
+      "context": "тобою"
+    },
+    {
+      "word": "допомагаємо",
+      "exercise_type": "error-correction",
+      "context": "Ми допомагаємо нашого сусіда з ремонтом."
+    },
+    {
+      "word": "ремонтом",
+      "exercise_type": "error-correction",
+      "context": "Ми допомагаємо нашого сусіда з ремонтом."
+    },
+    {
+      "word": "нашим",
+      "exercise_type": "error-correction",
+      "context": "нашим сусідом"
+    },
+    {
+      "word": "наш",
+      "exercise_type": "error-correction",
+      "context": "наш сусід"
+    },
+    {
+      "word": "нашій",
+      "exercise_type": "error-correction",
+      "context": "Нашій новій подругі сьогодні двадцять років."
+    },
+    {
+      "word": "двадцять",
+      "exercise_type": "error-correction",
+      "context": "Нашій новій подругі сьогодні двадцять років."
+    },
+    {
+      "word": "подругою",
+      "exercise_type": "error-correction",
+      "context": "подругою"
+    },
+    {
+      "word": "історичному",
+      "exercise_type": "error-correction",
+      "context": "Цьому історичному місті вже сто років."
+    },
+    {
+      "word": "місті",
+      "exercise_type": "error-correction",
+      "context": "Цьому історичному місті вже сто років."
+    },
+    {
+      "word": "міста",
+      "exercise_type": "error-correction",
+      "context": "міста"
+    },
+    {
+      "word": "містом",
+      "exercise_type": "error-correction",
+      "context": "містом"
+    },
+    {
+      "word": "потрібна",
+      "exercise_type": "error-correction",
+      "context": "Студентам потрібна багато вчитися."
+    },
+    {
+      "word": "потрібен",
+      "exercise_type": "error-correction",
+      "context": "потрібен"
+    },
+    {
+      "word": "потрібні",
+      "exercise_type": "error-correction",
+      "context": "потрібні"
+    },
+    {
+      "word": "однина",
+      "exercise_type": "group-sort",
+      "context": "Однина (Singular)"
+    },
+    {
+      "word": "множина",
+      "exercise_type": "group-sort",
+      "context": "Множина (Plural)"
+    },
+    {
+      "word": "їм",
+      "exercise_type": "group-sort",
+      "context": "їм"
+    },
+    {
+      "word": "після",
+      "exercise_type": "true-false",
+      "context": "Після дієслова «дякувати» ми використовуємо знахідний відмін"
+    },
+    {
+      "word": "га",
+      "exercise_type": "true-false",
+      "context": "В українській мові іменники жіночого роду на -га/ка/ха мають"
+    },
+    {
+      "word": "ка",
+      "exercise_type": "true-false",
+      "context": "В українській мові іменники жіночого роду на -га/ка/ха мають"
+    },
+    {
+      "word": "ха",
+      "exercise_type": "true-false",
+      "context": "В українській мові іменники жіночого роду на -га/ка/ха мають"
+    },
+    {
+      "word": "правильне",
+      "exercise_type": "true-false",
+      "context": "Правильне узгодження: «моєму мамі»."
+    },
+    {
+      "word": "людей",
+      "exercise_type": "true-false",
+      "context": "Для людей (чоловічий рід) ми частіше використовуємо закінчен"
+    },
+    {
+      "word": "частіше",
+      "exercise_type": "true-false",
+      "context": "Для людей (чоловічий рід) ми частіше використовуємо закінчен"
+    },
+    {
+      "word": "фізичні",
+      "exercise_type": "true-false",
+      "context": "Фізичні стани часто описуються безособовими реченнями (напри"
+    },
+    {
+      "word": "стани",
+      "exercise_type": "true-false",
+      "context": "Фізичні стани часто описуються безособовими реченнями (напри"
+    },
+    {
+      "word": "описуються",
+      "exercise_type": "true-false",
+      "context": "Фізичні стани часто описуються безособовими реченнями (напри"
+    },
+    {
+      "word": "безособовими",
+      "exercise_type": "true-false",
+      "context": "Фізичні стани часто описуються безособовими реченнями (напри"
+    },
+    {
+      "word": "реченнями",
+      "exercise_type": "true-false",
+      "context": "Фізичні стани часто описуються безособовими реченнями (напри"
+    },
+    {
+      "word": "два",
+      "exercise_type": "true-false",
+      "context": "Якщо поряд два іменники чоловічого роду в давальному відмінк"
+    },
+    {
+      "word": "обидва",
+      "exercise_type": "true-false",
+      "context": "Якщо поряд два іменники чоловічого роду в давальному відмінк"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 12,
+    "tested_in_exercises": 9,
+    "not_tested": [
+      "давальний",
+      "допомагати",
+      "подобатися"
+    ]
+  },
+  "all_grounded": false
+}

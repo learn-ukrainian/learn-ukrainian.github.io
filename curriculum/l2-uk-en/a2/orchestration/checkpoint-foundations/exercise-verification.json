@@ -1,0 +1,327 @@
+{
+  "total_items": 167,
+  "grounded_items": 106,
+  "ungrounded": [
+    {
+      "word": "вчити",
+      "exercise_type": "group-sort",
+      "context": "вчити"
+    },
+    {
+      "word": "вивчити",
+      "exercise_type": "group-sort",
+      "context": "вивчити"
+    },
+    {
+      "word": "олівець",
+      "exercise_type": "fill-in",
+      "context": "олівець"
+    },
+    {
+      "word": "олівцем",
+      "exercise_type": "fill-in",
+      "context": "олівцем"
+    },
+    {
+      "word": "зошит",
+      "exercise_type": "fill-in",
+      "context": "зошит"
+    },
+    {
+      "word": "зошиту",
+      "exercise_type": "fill-in",
+      "context": "зошиту"
+    },
+    {
+      "word": "парк",
+      "exercise_type": "fill-in",
+      "context": "парк"
+    },
+    {
+      "word": "парка",
+      "exercise_type": "fill-in",
+      "context": "парка"
+    },
+    {
+      "word": "хліб",
+      "exercise_type": "fill-in",
+      "context": "хліб"
+    },
+    {
+      "word": "хлібом",
+      "exercise_type": "fill-in",
+      "context": "хлібом"
+    },
+    {
+      "word": "кави",
+      "exercise_type": "fill-in",
+      "context": "кави"
+    },
+    {
+      "word": "пив",
+      "exercise_type": "fill-in",
+      "context": "Сьогодні вранці я не пив гарячої _____."
+    },
+    {
+      "word": "гарячої",
+      "exercise_type": "fill-in",
+      "context": "Сьогодні вранці я не пив гарячої _____."
+    },
+    {
+      "word": "кава",
+      "exercise_type": "fill-in",
+      "context": "кава"
+    },
+    {
+      "word": "музей",
+      "exercise_type": "fill-in",
+      "context": "музей"
+    },
+    {
+      "word": "музеєм",
+      "exercise_type": "fill-in",
+      "context": "музеєм"
+    },
+    {
+      "word": "читаю",
+      "exercise_type": "quiz",
+      "context": "читаю"
+    },
+    {
+      "word": "почитав",
+      "exercise_type": "quiz",
+      "context": "почитав"
+    },
+    {
+      "word": "братам",
+      "exercise_type": "quiz",
+      "context": "братам"
+    },
+    {
+      "word": "братами",
+      "exercise_type": "quiz",
+      "context": "братами"
+    },
+    {
+      "word": "лежить",
+      "exercise_type": "quiz",
+      "context": "На столі лежить десять нових _____."
+    },
+    {
+      "word": "зошити",
+      "exercise_type": "quiz",
+      "context": "зошити"
+    },
+    {
+      "word": "зошитах",
+      "exercise_type": "quiz",
+      "context": "зошитах"
+    },
+    {
+      "word": "зошитів",
+      "exercise_type": "quiz",
+      "context": "зошитів"
+    },
+    {
+      "word": "робив",
+      "exercise_type": "quiz",
+      "context": "робив"
+    },
+    {
+      "word": "час",
+      "exercise_type": "quiz",
+      "context": "час"
+    },
+    {
+      "word": "часі",
+      "exercise_type": "quiz",
+      "context": "часі"
+    },
+    {
+      "word": "часом",
+      "exercise_type": "quiz",
+      "context": "часом"
+    },
+    {
+      "word": "зателефонує",
+      "exercise_type": "quiz",
+      "context": "зателефонує"
+    },
+    {
+      "word": "телефонувала",
+      "exercise_type": "quiz",
+      "context": "телефонувала"
+    },
+    {
+      "word": "телефонує",
+      "exercise_type": "quiz",
+      "context": "телефонує"
+    },
+    {
+      "word": "купували",
+      "exercise_type": "quiz",
+      "context": "купували"
+    },
+    {
+      "word": "купуємо",
+      "exercise_type": "quiz",
+      "context": "купуємо"
+    },
+    {
+      "word": "п'ятнадцять",
+      "exercise_type": "quiz",
+      "context": "У нашому класі зараз навчається п'ятнадцять _____."
+    },
+    {
+      "word": "студенти",
+      "exercise_type": "quiz",
+      "context": "студенти"
+    },
+    {
+      "word": "студентам",
+      "exercise_type": "quiz",
+      "context": "студентам"
+    },
+    {
+      "word": "студентами",
+      "exercise_type": "quiz",
+      "context": "студентами"
+    },
+    {
+      "word": "вільний",
+      "exercise_type": "fill-in",
+      "context": "Я маю вільний час. -> У мене немає вільного _____."
+    },
+    {
+      "word": "пише",
+      "exercise_type": "fill-in",
+      "context": "Він пише текст. -> Вчора він довго _____ текст."
+    },
+    {
+      "word": "нього",
+      "exercise_type": "fill-in",
+      "context": "У нього є один олівець. -> У нього немає _____."
+    },
+    {
+      "word": "один",
+      "exercise_type": "fill-in",
+      "context": "У нього є один олівець. -> У нього немає _____."
+    },
+    {
+      "word": "тут",
+      "exercise_type": "fill-in",
+      "context": "Тут стоїть новий стіл. -> Тут стоїть п'ять нових _____."
+    },
+    {
+      "word": "стоїть",
+      "exercise_type": "fill-in",
+      "context": "Тут стоїть новий стіл. -> Тут стоїть п'ять нових _____."
+    },
+    {
+      "word": "купує",
+      "exercise_type": "fill-in",
+      "context": "Він купує каву щоранку. -> Вчора він _____ гарячу каву."
+    },
+    {
+      "word": "прочитає",
+      "exercise_type": "fill-in",
+      "context": "прочитає"
+    },
+    {
+      "word": "читає",
+      "exercise_type": "fill-in",
+      "context": "Вона зараз читає книгу. -> Завтра вона _____ цікаву книгу."
+    },
+    {
+      "word": "велике",
+      "exercise_type": "fill-in",
+      "context": "Ми маємо велике яблуко. -> У нас є десять великих _____."
+    },
+    {
+      "word": "яблуко",
+      "exercise_type": "fill-in",
+      "context": "Ми маємо велике яблуко. -> У нас є десять великих _____."
+    },
+    {
+      "word": "готували",
+      "exercise_type": "fill-in",
+      "context": "Вчора ми готували вечерю без свіжого _____."
+    },
+    {
+      "word": "п'яти",
+      "exercise_type": "fill-in",
+      "context": "У мене немає п'яти хвилин, щоб швидко _____ цей текст."
+    },
+    {
+      "word": "щоб",
+      "exercise_type": "fill-in",
+      "context": "У мене немає п'яти хвилин, щоб швидко _____ цей текст."
+    },
+    {
+      "word": "стола",
+      "exercise_type": "fill-in",
+      "context": "стола"
+    },
+    {
+      "word": "бо",
+      "exercise_type": "fill-in",
+      "context": "Завтра я куплю новий стіл, бо в мене немає _____."
+    },
+    {
+      "word": "зателефонувала",
+      "exercise_type": "fill-in",
+      "context": "зателефонувала"
+    },
+    {
+      "word": "неї",
+      "exercise_type": "fill-in",
+      "context": "Вона _____ мені ввечері, коли в неї був вільний час."
+    },
+    {
+      "word": "був",
+      "exercise_type": "fill-in",
+      "context": "Вона _____ мені ввечері, коли в неї був вільний час."
+    },
+    {
+      "word": "зошиті",
+      "exercise_type": "error-correction",
+      "context": "зошиті"
+    },
+    {
+      "word": "хлібу",
+      "exercise_type": "error-correction",
+      "context": "хлібу"
+    },
+    {
+      "word": "писала",
+      "exercise_type": "error-correction",
+      "context": "писала"
+    },
+    {
+      "word": "написала",
+      "exercise_type": "error-correction",
+      "context": "Вчора вона довго написала цей звіт."
+    },
+    {
+      "word": "напише",
+      "exercise_type": "error-correction",
+      "context": "напише"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 12,
+    "tested_in_exercises": 3,
+    "not_tested": [
+      "варіант",
+      "вправа",
+      "відповідь",
+      "контрольна",
+      "обрати",
+      "перевірка",
+      "правильний",
+      "речення",
+      "точка"
+    ]
+  },
+  "all_grounded": false
+}

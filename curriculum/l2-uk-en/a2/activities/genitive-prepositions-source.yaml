@@ -1,0 +1,382 @@
+version: '1.0'
+module: genitive-prepositions-source
+level: a2
+inline:
+- id: quiz
+  type: quiz
+  instruction: Оберіть правильний варіант
+  items:
+  - question: Моя найкраща подруга приїхала _____ Одеси.
+    options:
+    - з
+    - із
+    - зі
+    - за
+    correct: 0
+  - question: Минулого тижня ми повернулися _____ Львова.
+    options:
+    - з
+    - із
+    - зі
+    - за
+    correct: 2
+  - question: Цей новий автобус їде _____ Запоріжжя.
+    options:
+    - з
+    - із
+    - зі
+    - за
+    correct: 1
+  - question: Я п'ю свіжий сік _____ яблук.
+    options:
+    - з
+    - із
+    - зі
+    - за
+    correct: 0
+  - question: Діти дуже швидко вийшли _____ школи.
+    options:
+    - з
+    - із
+    - зі
+    - за
+    correct: 2
+  - question: Моя бабуся приїхала _____ села сьогодні.
+    options:
+    - з
+    - із
+    - зі
+    - за
+    correct: 1
+  - question: Кіт несподівано стрибнув _____ стола.
+    options:
+    - з
+    - із
+    - зі
+    - за
+    correct: 2
+  - question: Я отримав цей довгий лист _____ Бразилії.
+    options:
+    - з
+    - із
+    - зі
+    - за
+    correct: 1
+- id: fill-in
+  type: fill-in
+  instruction: Вставте правильний варіант
+  items:
+  - sentence: Я отримав цікавий лист _____.
+    options:
+    - від мами
+    - з мами
+    - мамою
+    - від маму
+    answer: від мами
+  - sentence: Мій друг приїхав _____ вчора ввечері.
+    options:
+    - з Лондона
+    - від Лондона
+    - зі Лондона
+    - Лондону
+    answer: з Лондона
+  - sentence: Ми маємо смачний шоколад _____.
+    options:
+    - зі Швейцарії
+    - від Швейцарії
+    - з Швейцарію
+    - Швейцарії
+    answer: зі Швейцарії
+  - sentence: Ці гроші _____ на новий комп'ютер.
+    options:
+    - від батьків
+    - з батьків
+    - від батьки
+    - батьками
+    answer: від батьків
+  - sentence: Ця красива сукня _____.
+    options:
+    - з шовку
+    - від шовку
+    - шовку
+    - із шовком
+    answer: з шовку
+  - sentence: У мене є хороший засіб _____.
+    options:
+    - від комарів
+    - з комарів
+    - комарів
+    - до комарів
+    answer: від комарів
+  - sentence: Наш будинок знаходиться недалеко _____.
+    options:
+    - від центру
+    - з центру
+    - до центру
+    - центру
+    answer: від центру
+  - sentence: Я п'ю свіжий сік _____.
+    options:
+    - з яблук
+    - від яблук
+    - яблук
+    - до яблук
+    answer: з яблук
+workbook:
+- id: match-up
+  type: match-up
+  instruction: З'єднайте українські фрази з їхнім англійським перекладом
+  pairs:
+  - left: подарунок від друга
+    right: a gift from a friend
+  - left: сир із Франції
+    right: cheese from France
+  - left: сік з яблук
+    right: juice from apples
+  - left: вільний час після роботи
+    right: free time after work
+  - left: далеко від дому
+    right: far from home
+  - left: захист від сонця
+    right: protection from the sun
+  - left: повернутися зі школи
+    right: to return from school
+  - left: кава після сніданку
+    right: coffee after breakfast
+- id: group-sort
+  type: group-sort
+  instruction: Розподіліть фрази за правильним прийменником
+  groups:
+  - label: з / із / зі
+    items:
+    - приїхати ... Лондона
+    - сукня ... шовку
+    - повернутися ... школи
+  - label: від
+    items:
+    - подарунок ... сусіда
+    - крем ... сонця
+    - недалеко ... дому
+  - label: після
+    items:
+    - вільний час ... уроку
+    - читати книгу ... вечері
+- id: true-false-prep
+  type: true-false
+  instruction: Правда чи ні? Прочитайте твердження про прийменники.
+  items:
+  - statement: 'Ми використовуємо «від», коли говоримо про матеріал (наприклад: стіл
+      від дерева).'
+    correct: false
+    explanation: Для матеріалу ми використовуємо «з» (стіл з дерева).
+  - statement: Слова «з», «із» та «зі» мають однакове значення.
+    correct: true
+    explanation: Так, це фонетичні варіанти одного прийменника для милозвучності.
+  - statement: Ми кажемо «від мами», тому що мама — це людина (джерело/відправник).
+    correct: true
+    explanation: Ми отримуємо щось від людей, тому використовуємо «від».
+  - statement: Антонім (протилежність) до слова «після» — це слово «до».
+    correct: true
+    explanation: 'Так, наприклад: до роботи і після роботи.'
+  - statement: Після прийменника «після» завжди йде називний відмінок.
+    correct: false
+    explanation: Після прийменників з, від, після ми завжди використовуємо родовий
+      відмінок.
+  - statement: Ми використовуємо «зі», коли наступне слово починається на голосну
+      літеру (наприклад, зі Англії).
+    correct: false
+    explanation: Перед голосною ми використовуємо «з» (з Англії). «Зі» вживається
+      перед збігом приголосних.
+- id: error-correction-prep
+  type: error-correction
+  instruction: Знайдіть і виправте помилку в реченні
+  items:
+  - sentence: Я отримав лист з мами.
+    error: з
+    correction: від
+    error_type: word
+    options:
+    - від
+    - до
+    - після
+    explanation: Від людини ми отримуємо щось (від мами).
+  - sentence: Ця красива сукня від шовку.
+    error: від
+    correction: з
+    error_type: word
+    options:
+    - з
+    - до
+    - із
+    explanation: Для матеріалу ми використовуємо з/із/зі.
+  - sentence: Мій університет розташований недалеко з вокзалу.
+    error: з
+    correction: від
+    error_type: word
+    options:
+    - від
+    - до
+    - після
+    explanation: Ми кажемо «далеко від» або «недалеко від».
+  - sentence: Я маю вільний час тільки після урок.
+    error: урок
+    correction: уроку
+    error_type: word
+    options:
+    - уроку
+    - урока
+    - уроком
+    explanation: Після прийменника «після» потрібен родовий відмінок.
+  - sentence: Цей новий автобус їде зі Києва.
+    error: зі
+    correction: з
+    error_type: word
+    options:
+    - з
+    - від
+    - із
+    explanation: Слово «Києва» починається на одну приголосну, тому ми використовуємо
+      «з».
+  - sentence: Нам потрібні ліки з головного болю.
+    error: з
+    correction: від
+    error_type: word
+    options:
+    - від
+    - до
+    - після
+    explanation: Для захисту або лікування ми кажемо «ліки від», «засіб від».
+- id: unjumble-prep
+  type: unjumble
+  instruction: Складіть правильне речення зі слів
+  items:
+  - words:
+    - маю
+    - смачний
+    - Я
+    - зі
+    - Швейцарії.
+    - шоколад
+    correct_order:
+    - Я
+    - маю
+    - смачний
+    - шоколад
+    - зі
+    - Швейцарії.
+  - words:
+    - роботи
+    - Ми
+    - парку
+    - в
+    - після
+    - гуляємо
+    correct_order:
+    - Ми
+    - гуляємо
+    - в
+    - парку
+    - після
+    - роботи
+  - words:
+    - далеко
+    - від
+    - дому?
+    - Ти
+    - живеш
+    correct_order:
+    - Ти
+    - живеш
+    - далеко
+    - від
+    - дому?
+  - words:
+    - лист
+    - має
+    - Вона
+    - бабусі.
+    - від
+    correct_order:
+    - Вона
+    - має
+    - лист
+    - від
+    - бабусі.
+  - words:
+    - ліки
+    - У
+    - є
+    - мене
+    - кашлю.
+    - від
+    correct_order:
+    - У
+    - мене
+    - є
+    - ліки
+    - від
+    - кашлю.
+  - words:
+    - купила
+    - сукню
+    - з
+    - шовку.
+    - Анна
+    correct_order:
+    - Анна
+    - купила
+    - сукню
+    - з
+    - шовку.
+- id: translate-prep
+  type: translate
+  instruction: Оберіть правильний переклад речення
+  items:
+  - source: I received a gift from my friend.
+    options:
+    - text: Я отримав подарунок від мого друга.
+      correct: true
+    - text: Я отримав подарунок з мого друга.
+      correct: false
+    - text: Я отримав подарунок до мого друга.
+      correct: false
+  - source: This table is made of wood.
+    options:
+    - text: Цей стіл з дерева.
+      correct: true
+    - text: Цей стіл від дерева.
+      correct: false
+    - text: Цей стіл після дерева.
+      correct: false
+  - source: We are resting after work.
+    options:
+    - text: Ми відпочиваємо після роботи.
+      correct: true
+    - text: Ми відпочиваємо від роботи.
+      correct: false
+    - text: Ми відпочиваємо з роботи.
+      correct: false
+  - source: My neighbor arrived from London.
+    options:
+    - text: Мій сусід приїхав з Лондона.
+      correct: true
+    - text: Мій сусід приїхав від Лондона.
+      correct: false
+    - text: Мій сусід приїхав зі Лондона.
+      correct: false
+  - source: She lives far from the center.
+    options:
+    - text: Вона живе далеко від центру.
+      correct: true
+    - text: Вона живе далеко з центру.
+      correct: false
+    - text: Вона живе недалеко від центру.
+      correct: false
+  - source: Do you have medicine for a headache?
+    options:
+    - text: Ви маєте ліки від головного болю?
+      correct: true
+    - text: Ви маєте ліки з головного болю?
+      correct: false
+    - text: Ви маєте ліки для головного болю?
+      correct: false

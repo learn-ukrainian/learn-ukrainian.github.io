@@ -1,0 +1,114 @@
+module: bio-095
+level: BIO
+sequence: 95
+slug: yevhen-konovalets
+version: '3.0'
+title: 'Євген Коновалець: Полковник і організатор'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of євген коновалець: полковник і організатор'
+- Evaluate the contributions of архітектор національного руху
+- Trace the career and influence of вбивство та спадщина
+content_outline:
+- section: Вступ — Архітектор національного руху
+  points:
+  - Коновалець як творець організованого опору
+  - Від військового командира до політичного лідера
+  - Трагічна загибель від рук НКВД
+  words: 850
+- section: Молодість і Перша світова війна
+  points:
+  - Народження в Галичині (1891)
+  - Юридична освіта у Львові
+  - Служба в австрійській армії
+  - Російський полон і формування Січових Стрільців
+  words: 850
+- section: Командир Січових Стрільців
+  points:
+  - Бої за Київ (1918)
+  - Захист УНР
+  - Листопадовий чин у Львові
+  - Поразка і еміграція
+  words: 850
+- section: Створення ОУН
+  points:
+  - Українська Військова Організація (1920)
+  - Підпільна боротьба в Польщі
+  - Заснування ОУН (1929)
+  - Ідеологія та стратегія руху
+  words: 850
+- section: Лідер в еміграції
+  points:
+  - Дипломатична діяльність
+  - Пошук союзників для України
+  - Конфлікти всередині руху
+  - Підготовка до майбутньої боротьби
+  words: 850
+- section: Вбивство та спадщина
+  points:
+  - Замах НКВД у Роттердамі (1938)
+  - Павло Судоплатов — вбивця
+  - Вплив на ОУН після смерті
+  - Коновалець як символ боротьби
+  words: 750
+vocabulary_hints:
+  required:
+  - полковник (colonel)
+  - Січові Стрільці (Sich Riflemen)
+  - підпілля (underground)
+  - націоналізм (nationalism)
+  - еміграція (emigration)
+  - замах (assassination attempt)
+  - визвольний рух (liberation movement)
+  - організатор (organizer)
+  - диверсія (sabotage)
+  - конспірація (conspiracy)
+  recommended:
+  - ідеологія (ideology)
+  - збройна боротьба (armed struggle)
+  - політв'язень (political prisoner)
+  - самостійність (independence)
+  - інтернований (interned)
+activity_hints:
+- type: reading
+  focus: Konovalets's speeches and documents
+  source: Historical archives
+  items: 3 passages
+- type: essay-response
+  focus: How did Konovalets transform military defeat into political movement?
+  output: Strategic analysis
+connects_to:
+- bio-120 (Roman Shukhevych - his successor)
+- bio-85 (Dmytro Dontsov - ideologist)
+- bio-80 (Symon Petliura - earlier leader)
+prerequisites:
+- bio-80 (Symon Petliura - UNR leader)
+- bio-86 (Petro Bolbochan - military figure)
+- Understanding of interwar Ukrainian politics
+persona:
+  voice: Senior Biographer
+  role: Underground Commander
+module_type: biography
+immersion: 100% Ukrainian
+references:
+- name: Євген Коновалець (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Коновалець_Євген_Михайлович
+  type: primary
+  notes: Military career, OUN leadership, assassination
+- name: Січові Стрільці
+  url: https://uk.wikipedia.org/wiki/Січові_стрільці
+  type: reference
+  notes: Military formation he led
+- name: Організація українських націоналістів
+  url: https://uk.wikipedia.org/wiki/Організація_українських_націоналістів
+  type: reference
+  notes: Organization he founded
+- name: СЗР України - Коновалець
+  url: 
+    https://szru.gov.ua/en/history/stories/leaders-of-the-liberation-movement--about-ukrainian-statehood-yevhen-konovalets
+  type: reference
+  notes: Intelligence service historical page
+register: академічний
+grammar: []

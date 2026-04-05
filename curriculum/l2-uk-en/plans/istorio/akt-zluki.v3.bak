@@ -1,0 +1,129 @@
+module: istorio-035
+level: ISTORIO
+sequence: 35
+slug: akt-zluki
+version: '3.0'
+title: 'Акт Злуки 1919: Символ єдності'
+focus: history
+pedagogy: seminar
+word_target: 5000
+objectives:
+- 'Analyze the causes and consequences of акт злуки 1919: символ єдності'
+- Evaluate the historical significance of найважливіший день
+content_outline:
+- section: Вступ — Найважливіший день
+  points:
+  - 22 січня 1919 — що відбулося
+  - УНР + ЗУНР = соборна Україна
+  - Символічне значення
+  - Чому святкуємо досі
+  words: 700
+- section: Історичний контекст
+  points:
+  - УНР — Наддніпрянщина
+  - ЗУНР — Галичина і Волинь
+  - Війна з Польщею
+  - Потреба об'єднання
+  words: 700
+- section: Текст Акту Злуки
+  points:
+  - Повний текст (з глосами)
+  - Однині воєдино зливаються
+  - Юридична формула
+  - Що проголошено
+  words: 700
+- section: Церемонія на Софійській площі
+  points:
+  - Як відбувалося
+  - Учасники — хто був присутній
+  - Символіка — місце, дата
+  - Емоційний вимір
+  words: 700
+- section: Реальність vs. символ
+  points:
+  - Чи відбулося реальне об'єднання?
+  - Конфлікти УНР-ЗУНР
+  - Війна і поразка
+  - Чому символ важливіший за реальність
+  words: 700
+- section: Акт Злуки в історичній пам'яті
+  points:
+  - Діаспорна пам'ять
+  - Радянське замовчування
+  - Після 1991 — державне свято
+  - День Соборності сьогодні
+  words: 700
+- section: Підсумок
+  points:
+  - Злука як ідеал
+  - Від 1919 до 2014
+  - Соборність як цінність
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+vocabulary:
+- Злука
+- соборність
+- УНР
+- ЗУНР
+- проголошення
+- об'єднання
+- символ
+- церемонія
+- пам'ять
+- свято
+- воєдино
+- соборна
+- урочистість
+- делегація
+- ратифікація
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+activities:
+- type: reading
+  focus: Full Act text with glosses
+- type: critical-analysis
+  focus: What symbols were used and why?
+- type: critical-analysis
+  focus: What was the actual relationship UNR-ZUNR?
+- type: critical-analysis
+  focus: How is Zluka commemorated differently in different eras?
+- type: essay-response
+  focus: Чому Акт Злуки став найважливішим символом української єдності?
+persona:
+  voice: Academic Historiographer
+  role: Unity Symbolism Researcher
+prerequisites:
+- universaly-unr
+connects_to:
+- svidchennia-holodomoru-i
+references:
+- name: Акт Злуки (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Акт_Злуки
+  type: reference
+  notes: Overview
+- name: Текст Акту Злуки
+  url: https://uk.wikisource.org/wiki/Акт_Злуки_УНР_та_ЗУНР
+  type: primary
+  notes: Full text
+- name: День Соборності
+  url: https://uk.wikipedia.org/wiki/День_Соборності_України
+  type: reference
+  notes: Modern commemoration
+register: академічний
+grammar: []

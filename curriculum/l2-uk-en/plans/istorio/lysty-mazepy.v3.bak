@@ -1,0 +1,130 @@
+module: istorio-026
+level: ISTORIO
+sequence: 26
+slug: lysty-mazepy
+version: '3.0'
+title: 'Листи Мазепи: Дипломат і меценат'
+focus: history
+pedagogy: seminar
+word_target: 5000
+objectives:
+- 'Analyze the causes and consequences of листи мазепи: дипломат і меценат'
+- Evaluate the historical significance of мазепа у листах
+content_outline:
+- section: Вступ — Мазепа у листах
+  points:
+  - Листування як джерело
+  - Чому важливі приватні документи?
+  - Мазепа — багатогранна постать
+  - Що збереглося
+  words: 700
+- section: Типи кореспонденції
+  points:
+  - Дипломатичні листи — до царя
+  - Внутрішня кореспонденція — старшина
+  - Приватні листи
+  - Меценатське листування — культура
+  words: 700
+- section: Мазепа-дипломат
+  points:
+  - Листи до Петра І
+  - Тон — підданий чи союзник?
+  - Що Мазепа просив
+  - Як маневрував
+  - Останні листи перед зрадою
+  words: 700
+- section: Фрагмент — Лист до Петра I
+  points:
+  - Текст (з глосами)
+  - Формули ввічливості
+  - Прихований зміст
+  - Що не сказано
+  words: 700
+- section: Мазепа-меценат
+  points:
+  - Листування про церкви
+  - Підтримка освіти
+  - Культурний патронат
+  - Інший образ — не тільки політик
+  words: 700
+- section: Критика джерела
+  points:
+  - Офіційні листи — маска
+  - Що можна дізнатися
+  - Порівняння з іншими джерелами
+  - Чи знаємо «справжнього» Мазепу?
+  words: 700
+- section: Підсумок
+  points:
+  - Листування як вікно в епоху
+  - Складність постаті
+  - Зв'язок із циклом кооптації
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+vocabulary:
+- листування
+- кореспонденція
+- дипломатія
+- меценатство
+- ввічливість
+- підданий
+- зрада
+- маневрування
+- патронат
+- анафема
+- епістолярний
+- ритуал
+- титулатура
+- челобитна
+- грамота
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+activities:
+- type: reading
+  focus: Letter to Peter I with glosses
+- type: critical-analysis
+  focus: What is NOT said in an official letter?
+- type: comparative-study
+  focus: Compare letter tone before and after 1708
+- type: comparative-study
+  focus: Reconstruct Mazepa's personality from letters
+- type: essay-response
+  focus: Чи можна зрозуміти Мазепу через його листування?
+persona:
+  voice: Academic Historiographer
+  role: Epistolary Researcher
+prerequisites:
+- konstytutsiia-orlyka
+connects_to:
+- sich-dokumenty
+references:
+- name: Іван Мазепа (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Іван_Мазепа
+  type: reference
+  notes: Hetman biography
+- name: Листування Мазепи
+  url: https://litopys.org.ua/
+  type: primary
+  notes: Correspondence collection
+- name: Мазепа як меценат
+  url: https://uk.wikipedia.org/wiki/Меценатство_Івана_Мазепи
+  type: reference
+  notes: Cultural patronage
+register: академічний
+grammar: []

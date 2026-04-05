@@ -1,0 +1,100 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння літературно-критичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Читання
+  focus: Розуміння літературного тексту (уривок з твору)
+  placement: inline
+  type: reading
+- focus: Аналіз авторського задуму — мова як мистецтво
+  placement: workbook
+  type: authorial-intent
+- focus: Літературна критика — оцінка інтерпретації
+  placement: workbook
+  type: critical-analysis
+- focus: Порівняння з іншими творами або інтерпретаціями (Nezdana Contemporary Women Drama)
+  placement: workbook
+  type: comparative-study
+- focus: Есе-аналіз рецепції та сучасного значення (Nezdana Contemporary Women Drama)
+  placement: workbook
+  type: essay-response
+connects_to:
+- lit-215
+content_outline:
+- points:
+  - Неда Неждана і сучасний жіночий театр
+  - Місце в літературному каноні
+  - Чому цей текст важливий сьогодні
+  section: Вступ та культурний контекст
+  words: 600
+- points:
+  - Ключові п'єси та театральні проекти
+  - Впливи та джерела
+  - Конфлікт між традицією і сучасністю
+  section: 'Аналіз твору: Сюжет та структура'
+  words: 1000
+- points:
+  - Детальний розбір символіки
+  - Система персонажів та їхня еволюція
+  - Жіночі архетипи та їхня деконструкція
+  section: Герменевтика та ключові образи
+  words: 1000
+- points:
+  - Стилістичні інновації автора
+  - Сучасна розмовна мова на сцені
+  - Особливості ритміки та синтаксису
+  section: Мова, стиль та поетика
+  words: 800
+- points:
+  - Який імперський міф руйнує цей текст?
+  - Жіноча агентність у сучасній драмі
+  - Опір асиміляції та культурне самоствердження
+  section: Деколонізаційний вимір
+  words: 800
+- points:
+  - Вплив на наступні покоління драматургів
+  - Жіночий театр в контексті пост-2014 культури
+  - Питання для дискусії
+  section: Підсумок та рецепція
+  words: 800
+focus: literature
+grammar: []
+immersion: 100% Ukrainian
+level: LIT
+module: lit-drama-016
+module_type: literature
+objectives:
+- Проаналізувати сучасну жіночу драматургію Неждани у контексті епохи
+- Дослідити стилістичні особливості тексту
+- Зрозуміти деколонізаційне значення автора
+pedagogy: Seminar
+persona:
+  role: Contemporary Women's Voice
+  voice: Senior Philologist & Critic
+phase: LIT.5 Independence Era 1991-Present
+prerequisites:
+- lit-213
+references:
+- name: Nezdana Contemporary Women Drama — тексти та аналіз
+  notes: Основне джерело
+  type: primary
+  url: https://www.ukrlib.com.ua/
+register: академічний
+sequence: 16
+slug: nezdana-contemporary-women-drama
+subtitle: Nezdana Contemporary Women Drama
+title: Nezdana Contemporary Women Drama
+version: '3.0'
+vocabulary_hints:
+  recommended:
+  - алегорія (allegory)
+  - контекст (context)
+  - рецепція (reception)
+  required:
+  - канон (canon)
+  - метафора (metaphor)
+  - дискурс (discourse)
+  - інтерпретація (interpretation)
+word_target: 5000

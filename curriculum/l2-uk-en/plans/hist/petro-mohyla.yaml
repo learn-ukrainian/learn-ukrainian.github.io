@@ -1,117 +1,149 @@
-module: hist-035
-level: HIST
-sequence: 35
-slug: petro-mohyla
-version: '3.0'
-title: 'Петро Могила: Реформатор церкви'
-subtitle: 'Petro Mohyla: The Church Reformer'
-focus: history
-pedagogy: CBI
-phase: HIST.4 [Lithuanian-Polish Era]
-word_target: 5000
-objectives:
-- Understand the significance of Petro Mohyla's educational reforms
-- Analyze the impact of the Kyiv-Mohyla Academy on Ukrainian culture
-- Discuss the 'Mohylian Era' in Ukrainian history
-- Use religious and educational terminology of the 17th century
-content_outline:
-- section: Вступ
-  points:
-  - Crisis of Orthodoxy post-Union — 1596 Union aftermath, hierarchy unrecognized, churches seized
-  - 'Need for new strategy — beyond survival: modernization and intellectual defense'
-  words: 550
-- section: Шлях до митри
-  points:
-  - Moldovan origins — son of hospodar Simeon Mohyla
-  - Western education — Lviv Brotherhood School, Zamość Academy, possibly Paris (Sorbonne)
-  - 'Military service — 1620-1621 Cecora and Khotyn battles; [!history-bite]: Mohyla was a soldier before becoming a monk,
-    bringing military discipline to the church'
-  - Tonsure at Lavra — 1627 elected archimandrite, start of publishing activity
-  words: 550
-- section: Заснування Академії
-  points:
-  - Merger of schools (1632) — Lavra School (1631) + Brotherhood School = Kyiv-Mohyla Collegium
-  - Latin curriculum for Orthodox defense — adopting Jesuit methods (language, rhetoric) to defeat the enemy with their 
-    own weapons
-  - Resistance from traditionalists — conservative Cossacks and clergy feared 'Latinization'
-  - 'Role of ''spudei'' (students) — forming a new national elite; [!myth-buster]: Myth: Mohyla ''Catholicized'' education.
-    Reality: He used Latin tools for Orthodox defense.'
-  words: 550
-- section: Реформатор церкви
-  points:
-  - Legalization of hierarchy (1632/1633) — 'Articles of Pacification' from King Władysław IV; consecration in Lviv
-  - 'Rebuilding St. Sophia and Desyatynna — 1633 restoration of Sophia (Octaviano Mancini), 1635 excavations of Desyatynna;
-    [!context]: Parallel with Counter-Reformation — education + discipline + dogma'
-  - Liturgical reforms (Trebnyk) — 1646 'Euchologion', unification of rites, pastor's manual
-  - Discipline and education of clergy — strict requirements for priests to be educated
-  words: 550
-- section: Спадщина Могили
-  points:
-  - Kyiv as the 'New Jerusalem' — theological concept of Kyiv as a sacred center
-  - 'Baroque culture — [!culture]: ''Mohylian'' or ''Cossack'' Baroque style blending European splendor with local tradition'
-  - Lasting impact on Ukrainian identity — integration into European cultural space
-  words: 550
-- section: Читання
-  points:
-  - Primary sources assignment — excerpts from 'Trebnyk' Preface or 'Testament'
-  words: 550
-- section: Первинні джерела
-  points:
-  - Testament of Mohyla — moral and educational instructions
-  - Inscription on Desyatynna — finding Rus' roots for legitimacy
-  - 'Linguistic analysis — [!quote]: ''Гарно й почесно бути свічкою... але свічка має світити'' (Trebnyk, 1646) — metaphor
-    of active service'
-  words: 550
-- section: Деколонізаційний погляд
-  points:
-  - 'Myth of Latinization — [!decolonization]: Imperial historiography portrayed pre-Moscow Orthodoxy as ''corrupted''; reality:
-    peak intellectual sovereignty'
-  - Intellectual sovereignty — Kyiv exported scholars to Moscow, not vice versa
-  - Summary of achievements — standardized dogma ('Confession of Faith', 1640), recognized by all patriarchs
-  - Reflection on 'Western tools for Eastern faith' — agency in self-reform without waiting for Moscow or Constantinople
-  words: 550
-- section: Потрібно більше практики?
-  points:
-  - Engagement — reflective questions on Mohyla's strategy
-  words: 600
-vocabulary_hints:
-  required:
-  - митрополит (Metropolitan) — титул глави церкви
-  - академія (Academy) — Києво-Могилянська академія
-  - реформа (reform) — церковна реформа, освітня реформа
-  - колегіум (collegium) — за зразком єзуїтських колегіумів
-  - полеміка (polemics) — релігійна полеміка
-  - православ'я (Orthodoxy) — захист православ'я
-  - унія (Union) — Берестейська унія 1596
-  - руїна (ruin) — відбудова з руїн (rebuilding from ruins)
-  - канонізація (canonization) — Петро Могила канонізований у 1996
-  - друкарня (printing press) — Лаврська друкарня
-  recommended:
-  - спудей (student) — студент академії (archaic)
-  - риторика (rhetoric) — мистецтво красномовства
-  - латина (Latin) — мова науки
-  - бароко (Baroque) — українське бароко, козацьке бароко
-  - меценат (patron) — меценат освіти і культури
 activity_hints:
-- type: critical-analysis
-  focus: 'Верифікація фактів: facts'
-  items: 4
-persona:
-  voice: Senior Professor of History
-  role: Academy Professor
-grammar:
-- Latinisms in Ukrainian language
-- Rhetorical style of Baroque
-- Passive voice in historical narrative
-prerequisites:
-- pravoslavna-tserkva-17
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння історіографічних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Джерела
+  focus: Розуміння первинного історичного джерела
+  placement: inline
+  type: reading
+- focus: Оцінка первинного джерела — хто написав, навіщо, що упущено?
+  placement: workbook
+  type: source-evaluation
+- focus: Дебат — оцінка значення та наслідків події
+  placement: workbook
+  type: debate
+- focus: 'Порівняння української та імперської інтерпретацій (Петро Могила: Реформатор церкви)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе на тему зв''язку з сучасністю (Петро Могила: Реформатор церкви)'
+  placement: workbook
+  type: essay-response
+cefr_min: C1
 connects_to:
 - bratstva-i-osvita
+- kozatske-baroko
+content_outline:
+- points:
+  - 'Провокація: Православ''я в Речі Посполитій на межі XVII століття — це пацієнт, що помирає. Церковна ієрархія невизнана,
+    храми захоплені. Чи можна врятувати свою віру, перейнявши зброю і тактику ворога (єзуїтську освіту), і не стати при цьому
+    схожим на нього?'
+  - 'Коротка цитата без контексту: «Гарно й почесно бути свічкою... але свічка має світити». Як ви розумієте цю метафору активного
+    служіння?'
+  section: Розминка
+  words: 400
+- points:
+  - 'Дебат 1: «Латинізація» чи модернізація? Консервативні козацькі та церковні кола вбачали в латинській мові та риториці
+    «троянського коня» католицизму. Могила ж доводив, що це лише інструмент для перемоги над опонентами в інтелектуальному
+    полі.'
+  - 'Дебат 2: [!decolonization] Інтелектуальний суверенітет vs імперська версія «зіпсованого» православ''я. Російська історіографія
+    зображувала до-московське київське православ''я як «нечисте», «ополячене». Насправді ж, це був пік інтелектуальної незалежності:
+    Київ експортував вчених до Москви, а не навпаки.'
+  - '[!epistemic-humility] Ми не знаємо достеменно, чи навчався Могила в Сорбонні, але його доступ до західної думки беззаперечний,
+    що й визначило його стратегію.'
+  - 'Глобальна синхронність: Реформи Могили — це українська відповідь на європейську Контрреформацію, що теж робила ставку
+    на освіту, дисципліну та уніфікацію догми.'
+  section: 'Конфліктна карта: Західна зброя для східної віри'
+  words: 900
+- points:
+  - 'Первинне джерело 1: Передмова до «Требника» (1646). Аналіз метафори «свічки, що має світити» — ідеологія активного, освіченого
+    пастиря, що служить громаді, а не просто проводить ритуали.'
+  - 'Первинне джерело 2: «Заповіт» Петра Могили. Що він залишив у спадок? Не тільки гроші на колегіум, а й моральні та освітні
+    настанови для нової еліти.'
+  - 'Археологічне джерело: Розкопки Десятинної церкви (1635). Навіщо Могилі потрібно було докопуватися до фундаментів часів
+    Русі? Пошук легітимності, прямого зв''язку з Володимировим хрещенням, утвердження Києва як «другого Єрусалима».'
+  - '[!decolonization] Критичне читання джерел: Могила використовував історію як інструмент. Пошук «мощей» і «давніх фундаментів»
+    був політичним актом, спрямованим на зміцнення статусу його церкви всупереч претензіям Москви і Риму.'
+  section: 'Джерела: Требник, Заповіт та каміння Десятинної церкви'
+  words: 1600
+- points:
+  - 'Короткострокові наслідки: Легалізація православної ієрархії «Статтями для заспокоєння руського народу» (1632), повернення
+    храмів, створення потужної інтелектуальної альтернативи єзуїтським школам.'
+  - 'Довгострокові наслідки: Створення нової національної еліти — «спудеїв» Києво-Могилянського колегіуму, які визначили обличчя
+    української культури наступних 150 років. Формування «козацького» або «могилянського» бароко.'
+  - '[!myth-buster] Міф: Могила «окатоличив» православну освіту. Реальність: Він використав латинську мову як lingua franca
+    європейської науки та єзуїтську педагогічну модель як найефективнішу на той час, але наповнив їх православним догматичним
+    змістом.'
+  - 'Оцінка істориків: Порівняння поглядів Грушевського (бачив у Могилі радше аристократа, ніж національного діяча) та сучасних
+    істориків (наголошують на його ролі у збереженні української ідентичності).'
+  section: 'Аналіз: Наслідки та значення'
+  words: 1600
+- points:
+  - 'Повернення до розминки: Чи вдалося Могилі та його наступникам використати західну зброю, не втративши східної душі? Студент
+    формулює відповідь, спираючись на матеріали модуля.'
+  - 'Зв''язок із сьогоденням: Наскільки актуальна стратегія Могили («наздогнати й перегнати», використовуючи чужі інструменти
+    для захисту свого) для сучасної України в її культурному та інформаційному протистоянні?'
+  - '[!anti-hagiography] Могила не був демократом. Він був аристократом, що будував жорстку ієрархічну структуру. Його метою
+    була сильна Церква і держава, а не загальна рівність. Важливо бачити в ньому ефективного менеджера, а не безгрішного святого.'
+  section: Дискусія та підсумок
+  words: 700
+focus: Crisis of Orthodoxy, Mohyla's Western education, founding of the Kyiv-Mohyla Academy, use of Latin tools for Orthodox
+  defense, liturgical reforms, Cossack Baroque, Kyiv as New Jerusalem
+level: HIST
+module: hist-035
+objectives:
+- Розуміти історичний контекст та причини церковних реформ Петра Могили
+- Аналізувати утворення Києво-Могилянської академії як інструменту культурного спротиву
+- Дискутувати про концепцію «могилянської доби» в українській історії та культурі
+- Критично оцінювати історичні міфи, зокрема щодо «латинізації» православ''я
+- Використовувати релігійну та освітню термінологію XVII століття в аналізі джерел
+pedagogy: CBI
+persona:
+  role: Професор історії, що спонукає студентів не приймати на віру канонічні образи, а аналізувати мотивацію, контекст та
+    наслідки дій історичних постатей.
+  voice: Academy-Professor-Skeptic
+phase: HIST.4
 references:
-- name: Історія України-Руси
-  url: http://litopys.org.ua/hrushrus/iur.htm
-  type: secondary
-- name: Petro Mohyla (Encyclopedia of Ukraine)
-  url: http://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CM%5CO%5CMohylaPetro.htm
+- author: Грушевський М.
+  note: Класична оцінка доби та ролі Могили
+  path: http://litopys.org.ua/hrushrus/iur.htm
+  type: primary
+  work: Історія України-Руси
+- author: Encyclopedia of Ukraine
+  note: Стислий огляд життя та діяльності англійською мовою
+  path: http://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CM%5CO%5CMohylaPetro.htm
   type: reference
-register: академічний
+  work: Petro Mohyla
+- author: Яковенко Н.
+  note: Сучасний погляд на Могилянську добу, культурні та освітні процеси
+  type: primary
+  work: Нарис історії України з найдавніших часів до кінця XVIII ст.
+sequence: 35
+slug: petro-mohyla
+subtitle: 'Petro Mohyla: The Church Reformer'
+title: 'Петро Могила: Реформатор церкви'
+version: '4.0'
+vocabulary_hints:
+- definition: студент (слухач) братської школи, колегіуму або академії у XVI–XVIII ст.; вживається як архаїзм
+  pos: ч.
+  word: спудей
+- definition: мистецтво красномовства, теорія ораторського мистецтва
+  pos: ж.
+  word: риторика
+- definition: гостра публічна дискусія на суперечливу тему (особливо релігійна в той період)
+  pos: ж.
+  word: полеміка
+- definition: стиль у європейському мистецтві та архітектурі кінця XVI — середини XVIII ст., що в Україні набув самобутніх
+    рис (козацьке/могилянське бароко)
+  pos: с.
+  word: бароко
+- definition: багатий покровитель наук і мистецтв; людина, що безкорисливо матеріально підтримує розвиток культури
+  pos: ч.
+  word: меценат
+- definition: вищий титул єпископа у православних церквах, глава автокефальної або автономної церкви
+  pos: ч.
+  word: митрополит
+- definition: назва середнього або вищого навчального закладу в Речі Посполитій, часто заснованого на єзуїтських зразках
+  pos: ч.
+  word: колегіум
+- definition: об''єднання, союз; у контексті модуля — Берестейська церковна унія 1596 року
+  pos: ж.
+  word: унія
+- definition: підприємство, що займається друкуванням; Лаврська друкарня була ключовим інтелектуальним центром
+  pos: ж.
+  word: друкарня
+- definition: у християнстві визнання вищою церковною владою померлого подвижника святим
+  pos: ж.
+  word: канонізація
+word_target: 5000

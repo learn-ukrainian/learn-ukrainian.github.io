@@ -1,0 +1,107 @@
+module: bio-152
+level: BIO
+sequence: 152
+slug: yuriy-vynnychuk
+version: '3.0'
+title: 'Юрій Винничук: Львівський казкар'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of юрій винничук: львівський казкар'
+- Evaluate the contributions of майстер львівської містики
+- Trace the career and influence of літературна містифікація як жанр
+content_outline:
+- section: Вступ — Майстер львівської містики
+  points:
+  - Винничук як унікальний голос української літератури
+  - Львів як головний герой його творчості
+  - Від андеграунду до визнання
+  words: 700
+- section: Львівське дитинство
+  points:
+  - Народження у Львові (1952)
+  - Формування в атмосфері старого Львова
+  - Ранні літературні спроби
+  words: 700
+- section: Андеграунд та перші публікації
+  points:
+  - Творчість у радянський період
+  - Цензура та обмеження
+  - Самвидав та неофіційна культура
+  words: 700
+- section: Містифікації та гра з читачем
+  points:
+  - Легенди Львова як літературний проект
+  - Створення псевдоісторичних текстів
+  - Гра між фактом і вигадкою
+  words: 700
+- section: Танґо смерті та великі романи
+  points:
+  - Аналіз головного роману
+  - Тема Голокосту та міжнаціональних стосунків
+  - Нагороди та визнання
+  words: 700
+- section: Сучасна творчість
+  points:
+  - Нові проекти та теми
+  - Громадська позиція
+  - Вплив на молоде покоління
+  words: 700
+- section: Дискусія — Літературна містифікація як жанр
+  points:
+  - Етика вигадування історії
+  - Роль уяви у збереженні памяті
+  words: 800
+vocabulary_hints:
+  required:
+  - містифікація (mystification)
+  - постмодернізм (postmodernism)
+  - легенда (legend)
+  - андеграунд (underground)
+  - ретро (retro)
+  - іронія (irony)
+  - псевдоісторичний (pseudo-historical)
+  - багатокультурність (multiculturalism)
+  - гра (game/play)
+  - фантасмагорія (phantasmagoria)
+  recommended:
+  - пастиш (pastiche)
+  - інтертекстуальність (intertextuality)
+  - міська культура (urban culture)
+  - ностальгія (nostalgia)
+  - деконструкція (deconstruction)
+activity_hints:
+- type: reading
+  focus: Фрагменти Танґо смерті
+  source: Художній текст
+  items: 3 passages
+- type: essay-response
+  focus: Чи етично вигадувати історію?
+  output: Критичний есей
+connects_to:
+- bio-89-taras-prokhasko
+- bio-86-oksana-zabuzhko
+- bio-84-halyna-pahutyak
+prerequisites:
+- bio-81-vasyl-shkliar
+persona:
+  voice: Senior Biographer
+  role: Literary Hoaxer
+module_type: biography
+immersion: 100% Ukrainian
+references:
+- name: Юрій Винничук (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Винничук_Юрій_Павлович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Видавництво Фоліо
+  url: https://folio.com.ua/
+  type: reference
+  notes: Бібліографія
+- name: Літературна критика
+  url: https://litakcent.com/
+  type: reference
+  notes: Аналіз творчості
+register: академічний
+grammar: []

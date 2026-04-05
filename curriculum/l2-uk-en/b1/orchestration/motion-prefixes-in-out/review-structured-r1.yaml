@@ -2,50 +2,56 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: The text missed explicit teaching of the `ви- + на + Зн.в.` grammatical
-    pattern requested in the plan (e.g., "вийшов на вулицю"), although it was naturally
-    used in narrative examples.
+  score: 7
+  evidence: '**Missing:** (a) The full prefix system overview required by plan section
+    4 point 3: "The full prefix system so far (M29-M31): при-/до- → пі-/по- → від-
+    → за- → ви-" is not presented as a systematic s'
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: Found a calque ("місцезнаходження") and a Russicism ("стаканчик" for a
-    to-go coffee cup). All other Ukrainian grammar, preposition logic, and morphology
-    are excellent.
+  score: 7
+  evidence: '**Critical error:** False etymology of "вийти заміж" — claims "вийти
+    за межу свого власного роду" when the word derives from "за мужъ" (behind a husband).
+    СУМ-11 confirms the standard meaning; the pla'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent PPP flow, creating strong spatial mental models ("перетин межі",
-    "візуальна стрілка").
+  score: 8
+  evidence: '**Strengths:** Clear PPP flow — situation (Андрій''s morning) → pattern
+    (prefix meanings, conjugation) → practice (dialogue, error correction). Multiple
+    examples per grammar point (зайти conjugation wi'
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required and recommended vocabulary items from the plan are utilized
-    effectively in the prose.
+  score: 9
+  evidence: 'All 12 required vocabulary items appear naturally in prose: зайти, заїхати,
+    забігти, занести, вийти, виїхати, вибігти, винести, заходити, виходити, заїжджати,
+    виїжджати — all used in context with exam'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: All 6 markers are successfully injected immediately after their relevant
-    conceptual blocks.
+  score: 8
+  evidence: All 6 activity types from plan present. Markers placed after relevant
+    teaching. **Issue:** group-sort marker missing ви- (out) category — plan requires
+    4-way sort, marker only specifies 3 groups. Fill
 - dimension: 6
   name: Engagement & tone
-  score: 8
-  evidence: 'DEDUCT for minor meta-commentary: "Давайте прочитаємо коротку, але динамічну
-    розповідь...", "Тепер давайте детальніше проаналізуємо цей невеликий текст."'
+  score: 5
+  evidence: '**Pervasive motivational filler and meta-commentary.** Examples: "фантастичною
+    математичною точністю" (section 4), "Ви перестанете розмовляти як автоматизований
+    робот, який просто механічно поєднує сл'
 - dimension: 7
   name: Structural integrity
   score: 8
-  evidence: 'The deterministic word count is 5275, which exceeds the target of 4000
-    by over 30%. Also, the section header `## Префікс за-: увійти...` contains a typo
-    leaked from the plan, as `увійти` does not have'
+  evidence: All 6 H2 sections present and correctly ordered. 5755 words against 4000
+    target (44% over — acceptable, targets are minimums). Clean markdown, no stray
+    tags. No duplicate summary sections. Activity ma
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Realistic scenarios including Lviv IT offices, coffee shop runs, and natural
-    daily errands.
+  score: 9
+  evidence: 'Fully decolonized — Ukrainian presented on its own terms, never compared
+    to Russian. Authentic cultural details: Львівська копальня кави (real Lviv café),
+    площа Ринок, Ukrainian hospitality customs ("'
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 10
-  evidence: Dialogues are highly natural, with excellent context and contextualized
-    usage of polite imperatives in an office setting.
+  score: 7
+  evidence: '**Phone dialogue (section 5):** Natural multi-turn conversation between
+    named speakers (Олена, Андрій) about real errands. Culturally appropriate — planning
+    pickup of child from садок, stopping at суп'
 findings: []

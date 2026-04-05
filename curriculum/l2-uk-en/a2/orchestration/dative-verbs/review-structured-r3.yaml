@@ -1,0 +1,57 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'All 4 content_outline sections present with correct headings. All 10
+    required vocabulary words used naturally in prose (допомагати, дякувати, дзвонити,
+    радити, заважати, подобатися, відповідати, рік, '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: All Ukrainian forms verified against VESUM (колезі, братові, вчителеві,
+    другові, сусідці, подрузі, дідусеві — all confirmed). Dative government confirmed
+    by Антоненко-Давидович. Case endings correct t
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Excellent PPP flow: each section starts with a Ukrainian framing sentence,
+    introduces the pattern, gives 3+ examples, then provides practice. The подобатися
+    section skillfully addresses the common L1 '
+- dimension: 4
+  name: Vocabulary coverage
+  score: 7
+  evidence: All 10 required words used naturally in prose across multiple sections.
+    допомагати appears 8+ times across sections 1, 4, and Підсумок. подобатися thoroughly
+    explored in its own section. **Deduction:*
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: 'All 4 plan activity_hints have corresponding markers. Each marker placed
+    immediately after its relevant teaching section. Marker descriptions specify pedagogically
+    sound focuses: dative forms after ve'
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: 'Volunteer day dialogue is engaging with named speakers and a believable
+    scenario (carrying bags, calling a friend for a car, warehouse work). Age dialogue
+    between Олена and Марк is brief but natural. '
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: 'Clean H2 structure: 4 content sections matching plan + Підсумок. 3046
+    words vs 2000 target (153% — well above minimum). All sections present and logically
+    ordered. No stray tags, no formatting artifac'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian taught entirely on its own terms. No "like Russian but..." comparisons
+    anywhere. Age construction presented as a Ukrainian-specific pattern compared
+    to English. Volunteer day setting reflect
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: 'Volunteer dialogue (section 1): 7 turns, named speakers (Волонтер, Координатор),
+    natural multi-turn flow covering допомагати бабусі, дзвонити другові, радити сусідці,
+    дякувати нам — hits all target ve'
+findings: []

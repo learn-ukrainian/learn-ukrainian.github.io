@@ -1,47 +1,47 @@
-## Способи творення дієслів (~750 words total)
-- P1 (~150 words): [Intro to the architectural beauty of the Ukrainian verb. Explain how understanding morphology is a "superpower" for B1 learners to decode thousands of words without a dictionary. Reference the three main pillars: prefixal, suffixal, and prefix-suffixal.]
-- P2 (~150 words): [Detailed breakdown of the Prefixal method (префіксальний спосіб) based on Ворон Grade 9. Use the verb 'читати' (to read) as the anchor: прочитати (completion), перечитати (re-reading), вичитати (extracting information). Explain that the prefix is added to the already existing verb.]
-- P3 (~150 words): [Detailed breakdown of the Suffixal method (суфіксальний спосіб) based on Литвінова Grade 6. Explain how verbs are born from other parts of speech: 'білий' (adj) → 'білити' (verb), 'крик' (noun) → 'кричати' (verb). Highlight that the suffix defines the part-of-speech change.]
-- Dialogue (~120 words): [Setting: A language school in Odesa. Викладач explains the "Verb Tree" concept. Слухач A asks how to make a verb from 'зима' (winter). Викладач explains 'зимувати'. Слухач B asks about 'земля' (earth) and learns 'заземлити'. Focus: nouns/adjectives as roots for verbs.]
-- P4 (~180 words): [The productivity of prefixation vs. other methods. Use 'ходити' (to go) as a case study. List 10+ variations: виходити, входити, приходити, відходити, заходити, обходити, переходити, підходити, проходити, доходити. Explain that while the root is constant, the prefix creates a precise spatial or logical "flavor."]
+## Способи творення дієслів (~820 words total)
+- P1 (~120 words): [The architectural beauty of Ukrainian verbs: introducing the concept of "word-building blocks" where a single root can generate a whole field of meanings.]
+- P2 (~150 words): [Overview of the three primary methods according to Voron (Grade 9) and Lytvinova (Grade 6): префіксальний (писати → написати), суфіксальний (білий → білити), and префіксально-суфіксальний (земля → заземлити).]
+- P3 (~150 words): [The productivity of prefixal formation: taking 'ходити' and showing how 10+ distinct actions are created (входити, виходити, приходити, відходити, заходити, обходити, переходити, підходити, проходити) using the systematic logic of Ukrainian prefixes.]
+- P4 (~150 words): [Distinguishing between purely aspectual changes (писати → написати) and lexical-semantic changes (писати → переписати) where a prefix creates a new "dictionary" meaning, not just a completion of the action.]
+- Dialogue (~150 words): [Teacher explaining verb formation in an Odesa language school; students convert nouns like 'радість' and 'сум' into verbs 'радіти' and 'сумувати', noting the suffixes used.]
+- Exercise: [fill-in, Add the correct prefix to change verb meaning as described (re-do, start, finish, turn off), 10 items]
 
-## Префікси: системний огляд (~950 words total)
-- P1 (~180 words): [Group 1: Spatial Prefixes. Review of motion-style prefixes applied to non-motion verbs. Examples: вписати (to inscribe/write into), вимкнути (to turn off/cut out), приєднати (to attach/connect to), відрізати (to cut away from). Explain the logic of directionality.]
-- P2 (~180 words): [Group 2: Resultative and Aktionsart (Способи дії). Explain prefixes that indicate the nature of the action: на- (accumulation, e.g., наготувати - to cook a lot), за- (beginning, e.g., заспівати - to start singing), по- (briefly/start, e.g., почекати - to wait a bit).]
-- Exercise: [quiz, focus: Choose the correct prefixed verb for the given context (вимкнути vs увімкнути vs перемкнути), 8 items]
-- P3 (~180 words): [Completion and Dispersal prefixes. до- (reaching a limit, e.g., дочитати - finish reading), роз- (dispersing or undoing, e.g., розрізати - cut apart, розповісти - distribute a story). Compare 'читати' (process) with 'дочитати' (result).]
-- P4 (~200 words): [Group 3: Modificational prefixes for nuance. Explain недо- (insufficiency: недоїсти - to not eat enough), пере- (excess: перевтомитися - to overtire), and під- (secrecy/slightness: підробити - to forge/work under, підмінити - to replace secretly).]
-- Exercise: [fill-in, focus: Add the correct prefix to change verb meaning as described (re-do, start, finish, turn off), 10 items]
-- P5 (~130 words): [Semantic shifts. Explain how a prefix can completely change the lexical core, not just the aspect. Example: 'бити' (to hit) vs 'розбити' (to break/shatter) or 'забити' (to score/clog).]
+## Префікси: системний огляд (~1000 words total)
+- P1 (~150 words): [Spatial prefixes review: focusing on movement and state changes with в-/у- (into: вписати), ви- (out: вирізати), при- (approach: прикріпити), від- (separation: відрізати), and пере- (transfer: перекласти).]
+- P2 (~150 words): [Resultative and Aktionsart prefixes: explaining the "shades of action" with на- (accumulation/volume: набрати), за- (sudden beginning: заспівати), and по- (brief duration or start: почекати, побігти).]
+- P3 (~150 words): [Completion and Dispersal prefixes: the role of до- (reaching the end: дочитати), роз- (unfolding or undoing: розрізати, розповісти), and the perfective z-/s- group (зробити, спекти).]
+- P4 (~150 words): [Modificational prefixes: the nuances of недо- (insufficient: недочути), пере- (excessive: перевтомитися), під- (partial or secret: підфарбувати, підслухати), and об- (comprehensive: обговорити).]
+- P5 (~120 words): [Orthography of prefixes: reinforcing the Zabolotnyi (Grade 5) rules for s- vs z- (перед к, п, т, ф, х) and the consistent 'д' in prefixes like над-, під-, від-.]
+- P6 (~120 words): [Practical comparison: taking a root like 'крити' and contrasting 'відкрити' (open), 'закрити' (close), 'покрити' (cover), and 'перекрити' (block) to show prefix power.]
+- Exercise: [quiz, Choose the correct prefixed verb for the given context (вимкнути vs увімкнути vs перемкнути), 8 items]
 
 ## Суфіксальне творення дієслів (~750 words total)
-- P1 (~180 words): [Formation from Adjectives: The crucial distinction between -ити and -іти. Explain the 'Causative' (to make) vs 'Inchoative' (to become) logic. Examples: білити (to make white/whitewash) vs біліти (to become/appear white); синити (to dye blue) vs синіти (to turn blue).]
-- P2 (~180 words): [Formation from Nouns: The power of -увати/-ювати. Examples: малюнок → малювати (to draw), танець → танцювати (to dance), будова → будувати (to build). Mention that this is the "go-to" suffix for modern technical terms: програма → програмувати.]
-- P3 (~180 words): [The Instantaneous Suffix -нути. Explain how this suffix indicates a single, sudden, or brief action. Examples: штовхати (repeated pushing) → штовхнути (one push), кричати (shouting) → крикнути (a shout), свистіти → свиснути (a whistle).]
-- P4 (~130 words): [Predicting Conjugation (Дієвідміна). Reference Заболотний Grade 7. Explain how the infinitive suffix (-а-, -ува-, -ну-) usually signals I conjugation, while -и- or dropping -і- signals II conjugation. This links word formation to grammar mechanics.]
-- Exercise: [sentence-builder, focus: Form verbs from given adjectives/nouns using appropriate suffixes (-ити, -увати, -нути), 6 items]
+- P1 (~150 words): [Verbs from adjectives: the critical distinction between causative -ити (to make something: білий → білити 'to whiten') and inchoative -іти (to become something: білий → біліти 'to turn white'). Examples with синій, червоний, чорний.]
+- P2 (~150 words): [Verbs from nouns: the productivity of -увати/-ювати (малюнок → малювати, танець → танцювати) and its application to modern loanwords (програма → програмувати, фільтр → фільтрувати).]
+- P3 (~150 words): [The -нути suffix: defining semelactive actions (одноразова миттєва дія). Comparing imperfective duration with perfective instant: штовхати (pushing) vs штовхнути (a push), кричати vs крикнути.]
+- P4 (~150 words): [Conjugation clues: using Zabolotnyi (Grade 7) logic to predict if a verb belongs to I or II conjugation based on its infinitive suffix (-а-, -ува-, -ну- vs -и-, -і-).]
+- Exercise: [sentence-builder, Form verbs from given adjectives/nouns using appropriate suffixes (-ити, -увати, -нути), 6 items]
 
-## Префіксально-суфіксальний спосіб (~700 words total)
-- P1 (~200 words): [The concept of simultaneous "bracketing." Explain that 'заземлити' is not 'за-' + 'землити' (which doesn't exist), but 'за-' + 'земл-' + '-ити' added at once. Reference Заболотний Grade 6 examples: зброя → озброїти (to arm), ціна → оцінити (to value).]
-- P2 (~180 words): [The logic of negation and removal using з- / зне-. Examples: знешкодити (to make harmless/neutralize from 'шкода'), знебарвити (to bleach/discolor from 'барва'), обезводити (to dehydrate from 'вода').]
-- P3 (~180 words): [Comparison of methods. Contrast 'білити' (suffix only) with 'освітлити' (prefix-suffix from 'світло'). Explain why some words require both parts to maintain semantic stability.]
-- Exercise: [group-sort, focus: Sort verbs by formation method: префіксальний / суфіксальний / префіксально-суфіксальний, 12 items]
-- P4 (~140 words): [Summary of the "Simultaneous" rule. Tips for identifying this method: if you remove the prefix and the remaining word is not a verb, it was likely formed by the prefix-suffix method.]
+## Префіксально-суфіксальний спосіб (~720 words total)
+- P1 (~150 words): [The concept of simultaneous "enveloping": explaining how words like 'заземлити' (from земля) or 'озброїти' (from зброя) add both parts at once to create a verb, rather than building it in steps.]
+- P2 (~150 words): [Productive patterns for removal and negation: the з-не- suffixal-prefixal chain (знешкодити from шкода, знебарвити from барва) used to describe the removal of a quality.]
+- P3 (~150 words): [Action/Quality application: the о-...-ити and об-...-ити patterns (оцінити from ціна, оновити from новий) and their role in formal and academic registers.]
+- P4 (~120 words): [Dialogue: Two students discussing how to name a new technological process, debating between suffixal (фільтрувати) and prefixal-suffixal (оцифрувати) methods.]
+- Exercise: [group-sort, Sort verbs by formation method: префіксальний / суфіксальний / префіксально-суфіксальний, 12 items]
 
-## Розкладання незнайомих дієслів (~800 words total)
-- P1 (~180 words): [The "Deconstruction Strategy." Step-by-step analysis of 'перевстановити'. Identify root 'став-' (to stand/place), prefix 'в-' (into), prefix 'пере-' (again/re-), suffix '-ити'. Result: 'to reinstall.']
-- P2 (~200 words): [Decoding complex prefixes. Explain 'розповсюдити' (роз- dispersal + по- surface + всюди - everywhere). Show how the components add up to "distribute/spread widely." Other examples: підсилити (reinforce), відтворити (reproduce).]
-- Reading Passage (~200 words): [A short narrative about a technician fixing a system. Use verbs like: підключити, перевантажити, розібрати, знешкодити (a virus), налаштувати, доопрацювати. Focus: immersion in technical/action-oriented verb formation.]
-- P3 (~150 words): [Analysis of the Reading Passage. Break down 3-4 verbs from the text. Explain the logic: why 'перевантажити' (overload) uses 'пере-' and why 'налаштувати' (setup) uses 'на-'.]
-- Exercise: [match-up, focus: Match prefixed verbs to their meanings based on prefix analysis, 10 items]
+## Розкладання незнайомих дієслів (~850 words total)
+- P1 (~150 words): [The Decoder Strategy: teaching learners to look at a 15-letter verb and break it down: prefix(es) + root + suffix + ending. Analysis of 'перевстановити' (re-in-stall).]
+- P2 (~150 words): [Predicting meanings: how to guess the definition of words like 'розповсюдити' (dispersal + spread) or 'підсилити' (slightly/support + strength + make) without a dictionary.]
+- P3 (~250 words): [Reading Passage: "The Digital Office." A narrative about upgrading a workspace filled with verbs like переобладнати, підключити, роздрукувати, and недооцінити. Learners must spot the formations.]
+- P4 (~150 words): [Semantic families: showing how 'твір' (work) branches into 'творити', 'відтворити', 'утворити', and 'перетворити', and how the core "creation" meaning stays.]
+- Exercise: [match-up, Match prefixed verbs to their meanings based on prefix analysis, 10 items]
 
-## Підсумок та перехід до M25 (~500 words total)
-- P1 (~150 words): [Recap of the three methods. Prefixation as the king of aspect and nuance; Suffixation as the bridge between nouns/adjectives and actions; Prefix-Suffixation as the tool for specific transformations like 'neutralization' or 'arming'.]
-- P2 (~200 words): [Self-check checklist:
-  * Я можу визначити різницю між 'білити' та 'біліти'? (Так/Ні)
-  * Я розумію, що префікс 'роз-' означає роз'єднання або поширення? (Так/Ні)
-  * Я вмію виділити префікс, корінь та суфікс у слові 'заземлити'? (Так/Ні)
-  * Я знаю, що суфікс '-нути' робить дію одноразовою? (Так/Ні)]
-- P3 (~150 words): [Preview of Module 25: Щоденне життя. Explain that now we have the "parts" (verb formation), we will use them to describe complex routines, give instructions (imperatives), and discuss hypothetical situations (conditionals). Verb formation is the engine of communication.]
+## Підсумок (~450 words)
+- P1 (~200 words): [Comprehensive recap: The three paths of verb creation. Prefixal (meaning shift/aspect), Suffixal (category change/duration), and Prefix-Suffix (simultaneous creation). The predictability of Ukrainian verbal morphology.]
+- P2 (~150 words): [Self-check list:
+  - Чи можу я пояснити різницю між 'білити' та 'біліти'? (Так/Ні)
+  - Чи можу я назвати 3 префікси зі значенням початку дії? (за-, по-, роз-)
+  - Чи вмію я розкладати складні дієслова на частини? (Так/Ні)]
+- P3 (~100 words): [Transition to M25: With our verb-building tools ready, we move to describing 'Daily Life' (Щоденне життя), where these prefixed and suffixal verbs will describe our routines and schedules.]
 
-Grand total: ~4450 words
+Grand total: ~4590 words

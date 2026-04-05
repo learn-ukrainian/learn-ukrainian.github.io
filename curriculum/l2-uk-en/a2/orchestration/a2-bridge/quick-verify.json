@@ -4,11 +4,6 @@
   "errors": [],
   "warnings": [
     {
-      "check": "TOXIC",
-      "severity": "WARNING",
-      "message": "Latin characters mixed with Cyrillic: i"
-    },
-    {
       "check": "VOCABULARY",
       "severity": "WARNING",
       "message": "Missing 2/9 required vocab: голосний (vowel), приголосний (consonant)"
@@ -16,8 +11,8 @@
     {
       "check": "EXERCISES",
       "severity": "WARNING",
-      "message": "Plan expects 3 exercise(s) but content has 0 placeholders"
+      "message": "Plan expects 4 exercise(s) but content has 0 placeholders"
     }
   ],
-  "timestamp": "2026-03-31T20:26:08.978109+00:00"
+  "timestamp": "2026-04-05T08:19:10.402099+00:00"
 }

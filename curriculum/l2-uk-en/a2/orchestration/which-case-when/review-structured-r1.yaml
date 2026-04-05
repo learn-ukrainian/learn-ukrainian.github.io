@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: All 4 content_outline sections present with appropriate depth. All required
+    vocabulary used naturally in prose (відмінок, прийменник, дієслово, напрямок,
+    місце, час, характеристика, думати, боятися, к
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 708/708 VESUM-verified words confirmed. Case endings correct throughout.
+    Dative «дякувати комусь» confirmed by Антоненко-Давидович. Gender agreement with
+    «собака» (m/f both valid in VESUM) is acceptab
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: each section opens with context/situation, presents
+    pattern with 3+ examples per grammar point, then provides practice markers. Excellent
+    use of contrast pairs (на пошту/на пошті, в м'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 10 required vocabulary items appear naturally in prose: відмінок
+    (throughout), прийменник (section 2 opening), дієслово (section 1 opening), напрямок
+    (section 2, section 4), місце (section 2, sect'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 4 markers match plan hints exactly in type, focus, and item count
+    (8 each). Markers placed after the relevant teaching sections. Quiz tests verb-case
+    selection (language skill ✓). Group-sort tests
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'Opening "compass" metaphor is specific and sustained. No motivational
+    fluff or "magic of" language. English explanations are appropriately dosed and
+    genuinely helpful (e.g., "In English, you use ''to'' '
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All 4 plan sections present as H2 headings in correct order. Clean markdown
+    throughout. Підсумок section is a standard addition. Word count 2721 well above
+    2000 target. No stray tags, no formatting ar
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented entirely on its own terms. No "like Russian but..."
+    framing. Grammar explained through Ukrainian categories (Знахідний, Давальний,
+    Орудний, Родовий, Місцевий). Examples use Ukraini
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: 'Dialogue 1 (grammar detective/newspaper) is well-constructed: named speakers
+    (Вчитель, Олена), natural classroom situation matching the plan''s dialogue_situations,
+    real newspaper example. **Deductions'
+findings: []

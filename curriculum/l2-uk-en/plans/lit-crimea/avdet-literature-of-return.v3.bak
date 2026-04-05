@@ -1,0 +1,40 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння літературно-критичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Читання
+  focus: Розуміння літературного тексту (уривок з твору)
+  placement: inline
+  type: reading
+- focus: Вигнання та повернення — аналіз голосу зсередини
+  placement: workbook
+  type: source-evaluation
+- focus: Літературна критика — оцінка інтерпретації
+  placement: workbook
+  type: critical-analysis
+- focus: Порівняння з іншими творами або інтерпретаціями
+  placement: workbook
+  type: comparative-study
+- focus: Есе-аналіз рецепції та сучасного значення
+  placement: workbook
+  type: essay-response
+content_outline:
+- points: []
+  section: Вступ та контекст
+  words: 800
+- points: []
+  section: Аналіз ключових творів
+  words: 1200
+- points: []
+  section: Стилістика та мова автора
+  words: 1200
+- points: []
+  section: Деколонізаційна перспектива
+  words: 1000
+- points: []
+  section: Підсумок та спадщина
+  words: 800
+slug: avdet-literature-of-return
+word_target: 5000

@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: All 6 content_outline sections present with correct headings. All 13 required
+    vocab items appear in context (знижка, готівка, картка, чек, повернення, гарантія,
+    розмір, примірочна, посилка, обмін валю
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: Ukrainian grammar is correct throughout — comparatives (дешевший, свіжіший,
+    гарніша, дорожча), superlatives (найкраща, найсвіжіші, найсмачніші), case endings
+    in dialogues all correct. Gender agreement
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'PPP flow is clear: each section presents a situation (market, shop, post
+    office), then models the language through dialogues, then gives practice opportunities
+    via activity markers. Multiple examples '
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 13 required vocabulary items used naturally in context (not as bare
+    lists). All 9 recommended items present. New vocabulary introduced through authentic
+    situations: примірочна in a fitting room sc'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 'All 6 activity markers present, matching plan''s activity_hints exactly
+    in type, focus, and item count. Markers are well-distributed: 1 per section (except
+    У магазині with 2, appropriate given its brea'
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: '**Good:** Dialogues are natural and engaging — the market bargaining
+    dialogue feels authentic with realistic haggling. Cultural details are specific
+    and interesting (домашнє vs перепродаж, Нова Пошта '
+- dimension: 7
+  name: Structural integrity
+  score: 7
+  evidence: All 6 H2 sections present and correctly ordered. Word count 5255 exceeds
+    4000 target ✓. Activity markers properly formatted. **Deduction:** The ТРЦ dialogue
+    in "У магазині" has broken formatting — the
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: 'Ukrainian culture presented on its own terms — markets as living cultural
+    spaces, bargaining as a social skill, домашнє produce as a value system. Specific
+    Ukrainian references: Бессарабський ринок, П'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: Named speakers throughout (Покупець, Продавець, Продавець-консультант,
+    Клієнт, Оператор, Перукар). Multi-turn exchanges with natural flow — the market
+    bargaining includes negotiation, agreement, and c
+findings: []

@@ -1,0 +1,121 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння літературно-критичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Читання
+  focus: Розуміння літературного тексту (уривок з твору)
+  placement: inline
+  type: reading
+- focus: Аналіз авторського задуму — мова як мистецтво
+  placement: workbook
+  type: authorial-intent
+- focus: Літературна критика — оцінка інтерпретації
+  placement: workbook
+  type: critical-analysis
+- focus: 'Порівняння з іншими творами або інтерпретаціями (Тарас Шевченко: Від Кріпака до Пророка)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе-аналіз рецепції та сучасного значення (Тарас Шевченко: Від Кріпака до Пророка)'
+  placement: workbook
+  type: essay-response
+connects_to:
+- lit-12 (The Ballads — рання творчість)
+- lit-17 (The Artist — Шевченко-маляр)
+content_outline:
+- points:
+  - Історичний контекст (1814-1840)
+  - Що таке кріпацтво і як воно працювало
+  - Шанси кріпака стати вільним
+  section: Вступ — Світ кріпацтва
+  words: 850
+- points:
+  - Село Моринці та родина
+  - Дякова школа і перші малюнки
+  - '"Козачок" пана Енгельгардта'
+  section: Дитинство і юність (1814-1831)
+  words: 850
+- points:
+  - Переїзд до столиці імперії
+  - Зустріч з Іваном Сошенком
+  - Літній сад — доленосна зустріч
+  section: Петербург — місто контрастів
+  words: 850
+- points:
+  - Брюллов, Жуковський, Венеціанов
+  - Лотерея з портретом Жуковського
+  - 2500 рублів — ціна свободи
+  section: Викуп — детективна історія
+  words: 850
+- points:
+  - Навчання у Брюллова
+  - 1840 рік — вихід "Кобзаря"
+  - Психологія "вільної людини"
+  section: Академія і "Кобзар"
+  words: 850
+- points:
+  - Формула успіху Шевченка
+  - Роль випадку в історії
+  - Перехід до аналізу творчості
+  section: Підсумок — Шанс, Талант, Солідарність
+  words: 750
+focus: biography
+grammar:
+- Historical narrative style
+- Biography lexicon
+- Art and freedom vocabulary
+immersion: 100% Ukrainian
+level: LIT
+module: lit-011
+module_type: biography
+objectives:
+- Outline Shevchenko's path to freedom
+- Analyze the role of the 1838 lottery
+- Explore the "Romantic Hero" image
+pedagogy: literature
+persona:
+  role: Young Artist
+  voice: Senior Philologist & Critic
+phase: LIT.3 The Prophet (Taras Shevchenko)
+prerequisites:
+- lit-01 to lit-10 (Kotliarevsky and Kvitka phases)
+- Understanding of early 19th century Ukraine
+references:
+- name: Тарас Шевченко — біографія
+  notes: Офіційна біографія на UkrLib
+  type: primary
+  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1749
+- name: Кобзар — повний текст
+  notes: Для контексту ранньої творчості
+  type: secondary
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=1
+- name: Шевченко і Академія мистецтв
+  notes: Петербурзький період
+  type: reference
+  url: https://uk.wikipedia.org/wiki/Тарас_Шевченко
+register: академічний
+sequence: 11
+slug: young-shevchenko
+subtitle: 'LIT-011: Анатомія Генія'
+title: 'Тарас Шевченко: Від Кріпака до Пророка'
+version: '3.0'
+vocabulary_hints:
+  recommended:
+  - козачок (servant boy)
+  - меценат (patron)
+  - портрет (portrait)
+  - живопис (painting)
+  - свобода (freedom)
+  required:
+  - кріпацтво (serfdom)
+  - кріпак (serf)
+  - поміщик (landowner)
+  - панщина (corvée)
+  - викуп (ransom/redemption)
+  - дяк (church clerk/teacher)
+  - академія (academy)
+  - лотерея (lottery)
+  - пророк (prophet)
+  - геній (genius)
+word_target: 5000

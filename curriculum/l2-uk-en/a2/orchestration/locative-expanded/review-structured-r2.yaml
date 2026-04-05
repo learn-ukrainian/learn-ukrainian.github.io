@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: '**Covered well:** All 4 content_outline sections present with correct
+    topics. All 10 required vocab words appear naturally (місцевий, абстрактний, минулий,
+    місяць, тиждень, телефон, подорож, зустріч, '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: '**Correct:** All locative forms verified against VESUM (телефону, тижні,
+    місяці, праві, мистецтві, житті — all v_mis ✓). на роботі exception correctly
+    identified. Temporal locative vs. accusative dura'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: '**Strong:** Good PPP flow — situation dialogues introduce patterns, explicit
+    rules follow, reading practice provides exposure. 5+ examples per grammar point
+    (e.g., 5 feminine abstracts, 5 masculine/ne'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'All 10 required words used naturally in prose: місцевий (throughout),
+    абстрактний ("абстрактний іменник"), минулий ("у минулому місяці"), місяць, тиждень,
+    телефон, подорож ("довга подорож"), зустріч ('
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: All 4 plan activity_hints have corresponding markers with matching type
+    and focus. Markers correctly placed after teaching. **Deduction:** Quiz marker
+    placed after section 1 but tests all 4 locative f
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: No motivational openers, no "magic of," no meta-commentary. Tone is direct,
+    instructional, teacher-like. Good use of reading practice blocks throughout. The
+    по дорозі vs. на дорозі contrast ("I bought
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: 'All 4 H2 sections from plan present and correctly ordered. Clean markdown.
+    Word count 2014 vs. 2000 target ✅. No stray tags, no duplicate summaries, no meta-commentary
+    sections. Minor: the Підсумок su'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented entirely on its own terms. No "like Russian" comparisons
+    anywhere. Locative case taught as a Ukrainian grammatical category with Ukrainian
+    terminology (місцевий відмінок). Examples
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: '**Positives:** Named speakers throughout (Студент/Викладач, Марія/Ігор,
+    Олена/Максим). Final Олена/Максим dialogue is natural and exercises multiple locative
+    functions in one conversation. **Deduction'
+findings: []

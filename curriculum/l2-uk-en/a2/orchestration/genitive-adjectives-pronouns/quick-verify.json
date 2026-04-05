@@ -1,0 +1,13 @@
+{
+  "attempt": 3,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 1/10 required vocab: дозвіл (permission)"
+    }
+  ],
+  "timestamp": "2026-04-05T11:42:27.130806+00:00"
+}

@@ -1,0 +1,98 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння літературно-критичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Читання
+  focus: Розуміння літературного тексту (уривок з твору)
+  placement: inline
+  type: reading
+- focus: Вигнання та повернення — аналіз голосу зсередини
+  placement: workbook
+  type: source-evaluation
+- focus: Літературна критика — оцінка інтерпретації
+  placement: workbook
+  type: critical-analysis
+- focus: Порівняння з іншими творами або інтерпретаціями (Celebicihan Poet Statesman)
+  placement: workbook
+  type: comparative-study
+- focus: Есе-аналіз рецепції та сучасного значення (Celebicihan Poet Statesman)
+  placement: workbook
+  type: essay-response
+connects_to:
+- lit-197
+content_outline:
+- points:
+  - Номан Челебіджіхан — поет і перший голова Кримськотатарської Республіки
+  - Місце в літературному каноні
+  - Чому цей текст важливий сьогодні
+  section: Вступ та культурний контекст
+  words: 600
+- points:
+  - Ключові твори — поезія і конституційні документи
+  - Впливи та джерела
+  - Конфлікт між ідеалом і реальністю
+  section: 'Аналіз твору: Сюжет та структура'
+  words: 1000
+- points:
+  - Детальний розбір символіки
+  - Образ вільного народу і незалежної держави
+  - Архетипи та народні підтексти
+  section: Герменевтика та ключові образи
+  words: 1000
+- points:
+  - Стилістичні інновації автора
+  - Кримськотатарська поетична традиція
+  - Особливості ритміки та синтаксису
+  section: Мова, стиль та поетика
+  words: 800
+- points:
+  - Який імперський міф руйнує цей текст?
+  - Кримськотатарська державність як реальність
+  - Опір асиміляції та культурне самоствердження
+  section: Деколонізаційний вимір
+  words: 800
+- points:
+  - Вплив на наступні покоління письменників
+  - Загибель у 1918 як знакова дата
+  - Питання для дискусії
+  section: Підсумок та рецепція
+  words: 800
+focus: literature
+immersion: 100% Ukrainian
+level: LIT
+module: lit-196
+module_type: literature
+objectives:
+- Проаналізувати поезію і державотворення Челебіджіхана у контексті епохи
+- Дослідити стилістичні особливості тексту
+- Зрозуміти деколонізаційне значення автора
+pedagogy: Seminar
+persona:
+  role: Poet-Statesman
+  voice: Senior Philologist & Critic
+phase: LIT.3 Executed Renaissance 1917-1933
+prerequisites:
+- lit-195
+sequence: 196
+slug: celebicihan-poet-statesman
+sources:
+- name: Celebicihan Poet Statesman — тексти та аналіз
+  notes: Основне джерело
+  type: primary
+  url: https://www.ukrlib.com.ua/
+subtitle: Celebicihan Poet Statesman
+title: Celebicihan Poet Statesman
+version: '2.0'
+vocabulary_hints:
+  recommended:
+  - алегорія (allegory)
+  - контекст (context)
+  - рецепція (reception)
+  required:
+  - канон (canon)
+  - метафора (metaphor)
+  - дискурс (discourse)
+  - інтерпретація (interpretation)
+word_target: 5000

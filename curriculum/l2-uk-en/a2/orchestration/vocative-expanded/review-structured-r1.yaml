@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'All 4 content_outline sections present and in order. Dialogue situations
+    from plan are covered: clinic scene (Section 1), classroom scene (Section 2),
+    phone call (Section 3). Cultural context about па'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: '**Critical:** суддя vocative taught as "суддю" — VESUM confirms it''s
+    "судде" (v_kly for both m/f). This teaches a wrong form. **Major:** "Слово «донька»
+    у кличному відмінку стає формою «донечко»" conf'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'PPP flow is solid: each section presents context/situation → pattern
+    → practice via dialogue. Multiple examples per grammar point (5+ nominative→vocative
+    pairs for both masculine and feminine). The cl'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'All 10 required vocab words present: кличний ✓, звертання ✓, пан ✓, пані
+    ✓, лікар ✓, вчитель ✓, друг ✓, ввічливий ✓, офіційний ✓, професія ✓. Recommended:
+    добродій ✓, добродійка ✓, емоційний ✓, колега'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 5 plan activity types present with 8 items each. Good placement after
+    relevant sections. Fill-in tests professional vocative formation (core skill).
+    Match-up tests nominative→vocative mapping. Err
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: '**Good:** Dialogues are natural and grounded (clinic visit, classroom,
+    phone call with friend). The Олег phone call has personality and humor ("сонечко"
+    joke). Cultural point about пан/пані as decolon'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: All 4 plan sections present as H2 headings, correct order. Summary section
+    (Підсумок) with self-check questions. Word count 2585 vs target 2000 — well within
+    range (29% over, acceptable). Clean markdo
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Decolonial framing is strong and accurate: пан/пані as conscious post-independence
+    choice replacing товариш. Feminitives presented as natural and standard (not "new"
+    or "controversial"). Добродій/добр'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'Three well-constructed dialogues: (1) Clinic — patient→doctor, natural
+    formal register with пане лікарю / пане Ковальчуку. (2) Classroom — teacher using
+    first-name vocatives, students using пані вчите'
+findings: []

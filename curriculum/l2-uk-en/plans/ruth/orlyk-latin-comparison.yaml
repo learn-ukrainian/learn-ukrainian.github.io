@@ -1,55 +1,67 @@
-module: ruth-090
-level: RUTH
-sequence: 90
-slug: orlyk-latin-comparison
-version: '3.0'
-title: 'Орлик: Порівняння з латиною'
-subtitle: Orlyk's Latin
-focus: Ruthenian vs Latin versions
-phase: 4
-word_target: 5000
-content_outline:
-- section: Вступ
-  points:
-  - Introduction to Orlyk's Latin
-  words: 1250
-- section: Основний матеріал
-  points:
-  - Primary source analysis and grammar focus
-  words: 1250
-- section: Практика
-  points:
-  - Exercises and activities
-  words: 1250
-- section: Підсумок
-  points:
-  - Summary and connection to next module
-  words: 1250
-vocabulary_hints:
-  required: []
-  recommended: []
 activity_hints:
-- type: transcription
-  focus: ''
-  items: 1
-- type: etymology-trace
-  focus: ''
-  items: 1
-- type: grammar-identify
-  focus: ''
-  items: 1
-persona:
-  voice: Baroque Scholar
-  role: Diplomatic Translator
-prerequisites:
-- diplomatic-language
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння соціолінгвістичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Текст
+  focus: Транскрипція руського/староукраїнського фрагменту
+  placement: inline
+  type: transcription
+- focus: Простежити еволюцію слова від руської доби до сучасної
+  placement: workbook
+  type: etymology-trace
+- focus: 'Порівняння мовних контактів — полонізми, латинізми, церковнослов''янізми (Орлик: Порівняння з латиною)'
+  placement: workbook
+  type: dialect-comparison
+- focus: 'Порівняння — те саме поняття церковнослов''янською, руською та сучасною (Орлик: Порівняння з латиною)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе — як цей текст доводить існування української мови до Котляревського? (Орлик: Порівняння з латиною)'
+  placement: workbook
+  type: essay-response
 connects_to:
 - wandering-philosopher
+content_outline:
+- points:
+  - Introduction to Orlyk's Latin
+  section: Вступ
+  words: 1250
+- points:
+  - Primary source analysis and grammar focus
+  section: Основний матеріал
+  words: 1250
+- points:
+  - Exercises and activities
+  section: Практика
+  words: 1250
+- points:
+  - Summary and connection to next module
+  section: Підсумок
+  words: 1250
+focus: Ruthenian vs Latin versions
+grammar: []
+level: RUTH
+module: ruth-090
 objectives:
 - Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
 - Продукувати тексти академічного та професійного рівня за тематикою модуля
 - Демонструвати вільне володіння спеціалізованою лексикою та термінологією
 - Застосовувати знання з теми «Практика» у власній мовній практиці
+persona:
+  role: Diplomatic Translator
+  voice: Baroque Scholar
+phase: 4
+prerequisites:
+- diplomatic-language
 references: []
 register: академічний
-grammar: []
+sequence: 90
+slug: orlyk-latin-comparison
+subtitle: Orlyk's Latin
+title: 'Орлик: Порівняння з латиною'
+version: '3.0'
+vocabulary_hints:
+  recommended: []
+  required: []
+word_target: 5000

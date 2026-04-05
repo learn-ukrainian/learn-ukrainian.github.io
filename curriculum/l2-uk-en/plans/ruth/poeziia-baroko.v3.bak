@@ -1,0 +1,74 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння соціолінгвістичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Текст
+  focus: Транскрипція руського/староукраїнського фрагменту
+  placement: inline
+  type: transcription
+- focus: Простежити еволюцію слова від руської доби до сучасної
+  placement: workbook
+  type: etymology-trace
+- focus: Порівняння мовних контактів — полонізми, латинізми, церковнослов'янізми (Українська бароко поезія XVI-XVII ст.)
+  placement: workbook
+  type: dialect-comparison
+- focus: Порівняння — те саме поняття церковнослов'янською, руською та сучасною (Українська бароко поезія XVI-XVII ст.)
+  placement: workbook
+  type: comparative-study
+- focus: Есе — як цей текст доводить існування української мови до Котляревського? (Українська бароко поезія XVI-XVII ст.)
+  placement: workbook
+  type: essay-response
+connects_to:
+- bajky-xvii-xviii
+content_outline:
+- points:
+  - 'Context: baroque poetry as a European phenomenon. Ukrainian poets writing in Ukrainian, Latin, and Polish simultaneously
+    — but CHOOSING Ukrainian for specific purposes.'
+  section: Вступ
+  words: 1250
+- points:
+  - 'Anthology analysis: syllabic verse forms, acrostics, panegyrics to hetmans and church leaders. Kasijan Sakovych, Lazarus
+    Baranovych, and anonymous brotherhood poets. Poetic vocabulary and imagery.'
+  section: Основний матеріал
+  words: 1250
+- points:
+  - Scanning syllabic verse. Identifying Latin/Polish borrowings vs native Ukrainian in poetic register. Writing analysis
+    of a selected poem.
+  section: Практика
+  words: 1250
+- points:
+  - Baroque poetry proves Ukrainian was a full-status literary language in the 16th-17th centuries — capable of sophisticated
+    verse forms alongside Europe's major languages.
+  section: Підсумок
+  words: 1250
+focus: Syllabic verse, panegyrics, and laments — Ukrainian competing with Latin and Polish as a literary language
+level: RUTH
+module: ruth-108
+objectives:
+- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
+- Продукувати тексти академічного та професійного рівня за тематикою модуля
+- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- Застосовувати знання з теми «Практика» у власній мовній практиці
+persona:
+  role: Brotherhood Poet
+  voice: Poetry Scholar
+phase: 5
+prerequisites:
+- intermedii-xvii-xviii
+sequence: 108
+slug: poeziia-baroko
+source_url: http://litopys.org.ua/ukrpoetry/anto.htm
+subtitle: Ukrainian Baroque Poetry (16th-17th c.)
+title: Українська бароко поезія XVI-XVII ст.
+version: '2.0'
+vocabulary_hints:
+- бароко
+- вірш
+- силабічний
+- панегірик
+- акровірш
+- епітафія
+- ода
+word_target: 5000

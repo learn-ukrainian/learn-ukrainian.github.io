@@ -1,0 +1,50 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Covers all grammar points and vocabulary perfectly. Adapts the "lost and
+    found" dialogue from a suitcase to a phone, which is acceptable but misses the
+    specific noun suggested.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Incorrectly teaches that the Genitive of "телефон" is "телефона" (`**Якого**
+    телефона?`). The standard Genitive singular form is "телефону".
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: 'Contains a critical pedagogical trap: the writer conflated the masculine
+    animate Accusative case (which looks exactly like the Genitive) with true Genitive
+    constructions. Teaching "Що ти знаєш про тог'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words (прикметник, узгодження, вчителька,
+    старший, дівчина) are integrated naturally into the prose and examples.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The 5 required exercise markers correspond directly to the plan's `activity_hints`
+    and are distributed well.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The tone is direct, encouraging, and clear. Dialogues are practical and
+    grounded in real-world scenarios.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Excellent structure. No markdown artifacts. Grammar notes (`:::note`)
+    are used perfectly to summarize endings.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Good use of culturally appropriate Ukrainian names (Богдан, Олена, Дмитро)
+    and authentic context.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The dialogues flow well, especially the "lost and found" scenario and
+    the casual exchanges about neighbors and gifts.
+findings: []

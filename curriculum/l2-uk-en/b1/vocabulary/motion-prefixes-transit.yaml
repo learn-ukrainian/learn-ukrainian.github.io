@@ -1,48 +1,48 @@
 vocabulary:
 - word: перевезти́
-  translation: to transport across (perfective)
+  translation: to transport across
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: провести́
-  translation: to guide through / to conduct (perfective)
+  translation: to guide through / lead
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: провезти́
-  translation: to transport through (perfective)
+  translation: to transport through
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: перелеті́ти
-  translation: to fly across (perfective)
+  translation: to fly across
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: переплисти́
-  translation: to swim across (perfective)
+  translation: to swim across
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: пролеті́ти
-  translation: to fly past (perfective)
+  translation: to fly past
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: проплисти́
-  translation: to sail past (perfective)
+  translation: to sail past
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: на́скрізь
-  translation: through (adverb)
+  translation: through
   expression: false
   pos: присл.
   gender: ''
@@ -54,49 +54,49 @@ vocabulary:
   gender: ч.
   verified: true
 - word: перейти́
-  translation: to cross on foot (perfective)
+  translation: to cross on foot
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: переї́хати
-  translation: to cross by vehicle / to relocate (perfective)
+  translation: to cross by vehicle / to relocate
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: перебі́гти
-  translation: to run across (perfective)
+  translation: to run across
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: перенести́
-  translation: to carry across / to reschedule (perfective)
+  translation: to carry across / to reschedule
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: перевести́
-  translation: to lead across / to translate (perfective)
+  translation: to lead across / to translate
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: пройти́
-  translation: to walk past / to walk through (perfective)
+  translation: to walk past / through
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: прої́хати
-  translation: to drive past / to drive through (perfective)
+  translation: to drive past / through
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: пробі́гти
-  translation: to run past (perfective)
+  translation: to run past
   expression: false
   pos: дієсл.
   gender: ''
@@ -108,7 +108,7 @@ vocabulary:
   gender: ''
   verified: true
 - word: проходити
-  translation: to pass / to go through (imperfective)
+  translation: to pass (imperfective)
   expression: false
   pos: дієсл.
   gender: ''
@@ -119,86 +119,20 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: перетну́ти
-  translation: to cross / to traverse
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: переїжджа́ти
-  translation: to drive across / to relocate (imperfective)
-  expression: false
-  pos: дієсл.
-  gender: ''
-  verified: true
-- word: проїжджа́ти
-  translation: to drive past / to drive through (imperfective)
+- word: перетина́ти
+  translation: to cross
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
 - word: пронести́
-  translation: to carry through / to carry past
+  translation: to carry through
   expression: false
   pos: дієсл.
   gender: ''
   verified: true
-- word: че́рез
-  translation: through / across (preposition)
-  expression: false
-  pos: прийм.
-  gender: ''
-  verified: true
-- word: крізь
-  translation: through (preposition)
-  expression: false
-  pos: прийм.
-  gender: ''
-  verified: true
-- word: по
-  translation: along / on (preposition)
-  expression: false
-  pos: прийм.
-  gender: ''
-  verified: true
-- word: міст
-  translation: bridge
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: залізничний переїзд
-  translation: railway crossing
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: калю́жа
-  translation: puddle
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: зупи́нка
-  translation: stop / bus stop
-  expression: false
-  pos: ім.
-  gender: ж.
-  verified: true
-- word: поворо́т
-  translation: turn
-  expression: false
-  pos: ім.
-  gender: ч.
-  verified: true
-- word: перейти дорогу
-  translation: to cross the road
-  expression: true
-  pos: ''
-  gender: ''
-  verified: true
-- word: переїхати в нове місто
-  translation: to relocate to a new city
+- word: проїхати повз
+  translation: to drive past
   expression: true
   pos: ''
   gender: ''
@@ -209,14 +143,14 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: перевести статтю
-  translation: to translate an article
-  expression: true
-  pos: ''
+- word: перекла́сти
+  translation: to translate (text)
+  expression: false
+  pos: дієсл.
   gender: ''
   verified: true
 - word: проїхати зупинку
-  translation: to miss a stop (in transport)
+  translation: to miss one's stop
   expression: true
   pos: ''
   gender: ''
@@ -227,15 +161,57 @@ vocabulary:
   pos: ''
   gender: ''
   verified: true
-- word: проїхати поворот
-  translation: to miss a turn
-  expression: true
-  pos: ''
-  gender: ''
+- word: порі́г
+  translation: threshold
+  expression: false
+  pos: ім.
+  gender: ч.
   verified: true
-- word: пройти через парк
-  translation: to walk through a park
-  expression: true
-  pos: ''
+- word: на́товп
+  translation: crowd
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: тротуа́р
+  translation: sidewalk
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: світлофо́р
+  translation: traffic light
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: межа́
+  translation: boundary / limit
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: запра́вка
+  translation: gas station
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: передмі́стя
+  translation: suburbs
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: поперек
+  translation: across / perpendicularly
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: уздо́вж
+  translation: along
+  expression: false
+  pos: присл.
   gender: ''
   verified: true

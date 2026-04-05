@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 1.1.0 | updated: 2026-03-31 -->
 # V6 Activity Generation — Structured YAML for Inline + Workbook Exercises
 
 You are generating structured exercise YAML for a Ukrainian language module. The exercises will be injected into the lesson tab (inline) and workbook tab (workbook) of the module.
@@ -52,7 +52,10 @@ The plan specifies these exercises to create:
   type: error-correction
 
 
-You MUST create activities that cover all these hints. Distribute them between inline and workbook as appropriate: focused checks go inline, extended practice goes to workbook.
+You MUST create activities that cover all these hints. **Respect the `placement` field:**
+- Hints with `placement: inline` go in the `inline:` array. They MUST have an `id` matching one of the injection markers above (e.g., `comprehension-check` or `reading-check`). If the marker id doesn't match exactly, use the closest match.
+- Hints with `placement: workbook` go in the `workbook:` array.
+- If no `placement` field, use this rule: quiz and reading go inline (2-3 max), everything else goes to workbook.
 
 ---
 
@@ -85,308 +88,134 @@ required:
 <module_content>
 ## Що таке вид дієслова?
 
-Two friends are watching a football match on TV. The striker rushes toward the goal — «Він біжить!» Then the ball hits the net — «Він забив гол!» Same player, two moments. But notice: Ukrainian used two completely different verbs. «Біжить» captures the running *as it happens* — you can almost see the legs moving. «Забив» captures a done deal — the goal exists, the scoreboard changed. This difference is not about *when* something happened. It is about *how* the action unfolds. Ukrainian has a name for this hidden layer: **вид дієслова** (verb aspect).
+If you have ever tried to explain English grammar to a Ukrainian speaker, you might have noticed their confusion over the difference between "I am doing" and "I do." English relies heavily on tense to convey the exact moment and frequency of an action. Ukrainian verbs, however, possess a hidden dimension that operates on a completely different logic. Instead of asking *when* an action happens with laser precision, Ukrainian asks a much more fundamental question about the nature of the event: is the action about the continuous process of "doing," or is it about the hard fact that it is "done"? This critical dimension is called **вид дієслова** (verb aspect). Understanding this core concept is the absolute foundation of speaking natural Ukrainian. It forces you to shift your mental focus away from the timeline and toward the result.
 
-Every Ukrainian verb carries aspect. There are exactly two kinds: **недоконаний вид** (imperfective aspect), abbreviated **НВ**, and **доконаний вид** (perfective aspect), abbreviated **ДВ**. Aspect is not tense. Tense tells you *when* — yesterday, now, tomorrow. Aspect tells you *how* — is the action a process that is unfolding, or is it a completed result that already exists? Here is your first pair: **писати** (to write, НВ) and **написати** (to write and finish, ДВ). Same action, different perspective.
+In Ukrainian, almost every verb you learn belongs to one of two distinct categories. The first is **недоконаний вид** (imperfective aspect). If we look at the literal translation of this grammatical term, it essentially means "not-finished-looking." This aspect is all about the **процес** (process), the duration, or the **повторення** (repetition) of an action. It tells us that an activity is ongoing, but it deliberately does not tell us if it ever reached a conclusion. The second category is **доконаний вид** (perfective aspect). Literally, this translates to "finished-looking." We use this aspect specifically to talk about a single, successfully completed **дія** (action). The focus here is entirely on the **результат** (result) or the definitive boundary of the action. To speak Ukrainian correctly, you must constantly decide whether you are describing the journey or the destination. The verbs **робити** (to do) and **зробити** (to have done) clearly illustrate this pairing.
 
-Think of it like watching a movie. Imperfective is the film playing — the camera rolls, scenes unfold, you are inside the story. Perfective is the screen that reads «Кінець» (The End) — the story is over, the result is final. Here is another way to see it, straight from the kitchen. «Варити борщ» (НВ) — the pot is on the stove, steam is rising, someone is stirring. «Зварити борщ» (ДВ) — the stove is off, the borsch is ready, grab a bowl.
+A helpful way to visualize this grammatical difference is the "movie versus snapshot" analogy. Using an imperfective verb is just like watching a video reel. If you watch a video of a cat playing with a toy, you are observing the continuous, fluid, and ongoing action. You see the movement happening right in front of you, but you do not necessarily see the end of the game. Using a perfective verb, on the other hand, is like looking at a single photograph. The picture shows the exact moment the cat has definitively caught the toy. The action is completely over, the dust has settled, and you are looking at the final, undeniable result.
 
-How can you tell which aspect you need? Ask yourself what question the verb answers:
+Let's see this dynamic in a real-life context. Imagine two friends are watching a tense football match on television. They naturally switch between both aspects to comment on the unfolding game.
 
-- **НВ** answers: What was happening? How long did it last? How often did it repeat?
-- **ДВ** answers: What got done? What is the result?
+> — **Олег:** Дивись, він дуже швидко біжить! *(Look, he is running very fast!)*
+> — **Максим:** Так, вони грають сьогодні просто чудово. *(Yes, they are playing simply wonderfully today.)*
+> — **Олег:** Він довго тримає м'яч. Що він робить? *(He is holding the ball for a long time. What is he doing?)*
+> — **Максим:** Ого! Він щойно передав м'яч прямо в центр! *(Wow! He just passed the ball right into the center!)*
+> — **Олег:** І він нарешті забив гол! *(And he finally scored a goal!)*
+> — **Максим:** Це справді неймовірний результат. *(This is truly an incredible result.)*
 
-Here are four common pairs. Notice that the ДВ verb usually adds a **prefix** to the НВ verb — this is the most frequent pattern in Ukrainian:
+Notice how **біжить** (is running), **грають** (are playing), and **робить** (is doing) describe the ongoing, unresolved process on the screen. But the sudden, completed actions—**передав** (passed) and **забив** (scored)—focus entirely on the final, irreversible result of the play.
 
-| НВ (process) | ДВ (result) |
-|---|---|
-| **читати** (to read) | **прочитати** (to finish reading) |
-| **робити** (to do) | **зробити** (to get done) |
-| **писати** (to write) | **написати** (to finish writing) |
-| **вчити** (to study) | **вивчити** (to master) |
-
-Now let's return to that football match. Listen to Андрій and Олена commenting on the game:
-
-> **Андрій:** Він біжить так швидко!
->
-> **Олена:** Він передав м'яч!
->
-> **Андрій:** Вони грають добре сьогодні.
->
-> **Олена:** О, вона забила гол!
->
-> **Андрій:** Суперники атакують.
->
-> **Олена:** Нарешті! Ми виграли матч!
-
-Did you feel the difference? Some lines describe action unfolding right now — the camera is rolling. Other lines announce a result — something just happened and the outcome is clear. Let's label each one:
-
-- «Він біжить так швидко!» — **НВ**. The running is in progress. We are watching it happen.
-- «Він передав м'яч!» — **ДВ**. The pass is complete. The ball is already with another player.
-- «Вони грають добре сьогодні.» — **НВ**. The match is still going. The playing continues.
-- «О, вона забила гол!» — **ДВ**. The ball crossed the line. A single completed moment.
-- «Суперники атакують.» — **НВ**. The attack is unfolding right now.
-- «Нарешті! Ми виграли матч!» — **ДВ**. The final whistle blew. The victory is a fact.
-
-The pattern is simple: if the action is still happening — НВ. If the result already exists — ДВ.
-
-<!-- INJECT_ACTIVITY: quiz, Aspect Sorting: Process vs. Result -->
+Because perfective verbs inherently describe a completed result, they do not have a true present tense. Logically, you cannot be currently in the middle of finishing something instantaneously. Therefore, as we begin exploring this new system, we will focus primarily on the past and present tenses. We will look at how to describe what you were doing in the past versus what you actually accomplished. Mastering this conceptual distinction is the ultimate key to unlocking all future verb usage in the Ukrainian language.
 
 
 ## Недоконаний вид: Процес і повторення
 
-Now that you can tell НВ from ДВ at a glance, it is time to practise recognising imperfective verbs in real situations. There are three contexts where Ukrainian requires НВ — think of them as three doors that all lead to the same verb form:
+When we talk about the imperfective aspect, or **недоконаний вид** (imperfective aspect), we are primarily focusing on the concept of a process. This means that the duration of the action is what truly matters to the speaker, not the final outcome. Imagine you are describing how you spent your afternoon. You might say the following sentence.
 
-1. **Action in progress** at a specific moment — «Я читав, коли ти подзвонив.»
-2. **Repeated or habitual action** — «Я читав цю книгу три рази.» / «Діти читають книги щодня.»
-3. **General fact or permanent state** — «Вона добре співає.»
+«Я читав книгу дві години.» *(I was reading a book for two hours.)*
 
-Whenever the situation fits one of these three doors, reach for an imperfective verb. Let's walk through each one.
+In this example, the verb **читав** (was reading) highlights the fact that you were actively engaged in the activity. It is completely irrelevant whether you actually finished the book. What matters is that you were busy doing it. We use the imperfective aspect whenever we want to emphasize the continuous flow of time. For instance, you can paint a picture of a continuous state with these phrases.
 
-### Door 1: Action in progress
+«Я працював весь день.» *(I was working all day.)*
 
-Imagine a scene: someone is doing something, and then another event interrupts. The background action — the one already happening — is always НВ. The interruption that breaks into the scene is usually ДВ. Think of it as a film playing on screen: the imperfective verb is the movie rolling, and the perfective verb is someone pressing pause.
+«Вони відпочивали в парку.» *(They were relaxing in the park.)*
 
-> «Я читав, коли телефон задзвонив.»
+Similarly, the verb **гуляти** (to walk) naturally implies a process.
 
-«Читав» (was reading) — НВ, the background. «Задзвонив» (rang) — ДВ, the interruption.
+«Ми гуляли містом.» *(We were walking around the city.)*
 
-> «Вони грали у футбол, коли пішов дощ.»
+The focus is entirely on the journey, not the destination.
 
-«Грали» (were playing) — НВ, the scene. «Пішов» (started, came down) — ДВ, the interruption.
+The second major use of the imperfective aspect is to describe repetition and habit. Any action that happens regularly or cyclically absolutely must be expressed using an imperfective verb. Because these actions are ongoing patterns in your life rather than single, isolated events, the imperfective aspect is the only grammatically correct choice. For example, if you want to talk about your morning exercise routine, you would say the following.
 
-> «Мама варила вечерю, коли я повернувся додому.»
+«Щодня я роблю вправи.» *(Every day I do exercises.)*
 
-«Варила» (was cooking) — НВ, still in progress. «Повернувся» (came back) — ДВ, single completed action.
+The verb **роблю** (do) is imperfective because the action repeats. The same logic applies to places you visit frequently or things you buy on a regular basis. You might tell a friend about your local bakery.
 
-Notice the pattern: in every sentence, the НВ verb sets the stage, and the ДВ verb breaks into it. The movie was playing — then someone pressed pause.
+«Ми часто купуємо хліб тут.» *(We often buy bread here.)*
 
-### Door 2: Repeated and habitual actions
+The verb **купуємо** (buy) captures the recurring nature of this action. Whether an event happens every day, once a week, or just a few times a year, the fact that it repeats makes it an ongoing habit.
 
-When an action happens more than once — a daily routine, a weekly habit, a pattern — Ukrainian uses НВ. There is a set of signal adverbs that point straight to imperfective. Learn them, and choosing the right aspect becomes much easier:
+Another important function of the imperfective aspect is to state general facts or to simply name an activity without any focus on a specific result. Sometimes, you just want to say that an action took place or that someone likes doing something, without worrying about the beginning, middle, or end. For example, you can describe a general truth.
 
-- **завжди** (always)
-- **часто** (often)
-- **зазвичай** (usually)
-- **щодня** (every day)
-- **іноді** (sometimes)
-- **ніколи** (never)
+«Діти люблять читати.» *(Children love to read.)*
 
-When you see one of these words in a sentence, НВ is almost always the correct choice. The action is a pattern, not a single unique event.
+You are using the imperfective verb **читати** (to read) to state a fact. This brings us to a crucial grammatical rule: in the present tense, only imperfective verb forms exist. Why? Because the "now" is, by definition, an ongoing process. You cannot be in the present moment and have already completed an action in that same instant. Therefore, whenever you describe what you are doing right now, you must use the imperfective aspect.
 
-> «Він завжди читає перед сном.»
+«Я пишу листа.» *(I am writing a letter.)*
 
-He always reads — a habit, not one particular evening.
+To make choosing the correct aspect easier, Ukrainian uses specific signal words that almost always point to the imperfective aspect. These are adverbs that express duration, frequency, or repetition. When you see these words, you can be highly confident that an imperfective verb will follow. The word **завжди** (always) clearly shows a continuous habit.
 
-> «Вона часто дзвонила бабусі.»
+«Вона завжди п'є каву.» *(She always drinks coffee.)*
 
-She often called grandma — many times, a repeated pattern.
+The word **часто** (often) indicates repetition.
 
-> «Ми щодня робили вправи.»
+«Ми часто ходимо в кіно.» *(We often go to the cinema.)*
 
-We did exercises every day — a routine, over and over.
+If something happens on a regular schedule, you will use **зазвичай** (usually) or **щодня** (every day).
 
-The rule is simple: if the action repeats, use НВ.
+«Зазвичай я працюю вдома.» *(Usually I work at home.)*
 
-### Door 3: General facts and permanent states
+To emphasize the length of an action, we use **довго** (for a long time).
 
-Some actions are not processes and not habits — they are simply true all the time. A permanent characteristic, a general ability, a fact about the world. These also take НВ, and this is the easiest context of the three: nothing is being completed, nothing is changing, so there is no room for ДВ.
+«Він довго писав листа.» *(He was writing a letter for a long time.)*
 
-> «Кіт спить вдень.»
+Finally, **кожного разу** (every time) signals a cycle.
 
-A cat sleeps during the day — that is what cats do.
+«Кожного разу ми бачимо цю собаку.» *(Every time we see this dog.)*
 
-> «Вона добре малює.»
+Now let's compare how the imperfective aspect looks in the present and the past tense, using the verb **читати** (to read). Remember that the core meaning of the imperfective—focusing on the process or continuity of the action—remains exactly the same regardless of the time period. In the present tense, you say the following.
 
-She draws well — a skill she has, not one drawing she finished.
+«Я читаю цікаву статтю.» *(I am reading an interesting article.)*
 
-> «Вони не їдять м'яса.»
+This means you are currently in the middle of the activity. The process is happening right now. In the past tense, the form changes, but the focus on continuity does not.
 
-They don't eat meat — a permanent fact about their life.
+«Вчора ввечері я читав цікаву статтю.» *(Yesterday evening I was reading an interesting article.)*
 
-No surprise, no completion, no single moment — just a general truth. НВ every time.
-
-### НВ in the present tense
-
-Imperfective verbs are the only verbs in Ukrainian that have a true present tense — action happening right now. Here is «читати» (to read) conjugated in the present:
-
-| | Singular | Plural |
-|---|---|---|
-| 1st person | читаю | читаємо |
-| 2nd person | читаєш | читаєте |
-| 3rd person | читає | читають |
-
-This is important: ДВ has no present tense at all. When you conjugate a perfective verb the same way, the form looks like present tense — but it means future. «Прочитаю» does not mean "I am finishing reading" — it means "I will finish reading." We will explore this in the next section. For now, remember: only НВ can describe what is happening at this very moment.
-
-### Діалог: Соломія дзвонить Василю
-
-> **Соломія:** Привіт, Василю! Що ти зараз робиш?
->
-> **Василь:** Читаю нову книгу. А ти?
->
-> **Соломія:** Готую обід. А що ти зазвичай робиш щонеділі?
->
-> **Василь:** Зазвичай ходжу на ринок і готую обід.
->
-> **Соломія:** Ти часто готуєш?
->
-> **Василь:** Так, завжди готую сам.
-
-Every verb in this dialogue is НВ. Let's label each one:
-
-- «Що ти зараз **робиш**?» — action in progress (Door 1). She asks what he is doing right now.
-- «**Читаю** нову книгу.» — action in progress (Door 1). He is reading at this moment.
-- «**Готую** обід.» — action in progress (Door 1). She is cooking right now.
-- «Зазвичай **ходжу** на ринок і **готую** обід.» — habitual action (Door 2). Signal word: «зазвичай».
-- «Ти часто **готуєш**?» — habitual action (Door 2). Signal word: «часто».
-- «Завжди **готую** сам.» — habitual action (Door 2). Signal word: «завжди».
-
-Notice how the same verb «готую» appears in two different contexts — present action and habitual action — and both times it is НВ. The aspect stays the same because both doors lead to imperfective.
-
-<!-- INJECT_ACTIVITY: fill-in, Identify the Aspect in Sentences, 8 items -->
+The imperfective past tense **читав** (was reading) tells us that the action took up a block of time in the past. It does not tell us if you finished the article; it only emphasizes that your evening was occupied by the continuous act of reading.
 
 
 ## Доконаний вид: Результат!
 
-Now we turn to the other side of Ukrainian aspect. If НВ is about the process — watching the action unfold — then **доконаний вид** (ДВ, perfective aspect) is about the finish line. ДВ tells us that an action happened once, it is complete, and a result exists right now. The question to ask yourself is simple: *"Is the action done? Does a result exist?"* If the answer is yes — ДВ. Compare these two sentences:
+In the previous section, we looked at how the imperfective aspect acts like a video camera, recording the ongoing process of an action. Now, let us introduce the perfective aspect, or **доконаний вид** *(perfective aspect)*. The perfective aspect is not interested in the process. It does not care how long an activity took, or how many times you repeated it. Instead, the perfective aspect is entirely focused on the final result. It is the finish line of an action. When you use a perfective verb, you are stating that the action is completely closed and finished. Let us look at a classic example. «Я прочитав книгу.» *(I have read the book.)* The verb **прочитав** *(have read)* is perfective. This sentence means that you reached the very last page, you closed the cover, and the book is now sitting on your shelf. You possess the complete knowledge of the story. You achieved the goal of reading it.
 
-> «Я читав книгу.»
+Because the perfective aspect focuses on a completed result, it is the perfect tool for describing single, sudden actions. If an event happens only once and is over in a flash, it has a clear beginning and an immediate end. «Раптом він впав.» *(Suddenly he fell.)* The verb **впав** *(fell)* describes an action that cannot really be stretched out as a continuous habit in this context. It happened once, and the result is that he is now on the ground. Similarly, mental realizations are often treated as sudden, completed events. «Вона нарешті зрозуміла правило.» *(She finally understood the rule.)* The verb **зрозуміла** *(understood)* shows that the process of thinking is over. The confusion is gone, and the clear result is her new understanding. The perfective aspect often carries a strong implication of success.
 
-> «Я прочитав книгу.»
+There is a fascinating and crucial grammatical rule about the perfective aspect that you must remember: perfective verbs do not have a present tense. This is sometimes called the "present tense trap." Think about the logic behind this rule. If an action is happening right now, in the present moment, it is still ongoing. Therefore, it cannot be completely finished yet. If you take a perfective verb and add present tense endings to it, the meaning automatically shifts into the future. For example, «Я зроблю це.» *(I will do this.)* The verb **зроблю** *(will do)* means that you promise to complete the action and achieve the result in the future. For now, we will focus primarily on the past tense forms of perfective verbs, which clearly show a result achieved in the past. Words like **зробив** *(finished)*, **написав** *(wrote)*, and **купив** *(bought)* are your main tools.
 
-The first sentence (НВ) tells us about a process — I was reading a book. Maybe I finished it, maybe I didn't. The sentence does not care about the ending. The second sentence (ДВ) tells us about a result — I read the book and it is finished. I now know what is in that book. The difference between «читав» and «прочитав» is not *when* the action happened — both are past tense. The difference is *whether the completion matters*.
+Just like the imperfective aspect has signal words that point to a continuous process, the perfective aspect has its own set of adverbs that highlight a completed result. When you see these words, they strongly suggest that a perfective verb is needed. The word **раптом** *(suddenly)* shows that an action happened unexpectedly and is already complete. The word **нарешті** *(finally)* emphasizes that a long wait is over and the result is achieved. The word **вже** *(already)* is a classic marker of completion. «Вона вже зробила домашнє завдання.» *(She already did the homework.)* This means her desk is clear and she is free to go outside. Finally, phrases like **за годину** *(within an hour)* show that a result will be or was reached after a specific amount of time.
 
-### ДВ in past tense — your safe starting zone
+In Ukrainian, most verbs travel together in pairs. These pairs consist of one imperfective verb and one perfective verb that share the exact same core meaning, but view the action from different angles. We call these "aspectual pairs." For example, the basic action of doing or making is represented by the pair **робити** *(to do)* and **зробити** *(to finish doing)*. The action of writing is represented by **писати** *(to write)* and **написати** *(to finish writing)*. You will notice a common pattern here. Very often, the perfective verb is formed simply by adding a short prefix to the beginning of the imperfective verb. Prefixes like «з-», «на-», or «про-» act as the finish line marker. They transform the open-ended process into a closed, completed result. Learning these pairs is a key part of mastering Ukrainian verbs.
 
-Past tense is the most natural place to use ДВ. One event happened, it is done, the result exists. Here is «написати» (to write — perfective) conjugated in the past:
+<!-- INJECT_ACTIVITY: quiz, Aspect Sorting -->
 
-| | Masculine | Feminine | Neuter | Plural |
-|---|---|---|---|---|
-| Past | написав | написала | написало | написали |
-
-Notice there is no first/second/third person distinction in the past — only gender and number. Four sentences with ДВ in the past:
-
-> «Вона написала листа другові.» She wrote a letter to her friend — the letter is finished.
-
-> «Він зробив домашнє завдання.» He did his homework — it is complete.
-
-> «Ми прочитали цю книгу за тиждень.» We read this book in a week — the whole book, start to finish.
-
-> «Вчора я вивчив десять нових слів.» Yesterday I learned ten new words — all ten, done.
-
-Every sentence describes a single event with a clear result. That is what makes past tense the safest context for ДВ at your level — one event, it happened, it is done.
-
-### ДВ has no true present tense
-
-This is a critical detail that surprises many learners. If you take the perfective verb «прочитати» and conjugate it like a present-tense verb, you get «прочитаю». But «прочитаю» does not mean "I am finishing reading right now." It means "I will read it and finish." The form looks like present tense, but the meaning is future. This is a peculiarity of Ukrainian aspect: the perfective "present" form always points forward to a future result. Compare:
-
-> «Я читаю зараз.» I am reading right now — НВ, true present, action in progress.
-
-> «Я прочитаю цю статтю за годину.» I will read this article in an hour — ДВ, future meaning, result expected.
-
-For this module, stay in past tense with ДВ. That is where the system is simplest and clearest.
-
-### Signal words for ДВ
-
-Just as НВ has its signal words — «завжди», «часто», «щодня» — ДВ has its own markers. These words point to single, completed events:
-
-- **вчора** (yesterday) — a single event, not a habit
-- **раптом** (suddenly) — something happened in one instant
-- **нарешті** (finally) — a long wait, then completion
-- **одразу** (at once) — immediate result
-- **за годину / за тиждень** (in an hour / in a week) — time it took to complete
-
-Notice the contrast with НВ signal words. «Щодня» (every day) points to repetition — НВ. «Раптом» (suddenly) points to a single moment — ДВ. The signal word tells you which aspect fits:
-
-> «Раптом він упав.» Suddenly he fell — one instant, one event.
-
-> «Нарешті вона зрозуміла задачу.» She finally understood the problem — the result arrived.
-
-> «Він одразу відповів на питання.» He answered the question at once — immediate, complete.
-
-> «Ми прочитали книгу за три дні.» We read the book in three days — start to finish, done.
-
-### Діалог: Після матчу
-
-The football match is over. Андрій and Олена discuss what happened:
-
-> **Андрій:** Хто забив перший гол?
-
-> **Олена:** Олексієнко забив на двадцять третій хвилині.
-
-> **Андрій:** А потім?
-
-> **Олена:** Потім суперники швидко відповіли — Мельник одразу зрівняв рахунок.
-
-> **Андрій:** Хто виграв?
-
-> **Олена:** Наша команда нарешті перемогла! Вони зробили це!
-
-Every verb in this dialogue is ДВ. The match is over, and each verb describes a single completed event with a clear result:
-
-- «**забив**» — scored (one goal, one moment)
-- «**відповіли**» — answered back (one counter-attack, complete)
-- «**зрівняв**» — equalized (the score changed — result)
-- «**перемогла**» — won (the match ended in victory — result)
-- «**зробили**» — did it (achievement, complete)
-
-Compare this to the НВ dialogue in the previous section, where Соломія and Василь talked about what they were doing and what they usually do. Here, everything has already happened. The results are in.
-
-### Common mistakes with ДВ
-
-Learners often reach for ДВ when НВ is needed — or the reverse. Here are natural traps to watch for:
-
-**Trap 1: Daily habit with ДВ.** «Він щодня зробив вправи» — ❌. The signal word «щодня» means every day, a repeated action. That is НВ territory: «Він щодня робив вправи.»
-
-**Trap 2: Long duration with ДВ.** «Вона довго написала листа» — ❌. The word «довго» (for a long time) emphasizes the process, not the result. НВ: «Вона довго писала листа.»
-
-**Trap 3: Completion implied but НВ used.** «Я читав усю книгу минулого тижня» — this is ambiguous. НВ «читав» focuses on the process, but «усю книгу» (the whole book) implies you finished it. If the result matters — and it usually does when you say "the whole book" — use ДВ: «Я прочитав усю книгу минулого тижня.»
-
-These are not failures — they are the natural growing pains of learning aspect. The key question always works: *Is the completion and result what I want to communicate?* If yes — ДВ. If no — НВ.
-
-<!-- INJECT_ACTIVITY: match-up, Choose the Correct Aspect (Context-based), 8 items -->
+<!-- INJECT_ACTIVITY: fill-in, Identify Aspect in Sentences -->
 
 
 ## Порівняння пар: Бачимо різницю (Comparing Pairs: Seeing the Difference)
 
-Now put the two aspects side by side. Each pair below uses the same verb root — one НВ, one ДВ — in the past tense. Read both sentences and feel the difference:
+Let's look at a side-by-side comparison to truly understand how these verbs feel in action. Imagine a friend tells you: «Він писав лист.» *(He was writing a letter.)* This sentence uses the imperfective verb **писав** *(was writing)*. It immediately makes you think about the physical effort, the process, and the time spent. You picture him sitting at his desk for hours, holding a pen, and thinking carefully about what to say. We do not know if he ever finished it, or if he just threw the paper away. Now, compare that to the perfective version: «Він написав лист.» *(He wrote a letter.)* By adding a simple prefix to make the perfective verb **написав** *(wrote / finished writing)*, the entire mental picture changes. You no longer think about the desk, the pen, or the time it took. Instead, you picture a tangible result: a finished letter in an envelope, folded, stamped, and ready to be sent to the post office. The ongoing process is completely over, and the final result is right in your hands.
 
-| НВ (процес) | ДВ (результат) |
-|---|---|
-| «Він писав лист.» — He was writing a letter. Maybe he finished, maybe not. The process is what matters. | «Він написав лист.» — He wrote the letter. It is done. The letter exists. |
-| «Вона читала книгу.» — She was reading a book. We see the action unfolding. | «Вона прочитала книгу.» — She read the book. Cover to cover, finished. |
-| «Діти робили домашнє завдання.» — The kids were doing homework. They were in the middle of it. | «Діти зробили домашнє завдання.» — The kids did their homework. It is complete. |
-| «Він вчив нові слова.» — He was studying new words. The learning process was happening. | «Він вивчив нові слова.» — He learned the new words. He knows them now. |
+A great way to master this concept is by visualizing the difference on an imaginary timeline. Think of the imperfective aspect (НВ) as a long, continuous line drawn on a page (————). It represents an action stretching through time without a clear end. For example, «Я готувала вечерю.» *(I was cooking dinner.)* This sentence shows you were busy in the kitchen for a while, chopping vegetables and stirring pots. However, it does not guarantee a successful meal. Maybe the stove broke, you got distracted, or maybe the food burnt completely! On the other hand, think of the perfective aspect (ДВ) as a single, solid point (X) marking the exact end of that line. It represents the precise moment of successful completion. «Я приготувала вечерю.» *(I have cooked dinner.)* This sentence means the hard work is done, the plates are set on the table, and a delicious dinner is officially served. Let's look at another common pair: «Ми вчили слова.» *(We were learning words.)* versus «Ми вивчили слова.» *(We learned the words.)* The first describes a long study session, while the second means the vocabulary is memorized and you are completely ready for the test. You only use the perfective when you have a clear, undeniable result to show for your effort.
 
-In every pair, the НВ sentence leaves the action open — we do not know if it ended. The ДВ sentence closes it — the result is here.
+<!-- INJECT_ACTIVITY: match-up, Choose the Correct Aspect (Context-based) -->
+<!-- INJECT_ACTIVITY: error-correction, Find and fix wrong aspect choice in sentences -->
 
-Picture two timelines. The НВ timeline is a long arrow stretching across time with no endpoint — the action fills that space, like a river flowing. You see the movement, but there is no stop sign. The ДВ timeline looks different: a single dot on the time axis with a star (★) at the end — the moment of completion. The action hits its target and stops there. «Він писав» is the river. «Він написав» is the arrow that reached the target.
 
-This is the heart of aspect. НВ shows you the action from inside — you are standing in the middle of the river, watching it flow around you. ДВ shows you the action from outside — you see the finished product, the result sitting on the table.
+## Підсумок (Summary)
 
-### Швидка перевірка (Quick Self-Check)
+Let's review the core rules of the Aspect Matrix. Choosing between the imperfective and perfective aspect completely changes your story.
 
-Before moving on, test yourself with these four questions. No grade — just anchors for your thinking:
+The imperfective aspect, or **недоконаний вид** *(imperfective aspect)*, focuses on the action itself. You use it to describe a continuous process, like «**Я працював**» *(I was working)*, a regular repetition, like «**Я часто працюю**» *(I often work)*, or a general fact.
 
-**1.** Яке питання задати, щоб вибрати НВ?
+The perfective aspect, or **доконаний вид** *(perfective aspect)*, focuses exclusively on the destination. You use it to declare a single, successfully completed result, like «**Я попрацював**» *(I finished working)*, or a sudden change in state, like «**Я прийшов**» *(I arrived)*.
 
-*"Is this a process or a habit?"* — if yes, НВ.
+When you are unsure which verb to use, run a quick self-check:
+- Is there a final result? If yes, choose the perfective aspect (ДВ).
+- Is this action repeating? If yes, choose the imperfective aspect (НВ).
+- Is the action happening right now? If yes, always choose the imperfective aspect (НВ).
 
-**2.** Яке питання задати для ДВ?
-
-*"Is the action completed? Does a result exist?"* — if yes, ДВ.
-
-**3.** Яке слово-підказка вказує на НВ?
-
-«Завжди», «часто», «щодня» — repetition and routine.
-
-**4.** А на ДВ?
-
-«Нарешті», «раптом», «вчора» (for a single event) — completion and result.
-
-Come back to these four questions any time you are unsure which aspect to use. They work every time.
-
-<!-- INJECT_ACTIVITY: error-correction, Find and fix wrong aspect choice, 6 items -->
+Remember, Ukrainian verbs almost always come in pairs. Choosing the correct one allows you to be perfectly precise about your actions!
 
 </module_content>
 
@@ -509,25 +338,64 @@ workbook:
 
 ## Activity Type Reference
 
-### Core types (use for A1-C2):
-- **quiz**: Multiple choice. Required: instruction, items[{question, options[], correct}]
-- **fill-in**: Blanks in sentences. Required: instruction, items[{sentence, answer}]. Optional: options[]
-- **match-up**: Pair matching. Required: instruction, pairs[{left, right}]. Min 3 pairs.
-- **group-sort**: Categorization. Required: instruction, groups[{label, items[]}]. Min 2 groups.
-- **true-false**: Statement evaluation. Required: instruction, items[{statement, correct}]
-- **error-correction**: Find wrong word. Required: instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
-- **anagram**: Letter rearrangement. Required: instruction, items[{letters[], answer}]
-- **translate**: Type translation. Required: instruction, items[{source}]. Use options[] for multiple choice.
-- **unjumble**: Word reordering. Required: instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
-- **order**: Sentence/line ordering. Required: instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
-- **observe**: Pattern discovery. Required: examples[], prompt
-- **classify**: Multi-category sort. Required: instruction, categories[{label, items[]}]
+**CRITICAL RULE: EVERY single activity object MUST include an `id` field (a unique string like "quiz-grammar", "match-up-vocab"). Do NOT generate an activity without an `id`.**
 
-### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH):
-- **critical-analysis**: Required: prompt. Optional: evaluation_criteria[]
-- **essay-response**: Required: prompt. Optional: min_words, model_answer, evaluation_criteria[]
-- **reading**: Required: passage, questions[]
-- **source-evaluation**: Required: source_text, criteria[], guiding_questions[]
+### Core types (use for A1-C2):
+- **quiz**: Multiple choice. Required: id, instruction, items[{question, options[], correct}]
+- **fill-in**: Blanks in sentences. Required: id, instruction, items[{sentence, answer}]. Optional: options[]
+- **match-up**: Pair matching. Required: id, instruction, pairs[{left, right}]. Min 3 pairs.
+- **group-sort**: Categorization. Required: id, instruction, groups[{label, items[]}]. Min 2 groups.
+- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct}]
+- **error-correction**: Find wrong word. Required: id, instruction, items[{sentence, error, correction}]. Optional: error_type (MUST be one of: `"word"`, `"phrase"`, `"register"`, `"construction"` — NOT "grammar"), options[], explanation
+- **anagram**: Letter rearrangement. Required: id, instruction, items[{letters[], answer}]
+- **translate**: Type translation. Required: id, instruction, items[{source}]. Use options[] for multiple choice.
+- **unjumble**: Word reordering. Required: id, instruction, items[{words[], correct_order[]}]. ⚠️ correct_order is an array of **STRINGS** (the words in correct order), NOT integers!
+- **order**: Sentence/line ordering. Required: id, instruction, items[] (array of strings), correct_order[] (TOP-LEVEL array of **integers** — zero-based indices into items). ⚠️ correct_order is a TOP-LEVEL field next to items, NOT inside each item.
+- **observe**: Pattern discovery. Required: id, examples[], prompt
+- **classify**: Multi-category sort. Required: id, instruction, categories[{label, items[]}]
+
+### Ukrainian pedagogy types (A1 phonetics/syllables):
+- **divide-words**: Interactive syllable division. Required: id, instruction, items[{word, answer}]. Optional: hint. Example: word: "молоко", answer: "мо-ло-ко"
+- **count-syllables**: Count syllables in a word. Required: id, items[{word, correct}]. Optional: instruction, maxCount, translation. Example: word: "яблуко", correct: 3
+- **pick-syllables**: Select syllables matching criteria. Required: id, syllables[], correctIndices[], category. Example: syllables: ["ка", "май", "ре"], correctIndices: [1], category: "закриті"
+- **odd-one-out**: Find the word that doesn't belong. Required: id, items[{words[], correct, explanation}]. `correct` is 0-based index. Example: words: ["кіт", "пес", "молоко"], correct: 2, explanation: "молоко — 3 syllables, rest have 1"
+- **image-to-letter**: See image/emoji, identify letter. Required: id, instruction, items[{image, letter}]. Optional: options[]
+- **letter-grid**: Letter reference grid. Required: id, letters[{upper, lower}]. Optional: name, emoji, key_word, sound_type
+- **watch-and-repeat**: Watch video, repeat pronunciation. Required: id, items[{video}]. Optional: letter, word, note
+- **phrase-table**: Grouped phrases for communication patterns. Required: id, groups[{label, phrases[]}]
+
+### Seminar types (use for HIST, BIO, LIT, ISTORIO, OES, RUTH, FOLK):
+
+**Core seminar types (use for ALL seminar tracks):**
+- **critical-analysis**: Analyze a claim, argument, or source. Required: id, prompt. Optional: target_text, questions[], model_answers[], evaluation_criteria[]
+- **essay-response**: Extended written response. Required: id, prompt. Optional: min_words (MUST be >= 50), model_answer, evaluation_criteria[], rubric[{criteria, description}]
+- **reading**: Passage with comprehension questions. Required: id, passage, questions[]. Optional: source
+- **source-evaluation**: Evaluate a primary/secondary source. Required: id, source_text, criteria[], guiding_questions[]. Optional: source_metadata, model_evaluation
+- **comparative-study**: Compare 2+ items/perspectives. Required: id, items_to_compare[], criteria[], prompt. Optional: model_answer
+- **authorial-intent**: Analyze author's purpose/perspective. Required: id, excerpt, questions[]. Optional: model_answer
+- **debate**: Structured debate exercise. Required: id, debate_question, positions[{label, arguments[]}]. Optional: analysis_tasks[]
+
+**Linguistics types (OES, RUTH, and linguistic analysis in any track):**
+- **etymology-trace**: Trace word evolution across periods. Required: id, instruction, stages[{period, form}]
+- **translation-critique**: Evaluate translations. Required: id, original, translations[{text}]. Optional: focus_points[]
+- **transcription**: Transcribe historical text. Required: id, original, answer. Optional: hints[]
+- **paleography-analysis**: Analyze historical script. Required: id, instruction, image_url, hotspots[{x, y, label}]
+- **dialect-comparison**: Compare dialect features. Required: id, text_a, text_b, features[{feature, variant_a, variant_b}]
+
+**Also allowed in seminars (for testing language comprehension):**
+- **quiz**: Multiple choice comprehension check. Required: id, instruction, items[{question, options[], correct}]. Use for testing understanding of debates, source arguments, not factual recall.
+- **true-false**: Statement evaluation. Required: id, instruction, items[{statement, correct, explanation}]. Good for testing understanding of historiographic positions.
+
+**FORBIDDEN in seminar tracks** (these test mechanics, not comprehension):
+match-up, fill-in, cloze, group-sort, unjumble, anagram, mark-the-words, error-correction, translate, order
+
+### Seminar activity rules
+
+1. **3-9 activities per seminar module.** Not more.
+2. **Required types:** Every seminar module MUST have at least one `reading` + one `essay-response` + one `critical-analysis`.
+3. **The golden rule:** Can the learner answer without reading the Ukrainian text? If YES → rewrite the activity. Activities test COMPREHENSION and CRITICAL THINKING, never factual recall.
+4. **All instructions in Ukrainian.** Seminar learners are B2+.
+5. **Follow the plan's activity_hints.** They specify exactly what to generate.
 
 ---
 
@@ -546,34 +414,66 @@ The learner knows ~1200 words, understands basic grammar.
 
 These patterns come from МійКлас and Ukrainian textbook analysis. They show what KINDS of exercises work best for this module's topic. Use them as templates — adapt the specific content to this module's vocabulary and concepts.
 
-### Pattern: grammar-verbs-present
-- **fill-in** — Відмінюй дієслово: Fill in correct verb conjugation for given person/number
+### Pattern: grammar-verbs-present [§4.2.4.1]
+**Дієвідмінювання в теперішньому часі** (Present tense conjugation)
+- **fill-in** — Відмінюй дієслово: Вставити правильну форму дієслова за особою та числом / Fill in correct verb conjugation for given person/number
   - Instruction: *Вставте правильну форму дієслова*
-- **group-sort** — І чи ІІ дієвідміна?: Sort verbs by conjugation class (I vs II)
-- **match-up** — Особа → форма: Match personal pronouns to verb conjugation forms
+- **group-sort** — І чи ІІ дієвідміна?: Розподілити дієслова за типом дієвідміни / Sort verbs by conjugation class (I vs II)
+- **match-up** — Особа → форма: Зіставити особові займенники з формами дієслова / Match personal pronouns to verb conjugation forms
   - Instruction: *З'єднайте*
-- **error-correction** — Виправ дієслово: Find incorrectly conjugated verb and fix it
+- **error-correction** — Виправ дієслово: Знайти неправильно відмінене дієслово та виправити / Find incorrectly conjugated verb and fix it
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Переклад не тестує відмінювання. Англійські дієслова не змінюються за особами
 
-### Pattern: grammar-verb-aspect
-- **group-sort** — Доконаний чи недоконаний?: Sort verbs by aspect — recognize aspect pairs
+### Pattern: grammar-pronouns [§4.2.1.4, §4.2.2]
+**Особові займенники** (Personal pronouns)
+- **match-up** — Займенник → дієслово: Зіставити особовий займенник із правильною формою дієслова — зв'язок займенника з дієвідмінюванням / Match personal pronoun with correct verb form — linking pronouns to conjugation
+  - Instruction: *З'єднайте займенник із дієсловом*
+- **fill-in** — Вставте займенник: Обрати правильний займенник за контекстом речення / Choose the correct pronoun based on sentence context
+  - Instruction: *Вставте правильний займенник*
+- **group-sort** — Однина чи множина?: Розподілити займенники на однину та множину / Sort pronouns into singular and plural
+  - Instruction: *Розподіліть*
+- **quiz** — Ти чи Ви?: Обрати правильну форму звертання — неформальне (ти) чи ввічливе (Ви) / Choose correct address form — informal (ти) vs polite (Ви)
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Займенники — про зв'язок з дієсловом, а не переклад
+
+### Pattern: grammar-verb-aspect [A2 §4.2.3.1, B1 §4.2.3.1]
+**Вид дієслова** (Verb aspect)
+- **group-sort** — Доконаний чи недоконаний?: Розподілити дієслова за видом — розпізнати видові пари / Sort verbs by aspect — recognize aspect pairs
   - Instruction: *Розподіліть дієслова за видами*
-- **match-up** — Утвори видові пари: Match imperfective ↔ perfective aspect pairs
+- **match-up** — Утвори видові пари: Зіставити недоконане з доконаним дієсловом / Match imperfective ↔ perfective aspect pairs
   - Instruction: *З'єднайте видові пари*
-- **fill-in** — Який вид доречний?: Choose correct aspect for context (duration vs completion)
+- **fill-in** — Який вид доречний?: Обрати правильний вид для контексту (тривалість vs завершеність) / Choose correct aspect for context (duration vs completion)
   - Instruction: *Оберіть правильну форму*
-- **quiz** — Визнач вид дієслова: Identify aspect of a given verb
+- **quiz** — Визнач вид дієслова: Визначити вид поданого дієслова / Identify aspect of a given verb
+**Anti-patterns (DO NOT generate):**
+- ❌ translate: Англійський минулий час НЕ відповідає 1:1 українському виду. «I read» = і «читав», і «прочитав»
+- ❌ quiz-only: Вид — це вибір мовця. Учні мають практикувати вибір виду в контексті, а не тільки розпізнавати
+
+### Pattern: general-vocabulary [§3 (Thematic catalogue)]
+**Тематична лексика** (Thematic vocabulary)
+- **match-up** — Слово → переклад: Зіставити українські слова з англійськими перекладами / Match Ukrainian words to English translations
+- **fill-in** — Вставте слово: Вставити пропущене слово за контекстом / Fill in the missing word from context
+- **anagram** — Склади слово: Переставити літери, щоб утворити правильне слово / Rearrange letters to form the target word
+- **odd-one-out** — Четверте зайве: Обрати слово, що не належить до семантичної групи / Pick the word that doesn't belong to the semantic group
+- **translate** — Оберіть переклад: Обрати правильний переклад із варіантів / Choose correct translation from options
 
 
-**Use these patterns.** If the pattern library recommends `divide-words` for a syllable module, generate a `divide-words` exercise. If it recommends `group-sort` for gender, generate a `group-sort`. The patterns encode how Ukrainian teachers actually test these concepts.
+**You MUST use these patterns.** The pedagogy patterns encode how Ukrainian teachers actually test each concept. For each matched pattern:
+1. Generate **at least one activity of each recommended type** from the pattern. If the pattern lists divide-words, count-syllables, and odd-one-out — your output MUST include all three.
+2. Follow the anti-patterns — if a type is listed under "DO NOT generate", do NOT use it for this topic.
+3. Use the Ukrainian instruction (назва / instruction_uk) when the level allows Ukrainian instructions.
 
 ---
 
 ## Quality Rules
 
 **ITEM COUNT MINIMUMS (non-negotiable):**
-- **Every activity MUST have at least 6 items.** Quiz = 6+ questions. Fill-in = 6+ sentences. Match-up = 6+ pairs. True-false = 6+ statements. Group-sort = 6+ items per group minimum. Anagram = 6+ words.
-- If you can't think of 6 items, add more examples from the module's vocabulary and content. NEVER submit an activity with fewer than 6 items.
-- **3-5 options per quiz/fill-in question** — enough to prevent guessing, not so many to overwhelm.
+- **Default minimum: 6 items per activity.** Quiz = 6+, fill-in = 6+, match-up = 6+ pairs, true-false = 6+, anagram = 6+, error-correction = 6+, translate = 6+, divide-words = 6+, count-syllables = 6+, odd-one-out = 6+.
+- **Lower minimums for specific types:** order = 3+ items (dialogue lines), observe = 2+ examples, pick-syllables = 4+ syllables, watch-and-repeat = 3+ items.
+- If you can't think of enough items, add more examples from the module's vocabulary and content.
+- **Exactly 4 options per quiz question at A2+** — enough to prevent guessing, not so many to overwhelm. A1 allows 3-4.
+- **BINARY CONCEPTS (e.g., НВ/ДВ, masculine/feminine, true/false):** Do NOT use `quiz` with only 2 options — use `true-false` (for statement evaluation) or `group-sort` (for categorization) instead. Quiz type requires 4 options at A2+.
 
 **Instructions match learner level:**
 1. **A1.1 (M01-M07):** Instructions in ENGLISH. The learner is a complete beginner who cannot read Ukrainian yet. They are learning the alphabet and first words. Use activity types: image-to-letter, letter-grid, match-up (letter↔sound), quiz (in English about Ukrainian sounds/letters). Anna Ohoiko's pronunciation videos should be referenced where relevant.
@@ -605,68 +505,68 @@ Use these tools to verify your exercise content:
 You have access to RAG-powered MCP tools to verify Ukrainian language constructs **live as you write**. The research phase is already complete; use these tools strictly for targeted verification to ensure zero Russianisms, accurate grammar, and authentic usage.
 
 **Core Tools:**
-- `mcp__rag__verify_words` / `mcp__rag__verify_word` / `mcp__rag__verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
-- `mcp__rag__search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
-- `mcp__rag__search_literary` — Primary literary sources (chronicles, poetry, legal texts).
-- `mcp__rag__query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
-- `mcp__rag__query_wikipedia` — Ukrainian Wikipedia.
+- `mcp_rag_verify_words` / `mcp_rag_verify_word` / `mcp_rag_verify_lemma` — VESUM morphological dictionary (409K lemmas, 6.7M forms). Returns full declension/conjugation.
+- `mcp_rag_search_text` — Ukrainian school textbooks (Grades 1-11, 23K chunks).
+- `mcp_rag_search_literary` — Primary literary sources (chronicles, poetry, legal texts).
+- `mcp_rag_query_pravopys` — Official Ukrainian orthography rules (Правопис 2019).
+- `mcp_rag_query_wikipedia` — Ukrainian Wikipedia.
 
 **Dictionary Tools (NEW — use these for quality):**
-- `mcp__rag__search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
-- `mcp__rag__query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
-- `mcp__rag__search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
-- `mcp__rag__search_etymology` — Грінченко (67K entries). Historical forms, etymology.
-- `mcp__rag__search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
-- `mcp__rag__search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
-- `mcp__rag__translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
-- `mcp__rag__query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
-- `mcp__rag__query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
-- `mcp__rag__query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
+- `mcp_rag_search_style_guide` — **Антоненко-Давидович (279 entries). HIGH PRIORITY.** Identifies calques and Russianisms. Use when unsure if a phrase is natural Ukrainian.
+- `mcp_rag_query_cefr_level` — PULS CEFR vocabulary (5.9K words). Check if a word is level-appropriate (A1/A2/B1 etc.).
+- `mcp_rag_search_definitions` — СУМ-11 (127K entries). Look up exact Ukrainian definitions.
+- `mcp_rag_search_etymology` — Грінченко (67K entries). Historical forms, etymology.
+- `mcp_rag_search_idioms` — Фразеологічний (25K entries). Find natural Ukrainian idioms.
+- `mcp_rag_search_synonyms` — Ukrajinet WordNet (122K synsets). Synonyms, antonyms.
+- `mcp_rag_translate_en_uk` — Балла EN→UK (79K entries). English→Ukrainian translations.
+- `mcp_rag_query_grac` — GRAC corpus (2B tokens). Check word frequency, collocations, concordance. Use when unsure if a collocation is natural.
+- `mcp_rag_query_ulif` — ULIF morphological paradigms. Full declension/conjugation tables. Use when verify_lemma isn't enough.
+- `mcp_rag_query_r2u` — Russian→Ukrainian equivalents. Use when you suspect a word might be a Russicism — finds the proper Ukrainian alternative.
 
 **WHEN to use tools (Specific Triggers):**
 
 1. **Suspected Russianisms or Surzhyk (HIGH PRIORITY):**
    - *Trigger:* You are about to use a word that sounds similar to Russian, a calque, or you are unsure of its exact Ukrainian equivalent.
-   - *Action:* Use `mcp__rag__search_style_guide` first (it knows calques). Then `mcp__rag__query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp__rag__verify_words`.
+   - *Action:* Use `mcp_rag_search_style_guide` first (it knows calques). Then `mcp_rag_query_r2u` for the proper Ukrainian equivalent. Then verify with `mcp_rag_verify_words`.
    - *Example:* Checking *приймати участь* (calque) → *брати участь* (correct).
 
 2. **Vocabulary Level Check:**
    - *Trigger:* You are writing for A1/A2 and want to ensure words are level-appropriate.
-   - *Action:* Use `mcp__rag__query_cefr_level` to verify the word's CEFR level.
+   - *Action:* Use `mcp_rag_query_cefr_level` to verify the word's CEFR level.
 
 3. **Grammar & Morphology Doubts:**
    - *Trigger:* You are unsure about a case ending, irregular plural, or conjugation.
-   - *Action:* Use `mcp__rag__verify_lemma` to pull the complete declension/conjugation.
+   - *Action:* Use `mcp_rag_verify_lemma` to pull the complete declension/conjugation.
 
 4. **Natural Expressions:**
    - *Trigger:* You need a natural idiom or collocation for a dialogue.
-   - *Action:* Use `mcp__rag__search_idioms` for Ukrainian expressions, `mcp__rag__search_synonyms` for word variety.
+   - *Action:* Use `mcp_rag_search_idioms` for Ukrainian expressions, `mcp_rag_search_synonyms` for word variety.
 
 5. **Drafting Grammar Rules:**
    - *Trigger:* You are explaining a spelling or phonetic rule.
-   - *Action:* Use `mcp__rag__query_pravopys` to confirm the exact 2019 standard.
+   - *Action:* Use `mcp_rag_query_pravopys` to confirm the exact 2019 standard.
 
 6. **Checking Collocations & Frequency:**
    - *Trigger:* You want to confirm a word combination is actually used by native speakers.
-   - *Action:* Use `mcp__rag__query_grac` with mode='collocations' to see real-world usage.
+   - *Action:* Use `mcp_rag_query_grac` with mode='collocations' to see real-world usage.
 
 **MANDATORY Verification (these are NOT optional):**
 
 7. **Letter/Sound Decomposition (ALWAYS VERIFY):**
    - *Trigger:* You are listing the letters, sounds, or syllables of ANY Ukrainian word.
-   - *Action:* BEFORE writing the decomposition, call `mcp__rag__verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
-   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp__rag__verify_word("вулиця")` and copy the letters from the result.
+   - *Action:* BEFORE writing the decomposition, call `mcp_rag_verify_word` on that word. The response shows the exact letter forms. Use ONLY what the tool returns. NEVER decompose a word from memory — your pre-training has wrong letter mappings (e.g., confusing и/і, я/а in specific words). This is the #1 source of errors.
+   - *Example:* Before writing 'вулиця has letters В, У, Л...', call `mcp_rag_verify_word("вулиця")` and copy the letters from the result.
 
 8. **Phonetic Claims (ALWAYS VERIFY):**
    - *Trigger:* You are stating how a letter sounds in a specific word, how many syllables a word has, or where stress falls.
-   - *Action:* Call `mcp__rag__verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
+   - *Action:* Call `mcp_rag_verify_word` to confirm. Ukrainian letters like є, ї, я, ю change sound value depending on position (after consonant vs word-initial). Do NOT guess — verify each claim.
 
 9. **ANY Factual Claim About Ukrainian (VERIFY WHEN POSSIBLE):**
    - *Trigger:* You are stating a grammar rule, exception, or linguistic fact.
-   - *Action:* Use `mcp__rag__query_pravopys` or `mcp__rag__search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
+   - *Action:* Use `mcp_rag_query_pravopys` or `mcp_rag_search_text` to confirm. If you can't verify it, flag with `<!-- VERIFY: claim -->`.
 
 **Efficiency Rules:**
-- **Batch your checks:** Use `mcp__rag__verify_words` with 5-15 words at once.
+- **Batch your checks:** Use `mcp_rag_verify_words` with 5-15 words at once.
 - **Do NOT verify basic words:** *мама*, *стіл*, *робити* don't need checking.
 - **Zero invention:** If VESUM doesn't know a word, don't use it.
 - **Target: 10-20 tool calls per module** (was 8-15; mandatory checks added).

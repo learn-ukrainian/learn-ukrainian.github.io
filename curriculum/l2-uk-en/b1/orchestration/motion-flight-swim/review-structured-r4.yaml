@@ -2,52 +2,56 @@ round: 4
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 6
-  evidence: 'The text misses several specific points from the plan: 1) The main reading
-    passage fails to mention "аеропорт Боріспіль" as requested. 2) The mandatory dialogue
-    setting at the Black Sea with parents a'
+  score: 7
+  evidence: '**Covered well:** All 6 content_outline sections present with correct
+    headings. All 10 prefixes for both летіти and пливти taught with examples. Conjugation
+    tables complete and accurate. Airport and m'
 - dimension: 2
   name: Linguistic accuracy
-  score: 7
-  evidence: 'Contains a critical Russianism/typo: "стрімкий **зльот**" instead of
-    the correct Ukrainian "стрімкий **зліт**".'
+  score: 9
+  evidence: All verb conjugations verified against VESUM. All 37 prefixed forms confirmed.
+    Stem alternation плив→плис correctly described and VESUM-confirmed. Idioms verified
+    against Фразеологічний словник and GR
 - dimension: 3
   name: Pedagogical quality
-  score: 8
-  evidence: Good use of PPP flow and textbook references. However, the `fill-in` activity
-    testing specific maritime and aviation vocabulary is placed before that vocabulary
-    is introduced, breaking the pedagogical
+  score: 9
+  evidence: 'Excellent PPP flow: Section 1 sets the real-world context (journey from
+    Boryspil to Istanbul), sections 2-3 present grammar systematically with 10+ examples
+    per verb pair, section 4 practices vocabula'
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required and recommended vocabulary items from the plan are naturally
-    integrated into the text.
+  score: 8
+  evidence: '**Required vocab (13/13 used):** летіти ✓, літати ✓, пливти ✓, плавати
+    ✓, прилетіти ✓, вилетіти ✓, припливти ✓, переплисти ✓, аеропорт ✓, рейс ✓, посадка
+    ✓, порт ✓, корабель ✓. **Recommended vocab (12'
 - dimension: 5
   name: Exercise quality
   score: 8
-  evidence: Activity counts and topics align with `activity_hints`. Deduction for
-    placing the vocabulary `fill-in` activity in the wrong section, which would require
-    learners to guess words they haven't been taug
+  evidence: 6 markers match all 6 plan activity_hints in type and focus. Markers are
+    well-distributed across sections. Each activity tests content just taught. **Deductions:**
+    (1) Plan's figurative section explic
 - dimension: 6
   name: Engagement & tone
-  score: 8
-  evidence: Generally engaging and descriptive, but contains some minor instances
-    of teacherly meta-commentary that tell rather than show (e.g., "Глибоке знання
-    всіх цих корисних префіксів дозволить вам неймовірн
+  score: 7
+  evidence: '**Positive:** Narrative framing (journey Boryspil→Istanbul→ferry) creates
+    coherent context. Folk song reference ("Тече вода з-під явора") is culturally
+    rich. Real idioms with GRAC-confirmed usage. Sel'
 - dimension: 7
   name: Structural integrity
-  score: 6
-  evidence: The word count is 5147 words, which is massively over the target of 4000
-    words (>28% off target).
+  score: 9
+  evidence: All 6 H2 sections from plan present in correct order. Clean markdown formatting.
+    Table in пливти section is well-structured. Summary table is useful. Word count
+    5354 ≥ 4000 target. No stray tags or fo
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Accurate references to Ukrainian educational materials (Авраменко, Вашуленко).
-    Natural geographical references (Босфор).
+  evidence: 'Ukrainian presented on its own terms — never "like Russian but..." All
+    geographic references are Ukrainian-relevant (Бориспіль, Одеса, Дніпро, Чорне
+    море, Чорноморськ). Folk song quotation authentic. '
 - dimension: 9
-  name: Dialogue & conversation quality
-  score: 6
-  evidence: 'Deducted because the core conversational requirement ("At the Чорне море
-    near Одеса") was entirely ignored. The substitute transactional airport/seaport
-    dialogues are fine, but failing to include the '
+  name: Dialogue quality
+  score: 7
+  evidence: '**Positive:** Named speakers (Агент/Пасажир, Касир/Клієнт) — not anonymous
+    em dashes. Dialogues demonstrate target vocabulary (рейс, посадковий талон, пересадка,
+    стикувальний рейс, каюта, причал, відп'
 findings: []

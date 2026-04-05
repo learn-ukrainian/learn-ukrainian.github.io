@@ -1,0 +1,100 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння літературно-критичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Читання
+  focus: Розуміння літературного тексту (уривок з твору)
+  placement: inline
+  type: reading
+- focus: Аналіз авторського задуму — мова як мистецтво
+  placement: workbook
+  type: authorial-intent
+- focus: Літературна критика — оцінка інтерпретації
+  placement: workbook
+  type: critical-analysis
+- focus: Порівняння з іншими творами або інтерпретаціями (Lesia Ukrainka Dramatic Legacy)
+  placement: workbook
+  type: comparative-study
+- focus: Есе-аналіз рецепції та сучасного значення (Lesia Ukrainka Dramatic Legacy)
+  placement: workbook
+  type: essay-response
+connects_to:
+- lit-214
+content_outline:
+- points:
+  - Леся Українка як драматург — огляд усього корпусу
+  - Місце в літературному каноні
+  - Чому цей текст важливий сьогодні
+  section: Вступ та культурний контекст
+  words: 600
+- points:
+  - Ключові твори — «Лісова пісня», «Камінний господар», «Касандра»
+  - Впливи та джерела
+  - Конфлікт між бажаним і можливим
+  section: 'Аналіз твору: Сюжет та структура'
+  words: 1000
+- points:
+  - Детальний розбір символіки
+  - Система персонажів та їхня еволюція
+  - Архетипи та античні підтексти
+  section: Герменевтика та ключові образи
+  words: 1000
+- points:
+  - Стилістичні інновації автора
+  - Поетична проза і драматичний вірш
+  - Особливості ритміки та синтаксису
+  section: Мова, стиль та поетика
+  words: 800
+- points:
+  - Який імперський міф руйнує цей текст?
+  - Жіноча агентність у драмі
+  - Опір асиміляції та культурне самоствердження
+  section: Деколонізаційний вимір
+  words: 800
+- points:
+  - Вплив на наступні покоління драматургів
+  - Світовий контекст творчості
+  - Питання для дискусії
+  section: Підсумок та рецепція
+  words: 800
+focus: literature
+grammar: []
+immersion: 100% Ukrainian
+level: LIT
+module: lit-drama-002
+module_type: literature
+objectives:
+- Проаналізувати драматичний спадок Лесі Українки у контексті модернізму
+- Дослідити стилістичні особливості тексту
+- Зрозуміти деколонізаційне значення автора
+pedagogy: Seminar
+persona:
+  role: Dramatic Modernist
+  voice: Senior Philologist & Critic
+phase: LIT.2 The Long Nineteenth Century 1860-1917
+prerequisites:
+- lit-212
+references:
+- name: Lesia Ukrainka Dramatic Legacy — тексти та аналіз
+  notes: Основне джерело
+  type: primary
+  url: https://www.ukrlib.com.ua/
+register: академічний
+sequence: 2
+slug: lesia-ukrainka-dramatic-legacy
+subtitle: Lesia Ukrainka Dramatic Legacy
+title: Lesia Ukrainka Dramatic Legacy
+version: '3.0'
+vocabulary_hints:
+  recommended:
+  - алегорія (allegory)
+  - контекст (context)
+  - рецепція (reception)
+  required:
+  - канон (canon)
+  - метафора (metaphor)
+  - дискурс (discourse)
+  - інтерпретація (interpretation)
+word_target: 5000

@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'All 4 content_outline sections covered. Vocabulary section covers пошта,
+    відділення, лист, конверт, марка, посилка, бандероль, квитанція, адреса, індекс,
+    листоноша, одержувач, відправник ✓. Dialogues '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: '**Critical error:** "підписати конверт *(to address an envelope)*" —
+    підписати means "to sign" (СУМ-11), not "to address." Correct verb: надписати
+    (СУМ-11: "надписав адресу"). All other forms verified'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'Good PPP flow: vocabulary → dialogues → grammar in context → practice.
+    Grammar is taught through postal situations, not abstract rules. Multiple examples
+    per grammar point (братові, другові, сестрі, м'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'All 10 required words used naturally: пошта ✓, лист ✓, конверт ✓, марка
+    ✓, посилка ✓, адреса ✓, надіслати ✓, отримати ✓, відправити ✓, листоноша ✓. All
+    5 recommended words present: бандероль ✓, квитан'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 'All 4 activity markers present and correctly placed after relevant teaching.
+    Types match plan: fill-in (dative forms), match-up (requests/responses), group-sort
+    (requesting/thanking/giving), quiz (dat'
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: '**Strengths:** Natural dialogues with real postal scenarios, cultural
+    details (Укрпошта, Нова Пошта, накладна vs квитанція), practical phrase "Скільки
+    з мене?" explained as natural. Named speakers (Ол'
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: All 4 plan sections present with correct H2 headings. Clean markdown,
+    no stray tags. Word count 2277 vs 2000 target ✓ (14% over, within tolerance).
+    **Deductions:** Section 4 H2 missing English subtitl
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent. Ukrainian postal system described on its own terms — Укрпошта,
+    Нова Пошта, індекс. No "like in Russia" or comparative framing. Address format
+    explained as Ukrainian convention. Cultural not
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: '**Strengths:** Three dialogues with distinct scenarios — buying stamps,
+    sending parcel abroad, asking neighbor for help. Named speakers in scenario 3
+    (Олег, Іван). Natural phrases: "Скільки з мене?", '
+findings: []

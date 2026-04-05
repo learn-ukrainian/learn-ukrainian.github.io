@@ -1,0 +1,57 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: '**Covered well:** All 4 content_outline sections present. Section 1 covers
+    tools (ручкою, олівцем, лінійкою, ложкою, щіткою, віником, ганчіркою, праскою).
+    Section 2 covers transport (автобусом, потяго'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All 36+ Instrumental forms VESUM-verified. Masculine endings (-ом/-ем/-єм)
+    match Захарійчук Grade 4 p.62. Feminine (-ою/-ею/-єю) correct. Plural (-ами/-ями)
+    correct. Irregular forms (дітьми, дверима/д
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: situation (daily tools) → pattern (endings by gender/stem
+    type) → practice (dialogues + exercises). Each grammar point has 3+ examples (section
+    1: ручкою, олівцем, ложкою, лінійкою, щ'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: '**Required vocab (all 11 present):** ручка/ручкою ✓, олівець/олівцем
+    ✓, фарба/фарбами ✓, лінійка/лінійкою ✓, ніж/ножем ✓, ложка/ложкою ✓, автобус/автобусом
+    ✓, потяг/потягом ✓, літак/літаком ✓, трамвай'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 5 plan activity_hints matched with correctly-placed markers. fill-in
+    after tools section tests singular forms; match-up after transport tests form
+    recognition; unjumble after plural tests word ord
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'No motivational filler, no "Let us now explore," no gamified language.
+    Clean teaching voice. Cultural specifics: маршрутка as "popular Ukrainian minibus,"
+    паличками for Japanese eating customs, Ukrain'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: 'All 4 plan sections present as H2 headings in correct order. Additional
+    Підсумок section is standard. Clean markdown throughout. «» quotation marks used
+    consistently for Ukrainian. Word count 3079 vs '
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented on its own terms. No "like Russian but..." comparisons.
+    Маршрутка introduced as a specifically Ukrainian cultural element. School and
+    work settings are authentically Ukrainian (уро
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'Two well-crafted dialogues with named speakers: (1) Андрій/Марія — colleagues
+    discussing commuting. Natural multi-turn, distinct voices (Марія uses bus+metro,
+    Андрій uses car/tram), culturally appropr'
+findings: []

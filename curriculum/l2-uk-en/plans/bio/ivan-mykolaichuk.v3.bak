@@ -1,0 +1,102 @@
+module: bio-144
+level: BIO
+sequence: 144
+slug: ivan-mykolaichuk
+version: '3.0'
+title: 'Іван Миколайчук: Душа українського кіно'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- Analyze the contribution of Ivan Mykolaichuk to world cinema
+- Evaluate the style of Ukrainian Poetic Cinema
+- Discuss the impact of censorship on art
+content_outline:
+- section: Вступ — Обличчя нації
+  points:
+  - Символ українського поетичного кіно
+  - Актор, сценарист, режисер, композитор
+  - '"Тіні забутих предків" як світовий шедевр'
+  words: 700
+- section: Буковинське коріння
+  points:
+  - Дитинство в селі Чортория
+  - Вплив народної культури та музики
+  - Навчання в Чернівцях та Києві
+  words: 700
+- section: Тіні забутих предків
+  points:
+  - Роль Івана Палійчука
+  - Співпраця з Параджановим та Іллєнком
+  - Міжнародний тріумф і політичний резонанс
+  words: 700
+- section: Епоха "Вавилона XX"
+  points:
+  - Режисерський дебют
+  - Філософська притча про українське село
+  - Образ Фабіана — мудреця і спостерігача
+  words: 700
+- section: Цензура та "задушення"
+  points:
+  - Переслідування українського поетичного кіно в 70-х
+  - Заборона на професію ("націоналізм")
+  - Незіграні ролі та незняті фільми
+  words: 700
+- section: Особистість і коло друзів
+  points:
+  - Харизма та гостинність
+  - Дружба з Брондуковим, Гаврилюком, Биковим
+  - Передчасна смерть у 46 років
+  words: 700
+- section: Дискусія — Митець і система
+  points:
+  - Як тоталітаризм вбиває талант
+  - Феномен "білого птаха з чорною ознакою"
+  words: 800
+vocabulary_hints:
+  required:
+  - поетичне кіно (poetic cinema)
+  - режисура (directing)
+  - сценарій (script)
+  - цензура (censorship)
+  - архетип (archetype)
+  - мольфар (sorcerer/molfar)
+  - гуцули (Hutsuls)
+  - кіностудія (film studio)
+  - шедевр (masterpiece)
+  - заборона (ban/prohibition)
+  recommended:
+  - естетика (aesthetics)
+  - фольклор (folklore)
+  - притча (parable)
+  - кінематограф (cinematography)
+  - амплуа (role/type)
+activity_hints:
+- type: reading
+  focus: Спогади про зйомки "Тіней"
+  source: Мемуари
+  items: 3 passages
+- type: essay-response
+  focus: Образ українця в кіно Миколайчука
+  output: Есе-аналіз
+connects_to:
+- lit-essay-64-kotsiubynsky-shadows-forgotten
+- bio-135-vasyl-stus
+prerequisites:
+- hist-sixtiers
+persona:
+  voice: Film Critic
+  role: Cultural Historian
+module_type: biography
+immersion: 100% Ukrainian
+references:
+- name: Іван Миколайчук (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Миколайчук_Іван_Васильович
+  type: primary
+  notes: Біографія
+- name: Фільм "Тіні забутих предків"
+  url: https://takflix.com/
+  type: reference
+  notes: Першоджерело
+register: академічний
+grammar: []

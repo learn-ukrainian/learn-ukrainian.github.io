@@ -1,0 +1,67 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння соціолінгвістичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Текст
+  focus: Транскрипція руського/староукраїнського фрагменту
+  placement: inline
+  type: transcription
+- focus: Простежити еволюцію слова від руської доби до сучасної
+  placement: workbook
+  type: etymology-trace
+- focus: Порівняння мовних контактів — полонізми, латинізми, церковнослов'янізми (Бароковий синтаксис)
+  placement: workbook
+  type: dialect-comparison
+- focus: Порівняння — те саме поняття церковнослов'янською, руською та сучасною (Бароковий синтаксис)
+  placement: workbook
+  type: comparative-study
+- focus: Есе — як цей текст доводить існування української мови до Котляревського? (Бароковий синтаксис)
+  placement: workbook
+  type: essay-response
+connects_to:
+- kyiv-mohyla-rhetoric
+content_outline:
+- points:
+  - Introduction to Baroque Syntax
+  section: Вступ
+  words: 1250
+- points:
+  - Primary source analysis and grammar focus
+  section: Основний матеріал
+  words: 1250
+- points:
+  - Exercises and activities
+  section: Практика
+  words: 1250
+- points:
+  - Summary and connection to next module
+  section: Підсумок
+  words: 1250
+focus: Complex, winding sentences
+grammar: []
+level: RUTH
+module: ruth-069
+objectives:
+- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
+- Продукувати тексти академічного та професійного рівня за тематикою модуля
+- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- Застосовувати знання з теми «Практика» у власній мовній практиці
+persona:
+  role: Period Constructor
+  voice: Baroque Scholar
+phase: 3
+prerequisites:
+- apostasy
+references: []
+register: академічний
+sequence: 69
+slug: baroque-syntax
+subtitle: Baroque Syntax
+title: Бароковий синтаксис
+version: '3.0'
+vocabulary_hints:
+  recommended: []
+  required: []
+word_target: 5000

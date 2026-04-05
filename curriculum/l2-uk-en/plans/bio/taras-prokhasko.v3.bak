@@ -1,0 +1,107 @@
+module: bio-161
+level: BIO
+sequence: 161
+slug: taras-prokhasko
+version: '3.0'
+title: 'Тарас Прохасько: Станіславівський феномен'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of тарас прохасько: станіславівський феномен'
+- Evaluate the contributions of письменник як ботанік і філософ
+- Trace the career and influence of література як спосіб бачити світ
+content_outline:
+- section: Вступ — Письменник як ботанік і філософ
+  points:
+  - Унікальний стиль Прохаська в українській літературі
+  - Станіславівський феномен як літературне явище
+  - Від ботаніка до культового письменника
+  words: 700
+- section: Івано-Франківське дитинство
+  points:
+  - Народження в 1968 році
+  - Вплив Карпат на формування світогляду
+  - Освіта та інтерес до природничих наук
+  words: 700
+- section: Ботаніка як філософія життя
+  points:
+  - Наукова діяльність
+  - Як природознавство впливає на творчість
+  - Паралелі між ботанікою та літературою
+  words: 700
+- section: НепрОсті та альтернативна історія
+  points:
+  - Аналіз головного роману
+  - Теми памяті, ідентичності, місця
+  - Карпати як метафора та простір
+  words: 700
+- section: Станіславівський феномен
+  points:
+  - Літературне угруповання у Франківську
+  - Співавтори та однодумці
+  - Вплив на сучасну українську прозу
+  words: 700
+- section: Медитативна проза та філософія буття
+  points:
+  - Особливості стилю Прохаська
+  - Теми спостереження та споглядання
+  - Есеїстика та малі форми
+  words: 700
+- section: Дискусія — Література як спосіб бачити світ
+  points:
+  - Як науковий погляд збагачує художню прозу
+  - Регіональна ідентичність в українській літературі
+  words: 800
+vocabulary_hints:
+  required:
+  - ботаніка (botany)
+  - феномен (phenomenon)
+  - споглядання (contemplation)
+  - альтернативна історія (alternative history)
+  - медитативний (meditative)
+  - ідентичність (identity)
+  - краєзнавство (local studies)
+  - есеїстика (essay writing)
+  - простір (space)
+  - памятка (memory/memorial)
+  recommended:
+  - гербарій (herbarium)
+  - філософія буття (philosophy of being)
+  - топографія (topography)
+  - ностальгія (nostalgia)
+  - феноменологія (phenomenology)
+activity_hints:
+- type: reading
+  focus: Фрагменти роману НепрОсті
+  source: Художній текст
+  items: 3 passages
+- type: essay-response
+  focus: Як місце формує письменника?
+  output: Аналітичний есей
+connects_to:
+- bio-86-oksana-zabuzhko
+- bio-90-serhiy-zhadan
+- bio-84-halyna-pahutyak
+prerequisites:
+- bio-82-yuriy-vynnychuk
+persona:
+  voice: Senior Biographer
+  role: Carpathian Philosopher
+module_type: biography
+immersion: 100% Ukrainian
+references:
+- name: Тарас Прохасько (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Прохасько_Тарас_Богданович
+  type: primary
+  notes: Основна біографічна інформація
+- name: Видавництво Кальварія
+  url: https://www.calvaria.com.ua/
+  type: reference
+  notes: Бібліографія та видання
+- name: Літературна критика
+  url: https://litakcent.com/
+  type: reference
+  notes: Аналіз творчості
+register: академічний
+grammar: []

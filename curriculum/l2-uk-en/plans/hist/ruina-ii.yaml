@@ -1,128 +1,139 @@
-module: hist-059
-level: HIST
-sequence: 59
-slug: ruina-ii
-version: '3.0'
-title: 'Руїна II: Дорошенко і надія'
-subtitle: 'The Ruin II: Doroshenko and Hope'
-focus: history
-pedagogy: CBI
-phase: HIST.6 [Khmelnytsky & Cossack State]
-word_target: 5000
-objectives:
-- Учень може пояснити політичну програму Петра Дорошенка
-- Учень може проаналізувати причини та наслідки союзу з Туреччиною
-- Учень може оцінити роль Івана Сірка як опозиції державницькому курсу
-content_outline:
-- section: 'Вступ: Людина, яка хотіла неможливого'
-  points:
-  - Doroshenko as 'The Sun of the Ruin' — reference Vasyl Pachovskyi's drama (1911) which cemented this romantic image; 
-    include [!history-bite] about the literary origin of the moniker
-  - The geopolitical situation in 1665 — Ukraine in ruins, divided, needing a 'state builder' to overcome the chaos of 
-    the post-Khmelnytsky era
-  words: 600
-- section: 'Петро Дорошенко: Шлях до булави'
-  points:
-  - Biography and origins (grandson of a hetman) — grandson of Mykhailo Doroshenko; aristocratic lineage gave him 
-    legitimacy
-  - Creation of a regular army (serdyuks) — 20,000 mercenaries independent of starshyna; personal loyalty to Hetman 
-    ensured stability
-  - 'Goal: Unification of both banks of the Dnipro — strategy of ''Sobornist'' (unity) above all; aimed to reunite the state
-    divided by powerful neighbors'
-  words: 600
-- section: 'Турецький вектор: Союз чи зрада?'
-  points:
-  - The logic of the alliance with the Ottoman Empire — Realpolitik response to Andrusovo Truce (1667) betrayal by 
-    Moscow and Poland; include [!myth-buster] debunking the 'traitor' myth
-  - 'Comparison of conditions: Moscow vs. Poland vs. Turkey — Ottomans offered: no tribute, military aid, border integrity
-    (modeled on Moldavia or Transylvania)'
-  - The Korsun Council of 1669 — Cossacks approved the protectorate; define 'protectorate' vs 'vassalage' and the 
-    specific articles of agreement
-  words: 600
-- section: Похід султана і Бучацький мир 1672
-  points:
-  - The fall of Kamianets-Podilskyi — joint Ottoman-Cossack force led by Mehmed IV and Doroshenko; shock to Europe; 
-    include [!context] on the scale of the campaign
-  - Terms of the Treaty of Buchach — Poland ceded Podillia to Turkey and Bratslav/Kyiv regions to Doroshenko; first 
-    mention of 'Ukrainian State' (Panstwo Ukrainskie) in an international treaty
-  - Reaction of the population and Europe — population feared 'Turkish freedom', churches turned to mosques in Podillia,
-    undermining Doroshenko's authority
-  words: 600
-- section: 'Внутрішній фронт: Дорошенко проти Сірка'
-  points:
-  - Ivan Sirko as the personification of the Zaporozhian opposition — popular hero but destructive element for the 
-    state; include [!perspective] on the conflict between order and chaos
-  - 'Conflict of ideologies: Statehood vs. ''Pure Orthodoxy'' — Hierarchy (Doroshenko) vs Anarchy (Sirko)'
-  - Sirko's raids against Crimea — attacked when Doroshenko needed calm on the southern front, provoking Tatar 
-    retaliation and destabilizing the alliance
-  words: 600
-- section: 'Чигиринські походи: Оборона столиці'
-  points:
-  - First Siege (1677) and Second Siege (1678) — Grand Vizier Kara Mustafa's army vs. Cossack defenders
-  - Heroism of the defenders and destruction of Chyhyryn — Patrick Gordon's diary description 'hell on earth'; include 
-    [!culture] on the intensity of the siege warfare
-  - The symbolic end of the Cossack capital — total destruction of the castle and city marked the end of the Khmelnytsky
-    era
-  words: 600
-- section: Капітуляція і доля гетьмана
-  points:
-  - Abdication in 1676 — surrendered insignias to Samoilovych to avoid further bloodshed after realizing the 
-    hopelessness of the situation
-  - Exile to Muscovy — lived in Vyatka/Yaropolche as voivode; died 1698; great-granddaughter Natalya Goncharova 
-    (Pushkin's wife); include [!decolonization] on his respectful treatment in exile
-  - 'Legacy: The last attempt at independence — ''Sun of the Ruin'' who fought for unity till the end, acting as a sovereign
-    ruler'
-  words: 600
-- section: 'Первинні джерела: Свідчення іноземців'
-  points:
-  - French diplomat's report — described Doroshenko as a man of 'great mind and courage' navigating between three 
-    empires
-  - Cossack chronicles — Litopys Samovydtsia on the 'great sorrow' of the people and the devastation of the land
-  words: 800
-vocabulary_hints:
-  required:
-  - протекторат (protectorate) — військово-політичний союз, не васалітет (як Молдавія)
-  - сюзеренітет (suzerainty) — верховна влада султана над васальною державою
-  - капітуляція (capitulation) — умови здачі Дорошенка та зречення булави
-  - облога (siege) — Чигиринська облога, яку Гордон назвав «пеклом на землі»
-  - данина (tribute) — відсутність данини як ключова умова союзу з Портою
-  - васал (vassal) — міф про «турецького васала» в радянській історіографії
-  - руйнація (destruction/ruin) — епоха Руїни, що характеризувалася війною всіх проти всіх
-  - чвари (strife/discord) — старшинські чвари, що заважали об'єднанню держави
-  - сердюки (serdyuks) — наймане піхотне військо — особиста гвардія гетьмана
-  - соборність (sobornist/unity) — єдність обох берегів Дніпра — головна мета Дорошенка
-  recommended:
-  - булава (bulava/mace) — символ гетьманської влади, яку Дорошенко здав Самойловичу
-  - універсал (universal) — гетьманський указ (зокрема про союз з Туреччиною)
-  - яничари (janissaries) — турецька елітна піхота, що штурмувала Чигирин
-  - експансія (expansion) — османська експансія в Європу, яку використав Дорошенко
 activity_hints:
-- type: reading
-  focus: Analysis of diplomatic correspondence
-- type: essay-response
-  focus: Was the Turkish alliance a mistake?
-- type: comparative-study
-  focus: Doroshenko vs. Sirko
-- type: critical-analysis
-  focus: 'Спростування міфів: Myths about the ''traitor'' Doroshenko'
-  items: 4
-persona:
-  voice: Senior Professor of History
-  role: Foreign Envoy
-grammar:
-- 'Historical narrative: description of battles'
-- 'Political terminology: protectorate vs. alliance'
-register: публіцистичний
-prerequisites:
-- ruina-i
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння історіографічних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Джерела
+  focus: Розуміння первинного історичного джерела
+  placement: inline
+  type: reading
+- focus: Оцінка первинного джерела — хто написав, навіщо, що упущено?
+  placement: workbook
+  type: source-evaluation
+- focus: Дебат — оцінка значення та наслідків події
+  placement: workbook
+  type: debate
+- focus: 'Порівняння української та імперської інтерпретацій (Руїна II: Дорошенко і надія)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе на тему зв''язку з сучасністю (Руїна II: Дорошенко і надія)'
+  placement: workbook
+  type: essay-response
+cefr_min: C1
 connects_to:
 - andrusivske-peremyrya
+- ruina-i
+content_outline:
+- points:
+  - 'Провокація: «Сонце Руїни» — це трагічний герой, що боровся за єдність, чи авантюрист, що поставив усе на турецьку карту
+    і програв? Чи могла одна людина врятувати державу, коли всі воювали проти всіх?'
+  - '[!history-bite] Літературне походження прізвиська: як драма Василя Пачовського (1911) створила романтичний образ, що
+    затьмарив реальну історичну постать.'
+  section: Розминка
+  words: 400
+- points:
+  - 'Дебат 1: Союз із Османською імперією — це зрада православ''я та національних інтересів чи єдиний можливий прагматичний
+    хід у відповідь на Андрусівську змову Москви та Польщі? [!decolonization] Розвінчання радянського та імперського міфу
+    про «турецького васала».'
+  - 'Дебат 2: Дорошенко проти Сірка — конфлікт двох ідеологій. Централізована держава (Дорошенко) проти анархічної вольниці
+    та «чистого православ''я» (Сірко). Хто з них був більшим патріотом України?'
+  - '[!epistemic-humility] Ми не знаємо точних мотивів Дорошенка. Хроніки описують його дії, але його особисті листи та щоденники
+    не збереглися. Історики змушені реконструювати його логіку.'
+  - 'Глобальна синхронність: У той час як Дорошенко шукав союзу з Портою, Людовік XIV вів Голландську війну, а Річ Посполита
+    слабшала, що й відкрило туркам шлях на Поділля.'
+  section: 'Конфліктна карта: ''Зрада'' чи ''Realpolitik''?'
+  words: 900
+- points:
+  - 'Аналіз Корсунської ради 1669: Текст угоди з Османською імперією. Що означав статус «протекторату»? Порівняння з умовами
+    для Молдавії чи Трансільванії. Чому козацька старшина підтримала цей союз?'
+  - 'Бучацький мирний договір 1672: Вперше в міжнародному документі згадується «Українська держава» (Panstwo Ukrainskie).
+    Аналіз тексту договору — що здобув і що втратив Дорошенко? [!decolonization] Факт визнання суб''єктності України, навіть
+    під протекторатом.'
+  - 'Щоденник Патріка Гордона: Шотландський офіцер на московській службі описує облогу Чигирина як «пекло на землі». Його
+    свідчення як джерело про інтенсивність бойових дій та героїзм оборонців.'
+  - 'Донесення французького дипломата: Опис Дорошенка як людини «великого розуму та сміливості», що маневрує між трьома імперіями.
+    Погляд на гетьмана очима європейської дипломатії.'
+  section: 'Джерела: Свідчення іноземців та міжнародні договори'
+  words: 1600
+- points:
+  - 'Державотворчі зусилля: Створення 20-тисячного найманого війська (сердюки) як спроба побудувати регулярну армію, незалежну
+    від старшинських чвар. Чи був це крок до абсолютизму?'
+  - 'Фатальний удар по державі: Падіння Кам''янця-Подільського та спустошення Поділля османськими військами. Як військовий
+    тріумф перетворився на політичну катастрофу, підірвавши авторитет гетьмана серед населення.'
+  - 'Крах столиці: Знищення Чигирина як символічний кінець епохи Хмельниччини. Аналіз коротко- та довгострокових наслідків
+    втрати гетьманської столиці.'
+  - '[!myth-buster] Доля після капітуляції: Дорошенко не був закатований. Він жив у почесному засланні у Вятці, був воєводою.
+    Його правнучка — Наталія Гончарова, дружина Пушкіна. Чому імперія ставилася до нього з повагою?'
+  - 'Оцінки істориків: Порівняння поглядів (Грушевський, Липинський, Субтельний) на Дорошенка. Чи був він останнім справжнім
+    державником козацької епохи?'
+  section: 'Аналіз: Наслідки та значення'
+  words: 1600
+- points:
+  - 'Повернення до розминки: То хто ж такий Дорошенко? Студент формулює власну оцінку, спираючись на проаналізовані джерела
+    та аргументи.'
+  - 'Історична дилема: Чи міг Дорошенко перемогти? Які були альтернативи турецькому союзу? Чи була взагалі можлива незалежна
+    Україна в геополітичних реаліях XVII століття?'
+  - '[!anti-hagiography] Руїна як урок: Дорошенко — не святий. Його політика призвела до жахливих руйнувань. Важливо уникнути
+    романтизації «сильної руки» і проаналізувати ціну його рішень.'
+  - 'Зв''язок із сьогоденням: Уроки Дорошенка для сучасної України — необхідність національної єдності перед зовнішньою загрозою,
+    небезпека покладання на ненадійних союзників, важливість збереження внутрішньої легітимності влади.'
+  section: Дискусія та підсумок
+  words: 700
+focus: Petro Doroshenko's attempt to unite Ukraine, his alliance with the Ottoman Empire, the conflict with Ivan Sirko, the
+  defense of Chyhyryn, and his legacy as the 'Sun of the Ruin'.
+level: HIST
+module: hist-059
+objectives:
+- Пояснювати політичну програму Петра Дорошенка, спрямовану на досягнення соборності українських земель
+- Критично аналізувати причини та наслідки союзу Гетьманщини з Османською імперією, розрізняючи поняття «протекторат» та «васалітет»
+- Оцінювати роль Івана Сірка та запорізької опозиції як дестабілізуючого фактора для гетьманської влади
+- Формулювати аргументовану позицію щодо спадщини Дорошенка як трагічної фігури епохи Руїни
+pedagogy: CBI
+persona:
+  role: Модератор семінару, що ставить незручні питання та змушує відрізняти романтичний міф від складної історичної реальності.
+  voice: Sober-Historian
 references:
-- name: Petro Doroshenko - Encyclopedia of Ukraine
-  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CD%5CO%5CDoroshenkoPetro.htm
+- note: Petro Doroshenko - Encyclopedia of Ukraine, academic biography
+  path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CD%5CO%5CDoroshenkoPetro.htm
   type: reference
-  notes: Academic biography
-- name: Chyhyryn Campaigns
-  url: http://litopys.org.ua/
+- note: Літопис Самовидця та інші козацькі літописи, що описують облогу Чигирина та добу Руїни
+  path: http://litopys.org.ua/
   type: primary
-  notes: Chronicles about the siege
+sequence: 59
+slug: ruina-ii
+subtitle: 'The Ruin II: Doroshenko and Hope'
+title: 'Руїна II: Дорошенко і надія'
+version: '4.0'
+vocabulary_hints:
+- definition: ідея єдності всіх українських земель, головна мета політики Дорошенка
+  pos: ж.
+  word: соборність
+- definition: наймане піхотне військо, особиста гвардія гетьмана для забезпечення стабільності
+  pos: мн.
+  word: сердюки
+- definition: форма міждержавних відносин, за якою одна держава переходить під захист іншої; не тотожний васалітету
+  pos: ч.
+  word: протекторат
+- definition: припинення збройної боротьби та здача на умовах, запропонованих переможцем; зречення Дорошенком булави
+  pos: ж.
+  word: капітуляція
+- definition: військова операція з блокування міста чи фортеці з метою її захоплення; героїчна оборона Чигирина
+  pos: ж.
+  word: облога
+- definition: внутрішні конфлікти, незгода, розбрат, зокрема серед козацької старшини
+  pos: мн.
+  word: чвари
+- definition: символ гетьманської влади
+  pos: ж.
+  word: булава
+- definition: гетьманський указ або маніфест
+  pos: ч.
+  word: універсал
+- definition: полонені, захоплені під час набігу (тюркізм)
+  pos: ч.
+  word: ясир
+- definition: верховна влада однієї держави (суверена) над іншою (васалом)
+  pos: ч.
+  word: сюзеренітет
+word_target: 5200

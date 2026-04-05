@@ -1,76 +1,118 @@
-module: istorio-052
-level: ISTORIO
-sequence: 52
-slug: rozstriliane-kontekst
-version: '3.0'
-title: 'Розстріляне відродження: Контекст 1920-х'
-focus: history
-pedagogy: seminar
-word_target: 5000
-objectives:
-- 'Analyze the causes and consequences of розстріляне відродження: контекст 1920-х'
-- Evaluate the historical significance of парадокс 1920-х
+activities:
+- focus: Map the Ukrainization policy — what was allowed, what not
+  type: critical-analysis
+- focus: Research 3 key figures of the era
+  type: reading
+- focus: Why did Moscow allow Ukrainization?
+  type: critical-analysis
+- focus: Чому 1920-ті були 'золотою добою' української культури?
+  type: essay-response
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння методологічних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Зіткнення наративів
+  focus: Розуміння історіографічного тексту
+  placement: inline
+  type: reading
+- focus: Джерельна критика — методологія, упередження, сліпі плями
+  placement: workbook
+  type: source-evaluation
+- focus: 'Порівняння 3+ наративів про одну подію (Розстріляне відродження: Контекст 1920-х)'
+  placement: workbook
+  type: comparative-study
+- focus: Який наратив найбільш підкріплений доказами?
+  placement: workbook
+  type: debate
+- focus: Мета-рефлексія — як ми читаємо історію?
+  placement: workbook
+  type: essay-response
+connects_to:
+- literaturna-dyskusiia
 content_outline:
-- section: Вступ — Парадокс 1920-х
-  points:
+- points:
   - Найбільший культурний вибух в УРСР
   - І його знищення
   - Термін «Розстріляне відродження»
   - Чому важливо вивчати
+  section: Вступ — Парадокс 1920-х
   words: 700
-- section: Політика українізації
-  points:
+- points:
   - Ленінська «коренізація» — що це
   - Чому більшовики дозволили
   - Скрипник і українізація — хто він
   - Масштаби — освіта, преса, культура
   - 1920-ті — золота доба?
+  section: Політика українізації
   words: 700
-- section: Культурний вибух
-  points:
+- points:
   - Література — нові таланти
   - Театр — Курбас і Березіль
   - Кіно — Довженко
   - Образотворче мистецтво
   - Наука — ВУАН
+  section: Культурний вибух
   words: 700
-- section: Хто вони були
-  points:
+- points:
   - Молоде покоління — після 1917
   - Селянське походження
   - Віра в революцію
   - Трагічна наївність
+  section: Хто вони були
   words: 700
-- section: Чому Москва дозволила
-  points:
+- points:
   - Тактичні міркування
   - Нейтралізація націоналізму
   - Ілюзія вибору
   - Готування до повороту
+  section: Чому Москва дозволила
   words: 700
-- section: Тіні над 1920-ми
-  points:
+- points:
   - Уже в 1920-х — сигнали
   - Процеси СВУ
   - Критика «націоналізму»
   - Самовбивство Хвильового — символ
+  section: Тіні над 1920-ми
   words: 700
-- section: Підсумок
-  points:
+- points:
   - 1920-ті як парадокс
   - Від розквіту до знищення
   - Підготовка до літературної дискусії
+  section: Підсумок
   words: 800
-vocabulary_hints:
-  required:
-  - історія (history)
-  - подія (event)
-  - джерело (source)
-  - аналіз (analysis)
-  recommended:
-  - контекст (context)
-  - інтерпретація (interpretation)
-  - наслідки (consequences)
+focus: history
+grammar: []
+level: ISTORIO
+module: istorio-052
+objectives:
+- 'Analyze the causes and consequences of розстріляне відродження: контекст 1920-х'
+- Evaluate the historical significance of парадокс 1920-х
+pedagogy: seminar
+persona:
+  role: Avant-Garde Specialist
+  voice: Academic Historiographer
+prerequisites:
+- syntez-holodomor-studiyi
+references:
+- name: Розстріляне відродження (Вікіпедія)
+  notes: Overview
+  type: reference
+  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
+- name: Українізація (Вікіпедія)
+  notes: Ukrainization policy
+  type: reference
+  url: https://uk.wikipedia.org/wiki/Українізація
+- name: Юрій Лавріненко — Розстріляне відродження
+  notes: Term originator
+  type: reference
+  url: https://uk.wikipedia.org/wiki/Лавріненко_Юрій_Андрійович
+register: академічний
+sequence: 52
+slug: rozstriliane-kontekst
+title: 'Розстріляне відродження: Контекст 1920-х'
+version: '3.0'
 vocabulary:
 - Розстріляне відродження
 - українізація
@@ -87,43 +129,14 @@ vocabulary:
 - модернізм
 - пролетарський
 - попутник
-activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: true-false
-  focus: Факти та інтерпретації
-  items: 10
-activities:
-- type: critical-analysis
-  focus: Map the Ukrainization policy — what was allowed, what not
-- type: reading
-  focus: Research 3 key figures of the era
-- type: critical-analysis
-  focus: Why did Moscow allow Ukrainization?
-- type: essay-response
-  focus: Чому 1920-ті були 'золотою добою' української культури?
-persona:
-  voice: Academic Historiographer
-  role: Avant-Garde Specialist
-prerequisites:
-- syntez-holodomor-studiyi
-connects_to:
-- literaturna-dyskusiia
-references:
-- name: Розстріляне відродження (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
-  type: reference
-  notes: Overview
-- name: Українізація (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Українізація
-  type: reference
-  notes: Ukrainization policy
-- name: Юрій Лавріненко — Розстріляне відродження
-  url: https://uk.wikipedia.org/wiki/Лавріненко_Юрій_Андрійович
-  type: reference
-  notes: Term originator
-register: академічний
-grammar: []
+vocabulary_hints:
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+word_target: 5000

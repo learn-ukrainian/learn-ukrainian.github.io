@@ -1,126 +1,139 @@
-module: hist-057
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння історіографічних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Джерела
+  focus: Розуміння первинного історичного джерела
+  placement: inline
+  type: reading
+- focus: Оцінка первинного джерела — хто написав, навіщо, що упущено?
+  placement: workbook
+  type: source-evaluation
+- focus: Дебат — оцінка значення та наслідків події
+  placement: workbook
+  type: debate
+- focus: 'Порівняння української та імперської інтерпретацій (Юрій Немирич: Гадяцька угода)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе на тему зв''язку з сучасністю (Юрій Немирич: Гадяцька угода)'
+  placement: workbook
+  type: essay-response
+cefr_min: C1
+connects_to:
+- pereyaslavska-uhoda
+- ruina-i
+content_outline:
+- points:
+  - 'Провокація: Гадяцька унія — це блискучий проект суверенної європейської України чи зрада і «панська» інтрига, як стверджувала
+    Москва? Що, якби все вдалося?'
+  - '[!biography] Юрій Немирич, «український Макіавеллі», найосвіченіший українець свого часу — протестант, випускник Сорбонни
+    та Оксфорду, що став канцлером козацької держави.'
+  section: Розминка
+  words: 400
+- points:
+  - 'Дебат 1: Гадяч vs. Переяслав. Європейська федерація рівних (Гадяч) проти азійської деспотії та «протекторату» (Переяслав).
+    Чи був у України третій шлях?'
+  - 'Дебат 2: Внутрішній розкол. «Аристократичний» проект Немирича та Виговського проти «чорної ради» — соціальний конфлікт
+    між козацькою старшиною та народними масами, розпалений Москвою.'
+  - '[!epistemic-humility] Історики сперечаються, чи була Угода життєздатною. Чи могла шляхта справді відмовитись від своїх
+    привілеїв, а козацтво — прийняти обмеження реєстру?'
+  - 'Глобальна синхронність: У той час як Україна намагається створити федерацію, Англія переживає реставрацію монархії після
+    республіки Кромвеля, а Франція Людовіка XIV утверджує абсолютизм.'
+  section: 'Конфліктна карта: Проект трьох народів чи розкол нації?'
+  words: 900
+- points:
+  - 'Аналіз тексту угоди (16 вересня 1658): Статті про створення Великого Князівства Руського як третього рівноправного члена
+    Речі Посполитої (поряд з Польщею та Литвою).'
+  - 'Ключові положення: Власний канцлер (Немирич), скарбниця, монетний двір, трибунал, 30-тисячне козацьке військо та скасування
+    Берестейської унії.'
+  - '[!decolonization] Читаємо промову Немирича на сеймі (квітень 1659): «Ми, як вільні до вільних і рівні до рівних, повертаємось».
+    Це маніфест розриву з Москвою, а не капітуляція перед Польщею.'
+  - 'Джерельна критика: Промова збереглася в латинському перекладі. Наскільки вона відображає точні слова Немирича, а наскільки
+    є риторичною конструкцією для польського сейму?'
+  section: 'Джерела: Текст Гадяцької угоди та промова Немирича'
+  words: 1600
+- points:
+  - 'Короткостроковий тріумф: Перемога під Конотопом (червень 1659) — військовий успіх, що мав гарантувати виконання Угоди.
+    Армія Виговського (козаки і татари) вщент розбиває московське військо.'
+  - 'Причини провалу: внутрішня опозиція (Пушкар, Барабаш), московська пропаганда та гроші (рання гібридна війна), небажання
+    польського сейму ратифікувати договір у повному обсязі.'
+  - 'Трагічний фінал: Вбивство Юрія Немирича у вересні 1659 року — символічна смерть «мозку» Гадяцької унії, початок періоду
+    Руїни.'
+  - '[!myth-buster] Радянська історіографія таврувала Немирича як «зрадника» і «польського пана». Насправді, його проект був
+    спробою зберегти суверенітет і уникнути поглинання Московським царством.'
+  section: 'Аналіз: Наслідки та значення'
+  words: 1600
+- points:
+  - 'Повернення до розминки: Отже, Гадяч — це «панська інтрига» чи втрачений шанс на європейську інтеграцію? Сформулюйте відповідь,
+    спираючись на джерела та аналіз причин провалу.'
+  - 'Історична паралель: Чи можна вважати Гадяцьку угоду прообразом сучасної європейської інтеграції України? Порівняйте аргументи
+    «за» і «проти» союзу з Європою тоді і зараз.'
+  - '[!anti-hagiography] Гадяцький проект не був ідеальним. Він закріплював владу старшинської еліти. Чи могла така «аристократична
+    республіка» бути стабільною в довгостроковій перспективі?'
+  section: Дискусія та підсумок
+  words: 700
+focus: Юрій Немирич, Гадяцька угода, Велике Князівство Руське, битва під Конотопом, європейський вибір України у XVII ст.
+  vs. московський протекторат
 level: HIST
+module: hist-057
+objectives:
+- Пояснювати суть та історичне значення проекту 'Великого Князівства Руського'
+- Аналізувати комплекс причин (внутрішніх та зовнішніх) провалу Гадяцької угоди
+- Критично оцінювати роль Юрія Немирича як інтелектуала та політика в українській історії
+- Деконструювати радянські та імперські міфи про Гадяцьку унію як 'зраду'
+pedagogy: CBI
+persona:
+  role: Адвокат європейського вибору України, що показує альтернативу московському шляху та аналізує причини втраченого шансу
+  voice: Historian-Federalist
+references:
+- note: Compiled from Hrushevsky, Plokhy, Subtelny on the Hadiach Treaty and Ruin period
+  path: wiki/hist/grand-duchy-of-rus.md
+  type: wiki
+- author: Yurii Nemyrych
+  note: Оригінальний текст промови, що обґрунтовує розрив з Москвою, доступний на litopys.org.ua
+  type: primary
+  work: Manifestation (Speech to the Sejm)
+- author: Encyclopedia of Ukraine
+  note: Академічний огляд та стислий виклад основних положень угоди
+  type: reference
+  work: The Treaty of Hadiach
 sequence: 57
 slug: yurii-nemyrych
-version: '3.0'
-title: 'Юрій Немирич: Гадяцька угода'
 subtitle: 'Yurii Nemyrych: The Treaty of Hadiach'
-focus: history
-pedagogy: CBI
-phase: HIST.6 [Khmelnytsky & Cossack State]
-word_target: 5000
-objectives:
-- Учень може пояснити суть проекту 'Великого Князівства Руського'
-- Учень може проаналізувати причини провалу Гадяцької угоди
-- Учень може оцінити роль Юрія Немирича як інтелектуала в політиці
-content_outline:
-- section: Вступ
-  points:
-  - 'Nemyrych as a unique figure: intellectual and politician — the ''brain'' behind the break with Moscow and turn to Europe'
-  - 'The crisis after Khmelnytsky''s death — seeking new allies amidst the collapse of the 1654 protectorate; cultural hook:
-    [!context] The concept of the ''Commonwealth of Three Nations'' (Rzeczpospolita Trojga Narodów)'
-  words: 500
-- section: 'Юрій Немирич: Портрет інтелектуала'
-  points:
-  - Education in Europe (Leiden, Oxford, Paris) — 1630–1634; studying at Sorbonne and Cambridge, arguably the most 
-    educated man in Ukraine
-  - 'Protestant faith (Arianism) and tolerance — conversion to Orthodoxy in 1657 for political legitimacy; cultural hook:
-    [!biography] ''The Ukrainian Machiavelli'' or ''Protestant Humanist'' — how European education shaped his statecraft'
-  - Political career in the Commonwealth — author of 'Discursus de bello Moscovitico' (1632)
-  words: 500
-- section: 'Гадяцька угода 1658: Проект трьох народів'
-  points:
-  - The concept of the Grand Duchy of Rus' — signed Sept 16, 1658; defining the state as a third equal partner alongside
-    Poland and Lithuania
-  - 'Equality of rights: religion, language, administration — Nemyrych becomes Chancellor; own treasury, mint, and tribunal'
-  - 'The vision of a federal state — army of 30k registered Cossacks + 10k mercenaries; cultural hook: [!myth-buster] The
-    ''Polish Intrigue'' myth vs. Reality: A sovereign Ukrainian project for a federal Europe'
-  words: 500
-- section: Освіта і культура в проекті Немирича
-  points:
-  - Plans for two academies (universities) — elevating Kyiv-Mohyla to university status (equal to Krakow) + a second new
-    academy
-  - Freedom of the press and schools — establishing printing presses and gymnasiums 'as many as needed'
-  - 'Intellectual foundation for the state — cultural hook: [!culture] Education as a prerequisite for statehood in Nemyrych''s
-    vision'
-  words: 500
-- section: 'Конотопська битва: Тріумф зброї'
-  points:
-  - The war with Muscovy (1658-1659) — Moscow's reaction to Hadiach as 'treason'
-  - 'Victory at Konotop as a defense of the Treaty — June 28-29, 1659; defeat of Trubetskoy''s army; cultural hook: [!history-bite]
-    ''The flower of Muscovite cavalry perished in one day'' — Tsar Alexei Mikhailovich preparing to flee Moscow'
-  - Vyhovsky's military leadership — coalition warfare (Cossacks + Tatars)
-  words: 500
-- section: 'Крах великої ідеї: Чому не вийшло?'
-  points:
-  - Internal opposition (Pushkar, Barabash) — social divide between the 'aristocratic' project and the egalitarian 
-    masses
-  - Muscovite propaganda and incitement of the masses — early 'hybrid war' tactics using populism and money
-  - The tragic death of Nemyrych — murdered in September 1659 near Svydivets; likely by pro-Moscow instigation
-  words: 500
-- section: Читання
-  points:
-  - Analysis of the Hadiach Treaty text — focusing on the articles establishing the Grand Duchy of Rus'
-  words: 500
-- section: Первинні джерела
-  points:
-  - Analysis of Nemyrych's speech to the Sejm — 'Manifestation' (April 23, 1659); justifying the break with Moscow
-  - 'include quote: «Ми, як вільні до вільних і рівні до рівних, повертаємось» — the motto of the union'
-  words: 500
-- section: Деколонізаційний погляд
-  points:
-  - Hadiach as an alternative to Pereiaslav — European legal tradition vs. Asian despotism
-  - 'The myth of ''inevitable unity'' with Russia — cultural hook: [!decolonization] Dismantling the Soviet label of Nemyrych
-    as a ''traitor'' and ''Polish lord'''
-  words: 500
-- section: Підсумок
-  points:
-  - Final evaluation of the project — 'The Grand Illusion' but a precursor to Pylyp Orlyk's Constitution
-  words: 500
+title: 'Юрій Немирич: Гадяцька угода'
+version: '4.0'
 vocabulary_hints:
-  required:
-  - федерація (federation) — as opposed to unitary empire or protectorate
-  - канцлер (chancellor) — Nemyrych's title in the Grand Duchy of Rus'
-  - шляхта (nobility) — the political nation of the Commonwealth
-  - сенат (senate) — the upper house of the parliament where Rus' was to be represented
-  - академія (academy) — status of a university (Kyiv-Mohyla)
-  - триєдина держава (triune state) — Res Publica of Three Nations
-  - аріанин (Arian) — Nemyrych's original Protestant confession
-  - унія (union) — specifically the Union of Hadiach (1658)
-  - розкол (schism/split) — social division exploited by Moscow
-  - Руїна (The Ruin) — the period of chaos following the failure of Hadiach
-  recommended:
-  - протекторат (protectorate) — the failed status under Moscow (1654)
-  - маніфестація (manifestation) — public declaration/speech
-  - ратифікація (ratification) — approval of the treaty by the Sejm
-  - деспотія (despotism) — Nemyrych's characterization of Muscovite rule
-activity_hints:
-- type: reading
-  focus: Analysis of the Hadiach Treaty text
-- type: essay-response
-  focus: Why the European choice failed in the 17th century
-- type: comparative-study
-  focus: Pereiaslav vs. Hadiach models
-- type: critical-analysis
-  focus: 'Верифікація фактів: Facts about the Grand Duchy of Rus'''
-  items: 4
-persona:
-  voice: Senior Professor of History
-  role: Protestant Noble
-grammar:
-- 'Political terminology: federation vs. protectorate'
-- 'Historical conditionals: ''what if'' scenarios'
-register: публіцистичний
-prerequisites:
-- pereyaslavska-uhoda
-connects_to:
-- ruina-i
-references:
-- name: The Treaty of Hadiach - Encyclopedia of Ukraine
-  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CH%5CA%5CHadiachTreatyof.htm
-  type: reference
-  notes: Academic summary
-- name: Yurii Nemyrych's Speech
-  url: http://litopys.org.ua/
-  type: primary
-  notes: Original text of the speech
+- definition: форма державного устрою, за якої кілька державних утворень створюють єдину союзну державу, зберігаючи певну
+    самостійність
+  pos: ж.
+  word: федерація
+- definition: найвища державна посада у Великому Князівстві Руському за Гадяцькою угодою
+  pos: ч.
+  word: канцлер
+- definition: затвердження міжнародного договору вищим органом державної влади
+  pos: ж.
+  word: ратифікація
+- definition: форма самодержавної необмеженої влади; характеристика московського політичного режиму
+  pos: ж.
+  word: деспотія
+- definition: форма залежності, за якою одна держава перебирає на себе зовнішні відносини та захист іншої
+  pos: ч.
+  word: протекторат
+- definition: союз, об'єднання; в даному контексті — Гадяцька унія 1658 року
+  pos: ж.
+  word: унія
+- definition: період громадянських воєн, анархії та втручання сусідніх держав в історію України після смерті Б. Хмельницького
+  pos: ж.
+  word: Руїна
+- definition: послідовник аріанства, однієї з течій протестантизму, до якої належав Немирич
+  pos: ч.
+  word: аріанин
+- definition: урочиста публічна промова або декларація
+  pos: ж.
+  word: маніфестація
+- definition: концепція Речі Посполитої Трьох Народів (Польщі, Литви та Русі)
+  pos: ж.
+  word: триєдина держава
+word_target: 5200

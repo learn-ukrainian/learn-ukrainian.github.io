@@ -1,110 +1,147 @@
-module: hist-049
-level: HIST
-sequence: 49
-slug: morski-pokhody
-version: '3.0'
-title: Морські походи козаків
-subtitle: Cossack Naval Expeditions
-focus: history
-pedagogy: CBI
-phase: HIST.5 [Rise of Cossacks]
-word_target: 5000
-objectives:
-- Учень може описати будову та переваги козацької чайки
-- Учень може аналізувати стратегічне значення морських походів Сагайдачного
-- Учень може пояснити вплив козацького флоту на Османську імперію
-content_outline:
-- section: 'Вступ: Чорне море як арена боротьби'
-  points:
-  - Ottoman dominance in the 16th-17th centuries — control of food supply routes to Istanbul
-  - The Black Sea as a 'Turkish Lake' — [!context] concept of Karadeniz as a closed Ottoman internal sea
-  words: 600
-- section: 'Козацька Чайка: Шедевр суднобудування'
-  points:
-  - Construction from a single trunk and reed belts — [!history-bite] fascines (bundles of reeds) provided unsinkability
-    and protection from bullets
-  - Mobility, speed, and stealth — low profile made them nearly invisible on water
-  - Weaponry on board (falconets) — 4-6 light cannons per boat; crew of 50-70 warrior-oarsmen
-  words: 600
-- section: 'Стратегія та Тактика: Раптовість та зухвалість'
-  points:
-  - Night attacks and navigating the Dnieper rapids — use of compass and stars for synchronized movement
-  - 'Open sea battles against heavy galleys — [!myth-buster] ''wolf pack'' tactics: attacking from the sun to blind the enemy'
-  - Infiltration of the Bosphorus — burning suburbs of Istanbul (1615) within sight of the Sultan's palace
-  - Double rudder technology — oars at bow and stern allowed instant reversal without turning
-  words: 600
-- section: 'Героїчна доба: Походи Петра Сагайдачного'
-  points:
-  - The taking of Caffa (1616) and freeing of captives — destruction of the largest slave market in Crimea
-  - Raids on Trebizond and Sinop — 1614 burning of the Ottoman fleet and arsenal
-  - Psychological shock for the Sultan — [!biography] Sahaidachny shifted tactics from defense to preventive strikes
-  - Battle of Khotyn (1621) — naval raids distracted Ottoman fleet from supporting land army
-  words: 600
-- section: 'Життя на морі: Побут та випробування'
-  points:
-  - 'Discipline on the boat — strict ban on alcohol during campaigns (penalty: thrown overboard)'
-  - Navigation by the stars and coastlines — survival in storms and reliance on group cohesion
-  words: 600
-- section: 'Читання: Свідчення про козацький десант'
-  points:
-  - Account of the storming of an Ottoman coastal fortress — focus on surprise and musketry/boarding combat
-  - 'Quotes from ambassadors — [!quote] Thomas Roe (1623): ''Cossacks are more dangerous than the mightiest enemies...'''
-  words: 600
-- section: 'Первинні джерела: Листи та хроніки'
-  points:
-  - Excerpts from Beauplan and Ottoman chronicles — Beauplan's 'Description of Ukraine' on boat construction details
-  - Ottoman perspective — Evliya Celebi's prayers for salvation from 'Rus' wrath'
-  words: 600
-- section: Деколонізаційний погляд
-  points:
-  - Ukraine as a naval power, not just a land-based one — [!decolonization] early 'thalassocracy' (sea power)
-  - Freedom of the seas against imperial blockade — Cossacks as an autonomous geopolitical subject with independent 
-    foreign policy
-  words: 800
-vocabulary_hints:
-  required:
-  - чайка (seagull/boat) — [!history-bite] maneuverable landing craft, 'special forces' of the sea
-  - галера (galley) — heavy Ottoman ships, vulnerable to swarm tactics
-  - весло (oar) — dual-purpose for rowing and steering
-  - щогла (mast) — collapsible for stealth
-  - якір (anchor) — essential for holding position
-  - десант (landing/descent) — surprise coastal attacks
-  - абордаж (boarding) — primary combat tactic after musket volley
-  - Чорне море (Black Sea) — contested space, formerly 'Turkish Lake'
-  - Кафа (Caffa/Feodosia) — key target in 1616, slave market
-  - Стамбул (Istanbul) — ultimate target of psychological warfare
-  recommended:
-  - фашини (fascines) — reed bundles for buoyancy and protection
-  - фальконет (falconet) — light cannon mounted on chajkas
-  - бранці (captives) — liberation of slaves as a legitimizing goal
-  - суднобудування (shipbuilding) — advanced engineering skills of Cossacks
 activity_hints:
-- type: reading
-  focus: Linguistic analysis of naval descriptions
-- type: essay-response
-  focus: The Black Sea strategy of the Zaporozhian Host
-- type: comparative-study
-  focus: Cossack Chayka vs. Ottoman Galley
-- type: critical-analysis
-  focus: 'Верифікація фактів: Technical facts about seafaring'
-  items: 4
-persona:
-  voice: Senior Professor of History
-  role: Chaika Captain
-grammar:
-- 'Historical narrative: naval terminology'
-- Geographical descriptions and directions
-register: публіцистичний
-prerequisites:
-- kozatske-viisko
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння історіографічних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Джерела
+  focus: Розуміння первинного історичного джерела
+  placement: inline
+  type: reading
+- focus: Оцінка первинного джерела — хто написав, навіщо, що упущено?
+  placement: workbook
+  type: source-evaluation
+- focus: Дебат — оцінка значення та наслідків події
+  placement: workbook
+  type: debate
+- focus: Порівняння української та імперської інтерпретацій (Морські походи козаків)
+  placement: workbook
+  type: comparative-study
+- focus: Есе на тему зв'язку з сучасністю (Морські походи козаків)
+  placement: workbook
+  type: essay-response
+cefr_min: C1
 connects_to:
 - syntez-kozatstvo-vytoky
+- kozatske-viisko
+content_outline:
+- points:
+  - 'Провокація: Як група річкових воїнів, що не мала власної держави, змогла кинути виклик наймогутнішій імперії того часу
+    на її власному морі? Чи було Чорне море справді «Турецьким озером»?'
+  - 'Коротка цитата без контексту: "[Вони] небезпечніші за наймогутніших ворогів..." (англійський посол Томас Ро, 1623). Хто
+    ці "вони" і чому їх так боялися?'
+  section: Розминка
+  words: 400
+- points:
+  - 'Дебат 1: [!decolonization] Українська vs. імперська історіографія. Чи були козацькі походи просто грабіжницькими набігами
+    (піратством), чи це була повноцінна морська стратегія молодої нації, що заявляла про себе як про геополітичного гравця?'
+  - 'Дебат 2: "Вовча зграя" чи централізована стратегія? Сучасна дискусія серед істориків. Чи були атаки хаотичними і опортуністичними,
+    чи вони були частиною єдиного плану під проводом Сагайдачного з конкретними військово-політичними цілями?'
+  - '[!epistemic-humility] Оцінка реальних масштабів козацького флоту ускладнена. Джерела (особливо османські) схильні перебільшувати
+    кількість "чайок" для виправдання власних поразок.'
+  - 'Глобальна синхронність: Козацькі рейди на Стамбул збігаються в часі з активністю англійських приватирів (Френсіс Дрейк)
+    проти Іспанії та берберських піратів у Середземномор''ї. Схожі тактики асиметричної війни проти імперій.'
+  section: 'Конфліктна карта: Пірати чи геополітики?'
+  words: 900
+- points:
+  - 'Технічний опис від союзника: "Description d''Ukranie" Гійома де Боплана. Аналіз конструкції "чайки": цільний стовбур,
+    очеретяні фашини для непотоплюваності, низький профіль для непомітності, подвійне кермо для маневреності. Чому ця конструкція
+    була ідеальною для Чорного моря?'
+  - 'Звіт очевидця-дипломата: Листи англійського посла Томаса Ро. Козаки як "публічна біда" для султана, що відволікає його
+    від європейських справ. Аналіз поглядів європейців на козаків як на третю силу.'
+  - 'Хроніки ворога: "Книга подорожей" Евлії Челебі. Як османи сприймали козацькі атаки? Страх, паніка, молитви про порятунок
+    від "гніву русів". [!decolonization] Читання османських джерел "проти шерсті" для реконструкції козацької тактики (атаки
+    з боку сонця, нічні рейди).'
+  - 'Первинні джерела: Козацькі універсали та листи. Аналіз мови: суворий військовий кодекс, заборона алкоголю під час походу
+    (покарання — за борт), побратимство як запорука виживання.'
+  section: 'Джерела: Свідчення ворогів та союзників'
+  words: 1600
+- points:
+  - 'Економічний удар: Зрив постачання продовольства до Стамбула, знищення головного невільничого ринку в Кафі (1616), спалення
+    Синопу та Трапезунда — османських арсеналів (1614).'
+  - 'Психологічний шок: Рейд на Стамбул (1615). Козацькі чайки спалюють передмістя на очах у султана. [!myth-buster] Це не
+    просто зухвалість, а прорахована акція, що підривала сакральний статус столиці та особисто султана.'
+  - 'Військово-стратегічний вплив: Роль козацького флоту в битві під Хотином (1621). Морські рейди змусили османів тримати
+    флот у Чорному морі, не давши йому підтримати сухопутну армію. [!biography] Петро Сагайдачний як автор доктрини превентивних
+    ударів.'
+  - 'Геополітичні наслідки: [!decolonization] Походи довели, що Україна є морською, а не лише сухопутною потугою (рання таласократія).
+    Військо Запорозьке починає діяти як автономний суб''єкт з власною зовнішньою політикою, що змушує європейські держави
+    рахуватися з ним.'
+  section: 'Аналіз: Наслідки та значення'
+  words: 1600
+- points:
+  - 'Повернення до розминки: Як "річкові пірати" перемогли імперію на морі? Студент формулює відповідь, спираючись на технологічні
+    переваги (чайка), тактичну винахідливість (асиметрична війна) та стратегічне лідерство (Сагайдачний).'
+  - 'Ширше питання: Що робить націю "морською державою"? Лише наявність флоту чи певний тип мислення — сміливість, ризик,
+    глобальне бачення? Дискусія на прикладі козаків.'
+  - '[!anti-hagiography] Походи мали й темний бік — пограбування мирних міст, жертви серед цивільного населення. Як узгодити
+    героїчний епос із реальною жорстокістю війни?'
+  - 'Зв''язок із сьогоденням: Сучасні українські морські дрони проти російського флоту. Чи можна побачити спадковість у тактиці
+    "москітного флоту", асиметричності та технологічних інноваціях через 400 років?'
+  section: Дискусія та підсумок
+  words: 700
+focus: Cossack naval power as a geopolitical factor, Chayka boat technology, Sahaidachny's strategy, raids on Ottoman cities,
+  and challenging the "Turkish Lake" narrative.
+level: HIST
+module: hist-049
+objectives:
+- Описувати технічні характеристики та тактичні переваги козацької чайки порівняно з османською галерою.
+- Аналізувати морські походи Сагайдачного як елемент геополітичної стратегії, а не просто піратські набіги.
+- Пояснювати економічний, військовий та психологічний вплив козацького флоту на Османську імперію, руйнуючи міф про «Турецьке
+  озеро».
+- Критично аналізувати першоджерела (Боплан, османські хроніки), розрізняючи факти та упередження автора.
+pedagogy: CBI
+persona:
+  role: Поєднує академічну глибину професора історії з практичним досвідом капітана. Розповідає про морські походи не як про
+    сухі факти, а як про живу, динамічну боротьбу, пояснюючи тактику, технології та стратегію з точки зору учасника.
+  voice: Історик-мореплавець
+phase: HIST.5 [Rise of Cossacks]
 references:
-- name: Naval Expeditions of Zaporozhian Cossacks
-  url: https://history.org.ua/uk/lib/12345
+- note: 'Naval Expeditions of Zaporozhian Cossacks: Детальна історична реконструкція морських походів.'
+  path: https://history.org.ua/uk/lib/12345
   type: academic
-  notes: Detailed historical reconstruction
-- name: Guillaume de Beauplan - Description of Ukraine
-  url: http://litopys.org.ua/boplan/bop.htm
+- note: 'Guillaume de Beauplan - Description of Ukraine: Класичне першоджерело про побут, звичаї та військову техніку козаків,
+    зокрема про конструкцію човнів.'
+  path: http://litopys.org.ua/boplan/bop.htm
   type: primary
-  notes: Classic source on boat construction
+- author: Evliya Çelebi
+  note: Погляд на козацькі набіги з боку Османської імперії, цінне джерело для розуміння їхнього психологічного впливу.
+  type: primary
+  work: Seyahatnâme (Книга подорожей)
+sequence: 49
+slug: morski-pokhody
+subtitle: 'Cossack Naval Expeditions: The Black Sea Front'
+title: Морські походи козаків
+version: '4.0'
+vocabulary_hints:
+- definition: легкий, маневрений козацький бойовий човен, основа "москітного флоту"
+  pos: ж.
+  word: чайка
+- definition: в'язанки очерету, що кріпилися до бортів чайки для підвищення плавучості та захисту
+  pos: мн.
+  word: фашини
+- definition: легка гармата (калібр 1-3 фунти), що встановлювалася на козацьких чайках
+  pos: ч.
+  word: фальконет
+- definition: тактика морського бою, що полягає в зближенні з ворожим судном для рукопашного бою
+  pos: ч.
+  word: абордаж
+- definition: висадка військ на узбережжя, що контролюється противником; ключовий елемент козацьких операцій
+  pos: ч.
+  word: десант
+- definition: велике османське військове судно, що рухалося веслами; головний противник козацьких чайок
+  pos: ж.
+  word: галера
+- definition: полонені, захоплені під час набігу; визволення бранців-християн було ідеологічним виправданням походів
+  pos: ч.
+  word: ясир
+- definition: галузь господарства, що займається будівництвом суден; у козаків досягла високого рівня
+  pos: с.
+  word: суднобудування
+- definition: тип держави, чия економічна і політична могутність базується на контролі морських шляхів
+  pos: ж.
+  word: таласократія
+- definition: попереджувальний, випереджальний; характеризує стратегію ударів Сагайдачного
+  pos: прикм.
+  word: превентивний
+word_target: 5200

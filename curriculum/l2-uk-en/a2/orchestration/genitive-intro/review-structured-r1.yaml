@@ -1,0 +1,52 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 6
+  evidence: The module fails the word target severely (3447 words vs 2000 target;
+    >70% over budget). It also fails the explicitly stated plan requirement to "Provide
+    clear charts" for the Genitive singular ending
+- dimension: 2
+  name: Linguistic accuracy
+  score: 5
+  evidence: Incorrect grammatical terminology ("Яке закінчення мають маскулінітиви..."
+    and "Що відбувається з закінченням фемінітивів..."). Unnatural and broken semantic
+    setups for contrasts throughout the lesson
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: The rigid "Тут є [X]" formula used to set up Genitive contrasts creates
+    completely disconnected sentences (e.g., "Тут є новий комп'ютер. — У школі немає
+    комп'ютера."). The premise of the contrast is p
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: Required words are all present, but the recommended words `відсутність`
+    and `кількість` are completely absent from the Ukrainian text.
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: Missing item counts on the injected activity markers, failing to perfectly
+    mirror the `activity_hints` structure.
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: 'Deducting for heavy meta-commentary and "telling instead of showing":
+    "Now you can combine everything you have learned in this module to create much
+    richer and more complex descriptions."'
+- dimension: 7
+  name: Structural integrity
+  score: 6
+  evidence: Massively over the word budget. Activity tags lack required parameters,
+    meaning the downstream injection might fail or default incorrectly.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Good use of realistic everyday contexts (moving into a new apartment,
+    evaluating a new office). Appropriate names.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: Dialogues are functional, demonstrate the grammar well, and flow reasonably,
+    though they are slightly transactional.
+findings: []

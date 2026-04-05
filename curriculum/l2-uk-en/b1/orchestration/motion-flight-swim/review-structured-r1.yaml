@@ -2,51 +2,56 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 7
-  evidence: Deducting points because the plan explicitly required "Practical dialogues...
-    6-8 example exchanges in natural Ukrainian," but the writer completely omitted
-    multi-turn dialogues, providing only isolat
+  score: 6
+  evidence: '**Missing prefix полетіти** — plan requires "All 10 prefixes with летіти"
+    including "полетіти (take off/depart): Полетіли о шостій ранку." Module covers
+    only 9 prefixes, полетіти is entirely absent. *'
 - dimension: 2
   name: Linguistic accuracy
-  score: 5
-  evidence: 'Deducting heavily for factual errors: inventing the word "проплисли"
-    (instead of проплили), using Surzhyk "перевірочні", and falsely teaching learners
-    that "перепливти" is grammatically incorrect.'
+  score: 6
+  evidence: '**"Зльот" instead of "Зліт"** — wrong word (VESUM: зліт ✓, зльот ✗).
+    **"хвилюючий"** — unnatural Russian-style active participle (NOT IN VESUM; Антоненко-Давидович
+    flags this class). **"пропливли" for'
 - dimension: 3
   name: Pedagogical quality
   score: 7
-  evidence: The presentation of the rules is slightly heavy-handed and lecturing ("Це
-    критичне правило української фонетики, яке потрібно просто добре запам'ятати раз
-    і назавжди") rather than inductive, but the o
+  evidence: 'PPP flow present: reading passage establishes context (Presentation),
+    grammar sections teach systematically (Practice planned via activities). Conjugation
+    tables are clear and complete for base pairs.'
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required and recommended vocabulary items (аеропорт, рейс, пором,
-    палуба, etc.) are integrated smoothly into the text.
+  score: 8
+  evidence: '**Required vocabulary (plan):** летіти ✓, літати ✓, пливти ✓, плавати
+    ✓, прилетіти ✓, вилетіти ✓, припливти ✓, переплисти ✓, аеропорт ✓, рейс ✓, посадка
+    ✓, порт ✓, корабель ✓ — all 13 required words a'
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: The writer perfectly mapped the activity markers to the content, cleverly
-    splitting the air and water exercises directly after their respective teaching
-    sections.
+  score: 7
+  evidence: All 6 plan activity types have markers. The group-sort (prefixed forms
+    of летіти by meaning), error-correction (wrong stems), match-up (vocabulary definitions),
+    and fill-in (travel sentences) are well
 - dimension: 6
   name: Engagement & tone
-  score: 7
-  evidence: Deducting points for meta-commentary and generic enthusiasm ("Ми вже дослідили
-    велику частину всесвіту", "Це величезний і дуже важливий крок").
+  score: 5
+  evidence: '**Excessive padding:** "дуже", "надзвичайно", "абсолютно", "максимально"
+    saturate nearly every paragraph. Example: "Тепер ми маємо **дуже** детально і
+    **максимально** уважно розглянути **критично** ва'
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: Markdown is clean, all sections from the outline are present, and the
-    word count is within bounds.
+  score: 8
+  evidence: All 6 H2 headings from plan present in correct order. ✓ Word count 5167
+    > 4000 target. ✓ Clean markdown, tables render correctly. No stray tags or formatting
+    artifacts. The only structural issue is th
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Culturally sound. The "Journey to Istanbul" effectively mirrors real-world
-    Ukrainian travel routes (Boryspil to Bosphorus).
+  score: 9
+  evidence: Decolonized — Ukrainian presented on its own terms, no "like Russian"
+    comparisons. Boryspil, Dnipro, Odesa, Zmiinyi Island — Ukrainian geography centered.
+    Reference to Чорноморськ (not old name Іллічі
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 3
-  evidence: Deducting heavily because the module completely failed to deliver the
-    required conversational dialogue section.
+  score: 8
+  evidence: 'Two well-structured dialogues: airport check-in and ferry ticket office.
+    Named speakers (Агент/Пасажир, Касир/Клієнт). Multi-turn, practical situations
+    with natural Ukrainian. The airport dialogue nat'
 findings: []

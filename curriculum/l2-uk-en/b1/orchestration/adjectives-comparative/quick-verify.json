@@ -1,0 +1,24 @@
+{
+  "attempt": 1,
+  "passed": false,
+  "errors": [
+    {
+      "check": "STRUCTURE",
+      "severity": "ERROR",
+      "message": "Missing section heading: 'Порівняння в українських прислів'ях і фразеології'"
+    }
+  ],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 1/10 required vocab: відносний прикметник (relative adjective — cannot form comparatives)"
+    },
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 6 exercise(s) but content has 0 placeholders"
+    }
+  ],
+  "timestamp": "2026-04-04T12:03:39.643571+00:00"
+}

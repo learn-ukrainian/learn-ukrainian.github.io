@@ -1,0 +1,283 @@
+vocabulary:
+- word: впе́ртий
+  translation: stubborn, persistent
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: чу́йний
+  translation: responsive, caring
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: наполе́гливий
+  translation: persistent, determined
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ро́дич
+  translation: relative
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: знайо́мий
+  translation: acquaintance
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: люди́на
+  translation: person, human being
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: стосу́нок
+  translation: relationship
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: хара́ктер
+  translation: character, personality
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: зо́внішність
+  translation: appearance
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: приві́тний
+  translation: friendly, welcoming
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: щи́рий
+  translation: sincere, genuine
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: працьови́тий
+  translation: hardworking
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: терпля́чий
+  translation: patient
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: сусі́д
+  translation: neighbor
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: опи́сувати
+  translation: to describe
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: висо́кий
+  translation: tall
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: низьки́й
+  translation: short
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: худи́й
+  translation: thin
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: по́вний
+  translation: plump, full
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: молоди́й
+  translation: young
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: стари́й
+  translation: old
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: темноволо́сий
+  translation: dark-haired
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: світловоло́сий
+  translation: light-haired, blonde
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: кароо́кий
+  translation: brown-eyed
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: блакитноо́кий
+  translation: blue-eyed
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: о́чі
+  translation: eyes
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: воло́сся
+  translation: hair
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: струнки́й
+  translation: slim, slender
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: відповіда́льний
+  translation: responsible
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: розу́мний
+  translation: smart, intelligent
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: весе́лий
+  translation: cheerful
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: до́брий
+  translation: kind, good
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: сумни́й
+  translation: sad
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: леда́чий
+  translation: lazy
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: серйо́зний
+  translation: serious
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ти́хий
+  translation: quiet
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: дя́дько
+  translation: uncle
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ті́тка
+  translation: aunt
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: това́риш
+  translation: friend, buddy
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: коле́га
+  translation: colleague
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: довіря́ти
+  translation: to trust
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: поважа́ти
+  translation: to respect
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Як справи?
+  translation: How are you?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Який він?
+  translation: What is he like?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Яка вона?
+  translation: What is she like?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: добра людина
+  translation: good person (compliment)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: А хто це?
+  translation: And who is this?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

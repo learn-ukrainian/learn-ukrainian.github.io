@@ -1,0 +1,131 @@
+module: istorio-036
+level: ISTORIO
+sequence: 36
+slug: svidchennia-holodomoru-i
+version: '3.0'
+title: 'Свідчення Голодомору I: Усна історія'
+focus: history
+pedagogy: seminar
+word_target: 5000
+objectives:
+- 'Analyze the causes and consequences of свідчення голодомору i: усна історія'
+- Evaluate the historical significance of голоси вижилих
+content_outline:
+- section: Вступ — Голоси вижилих
+  points:
+  - Усна історія — що це?
+  - Чому важлива для Голодомору
+  - Свідчення як джерело
+  - Методологічні питання
+  words: 700
+- section: Методологія усної історії
+  points:
+  - Як збирають свідчення
+  - Інтерв'ю — техніка
+  - Пам'ять і травма
+  - Обмеження методу
+  - Етичні питання
+  words: 700
+- section: Проєкти збору свідчень
+  points:
+  - UCRDC — Україно-канадський дослідницький центр
+  - Комісія конгресу США (1980-ті)
+  - Українські проєкти після 1991
+  - Що збережено
+  words: 700
+- section: Типові теми свідчень
+  points:
+  - Голод — як описують
+  - Конфіскація зерна
+  - Смерті в родині
+  - Виживання — стратегії
+  - Табу і замовчування
+  words: 700
+- section: Фрагменти свідчень
+  points:
+  - Свідчення 1 — дитина 1932
+  - Свідчення 2 — мати
+  - Свідчення 3 — село
+  - Як читати травму
+  words: 700
+- section: Критика джерела
+  points:
+  - Ретроспективність — через десятиліття
+  - Вплив пізніших наративів
+  - Репрезентативність — хто вижив
+  - Як верифікувати
+  words: 700
+- section: Підсумок
+  points:
+  - Усна історія як доповнення
+  - Голос жертв
+  - Зв'язок із документами
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+vocabulary:
+- усна історія
+- свідчення
+- вижилий
+- травма
+- пам'ять
+- інтерв'ю
+- конфіскація
+- голод
+- виживання
+- табу
+- ретроспективність
+- репрезентативність
+- наратив
+- посттравматичний
+- архів
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+activities:
+- type: reading
+  focus: Two survivor testimonies
+- type: critical-analysis
+  focus: What are the strengths/weaknesses of oral history?
+- type: reading
+  focus: Identify recurring themes across testimonies
+- type: essay-response
+  focus: How to work with trauma testimonies responsibly?
+- type: essay-response
+  focus: Як усна історія допомагає зрозуміти Голодомор?
+persona:
+  voice: Academic Historiographer
+  role: Oral History Archivist
+prerequisites:
+- akt-zluki
+connects_to:
+- svidchennia-holodomoru-ii
+references:
+- name: Голодомор (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Голодомор
+  type: reference
+  notes: Overview
+- name: Архів свідчень Голодомору (UCRDC)
+  url: https://ucrdc.org/
+  type: primary
+  notes: Testimony archive
+- name: Усна історія (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Усна_історія
+  type: reference
+  notes: Methodology
+register: академічний
+grammar: []

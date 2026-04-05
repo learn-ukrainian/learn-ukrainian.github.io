@@ -1,0 +1,96 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння літературно-критичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Читання
+  focus: Розуміння літературного тексту (уривок з твору)
+  placement: inline
+  type: reading
+- focus: Аналіз авторського задуму — мова як мистецтво
+  placement: workbook
+  type: authorial-intent
+- focus: Літературна критика — оцінка інтерпретації
+  placement: workbook
+  type: critical-analysis
+- focus: 'Порівняння з іншими творами або інтерпретаціями (Юрій Тарнавський: Екзистенціалізм Нью-Йоркської групи)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе-аналіз рецепції та сучасного значення (Юрій Тарнавський: Екзистенціалізм Нью-Йоркської групи)'
+  placement: workbook
+  type: essay-response
+connects_to:
+- lit-225
+content_outline:
+- points:
+  - Тарнавський (1934-2025) — біографія, еміграція, повернення
+  - Співзасновник Нью-Йоркської групи
+  - Екзистенціалізм по-українськи — Камю, Сартр, Бекет
+  section: Вступ та контекст
+  words: 850
+- points:
+  - Урбанізм — Нью-Йорк як літературний простір
+  - Мінімалізм та конкретна поезія
+  - Порівняння з англомовною поезією (він писав обома мовами)
+  section: Поезія — «Життя в місті»
+  words: 850
+- points:
+  - Експериментальна проза — потік свідомості
+  - «Три бльондинки і смерть» — абсурдизм
+  - Кіносценарний стиль у прозі
+  section: «Без Еспанії» та проза
+  words: 850
+- points:
+  - Тарнавський між двома мовами — свідомий вибір української
+  - Вплив англійського синтаксису — благо чи загроза?
+  - Лаконічність проти бароковості (антитеза Шевчуку)
+  section: Мова та стиль
+  words: 850
+- points:
+  - Українська мова як мова світової літератури
+  - Розрив із провінційністю та «хуторянством»
+  - Діаспора як лабораторія мовних експериментів
+  section: Деколонізаційний вимір
+  words: 850
+- points:
+  - Тарнавський у контексті світової літератури
+  - Вплив на сучасну урбаністичну прозу
+  - Питання для дискусії
+  section: Підсумок та спадщина
+  words: 750
+focus: literature
+grammar: []
+immersion: 100% Ukrainian
+level: LIT
+module: lit-169
+module_type: literature
+objectives:
+- Проаналізувати екзистенціалістську прозу та поезію Тарнавського
+- Дослідити урбаністичну тематику як новацію в українській літературі
+- Зрозуміти діалог Тарнавського із західним модернізмом
+pedagogy: Seminar
+persona:
+  role: Diaspora Literature Specialist
+  voice: Senior Philologist & Critic
+phase: LIT.4 Resistance and Resilience 1933-1991
+prerequisites: []
+references:
+- name: Юрій Тарнавський — тексти та критика
+  type: primary
+  url: https://www.ukrlib.com.ua/
+register: академічний
+sequence: 169
+slug: yuriy-tarnavsky-new-york-group
+subtitle: Yuriy Tarnavsky — New York Group Existentialism
+title: 'Юрій Тарнавський: Екзистенціалізм Нью-Йоркської групи'
+version: '3.0'
+vocabulary_hints:
+  recommended:
+  - конкретна поезія (concrete poetry)
+  - абсурдизм (absurdism)
+  required:
+  - екзистенціалізм (existentialism)
+  - урбанізм (urbanism)
+  - мінімалізм (minimalism)
+word_target: 5000

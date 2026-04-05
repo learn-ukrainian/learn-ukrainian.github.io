@@ -3,18 +3,17 @@
 You are writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 30: Летіти, пливти (B1, B1.3 [Motion Verb Universe])
-**Section to write:** У повітрі та на воді: два особливі домени руху (~600 words total)
-**Word target for this section:** 600 words (aim for 660 to account for undershoot)
+**Section to write:** У повітрі та на воді: два особливі домени руху (~550 words total)
+**Word target for this section:** 550 words (aim for 605 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## У повітрі та на воді: два особливі домени руху (~600 words total)
-- P1 (~120 words): [Bridge from M28/M29: Re-establishing the "Motion Verb Universe" map. Review the progress from land-based motion (walking, driving) to the final two domains: air and water. Emphasize that while the 10 prefixes remain the same, their application to "летіти" and "пливти" introduces new lexical fields and specific grammatical irregularities.]
-- P2 (~130 words): [Defining the domains. Explain why air and water motion are distinct: they represent environments where humans require technology (літак, корабель) or inherent biology (птахи, риби). Introduce the base pairs летіти/літати and пливти/плавати, highlighting that they follow the same unidirectional/multidirectional logic as іти/ходити.]
-- P3 (~250 words): [Reading passage: "Подорож до Стамбула" (A Journey to Istanbul). A first-person narrative about a trip starting at аеропорт Бориспіль, flying to Turkey, and taking a ferry across the Bosphorus. Contextual use of: летіти до Стамбула, літак вилетів, прилетіли вчасно, пором плив через протоку, переплисти Босфор. This serves as the "Global Context" for the entire module.]
-- P4 (~100 words): [Reflection on the text. Deconstruct the narrative by identifying the motion verbs used. Point out that "прилетіли" indicates the result of flight, while "плив" describes the process on water. Transition to the specific study of air motion.]
+## У повітрі та на воді: два особливі домени руху (~550 words total)
+- P1 (~200 words): [Hook and Bridge: Connecting the concept of motion verbs on land (M28-M33) to the less predictable environments of air and water. Explain why "летіти" and "пливти" require their own module: unique vocabulary, specific prefix semantics (like "set sail" vs "take off"), and the stem changes in water verbs. Introduce the thematic setting: Ukraine’s strategic location between the sky (aviation hub) and the sea (Odessa, Black Sea ports).]
+- P2 (~175 words): [Reading Passage Part 1: "The Journey Begins." A narrative describing a flight from Boryspil to Istanbul. Focus on "вилетіти" (depart), "летіти" (flying now), and "долетіти" (reach). Include contextual use of airport terms: термінал, злітна смуга, рейс.]
+- P3 (~175 words): [Reading Passage Part 2: "Crossing the Bosphorus." The journey continues by ferry. Focus on "відпливти" (set sail), "пливти" (sailing now), and "переплисти" (crossing). Contrast the speed of the plane with the steady pace of the ship. Preview the vocabulary: пором, причал, затока.]
 
 ---
 ## Full Plan (for reference)
@@ -24,7 +23,7 @@ module: b1-030
 level: B1
 sequence: 30
 slug: motion-flight-swim
-version: '3.0'
+version: '3.1'
 title: Летіти, пливти
 subtitle: Дієслова руху в повітрі та на воді — з усіма префіксами
 focus: grammar
@@ -131,6 +130,15 @@ content_outline:
       - 'Quick contrastive examples: Літак летить (literal — the plane is flying).
         Час летить (figurative — time flies). Корабель пливе (literal — the ship is
         sailing). Думки пливуть (figurative — thoughts drift).'
+      - 'Ukrainian idioms and collocations with летіти/пливти: Гроші летять (money
+        disappears fast). Все пливе перед очима (everything is blurry/spinning). Пливти
+        за течією (go with the flow). These are high-frequency expressions that learners
+        will encounter in everyday Ukrainian. Compare with English equivalents to show
+        where metaphors overlap and where they diverge.'
+      - 'Practice: learners sort 10-12 sentences into literal vs figurative categories,
+        then explain what the figurative meaning is in each case. Extension: write 3-4
+        original sentences using летіти or пливти figuratively in contexts from their
+        own life — Мої канікули летять! Дні до іспиту пливуть повільно.'
   - section: 'Підсумок: повітряний та водний рух'
     words: 300
     points:
@@ -539,6 +547,8 @@ references:
 </knowledge_packet>
 
 ---
+
+
 
 ## Rules
 

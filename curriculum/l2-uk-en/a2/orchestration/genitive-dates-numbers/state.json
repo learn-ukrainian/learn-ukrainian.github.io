@@ -3,13 +3,65 @@
   "track": "a2",
   "slug": "genitive-dates-numbers",
   "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-05T09:43:22.305865+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-05T09:44:04.102687+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-05T09:44:39.485791+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-05T09:45:48.367115+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-05T09:48:40.214024+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-05T09:48:40.214239+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-05T09:50:31.231804+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-05T09:50:31.244295+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-05T09:50:31.251430+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-05T09:51:07.876982+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-05T09:51:07.877110+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-05T09:51:08.099431+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-05T09:55:48.602921+00:00"
+    },
     "stress": {
       "status": "complete",
-      "ts": "2026-04-02T14:56:54.188756+00:00"
+      "ts": "2026-04-05T09:55:51.916774+00:00"
     },
     "publish": {
       "status": "complete",
-      "ts": "2026-04-02T14:56:54.189055+00:00"
+      "ts": "2026-04-05T09:55:53.291006+00:00"
     }
   }
 }

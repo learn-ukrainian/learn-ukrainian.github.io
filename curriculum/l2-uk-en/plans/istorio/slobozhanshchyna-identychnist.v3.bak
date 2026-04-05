@@ -1,0 +1,130 @@
+module: istorio-076
+level: ISTORIO
+sequence: 76
+slug: slobozhanshchyna-identychnist
+version: '3.0'
+title: 'Слобожанщина: Формування ідентичності'
+focus: history
+pedagogy: seminar
+word_target: 5000
+objectives:
+- 'Analyze the causes and consequences of слобожанщина: формування ідентичності'
+- Evaluate the historical significance of вільні землі
+content_outline:
+- section: Вступ — «Слободи» — вільні землі
+  points:
+  - Слобожанщина — де це
+  - Назва — від «слобода»
+  - Козацьке заселення
+  - Структура модуля
+  words: 700
+- section: Заселення (XVII ст.)
+  points:
+  - Втечі з Правобережжя
+  - Козацькі полки — Харківський, Сумський, та ін.
+  - Росія запрошує — чому
+  - Особливий статус
+  words: 700
+- section: Слобідське козацтво
+  points:
+  - Козацька організація
+  - Відмінності від Запорожжя
+  - Служба Росії
+  - Скасування — 1765
+  words: 700
+- section: Харків — культурний центр
+  points:
+  - Заснування — 1654
+  - Університет — 1804
+  - Харківська школа романтиків
+  - Котляревський, Квітка-Основ'яненко
+  - Перша столиця УРСР
+  words: 700
+- section: Русифікація
+  points:
+  - Раніше, ніж деінде
+  - Близькість до Росії
+  - Мовний зсув
+  - Але збереження ідентичності
+  words: 700
+- section: Сучасна Слобожанщина
+  points:
+  - Харківська область
+  - «Другий фронт» 2022
+  - Деокупація
+  - Українська ідентичність під тиском
+  words: 700
+- section: Підсумок
+  points:
+  - Слобожанщина — козацька, але інша
+  - Харків — українське місто
+  - Перехід до Донбасу
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+vocabulary:
+- Слобожанщина
+- слобода
+- козацький полк
+- заселення
+- русифікація
+- культурний центр
+- ідентичність
+- романтизм
+- прикордоння
+- автономія
+- Харківська школа
+- етнічна межа
+- мовний зсув
+- регіональна свідомість
+- колонізація
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+activities:
+- type: critical-analysis
+  focus: Who settled Slobozhanshchyna and why
+- type: critical-analysis
+  focus: Kharkiv as Ukrainian cultural center — key figures
+- type: comparative-study
+  focus: Slobozhanshchyna vs. Zaporozhian Cossacks
+- type: critical-analysis
+  focus: Kharkiv 2022 — Ukrainian identity under siege
+- type: essay-response
+  focus: Чому Харків став культурною столицею України у XIX ст.?
+persona:
+  voice: Academic Historiographer
+  role: Frontier Identity Scholar
+prerequisites:
+- syntez-zakhidni-rehiony
+connects_to:
+- donbas-industrializatsiia
+references:
+- name: Слобідська Україна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Слобідська_Україна
+  type: reference
+  notes: Regional overview
+- name: Слобідські козацькі полки (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Слобідські_козацькі_полки
+  type: reference
+  notes: Cossack regiments
+- name: Харків (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Харків
+  type: reference
+  notes: City history
+register: академічний
+grammar: []

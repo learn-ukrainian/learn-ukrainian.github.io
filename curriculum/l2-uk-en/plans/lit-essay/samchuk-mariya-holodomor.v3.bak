@@ -1,0 +1,83 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння літературно-критичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Читання
+  focus: Розуміння літературного тексту (уривок з твору)
+  placement: inline
+  type: reading
+- focus: Аналіз авторського задуму — мова як мистецтво
+  placement: workbook
+  type: authorial-intent
+- focus: Аналіз риторичних стратегій та аргументації
+  placement: workbook
+  type: authorial-intent
+- focus: 'Порівняння з іншими творами або інтерпретаціями (Улас Самчук: «Марія» — Голодомор як свідчення)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе-аналіз рецепції та сучасного значення (Улас Самчук: «Марія» — Голодомор як свідчення)'
+  placement: workbook
+  type: essay-response
+content_outline:
+- points:
+  - Самчук (1905-1987) — біографія, еміграція
+  - «Марія» (1934) — написана по гарячих слідах
+  - Перший літературний відгук на Голодомор
+  section: Вступ та контекст
+  words: 1000
+- points:
+  - Структура роману — три частини, три епохи
+  - Марія як архетип української жінки
+  - Документальність vs художність
+  section: Аналіз ключових творів
+  words: 1200
+- points:
+  - Волинський діалект у літературній мові
+  - Епічний стиль — біблійні паралелі
+  - Голод як мовний виклик — як описати невимовне
+  section: Стилістика та мова автора
+  words: 1200
+- points:
+  - «Марія» — документ, який СРСР намагався знищити
+  - Самчук в еміграції — збереження правди
+  section: Деколонізаційна перспектива
+  words: 1000
+- points:
+  - Повернення «Марії» в Україну після 1991
+  - Вплив на сучасну тестимоніальну прозу
+  section: Підсумок та спадщина
+  words: 800
+focus: literature
+grammar: []
+immersion: 100% Ukrainian
+level: LIT.ESSAY
+module: lit-essay-060
+objectives:
+- Проаналізувати роман «Марія» як перший літературний свідок Голодомору
+- Дослідити тестимоніальну прозу як жанр — документ і художній текст
+- Зрозуміти Самчука як голос волинського селянства
+pedagogy: literature
+persona:
+  role: Holodomor Literature Specialist
+  voice: Senior Specialist
+phase: ESSAY.6 Testimony Prose
+references:
+- name: Улас Самчук — «Марія»
+  type: primary
+  url: https://www.ukrlib.com.ua/
+register: академічний
+sequence: 60
+slug: samchuk-mariya-holodomor
+subtitle: Ulas Samchuk — Maria (Holodomor Testimony)
+title: 'Улас Самчук: «Марія» — Голодомор як свідчення'
+version: '3.0'
+vocabulary_hints:
+  recommended:
+  - геноцид (genocide)
+  required:
+  - свідчення (testimony)
+  - Голодомор (Holodomor)
+  - тестимоніальна проза (testimonial prose)
+word_target: 5000

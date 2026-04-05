@@ -1,0 +1,130 @@
+module: istorio-042
+level: ISTORIO
+sequence: 42
+slug: memorandum-uhh
+version: '3.0'
+title: Меморандум Української Гельсінської групи
+focus: history
+pedagogy: seminar
+word_target: 5000
+objectives:
+- Analyze the causes and consequences of меморандум української гельсінської групи
+- Evaluate the historical significance of права людини як зброя
+content_outline:
+- section: Вступ — Права людини як зброя
+  points:
+  - 1976 рік — контекст
+  - Гельсінські угоди — можливість
+  - УГГ — перша правозахисна організація
+  - Значення меморандуму
+  words: 700
+- section: Гельсінські угоди
+  points:
+  - Що підписав СРСР
+  - «Третій кошик» — права людини
+  - Як дисиденти використали
+  - Міжнародний тиск
+  words: 700
+- section: Створення УГГ
+  points:
+  - Засновники — хто вони
+  - Руденко, Лук'яненко, Тихий
+  - Мотивація — чому ризикували
+  - Перші дії
+  words: 700
+- section: Меморандум — аналіз тексту
+  points:
+  - Текст (фрагменти з глосами)
+  - Правова аргументація
+  - Порушення прав в Україні
+  - Національні права
+  - Адресати — хто мав читати
+  words: 700
+- section: Діяльність групи
+  points:
+  - Документи — що публікували
+  - Міжнародні контакти
+  - Репресії — арешти членів
+  - Трагічні долі
+  words: 700
+- section: Спадщина УГГ
+  points:
+  - Від УГГ до Руху
+  - Правозахисна традиція
+  - Сучасні організації
+  - Уроки
+  words: 700
+- section: Підсумок
+  points:
+  - Меморандум як документ епохи
+  - Права людини і нація
+  - Зв'язок із незалежністю
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+vocabulary:
+- Гельсінська група
+- меморандум
+- права людини
+- правозахисник
+- Гельсінські угоди
+- «третій кошик»
+- порушення
+- національні права
+- міжнародний тиск
+- репресія
+- дисидент
+- моніторинг
+- декларація
+- конвенція
+- політв'язень
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+activities:
+- type: reading
+  focus: Memorandum excerpts with glosses
+- type: critical-analysis
+  focus: How does UHH use international law as argument?
+- type: reading
+  focus: Research fates of founding members
+- type: critical-analysis
+  focus: Trace UHH influence to modern organizations
+- type: essay-response
+  focus: Як Гельсінські угоди стали зброєю дисидентів?
+persona:
+  voice: Academic Historiographer
+  role: Human Rights Archivist
+prerequisites:
+- ukrayinskyi-visnyk
+connects_to:
+- akt-nezalezhnosti-1991
+references:
+- name: Українська Гельсінська група (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українська_Гельсінська_група
+  type: reference
+  notes: Group overview
+- name: Установчий документ УГГ
+  url: https://khpg.org/
+  type: primary
+  notes: Founding documents
+- name: Гельсінські угоди
+  url: https://uk.wikipedia.org/wiki/Гельсінський_заключний_акт
+  type: reference
+  notes: Helsinki Accords context
+register: академічний
+grammar: []

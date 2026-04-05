@@ -1,0 +1,114 @@
+module: istorio-136
+level: ISTORIO
+sequence: 136
+slug: finalnyi-syntez
+version: '3.0'
+title: 'Фінальний синтез: Що ми дізналися'
+focus: history
+pedagogy: seminar
+word_target: 5000
+objectives:
+- 'Analyze the causes and consequences of фінальний синтез: що ми дізналися'
+- Evaluate the historical significance of кінець курсу, початок розуміння
+content_outline:
+- section: Вступ — Кінець курсу, початок розуміння
+  points:
+  - 135 модулів — що ми пройшли
+  - Не факти — методи
+  - Як думати про історію
+  - Структура модуля
+  words: 850
+- section: Методологічні уроки
+  points:
+  - Джерелознавство — чому важливе
+  - Множинність інтерпретацій
+  - Критичне мислення
+  - Як оцінювати історичні твердження
+  words: 850
+- section: Тематичні уроки
+  points:
+  - Імперські механізми — як розпізнавати
+  - Культурна резистенція — як працює
+  - Агентність — чому ключова
+  - Пам'ять — як формується
+  words: 850
+- section: Практичні уроки
+  points:
+  - Як читати джерела
+  - Як оцінювати аргументи
+  - Як писати про історію
+  - Як розпізнавати пропаганду
+  words: 850
+- section: Відкриті питання
+  points:
+  - Що залишається невідомим
+  - Де потрібні дослідження
+  - Нові джерела — нові інтерпретації
+  - Історія — незавершений проект
+  words: 850
+- section: Підсумок курсу
+  points:
+  - Від фактів до розуміння
+  - Від споживача до критика
+  - Завершення ISTORIO
+  words: 750
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+vocabulary:
+- фінальний синтез
+- методологія
+- джерелознавство
+- критичне мислення
+- інтерпретація
+- агентність
+- пам'ять
+- пропаганда
+- аргумент
+- дослідження
+- епістемологія
+- верифікація
+- контекстуалізація
+- деконструкція
+- рефлексія
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+activities:
+- type: essay-response
+  focus: What did you learn in 135 modules?
+- type: critical-analysis
+  focus: Key methodological takeaways
+- type: essay-response
+  focus: What questions remain open?
+- type: essay-response
+  focus: Як ISTORIO змінив ваше розуміння української історії?
+persona:
+  voice: Academic Historiographer
+  role: Curriculum Architect
+prerequisites:
+- continuity-of-cultural-genocide
+references:
+- name: Історіографія України (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Історіографія_України
+  type: reference
+  notes: Ukrainian historiography
+- name: Методологія історії (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Методологія_історії
+  type: reference
+  notes: Historical methodology
+register: академічний
+grammar: []

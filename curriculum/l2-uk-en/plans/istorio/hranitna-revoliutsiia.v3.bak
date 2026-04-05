@@ -1,0 +1,118 @@
+module: istorio-128
+level: ISTORIO
+sequence: 128
+slug: hranitna-revoliutsiia
+version: '3.0'
+title: Гранітна революція 1990
+focus: history
+pedagogy: seminar
+word_target: 5000
+objectives:
+- Analyze the causes and consequences of гранітна революція 1990
+- Evaluate the historical significance of забута революція
+content_outline:
+- section: Вступ — Забута революція
+  points:
+  - Жовтень 1990 — студенти
+  - Перша українська революція
+  - Чому забули
+  - Структура модуля
+  words: 850
+- section: Контекст — 1990 рік
+  points:
+  - СРСР ще існує
+  - Декларація про суверенітет
+  - Що хотіли студенти
+  - Ризики — реальні
+  words: 850
+- section: Голодування
+  points:
+  - Хто голодував — імена
+  - Вимоги — п'ять пунктів
+  - Намет на площі
+  - Реакція влади
+  words: 850
+- section: Перемога
+  points:
+  - Відставка Масола
+  - Які вимоги виконали
+  - Що це означало
+  - Чому перемогли
+  words: 850
+- section: Спадок
+  points:
+  - Перша успішна революція
+  - Модель для Майданів
+  - Учасники — хто вони сьогодні
+  - Пам'ять і забуття
+  words: 850
+- section: Підсумок
+  points:
+  - Гранітна — початок
+  - Студенти — авангард
+  - Перехід до 2004 кримської кризи
+  words: 750
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+vocabulary:
+- Гранітна революція
+- голодування
+- студентський протест
+- вимоги
+- намет
+- відставка
+- суверенітет
+- авангард
+- перемога
+- спадок
+- Масол
+- декларація про суверенітет
+- Верховна Рада
+- молодіжний рух
+- ненасильницький спротив
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+activities:
+- type: critical-analysis
+  focus: October 1990 — day-by-day reconstruction
+- type: critical-analysis
+  focus: Five demands — what they meant
+- type: comparative-study
+  focus: Who were the students — where are they now
+- type: critical-analysis
+  focus: Granite → Orange → Dignity — continuity
+- type: essay-response
+  focus: Чому Гранітну революцію забули?
+persona:
+  voice: Academic Historiographer
+  role: Student Movement Historian
+prerequisites:
+- hromadianske-suspilstvo
+connects_to:
+- 2004-krymska-kryza
+references:
+- name: Революція на граніті (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Революція_на_граніті
+  type: reference
+  notes: Granite Revolution
+- name: Студентське голодування 1990 (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Студентське_голодування_1990
+  type: reference
+  notes: Student hunger strike
+register: академічний
+grammar: []

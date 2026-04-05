@@ -1,57 +1,114 @@
-module: lit-006
-level: LIT
-sequence: 6
-slug: kvitka-bio
-version: '3.0'
-title: 'Батько Прози: Квітка-Основ''яненко'
-subtitle: 'LIT-006: Слобожанський контекст'
-focus: biography
-pedagogy: literature
-phase: LIT.2 Sentimentalism (Kvitka-Osnovianenko)
-word_target: 5000
-objectives:
-- Outline Kvitka's biography
-- Compare his two literary styles
-- Analyze his role in Kharkiv culture
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння літературно-критичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Читання
+  focus: Розуміння літературного тексту (уривок з твору)
+  placement: inline
+  type: reading
+- focus: Аналіз авторського задуму — мова як мистецтво
+  placement: workbook
+  type: authorial-intent
+- focus: Літературна критика — оцінка інтерпретації
+  placement: workbook
+  type: critical-analysis
+- focus: 'Порівняння з іншими творами або інтерпретаціями (Батько Прози: Квітка-Основ''яненко)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе-аналіз рецепції та сучасного значення (Батько Прози: Квітка-Основ''яненко)'
+  placement: workbook
+  type: essay-response
+connects_to:
+- lit-07 (Marusya — головний твір)
+- lit-08 (Konotop Witch — сатира)
+- lit-10 (Language of Kvitka)
 content_outline:
-- section: Вступ — Хто такий \"батько української прози\"?
-  points:
+- points:
   - Роль Квітки у становленні прозової традиції
   - Перехід від бурлеску до сентименталізму
   - Зв'язок з Котляревським і Шевченком
+  section: Вступ — Хто такий \"батько української прози\"?
   words: 850
-- section: Біографія — від сліпоти до театру
-  points:
+- points:
   - Дитинство та сліпота (1778-1793)
   - Монастирський період
   - Заснування театру в Харкові
   - Інститут шляхетних дівчат
+  section: Біографія — від сліпоти до театру
   words: 850
-- section: Слобожанщина як культурний простір
-  points:
+- points:
   - Географія та історія регіону
   - Харків як культурна столиця
   - Місцева еліта і просвітництво
+  section: Слобожанщина як культурний простір
   words: 850
-- section: Псевдонім "Грицько Основ'яненко"
-  points:
+- points:
   - Чому дворянин писав під псевдонімом
   - '"Грицько" — маска селянина-оповідача'
   - Літературна гра з читачем
+  section: Псевдонім "Грицько Основ'яненко"
   words: 850
-- section: Два стилі — бурлеск і сентименталізм
-  points:
+- points:
   - '"Конотопська відьма" vs "Маруся"'
   - Сміх vs сльози
   - Єдність авторського світогляду
+  section: Два стилі — бурлеск і сентименталізм
   words: 850
-- section: Підсумок — Вплив на наступні покоління
-  points:
+- points:
   - Квітка і Шевченко
   - Квітка і Гоголь
   - Значення для літературної мови
+  section: Підсумок — Вплив на наступні покоління
   words: 750
+focus: biography
+grammar:
+- Biographical narrative
+- Sentimentalist vs Burlesque style
+- Literary pseudonym usage
+immersion: 100% Ukrainian
+level: LIT
+module: lit-006
+module_type: biography
+objectives:
+- Outline Kvitka's biography
+- Compare his two literary styles
+- Analyze his role in Kharkiv culture
+pedagogy: literature
+persona:
+  role: Prose Father
+  voice: Senior Philologist & Critic
+phase: LIT.2 Sentimentalism (Kvitka-Osnovianenko)
+prerequisites:
+- lit-05 (Natalka Poltavka)
+- Understanding of sentimentalism
+references:
+- name: Григорій Квітка-Основ'яненко — біографія
+  notes: Офіційна біографія на UkrLib
+  type: primary
+  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1646
+- name: Маруся — повний текст
+  notes: Для контексту творчості
+  type: secondary
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=252
+- name: Слобожанщина — історія
+  notes: Регіональний контекст
+  type: reference
+  url: https://uk.wikipedia.org/wiki/Слобожанщина
+register: академічний
+sequence: 6
+slug: kvitka-bio
+subtitle: 'LIT-006: Слобожанський контекст'
+title: 'Батько Прози: Квітка-Основ''яненко'
+version: '3.0'
 vocabulary_hints:
+  recommended:
+  - маска (mask)
+  - літературна гра (literary game)
+  - еліта (elite)
+  - губернія (province)
+  - меценатство (patronage)
   required:
   - проза (prose)
   - сентименталізм (sentimentalism)
@@ -63,47 +120,4 @@ vocabulary_hints:
   - театр (theatre)
   - сліпота (blindness)
   - монастир (monastery)
-  recommended:
-  - маска (mask)
-  - літературна гра (literary game)
-  - еліта (elite)
-  - губернія (province)
-  - меценатство (patronage)
-activity_hints:
-- type: reading
-  focus: Біографічні матеріали про Квітку
-  source: UkrLib biography
-  items: 3+
-- type: essay-response
-  focus: Чому дворянин став "голосом народу"?
-  output: Біографічне есе
-connects_to:
-- lit-07 (Marusya — головний твір)
-- lit-08 (Konotop Witch — сатира)
-- lit-10 (Language of Kvitka)
-prerequisites:
-- lit-05 (Natalka Poltavka)
-- Understanding of sentimentalism
-persona:
-  voice: Senior Philologist & Critic
-  role: Prose Father
-grammar:
-- Biographical narrative
-- Sentimentalist vs Burlesque style
-- Literary pseudonym usage
-module_type: biography
-immersion: 100% Ukrainian
-references:
-- name: Григорій Квітка-Основ'яненко — біографія
-  url: https://www.ukrlib.com.ua/bio/printit.php?tid=1646
-  type: primary
-  notes: Офіційна біографія на UkrLib
-- name: Маруся — повний текст
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=252
-  type: secondary
-  notes: Для контексту творчості
-- name: Слобожанщина — історія
-  url: https://uk.wikipedia.org/wiki/Слобожанщина
-  type: reference
-  notes: Регіональний контекст
-register: академічний
+word_target: 5000

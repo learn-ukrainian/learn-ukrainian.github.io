@@ -1,0 +1,48 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'Missed specific outline phrases: `нормально`, `Як давно?`, `Чи є алергія
+    на ліки?`, `дбати про здоров''я`, and `з ринку`.'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: 'Critical error: Forces unnatural phrasing ("біль горла", "біль спини")
+    to teach Genitive case, contradicting standard Ukrainian usage ("біль у горлі").'
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: Teaches a factually incorrect linguistic pattern by inventing unnatural
+    Genitive pain examples instead of using valid Locative constructions.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words (ринок, кілограм, пляшка, здоров'я,
+    помідор, etc.) are included and used naturally.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Exercise markers perfectly match the plan's hints and logically test the
+    relevant grammatical skills in context.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Engaging dialogues and culturally relevant market interactions. Tone is
+    instructional, concrete, and natural.
+- dimension: 7
+  name: Structural integrity
+  score: 7
+  evidence: The deterministic word count (3131 words) vastly overshoots the target
+    budget (2000 words).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent depiction of Ukrainian markets (tasting food, buying "десяток
+    яєць") and authentic pharmacy etiquette.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are realistic, culturally appropriate, and effectively demonstrate
+    the target grammar in multi-turn exchanges.
+findings: []

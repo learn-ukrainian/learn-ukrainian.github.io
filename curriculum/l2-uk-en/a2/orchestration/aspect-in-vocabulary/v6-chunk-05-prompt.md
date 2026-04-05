@@ -3,29 +3,22 @@
 You are writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 3: Дієслова ходять парами (A2, A2.1 [Foundation and Aspect Introduction])
-**Section to write:** Summary (~160 words)
-**Word target for this section:** 160 words (aim for 176 to account for undershoot)
+**Section to write:** Summary (~150 words)
+**Word target for this section:** 150 words (aim for 165 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Summary (~160 words)
+## Summary (~150 words)
+- P1 (~150 words): Recap of the three methods of aspect pair formation. Provide a final bulleted self-check list:
+  1. Чому важливо вчити дієслова парами? (Because aspect defines the nature of the action—process vs. result).
+  2. Який спосіб утворення найпопулярніший? (Adding a prefix like *на-, по-, з-*).
+  3. Як змінюються слова типу "допомогти"? (Internal vowel change **о -> а**).
+  4. Назвіть партнерів для *брати* та *говорити*. (*Взяти* та *сказати*).
+  5. Де шукати пару, якщо ви її забули? (In the dictionary, usually right after the main entry).
 
-- P1 (~80 words): Recap: Ukrainian verbs live in aspect pairs — недоконаний (process) and доконаний (result). Three structural patterns: (1) prefix — писати / написати; (2) suffix or vowel change — запитувати / запитати, допомагати / допомогти; (3) suppletive — брати / взяти, шукати / знайти. The notation "impf / pf" is now your default — enter every new verb in pairs.
-
-- Exercise (match-up — Sentence Translation, 8 items): Eight short English prompts translated into Ukrainian with aspect focus. Examples: "She was reading for an hour." → impf required. "He finally found his keys." → pf required. "They cooked the varenyky." (finished) → pf. "We were helping." → impf. Forces the learner to select the right partner using semantic context, not just pattern-matching.
-
-- Self-check questions (~80 words):
-  - Яке питання ставлять до недоконаного дієслова? (що робити?)
-  - Яке питання ставлять до доконаного дієслова? (що зробити?)
-  - Як утворити доконаний вид у парі читати/___? (прочитати — префікс)
-  - Який суфікс є сигналом недоконаного виду? (-ува-/-юва-)
-  - Назви дві суплетивні пари. (брати/взяти; шукати/знайти)
-
----
-
-Grand total: ~2360 words
+Grand total: ~2350 words
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -33,7 +26,7 @@ Grand total: ~2360 words
 <previous_context>
 [...previous sections truncated...]
 
-suppletion means zero shared material, as in **брати / взяти** or **шукати / знайти**. Linguists still group **ловити / зловити** here because the prefix **з-** does not create the perfective meaning the way **на-** creates **написати** from **писати** — it merely reinforces a root that already implies catching. Why do these irregular pairs exist at all? The most frequent verbs in any language resist regularization. They are used so often, by so many speakers, that their ancient forms survive unchanged across centuries. English has the same phenomenon: *go / went* comes from two different Old English verbs that merged. Ukrainian **брати / взяти** similarly inherits two separate roots from Old Slavic — one for the process, one for the result. Knowing this makes the irregularity feel less random. These are not exceptions. They are survivors. Here are the twenty most important A2 aspectual pairs across all three methods — your quick-reference master list: | Недоконаний вид | Доконаний вид | Тип | |---|---|---| | писати | написати | П | | читати | прочитати | П | | робити | зробити | П | | бачити | побачити | П | | готувати | приготувати | П | | варити | зварити | П | | вчити | вивчити | П | | їсти | з'їсти | П | | пити | випити | П | | малювати | намалювати | П | | запитувати | запитати | С | | відповідати | відповісти | С | | вирішувати | вирішити | С | | розповідати | розповісти | С | | допомагати | допомогти | К | | забувати | забути | С | | показувати | показати | С | | брати | взяти | З | | говорити | сказати | З | | шукати | знайти | З | **П** = префікс, **С** = суфікс, **К** = кореневе чергування, **З** = зовсім інші слова. <!-- INJECT_ACTIVITY: match-up, Fill in the Blanks with the Correct Pair — eight sentences with gaps requiring correct aspect form; context clues signal тривалість vs. результат; items: шукати/знайти, говорити/сказати, брати/взяти, ловити/зловити, писати/написати, читати/прочитати, готувати/приготувати, допомагати/допомогти --> How do you memorize pairs that share no visible root? Three strategies work: First, always learn them inside a mini-story — never as isolated words. «Вона шукала і знайшла.» «Він говорив і сказав.» «Я брав і взяв.» The two verbs live together in one sentence, one situation. Your memory binds them through narrative, not through spelling. Second, notice a practical pattern: the suppletive imperfectives tend to be longer and end in **-ити** or **-ати** — **ловити**, **шукати**, **говорити**, **брати**. Their perfective partners are often shorter or end in a bare **-ти** — **зловити**, **знайти**, **сказати**, **взяти**. This is not a rule, but it is a useful instinct to develop. Third, put both verbs on one flashcard with the mini-story on the back. Never study one form alone. A verb without its partner is only half a word — and these partners cannot be guessed, only known.
+phenomenon is called suppletion (**суплетивізм**). A suppletive pair consists of two words that share the exact same core meaning and function together as a grammatical aspect pair, but they are built from completely different roots. They look and sound nothing alike. You cannot rely on a shared prefix or a predictable suffix to identify them. Instead, you must simply memorize these specific pairs as two sides of the same coin. While this concept might seem intimidating, there is good news. True suppletive verb pairs are quite rare in the Ukrainian language. However, because they describe fundamental human actions, they are among the most frequently used words in daily conversations. You cannot reach basic fluency without knowing them. The single most important suppletive pair you must learn is the verb for taking. The imperfective process is **брати** (to take, to be taking). Its perfective partner, which indicates a successful and completed acquisition, is **взяти** (to have taken). You will use the imperfective form for habits, general statements, or ongoing actions. > Я беру парасольку щодня. *(I take an umbrella every day.)* When the action is completely finished and the result is achieved, you switch to the perfective form. > Я взяв парасольку сьогодні. *(I took an umbrella today.)* This distinction between taking something regularly and having successfully taken something once is fundamental to speaking naturally. Another critical suppletive pair relates to communication. The imperfective verb for speaking or talking is **говорити** (to speak, to talk). You use this word to describe the continuous process of producing speech, discussing a topic, or having a conversation. The perfective counterpart is **сказати** (to say, to tell). You use this perfective form when a specific message has been successfully delivered or a definitive statement has been made. > Він говорив довго, але нічого не сказав. *(He spoke for a long time, but said nothing.)* > Я хочу сказати правду. *(I want to tell the truth.)* Notice how the ongoing process contrasts sharply with the final communicative result. There are a few other essential pairs at this level that belong in this highly irregular category. The verb for placing or putting things down is **класти** (to put, to be placing). Its perfective partner for a completed placement is **покласти** (to have put). The verb for catching or hunting is **ловити** (to catch, to be catching), while a successful capture is expressed with **піймати** (to have caught). Finally, you should understand the relationship between searching and finding. The imperfective process of looking for something is **шукати** (to search, to be looking for). The successful achievement of discovering that item is **знайти** (to find). While linguists might debate if these two are a strict grammatical pair because they have slightly different literal meanings, they function exactly like a perfective and imperfective pair in everyday communication. You search continuously, but you find instantly. <!-- INJECT_ACTIVITY: fill-in, Categorize by Formation Type. Focus: Sorting a list of 8 pairs into three groups: Prefixation (написати), Suffix/Root Change (купувати), or Suppletion (взяти). -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -46,7 +39,7 @@ module: a2-003
 level: A2
 sequence: 3
 slug: aspect-in-vocabulary
-version: '1.0'
+version: '1.1'
 title: Дієслова ходять парами
 subtitle: Як утворюються та вивчаються видові пари
 focus: grammar
@@ -54,92 +47,99 @@ pedagogy: PPP
 phase: A2.1 [Foundation and Aspect Introduction]
 word_target: 2000
 objectives:
-- Learner can recognize that most Ukrainian verbs exist in aspectual pairs and understand
-  the importance of learning them together.
-- 'Learner can identify the three main patterns of aspect pair formation: prefixation,
-  suffix/root vowel change, and suppletion.'
-- Learner can list and use approximately 20 essential A2-level aspectual pairs in
-  simple sentences.
-- Given one verb from a common pair, the learner can name its aspectual partner.
+  - Learner can recognize that most Ukrainian verbs exist in aspectual pairs and
+    understand the importance of learning them together.
+  - 'Learner can identify the three main patterns of aspect pair formation: prefixation,
+    suffix/root vowel change, and suppletion.'
+  - Learner can list and use approximately 20 essential A2-level aspectual pairs
+    in simple sentences.
+  - Given one verb from a common pair, the learner can name its aspectual 
+    partner.
 dialogue_situations:
-- setting: 'Cooking varenyky together — one person reads the recipe step by step:
-    Ліпи (impf, keep forming) вареники. Зліпи (pf, form one). Вари (impf) 10 хвилин.
-    Звари (pf) до готовності.'
-  speakers:
-  - Бабуся (teaching recipe)
-  - Онучка (cooking)
-  motivation: 'Aspect pairs in cooking: ліпити/зліпити, варити/зварити'
+  - setting: 'Cooking varenyky together — one person reads the recipe step by step:
+      Ліпи (impf, keep forming) вареники. Зліпи (pf, form one). Вари (impf) 10 хвилин.
+      Звари (pf) до готовності.'
+    speakers:
+      - Бабуся (teaching recipe)
+      - Онучка (cooking)
+    motivation: 'Aspect pairs in cooking: ліпити/зліпити, варити/зварити'
 content_outline:
-- section: Чому дієслова потрібно вчити парами? (Why Verbs Must Be Learned in Pairs)
-  words: 400
-  points:
-  - Reinforce the idea that aspect is fundamental. Learning a verb without its partner
-    is like learning only half a word.
-  - 'Introduce the standard notation: imperfective / perfective (e.g., робити / зробити).'
-  - 'Using a dictionary: how to find aspectual pairs in online or paper dictionaries.'
-- section: 'Спосіб 1: Додавання префікса (Method 1: Adding a Prefix)'
-  words: 600
-  points:
-  - 'The most common way to form a perfective verb: add a prefix to the imperfective
-    base. The prefix often adds a specific meaning, but for now, we focus on its role
-    in creating a perfective verb.'
-  - 'Core examples: писати / **на**писати; читати / **про**читати; робити / **з**робити;
-    бачити / **по**бачити; готувати / **при**готувати.'
-  - 'Practice: given an imperfective verb, learner adds the correct prefix to make
-    it perfective.'
-- section: 'Спосіб 2: Зміна в корені або суфіксі (Method 2: Change in the Root or
-    Suffix)'
-  words: 600
-  points:
-  - 'The ''imperfectivization'' pattern: a complex perfective verb (often with a prefix)
-    gets an ''-ува-'' or ''-юва-'' suffix to become imperfective.'
-  - 'This is a more advanced concept, so we introduce it with simple pairs: відповідати
-    / відповісти; вирішувати / вирішити; запитувати / запитати.'
-  - 'Show the vowel change that often accompanies this: ''о'' -> ''а'' (допомогти
-    / допомагати).'
-- section: 'Спосіб 3: Зовсім інші слова (суплетивізм) (Method 3: Completely Different
-    Words - Suppletion)'
-  words: 400
-  points:
-  - Some of the most common verbs have suppletive pairs that must be memorized.
-  - 'Essential pairs: брати / взяти (to take); говорити / сказати (to say/tell); ловити
-    / зловити (to catch); шукати / знайти (to look for / to find).'
-  - Present a list of the 20 most important aspectual pairs for A2 learners to memorize,
-    covering all three formation types.
+  - section: Чому дієслова потрібно вчити парами? (Why Verbs Must Be Learned in 
+      Pairs)
+    words: 400
+    points:
+      - Reinforce the idea that aspect is fundamental. Learning a verb without 
+        its partner is like learning only half a word.
+      - 'Introduce the standard notation: imperfective / perfective (e.g., робити
+        / зробити).'
+      - 'Using a dictionary: how to find aspectual pairs in online or paper dictionaries.'
+  - section: 'Спосіб 1: Додавання префікса (Method 1: Adding a Prefix)'
+    words: 600
+    points:
+      - 'The most common way to form a perfective verb: add a prefix to the imperfective
+        base. The prefix often adds a specific meaning, but for now, we focus on its
+        role in creating a perfective verb.'
+      - 'Core examples: писати / **на**писати; читати / **про**читати; робити / **з**робити;
+        бачити / **по**бачити; готувати / **при**готувати.'
+      - 'Practice: given an imperfective verb, learner adds the correct prefix to
+        make it perfective.'
+  - section: 'Спосіб 2: Зміна в корені або суфіксі (Method 2: Change in the Root or
+      Suffix)'
+    words: 600
+    points:
+      - 'The ''imperfectivization'' pattern: a complex perfective verb (often with
+        a prefix) gets an ''-ува-'' or ''-юва-'' suffix to become imperfective.'
+      - 'This is a more advanced concept, so we introduce it with simple pairs: відповідати
+        / відповісти; вирішувати / вирішити; запитувати / запитати.'
+      - 'Show the vowel change that often accompanies this: ''о'' -> ''а'' (допомогти
+        / допомагати).'
+  - section: 'Спосіб 3: Зовсім інші слова (суплетивізм) (Method 3: Completely Different
+      Words - Suppletion)'
+    words: 400
+    points:
+      - Some of the most common verbs have suppletive pairs that must be 
+        memorized.
+      - 'Essential pairs: брати / взяти (to take); говорити / сказати (to say/tell);
+        ловити / піймати (to catch); класти / покласти (to put).'
+      - 'Note: шукати (to search) and знайти (to find) are often presented together,
+        but they are different actions, not a true aspect pair. The perfective of
+        шукати is пошукати or відшукати.'
+      - Present a list of the 20 most important aspectual pairs for A2 learners 
+        to memorize, covering all three formation types.
 vocabulary_hints:
   required:
-  - пара (pair)
-  - префікс (prefix)
-  - суфікс (suffix)
-  - корінь (root)
-  - читати / прочитати (to read)
-  - писати / написати (to write)
-  - брати / взяти (to take)
-  - говорити / сказати (to speak / to say)
+    - пара (pair)
+    - префікс (prefix)
+    - суфікс (suffix)
+    - корінь (root)
+    - читати / прочитати (to read)
+    - писати / написати (to write)
+    - брати / взяти (to take)
+    - говорити / сказати (to speak / to say)
   recommended:
-  - утворювати (to form)
-  - словник (dictionary)
-  - запам'ятовувати (to memorize)
-  - базовий (basic)
+    - утворювати (to form)
+    - словник (dictionary)
+    - запам'ятовувати (to memorize)
+    - базовий (basic)
 activity_hints:
-- type: quiz
-  focus: Find the Partner (Verb Matching)
-  items: 8
-- type: fill-in
-  focus: Categorize by Formation Type
-  items: 8
-- type: match-up
-  focus: Fill in the Blanks with the Correct Pair
-  items: 8
-- type: match-up
-  focus: Sentence Translation (Aspect Focus)
-  items: 8
+  - type: quiz
+    focus: Find the Partner (Verb Matching)
+    items: 8
+  - type: fill-in
+    focus: Categorize by Formation Type
+    items: 8
+  - type: match-up
+    focus: Fill in the Blanks with the Correct Pair
+    items: 8
+  - type: fill-in
+    focus: Choose the Correct Aspect Partner
+    items: 8
 references:
-- title: Заболотний Grade 6, §52-54
-  notes: 'Вид дієслова: доконаний і недоконаний'
-- title: 'ULP: Ukrainian Verb Aspect'
-  url: https://www.ukrainianlessons.com/ukrainian-verb-aspect/
-  notes: Imperfective vs perfective
+  - title: Заболотний Grade 6, §52-54
+    notes: 'Вид дієслова: доконаний і недоконаний'
+  - title: 'ULP: Ukrainian Verb Aspect'
+    url: https://www.ukrainianlessons.com/ukrainian-verb-aspect/
+    notes: Imperfective vs perfective
 
 </plan_content>
 
@@ -369,6 +369,29 @@ references:
 
 ## Спосіб 3: Зовсім інші слова (суплетивізм) (Method 3: Completely Different Words - Suppletion)
 
+> **Source:** avramenko, Grade 5
+> **Section:** Сторінка 54
+> **Score:** 0.33
+>
+> 54
+> ЛЕКСИКОЛОГІЯ 
+> Притягтися, розм. — (прийти насилу) приволоктися, приплестися, 
+> причвалати; фам. приплентатися, притарабанитися, притарганитися. 
+> У словнику антонімів протилежні за значенням слова подано парами, 
+> до них додано тлумачення й зразки вживання:
+> МОВЧАТИ ↔ КРИЧАТИ
+> Не видавати звуків, не виявляти 
+> почуттів, зберігати мовчанку. 
+> Видавати голосом сильний, різ-
+> кий звук, репетувати, галасувати.
+> Дурне сало: як у піч, то мовчить, а як із печі, то кричить (Нар. тв.).
+> Подібну будову словникової статті має словник паронімів: 
+> БАГАТИР — БОГАТИР 
+> Багатир — багата людина, багатій: сільський багатир. 
+> Богатир — оспіваний у фольклорі герой, хоробрий воїн: богатир Ілля 
+> Муромець; про людину, високу на зріст, міцної статури, сильну: справж­
+> ній богатир.
+
 > **Source:** zaharijchuk, Grade 1
 > **Section:** Сторінка 30
 > **Score:** 0.50
@@ -444,37 +467,26 @@ references:
 *  
 - Після **м’яких** приголосних у **середині складу** перед о: *чотирьох, дзьоб, сьомий, льодяний, відьом*.
 
-### Речення, його граматична основа
-> **Source:** МійКлас — [Речення, його граматична основа](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/rechennia-iogo-gramatichna-osnova-pidmet-i-prisudok-39372)
-
-### Теорія:
-
-*www.ua.pistacja.tv*  
-Речення
-Реченням називаємо одне або кілька слів, що виражають закінчену думку.
-Саме за допомогою речень ми спілкуємось, висловлюємо прохання, наказ, виражаємо емоції, повідомляємо інформацію.
-Приклад:
-- Весна іде, красу несе \(Нар. творчість\). 
-- Ліс. Тиша. Благодать. 
-Слова в реченні зв'язані між собою **за змістом** і **граматично**. **Граматичний зв'язок** — це поєднання за допомогою **закінчень** і **службових слів**. На початок і кінець речення вказує **інтонація**. Між реченнями робимо **паузи**.
-Ознаки речення
-1. Речення відображає дійсність. Інформація **стверджується** або **заперечується**, сприймається як **реальна** або **нереальна**, **можлива** або **неможлива**.
- 
+### Розряди займенників за значенням
+> **Source:** МійКлас — [Розряди займенників за значенням](h
 
 ... (truncated for context window)
 </knowledge_packet>
 
 ---
 
+
+
 ## Rules
 
-TARGET: 45-65% Ukrainian.
+TARGET: 20-40% Ukrainian. Bridge modules continue from A1 (which ends at 20-41%).
 LANGUAGE ROLES:
-- THEORY: English prose for grammar explanations that would be too complex in Ukrainian at this level.
-- EXAMPLES & CONTEXT: Ukrainian — dialogues, example sentences, cultural context.
+- THEORY: English prose for grammar review and metalanguage introduction.
+- EXAMPLES & CONTEXT: Ukrainian — dialogues, example sentences, pattern boxes.
 - HEADERS: Ukrainian with English in parentheses.
-- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English — never mix languages within a sentence. Ukrainian paragraphs and dialogues carry most content. English appears for grammar theory and in callout boxes.
-A2 register ONLY. Concrete everyday vocabulary. No literary/poetic language. No abstract nouns. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only (який/що/коли). Aspect pairs introduced. No participles.
+- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English — never mix.
+These are review/bridge modules. English theory is expected. Ukrainian content comes from dialogues, example sentences, paradigm tables, and pattern boxes.
+A2 register ONLY. Concrete everyday vocabulary. No literary/poetic language. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only (який/що/коли). Aspect pairs introduced. No participles.
 
 GRAMMAR RULES:
 - Max 15 words per Ukrainian sentence
@@ -493,7 +505,10 @@ GRAMMAR RULES:
 - **Zero Russian, zero Surzhyk, zero calques.**
 - **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own line.
+- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+  > — **Оксана:** Привіт! *(Hi!)*
+  > — **Степан:** Добрий день! *(Good day!)*
+  > — **Оксана:** Як справи? *(How are you?)*
 
 ## Output
 

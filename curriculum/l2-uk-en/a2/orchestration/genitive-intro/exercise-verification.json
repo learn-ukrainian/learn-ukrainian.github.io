@@ -1,0 +1,86 @@
+{
+  "total_items": 79,
+  "grounded_items": 66,
+  "ungrounded": [
+    {
+      "word": "столу",
+      "exercise_type": "fill-in",
+      "context": "столу"
+    },
+    {
+      "word": "цукра",
+      "exercise_type": "fill-in",
+      "context": "цукра"
+    },
+    {
+      "word": "цукрів",
+      "exercise_type": "fill-in",
+      "context": "цукрів"
+    },
+    {
+      "word": "машину",
+      "exercise_type": "fill-in",
+      "context": "машину"
+    },
+    {
+      "word": "машині",
+      "exercise_type": "fill-in",
+      "context": "машині"
+    },
+    {
+      "word": "пісню",
+      "exercise_type": "fill-in",
+      "context": "пісню"
+    },
+    {
+      "word": "пісень",
+      "exercise_type": "fill-in",
+      "context": "пісень"
+    },
+    {
+      "word": "вікну",
+      "exercise_type": "fill-in",
+      "context": "вікну"
+    },
+    {
+      "word": "морі",
+      "exercise_type": "fill-in",
+      "context": "морі"
+    },
+    {
+      "word": "морів",
+      "exercise_type": "fill-in",
+      "context": "морів"
+    },
+    {
+      "word": "брату",
+      "exercise_type": "fill-in",
+      "context": "брату"
+    },
+    {
+      "word": "часа",
+      "exercise_type": "fill-in",
+      "context": "часа"
+    },
+    {
+      "word": "часів",
+      "exercise_type": "fill-in",
+      "context": "часів"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 14,
+    "tested_in_exercises": 6,
+    "not_tested": [
+      "відмінок",
+      "відсутність",
+      "гроші",
+      "закінчення",
+      "кількість",
+      "множина",
+      "однина",
+      "родовий"
+    ]
+  },
+  "all_grounded": false
+}

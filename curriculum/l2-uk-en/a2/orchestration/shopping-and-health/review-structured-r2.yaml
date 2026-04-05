@@ -1,0 +1,49 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Covers all grammar points and dialogues, but misses the English translations
+    in the final two H2 headings from the `content_outline`.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: Contains a critical grammar error teaching the wrong gender for "нежить"
+    (`**Нежить** (runny nose) becomes **нежиті**`), plus several structural calques
+    (`знаходиться`, `рецепт від болю`).
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent PPP flow. Introduces situations, establishes patterns with explicit
+    examples, and reinforces them.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required (`ринок`, `кілограм`, `здоров'я`, etc.) and recommended words
+    (`алергія`, `шматок`) are used organically in context.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers perfectly map to the plan's activity targets and are spread evenly
+    throughout the module.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Dialogues are highly natural and contextualized ("Я сам робив. Дійсно
+    дуже смачний сир").
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: Clean markdown, but H2 headers deviate slightly from the plan's exact
+    strings.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Accurately describes the lively Ukrainian market (базар) culture, tasting
+    food before buying, and counting eggs by tens (десяток).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Excellent multi-turn conversations reflecting real-world market and medical
+    scenarios with polite forms and named speakers.
+findings: []

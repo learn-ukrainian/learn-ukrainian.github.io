@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: All 4 `content_outline` sections present with correct topics. Word count
+    2826 vs 2000 target ✓. **Deductions:** (a) Plan's `dialogue_situations` specifies
+    museum setting (Гід музею + Відвідувачі, with
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: '**Critical:** 7 instances of "знаходиться" as location verb — confirmed
+    calque by Антоненко-Давидович (ad-148). This is particularly damaging in a spatial
+    prepositions module where learners internaliz'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'Good PPP flow: presents prepositions → examples → room description practice
+    → temporal extension → contrastive practice. Instrumental endings recapped at
+    the start (good scaffolding). Де? vs Куди? dis'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: '**Required (10/10):** над ✓, під ✓, перед ✓, за ✓, між ✓, стіл ✓, будинок
+    ✓, ліжко ✓, стіна ✓, обід ✓. **Recommended (5/5):** стеля ✓, підлога ✓, кут ✓,
+    розклад ✓, сон ✓. All introduced in context, no'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 4 markers matching all 4 plan `activity_hints` in type and focus. Placed
+    after relevant teaching content. Distributed evenly. Cannot evaluate generated
+    exercise content (separate YAML step).
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: '**Deductions:** (a) Generic enthusiasm: "Українська просторова точність
+    показує справжню красу і математичну логіку нашої мови" — cheerleading that could
+    apply to any language. (b) Motivational filler'
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: All 4 plan H2 sections present. Clean markdown. Activity markers well-placed.
+    **Deduction:** Extra Підсумок (summary) section adds ~200 words not in plan —
+    acceptable but slightly inflates word count.
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: Ukrainian presented on its own terms throughout. No "like Russian but..."
+    framing. The за + Instrumental vs за + Accusative contrast is taught as an internal
+    Ukrainian feature, not a comparison to ano
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: 'Two dialogues with named speakers: (a) Макс & Олена arranging furniture
+    — natural, multi-turn, targets all 5 prepositions. (b) Турист & Місцевий asking
+    directions — natural, targets перед/за/між. **De'
+findings: []

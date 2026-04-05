@@ -3,13 +3,65 @@
   "track": "a2",
   "slug": "genitive-prepositions-direction",
   "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-05T10:52:27.112125+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-05T10:53:09.413425+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-05T10:54:49.744745+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-05T10:56:27.895553+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-05T10:59:31.113188+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-05T10:59:31.113381+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-05T11:00:39.272286+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-05T11:00:39.286615+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-05T11:00:39.293152+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-05T11:01:55.602639+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-05T11:01:55.602758+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-05T11:01:55.773372+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-05T11:07:39.477125+00:00"
+    },
     "stress": {
       "status": "complete",
-      "ts": "2026-04-02T14:56:54.829028+00:00"
+      "ts": "2026-04-05T11:07:41.777070+00:00"
     },
     "publish": {
       "status": "complete",
-      "ts": "2026-04-02T14:56:54.829481+00:00"
+      "ts": "2026-04-05T11:07:43.232747+00:00"
     }
   }
 }

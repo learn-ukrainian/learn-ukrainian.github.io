@@ -1,0 +1,56 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'Covers all 3 content_outline sections with correct structure. **Missing:**
+    (a) рік→роки explicitly listed in plan §1 "Consonant alternations: друг → друзі,
+    рік → роки" — module covers друг→друзі but o'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'All grammar rules stated correctly. All plural forms verified via VESUM.
+    One calque: "старі друзі"/"старі університетські друзі" should be "давні" per
+    Антоненко-Давидович (ad-114). No Russianisms, no '
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: intro dialogue situates the grammar → systematic presentation
+    by відміна with 3+ examples each → practice in context paragraphs. Each declension
+    class gets multiple contextualized exa'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'All 10 required vocab items present: множина, називний відмінок, знахідний
+    відмінок, живий, неживий, закінчення, люди, діти, речі, очі — all used naturally
+    in prose context. Recommended vocab: відміна'
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: '4 markers present for 4 plan hints. Placement is logical (after teaching,
+    not before). However, marker #4 (`nominative-accusative-context`) doesn''t match
+    plan''s error-correction type — this will gener'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'No motivational filler, no "magic of" language, no gamification. Prose
+    is direct and instructional. Good cultural grounding (козак example, zoo setting,
+    dinner party dialogue). One minor meta-phrase: '
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All H2 headings from plan present and correctly ordered. Clean markdown.
+    Word count 2105 vs target 2000 ✓. No stray tags, no duplicate summaries, no meta-commentary
+    sections. Підсумок is concise and u
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented on its own terms. No "like Russian but..." framing.
+    козак example is culturally appropriate. No decolonization issues.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'Zoo dialogue (intro): natural, named speakers (Батько/Дитина), demonstrates
+    both Nom.Pl and Acc.Pl naturally, matches plan''s dialogue situation exactly.
+    Dinner party dialogue (§3, Олена/Андрій): natur'
+findings: []

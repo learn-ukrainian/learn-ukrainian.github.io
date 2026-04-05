@@ -1,80 +1,146 @@
+Now I have all the verification data needed. Let me compile the full adversarial review.
+
+---
+
 ## Linguistic Scan
-1 error found:
-- Russianism/Typo: "зльот" instead of "зліт" (take-off). VESUM confirms "зльот" does not exist in standard Ukrainian.
+
+**Russianisms:** None found. All vocabulary is standard Ukrainian.
+
+**Surzhyk:** None found.
+
+**Calques:** None found. Checked key phrases against Антоненко-Давидович style guide — no calque patterns detected.
+
+**Paronyms:** None found.
+
+**Russian characters (ы, э, ё, ъ):** None found.
+
+**Conjugation accuracy:**
+- летіти: лечу, летиш, летить, летимо, летите, летять — all confirmed by VESUM. ✓
+- літати: літаю, літаєш, літає, літаємо, літаєте, літають — all confirmed. ✓
+- пливти: пливу, пливеш, пливе, пливемо, пливете, пливуть — all confirmed. ✓
+- плавати: плаваю, плаваєш, плаває, плаваємо, плаваєте, плавають — all confirmed. ✓
+- All 37 prefixed verb forms (both -летіти/-літати and -пливти/-плисти groups) verified in VESUM. ✓
+
+**Grammatical claims:**
+- летіти belongs to друга дієвідміна (endings -у, -иш, -ить) — correct. ✓
+- пливти belongs to перша дієвідміна (endings -у, -еш, -е) — correct. ✓
+- літати belongs to перша дієвідміна — correct. ✓
+- Stem alternation плив→плис in переплисти, доплисти, обплисти, підплисти, проплисти — all VESUM-confirmed. ✓
+- Module states both переплисти and перепливти exist but literary norm prefers -плис- forms. VESUM confirms BOTH exist as separate lemmas. The pedagogical simplification is reasonable and explicitly notes the parallel forms exist.
+
+**Factual error found:**
+
+1. **Rylsky misquote and misattribution.** The module says: «Корабель летів на всіх парусах» (М. Рильський). The Фразеологічний словник cites the actual text as: "По синіх валах океану, Лиш зорі зійдуть в небесах, Летить корабель одинокий, Летить він на всіх парусах (**Переклад М. Рильського**)." Two problems: (a) the module changes the tense (летить → летів) and paraphrases the quote; (b) it's a **translation** by Rylsky, not his original poetry. The module presents it as a direct quote from Rylsky's own work.
+
+**Idiom verification (all confirmed in Фразеологічний словник or GRAC):**
+- «пливти за течією» ✓ — definition matches module's explanation exactly
+- «на всіх парах» ✓ — meaning confirmed: "дуже швидко" (зі сл. бігти і под.)
+- «на всіх парусах» ✓ — confirmed for water transport only
+- «пливти до рук (у руки)» ✓ — module uses "пливти в руки" which matches the "у руки" variant attested in dictionary
+- «все пливе перед очима» ✓ — GRAC confirms 5+ attestations, all in dizziness/blurriness context
+- «гроші летять» ✓ — GRAC confirms 5+ attestations in the meaning the module describes
 
 ## Exercise Check
-- The `group-sort` activity is correctly placed after the verbs of air motion prefix section.
-- The `quiz` activity is correctly placed.
-- The `error-correction` activity is correctly placed.
-- The `match-up` activity is correctly placed.
-- The `free-write` activity is correctly placed.
-- **ERROR:** The `fill-in` activity (Complete airport and maritime sentences) is injected *before* the "Авіаційна та морська лексика" section where the airport and maritime terminology is actually taught. It tests concepts before they are introduced.
+
+**Activity markers inventory (6 total, matching plan's 6 activity_hints):**
+
+| # | Type | Location | Plan Match | Placement |
+|---|------|----------|------------|-----------|
+| 1 | group-sort (12 items) | After "Летіти/літати" section | ✓ Matches plan hint #4 | ✓ After teaching prefixed летіти forms |
+| 2 | error-correction (6 items) | After "Пливти/плавати" section | ✓ Matches plan hint #5 | ✓ After teaching stem alternation |
+| 3 | match-up (8 items) | After "Авіаційна та морська лексика" | ✓ Matches plan hint #3 | ✓ After teaching vocabulary |
+| 4 | fill-in (8 items) | After "Авіаційна та морська лексика" | ✓ Matches plan hint #2 | ✓ Same section, good |
+| 5 | quiz (8 items) | After "Переносні значення" section | ✓ Matches plan hint #1 | ✓ After all verbs taught |
+| 6 | free-write (6 items) | After "Переносні значення" section | ✓ Matches plan hint #6 | ✓ Capstone activity |
+
+**Issues:**
+- The plan's figurative section content_outline says "Practice: learners sort 10-12 sentences into literal vs figurative categories" — this specific activity type (sorting literal vs figurative) is NOT represented by any marker. The quiz marker tests verb/prefix choice, not literal/figurative classification. This is a plan adherence gap, though the quiz activity is reasonable.
+- Markers are distributed evenly across sections — not clustered. ✓
+- Exercise logic in markers appears sound — each tests what was just taught. ✓
 
 ## Scores
+
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 6/10 | The text misses several specific points from the plan: 1) The main reading passage fails to mention "аеропорт Боріспіль" as requested. 2) The mandatory dialogue setting at the Black Sea with parents and children is completely missing. 3) The required example for `обплисти` ("Обпливли острів за день") is omitted entirely. 4) The required example for `проплисти` ("Проплили повз острів") is missing in favor of a different context. |
-| 2. Linguistic accuracy | 7/10 | Contains a critical Russianism/typo: "стрімкий **зльот**" instead of the correct Ukrainian "стрімкий **зліт**". |
-| 3. Pedagogical quality | 8/10 | Good use of PPP flow and textbook references. However, the `fill-in` activity testing specific maritime and aviation vocabulary is placed before that vocabulary is introduced, breaking the pedagogical sequence. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items from the plan are naturally integrated into the text. |
-| 5. Exercise quality | 8/10 | Activity counts and topics align with `activity_hints`. Deduction for placing the vocabulary `fill-in` activity in the wrong section, which would require learners to guess words they haven't been taught yet. |
-| 6. Engagement & tone | 8/10 | Generally engaging and descriptive, but contains some minor instances of teacherly meta-commentary that tell rather than show (e.g., "Глибоке знання всіх цих корисних префіксів дозволить вам неймовірно точно і красиво описувати..."). |
-| 7. Structural integrity | 6/10 | The word count is 5147 words, which is massively over the target of 4000 words (>28% off target). |
-| 8. Cultural accuracy | 10/10 | Accurate references to Ukrainian educational materials (Авраменко, Вашуленко). Natural geographical references (Босфор). |
-| 9. Dialogue & conversation quality | 6/10 | Deducted because the core conversational requirement ("At the Чорне море near Одеса") was entirely ignored. The substitute transactional airport/seaport dialogues are fine, but failing to include the planned interactive family scene weakens the conversational quality. |
+| 1. Plan adherence | 7/10 | **Covered well:** All 6 content_outline sections present with correct headings. All 10 prefixes for both летіти and пливти taught with examples. Conjugation tables complete and accurate. Airport and maritime vocabulary taught in context. Figurative meanings covered with attested idioms. **Missing:** (1) Plan's `dialogue_situations` (beach at Чорне море with Батьки/Діти speakers) is completely absent — content has airport/port dialogues instead. (2) Plan vocabulary "зал очікування" not used (content says "просторому залі" but never uses the full term). (3) Plan vocabulary "матрос" (VESUM-confirmed noun) absent from content. (4) Plan says "6-8 example exchanges in natural Ukrainian" for section 4 — content has exactly 2 dialogues (5 turns each), which technically satisfies "6-8 exchanges" across both dialogues but only barely. (5) Plan's figurative section practice activity (sort 10-12 sentences into literal vs figurative) has no exercise marker. |
+| 2. Linguistic accuracy | 9/10 | All verb conjugations verified against VESUM. All 37 prefixed forms confirmed. Stem alternation плив→плис correctly described and VESUM-confirmed. Idioms verified against Фразеологічний словник and GRAC. **One error:** Rylsky misquote — module says «Корабель летів на всіх парусах» (М. Рильський) but actual text is "Летить корабель одинокий, Летить він на всіх парусах" (Переклад М. Рильського). Paraphrased quote presented as direct, translation not noted, tense changed. |
+| 3. Pedagogical quality | 9/10 | Excellent PPP flow: Section 1 sets the real-world context (journey from Boryspil to Istanbul), sections 2-3 present grammar systematically with 10+ examples per verb pair, section 4 practices vocabulary in dialogues, section 5 extends to figurative meaning, section 6 summarizes. Grammar scope respected — all prerequisite concepts (односпрямований/різноспрямований, prefix system from M28-M33) are explicitly bridged. Conjugation paradigms are complete and accurate. The stem alternation table (плисти vs пливти columns) is a strong pedagogical tool. Self-check questions in summary section reinforce key learning targets. Minor deduction: prose padding inflates explanations without adding pedagogical value (see dimension 6). |
+| 4. Vocabulary coverage | 8/10 | **Required vocab (13/13 used):** летіти ✓, літати ✓, пливти ✓, плавати ✓, прилетіти ✓, вилетіти ✓, припливти ✓, переплисти ✓, аеропорт ✓, рейс ✓, посадка ✓, порт ✓, корабель ✓. **Recommended vocab (12/14 used):** долетіти ✓, полетіти ✓, перелетіти ✓, облетіти ✓, доплисти ✓, поплисти (as попливти) ✓, відпливти ✓, пором ✓, причал ✓, човен ✓, палуба ✓, каюта ✓, термінал ✓, пересадка ✓. **Missing from plan content_outline vocab:** "зал очікування" (plan section 4), "матрос" (plan section 4). Both are listed in the plan's airport/maritime vocabulary lists. |
+| 5. Exercise quality | 8/10 | 6 markers match all 6 plan activity_hints in type and focus. Markers are well-distributed across sections. Each activity tests content just taught. **Deductions:** (1) Plan's figurative section explicitly requests a literal-vs-figurative sorting exercise ("learners sort 10-12 sentences") — no marker for this. (2) The quiz marker in the figurative section tests verb/prefix choice rather than literal/figurative distinction, which is a different skill than what the plan specified for that section. |
+| 6. Engagement & tone | 7/10 | **Positive:** Narrative framing (journey Boryspil→Istanbul→ferry) creates coherent context. Folk song reference ("Тече вода з-під явора") is culturally rich. Real idioms with GRAC-confirmed usage. Self-check questions in summary. **Deductions:** (1) Extremely heavy adjective padding throughout. Examples: "дуже довгий дерев'яний пірс", "надзвичайно важливу роль", "абсолютно без жодних зусиль", "максимально точно уточнити", "дуже повільно, але надзвичайно впевнено", "надзвичайно міцний сталевий корпус і складну інженерну конструкцію". Nearly every noun carries 2-3 intensifiers. (2) Meta-commentary: "Ця зручна таблиця обов'язково допоможе вам", "Ця ж фундаментальна різниця чудово працює". (3) Generic enthusiasm: "надзвичайно захопливий фігуральний світ", "захопливу уявну мандрівку". (4) Repetitive sentence structures — many paragraphs follow the same pattern of [subject] + [intensifier] + [verb] + [long object with multiple adjectives]. This inflates word count to 5354 (34% above 4000 target) without proportional pedagogical gain. |
+| 7. Structural integrity | 9/10 | All 6 H2 sections from plan present in correct order. Clean markdown formatting. Table in пливти section is well-structured. Summary table is useful. Word count 5354 ≥ 4000 target. No stray tags or formatting artifacts. Minor: two activity markers clustered at end of vocabulary section (match-up + fill-in back-to-back), and two at end of figurative section (quiz + free-write back-to-back). |
+| 8. Cultural accuracy | 10/10 | Ukrainian presented on its own terms — never "like Russian but..." All geographic references are Ukrainian-relevant (Бориспіль, Одеса, Дніпро, Чорне море, Чорноморськ). Folk song quotation authentic. Idioms verified against Ukrainian sources. No decolonization issues. References to Антуан де Сент-Екзюпері used naturally to illustrate облетіти. Island Зміїний reference is culturally significant and appropriate. |
+| 9. Dialogue quality | 7/10 | **Positive:** Named speakers (Агент/Пасажир, Касир/Клієнт) — not anonymous em dashes. Dialogues demonstrate target vocabulary (рейс, посадковий талон, пересадка, стикувальний рейс, каюта, причал, відплиття). Multi-turn (5 turns each). Culturally appropriate greeting patterns. **Deductions:** (1) Plan's dialogue_situations (beach at Чорне море, speakers: Батьки/Діти, using летіти/літати and пливти/плавати with море, літак, човен) is completely absent. This was the primary dialogue context. (2) Both dialogues are purely transactional service encounters — check-in and ticket purchase. No informal/emotional register. (3) Both dialogues follow identical structure: greeting → request → confirmation → follow-up question → farewell. No variety in conversational pattern. |
 
 ## Findings
-[Linguistic accuracy] [Critical]
-Location: `починається найемоційніший момент — стрімкий **зльот** *(take-off)* літака`
-Issue: "Зльот" is a Russianism or typo (derived from Russian "взлёт"). The correct Ukrainian noun for "take-off" is "зліт".
-Fix: Change "зльот" to "зліт".
 
-[Plan adherence] [Major]
-Location: `Я приїхав у головний міжнародний **аеропорт** *(airport)* нашої столиці. Я знав,`
-Issue: The plan explicitly requires mentioning "аеропорт Боріспіль" in the introductory reading passage, but it is missing.
-Fix: Add "Бориспіль" to the airport description.
+**[LINGUISTIC ACCURACY] [MAJOR]**
+Location: Переносні значення section — "«на всіх парусах» *(under full sail)*, яка також означає максимальну швидкість, але вживається саме про водний транспорт: «Корабель летів на всіх парусах» (М. Рильський)."
+Issue: Misquote and misattribution. The Фразеологічний словник cites: "Летить корабель одинокий, Летить він на всіх парусах (Переклад М. Рильського)." The module (a) paraphrases the quote while presenting it in quotation marks, (b) changes tense (летить→летів), (c) doesn't note it's a translation by Rylsky, not his original work.
+Fix: Replace with the actual quote and mark it as a translation: «Летить корабель одинокий, летить він на всіх парусах» (переклад М. Рильського).
 
-[Plan adherence] [Major]
-Location: `За таким самим принципом утворюються й інші важливі форми: **доплисти** *(to swim all the way to)*, **обплисти** *(to sail/swim around)*, **проплисти** *(to sail/swim past or cover a distance)*.`
-Issue: The plan requires an example for the prefix "об-": "Обпливли острів за день". The text lists the verb "обплисти" but gives no example sentence for it.
-Fix: Add the required example sentence after the verb "обплисти".
+**[PLAN ADHERENCE] [MAJOR]**
+Location: Entire module — dialogue_situations
+Issue: Plan's `dialogue_situations` specifies a beach scene at Чорне море near Одеса with Батьки/Діти speakers, using летіти/літати and пливти/плавати with море, літак, човен. This natural family dialogue is completely absent. The module only has transactional service dialogues (airport check-in, ferry ticket), which match section 4's content_outline but not the primary dialogue_situation.
+Fix: Add a short dialogue (6-8 lines) between Батько/Мати/Дитина at a beach scene, using both air and water motion verbs naturally (чайки летять, діти пливуть, літак пролетів, човен попливе). Insert after the port dialogue in section 4.
 
-[Plan adherence] [Major]
-Location: `сміливо використовуйте префікс про- і дієслово **проплисти** *(to sail/swim past or cover distance)*. Наприклад, ви можете гордо розповісти друзям: «Під час учорашніх міських змагань ми дуже швидко **проплили** цілих п'ять кілометрів»`
-Issue: The plan requires the specific example "Проплили повз острів" for the verb "проплисти", but the text only gives an example about swimming 5 kilometers in a competition.
-Fix: Add the missing "sail past an island" example.
+**[VOCABULARY COVERAGE] [MAJOR]**
+Location: Section 4 "Авіаційна та морська лексика"
+Issue: Plan's content_outline lists "зал очікування" (waiting hall) as airport vocabulary and "матрос" (sailor) as maritime vocabulary. Neither appears in the content. The content says "просторому залі" but never uses the full term "зал очікування." "Матрос" is entirely absent (only "капітан" is mentioned for ship crew).
+Fix: Insert "зал очікування" in the airport paragraph and "матрос" in the maritime paragraph with contextual usage.
 
-[Exercise quality] [Major]
-Location: Just before `## Авіаційна та морська лексика`
-Issue: The `fill-in` activity tests airport and maritime sentences, but is placed BEFORE the "Авіаційна та морська лексика" section where these terms are taught.
-Fix: Move the `fill-in` activity marker to below the vocabulary section.
+**[ENGAGEMENT & TONE] [MAJOR]**
+Location: Throughout all sections
+Issue: Excessive adjective padding inflates prose without pedagogical value. Nearly every noun carries 2-3 intensifiers: "дуже довгий дерев'яний пірс", "надзвичайно важливу роль", "абсолютно без жодних зусиль", "максимально точно уточнити", "дуже повільно, але надзвичайно впевнено", "надзвичайно міцний сталевий корпус і складну інженерну конструкцію", "дуже важкою, довгою", "надзвичайно цікавих і популярних розмовних фразеологізмів". This creates a monotonous rhythm and inflates word count (5354 — 34% over target) without adding information. A B1 learner needs clear, varied prose, not walls of intensifiers.
+Fix: Cannot provide exhaustive find/replace for a pervasive style issue. Providing targeted fixes for the worst offenders below. A future style pass should systematically trim unnecessary intensifiers ("дуже", "надзвичайно", "абсолютно") throughout.
 
-[Dialogue & conversation quality] [Major]
-Location: End of section "Авіаційна та морська лексика"
-Issue: The text completely ignores the mandatory `dialogue_situations` plan point (setting at the Black Sea, parents and kids talking about swimming to a buoy and a boat sailing to an island).
-Fix: Add the mandatory dialogue scene at the end of the dialogues section.
+**[EXERCISE QUALITY] [MINOR]**
+Location: Figurative meanings section
+Issue: Plan content_outline section 5 explicitly says "Practice: learners sort 10-12 sentences into literal vs figurative categories, then explain what the figurative meaning is in each case." No exercise marker for literal/figurative sorting exists. The quiz marker in this section tests verb/prefix choice instead.
+Fix: This would require adding a new activity marker. Not actionable via find/replace — flagged for pipeline attention.
 
-[Structural integrity] [Major]
-Location: Deterministic word count check at the bottom.
-Issue: The module word count is 5147 words, which is massively over the target of 4000 words.
-Fix: None for the fix block, but heavily penalized in scoring.
+**[DIALOGUE QUALITY] [MINOR]**
+Location: Both dialogues in section 4
+Issue: Both dialogues are purely transactional service encounters following identical structure (greeting→request→info→question→farewell). No informal dialogue, no emotional variety, no situation where speakers use motion verbs naturally in conversation (as opposed to discussing logistics).
+Fix: Partially addressed by adding the beach dialogue from the plan's dialogue_situations (see finding #2).
 
 ## Verdict: REVISE
-The module contains a critical linguistic error ("зльот"), fails to incorporate a mandatory dialogue setting, misses several required examples, and places an exercise out of logical sequence. These issues can be corrected deterministically.
+
+Justification: One factual error in literary attribution (Rylsky misquote — MAJOR), one significant plan adherence gap (missing dialogue_situation), two missing plan vocabulary items, and pervasive adjective padding. No critical linguistic errors in the Ukrainian grammar content — all verb forms, conjugations, and stem alternations are VESUM-verified. The core pedagogical content is strong. Dimensions 1, 4, 5, 6, 9 scored below 9, with identified actionable errors.
 
 <fixes>
-- find: "починається найемоційніший момент — стрімкий **зльот** *(take-off)* літака"
-  replace: "починається найемоційніший момент — стрімкий **зліт** *(take-off)* літака"
-- find: "Я приїхав у головний міжнародний **аеропорт** *(airport)* нашої столиці. Я знав,"
-  replace: "Я приїхав у міжнародний **аеропорт Бориспіль** *(Boryspil airport)* поблизу нашої столиці. Я знав,"
-- find: "За таким самим принципом утворюються й інші важливі форми: **доплисти** *(to swim all the way to)*, **обплисти** *(to sail/swim around)*, **проплисти** *(to sail/swim past or cover a distance)*. Щоб набагато краще зрозуміти"
-  replace: "За таким самим принципом утворюються й інші важливі форми: **доплисти** *(to swim all the way to)*, **обплисти** *(to sail/swim around)*, **проплисти** *(to sail/swim past or cover a distance)*. Наприклад: «Ми швидко **обпливли** цей острів за один день» *(We sailed around this island in one day)*. Щоб набагато краще зрозуміти"
-- find: "сміливо використовуйте префікс про- і дієслово **проплисти** *(to sail/swim past or cover distance)*. Наприклад, ви можете гордо розповісти друзям: «Під час учорашніх міських змагань ми дуже швидко **проплили** цілих п'ять кілометрів» *(During yesterday's city competition we very quickly swam a whole five kilometers)*."
-  replace: "сміливо використовуйте префікс про- і дієслово **проплисти** *(to sail/swim past or cover distance)*. Наприклад: «Ми швидко **проплили** повз зелений острів» *(We quickly sailed past the green island)*. Або ж про відстань: «На змаганнях ми дуже швидко **проплили** цілих п'ять кілометрів» *(At the competition we very quickly swam a whole five kilometers)*."
-- find: "<!-- INJECT_ACTIVITY: quiz, Focus on choosing летіти/літати or пливти/плавати and correct prefix based on context, 8 items -->\n<!-- INJECT_ACTIVITY: fill-in, Complete airport and maritime sentences with correct prefixed motion verbs, 8 items -->\n<!-- INJECT_ACTIVITY: error-correction, Fix incorrect air/water motion verb forms (wrong prefix, wrong base verb), 6 items -->\n\n## Авіаційна та морська лексика"
-  replace: "<!-- INJECT_ACTIVITY: quiz, Focus on choosing летіти/літати or пливти/плавати and correct prefix based on context, 8 items -->\n<!-- INJECT_ACTIVITY: error-correction, Fix incorrect air/water motion verb forms (wrong prefix, wrong base verb), 6 items -->\n\n## Авіаційна та морська лексика"
-- find: "<!-- INJECT_ACTIVITY: match-up, Match aviation/maritime vocabulary (рейс, пором, причал, палуба) with definitions in Ukrainian, 8 items -->\n<!-- INJECT_ACTIVITY: free-write, Write a travel story involving both a flight and a ferry trip using 6+ prefixed verbs from the module, 6 items -->\n\n## Переносні значення: час летить, думки пливуть"
-  replace: "<!-- INJECT_ACTIVITY: fill-in, Complete airport and maritime sentences with correct prefixed motion verbs, 8 items -->\n<!-- INJECT_ACTIVITY: match-up, Match aviation/maritime vocabulary (рейс, пором, причал, палуба) with definitions in Ukrainian, 8 items -->\n<!-- INJECT_ACTIVITY: free-write, Write a travel story involving both a flight and a ferry trip using 6+ prefixed verbs from the module, 6 items -->\n\n## Переносні значення: час летить, думки пливуть"
-- find: "**Олена:** На верхню палубу, будь ласка. *(To the upper deck, please.)*\n\n<!-- INJECT_ACTIVITY:"
-  replace: "**Олена:** На верхню палубу, будь ласка. *(To the upper deck, please.)*\n\n**На Чорному морі (At the Black Sea):**\n**Батьки:** Дивіться, як красиво! Чайки летять над морем, а он там, дуже високо, літак пролетів над нами. *(Look how beautiful! Seagulls are flying over the sea, and over there, very high up, a plane flew above us.)*\n**Діти:** Ми хочемо плавати! Можна ми попливемо до того великого жовтого буйка? *(We want to swim! Can we swim to that big yellow buoy?)*\n**Батьки:** Так, але не запливайте за нього. А завтра ми купимо квитки, і наш човен попливе на той зелений острів. *(Yes, but don't swim past it. And tomorrow we will buy tickets, and our boat will sail to that green island.)*\n**Діти:** Ура! Ми дуже любимо плавати в морі! *(Hooray! We really love swimming in the sea!)*\n\n<!-- INJECT_ACTIVITY:"
+- find: "«Корабель летів на всіх парусах» (М. Рильський)"
+  replace: "«Летить корабель одинокий, летить він на всіх парусах» (переклад М. Рильського)"
+- find: "Керує всім цим складним і відповідальним навігаційним процесом найголовніша і найповажніша людина на будь-якому судні — строгий **капітан** *(captain)*."
+  replace: "Керує всім цим складним і відповідальним навігаційним процесом найголовніша і найповажніша людина на будь-якому судні — строгий **капітан** *(captain)*. Його надійним помічником і головним виконавцем усіх щоденних завдань на палубі є досвідчений **матрос** *(sailor)*."
+- find: "Після успішного проходження суворого контролю безпеки та паспортного контролю пасажири чекають у просторому залі"
+  replace: "Після успішного проходження суворого контролю безпеки та паспортного контролю пасажири чекають у просторому **залі очікування** *(waiting hall)*"
+- find: "Щасливої вам подорожі і спокійного моря!"
+  replace: "Щасливої вам подорожі і спокійного моря!\n\n> — **Тато:** Дивіться, діти! Бачите, як високо над нами **летять** білі чайки? А ось там, далеко, літак **пролетів** прямо над морем!\n> — **Оленка:** Тату, а я хочу **попливти** до того буйка! Можна?\n> — **Тато:** Добре, але тримайся ближче до берега. Бачиш, як швидко той **човен** **пливе** до острова? Не пливи так далеко.\n> — **Оленка:** Дивіться, мамо! Я вже **доплила** до буйка!\n> — **Мама:** Молодець, Оленко! А тепер **пливи** назад. Дивіться всі — ваш літак на Київ уже **вилітає** о п'ятій, а наш пором **відпливає** ще пізніше. Ми маємо час!"
+- find: "Україна має стратегічно важливе географічне розташування: вона є великим транзитним вузлом, де постійно перетинаються жваві міжнародні авіаційні маршрути та завантажені морські шляхи. Безмежне **небо** *(sky)* високо над нами та глибоке **море** *(sea)* на півдні нашої країни вимагають зовсім іншого, специфічного словникового запасу."
+  replace: "Україна має важливе географічне розташування: вона є великим транзитним вузлом, де перетинаються міжнародні авіаційні маршрути та морські шляхи. **Небо** *(sky)* над нами та **море** *(sea)* на півдні країни вимагають іншого словникового запасу."
+- find: "Для цих стихій існують власні дієслова: **летіти** *(to fly)* та **пливти** *(to swim, to sail)*. Вони потребують нашої окремої уваги з кількох вагомих причин."
+  replace: "Для цих стихій існують власні дієслова: **летіти** *(to fly)* та **пливти** *(to swim, to sail)*. Вони потребують окремої уваги з кількох причин."
+- find: "Величезний літак повільно виїжджає на довгу **злітну смугу** *(runway)*, швидко набирає необхідну швидкість і нарешті плавно відривається від землі."
+  replace: "Літак виїжджає на довгу **злітну смугу** *(runway)*, набирає швидкість і плавно відривається від землі."
+- find: "Досвідчений капітан радісно оголошує, що ми зможемо **долетіти** *(to fly all the way to)* до нашого пункту призначення навіть без найменших затримок."
+  replace: "Капітан оголошує, що ми зможемо **долетіти** *(to fly all the way to)* до пункту призначення без затримок."
+- find: "Після швидкого та комфортного перельоту ми опиняємося у Стамбулі — унікальному стародавньому місті, яке велично розкинулося на двох різних континентах."
+  replace: "Після перельоту ми опиняємося у Стамбулі — стародавньому місті на двох континентах."
+- find: "На відміну від швидкісного літака, важкий корабель ніколи не поспішає. Він має обережно та спокійно **відпливти** *(to sail away)* від твердого берега, залишаючи за собою довгий білий слід піни на темній холодній воді."
+  replace: "На відміну від літака, корабель не поспішає. Він має спокійно **відпливти** *(to sail away)* від берега, залишаючи за собою білий слід піни на воді."
+- find: "Зараз наш надійний корабель дуже повільно, але надзвичайно впевнено **пливе** *(is sailing)*."
+  replace: "Зараз наш корабель повільно, але впевнено **пливе** *(is sailing)*."
+- find: "В сучасній українській мові історично існує кілька дуже цікавих і популярних розмовних фразеологізмів із цими двома важливими дієсловами руху."
+  replace: "В українській мові існує кілька цікавих фразеологізмів із цими дієсловами руху."
+- find: "ми з іронією кажемо, що вона звикла «**пливти за течією**» *(to go with the flow)*. Це майже повний аналог відомого англійського вислову, який дуже влучно описує пасивну життєву позицію."
+  replace: "ми з іронією кажемо, що вона звикла «**пливти за течією**» *(to go with the flow)*. Це аналог англійського вислову, який описує пасивну життєву позицію."
+- find: "ми кажемо, що ця відповідальна людина готова «**летіти на всіх парах**» *(to rush at full speed)*. Слово «пара» *(steam)* натякає на старі парові машини, а ідіома підкреслює максимальну фізичну швидкість та енергію."
+  replace: "ми кажемо, що ця людина готова «**летіти на всіх парах**» *(to rush at full speed)*. Слово «пара» *(steam)* натякає на парові машини, а ідіома підкреслює швидкість та енергію."
+- find: "Особливу, надзвичайно важливу роль в українській і світовій транспортній системі відіграє надійний **пором** *(ferry)*. Це спеціальне велике судно з плоским дном, яке регулярно перевозить не лише людей, але й важкі вантажні автомобілі, туристичні автобуси та навіть цілі пасажирські поїзди з одного берега на інший протилежний берег."
+  replace: "Важливу роль в транспортній системі відіграє **пором** *(ferry)*. Це велике судно з плоским дном, яке регулярно перевозить людей, автомобілі, автобуси та навіть поїзди з одного берега на інший."
+- find: "Величезний металевий **корабель** *(ship)* спеціально створений для дуже довгих і небезпечних подорожей у відкритому морі чи океані; він зазвичай має багато різних поверхів, надзвичайно міцний сталевий корпус і складну інженерну конструкцію."
+  replace: "Великий **корабель** *(ship)* створений для довгих подорожей у відкритому морі чи океані; він має кілька поверхів, міцний корпус і складну конструкцію."
+- find: "Натомість маленький дерев'яний чи гумовий **човен** *(boat)* — це зазвичай дуже просте невелике судно, яким рибалки часто керують виключно за допомогою довгих весел або невеликого шумного мотора; він ідеально підходить для тихої ранкової риболовлі на спокійному озері чи вузькій річці."
+  replace: "Натомість **човен** *(boat)* — це просте невелике судно, яким керують за допомогою весел або мотора; він підходить для риболовлі на озері чи річці."
 </fixes>

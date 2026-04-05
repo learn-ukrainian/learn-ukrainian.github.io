@@ -157,3 +157,5 @@
 {"slug": "health", "error_type": "STRUCTURE", "attempt": 1, "model": "claude-tools", "success": false, "timestamp": "2026-04-03T21:13:12.966268+00:00"}
 {"slug": "health", "error_type": "PASS", "attempt": 2, "model": "claude-tools", "success": true, "timestamp": "2026-04-03T21:13:43.232152+00:00"}
 {"slug": "checkpoint-my-world", "error_type": "PASS", "attempt": 1, "model": "claude-tools", "success": true, "timestamp": "2026-04-03T22:38:41.262467+00:00"}
+{"slug": "food-and-drink", "error_type": "STRUCTURE", "attempt": 1, "model": "claude-tools", "success": false, "timestamp": "2026-04-03T22:57:46.464098+00:00"}
+{"slug": "food-and-drink", "error_type": "PASS", "attempt": 2, "model": "claude-tools", "success": true, "timestamp": "2026-04-03T22:58:23.688910+00:00"}

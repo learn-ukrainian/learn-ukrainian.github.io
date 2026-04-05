@@ -1,0 +1,323 @@
+{
+  "total_items": 224,
+  "grounded_items": 163,
+  "ungrounded": [
+    {
+      "word": "брата",
+      "exercise_type": "fill-in",
+      "context": "брата"
+    },
+    {
+      "word": "надішліть",
+      "exercise_type": "fill-in",
+      "context": "Надішліть цю посилку моїй ____ в Канаду."
+    },
+    {
+      "word": "сестру",
+      "exercise_type": "fill-in",
+      "context": "сестру"
+    },
+    {
+      "word": "клієнту",
+      "exercise_type": "fill-in",
+      "context": "клієнту"
+    },
+    {
+      "word": "клієнта",
+      "exercise_type": "fill-in",
+      "context": "клієнта"
+    },
+    {
+      "word": "посилки",
+      "exercise_type": "fill-in",
+      "context": "Підкажіть ____ правила відправлення посилки."
+    },
+    {
+      "word": "вона",
+      "exercise_type": "fill-in",
+      "context": "вона"
+    },
+    {
+      "word": "конвертів",
+      "exercise_type": "match-up",
+      "context": "Ось ваші марки. Скільки конвертів вам потрібно?"
+    },
+    {
+      "word": "потрібно",
+      "exercise_type": "match-up",
+      "context": "Ось ваші марки. Скільки конвертів вам потрібно?"
+    },
+    {
+      "word": "цифр",
+      "exercise_type": "match-up",
+      "context": "Індекс — це п'ять цифр у правому куті конверта."
+    },
+    {
+      "word": "правому",
+      "exercise_type": "match-up",
+      "context": "Індекс — це п'ять цифр у правому куті конверта."
+    },
+    {
+      "word": "куті",
+      "exercise_type": "match-up",
+      "context": "Індекс — це п'ять цифр у правому куті конверта."
+    },
+    {
+      "word": "подивіться",
+      "exercise_type": "match-up",
+      "context": "Ось вони, подивіться. Вони більші, ніж звичайні."
+    },
+    {
+      "word": "більші",
+      "exercise_type": "match-up",
+      "context": "Ось вони, подивіться. Вони більші, ніж звичайні."
+    },
+    {
+      "word": "ніж",
+      "exercise_type": "match-up",
+      "context": "Ось вони, подивіться. Вони більші, ніж звичайні."
+    },
+    {
+      "word": "він",
+      "exercise_type": "match-up",
+      "context": "Він отримає його приблизно через два тижні."
+    },
+    {
+      "word": "так",
+      "exercise_type": "match-up",
+      "context": "Так, обов'язково потрібен митний документ."
+    },
+    {
+      "word": "друг",
+      "exercise_type": "quiz",
+      "context": "дорогому друг"
+    },
+    {
+      "word": "любою",
+      "exercise_type": "quiz",
+      "context": "любою мамою"
+    },
+    {
+      "word": "мамою",
+      "exercise_type": "quiz",
+      "context": "любою мамою"
+    },
+    {
+      "word": "шановного",
+      "exercise_type": "quiz",
+      "context": "шановного директора"
+    },
+    {
+      "word": "директора",
+      "exercise_type": "quiz",
+      "context": "шановного директора"
+    },
+    {
+      "word": "шановний",
+      "exercise_type": "quiz",
+      "context": "шановний директор"
+    },
+    {
+      "word": "шановним",
+      "exercise_type": "quiz",
+      "context": "шановним директором"
+    },
+    {
+      "word": "директором",
+      "exercise_type": "quiz",
+      "context": "шановним директором"
+    },
+    {
+      "word": "брату",
+      "exercise_type": "quiz",
+      "context": "старшому брату"
+    },
+    {
+      "word": "старший",
+      "exercise_type": "quiz",
+      "context": "старший брату"
+    },
+    {
+      "word": "старшим",
+      "exercise_type": "quiz",
+      "context": "старшим братом"
+    },
+    {
+      "word": "братом",
+      "exercise_type": "quiz",
+      "context": "старшим братом"
+    },
+    {
+      "word": "колега",
+      "exercise_type": "quiz",
+      "context": "шановній колега"
+    },
+    {
+      "word": "шановною",
+      "exercise_type": "quiz",
+      "context": "шановною колегою"
+    },
+    {
+      "word": "колегою",
+      "exercise_type": "quiz",
+      "context": "шановною колегою"
+    },
+    {
+      "word": "моя",
+      "exercise_type": "quiz",
+      "context": "моя бабусі"
+    },
+    {
+      "word": "бабуся",
+      "exercise_type": "quiz",
+      "context": "моїй бабуся"
+    },
+    {
+      "word": "моєю",
+      "exercise_type": "quiz",
+      "context": "моєю бабусею"
+    },
+    {
+      "word": "бабусею",
+      "exercise_type": "quiz",
+      "context": "моєю бабусею"
+    },
+    {
+      "word": "новому",
+      "exercise_type": "quiz",
+      "context": "новому клієнту"
+    },
+    {
+      "word": "новим",
+      "exercise_type": "quiz",
+      "context": "новим клієнтом"
+    },
+    {
+      "word": "клієнтом",
+      "exercise_type": "quiz",
+      "context": "новим клієнтом"
+    },
+    {
+      "word": "відомому",
+      "exercise_type": "quiz",
+      "context": "відомому професорові"
+    },
+    {
+      "word": "відомий",
+      "exercise_type": "quiz",
+      "context": "відомий професорові"
+    },
+    {
+      "word": "професор",
+      "exercise_type": "quiz",
+      "context": "відомому професор"
+    },
+    {
+      "word": "відомим",
+      "exercise_type": "quiz",
+      "context": "відомим професором"
+    },
+    {
+      "word": "професором",
+      "exercise_type": "quiz",
+      "context": "відомим професором"
+    },
+    {
+      "word": "роботу",
+      "exercise_type": "group-sort",
+      "context": "Дякую працівникові за роботу."
+    },
+    {
+      "word": "важких",
+      "exercise_type": "true-false",
+      "context": "Бандероль часто використовують для дуже важких речей."
+    },
+    {
+      "word": "використання",
+      "exercise_type": "true-false",
+      "context": "Дієслово «дякувати» завжди вимагає використання давального в"
+    },
+    {
+      "word": "пишеться",
+      "exercise_type": "true-false",
+      "context": "Ім'я людини на конверті завжди пишеться в давальному відмінк"
+    },
+    {
+      "word": "синоніми",
+      "exercise_type": "true-false",
+      "context": "Дієслова «надіслати» і «відправити» — це синоніми."
+    },
+    {
+      "word": "починаючи",
+      "exercise_type": "true-false",
+      "context": "Листоноша завжди шукає вашу адресу, починаючи з вашого імені"
+    },
+    {
+      "word": "друга",
+      "exercise_type": "error-correction",
+      "context": "Я хочу надіслати цей лист друга."
+    },
+    {
+      "word": "другу",
+      "exercise_type": "error-correction",
+      "context": "другу"
+    },
+    {
+      "word": "другом",
+      "exercise_type": "error-correction",
+      "context": "другом"
+    },
+    {
+      "word": "нести",
+      "exercise_type": "error-correction",
+      "context": "Він допомагає бабуся нести важку посилку."
+    },
+    {
+      "word": "бабусю",
+      "exercise_type": "error-correction",
+      "context": "бабусю"
+    },
+    {
+      "word": "дві",
+      "exercise_type": "error-correction",
+      "context": "Дайте я дві святкові марки, будь ласка."
+    },
+    {
+      "word": "мною",
+      "exercise_type": "error-correction",
+      "context": "мною"
+    },
+    {
+      "word": "пише",
+      "exercise_type": "error-correction",
+      "context": "Вона пише офіційний лист шановна колезі."
+    },
+    {
+      "word": "шановну",
+      "exercise_type": "error-correction",
+      "context": "шановну"
+    },
+    {
+      "word": "шановної",
+      "exercise_type": "error-correction",
+      "context": "шановної"
+    },
+    {
+      "word": "нами",
+      "exercise_type": "error-correction",
+      "context": "нами"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 15,
+    "tested_in_exercises": 10,
+    "not_tested": [
+      "адреса",
+      "відправник",
+      "квитанція",
+      "отримати",
+      "пошта"
+    ]
+  },
+  "all_grounded": false
+}

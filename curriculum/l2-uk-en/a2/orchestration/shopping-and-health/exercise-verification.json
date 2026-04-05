@@ -1,0 +1,487 @@
+{
+  "total_items": 251,
+  "grounded_items": 157,
+  "ungrounded": [
+    {
+      "word": "яблуках",
+      "exercise_type": "fill-in",
+      "context": "яблуках"
+    },
+    {
+      "word": "яйця",
+      "exercise_type": "fill-in",
+      "context": "яйця"
+    },
+    {
+      "word": "яйцями",
+      "exercise_type": "fill-in",
+      "context": "яйцями"
+    },
+    {
+      "word": "молоко",
+      "exercise_type": "fill-in",
+      "context": "молоко"
+    },
+    {
+      "word": "молоком",
+      "exercise_type": "fill-in",
+      "context": "молоком"
+    },
+    {
+      "word": "сіль",
+      "exercise_type": "fill-in",
+      "context": "сіль"
+    },
+    {
+      "word": "сіллю",
+      "exercise_type": "fill-in",
+      "context": "сіллю"
+    },
+    {
+      "word": "температуру",
+      "exercise_type": "quiz",
+      "context": "температуру"
+    },
+    {
+      "word": "температурою",
+      "exercise_type": "quiz",
+      "context": "температурою"
+    },
+    {
+      "word": "болем",
+      "exercise_type": "quiz",
+      "context": "болем"
+    },
+    {
+      "word": "болі",
+      "exercise_type": "quiz",
+      "context": "болі"
+    },
+    {
+      "word": "кашлем",
+      "exercise_type": "quiz",
+      "context": "кашлем"
+    },
+    {
+      "word": "кашлі",
+      "exercise_type": "quiz",
+      "context": "кашлі"
+    },
+    {
+      "word": "апетитом",
+      "exercise_type": "quiz",
+      "context": "апетитом"
+    },
+    {
+      "word": "апетиті",
+      "exercise_type": "quiz",
+      "context": "апетиті"
+    },
+    {
+      "word": "радить",
+      "exercise_type": "quiz",
+      "context": "Лікар радить пити багато ..."
+    },
+    {
+      "word": "водою",
+      "exercise_type": "quiz",
+      "context": "водою"
+    },
+    {
+      "word": "холодом",
+      "exercise_type": "quiz",
+      "context": "холодом"
+    },
+    {
+      "word": "холоді",
+      "exercise_type": "quiz",
+      "context": "холоді"
+    },
+    {
+      "word": "алергію",
+      "exercise_type": "quiz",
+      "context": "алергію"
+    },
+    {
+      "word": "алергією",
+      "exercise_type": "quiz",
+      "context": "алергією"
+    },
+    {
+      "word": "цукром",
+      "exercise_type": "quiz",
+      "context": "цукром"
+    },
+    {
+      "word": "цукрі",
+      "exercise_type": "quiz",
+      "context": "цукрі"
+    },
+    {
+      "word": "головний",
+      "exercise_type": "match-up",
+      "context": "головний біль"
+    },
+    {
+      "word": "закладений",
+      "exercise_type": "match-up",
+      "context": "закладений ніс"
+    },
+    {
+      "word": "ніс",
+      "exercise_type": "match-up",
+      "context": "закладений ніс"
+    },
+    {
+      "word": "спрей",
+      "exercise_type": "match-up",
+      "context": "спрей від болю у горлі"
+    },
+    {
+      "word": "почервоніння",
+      "exercise_type": "match-up",
+      "context": "почервоніння на шкірі"
+    },
+    {
+      "word": "шкірі",
+      "exercise_type": "match-up",
+      "context": "почервоніння на шкірі"
+    },
+    {
+      "word": "сильна",
+      "exercise_type": "match-up",
+      "context": "сильна втома"
+    },
+    {
+      "word": "втома",
+      "exercise_type": "match-up",
+      "context": "сильна втома"
+    },
+    {
+      "word": "слабкий",
+      "exercise_type": "match-up",
+      "context": "слабкий імунітет"
+    },
+    {
+      "word": "вітамінів",
+      "exercise_type": "match-up",
+      "context": "багато вітамінів"
+    },
+    {
+      "word": "називний",
+      "exercise_type": "group-sort",
+      "context": "Називний відмінок (Nominative: хто? що?)"
+    },
+    {
+      "word": "відмінок",
+      "exercise_type": "group-sort",
+      "context": "Називний відмінок (Nominative: хто? що?)"
+    },
+    {
+      "word": "хто",
+      "exercise_type": "group-sort",
+      "context": "Називний відмінок (Nominative: хто? що?)"
+    },
+    {
+      "word": "яблуко",
+      "exercise_type": "group-sort",
+      "context": "яблуко"
+    },
+    {
+      "word": "родовий",
+      "exercise_type": "group-sort",
+      "context": "Родовий відмінок (Genitive: кого? чого?)"
+    },
+    {
+      "word": "кого",
+      "exercise_type": "group-sort",
+      "context": "Родовий відмінок (Genitive: кого? чого?)"
+    },
+    {
+      "word": "чого",
+      "exercise_type": "group-sort",
+      "context": "Родовий відмінок (Genitive: кого? чого?)"
+    },
+    {
+      "word": "пляшку",
+      "exercise_type": "error-correction",
+      "context": "Дайте мені пляшку вода."
+    },
+    {
+      "word": "сніданком",
+      "exercise_type": "error-correction",
+      "context": "сніданком"
+    },
+    {
+      "word": "сніданкові",
+      "exercise_type": "error-correction",
+      "context": "сніданкові"
+    },
+    {
+      "word": "порадив",
+      "exercise_type": "error-correction",
+      "context": "Лікар порадив пити багато вода."
+    },
+    {
+      "word": "десять",
+      "exercise_type": "quiz",
+      "context": "Десять"
+    },
+    {
+      "word": "штук",
+      "exercise_type": "quiz",
+      "context": "10 штук"
+    },
+    {
+      "word": "штука",
+      "exercise_type": "quiz",
+      "context": "1 штука"
+    },
+    {
+      "word": "кг",
+      "exercise_type": "quiz",
+      "context": "0.5 кг"
+    },
+    {
+      "word": "десята",
+      "exercise_type": "quiz",
+      "context": "Десята година"
+    },
+    {
+      "word": "година",
+      "exercise_type": "quiz",
+      "context": "Десята година"
+    },
+    {
+      "word": "одне",
+      "exercise_type": "fill-in",
+      "context": "одне"
+    },
+    {
+      "word": "дві",
+      "exercise_type": "fill-in",
+      "context": "дві"
+    },
+    {
+      "word": "двоє",
+      "exercise_type": "fill-in",
+      "context": "двоє"
+    },
+    {
+      "word": "десятої",
+      "exercise_type": "fill-in",
+      "context": "десятої"
+    },
+    {
+      "word": "випийте",
+      "exercise_type": "fill-in",
+      "context": "Випийте (1) ____ таблетку після їжі."
+    },
+    {
+      "word": "шт",
+      "exercise_type": "fill-in",
+      "context": "Вона купила (10 шт.) один ____ яєць."
+    },
+    {
+      "word": "чоловічий",
+      "exercise_type": "match-up",
+      "context": "1 (чоловічий рід)"
+    },
+    {
+      "word": "рід",
+      "exercise_type": "match-up",
+      "context": "1 (чоловічий рід)"
+    },
+    {
+      "word": "жіночий",
+      "exercise_type": "match-up",
+      "context": "1 (жіночий рід)"
+    },
+    {
+      "word": "ти",
+      "exercise_type": "match-up",
+      "context": "ти"
+    },
+    {
+      "word": "тебе",
+      "exercise_type": "match-up",
+      "context": "у тебе"
+    },
+    {
+      "word": "них",
+      "exercise_type": "match-up",
+      "context": "у них"
+    },
+    {
+      "word": "здоровий",
+      "exercise_type": "fill-in",
+      "context": "Я здоровий, ____ немає температури."
+    },
+    {
+      "word": "почуваєш",
+      "exercise_type": "fill-in",
+      "context": "Ти добре себе почуваєш? ____ немає болю?"
+    },
+    {
+      "word": "хворий",
+      "exercise_type": "fill-in",
+      "context": "Він хворий, ____ сильний нежить."
+    },
+    {
+      "word": "хоче",
+      "exercise_type": "fill-in",
+      "context": "Вона не хоче їсти, ____ немає апетиту."
+    },
+    {
+      "word": "працювали",
+      "exercise_type": "fill-in",
+      "context": "Ми багато працювали, ____ немає сил."
+    },
+    {
+      "word": "здорові",
+      "exercise_type": "fill-in",
+      "context": "Вони здорові, ____ немає алергії."
+    },
+    {
+      "word": "однина",
+      "exercise_type": "group-sort",
+      "context": "Однина (Singular)"
+    },
+    {
+      "word": "множина",
+      "exercise_type": "group-sort",
+      "context": "Множина (Plural)"
+    },
+    {
+      "word": "мамо",
+      "exercise_type": "quiz",
+      "context": "Мамо, у ____ є ліки від кашлю?"
+    },
+    {
+      "word": "сашко",
+      "exercise_type": "quiz",
+      "context": "Сашко, у ____ немає температури?"
+    },
+    {
+      "word": "лікарю",
+      "exercise_type": "quiz",
+      "context": "Лікарю, що ____ порадите від нежиті?"
+    },
+    {
+      "word": "бабусю",
+      "exercise_type": "quiz",
+      "context": "Бабусю, у ____ болить голова?"
+    },
+    {
+      "word": "болить",
+      "exercise_type": "quiz",
+      "context": "Бабусю, у ____ болить голова?"
+    },
+    {
+      "word": "куди",
+      "exercise_type": "quiz",
+      "context": "Куди українці люблять ходити у вихідні?"
+    },
+    {
+      "word": "лікарню",
+      "exercise_type": "quiz",
+      "context": "У лікарню"
+    },
+    {
+      "word": "аптеку",
+      "exercise_type": "quiz",
+      "context": "В аптеку"
+    },
+    {
+      "word": "роботу",
+      "exercise_type": "quiz",
+      "context": "На роботу"
+    },
+    {
+      "word": "запитують",
+      "exercise_type": "quiz",
+      "context": "Що часто запитують у продавця на ринку?"
+    },
+    {
+      "word": "продавця",
+      "exercise_type": "quiz",
+      "context": "Що часто запитують у продавця на ринку?"
+    },
+    {
+      "word": "яка",
+      "exercise_type": "quiz",
+      "context": "Яка у вас температура?"
+    },
+    {
+      "word": "чому",
+      "exercise_type": "quiz",
+      "context": "У чому часто продають мед?"
+    },
+    {
+      "word": "продають",
+      "exercise_type": "quiz",
+      "context": "У чому часто продають мед?"
+    },
+    {
+      "word": "мед",
+      "exercise_type": "quiz",
+      "context": "У чому часто продають мед?"
+    },
+    {
+      "word": "банках",
+      "exercise_type": "quiz",
+      "context": "У банках"
+    },
+    {
+      "word": "пачках",
+      "exercise_type": "quiz",
+      "context": "У пачках"
+    },
+    {
+      "word": "пляшках",
+      "exercise_type": "quiz",
+      "context": "У пляшках"
+    },
+    {
+      "word": "шматках",
+      "exercise_type": "quiz",
+      "context": "У шматках"
+    },
+    {
+      "word": "запитує",
+      "exercise_type": "quiz",
+      "context": "Що запитує лікар, коли пацієнт заходить?"
+    },
+    {
+      "word": "заходить",
+      "exercise_type": "quiz",
+      "context": "Що запитує лікар, коли пацієнт заходить?"
+    },
+    {
+      "word": "щоб",
+      "exercise_type": "quiz",
+      "context": "Що потрібно, щоб купити сильні ліки в аптеці?"
+    },
+    {
+      "word": "дозвіл",
+      "exercise_type": "quiz",
+      "context": "Дозвіл продавця"
+    },
+    {
+      "word": "використовуємо",
+      "exercise_type": "quiz",
+      "context": "Який прийменник використовуємо, коли просимо ліки 'against' "
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 15,
+    "tested_in_exercises": 11,
+    "not_tested": [
+      "аптека",
+      "здоров'я",
+      "помідор",
+      "таблетка"
+    ]
+  },
+  "all_grounded": false
+}

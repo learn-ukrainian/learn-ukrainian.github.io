@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'All 6 content_outline sections present with appropriate coverage. Missing:
+    **над-...-я pattern** (plan explicitly lists "над- + -я: Наддніпрянщина") — not
+    mentioned anywhere in the module. The plan''s '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: '**Critical:** правило дев''ятки error — "журналіст" listed as -ист example
+    but is -іст (л not in rule of nine). **Major:** "існуючих"/"існуючого" — active
+    participle calque, NOT IN VESUM, appears twice'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'Strong PPP flow: presentation with examples → pattern recognition → practice
+    activities. Every suffix introduced with 3+ examples and etymological explanation.
+    Derivational chains well-taught with вод'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'All 10 required vocabulary items from plan used naturally in prose: словотвір
+    ✓, назва особи ✓, назва місця ✓, віддієслівний ✓, безафіксний ✓, словотвірний
+    ланцюжок ✓, пекарня ✓, читальня ✓, читач ✓, '
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: All 6 plan activity types present with correct item counts (except fill-in
+    missing count). Exercise types well-matched to learning objectives. Markers placed
+    after relevant teaching content (with mino
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: '**Significant padding throughout.** The reading passage in "Практика
+    в контексті" is saturated with unnecessary adjectives: "справжня велика культурна
+    подія — урочисто відкрилася", "величезною радістю'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: All 6 H2 sections present and correctly ordered. Word count 4632 — above
+    4000 target ✓. Clean markdown. Activity markers properly formatted. No stray tags
+    or formatting artifacts. No duplicate summary
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Excellent decolonization: "В українській культурі використання фемінітивів
+    є абсолютно природним явищем. Це норма літературної мови, а не сучасне нововведення"
+    — correctly presents feminitives as nati'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: Two multi-turn dialogues with named speakers (Максим, Оксана). Natural
+    career fair setting matches plan's dialogue situation. Speakers have distinct
+    voices — Максим asks questions, Оксана shares plans
+findings: []

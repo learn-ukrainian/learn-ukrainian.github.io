@@ -1,0 +1,226 @@
+{
+  "total_items": 161,
+  "grounded_items": 119,
+  "ungrounded": [
+    {
+      "word": "новім",
+      "exercise_type": "fill-in",
+      "context": "новім"
+    },
+    {
+      "word": "синою",
+      "exercise_type": "fill-in",
+      "context": "синою"
+    },
+    {
+      "word": "сидимо",
+      "exercise_type": "fill-in",
+      "context": "Ми сидимо під _____ (старий) деревом."
+    },
+    {
+      "word": "старім",
+      "exercise_type": "fill-in",
+      "context": "старім"
+    },
+    {
+      "word": "говорю",
+      "exercise_type": "fill-in",
+      "context": "Я часто говорю зі _____ (старий) сусідкою."
+    },
+    {
+      "word": "старією",
+      "exercise_type": "fill-in",
+      "context": "старією"
+    },
+    {
+      "word": "величним",
+      "exercise_type": "fill-in",
+      "context": "величним"
+    },
+    {
+      "word": "розмовляємо",
+      "exercise_type": "fill-in",
+      "context": "Ми розмовляємо з _____ (найкращий) лікарем."
+    },
+    {
+      "word": "найкращем",
+      "exercise_type": "fill-in",
+      "context": "найкращем"
+    },
+    {
+      "word": "домашним",
+      "exercise_type": "fill-in",
+      "context": "домашним"
+    },
+    {
+      "word": "милується",
+      "exercise_type": "fill-in",
+      "context": "Вона милується _____ (літній) ніччю."
+    },
+    {
+      "word": "літнею",
+      "exercise_type": "fill-in",
+      "context": "літнею"
+    },
+    {
+      "word": "стара",
+      "exercise_type": "match-up",
+      "context": "моя стара подруга"
+    },
+    {
+      "word": "будинок",
+      "exercise_type": "match-up",
+      "context": "наш великий будинок"
+    },
+    {
+      "word": "ваша",
+      "exercise_type": "match-up",
+      "context": "ваша нова школа"
+    },
+    {
+      "word": "олівець",
+      "exercise_type": "match-up",
+      "context": "цей синій олівець"
+    },
+    {
+      "word": "сусідом",
+      "exercise_type": "match-up",
+      "context": "моїм найкращим сусідом"
+    },
+    {
+      "word": "наша",
+      "exercise_type": "match-up",
+      "context": "наша домашня кухня"
+    },
+    {
+      "word": "домашня",
+      "exercise_type": "match-up",
+      "context": "наша домашня кухня"
+    },
+    {
+      "word": "кухня",
+      "exercise_type": "match-up",
+      "context": "наша домашня кухня"
+    },
+    {
+      "word": "моєму",
+      "exercise_type": "quiz",
+      "context": "моєму"
+    },
+    {
+      "word": "розмовляти",
+      "exercise_type": "quiz",
+      "context": "Вона любить розмовляти з _____ мамою."
+    },
+    {
+      "word": "твоя",
+      "exercise_type": "quiz",
+      "context": "твоя"
+    },
+    {
+      "word": "ця",
+      "exercise_type": "quiz",
+      "context": "ця"
+    },
+    {
+      "word": "складною",
+      "exercise_type": "quiz",
+      "context": "Він працює над _____ складною проблемою."
+    },
+    {
+      "word": "твоє",
+      "exercise_type": "quiz",
+      "context": "твоє"
+    },
+    {
+      "word": "обов'язково",
+      "exercise_type": "quiz",
+      "context": "Ми обов'язково зустрінемося _____ вечором."
+    },
+    {
+      "word": "дуб",
+      "exercise_type": "fill-in",
+      "context": "Ми сидимо _____ (під, цей, великий, дуб)."
+    },
+    {
+      "word": "машина",
+      "exercise_type": "fill-in",
+      "context": "Машина стоїть _____ (перед, наш, новий, школа)."
+    },
+    {
+      "word": "лікар",
+      "exercise_type": "fill-in",
+      "context": "Він працює _____ (з, ваш, найкращий, лікар)."
+    },
+    {
+      "word": "колега",
+      "exercise_type": "fill-in",
+      "context": "Я хочу поговорити _____ (з, їхній, новий, колега)."
+    },
+    {
+      "word": "новими",
+      "exercise_type": "error-correction",
+      "context": "новими"
+    },
+    {
+      "word": "синьої",
+      "exercise_type": "error-correction",
+      "context": "синьої"
+    },
+    {
+      "word": "великім",
+      "exercise_type": "error-correction",
+      "context": "великім"
+    },
+    {
+      "word": "велику",
+      "exercise_type": "error-correction",
+      "context": "велику"
+    },
+    {
+      "word": "своїй",
+      "exercise_type": "error-correction",
+      "context": "своїй"
+    },
+    {
+      "word": "наполегливо",
+      "exercise_type": "error-correction",
+      "context": "Він наполегливо працює над твоєю важливим завданням."
+    },
+    {
+      "word": "важливим",
+      "exercise_type": "error-correction",
+      "context": "Він наполегливо працює над твоєю важливим завданням."
+    },
+    {
+      "word": "твою",
+      "exercise_type": "error-correction",
+      "context": "твою"
+    },
+    {
+      "word": "твої",
+      "exercise_type": "error-correction",
+      "context": "твої"
+    },
+    {
+      "word": "солодко",
+      "exercise_type": "error-correction",
+      "context": "Кіт солодко спить за нашим новою школою."
+    },
+    {
+      "word": "нашій",
+      "exercise_type": "error-correction",
+      "context": "нашій"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 19,
+    "tested_in_exercises": 16,
+    "not_tested": [
+      "гарний",
+      "сусідка",
+      "часом"
+    ]
+  },
+  "all_grounded": false
+}

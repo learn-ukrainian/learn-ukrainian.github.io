@@ -1,0 +1,117 @@
+module: bio-035
+level: BIO
+sequence: 35
+slug: dmytro-bortnyanskyy
+version: '3.0'
+title: 'Дмитро Бортнянський: Придворний маестро'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of дмитро бортнянський: придворний маестро'
+- Evaluate the contributions of між україною та імперією
+content_outline:
+- section: Вступ — Між Україною та імперією
+  points:
+  - Бортнянський як найвідоміший український композитор XVIII століття
+  - Питання ідентичності та привласнення
+  - Його вплив на церковну музику
+  words: 700
+- section: Глухівське походження
+  points:
+  - Народження в Глухові
+  - Глухівська музична школа
+  - Виявлення таланту
+  - Переїзд до Петербурга
+  words: 700
+- section: Італійські роки
+  points:
+  - Навчання в Італії
+  - Опери для італійських театрів
+  - Вплив італійської школи
+  - Повернення до Росії
+  words: 700
+- section: Придворна кар'єра
+  points:
+  - Директор Придворної капели
+  - Реформа церковного співу
+  - Відносини з двором
+  - Адміністративна діяльність
+  words: 700
+- section: Музична спадщина
+  points:
+  - Хорові концерти
+  - Духовні твори
+  - Світська музика
+  - Стильові особливості
+  - '"Чертог Твой" та інші шедеври'
+  words: 700
+- section: Спірне питання ідентичності
+  points:
+  - Бортнянський як "російський" композитор
+  - Українське коріння та традиція
+  - Сучасні дискусії про привласнення
+  - Його місце в українській культурі
+  words: 700
+- section: Підсумок — Між світами
+  points:
+  - Успіх ціною ідентичності
+  - Спадщина для церковної музики
+  - Пам'ять про Бортнянського сьогодні
+  words: 800
+vocabulary_hints:
+  required:
+  - композитор (composer)
+  - капела (chapel/choir)
+  - директор (director)
+  - хоровий (choral)
+  - концерт (concerto)
+  - духовна музика (sacred music)
+  - придворний (court)
+  - реформа (reform)
+  - спадщина (legacy)
+  - привласнення (appropriation)
+  recommended:
+  - регент (choir director)
+  - акапела (a cappella)
+  - партитура (score)
+  - гармонія (harmony)
+  - маестро (maestro)
+activity_hints:
+- type: reading
+  focus: Historical descriptions of Bortnyanskyy's work
+  source: Adapted historical sources
+  items: 3 passages
+- type: essay-response
+  focus: Is Bortnyanskyy Ukrainian or Russian?
+  output: Analysis of cultural identity debates
+- type: critical-analysis
+  focus: How did empire appropriate Ukrainian talent?
+  output: Decolonial perspective
+connects_to:
+- 'bio-38 (Semen Hulak Artemovskyy)'
+- bio-48 (Mykola Lysenko - national music)
+- bio-77 (Mykola Leontovych - choral tradition)
+prerequisites:
+- 'bio-34 (Maksym Berezovskyy)'
+- Understanding of 18th century imperial culture
+persona:
+  voice: Senior Biographer
+  role: Choir Master
+module_type: biography
+immersion: 100% Ukrainian
+references:
+- name: Дмитро Бортнянський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Дмитро_Бортнянський
+  type: primary
+  notes: Biography, court career, choral works
+- name: Придворна співацька капела
+  url: https://uk.wikipedia.org/wiki/Придворна_співацька_капела
+  type: reference
+  notes: Institutional context
+- name: Глухівська співацька школа
+  url: https://uk.wikipedia.org/wiki/Глухівська_співацька_школа
+  type: reference
+  notes: Early education
+register: академічний
+grammar: []

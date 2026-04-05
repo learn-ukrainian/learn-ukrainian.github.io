@@ -1,0 +1,63 @@
+{
+  "mode": "v6",
+  "track": "a2",
+  "slug": "liudyna-i-stosunky",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-05T09:13:09.066850+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-05T09:13:52.277552+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-05T09:16:50.987000+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-05T09:18:13.376420+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-05T09:18:13.376604+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-05T09:21:10.119313+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-05T09:21:10.136347+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-05T09:21:10.142112+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-05T09:22:37.273436+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-05T09:22:37.273555+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-05T09:22:37.430194+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-05T09:24:45.665796+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-05T09:24:47.783718+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-05T09:24:49.229562+00:00"
+    }
+  }
+}

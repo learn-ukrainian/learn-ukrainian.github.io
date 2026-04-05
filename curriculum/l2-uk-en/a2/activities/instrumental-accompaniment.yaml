@@ -1,0 +1,253 @@
+version: '1.0'
+module: instrumental-accompaniment
+level: a2
+workbook:
+- id: match-up-instrumental
+  type: match-up
+  instruction: З'єднайте слова в називному відмінку з їхньою формою в орудному відмінку
+  pairs:
+  - left: друг
+    right: з другом
+  - left: подруга
+    right: з подругою
+  - left: брат
+    right: з братом
+  - left: сестра
+    right: із сестрою
+  - left: молоко
+    right: з молоком
+  - left: кава
+    right: з кавою
+  - left: чай
+    right: з чаєм
+  - left: сметана
+    right: зі сметаною
+- id: fill-in-endings
+  type: fill-in
+  instruction: Вставте правильне закінчення орудного відмінка
+  items:
+  - sentence: Я йду в кіно з (друг) ____.
+    answer: другом
+  - sentence: Вона п'є каву з (молоко) ____.
+    answer: молоком
+  - sentence: Він розмовляє із (сестра) ____.
+    answer: сестрою
+  - sentence: Я люблю чай з (лимон) ____.
+    answer: лимоном
+  - sentence: Ми їмо бутерброди з (масло) ____.
+    answer: маслом
+  - sentence: Вона зустрічається з (хлопець) ____.
+    answer: хлопцем
+  - sentence: Я згоден з (мама) ____.
+    answer: мамою
+  - sentence: Він живе з (подруга) ____.
+    answer: подругою
+- id: quiz-prepositions
+  type: quiz
+  instruction: Оберіть правильний варіант прийменника (з/із/зі)
+  items:
+  - question: _____ сметаною
+    options:
+    - з
+    - із
+    - зі
+    - за
+    correct: 2
+  - question: _____ братом
+    options:
+    - з
+    - із
+    - зі
+    - за
+    correct: 1
+  - question: _____ мамою
+    options:
+    - з
+    - із
+    - зі
+    - за
+    correct: 0
+  - question: _____ мною
+    options:
+    - з
+    - із
+    - зі
+    - за
+    correct: 2
+  - question: _____ сестрою
+    options:
+    - з
+    - із
+    - зі
+    - за
+    correct: 1
+  - question: _____ другом
+    options:
+    - з
+    - із
+    - зі
+    - за
+    correct: 0
+  - question: _____ школою
+    options:
+    - з
+    - із
+    - зі
+    - за
+    correct: 2
+  - question: _____ цукром
+    options:
+    - з
+    - із
+    - зі
+    - за
+    correct: 0
+- id: fill-in-cafe
+  type: fill-in
+  instruction: 'Доповніть діалог у кафе: напишіть слова в орудному відмінку'
+  items:
+  - sentence: — Добрий день! Мені, будь ласка, каву з (молоко) ____.
+    answer: молоком
+  - sentence: — А я буду чорний чай з (лимон) ____.
+    answer: лимоном
+  - sentence: — Ви будете десерт? У нас є смачні млинці з (сир) ____.
+    answer: сиром
+  - sentence: — Ні, дякую. Дайте ще бутерброд із (м'ясо) ____.
+    answer: м'ясом
+  - sentence: — Добре. А для вашої подруги? Вона буде чай з (мед) ____?
+    answer: медом
+  - sentence: — Так, і ще салат зі (сметана) ____.
+    answer: сметаною
+  - sentence: — Чудово. А піцу з (гриби) ____ будете замовляти?
+    answer: грибами
+  - sentence: — Так, одну велику піцу з (курка) ____.
+    answer: куркою
+- id: unjumble-sentences
+  type: unjumble
+  instruction: Складіть правильне речення зі слів
+  items:
+  - words:
+    - другом.
+    - з
+    - гуляю
+    - Я
+    correct_order:
+    - Я
+    - гуляю
+    - з
+    - другом.
+  - words:
+    - молоком.
+    - каву
+    - п'є
+    - Вона
+    - з
+    correct_order:
+    - Вона
+    - п'є
+    - каву
+    - з
+    - молоком.
+  - words:
+    - із
+    - розмовляємо
+    - Ми
+    - сестрою.
+    correct_order:
+    - Ми
+    - розмовляємо
+    - із
+    - сестрою.
+  - words:
+    - згоден
+    - тобою.
+    - повністю
+    - Я
+    - з
+    correct_order:
+    - Я
+    - повністю
+    - згоден
+    - з
+    - тобою.
+  - words:
+    - з
+    - піцу
+    - їдять
+    - Вони
+    - грибами.
+    correct_order:
+    - Вони
+    - їдять
+    - піцу
+    - з
+    - грибами.
+  - words:
+    - з
+    - Він
+    - дівчиною.
+    - зустрічається
+    correct_order:
+    - Він
+    - зустрічається
+    - з
+    - дівчиною.
+- id: error-correction-endings
+  type: error-correction
+  instruction: Знайдіть і виправте помилку в закінченні орудного відмінка
+  items:
+  - sentence: Я п'ю каву з молоко.
+    error: молоко
+    correction: молоком
+    error_type: word
+    options:
+    - молоком
+    - молока
+    - молоку
+    explanation: 'Після прийменника «з» потрібен орудний відмінок: з молоком.'
+  - sentence: Він розмовляє із сестра.
+    error: сестра
+    correction: сестрою
+    error_type: word
+    options:
+    - сестри
+    - сестрою
+    - сестрі
+    explanation: Жіночий рід на -а в орудному відмінку має закінчення -ою (із сестрою).
+  - sentence: Вона живе з хлопець.
+    error: хлопець
+    correction: хлопцем
+    error_type: word
+    options:
+    - хлопця
+    - хлопцем
+    - хлопцю
+    explanation: Слово «хлопець» втрачає голосну «е» і отримує м'яке закінчення -ем.
+  - sentence: Ми їмо салат зі сметаном.
+    error: сметаном
+    correction: сметаною
+    error_type: word
+    options:
+    - сметаною
+    - сметани
+    - сметані
+    explanation: «Сметана» — це жіночий рід, тому правильне закінчення -ою.
+  - sentence: Я люблю чай з лимона.
+    error: лимона
+    correction: лимоном
+    error_type: word
+    options:
+    - лимоном
+    - лимону
+    - лимоні
+    explanation: Орудний відмінок чоловічого роду після твердого приголосного має
+      закінчення -ом.
+  - sentence: Мені потрібен бутерброд із сиру.
+    error: сиру
+    correction: сиром
+    error_type: word
+    options:
+    - сиром
+    - сирі
+    - сир
+    explanation: Орудний відмінок відповідає на питання «з чим?» — із сиром.

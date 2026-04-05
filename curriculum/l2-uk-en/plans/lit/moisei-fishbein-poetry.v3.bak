@@ -1,0 +1,80 @@
+module: lit-218
+level: LIT
+sequence: 218
+slug: moisei-fishbein-poetry
+version: '3.0'
+title: 'Мойсей Фішбейн: Апокриф'
+subtitle: Moisei Fishbein — Jewish-Ukrainian Poetry
+focus: literature
+pedagogy: Seminar
+phase: LIT.5 Independence Era 1991-Present
+word_target: 5000
+objectives:
+- Проаналізувати поезію Фішбейна — єврейсько-українську інтелектуальну традицію
+- Дослідити свідомий вибір української мови як творчого рішення
+- Зрозуміти Фішбейна як спростування міфу про «чужу» українську мову
+content_outline:
+- section: Вступ та контекст
+  words: 850
+  points:
+  - Фішбейн (1946-2020) — біографія, єврейське походження, вибір мови
+  - Українсько-єврейська літературна взаємодія
+  - Чому єврейський інтелектуал обрав українську
+- section: '«Апокриф» та ранні збірки'
+  words: 850
+  points:
+  - Інтелектуальна поезія — філософська глибина
+  - Біблійні та талмудичні алюзії українською
+  - Діалог двох традицій — юдаїзм і українська культура
+- section: '«Пророк» та зрілі твори'
+  words: 850
+  points:
+  - Розвиток стилю — від ліричного до філософського
+  - «Ранній рай» — поезія пам'яті та втрати
+  - Перекладацька діяльність (Целан, Рільке українською)
+- section: Мова та стиль
+  words: 850
+  points:
+  - Витонченість української мови Фішбейна
+  - Інтертекстуальність — юдейська та українська традиції
+  - Поліфонічність — багатоголосся культур
+- section: Деколонізаційний вимір
+  words: 850
+  points:
+  - Фішбейн руйнує міф про «антисемітську» українську культуру
+  - Українська як мова вибору, не примусу
+  - Єврейсько-українська співтворчість проти імперського «поділяй і владарюй»
+- section: Підсумок та спадщина
+  words: 750
+  points:
+  - Фішбейн у контексті мультикультурної України
+  - Значення для сучасного діалогу
+  - Питання для дискусії
+vocabulary_hints:
+  required:
+  - апокриф (apocrypha)
+  - поліфонія (polyphony)
+  - інтертекстуальність (intertextuality)
+  recommended:
+  - талмудичний (Talmudic)
+  - мультикультурність (multiculturalism)
+activity_hints:
+- type: reading
+  focus: Аналіз поезії Фішбейна
+- type: essay-response
+  focus: Єврейсько-українська літературна взаємодія
+connects_to:
+- lit-212
+prerequisites:
+- lit-200
+persona:
+  voice: Senior Philologist & Critic
+  role: Multicultural Literature Specialist
+module_type: literature
+immersion: 100% Ukrainian
+references:
+- name: Мойсей Фішбейн — поезія та переклади
+  url: https://www.ukrlib.com.ua/
+  type: primary
+register: академічний
+grammar: []

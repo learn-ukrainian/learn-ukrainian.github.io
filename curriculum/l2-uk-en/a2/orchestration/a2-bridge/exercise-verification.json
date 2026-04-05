@@ -1,519 +1,161 @@
 {
-  "total_items": 192,
-  "grounded_items": 91,
+  "total_items": 74,
+  "grounded_items": 45,
   "ungrounded": [
     {
-      "word": "якому",
+      "word": "це",
       "exercise_type": "quiz",
-      "context": "«Я вивчаю **українську мову**.» — у якому відмінку виділені "
+      "context": "Це новий **студент**."
     },
     {
-      "word": "виділені",
+      "word": "йде",
       "exercise_type": "quiz",
-      "context": "«Я вивчаю **українську мову**.» — у якому відмінку виділені "
+      "context": "Вона йде на **роботу**."
     },
     {
-      "word": "слова",
+      "word": "книга",
       "exercise_type": "quiz",
-      "context": "«Я вивчаю **українську мову**.» — у якому відмінку виділені "
+      "context": "Книга лежить на **столі**."
     },
     {
-      "word": "слово",
+      "word": "лежить",
       "exercise_type": "quiz",
-      "context": "«Я живу **в Києві**.» — у якому відмінку слово «Києві»?"
+      "context": "Книга лежить на **столі**."
     },
     {
-      "word": "навчається",
+      "word": "привіт",
       "exercise_type": "quiz",
-      "context": "«Алекс навчається **в університеті**.» — у якому відмінку сл"
+      "context": "**Маріє**, привіт!"
     },
     {
-      "word": "однини",
+      "word": "знаходиться",
+      "exercise_type": "quiz",
+      "context": "**Школа** знаходиться в центрі."
+    },
+    {
+      "word": "великий",
       "exercise_type": "fill-in",
-      "context": "стіл → ______ (родовий відмінок однини)"
+      "context": "Це великий ____."
     },
     {
-      "word": "столу",
+      "word": "не",
       "exercise_type": "fill-in",
-      "context": "столу"
+      "context": "Я не бачу ____."
     },
     {
-      "word": "столом",
+      "word": "бачу",
       "exercise_type": "fill-in",
-      "context": "столом"
+      "context": "Я не бачу ____."
     },
     {
-      "word": "рукові",
+      "word": "живемо",
       "exercise_type": "fill-in",
-      "context": "рукові"
+      "context": "Ми живемо в місті ____."
     },
     {
-      "word": "руку",
+      "word": "кіт",
       "exercise_type": "fill-in",
-      "context": "руку"
+      "context": "кіт"
     },
     {
-      "word": "книгою",
+      "word": "чорний",
       "exercise_type": "fill-in",
-      "context": "книгою"
+      "context": "Це чорний ____."
     },
     {
-      "word": "коні",
+      "word": "кота",
       "exercise_type": "fill-in",
-      "context": "коні"
+      "context": "кота"
     },
     {
-      "word": "коню",
+      "word": "коті",
       "exercise_type": "fill-in",
-      "context": "коню"
+      "context": "коті"
     },
     {
-      "word": "конем",
+      "word": "люблю",
       "exercise_type": "fill-in",
-      "context": "конем"
+      "context": "Я люблю цього ____."
     },
     {
-      "word": "ноги",
+      "word": "цього",
       "exercise_type": "fill-in",
-      "context": "ноги"
+      "context": "Я люблю цього ____."
     },
     {
-      "word": "ногу",
+      "word": "ніч",
       "exercise_type": "fill-in",
-      "context": "ногу"
+      "context": "ніч"
     },
     {
-      "word": "ногою",
+      "word": "сьогодні",
       "exercise_type": "fill-in",
-      "context": "ногою"
+      "context": "Сьогодні холодна ____."
     },
     {
-      "word": "пічці",
+      "word": "холодна",
       "exercise_type": "fill-in",
-      "context": "пічці"
+      "context": "Сьогодні холодна ____."
     },
     {
-      "word": "піччю",
+      "word": "ночі",
       "exercise_type": "fill-in",
-      "context": "піччю"
+      "context": "ночі"
     },
     {
-      "word": "ліду",
+      "word": "ніччю",
       "exercise_type": "fill-in",
-      "context": "ліду"
+      "context": "ніччю"
     },
     {
-      "word": "лоду",
+      "word": "сплю",
       "exercise_type": "fill-in",
-      "context": "лоду"
+      "context": "Я не сплю посеред ____."
     },
     {
-      "word": "льодом",
+      "word": "посеред",
       "exercise_type": "fill-in",
-      "context": "льодом"
+      "context": "Я не сплю посеред ____."
     },
     {
-      "word": "дороги",
-      "exercise_type": "fill-in",
-      "context": "дороги"
-    },
-    {
-      "word": "дорогу",
-      "exercise_type": "fill-in",
-      "context": "дорогу"
-    },
-    {
-      "word": "дорогою",
-      "exercise_type": "fill-in",
-      "context": "дорогою"
-    },
-    {
-      "word": "після",
+      "word": "анна",
       "exercise_type": "match-up",
-      "context": "прийменник «в/у» — після голосного звуку"
+      "context": "Анна була"
     },
     {
-      "word": "голосного",
+      "word": "розмовляю",
       "exercise_type": "match-up",
-      "context": "прийменник «в/у» — після голосного звуку"
+      "context": "Я розмовляю"
     },
     {
-      "word": "звуку",
+      "word": "студентом",
       "exercise_type": "match-up",
-      "context": "прийменник «в/у» — після голосного звуку"
+      "context": "зі студентом."
     },
     {
-      "word": "приголосного",
-      "exercise_type": "match-up",
-      "context": "прийменник «в/у» — після приголосного звуку"
-    },
-    {
-      "word": "перед",
-      "exercise_type": "match-up",
-      "context": "прийменник «в/у» — перед словом на «в-» або «ф-»"
-    },
-    {
-      "word": "словом",
-      "exercise_type": "match-up",
-      "context": "прийменник «в/у» — перед словом на «в-» або «ф-»"
-    },
-    {
-      "word": "або",
-      "exercise_type": "match-up",
-      "context": "прийменник «в/у» — перед словом на «в-» або «ф-»"
-    },
-    {
-      "word": "вінниці",
-      "exercise_type": "match-up",
-      "context": "Він живе у Вінниці."
-    },
-    {
-      "word": "сполучник",
-      "exercise_type": "match-up",
-      "context": "сполучник «і/й» — між двома приголосними"
-    },
-    {
-      "word": "між",
-      "exercise_type": "match-up",
-      "context": "сполучник «і/й» — між двома приголосними"
-    },
-    {
-      "word": "двома",
-      "exercise_type": "match-up",
-      "context": "сполучник «і/й» — між двома приголосними"
-    },
-    {
-      "word": "приголосними",
-      "exercise_type": "match-up",
-      "context": "сполучник «і/й» — між двома приголосними"
-    },
-    {
-      "word": "хліб",
-      "exercise_type": "match-up",
-      "context": "хліб і масло"
-    },
-    {
-      "word": "речення",
-      "exercise_type": "match-up",
-      "context": "сполучник «і/й» — на початку речення"
-    },
-    {
-      "word": "викладач",
-      "exercise_type": "match-up",
-      "context": "І студент, і викладач навчаються."
-    },
-    {
-      "word": "навчаються",
-      "exercise_type": "match-up",
-      "context": "І студент, і викладач навчаються."
-    },
-    {
-      "word": "більшістю",
-      "exercise_type": "match-up",
-      "context": "прийменник «з/зі/із» — перед більшістю слів"
-    },
-    {
-      "word": "слів",
-      "exercise_type": "match-up",
-      "context": "прийменник «з/зі/із» — перед більшістю слів"
-    },
-    {
-      "word": "збігом",
-      "exercise_type": "match-up",
-      "context": "прийменник «з/зі/із» — перед збігом приголосних"
-    },
-    {
-      "word": "лежать",
+      "word": "йдуть",
       "exercise_type": "error-correction",
-      "context": "Книга і ручка лежать на столі."
+      "context": "Брат й сестра йдуть додому."
     },
     {
-      "word": "та",
+      "word": "додому",
       "exercise_type": "error-correction",
-      "context": "та"
+      "context": "Брат й сестра йдуть додому."
     },
     {
-      "word": "сніданок",
+      "word": "вдома",
       "exercise_type": "error-correction",
-      "context": "Хліб й масло — це сніданок."
-    },
-    {
-      "word": "вони",
-      "exercise_type": "error-correction",
-      "context": "Вони повернулися з Львова."
-    },
-    {
-      "word": "повернулися",
-      "exercise_type": "error-correction",
-      "context": "Вони повернулися з Львова."
-    },
-    {
-      "word": "приїхала",
-      "exercise_type": "error-correction",
-      "context": "Вона приїхала зі Канади."
-    },
-    {
-      "word": "першому",
-      "exercise_type": "quiz",
-      "context": "«За́мок» (наголос на першому складі) — що означає це слово?"
-    },
-    {
-      "word": "складі",
-      "exercise_type": "quiz",
-      "context": "«За́мок» (наголос на першому складі) — що означає це слово?"
-    },
-    {
-      "word": "означає",
-      "exercise_type": "quiz",
-      "context": "«За́мок» (наголос на першому складі) — що означає це слово?"
-    },
-    {
-      "word": "пристрій",
-      "exercise_type": "quiz",
-      "context": "пристрій для закривання дверей"
-    },
-    {
-      "word": "для",
-      "exercise_type": "quiz",
-      "context": "пристрій для закривання дверей"
-    },
-    {
-      "word": "закривання",
-      "exercise_type": "quiz",
-      "context": "пристрій для закривання дверей"
-    },
-    {
-      "word": "дверей",
-      "exercise_type": "quiz",
-      "context": "пристрій для закривання дверей"
-    },
-    {
-      "word": "середньовічна",
-      "exercise_type": "quiz",
-      "context": "середньовічна фортеця або палац"
-    },
-    {
-      "word": "фортеця",
-      "exercise_type": "quiz",
-      "context": "середньовічна фортеця або палац"
-    },
-    {
-      "word": "палац",
-      "exercise_type": "quiz",
-      "context": "середньовічна фортеця або палац"
-    },
-    {
-      "word": "тип",
-      "exercise_type": "quiz",
-      "context": "тип ключа"
-    },
-    {
-      "word": "ключа",
-      "exercise_type": "quiz",
-      "context": "тип ключа"
-    },
-    {
-      "word": "будівлі",
-      "exercise_type": "quiz",
-      "context": "вид будівлі в місті"
-    },
-    {
-      "word": "другому",
-      "exercise_type": "quiz",
-      "context": "«Замо́к» (наголос на другому складі) — що означає це слово?"
-    },
-    {
-      "word": "синонім",
-      "exercise_type": "quiz",
-      "context": "синонім до «форт»"
-    },
-    {
-      "word": "форт",
-      "exercise_type": "quiz",
-      "context": "синонім до «форт»"
-    },
-    {
-      "word": "назва",
-      "exercise_type": "quiz",
-      "context": "назва міста"
-    },
-    {
-      "word": "міста",
-      "exercise_type": "quiz",
-      "context": "назва міста"
-    },
-    {
-      "word": "яка",
-      "exercise_type": "quiz",
-      "context": "«До́рога» (наголос на першому складі) — яка це частина мови?"
-    },
-    {
-      "word": "частина",
-      "exercise_type": "quiz",
-      "context": "«До́рога» (наголос на першому складі) — яка це частина мови?"
-    },
-    {
-      "word": "іменник",
-      "exercise_type": "quiz",
-      "context": "іменник (дорога — шлях)"
-    },
-    {
-      "word": "шлях",
-      "exercise_type": "quiz",
-      "context": "іменник (дорога — шлях)"
-    },
-    {
-      "word": "прикметник",
-      "exercise_type": "quiz",
-      "context": "прикметник жіночого роду від «дорогий» (expensive)"
-    },
-    {
-      "word": "жіночого",
-      "exercise_type": "quiz",
-      "context": "прикметник жіночого роду від «дорогий» (expensive)"
-    },
-    {
-      "word": "роду",
-      "exercise_type": "quiz",
-      "context": "прикметник жіночого роду від «дорогий» (expensive)"
-    },
-    {
-      "word": "від",
-      "exercise_type": "quiz",
-      "context": "прикметник жіночого роду від «дорогий» (expensive)"
-    },
-    {
-      "word": "дорогий",
-      "exercise_type": "quiz",
-      "context": "прикметник жіночого роду від «дорогий» (expensive)"
-    },
-    {
-      "word": "прислівник",
-      "exercise_type": "quiz",
-      "context": "прислівник"
-    },
-    {
-      "word": "займенник",
-      "exercise_type": "quiz",
-      "context": "займенник"
-    },
-    {
-      "word": "вулиця",
-      "exercise_type": "quiz",
-      "context": "іменник (дорога — шлях, вулиця)"
-    },
-    {
-      "word": "дієслово",
-      "exercise_type": "quiz",
-      "context": "дієслово"
-    },
-    {
-      "word": "яке",
-      "exercise_type": "quiz",
-      "context": "Яке твердження про наголос в українській мові є правильним?"
-    },
-    {
-      "word": "твердження",
-      "exercise_type": "quiz",
-      "context": "Яке твердження про наголос в українській мові є правильним?"
-    },
-    {
-      "word": "про",
-      "exercise_type": "quiz",
-      "context": "Яке твердження про наголос в українській мові є правильним?"
-    },
-    {
-      "word": "українській",
-      "exercise_type": "quiz",
-      "context": "Яке твердження про наголос в українській мові є правильним?"
-    },
-    {
-      "word": "мові",
-      "exercise_type": "quiz",
-      "context": "Яке твердження про наголос в українській мові є правильним?"
-    },
-    {
-      "word": "правильним",
-      "exercise_type": "quiz",
-      "context": "Яке твердження про наголос в українській мові є правильним?"
-    },
-    {
-      "word": "завжди",
-      "exercise_type": "quiz",
-      "context": "Наголос завжди стоїть на першому складі"
-    },
-    {
-      "word": "стоїть",
-      "exercise_type": "quiz",
-      "context": "Наголос завжди стоїть на першому складі"
-    },
-    {
-      "word": "останньому",
-      "exercise_type": "quiz",
-      "context": "Наголос завжди стоїть на останньому складі"
-    },
-    {
-      "word": "може",
-      "exercise_type": "quiz",
-      "context": "Наголос вільний і рухомий — може стояти на будь-якому складі"
-    },
-    {
-      "word": "стояти",
-      "exercise_type": "quiz",
-      "context": "Наголос вільний і рухомий — може стояти на будь-якому складі"
-    },
-    {
-      "word": "наголосу",
-      "exercise_type": "quiz",
-      "context": "В українській мові немає наголосу"
-    },
-    {
-      "word": "формі",
-      "exercise_type": "quiz",
-      "context": "У формі «ру́ки» (родовий відмінок від «рука́») — де стоїть н"
-    },
-    {
-      "word": "ки",
-      "exercise_type": "quiz",
-      "context": "на першому складі: РУ-ки"
-    },
-    {
-      "word": "ру",
-      "exercise_type": "quiz",
-      "context": "на другому складі: ру-КИ"
-    },
-    {
-      "word": "залишається",
-      "exercise_type": "quiz",
-      "context": "наголос залишається на тому самому складі, що й у називному"
-    },
-    {
-      "word": "тому",
-      "exercise_type": "quiz",
-      "context": "наголос залишається на тому самому складі, що й у називному"
-    },
-    {
-      "word": "самому",
-      "exercise_type": "quiz",
-      "context": "наголос залишається на тому самому складі, що й у називному"
-    },
-    {
-      "word": "називному",
-      "exercise_type": "quiz",
-      "context": "наголос залишається на тому самому складі, що й у називному"
-    },
-    {
-      "word": "залежить",
-      "exercise_type": "quiz",
-      "context": "наголос залежить від речення"
+      "context": "Батько і мати вдома."
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 13,
-    "tested_in_exercises": 6,
+    "tested_in_exercises": 4,
     "not_tested": [
+      "відмінок",
       "голосний",
       "милозвучність",
+      "наголос",
       "огляд",
       "правило",
       "приголосний",

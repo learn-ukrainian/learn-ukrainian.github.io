@@ -1,51 +1,50 @@
-## У повітрі та на воді: два особливі домени руху (~600 words total)
-- P1 (~120 words): [Bridge from M28/M29: Re-establishing the "Motion Verb Universe" map. Review the progress from land-based motion (walking, driving) to the final two domains: air and water. Emphasize that while the 10 prefixes remain the same, their application to "летіти" and "пливти" introduces new lexical fields and specific grammatical irregularities.]
-- P2 (~130 words): [Defining the domains. Explain why air and water motion are distinct: they represent environments where humans require technology (літак, корабель) or inherent biology (птахи, риби). Introduce the base pairs летіти/літати and пливти/плавати, highlighting that they follow the same unidirectional/multidirectional logic as іти/ходити.]
-- P3 (~250 words): [Reading passage: "Подорож до Стамбула" (A Journey to Istanbul). A first-person narrative about a trip starting at аеропорт Бориспіль, flying to Turkey, and taking a ferry across the Bosphorus. Contextual use of: летіти до Стамбула, літак вилетів, прилетіли вчасно, пором плив через протоку, переплисти Босфор. This serves as the "Global Context" for the entire module.]
-- P4 (~100 words): [Reflection on the text. Deconstruct the narrative by identifying the motion verbs used. Point out that "прилетіли" indicates the result of flight, while "плив" describes the process on water. Transition to the specific study of air motion.]
+## У повітрі та на воді: два особливі домени руху (~550 words total)
+- P1 (~200 words): [Hook and Bridge: Connecting the concept of motion verbs on land (M28-M33) to the less predictable environments of air and water. Explain why "летіти" and "пливти" require their own module: unique vocabulary, specific prefix semantics (like "set sail" vs "take off"), and the stem changes in water verbs. Introduce the thematic setting: Ukraine’s strategic location between the sky (aviation hub) and the sea (Odessa, Black Sea ports).]
+- P2 (~175 words): [Reading Passage Part 1: "The Journey Begins." A narrative describing a flight from Boryspil to Istanbul. Focus on "вилетіти" (depart), "летіти" (flying now), and "долетіти" (reach). Include contextual use of airport terms: термінал, злітна смуга, рейс.]
+- P3 (~175 words): [Reading Passage Part 2: "Crossing the Bosphorus." The journey continues by ferry. Focus on "відпливти" (set sail), "пливти" (sailing now), and "переплисти" (crossing). Contrast the speed of the plane with the steady pace of the ship. Preview the vocabulary: пором, причал, затока.]
 
-## Летіти / літати: рух у повітрі (~1000 words total)
-- P1 (~160 words): [Base pair contrast: Летіти (unidirectional) vs. Літати (multidirectional/habitual). Contrast specific examples: "Дивись, лелека летить!" (now, one direction) vs. "Лелеки літають у небі" (general movement). Discuss "літати" as a general ability: "Я боюся літати" (I am afraid of flying).]
-- P2 (~120 words): [Conjugation patterns. Detail the II-conjugation for "летіти" (лечу, летиш, летять — note the ч/т alternation) and the I-conjugation for "літати" (літаю, літаєш, літають). Provide the past tense: летів/летіла vs. літав/літала.]
-- P3 (~160 words): [Prefixes of Arrival and Departure: прилетіти, вилетіти, відлетіти, полетіти. Focus on airport scenarios. Examples: "Рейс прилетів із запізненням" (The flight arrived late), "Літак вилетів о третій" (The plane took off/departed at three). Explain that "полетіти" emphasizes the start of the action.]
-- P4 (~160 words): [Prefixes of Path and Space: перелетіти (cross), пролетіти (past/through), облетіти (around), залетіти (into). Nature context: "Метелик залетів у кімнату" (The butterfly flew into the room), "Ми облетіли всю гору" (We flew around the whole mountain). Contrast "перелетіти океан" with "пролетіти над хмарами".]
-- P5 (~140 words): [Prefixes of Reach and Target: долетіти (reach), підлетіти (approach). Discuss the difficulty of distance: "Ми нарешті долетіли" (We finally reached/arrived). Discuss physical proximity: "Птах підлетів до годівниці" (The bird flew up to the feeder).]
-- P6 (~150 words): [Aspectual pairs for prefixed air motion. List the imperfective counterparts: прилітати, відлітати, вилітати. Explain that these are used for schedules and repeated actions: "Рейс прилітає щодня" (The flight arrives daily) vs. "Він прилетів сьогодні" (He arrived today).]
-- Exercise: [Quiz, Focus on choosing летіти/літати or the correct prefix, 8 items]
-- Exercise: [Group-sort, Sort prefixed forms of летіти (прилетіти, залетіти, облетіти, etc.) by meaning category (Arrival, Direction, Limit), 12 items]
+## Летіти / літати: рух у повітрі (~1100 words total)
+- P1 (~150 words): [Conjugation and Phonetics of Летіти: Detail the 1st conjugation pattern with the specific "ч/т" alternation in the first person singular: "я лечу," but "ти летиш," "він летить." Provide past tense forms: летів, летіла, летіли. Highlight the stress on the ending in present tense.]
+- P2 (~150 words): [Conjugation and Phonetics of Літати: Detail the stable -а- conjugation class (I conjugation): літаю, літаєш, літає. Contrast the lack of consonant shifts with its unidirectional partner. Provide past tense: літав, літала, літали. Highlight that this is the productive stem for all imperfective prefixed forms.]
+- P3 (~200 words): [Uni- vs Multi-directional Logic in the Air: Re-explain the core distinction using aviation examples. Летіти = the plane is in the air right now (Літак летить у Стамбул). Літати = a general ability (Птахи вміють літати), a habit (Я літаю у відрядження щомісяця), or a round trip (Ми літали в Париж минулого тижня).]
+- P4 (~150 words): [Prefixes Part 1: Arrival and Departure. Explain "прилетіти" (arrival) and "відлетіти/вилетіти" (departure). Contrast "вилетіти" (scheduled departure/flying out of a space) with "відлетіти" (flying away from a person or object). Examples: "Рейс вилетів вчасно," "Птах відлетів від вікна."]
+- P5 (~150 words): [Prefixes Part 2: Crossing and Passing. Explain "перелетіти" (crossing a barrier) and "пролетіти" (passing by or through). Examples: "Перелетіти через океан," "Літак пролетів над будинком." Introduce "залетіти" (flying into/entering) with the example of a butterfly: "Метелик залетів у кімнату."]
+- P6 (~150 words): [Prefixes Part 3: Proximity and Scope. Explain "підлетіти" (approaching/flying up to) and "облетіти" (flying around/circumference). Examples: "Голуб підлетів до крихт," "Екзюпері облетів усю землю." Include "долетіти" for reaching a final goal: "Ми успішно долетіли до Одеси."]
+- Exercise: [Type: group-sort, Focus: Sort 12 prefixed forms of летіти (e.g., вилетіла, прилетів, перелетіли) into categories based on the prefix's directional meaning: Arrival, Departure, Crossing, Proximity.]
 
-## Пливти / плавати: рух на воді (~1000 words total)
-- P1 (~160 words): [Base pair contrast: Пливти (unidirectional) vs. Плавати (multidirectional/skill). Example: "Ми пливемо до острова" (specific destination) vs. "Я люблю плавати в морі" (habitual skill). Mention "плавати" for objects drifting in various directions: "Листя плаває на воді".]
-- P2 (~120 words): [Conjugation and Stems. Conjugate "пливти" (пливу, пливеш, пливуть) and "плавати" (плаваю, плаваєш). Note the past tense "плив" (he swam/sailed) and its potential for confusion with "плавав" (he was swimming/did a round trip).]
-- P3 (~180 words): [CRITICAL GRAMMAR: The irregular stems in prefixed forms. Explain that when prefixes like пере-, до-, об- are added to "пливти", the stem changes to "-плисти". Examples: переплисти (not *перепливти), доплисти, обплисти, проплисти. Provide 3 clear comparison sentences: "Він переплив річку" (result) vs "Він плив через річку" (process).]
-- P4 (~160 words): [Prefixes of Water Arrival/Departure: припливти, відпливти, виплисти. Maritime focus: "Корабель приплив до причалу" (The ship arrived at the pier), "Човен відплив від берега" (The boat sailed away from the shore). Use "виплисти" for emerging from somewhere: "Ми виплисли з печери".]
-- P5 (~160 words): [Prefixes of Crossing and Limit: переплисти (cross), доплисти (reach), проплисти (cover distance/past). Practical examples: "Я хочу переплисти цей басейн", "Ми проплисли п'ять кілометрів". Explain "доплисти" as reaching a goal: "Він ледве доплив до буйка".]
-- P6 (~150 words): [Other prefixes and safety: заплисти (too far/into), підплисти (approach). Use the beach context: "Не запливайте за буйки!" (Don't swim past the buoys), "Дельфін підплив до людей" (The dolphin swam up to the people).]
-- Exercise: [Fill-in, Complete maritime sentences with correct prefixed verbs (припливти, переплисти, відпливти), 8 items]
-- Exercise: [Error-correction, Fix incorrect air/water motion verb forms like *перепливти or *літати instead of летіти in specific contexts, 6 items]
+## Пливти / плавати: рух на воді (~1100 words total)
+- P1 (~150 words): [Conjugation and Phonetics of Пливти: Detail the specific present tense paradigm: пливу, пливеш, пливе, пливемо, пливете, пливуть. Note the consistent "в" in the stem. Past tense: плив, пливла, пливли. Mention the poetic use in songs (Тече вода, пливе човен).]
+- P2 (~150 words): [Conjugation and Phonetics of Плавати: Detail the -а- conjugation class: плаваю, плаваєш, плаває. This verb follows the same predictable pattern as літати. Past tense: плавав, плавала, плавали. Highlight its use for sport and leisure.]
+- P3 (~200 words): [Uni- vs Multi-directional Logic on Water: Contrast "Він пливе до берега" (specific goal right now) with "Він плаває в басейні" (various directions/exercise). Use maritime vessels for contrast: "Корабель пливе в Одесу" vs "Човен плаває по озеру" (drifting or circular movement).]
+- P4 (~200 words): [The Irregular Stem Shift: CRITICAL GRAMMAR POINT. Explain that while the base verb is "пливти," certain perfective prefixed forms shift to a "-плисти" stem. Detail: переплисти, доплисти, обплисти, підплисти. Contrast these with the regular "припливти," "відпливти," "запливти," "випливти." Provide a table showing the split.]
+- P5 (~150 words): [Prefixed Water Motion in Context: Explain "припливти" (ship docking) vs "відпливти" (setting sail). Use "переплисти" for the Dnipro or the Bosphorus. Introduce "проплисти" (passing a lighthouse or buoy). Example: "Ми пропливли повз острів Зміїний."]
+- P6 (~100 words): [Imperfective Prefixed Forms: Explain that all imperfective variants use the -плавати stem: припливати, перепливати, допливати. Note that these are used for repetitive arrivals or actions in progress.]
+- Exercise: [Type: error-correction, Focus: Identify 6 sentences with incorrect stem usage (e.g., "*перепливти річку" corrected to "переплисти річку") or wrong conjugation of the base verb пливти.]
 
 ## Авіаційна та морська лексика (~900 words total)
-- P1 (~160 words): [At the Airport (В аеропорту). Detailed walkthrough of the sequence: термінал (terminal), реєстрація на рейс (check-in), посадковий талон (boarding pass), огляд (security), зал очікування (waiting hall). Example: "Пройдіть на реєстрацію в другому терміналі".]
-- P2 (~150 words): [Flight specifics. Introduce рейс (flight), посадка (boarding), зліт (take-off). Explain types of flights: прямий рейс (direct) vs. стикувальний рейс (connecting). Use "пересадка" for a transfer: "У нас пересадка у Варшаві".]
-- P3 (~140 words): [Parts of the Aircraft. Technical vocabulary: крило (wing), хвіст (tail), ілюмінатор (porthole/window), кабіна пілота (cockpit). Mention the polite command: "Пристебніть паски безпеки" (Fasten your seatbelts).]
-- P4 (~160 words): [At the Sea Port (У морському порту). Vessel types: корабель (ship), катер (cutter/motorboat), пором (ferry), яхта (yacht), човен (boat). Infrastructure: причал (pier), пристань (dock/wharf), маяк (lighthouse).]
-- P5 (~150 words): [Onboard the Ship. Life on water: палуба (deck), каюта (cabin), капітан (captain), матрос (sailor). Describe the movement: "Пором відпливає від пристані о восьмій". Discuss the view: "Ми вийшли на палубу помилуватися морем".]
-- P6 (~140 words): [Geographic maritime terms. Locations for motion: берег (shore), острів (island), затока (bay), відкрите море (open sea). "Човен заплив у тиху затоку", "Корабель тримає курс на острів".]
-- Exercise: [Match-up, Match aviation/maritime vocabulary (рейс, пором, причал, ілюмінатор) with definitions in Ukrainian, 8 items]
-- Exercise: [Free-write, Write a travel story involving both a flight and a ferry trip using 6+ prefixed verbs from the module, 6 items]
+- P1 (~150 words): [The Modern Airport (Аеропорт): Introduce terminal navigation. Words: термінал, реєстрація на рейс, злітна смуга, посадка. Explain the difference between "зльот" (takeoff) and "посадка" (landing). Example: "Ваша посадка починається в терміналі D."]
+- P2 (~150 words): [Flight Logistics: Introduce tickets and connections. Words: посадковий талон, пересадка (transfer), прямий рейс, стикувальний рейс. Example sentences showing how these interact with motion verbs: "Ми летимо прямим рейсом," "У нас пересадка у Відні."]
+- P3 (~150 words): [At the Port (Порт): Introduce maritime infrastructure. Words: причал (pier), пристань, пристань, затока (bay). Explain the role of the "пором" (ferry) in Ukrainian transport (e.g., across the Danube or to Istanbul from Chornomorsk).]
+- P4 (~150 words): [Vessels and Crew: Words: корабель, човен (boat), яхта, палуба (deck), каюта, капітан. Contrast the "човен" (small, often rowing/motor) with the "корабель" (large ship). Example: "Капітан стояв на палубі корабля."]
+- P5 (~100 words): [Dialogue 1: At the Check-in Desk. A 5-turn exchange between a passenger and an agent involving "виліт," "рейс," and "реєстрація."]
+- P6 (~100 words): [Dialogue 2: Buying a Ferry Ticket. A 5-turn exchange at an Odessa ticket office involving "відплиття," "причал," and "переправа."]
+- Exercise: [Type: match-up, Focus: Match 8 aviation/maritime terms (e.g., палуба, злітна смуга) with their Ukrainian definitions (e.g., частина корабля, де гуляють пасажири; місце, де літак розганяється).]
+- Exercise: [Type: fill-in, Focus: Complete 8 sentences about a travel itinerary using correct vocabulary: "Мій ___ (рейс) запізнюється," "Ми чекаємо на ___ (причалі)."]
 
-## Переносні значення: час летить, думки пливуть (~600 words total)
-- P1 (~150 words): [Metaphors of Speed: Летіти. Explain why "Час летить" is the most common metaphor in Ukrainian (speed, transience). Mention "роки летять", "дні летять". Contrast with the neutral "час іде". Provide an example: "Не встиг я озирнутися, як літо пролетіло".]
-- P2 (~150 words): [Metaphors of Flow: Пливти. Discuss the metaphor of slow, steady, or uncontrolled movement. "Думки пливуть" (thoughts drift), "життя пливе" (life flows/drifts). Explain "пливти за течією" (to go with the flow) as a behavioral idiom.]
-- P3 (~150 words): [Abstract movement. "Летіти" as rushing: "Я лечу до тебе" (I'm rushing to you). "Пливти" for music or sound: "Мелодія пливе над залом". Explain how these verbs enrich literary and daily descriptions.]
-- P4 (~150 words): [Nature metaphors. Clouds as ships: "Хмари пливуть по небу". Falling leaves: "Листя летить на землю". Discuss the fine line between literal motion (leaves actually flying in wind) and the poetic "flight" of autumn.]
+## Переносні значення: час летить, думки пливуть (~650 words total)
+- P1 (~150 words): [Figurative "Летіти" - Speed and Fleetingness: Explain the most common metaphor: "Час летить" (Time flies). Extend this to money ("Гроші летять") and news ("Новина летить"). Emphasize that in these cases, the verb implies extreme speed and lack of control.]
+- P2 (~150 words): [Figurative "Пливти" - Fluidity and Slowness: Explain metaphors of smooth movement: "Хмари пливуть," "Мелодія пливе," "Думки пливуть." Contrast this with "летіти" — where "летіти" is fast and chaotic, "пливти" is calm and continuous. Mention "все пливе перед очима" for dizziness.]
+- P3 (~200 words): [Ukrainian Idioms: Introduce "Пливти за течією" (Go with the flow) and "Летіти на всіх вітрилах" (to rush at full speed). Explain the cultural nuance of "Пливти в руки" (to come easily). Compare these with English equivalents to help B1 learners internalize the logic.]
+- Exercise: [Type: quiz, Focus: Sort 8 sentences into "Literal" vs "Figurative" usage. Examples: "Літак летить у Київ" (L) vs "Моя відпустка летить" (F).]
+- Exercise: [Type: free-write, Focus: Write a 6-sentence paragraph about your last vacation using at least 3 prefixed motion verbs (e.g., прилетів, відпливти, переплисти) and one figurative expression (e.g., час летів).]
 
-## Підсумок: повітряний та водний рух (~350 words total)
-- P1 (~200 words): [Final recap table. A comprehensive summary of летіти/літати and пливти/плавати. Remind learners of the 10 prefixes and their meanings (при- = arrival, ви- = departure, пере- = across, etc.). Reiterate the "-плисти" irregularity for prefixed unidirectional water motion. Confirm that with this module, the literal "Motion Verb Universe" of base pairs is complete.]
-- P2 (~150 words): [Self-check Questions:
-    - Q: Як відрізнити "летіти" від "літати"? A: "Летіти" — зараз в один бік; "літати" — часто або туди-сюди.
-    - Q: Яка форма "swim across" правильна: перепливти чи переплисти? A: Правильно "переплисти".
-    - Q: Що таке "direct flight"? A: Це "прямий рейс".
-    - Q: Коли ми кажемо "час летить"? A: Коли він минає дуже швидко.]
+## Підсумок: повітряний та водний рух (~300 words total)
+- P1 (~150 words): [Final Grammar Matrix: A structured table recap. Columns: Verb Pair (Летіти/Літати vs Пливти/Плавати), Conjugation Highlight (я лечу, я пливу), Key Prefixes (при-, від-, пере-, про-), and Irregular Stems (переплисти). This serves as the learner's "cheat sheet" for the module.]
+- P2 (~150 words): [Self-Check Questions: Provide a bulleted list for the learner to verify mastery:
+  - Чи можу я відміняти 'лечу' та 'пливу' без помилок?
+  - Чи знаю я, коли використовувати 'переплисти', а не 'перепливти'?
+  - Чи можу я назвати 5 слів для аеропорту та 5 для порту?
+  - Чи розумію я різницю між 'прилетіти' та 'долетіти'?
+  Final sentence: Preview of M35 (Figurative universe of ALL motion verbs).]
 
-Grand total: ~4450 words
+Grand total: ~4600 words (including exercises and structured summaries).

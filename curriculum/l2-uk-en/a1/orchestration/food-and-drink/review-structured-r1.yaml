@@ -2,52 +2,48 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 7
-  evidence: 'The module missed the specific prompt for the self-check: "Name 5 foods
-    and 3 drinks you like. Name one Ukrainian dish and why it matters." Instead, it
-    used generic recall prompts ("Назви 5 овочів", "'
+  score: 8
+  evidence: The plan explicitly lists "галушки" as an iconic cultural food to include,
+    but it is missing from the prose.
 - dimension: 2
   name: Linguistic accuracy
-  score: 8
-  evidence: DEDUCT for using the calque "по-українськи" 4 times in the self-check
-    instead of standard "українською". REWARD for correcting the plan's "їш" to the
-    grammatically proper "їси".
+  score: 10
+  evidence: No linguistic errors found. Gender assignments (каша, f; м'ясо, n; борщ,
+    m) are accurate, and natural vocabulary ("зазвичай", "щоранку") is used.
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Excellent PPP flow. Explicitly teaching `з + noun` as a chunk and deferring
-    the instrumental case grammar to A2 is exactly the right pedagogical approach
-    for A1 learners.
+  score: 7
+  evidence: Exercises test concepts before they are taught. `fill-in-z-chunks` tests
+    "вода" and "м'ясо" right after the first dialogue, before the Food/Drinks sections
+    introduce them. `quiz-meals-dishes` asks abo
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required and recommended vocabulary items were seamlessly integrated
-    into the natural flow of the prose without resorting to bare lists.
+  score: 9
+  evidence: All required vocabulary is present naturally. From the recommended list,
+    "піца" is missing.
 - dimension: 5
   name: Exercise quality
-  score: 6
-  evidence: DEDUCT for injecting `quiz-meals-dishes` prematurely (testing "компот"
-    before it is introduced) and duplicating the marker. DEDUCT for clustering 4 markers
-    at the end.
+  score: 9
+  evidence: Exercises match the plan's focus well, but suffer from the pedagogical
+    placement issues noted above.
 - dimension: 6
   name: Engagement & tone
   score: 8
-  evidence: 'DEDUCT for meta-commentary / corporate-speak: "You now have a toolkit
-    for talking about food and drink in Ukrainian." This violates the "telling instead
-    of showing" rule.'
+  evidence: Some meta-commentary is present ("A learner who knows борщ... is not just
+    vocabulary-trained — they carry a signal of respect"). This tells rather than
+    shows.
 - dimension: 7
   name: Structural integrity
-  score: 7
-  evidence: DEDUCT for the duplicate exercise marker artifact and for exceeding the
-    +10% word count tolerance limit (1357 vs 1200 target).
+  score: 9
+  evidence: A stray HTML comment `<!-- A2-word -->` was left in the prose after "компот".
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Exceptionally strong, decolonized representation of borshch, salo, and
-    varenyky, correctly referencing the UNESCO heritage list.
+  evidence: Excellent integration of UNESCO's recognition of Ukrainian borshch and
+    natural cultural context for salo and varanyky.
 - dimension: 9
   name: Dialogue & conversation quality
   score: 10
-  evidence: Dialogues are highly natural, contextual, and feature named speakers with
-    distinct voices (e.g., "Каша на плиті").
+  evidence: Dialogues are natural, multi-turn, and effectively use the target chunks
+    ("Кашу з молоком чи без? З молоком, звичайно!").
 findings: []

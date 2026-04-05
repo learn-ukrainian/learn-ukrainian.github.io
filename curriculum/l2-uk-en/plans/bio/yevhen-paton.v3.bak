@@ -1,0 +1,109 @@
+module: bio-069
+level: BIO
+sequence: 69
+slug: yevhen-paton
+version: '3.0'
+title: 'Євген Патон: Батько українського мостобудування'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of євген патон: батько українського мостобудування'
+- Evaluate the contributions of інженер, який з'єднав береги
+- Trace the career and influence of спадщина двох поколінь
+content_outline:
+- section: Вступ — Інженер, який з'єднав береги
+  points:
+  - Патон як засновник української школи зварювання
+  - Мости та технології, що змінили інженерію
+  - Київський міст як символ його спадщини
+  words: 850
+- section: Від Росії до України
+  points:
+  - Народження в Ніцці (1870)
+  - Інженерна освіта в Петербурзі
+  - Переїзд до Києва (1904)
+  - Вибір України як батьківщини
+  words: 850
+- section: Мостобудівник
+  points:
+  - Проектування мостів через Дніпро
+  - Інновації в конструкції мостів
+  - Підготовка українських інженерів
+  - Київський політехнічний інститут
+  words: 850
+- section: Революція зварювання
+  points:
+  - Заснування Інституту електрозварювання (1934)
+  - Автоматичне зварювання
+  - Застосування у танкобудуванні (WWII)
+  - Підвищення продуктивності в 10 разів
+  words: 850
+- section: Післявоєнні досягнення
+  points:
+  - Відбудова зруйнованих мостів
+  - Новий міст через Дніпро (1953)
+  - Підготовка наступного покоління
+  - Робота до останнього дня життя
+  words: 850
+- section: Спадщина двох поколінь
+  points:
+  - Смерть 1953 року
+  - Син Борис — продовжувач справи
+  - Інститут Патона — світовий лідер
+  - Міст Патона — пам'ятка Києва
+  words: 750
+vocabulary_hints:
+  required:
+  - мостобудування (bridge construction)
+  - електрозварювання (electric welding)
+  - інженер (engineer)
+  - конструкція (construction/design)
+  - інститут (institute)
+  - автоматизація (automation)
+  - продуктивність (productivity)
+  - технологія (technology)
+  - проект (project/design)
+  - школа (school/tradition)
+  recommended:
+  - балка (beam)
+  - опора (support/pillar)
+  - прогін (span)
+  - метал (metal)
+  - плавлення (melting)
+activity_hints:
+- type: reading
+  focus: Technical descriptions and memoirs
+  source: Engineering archives
+  items: 3 passages
+- type: essay-response
+  focus: How did Paton's welding technology change industry?
+  output: Technical impact analysis
+connects_to:
+- bio-69 (Boris Paton - his son)
+- bio-121 (Korolyov - contemporary engineer)
+- bio-127 (Amosov - same era scientist)
+prerequisites:
+- Basic understanding of engineering
+- WWII industrial context
+- Soviet-era Ukraine
+persona:
+  voice: Senior Biographer
+  role: Bridge Engineer
+module_type: biography
+immersion: 100% Ukrainian
+references:
+- name: Євген Патон (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Патон_Євген_Оскарович
+  type: primary
+  notes: Biography, engineering achievements, institute
+- name: Інститут електрозварювання
+  url: https://uk.wikipedia.org/wiki/Інститут_електрозварювання_імені_Є._О._Патона
+  type: reference
+  notes: Institute he founded
+- name: Міст Патона
+  url: https://uk.wikipedia.org/wiki/Міст_Патона
+  type: reference
+  notes: Kyiv bridge named after him
+register: академічний
+grammar: []

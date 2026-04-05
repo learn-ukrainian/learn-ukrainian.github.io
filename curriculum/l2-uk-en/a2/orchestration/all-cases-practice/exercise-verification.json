@@ -1,0 +1,411 @@
+{
+  "total_items": 148,
+  "grounded_items": 70,
+  "ungrounded": [
+    {
+      "word": "дав",
+      "exercise_type": "quiz",
+      "context": "Лікар дав рецепт **пацієнту**."
+    },
+    {
+      "word": "пацієнту",
+      "exercise_type": "quiz",
+      "context": "Лікар дав рецепт **пацієнту**."
+    },
+    {
+      "word": "милуються",
+      "exercise_type": "quiz",
+      "context": "Вони милуються **Карпатами**."
+    },
+    {
+      "word": "справи",
+      "exercise_type": "fill-in",
+      "context": "— Привіт, ____! Як справи?"
+    },
+    {
+      "word": "оксані",
+      "exercise_type": "fill-in",
+      "context": "Оксані"
+    },
+    {
+      "word": "оксану",
+      "exercise_type": "fill-in",
+      "context": "Оксану"
+    },
+    {
+      "word": "організовую",
+      "exercise_type": "fill-in",
+      "context": "— Привіт! Я організовую ____ на вихідні."
+    },
+    {
+      "word": "вихідні",
+      "exercise_type": "fill-in",
+      "context": "— Привіт! Я організовую ____ на вихідні."
+    },
+    {
+      "word": "вечірки",
+      "exercise_type": "fill-in",
+      "context": "вечірки"
+    },
+    {
+      "word": "вечіркою",
+      "exercise_type": "fill-in",
+      "context": "вечіркою"
+    },
+    {
+      "word": "подарунків",
+      "exercise_type": "fill-in",
+      "context": "подарунків"
+    },
+    {
+      "word": "класно",
+      "exercise_type": "fill-in",
+      "context": "— Класно! Але в мене немає ____ для іменинника."
+    },
+    {
+      "word": "іменинника",
+      "exercise_type": "fill-in",
+      "context": "— Класно! Але в мене немає ____ для іменинника."
+    },
+    {
+      "word": "подарунками",
+      "exercise_type": "fill-in",
+      "context": "подарунками"
+    },
+    {
+      "word": "подарунках",
+      "exercise_type": "fill-in",
+      "context": "подарунках"
+    },
+    {
+      "word": "проблема",
+      "exercise_type": "fill-in",
+      "context": "— Це не проблема. Головне — твоє ____."
+    },
+    {
+      "word": "головне",
+      "exercise_type": "fill-in",
+      "context": "— Це не проблема. Головне — твоє ____."
+    },
+    {
+      "word": "твоє",
+      "exercise_type": "fill-in",
+      "context": "— Це не проблема. Головне — твоє ____."
+    },
+    {
+      "word": "здоров'ям",
+      "exercise_type": "fill-in",
+      "context": "здоров'ям"
+    },
+    {
+      "word": "здоров'ю",
+      "exercise_type": "fill-in",
+      "context": "здоров'ю"
+    },
+    {
+      "word": "здоров'ї",
+      "exercise_type": "fill-in",
+      "context": "здоров'ї"
+    },
+    {
+      "word": "лікарем",
+      "exercise_type": "fill-in",
+      "context": "лікарем"
+    },
+    {
+      "word": "щойно",
+      "exercise_type": "fill-in",
+      "context": "— Дякую! Я щойно розмовляла з ____."
+    },
+    {
+      "word": "розмовляла",
+      "exercise_type": "fill-in",
+      "context": "— Дякую! Я щойно розмовляла з ____."
+    },
+    {
+      "word": "лікаря",
+      "exercise_type": "fill-in",
+      "context": "лікаря"
+    },
+    {
+      "word": "ліжку",
+      "exercise_type": "fill-in",
+      "context": "ліжку"
+    },
+    {
+      "word": "він",
+      "exercise_type": "fill-in",
+      "context": "— Він сказав, що мені треба відпочивати у ____."
+    },
+    {
+      "word": "сказав",
+      "exercise_type": "fill-in",
+      "context": "— Він сказав, що мені треба відпочивати у ____."
+    },
+    {
+      "word": "відпочивати",
+      "exercise_type": "fill-in",
+      "context": "— Він сказав, що мені треба відпочивати у ____."
+    },
+    {
+      "word": "ліжко",
+      "exercise_type": "fill-in",
+      "context": "ліжко"
+    },
+    {
+      "word": "ліжком",
+      "exercise_type": "fill-in",
+      "context": "ліжком"
+    },
+    {
+      "word": "ліжка",
+      "exercise_type": "fill-in",
+      "context": "ліжка"
+    },
+    {
+      "word": "тобі",
+      "exercise_type": "fill-in",
+      "context": "тобі"
+    },
+    {
+      "word": "принесу",
+      "exercise_type": "fill-in",
+      "context": "— Тоді я принесу ____ трохи фруктів."
+    },
+    {
+      "word": "трохи",
+      "exercise_type": "fill-in",
+      "context": "— Тоді я принесу ____ трохи фруктів."
+    },
+    {
+      "word": "фруктів",
+      "exercise_type": "fill-in",
+      "context": "— Тоді я принесу ____ трохи фруктів."
+    },
+    {
+      "word": "тебе",
+      "exercise_type": "fill-in",
+      "context": "тебе"
+    },
+    {
+      "word": "тобою",
+      "exercise_type": "fill-in",
+      "context": "тобою"
+    },
+    {
+      "word": "буду",
+      "exercise_type": "fill-in",
+      "context": "— Дякую! Я буду рада бачити ____!"
+    },
+    {
+      "word": "рада",
+      "exercise_type": "fill-in",
+      "context": "— Дякую! Я буду рада бачити ____!"
+    },
+    {
+      "word": "виписав",
+      "exercise_type": "match-up",
+      "context": "Лікар виписав рецепт"
+    },
+    {
+      "word": "любимо",
+      "exercise_type": "match-up",
+      "context": "Ми дуже любимо милуватися"
+    },
+    {
+      "word": "високими",
+      "exercise_type": "match-up",
+      "context": "високими Карпатами."
+    },
+    {
+      "word": "ефективних",
+      "exercise_type": "match-up",
+      "context": "ефективних ліків."
+    },
+    {
+      "word": "ліків",
+      "exercise_type": "match-up",
+      "context": "ефективних ліків."
+    },
+    {
+      "word": "вихідних",
+      "exercise_type": "match-up",
+      "context": "На вихідних ми організуємо"
+    },
+    {
+      "word": "організуємо",
+      "exercise_type": "match-up",
+      "context": "На вихідних ми організуємо"
+    },
+    {
+      "word": "мій",
+      "exercise_type": "match-up",
+      "context": "Мій друг зараз знаходиться в"
+    },
+    {
+      "word": "друг",
+      "exercise_type": "match-up",
+      "context": "Мій друг зараз знаходиться в"
+    },
+    {
+      "word": "сучасній",
+      "exercise_type": "match-up",
+      "context": "сучасній лікарні."
+    },
+    {
+      "word": "зовсім",
+      "exercise_type": "match-up",
+      "context": "У мене зовсім немає"
+    },
+    {
+      "word": "високої",
+      "exercise_type": "match-up",
+      "context": "високої температури."
+    },
+    {
+      "word": "запросили",
+      "exercise_type": "match-up",
+      "context": "На свято ми запросили"
+    },
+    {
+      "word": "найкращих",
+      "exercise_type": "match-up",
+      "context": "найкращих друзів."
+    },
+    {
+      "word": "нічним",
+      "exercise_type": "match-up",
+      "context": "нічним потягом."
+    },
+    {
+      "word": "допомагаю",
+      "exercise_type": "error-correction",
+      "context": "Я допомагаю пацієнт знайти аптеку."
+    },
+    {
+      "word": "знайти",
+      "exercise_type": "error-correction",
+      "context": "Я допомагаю пацієнт знайти аптеку."
+    },
+    {
+      "word": "пацієнта",
+      "exercise_type": "error-correction",
+      "context": "пацієнта"
+    },
+    {
+      "word": "пацієнтом",
+      "exercise_type": "error-correction",
+      "context": "пацієнтом"
+    },
+    {
+      "word": "пацієнті",
+      "exercise_type": "error-correction",
+      "context": "пацієнті"
+    },
+    {
+      "word": "вечірці",
+      "exercise_type": "error-correction",
+      "context": "У нас на вечірці було багато гості."
+    },
+    {
+      "word": "було",
+      "exercise_type": "error-correction",
+      "context": "У нас на вечірці було багато гості."
+    },
+    {
+      "word": "гостям",
+      "exercise_type": "error-correction",
+      "context": "гостям"
+    },
+    {
+      "word": "гостями",
+      "exercise_type": "error-correction",
+      "context": "гостями"
+    },
+    {
+      "word": "милувалися",
+      "exercise_type": "error-correction",
+      "context": "Ми довго милувалися Карпати."
+    },
+    {
+      "word": "карпат",
+      "exercise_type": "error-correction",
+      "context": "Карпат"
+    },
+    {
+      "word": "карпатам",
+      "exercise_type": "error-correction",
+      "context": "Карпатам"
+    },
+    {
+      "word": "карпатах",
+      "exercise_type": "error-correction",
+      "context": "Карпатах"
+    },
+    {
+      "word": "хворий",
+      "exercise_type": "error-correction",
+      "context": "Хворий чекає на лікаря у лікарня."
+    },
+    {
+      "word": "чекає",
+      "exercise_type": "error-correction",
+      "context": "Хворий чекає на лікаря у лікарня."
+    },
+    {
+      "word": "лікарня",
+      "exercise_type": "error-correction",
+      "context": "Хворий чекає на лікаря у лікарня."
+    },
+    {
+      "word": "лікарню",
+      "exercise_type": "error-correction",
+      "context": "лікарню"
+    },
+    {
+      "word": "лікарнею",
+      "exercise_type": "error-correction",
+      "context": "лікарнею"
+    },
+    {
+      "word": "лікарнях",
+      "exercise_type": "error-correction",
+      "context": "лікарнях"
+    },
+    {
+      "word": "випишіть",
+      "exercise_type": "error-correction",
+      "context": "Лікар, випишіть мені рецепт!"
+    },
+    {
+      "word": "лікареві",
+      "exercise_type": "error-correction",
+      "context": "Лікареві"
+    },
+    {
+      "word": "температуру",
+      "exercise_type": "error-correction",
+      "context": "температуру"
+    },
+    {
+      "word": "температурою",
+      "exercise_type": "error-correction",
+      "context": "температурою"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 16,
+    "tested_in_exercises": 8,
+    "not_tested": [
+      "визначне",
+      "запрошувати",
+      "ліки",
+      "місце",
+      "подарунок",
+      "подорож",
+      "потяг",
+      "частувати"
+    ]
+  },
+  "all_grounded": false
+}

@@ -1,44 +1,75 @@
-module: oes-101
-level: OES
-sequence: 101
-slug: kyrylo-turovskyi-prytchi-molytvy
-version: '2.0'
-title: 'Кирило Турівський: Притчі та молитви'
-subtitle: 'Kyrylo of Turiv: Parables and Prayers'
-focus: Притча про сліпця і хромця, prayers, стовпництво (stylitism)
-phase: 4
-word_target: 5000
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння філологічних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Текст
+  focus: Транскрипція давньосхіднослов'янського фрагменту
+  placement: inline
+  type: transcription
+- focus: Простежити еволюцію слова від давньосхіднослов'янської до сучасної
+  placement: workbook
+  type: etymology-trace
+- focus: 'Порівняння давньосхіднослов''янських форм із сучасними українськими (Кирило Турівський: Притчі та молитви)'
+  placement: workbook
+  type: comparative-study
+- focus: Критичний аналіз лінгвістичної класифікації тексту
+  placement: workbook
+  type: critical-analysis
+- focus: 'Есе — що цей текст розповідає про стан мови в цю добу? (Кирило Турівський: Притчі та молитви)'
+  placement: workbook
+  type: essay-response
+connects_to:
+- kyrylo-turovskyi-propovidi
+- hagiography-intro
 content_outline:
-- section: Вступ
-  points:
+- points:
   - Kyrylo's literary range — beyond sermons to parables and prayers
   - Biographical context — стовпник (stylite) life and ascetic practice
+  section: Вступ
   words: 750
-- section: Притча про сліпця і хромця
-  points:
+- points:
   - The blind man and the lame man — allegorical parable of body and soul
   - Political subtext — critique of princely power
+  section: Притча про сліпця і хромця
   words: 950
-- section: Молитви Кирила
-  points:
+- points:
   - Penitential prayers — канон покаянний
   - Poetic structure — acrostic, rhythmic prose, liturgical embedding
+  section: Молитви Кирила
   words: 850
-- section: Стовпництво та аскетизм
-  points:
+- points:
   - Kyrylo as стовпник — the pillar ascetic tradition
   - Ascetic theology and its literary expression
+  section: Стовпництво та аскетизм
   words: 800
-- section: Мовний аналіз
-  points:
+- points:
   - Close reading of parable and prayer excerpts
   - Allegory decoding — soul/body, vineyard/church
+  section: Мовний аналіз
   words: 850
-- section: Підсумок
-  points:
+- points:
   - Kyrylo's place in the tradition of Ukrainian spiritual literature
   - Vocabulary table
+  section: Підсумок
   words: 800
+focus: Притча про сліпця і хромця, prayers, стовпництво (stylitism)
+level: OES
+module: oes-101
+objectives:
+- Аналізувати «Притчу про сліпця і хромця» як алегорію душі та тіла
+- Розуміти стовпництво як аскетичну практику та її вплив на літературу
+- Демонструвати вміння інтерпретувати покаянні молитви як поетичну форму
+persona:
+  role: Medieval Theologian
+  voice: Senior Paleographer
+phase: 4
+sequence: 101
+slug: kyrylo-turovskyi-prytchi-molytvy
+subtitle: 'Kyrylo of Turiv: Parables and Prayers'
+title: 'Кирило Турівський: Притчі та молитви'
+version: '2.0'
 vocabulary_hints:
 - притча
 - стовпник
@@ -48,23 +79,4 @@ vocabulary_hints:
 - канон
 - сліпець
 - хромець
-activity_hints:
-- type: reading
-  focus: Parable and prayer text analysis
-  items: 1
-- type: vocabulary
-  focus: Theological and ascetic terminology
-  items: 1
-- type: comparative-analysis
-  focus: Parable vs sermon — genre differences
-  items: 1
-persona:
-  voice: Senior Paleographer
-  role: Medieval Theologian
-connects_to:
-- kyrylo-turovskyi-propovidi
-- hagiography-intro
-objectives:
-- Аналізувати «Притчу про сліпця і хромця» як алегорію душі та тіла
-- Розуміти стовпництво як аскетичну практику та її вплив на літературу
-- Демонструвати вміння інтерпретувати покаянні молитви як поетичну форму
+word_target: 5000

@@ -1,0 +1,127 @@
+vocabulary:
+- word: словосполу́чення
+  translation: phrase, word combination
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: описа́ти
+  translation: to describe
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ви́значити
+  translation: to identify, to determine
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: орудний відмінок
+  translation: instrumental case
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: впра́ва
+  translation: exercise
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: завда́ння
+  translation: task
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ві́дповідь
+  translation: answer
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пере́ві́рка
+  translation: check, test
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: Ким? Чим?
+  translation: By whom? With what?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: чергува́ння
+  translation: alternation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: розрізня́ти
+  translation: to distinguish
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: знаря́ддя
+  translation: tool, instrument
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: за́сіб
+  translation: means
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: прийме́нник
+  translation: preposition
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: су́провід
+  translation: accompaniment
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: інгредіє́нт
+  translation: ingredient
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пе́ред
+  translation: in front of
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: З великою радістю!
+  translation: With great pleasure!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пилосо́с
+  translation: vacuum cleaner
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ганчі́рка
+  translation: rag
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: олі́я
+  translation: oil
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true

@@ -1,27 +1,21 @@
-# Section-by-Section Generation — Section 2/4
+# Section-by-Section Generation — Section 2/5
 
 You are writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 2: Зроблено чи в процесі? Вступ до виду дієслів (A2, A2.1 [Foundation and Aspect Introduction])
-**Section to write:** Недоконаний вид: Процес і повторення (~770 words total)
-**Word target for this section:** 770 words (aim for 847 to account for undershoot)
+**Section to write:** Недоконаний вид: Процес і повторення (~650 words total)
+**Word target for this section:** 650 words (aim for 715 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Недоконаний вид: Процес і повторення (~770 words total)
-
-- P1 (~90 words): Open the "Practice" phase for НВ. State the three contexts where НВ is required: (1) action in progress at a specific moment (*Я читав, коли ти подзвонив*), (2) repeated or habitual action (*Я читав цю книгу три рази*; *Діти читають книги щодня*), (3) general fact or permanent state (*Вона добре співає*). Present as a clearly labelled three-item list so learners have a reference anchor.
-- P2 (~110 words): Deep dive into context 1 — **action in progress**. Explain the "interrupted action" pattern using the imperfect past: *Я читав, коли телефон задзвонив.* / *Вони грали у футбол, коли пішов дощ.* / *Мама варила вечерю, коли я повернувся додому.* Emphasize that НВ sets the background scene; another action (often ДВ) interrupts it. Draw the mental image: НВ is the "movie playing" — the ДВ interruption is someone pressing pause.
-- P3 (~110 words): Deep dive into context 2 — **repeated/habitual actions**. Introduce signal adverbs: *завжди* (always), *часто* (often), *зазвичай* (usually), *щодня* (every day), *іноді* (sometimes), *ніколи* (never). Show them in full sentences: *Він завжди читає перед сном.* / *Вона часто дзвонила бабусі.* / *Ми щодня робили вправи.* Emphasize: whenever one of these adverbs is present, НВ is almost always correct — the action is a pattern, not one unique event.
-- P4 (~70 words): Deep dive into context 3 — **general facts / permanent states**. Short examples: *Кіт спить вдень.* (a cat's habit) / *Вона добре малює.* (a skill) / *Вони не їдять м'яса.* (a permanent fact). Note this is the easiest НВ context — no surprise or completion possible for a permanent fact.
-- P5 (~80 words): НВ in present tense — recap of forms. Conjugate *читати* in present: *читаю, читаєш, читає, читаємо, читаєте, читають*. Note that НВ has a genuine present tense (action happening NOW). Contrast immediately: ДВ has no present — its "present-looking" form always means future (this will be explained in the next section). НВ is the only aspect with a true present.
-- P6 (~110 words): Mini-dialogue — Соломія calls her friend Василь. She describes what she is currently doing and what she usually does on Sundays (~6 turns, ~100 words). Key НВ lines: *Що ти зараз робиш? — Читаю.* / *А щонеділі? — Зазвичай ходжу на ринок і готую обід.* / *Ти часто готуєш? — Так, завжди готую сам.* — After the dialogue, label the НВ verbs and name their context (habit / present action).
-
-**Exercise (fill-in — Identify the Aspect in Sentences, 8 items):** Eight gapped sentences; learner writes НВ or ДВ and the context (process / habit / fact / result). Items: *Він [грав/зіграв] у теніс щоранку.* / *Вчора вона [читала/прочитала] весь день.* / *Я вже [писав/написав] звіт.* / *Вони зазвичай [пили/випили] каву о дев'ятій.* / *Раптом він [падав/упав].* / *Щодня ми [вчили/вивчили] п'ять слів.* / *Нарешті вона [розуміла/зрозуміла] завдання.* / *Мама довго [варила/зварила] суп.*
-
----
+## Недоконаний вид: Процес і повторення (~650 words total)
+- P1 (~140 words): Deep dive into Process. Explain that НВ is used when the duration matters. Example: "Я читав (reading) книгу дві години." It doesn't matter if I finished; it matters that I was busy. Use examples: працювати, відпочивати, гуляти.
+- P2 (~130 words): Deep dive into Repetition and Habit. Any action that happens regularly (every day, often, always) MUST be НВ. Examples: "Щодня я роблю (do) вправи," "Ми часто купуємо (buy) хліб тут."
+- P3 (~120 words): General Facts/Actions without a result. Use НВ to state a simple truth or activity. "Діти люблять читати." Mention that in the Present Tense, only НВ forms exist because "now" is always a process.
+- P4 (~130 words): Signal Words for IMPF. Provide a detailed list with sentences: завжди (always), часто (often), зазвичай (usually), довго (for a long time), щодня (every day), кожного разу (every time). Example: "Він довго писав (was writing) листа."
+- P5 (~130 words): Present vs. Past in НВ. Show the paradigm for "читати" (я читаю, я читав) and explain that both emphasize the continuity of the action.
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -29,7 +23,7 @@ You are writing ONE SECTION of a Ukrainian language module. Write ONLY this sect
 <previous_context>
 [...previous sections truncated...]
 
-*how* the action unfolds. Ukrainian has a name for this hidden layer: **вид дієслова** (verb aspect). Every Ukrainian verb carries aspect. There are exactly two kinds: **недоконаний вид** (imperfective aspect), abbreviated **НВ**, and **доконаний вид** (perfective aspect), abbreviated **ДВ**. Aspect is not tense. Tense tells you *when* — yesterday, now, tomorrow. Aspect tells you *how* — is the action a process that is unfolding, or is it a completed result that already exists? Here is your first pair: **писати** (to write, НВ) and **написати** (to write and finish, ДВ). Same action, different perspective. Think of it like watching a movie. Imperfective is the film playing — the camera rolls, scenes unfold, you are inside the story. Perfective is the screen that reads «Кінець» (The End) — the story is over, the result is final. Here is another way to see it, straight from the kitchen. «Варити борщ» (НВ) — the pot is on the stove, steam is rising, someone is stirring. «Зварити борщ» (ДВ) — the stove is off, the borsch is ready, grab a bowl. How can you tell which aspect you need? Ask yourself what question the verb answers: - **НВ** answers: What was happening? How long did it last? How often did it repeat? - **ДВ** answers: What got done? What is the result? Here are four common pairs. Notice that the ДВ verb usually adds a **prefix** to the НВ verb — this is the most frequent pattern in Ukrainian: | НВ (process) | ДВ (result) | |---|---| | **читати** (to read) | **прочитати** (to finish reading) | | **робити** (to do) | **зробити** (to get done) | | **писати** (to write) | **написати** (to finish writing) | | **вчити** (to study) | **вивчити** (to master) | Now let's return to that football match. Listen to Андрій and Олена commenting on the game: > **Андрій:** Він біжить так швидко! > > **Олена:** Він передав м'яч! > > **Андрій:** Вони грають добре сьогодні. > > **Олена:** О, вона забила гол! > > **Андрій:** Суперники атакують. > > **Олена:** Нарешті! Ми виграли матч! Did you feel the difference? Some lines describe action unfolding right now — the camera is rolling. Other lines announce a result — something just happened and the outcome is clear. Let's label each one: - «Він біжить так швидко!» — **НВ**. The running is in progress. We are watching it happen. - «Він передав м'яч!» — **ДВ**. The pass is complete. The ball is already with another player. - «Вони грають добре сьогодні.» — **НВ**. The match is still going. The playing continues. - «О, вона забила гол!» — **ДВ**. The ball crossed the line. A single completed moment. - «Суперники атакують.» — **НВ**. The attack is unfolding right now. - «Нарешті! Ми виграли матч!» — **ДВ**. The final whistle blew. The victory is a fact. The pattern is simple: if the action is still happening — НВ. If the result already exists — ДВ. <!-- INJECT_ACTIVITY: quiz, Aspect Sorting: Process vs. Result -->
+The first is **недоконаний вид** (imperfective aspect). If we look at the literal translation of this grammatical term, it essentially means "not-finished-looking." This aspect is all about the **процес** (process), the duration, or the **повторення** (repetition) of an action. It tells us that an activity is ongoing, but it deliberately does not tell us if it ever reached a conclusion. The second category is **доконаний вид** (perfective aspect). Literally, this translates to "finished-looking." We use this aspect specifically to talk about a single, successfully completed **дія** (action). The focus here is entirely on the **результат** (result) or the definitive boundary of the action. To speak Ukrainian correctly, you must constantly decide whether you are describing the journey or the destination. The verbs **робити** (to do) and **зробити** (to have done) clearly illustrate this pairing. A helpful way to visualize this grammatical difference is the "movie versus snapshot" analogy. Using an imperfective verb is just like watching a video reel. If you watch a video of a cat playing with a toy, you are observing the continuous, fluid, and ongoing action. You see the movement happening right in front of you, but you do not necessarily see the end of the game. Using a perfective verb, on the other hand, is like looking at a single photograph. The picture shows the exact moment the cat has definitively caught the toy. The action is completely over, the dust has settled, and you are looking at the final, undeniable result. Let's see this dynamic in a real-life context. Imagine two friends are watching a tense football match on television. They naturally switch between both aspects to comment on the unfolding game. > — **Олег:** Дивись, він дуже швидко біжить! *(Look, he is running very fast!)* > — **Максим:** Так, вони грають сьогодні просто чудово. *(Yes, they are playing simply wonderfully today.)* > — **Олег:** Він довго тримає м'яч. Що він робить? *(He is holding the ball for a long time. What is he doing?)* > — **Максим:** Ого! Він щойно передав м'яч прямо в центр! *(Wow! He just passed the ball right into the center!)* > — **Олег:** І він нарешті забив гол! *(And he finally scored a goal!)* > — **Максим:** Це справді неймовірний результат. *(This is truly an incredible result.)* Notice how **біжить** (is running), **грають** (are playing), and **робить** (is doing) describe the ongoing, unresolved process on the screen. But the sudden, completed actions—**передав** (passed) and **забив** (scored)—focus entirely on the final, irreversible result of the play. Because perfective verbs inherently describe a completed result, they do not have a true present tense. Logically, you cannot be currently in the middle of finishing something instantaneously. Therefore, as we begin exploring this new system, we will focus primarily on the past and present tenses. We will look at how to describe what you were doing in the past versus what you actually accomplished. Mastering this conceptual distinction is the ultimate key to unlocking all future verb usage in the Ukrainian language.
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -42,7 +36,7 @@ module: a2-002
 level: A2
 sequence: 2
 slug: aspect-concept
-version: '1.0'
+version: '1.1'
 title: Зроблено чи в процесі? Вступ до виду дієслів
 subtitle: Концепція доконаного та недоконаного виду
 focus: grammar
@@ -50,95 +44,97 @@ pedagogy: PPP
 phase: A2.1 [Foundation and Aspect Introduction]
 word_target: 2000
 objectives:
-- Learner can define grammatical aspect (вид дієслова) and differentiate between perfective
-  (доконаний) and imperfective (недоконаний) verbs.
-- 'Learner can explain the core conceptual difference: imperfective for process/repetition,
-  perfective for a single, completed result.'
-- Learner can identify the aspect of a verb in a simple sentence (past or present
-  tense).
-- Given a simple action, learner can describe it as a process (imperfective) and as
-  a completed result (perfective).
+  - Learner can define grammatical aspect (вид дієслова) and differentiate 
+    between perfective (доконаний) and imperfective (недоконаний) verbs.
+  - 'Learner can explain the core conceptual difference: imperfective for process/repetition,
+    perfective for a single, completed result.'
+  - Learner can identify the aspect of a verb in a simple sentence (past or 
+    present tense).
+  - Given a simple action, learner can describe it as a process (imperfective) 
+    and as a completed result (perfective).
 dialogue_situations:
-- setting: 'Watching a football match on TV — commenting on what''s happening vs what
-    just happened: Він біжить (impf, running)! Він забив гол (pf, scored)! Вони грають
-    (impf) добре. Вона передала (pf) м''яч (m, ball).'
-  speakers:
-  - Два друзі (watching together)
-  motivation: Impf (process) vs pf (result) with гра(f), гол(m), м'яч(m)
+  - setting: 'Watching a football match on TV — commenting on what''s happening vs
+      what just happened: Він біжить (impf, running)! Він забив гол (pf, scored)!
+      Вони грають (impf) добре. Вона передала (pf) м''яч (m, ball).'
+    speakers:
+      - Два друзі (watching together)
+    motivation: Impf (process) vs pf (result) with гра(f), гол(m), м'яч(m)
 content_outline:
-- section: Що таке вид дієслова? (What is Verb Aspect?)
-  words: 500
-  points:
-  - 'Introduction to the concept: Ukrainian verbs have a hidden dimension called ''aspect''.
-    It''s not about *when* (tense), but *how* the action unfolds.'
-  - 'Meet the two types: Недоконаний вид (НВ, imperfective) for ongoing processes,
-    repeated actions, or facts. Доконаний вид (ДВ, perfective) for a single, completed
-    action with a clear result.'
-  - 'Analogy: Imperfective is like watching a movie; perfective is like seeing the
-    ''The End'' screen.'
-- section: 'Недоконаний вид: Процес і повторення (Imperfective: Process & Repetition)'
-  words: 700
-  points:
-  - 'Focus on the uses of imperfective: describing an action in progress (''Я читав,
-    коли ти подзвонив''), a repeated action (''Я читав цю книгу три рази''), or a
-    general fact (''Діти читають книги'').'
-  - 'Simple examples in present and past tense: ''Я читаю'' (I am reading), ''Я читав''
-    (I was reading / I used to read).'
-  - 'Key signal words: завжди (always), часто (often), зазвичай (usually), довго (for
-    a long time), щодня (every day).'
-- section: 'Доконаний вид: Результат! (Perfective: The Result!)'
-  words: 600
-  points:
-  - 'Focus on the use of perfective: describing a single, successfully completed action.
-    The result is what matters.'
-  - 'Example: ''Я прочитав книгу'' (I have read the book, it is finished). Contrast
-    with ''Я читав книгу'' (I was reading the book, maybe I finished, maybe not).'
-  - 'Perfective verbs have no true present tense. Their ''present'' form has a future
-    meaning (e.g., ''зроблю'' means ''I will do''). We will focus on the past tense
-    for now: ''зробив'', ''написала''.'
-  - 'Key signal words: вчора (yesterday, for a single event), раптом (suddenly), нарешті
-    (finally).'
-- section: 'Порівняння пар: Бачимо різницю (Comparing Pairs: Seeing the Difference)'
-  words: 200
-  points:
-  - 'Side-by-side comparison of simple pairs: ''Він писав лист'' (He was writing a
-    letter) vs. ''Він написав лист'' (He wrote a letter).'
-  - 'Visual aids: timelines showing the duration of an imperfective action vs. the
-    single point of completion for a perfective action.'
+  - section: Що таке вид дієслова? (What is Verb Aspect?)
+    words: 500
+    points:
+      - 'Introduction to the concept: Ukrainian verbs have a hidden dimension called
+        ''aspect''. It''s not about *when* (tense), but *how* the action unfolds.'
+      - 'Meet the two types: Недоконаний вид (НВ, imperfective) for ongoing processes,
+        repeated actions, or facts. Доконаний вид (ДВ, perfective) for a single, completed
+        action with a clear result.'
+      - 'Analogy: Imperfective is like watching a movie; perfective is like seeing
+        the ''The End'' screen.'
+  - section: 'Недоконаний вид: Процес і повторення (Imperfective: Process & Repetition)'
+    words: 600
+    points:
+      - 'Focus on the uses of imperfective: describing an action in progress (''Я
+        читав, коли ти подзвонив''), a repeated action (''Я читав цю книгу три рази''),
+        or a general fact (''Діти читають книги'').'
+      - 'Simple examples in present and past tense: ''Я читаю'' (I am reading), ''Я
+        читав'' (I was reading / I used to read).'
+      - 'Key signal words: завжди (always), часто (often), зазвичай (usually), довго
+        (for a long time), щодня (every day).'
+  - section: 'Доконаний вид: Результат! (Perfective: The Result!)'
+    words: 600
+    points:
+      - 'Focus on the use of perfective: describing a single, successfully completed
+        action. The result is what matters.'
+      - 'Example: ''Я прочитав книгу'' (I have read the book, it is finished). Contrast
+        with ''Я читав книгу'' (I was reading the book, maybe I finished, maybe not).'
+      - 'Perfective verbs have no true present tense. Their ''present'' form has a
+        future meaning (e.g., ''зроблю'' means ''I will do''). We will focus on the
+        past tense for now: ''зробив'', ''написала''.'
+      - 'Key signal words: раптом (suddenly), нарешті (finally), вже (already). Note:
+        вчора (yesterday) works with BOTH aspects — Вчора я читав (impf) vs Вчора
+        я прочитав (pf).'
+  - section: 'Порівняння пар: Бачимо різницю (Comparing Pairs: Seeing the Difference)'
+    words: 300
+    points:
+      - 'Side-by-side comparison of simple pairs: ''Він писав лист'' (He was writing
+        a letter) vs. ''Він написав лист'' (He wrote a letter).'
+      - 'Visual aids: timelines showing the duration of an imperfective action vs.
+        the single point of completion for a perfective action.'
 vocabulary_hints:
   required:
-  - вид дієслова (verb aspect)
-  - недоконаний вид (imperfective aspect)
-  - доконаний вид (perfective aspect)
-  - процес (process)
-  - результат (result)
-  - дія (action)
-  - повторення (repetition)
-  - робити / зробити (to do)
+    - вид дієслова (verb aspect)
+    - недоконаний вид (imperfective aspect)
+    - доконаний вид (perfective aspect)
+    - процес (process)
+    - результат (result)
+    - дія (action)
+    - повторення (repetition)
+    - робити / зробити (to do)
   recommended:
-  - завершений (completed, finished)
-  - тривалий (ongoing, lasting)
-  - одноразовий (single, one-time)
-  - концепція (concept)
+    - завершений (completed, finished)
+    - тривалий (ongoing, lasting)
+    - одноразовий (single, one-time)
+    - концепція (concept)
 activity_hints:
-- type: quiz
-  focus: 'Aspect Sorting: Process vs. Result'
-  items: 8
-- type: fill-in
-  focus: Identify the Aspect in Sentences
-  items: 8
-- type: match-up
-  focus: Choose the Correct Aspect (Context-based)
-  items: 8
-- type: error-correction
-  focus: Find and fix wrong aspect choice in sentences (e.g., *Він щодня зробив вправи → робив, *Вона довго написала листа → писала)
-  items: 6
+  - type: quiz
+    focus: 'Aspect Sorting: Process vs. Result'
+    items: 8
+  - type: fill-in
+    focus: Identify the Aspect in Sentences
+    items: 8
+  - type: match-up
+    focus: Choose the Correct Aspect (Context-based)
+    items: 8
+  - type: error-correction
+    focus: Find and fix wrong aspect choice in sentences (e.g., *Він щодня 
+      зробив вправи → робив, *Вона довго написала листа → писала)
+    items: 6
 references:
-- title: Заболотний Grade 6, §52-54
-  notes: 'Вид дієслова: доконаний і недоконаний'
-- title: 'ULP: Ukrainian Verb Aspect'
-  url: https://www.ukrainianlessons.com/ukrainian-verb-aspect/
-  notes: Imperfective vs perfective
+  - title: Заболотний Grade 6, §52-54
+    notes: 'Вид дієслова: доконаний і недоконаний'
+  - title: 'ULP: Ukrainian Verb Aspect'
+    url: https://www.ukrainianlessons.com/ukrainian-verb-aspect/
+    notes: Imperfective vs perfective
 
 </plan_content>
 
@@ -445,15 +441,18 @@ references:
 
 ---
 
+
+
 ## Rules
 
-TARGET: 45-65% Ukrainian.
+TARGET: 20-40% Ukrainian. Bridge modules continue from A1 (which ends at 20-41%).
 LANGUAGE ROLES:
-- THEORY: English prose for grammar explanations that would be too complex in Ukrainian at this level.
-- EXAMPLES & CONTEXT: Ukrainian — dialogues, example sentences, cultural context.
+- THEORY: English prose for grammar review and metalanguage introduction.
+- EXAMPLES & CONTEXT: Ukrainian — dialogues, example sentences, pattern boxes.
 - HEADERS: Ukrainian with English in parentheses.
-- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English — never mix languages within a sentence. Ukrainian paragraphs and dialogues carry most content. English appears for grammar theory and in callout boxes.
-A2 register ONLY. Concrete everyday vocabulary. No literary/poetic language. No abstract nouns. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only (який/що/коли). Aspect pairs introduced. No participles.
+- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English — never mix.
+These are review/bridge modules. English theory is expected. Ukrainian content comes from dialogues, example sentences, paradigm tables, and pattern boxes.
+A2 register ONLY. Concrete everyday vocabulary. No literary/poetic language. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only (який/що/коли). Aspect pairs introduced. No participles.
 
 GRAMMAR RULES:
 - Max 15 words per Ukrainian sentence
@@ -472,7 +471,10 @@ GRAMMAR RULES:
 - **Zero Russian, zero Surzhyk, zero calques.**
 - **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own line.
+- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+  > — **Оксана:** Привіт! *(Hi!)*
+  > — **Степан:** Добрий день! *(Good day!)*
+  > — **Оксана:** Як справи? *(How are you?)*
 
 ## Output
 

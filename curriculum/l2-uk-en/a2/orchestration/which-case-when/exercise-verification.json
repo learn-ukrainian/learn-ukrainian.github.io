@@ -1,0 +1,275 @@
+{
+  "total_items": 174,
+  "grounded_items": 123,
+  "ungrounded": [
+    {
+      "word": "розуміє",
+      "exercise_type": "quiz",
+      "context": "Студент добре розуміє цей _____."
+    },
+    {
+      "word": "контексту",
+      "exercise_type": "quiz",
+      "context": "контексту"
+    },
+    {
+      "word": "контекстом",
+      "exercise_type": "quiz",
+      "context": "контекстом"
+    },
+    {
+      "word": "контексті",
+      "exercise_type": "quiz",
+      "context": "контексті"
+    },
+    {
+      "word": "часом",
+      "exercise_type": "quiz",
+      "context": "часом"
+    },
+    {
+      "word": "часі",
+      "exercise_type": "quiz",
+      "context": "часі"
+    },
+    {
+      "word": "друг",
+      "exercise_type": "quiz",
+      "context": "друг"
+    },
+    {
+      "word": "програміст",
+      "exercise_type": "quiz",
+      "context": "Програміст користується новим _____."
+    },
+    {
+      "word": "алгоритму",
+      "exercise_type": "quiz",
+      "context": "алгоритму"
+    },
+    {
+      "word": "алгоритмом",
+      "exercise_type": "quiz",
+      "context": "алгоритмом"
+    },
+    {
+      "word": "алгоритмі",
+      "exercise_type": "quiz",
+      "context": "алгоритмі"
+    },
+    {
+      "word": "маму",
+      "exercise_type": "quiz",
+      "context": "маму"
+    },
+    {
+      "word": "мамою",
+      "exercise_type": "quiz",
+      "context": "мамою"
+    },
+    {
+      "word": "собаку",
+      "exercise_type": "quiz",
+      "context": "собаку"
+    },
+    {
+      "word": "собакою",
+      "exercise_type": "quiz",
+      "context": "собакою"
+    },
+    {
+      "word": "компанія",
+      "exercise_type": "quiz",
+      "context": "компанія"
+    },
+    {
+      "word": "компанію",
+      "exercise_type": "quiz",
+      "context": "компанію"
+    },
+    {
+      "word": "компанії",
+      "exercise_type": "quiz",
+      "context": "компанії"
+    },
+    {
+      "word": "допомога",
+      "exercise_type": "quiz",
+      "context": "допомога"
+    },
+    {
+      "word": "допомогою",
+      "exercise_type": "quiz",
+      "context": "допомогою"
+    },
+    {
+      "word": "подяка",
+      "exercise_type": "group-sort",
+      "context": "за (подяка: за що?)"
+    },
+    {
+      "word": "звідки",
+      "exercise_type": "group-sort",
+      "context": "з (назовні: звідки?)"
+    },
+    {
+      "word": "відсутність",
+      "exercise_type": "group-sort",
+      "context": "без (відсутність: без чого?)"
+    },
+    {
+      "word": "разом",
+      "exercise_type": "group-sort",
+      "context": "з (разом: з ким?)"
+    },
+    {
+      "word": "можу",
+      "exercise_type": "fill-in",
+      "context": "Я працюю у _____, тому не можу піти в кіно."
+    },
+    {
+      "word": "піти",
+      "exercise_type": "fill-in",
+      "context": "Я працюю у _____, тому не можу піти в кіно."
+    },
+    {
+      "word": "середа",
+      "exercise_type": "fill-in",
+      "context": "середа"
+    },
+    {
+      "word": "середі",
+      "exercise_type": "fill-in",
+      "context": "середі"
+    },
+    {
+      "word": "їздили",
+      "exercise_type": "fill-in",
+      "context": "Минулого _____ ми їздили в гори."
+    },
+    {
+      "word": "гори",
+      "exercise_type": "fill-in",
+      "context": "Минулого _____ ми їздили в гори."
+    },
+    {
+      "word": "тиждень",
+      "exercise_type": "fill-in",
+      "context": "тиждень"
+    },
+    {
+      "word": "тижнем",
+      "exercise_type": "fill-in",
+      "context": "тижнем"
+    },
+    {
+      "word": "сукня",
+      "exercise_type": "fill-in",
+      "context": "сукня"
+    },
+    {
+      "word": "сукню",
+      "exercise_type": "fill-in",
+      "context": "сукню"
+    },
+    {
+      "word": "светр",
+      "exercise_type": "fill-in",
+      "context": "светр"
+    },
+    {
+      "word": "светра",
+      "exercise_type": "fill-in",
+      "context": "светра"
+    },
+    {
+      "word": "місто",
+      "exercise_type": "fill-in",
+      "context": "місто"
+    },
+    {
+      "word": "міста",
+      "exercise_type": "fill-in",
+      "context": "міста"
+    },
+    {
+      "word": "майбутнього",
+      "exercise_type": "fill-in",
+      "context": "майбутнього"
+    },
+    {
+      "word": "рік",
+      "exercise_type": "fill-in",
+      "context": "рік"
+    },
+    {
+      "word": "поїхати",
+      "exercise_type": "fill-in",
+      "context": "Наступного _____ я хочу поїхати в Україну."
+    },
+    {
+      "word": "роботі",
+      "exercise_type": "true-false",
+      "context": "Я щодня йду на роботі о восьмій годині."
+    },
+    {
+      "word": "восьмій",
+      "exercise_type": "true-false",
+      "context": "Я щодня йду на роботі о восьмій годині."
+    },
+    {
+      "word": "годині",
+      "exercise_type": "true-false",
+      "context": "Я щодня йду на роботі о восьмій годині."
+    },
+    {
+      "word": "чорному",
+      "exercise_type": "true-false",
+      "context": "Зараз він сидить у чорному капелюсі."
+    },
+    {
+      "word": "думаємо",
+      "exercise_type": "true-false",
+      "context": "Ми часто думаємо про нашій Україні."
+    },
+    {
+      "word": "україні",
+      "exercise_type": "true-false",
+      "context": "Ми часто думаємо про нашій Україні."
+    },
+    {
+      "word": "відпочивають",
+      "exercise_type": "true-false",
+      "context": "Вони зараз відпочивають на морі."
+    },
+    {
+      "word": "морі",
+      "exercise_type": "true-false",
+      "context": "Вони зараз відпочивають на морі."
+    },
+    {
+      "word": "вільний",
+      "exercise_type": "true-false",
+      "context": "У мене сьогодні немає вільний час."
+    },
+    {
+      "word": "молодшого",
+      "exercise_type": "true-false",
+      "context": "Я допомагаю свого молодшого брата."
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 14,
+    "tested_in_exercises": 7,
+    "not_tested": [
+      "боятися",
+      "думати",
+      "дієслово",
+      "керувати",
+      "користуватися",
+      "прийменник",
+      "характеристика"
+    ]
+  },
+  "all_grounded": false
+}

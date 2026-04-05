@@ -1,0 +1,102 @@
+module: bio-126
+level: BIO
+sequence: 126
+slug: petro-veskliaov
+version: '3.0'
+title: 'Дід Панас: Казкар нації'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- Analyze the cultural phenomenon of "Did Panas"
+- Evaluate the role of Ukrainian language on Soviet TV
+- Discuss the art of storytelling
+content_outline:
+- section: Вступ — Дідусь усіх українських дітей
+  points:
+  - Петро Вескляров (Дід Панас) — легенда українського ТБ
+  - Програма "Вечірня казка": 1962-1988
+  - Символ затишку і рідної мови в радянські часи
+  words: 700
+- section: Театральний шлях
+  points:
+  - Походження з Черкащини, справжнє прізвище Вескляр
+  - Робота в театрі в Луцьку та Рівному
+  - Кіноролі: характерний актор другого плану
+  words: 700
+- section: Народження легенди
+  points:
+  - Заміна першого "дідуся" на радіо
+  - Перехід на телебачення (УТ-1)
+  - Образ: вишиванка, сиві вуса, тепла усмішка
+  words: 700
+- section: Українська мова в ефірі
+  points:
+  - Феномен україномовної програми в зросійщеному Києві
+  - Добрий вечір вам, малята, любі хлопчики й дівчата!
+  - Казки як спосіб передачі національного коду
+  words: 700
+- section: Легенди та міфи
+  points:
+  - Історії про нецензурні слова в прямому ефірі (міф чи правда?)
+  - Конфлікти з керівництвом телебачення
+  - Звільнення і народна любов
+  words: 700
+- section: Самотність і пам'ять
+  points:
+  - Останні роки життя в забутті
+  - Смерть 1994 року
+  - 'Культурна спадщина: "Дід Панас" як бренд добра'
+  words: 700
+- section: Дискусія — Роль казки у вихованні
+  points:
+  - Чому діти вірили Діду Панасу?
+  - Значення "живого" оповідача в епоху гаджетів
+  words: 800
+vocabulary_hints:
+  required:
+  - казка (fairy tale)
+  - телеведучий (TV presenter)
+  - вишиванка (vyshyvanka)
+  - прямий ефір (live broadcast)
+  - легенда (legend)
+  - дідусь (grandpa)
+  - колискова (lullaby)
+  - актор (actor)
+  - цензура (censorship)
+  - малята (little ones/kids)
+  recommended:
+  - байка (fable)
+  - імпровізація (improvisation)
+  - екран (screen)
+  - покоління (generation)
+  - затишок (coziness/comfort)
+activity_hints:
+- type: reading
+  focus: Спогади колег про Петра Весклярова
+  source: Інтерв'ю та статті
+  items: 3 passages
+- type: essay-response
+  focus: Феномен Діда Панаса в радянській Україні
+  output: Есе-аналіз
+connects_to:
+- bio-135-vasyl-stus
+- lit-juvenile-kids-poetry-anthology
+prerequisites:
+- lit-juvenile-kids-folklore
+persona:
+  voice: TV Historian
+  role: Cultural Anthropologist
+module_type: biography
+immersion: 100% Ukrainian
+references:
+- name: Петро Вескляров (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Вескляров_Петро_Юхимович
+  type: primary
+  notes: Біографія
+- name: Записи "Вечірньої казки"
+  url: https://www.youtube.com/
+  type: reference
+  notes: Відеоархів
+register: академічний
+grammar: []

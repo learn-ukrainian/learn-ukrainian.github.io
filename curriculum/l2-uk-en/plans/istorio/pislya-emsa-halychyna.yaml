@@ -1,67 +1,111 @@
-module: istorio-123
-level: ISTORIO
-sequence: 123
-slug: pislya-emsa-halychyna
-version: '3.0'
-title: 'Після Емса: Галицький розквіт'
-focus: history
-pedagogy: seminar
-word_target: 5000
-objectives:
-- 'Analyze the causes and consequences of після емса: галицький розквіт'
-- Evaluate the historical significance of культура переїжджає
+activities:
+- focus: What Ems Decree prohibited — text analysis
+  type: critical-analysis
+- focus: Galician institution building 1876-1914
+  type: comparative-study
+- focus: How Galicia influenced all of Ukraine
+  type: critical-analysis
+- focus: Galicia vs. Russian Empire — cultural freedom
+  type: comparative-study
+- focus: Чому Галичина стала 'українським П'ємонтом'?
+  type: essay-response
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння методологічних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Зіткнення наративів
+  focus: Розуміння історіографічного тексту
+  placement: inline
+  type: reading
+- focus: Джерельна критика — методологія, упередження, сліпі плями
+  placement: workbook
+  type: source-evaluation
+- focus: 'Порівняння 3+ наративів про одну подію (Після Емса: Галицький розквіт)'
+  placement: workbook
+  type: comparative-study
+- focus: Який наратив найбільш підкріплений доказами?
+  placement: workbook
+  type: debate
+- focus: Мета-рефлексія — як ми читаємо історію?
+  placement: workbook
+  type: essay-response
+connects_to:
+- pislya-stalina-shistdesiatnyky
 content_outline:
-- section: Вступ — Культура переїжджає
-  points:
+- points:
   - 1876 — Емський указ
   - Заборона української мови
   - Галичина — рятівний острів
   - Структура модуля
+  section: Вступ — Культура переїжджає
   words: 850
-- section: Емський указ — що заборонили
-  points:
+- points:
   - Текст указу
   - Що неможливо було друкувати
   - Освіта — закрита
   - Наслідки для Наддніпрянщини
+  section: Емський указ — що заборонили
   words: 850
-- section: Галичина — інший світ
-  points:
+- points:
   - Австрія — відносна свобода
   - Українські школи
   - Преса і видавництва
   - «Просвіта»
+  section: Галичина — інший світ
   words: 850
-- section: Інституційне будівництво
-  points:
+- points:
   - НТШ — українська академія
   - Франко, Грушевський — львівський період
   - Кооперативний рух
   - Політичні партії
+  section: Інституційне будівництво
   words: 850
-- section: Вплив на всю Україну
-  points:
+- points:
   - Львів — столиця культури
   - Книги контрабандою
   - «Галицький П'ємонт»
   - Ідеї перетинають кордон
+  section: Вплив на всю Україну
   words: 850
-- section: Підсумок
-  points:
+- points:
   - Емс — не смерть, а переїзд
   - Галичина — носій до 1939
   - Перехід до шістдесятників
+  section: Підсумок
   words: 750
-vocabulary_hints:
-  required:
-  - історія (history)
-  - подія (event)
-  - джерело (source)
-  - аналіз (analysis)
-  recommended:
-  - контекст (context)
-  - інтерпретація (interpretation)
-  - наслідки (consequences)
+focus: history
+grammar: []
+level: ISTORIO
+module: istorio-123
+objectives:
+- 'Analyze the causes and consequences of після емса: галицький розквіт'
+- Evaluate the historical significance of культура переїжджає
+pedagogy: seminar
+persona:
+  role: Austro-Hungarian Specialist
+  voice: Academic Historiographer
+prerequisites:
+- tsykl-kulturnykh-vidrodzhen
+references:
+- name: Емський указ (Вікіпедія)
+  notes: Ems Decree
+  type: reference
+  url: https://uk.wikipedia.org/wiki/Емський_указ
+- name: Галицьке українство (Вікіпедія)
+  notes: Galician Ukrainians
+  type: reference
+  url: https://uk.wikipedia.org/wiki/Галичина
+- name: НТШ (Вікіпедія)
+  notes: Shevchenko Scientific Society
+  type: reference
+  url: https://uk.wikipedia.org/wiki/Наукове_товариство_імені_Шевченка
+register: академічний
+sequence: 123
+slug: pislya-emsa-halychyna
+title: 'Після Емса: Галицький розквіт'
+version: '3.0'
 vocabulary:
 - Емський указ
 - заборона
@@ -78,45 +122,14 @@ vocabulary:
 - «Літературно-науковий вісник»
 - греко-католицька церква
 - українофіли
-activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: true-false
-  focus: Факти та інтерпретації
-  items: 10
-activities:
-- type: critical-analysis
-  focus: What Ems Decree prohibited — text analysis
-- type: comparative-study
-  focus: Galician institution building 1876-1914
-- type: critical-analysis
-  focus: How Galicia influenced all of Ukraine
-- type: comparative-study
-  focus: Galicia vs. Russian Empire — cultural freedom
-- type: essay-response
-  focus: Чому Галичина стала 'українським П'ємонтом'?
-persona:
-  voice: Academic Historiographer
-  role: Austro-Hungarian Specialist
-prerequisites:
-- tsykl-kulturnykh-vidrodzhen
-connects_to:
-- pislya-stalina-shistdesiatnyky
-references:
-- name: Емський указ (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Емський_указ
-  type: reference
-  notes: Ems Decree
-- name: Галицьке українство (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Галичина
-  type: reference
-  notes: Galician Ukrainians
-- name: НТШ (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Наукове_товариство_імені_Шевченка
-  type: reference
-  notes: Shevchenko Scientific Society
-register: академічний
-grammar: []
+vocabulary_hints:
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+word_target: 5000

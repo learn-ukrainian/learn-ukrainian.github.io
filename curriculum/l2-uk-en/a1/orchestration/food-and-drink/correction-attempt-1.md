@@ -2,7 +2,6 @@
 CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
 
 - FIX: Missing section heading: 'Підсумок — Summary'
-- NOTE: Missing 1/14 required vocab: напій (drink, m)
 </correction_directive>
 
 LEARNINGS FROM PAST BUILDS (same error patterns seen before):

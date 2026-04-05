@@ -1,0 +1,235 @@
+vocabulary:
+- word: кі́лькість
+  translation: quantity
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: відсу́тність
+  translation: absence
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: гроші
+  translation: money
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: час
+  translation: time
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: родо́ви́й відмі́нок
+  translation: genitive case
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: нема́є
+  translation: (there) is not, (I) don't have
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: бага́то
+  translation: a lot, many, much
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ма́ло
+  translation: a little, few
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: кі́лька
+  translation: a few, several
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: скі́льки
+  translation: how many, how much
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: закі́нчення
+  translation: ending (grammar)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: однина́
+  translation: singular
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: множина́
+  translation: plural
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: у мене немає
+  translation: I don't have
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вільний час
+  translation: free time
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: плита́
+  translation: stove
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: холоди́льник
+  translation: fridge
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: дзе́ркало
+  translation: mirror
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ме́блі
+  translation: furniture
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: нічого страшного
+  translation: no worries
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: обов'язко́во
+  translation: definitely
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: завтра вранці
+  translation: tomorrow morning
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: цу́кор
+  translation: sugar
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пісо́к
+  translation: sand
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: скля́нка
+  translation: glass
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: земля́
+  translation: land, soil
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: по́ми́лка
+  translation: mistake
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: гри́вня
+  translation: hryvnia
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: карти́на
+  translation: painting
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: зо́шит
+  translation: notebook
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ремо́нт
+  translation: renovation
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лі́жко
+  translation: bed
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ша́фа
+  translation: wardrobe
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: стіле́ць
+  translation: chair
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: те́хніка
+  translation: appliances
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: де́кілька
+  translation: several, a few
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: спра́вді
+  translation: really, indeed
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: на жаль
+  translation: unfortunately
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: поки що
+  translation: for now, yet
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

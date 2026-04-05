@@ -1,0 +1,50 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: Word count (2822 words) significantly exceeds the 2000-word target. Required
+    vocabulary (`чергування`, `голосний`, `приголосний`) was omitted from instructional
+    prose, appearing only in summary questi
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Minor euphony violation in the dialogue ("в готелі у центрі" instead of
+    "в центрі"). Phonetic explanation for "просьба" inaccurately omits the role of
+    "ь" in its spelling.
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'Good use of examples and clear explanations of rules like the closed
+    syllable rule. However, failing to introduce target language terminology (vowels,
+    consonants, alternation) in the text weakens the '
+- dimension: 4
+  name: Vocabulary coverage
+  score: 6
+  evidence: 3 of 9 required words absent from prose. 3 of 4 recommended words (`огляд`,
+    `система`, `правило`) were missing entirely.
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All markers placed correctly and match plan perfectly.
+- dimension: 6
+  name: Engagement & tone
+  score: 4
+  evidence: Text is saturated with meta-commentary, gamification, and fluff ("Great
+    Map", "frontier cases", "magic of", "secret ingredient", "power tools", "major
+    milestone").
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: 'Stray pipeline artifact left at the end of the text ("Deterministic word
+    count: 2822 words"). Headings are clean.'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent framing of the Vocative case as a cultural necessity and euphony
+    as a native phonetic feature.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: The dialogue contains unnatural teacher phrasing ("Ви добре знаєте слова!").
+findings: []

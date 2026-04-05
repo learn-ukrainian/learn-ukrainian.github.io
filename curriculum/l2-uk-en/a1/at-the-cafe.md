@@ -33,6 +33,8 @@ Now test yourself — can you answer these questions from the dialogues?
 - What did Іванка order? → **Мені чай і тістечко.**
 - How did they pay? → **Карткою** (by card).
 
+<!-- INJECT_ACTIVITY: fill-in-dialogue -->
+
 ## Як замо́вити (How to Order)
 
 When you want to order (**замовля́ти**) at a Ukrainian **кафе**, there are four polite ways to do it. Each one uses the accusative case — the same endings you learned in M37.
@@ -65,7 +67,7 @@ Once you've ordered, you might want to ask about the **меню**. Here are six 
 - **Це го́стре?** — Is it spicy?
 - **Це з м'я́сом?** — Is it with meat?
 - **А що це?** — What is this?
-- **Скі́льки ко́шту́є?** — How much does it cost?
+- **Скі́льки ко́штує?** — How much does it cost?
 - **Є вегетаріа́нське меню?** — Is there a vegetarian menu?
 
 Each question gets a real answer. Ask **Скільки коштує борщ?** and the waiter might say: **Борщ коштує вісімдеся́т гривень** (The borshch costs eighty hryvnias).
@@ -101,8 +103,6 @@ And here are six phrases for everyday café moments — from arriving to leaving
 - **Все було дуже смачно!** — Everything was delicious!
 
 Each phrase fits a micro-situation: you walk in (**Тут вільно?**), you browse (**Можна меню?**), you reorder (**Ще одну каву**), you customize (**Без цукру**), and you leave happy (**Все було дуже смачно!**).
-
-<!-- INJECT_ACTIVITY: fill-in-dialogue -->
 
 <!-- INJECT_ACTIVITY: match-cafe-phrases -->
 

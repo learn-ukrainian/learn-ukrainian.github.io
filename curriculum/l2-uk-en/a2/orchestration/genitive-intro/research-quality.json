@@ -1,0 +1,70 @@
+{
+  "exists": true,
+  "words": 848,
+  "quality": "adequate",
+  "score": 5,
+  "score_raw": 8,
+  "score_max": 17,
+  "markers": 5,
+  "profile": "core",
+  "dimensions": {
+    "state_standard": {
+      "score": 1,
+      "max": 2,
+      "detail": "4 sections (need 5+)"
+    },
+    "vocabulary": {
+      "score": 0,
+      "max": 2,
+      "detail": "only 6 excerpts"
+    },
+    "cultural_hooks": {
+      "score": 0,
+      "max": 2,
+      "detail": "no cultural references found"
+    },
+    "learner_errors": {
+      "score": 2,
+      "max": 2,
+      "detail": "N/A for V6 packets"
+    },
+    "cross_references": {
+      "score": 1,
+      "max": 1,
+      "detail": "3 authors"
+    },
+    "pedagogy_notes": {
+      "score": 1,
+      "max": 1,
+      "detail": "3 pedagogy references"
+    },
+    "source_verification": {
+      "score": 1,
+      "max": 2,
+      "detail": "6 sources"
+    },
+    "claim_grounding": {
+      "score": 1,
+      "max": 2,
+      "detail": "470 terms"
+    },
+    "discovery_integration": {
+      "score": 1,
+      "max": 1,
+      "detail": "N/A for V6"
+    },
+    "specificity": {
+      "score": 0,
+      "max": 2,
+      "detail": "only 848 words"
+    }
+  },
+  "gaps": [
+    "state_standard: 4 sections (need 5+)",
+    "vocabulary: only 6 excerpts",
+    "cultural_hooks: no cultural references found",
+    "source_verification: 6 sources",
+    "claim_grounding: 470 terms",
+    "specificity: only 848 words"
+  ]
+}

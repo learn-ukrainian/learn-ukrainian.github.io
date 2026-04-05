@@ -1,0 +1,50 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'The plan required specific examples: "без хліба" and "без води", which
+    were omitted from the text. The plan also required the vocabulary word "призначення",
+    which was absent.'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Repeated use of the calque "знаходиться" for location ("Моя нова квартира
+    знаходиться біля парку", "Стара площа знаходиться навпроти церкви", etc.). Unnatural
+    phrasing "вправу для спостереження".
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent flow from situation to pattern to practice. Clear and abundant
+    examples for hard and soft stems.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: The required word "призначення" is missing from the prose. All other required
+    words (допомога, лікарня, станція, etc.) are used naturally.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers perfectly match the plan hints and test the exact concepts taught
+    in the preceding sections.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Professional and conversational. No annoying meta-commentary. Good use
+    of short dialogues to break up grammar explanations.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, correct H2 headers, no formatting artifacts. Word count
+    (3363) is well within the acceptable range for a 2000-word target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Accurate references to Ukrainian names and typical urban settings. Authentic
+    use of the literary "коло" (Садок вишневий коло хати).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogues are simple but natural for the A2 level. They successfully model
+    the target grammar in context.
+findings: []

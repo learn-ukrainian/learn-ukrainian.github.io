@@ -1,130 +1,142 @@
-module: istorio-076
-level: ISTORIO
-sequence: 76
-slug: slobozhanshchyna-identychnist
-version: '3.0'
-title: 'Слобожанщина: Формування ідентичності'
-focus: history
-pedagogy: seminar
-word_target: 5000
-objectives:
-- 'Analyze the causes and consequences of слобожанщина: формування ідентичності'
-- Evaluate the historical significance of вільні землі
-content_outline:
-- section: Вступ — «Слободи» — вільні землі
-  points:
-  - Слобожанщина — де це
-  - Назва — від «слобода»
-  - Козацьке заселення
-  - Структура модуля
-  words: 700
-- section: Заселення (XVII ст.)
-  points:
-  - Втечі з Правобережжя
-  - Козацькі полки — Харківський, Сумський, та ін.
-  - Росія запрошує — чому
-  - Особливий статус
-  words: 700
-- section: Слобідське козацтво
-  points:
-  - Козацька організація
-  - Відмінності від Запорожжя
-  - Служба Росії
-  - Скасування — 1765
-  words: 700
-- section: Харків — культурний центр
-  points:
-  - Заснування — 1654
-  - Університет — 1804
-  - Харківська школа романтиків
-  - Котляревський, Квітка-Основ'яненко
-  - Перша столиця УРСР
-  words: 700
-- section: Русифікація
-  points:
-  - Раніше, ніж деінде
-  - Близькість до Росії
-  - Мовний зсув
-  - Але збереження ідентичності
-  words: 700
-- section: Сучасна Слобожанщина
-  points:
-  - Харківська область
-  - «Другий фронт» 2022
-  - Деокупація
-  - Українська ідентичність під тиском
-  words: 700
-- section: Підсумок
-  points:
-  - Слобожанщина — козацька, але інша
-  - Харків — українське місто
-  - Перехід до Донбасу
-  words: 800
-vocabulary_hints:
-  required:
-  - історія (history)
-  - подія (event)
-  - джерело (source)
-  - аналіз (analysis)
-  recommended:
-  - контекст (context)
-  - інтерпретація (interpretation)
-  - наслідки (consequences)
-vocabulary:
-- Слобожанщина
-- слобода
-- козацький полк
-- заселення
-- русифікація
-- культурний центр
-- ідентичність
-- романтизм
-- прикордоння
-- автономія
-- Харківська школа
-- етнічна межа
-- мовний зсув
-- регіональна свідомість
-- колонізація
 activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: true-false
-  focus: Факти та інтерпретації
-  items: 10
-activities:
-- type: critical-analysis
-  focus: Who settled Slobozhanshchyna and why
-- type: critical-analysis
-  focus: Kharkiv as Ukrainian cultural center — key figures
-- type: comparative-study
-  focus: Slobozhanshchyna vs. Zaporozhian Cossacks
-- type: critical-analysis
-  focus: Kharkiv 2022 — Ukrainian identity under siege
-- type: essay-response
-  focus: Чому Харків став культурною столицею України у XIX ст.?
-persona:
-  voice: Academic Historiographer
-  role: Frontier Identity Scholar
-prerequisites:
-- syntez-zakhidni-rehiony
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння методологічних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Зіткнення наративів
+  focus: Розуміння історіографічного тексту
+  placement: inline
+  type: reading
+- focus: Джерельна критика — методологія, упередження, сліпі плями
+  placement: workbook
+  type: source-evaluation
+- focus: 'Порівняння 3+ наративів про одну подію (Слобожанщина: Формування ідентичності)'
+  placement: workbook
+  type: comparative-study
+- focus: Який наратив найбільш підкріплений доказами?
+  placement: workbook
+  type: debate
+- focus: Мета-рефлексія — як ми читаємо історію?
+  placement: workbook
+  type: essay-response
+cefr_min: C1
 connects_to:
 - donbas-industrializatsiia
+- syntez-zakhidni-rehiony
+content_outline:
+- points:
+  - 'Провокація: Українські козаки тікають від Речі Посполитої, щоб заснувати «вільні землі» (слободи), але присягають на
+    вірність московському царю. Це акт виживання, державницька мудрість чи зрада?'
+  - 'Дві цитати без авторства: одна описує заселення Слобожанщини як «возз''єднання» братніх народів, інша — як українську
+    колонізацію Дикого Поля. Студент має припустити, хто автори.'
+  section: Розминка
+  words: 400
+- points:
+  - 'Дебат 1: Заселення Слобожанщини — це стихійна українська колонізація чи керований російський проєкт? Розглядаємо докази
+    на користь обох версій.'
+  - 'Дебат 2: Слобідські полки — це автономне козацьке утворення чи просто нерегулярні війська на службі імперії? Порівняння
+    з Гетьманщиною та Запоріжжям.'
+  - '[!epistemic-humility] Аналіз указу 1765 р. про скасування полкового устрою: чи це була «зрада» з боку імперії, чи логічний
+    кінець тимчасового військового союзу?'
+  section: 'Конфліктна карта: Прикордоння чи форпост?'
+  words: 900
+- points:
+  - 'Російський імперський / радянський наратив: Слобожанщина як частина «Новоросії» або «Півдня Росії». Заселення — акт милості
+    царя. Харків — російськомовне місто, промисловий центр СРСР.'
+  - 'Український наратив: Слобожанщина як продовження українського життєвого простору. Козаки як носії державності. Харків
+    — центр національного відродження (університет, романтики, видавництва), перша столиця УСРР як компроміс.'
+  - 'Західний наратив: Слобожанщина як класичне «прикордоння» (frontier). Аналіз через порівняння з американським Заходом.
+    Зона культурного обміну, гібридних ідентичностей та державного насильства.'
+  - '[!decolonization] Викриття міфу про «віковічну дружбу»: як імперія використовувала українців для захисту своїх кордонів,
+    а потім асимілювала їх.'
+  - '[!myth-buster] Харків не був «подарований» Україні. Він був і залишається українським містом, що розвивалося на перетині
+    культур, але в межах українського етнічного масиву.'
+  section: 'Зіткнення наративів: Ідентичність Слобожанщини'
+  words: 1700
+- points:
+  - 'Джерело 1: Фрагмент з твору Григорія Квітки-Основ''яненка, що оспівує Харків та його мешканців. Аналіз: ідеалізація,
+    створення регіонального міфу, мова, приховані сенси.'
+  - 'Джерело 2: Уривок з імперського указу про створення Слобідсько-Української губернії. Аналіз: бюрократична мова, мета
+    — уніфікація, стирання відмінностей, централізація влади.'
+  - '[!epistemic-humility] Порівняльний аналіз: як два різні документи створюють абсолютно різні образи однієї й тієї ж реальності.
+    Чия версія «правдивіша» і для кого?'
+  section: 'Джерельна критика: Романтики vs. Імперія'
+  words: 1500
+- points:
+  - 'Повернення до розминки: чи змінилася ваша думка про перших поселенців? Обґрунтуйте свою позицію, використовуючи терміни
+    «агентність», «структура», «історичний контекст».'
+  - 'Харків 2022: як битва за місто та спротив окупації підтверджують, спростовують або ускладнюють наративи, проаналізовані
+    в модулі?'
+  - '[!decolonization] Як розуміння історіографічних наративів про Слобожанщину допомагає протидіяти сучасній російській пропаганді
+    про «один народ» та «історичні землі Росії»?'
+  section: Дискусія та підсумок
+  words: 700
+focus: 'Historiography of Slobozhanshchyna: Ukrainian self-colonization vs. Russian imperial project, Kharkiv as a cultural
+  center, Russification, and modern identity under siege.'
+level: ISTORIO
+module: istorio-076
+objectives:
+- Аналізувати щонайменше три різні історіографічні наративи (російський, український, західний) щодо минулого Слобожанщини
+- Застосовувати методику критики джерел до уривків з історичних документів та літературних творів
+- Розрізняти поняття «колонізація», «самоколонізація» та «внутрішня колонізація» на прикладі регіону
+- Формулювати обґрунтовану позицію щодо зв'язку між історичними наративами про Слобожанщину та сучасною війною
+pedagogy: CBI
+persona:
+  role: Професор, що спеціалізується на історії прикордоння; розглядає Слобожанщину як кейс для порівняльного аналізу імперій
+    та націй
+  voice: Frontier-Studies-Professor
+phase: ISTORIO.1
 references:
-- name: Слобідська Україна (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Слобідська_Україна
-  type: reference
-  notes: Regional overview
-- name: Слобідські козацькі полки (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Слобідські_козацькі_полки
-  type: reference
-  notes: Cossack regiments
-- name: Харків (Вікіпедія)
-  url: https://uk.wikipedia.org/wiki/Харків
-  type: reference
-  notes: City history
-register: академічний
-grammar: []
+- note: Compiled from Plokhy, Hrytsak, Miller — primary historiography on the region
+  path: wiki/istorio/regions/slobozhanshchyna-identychnist.md
+  type: wiki
+- author: Plokhy S.
+  note: Slobozhanshchyna in the context of Ukrainian frontier history
+  type: primary
+  work: 'The Gates of Europe: A History of Ukraine'
+- author: Miller A.
+  note: Imperial perspective on borderlands and colonization policies
+  type: primary
+  work: The Romanov Empire and Nationalism
+- author: Hrytsak Y.
+  note: Role of Kharkiv in the 19th-century national revival
+  type: primary
+  work: 'Essay on the History of Ukraine: Formation of a Modern Nation'
+sequence: 76
+slug: slobozhanshchyna-identychnist
+subtitle: 'Slobozhanshchyna: The Forging of an Identity'
+title: 'Слобожанщина: Формування ідентичності'
+version: '4.0'
+vocabulary_hints:
+- definition: поселення, мешканці якого тимчасово звільнялися від державних повинностей
+  pos: ж.
+  word: слобода
+- definition: територія на межі держав чи цивілізацій, зона контакту та конфлікту
+  pos: с.
+  word: прикордоння
+- definition: політика насадження російської мови та культури з метою асиміляції
+  pos: ж.
+  word: русифікація
+- definition: право на самоврядування в межах більшої держави
+  pos: ж.
+  word: автономія
+- definition: відчуття належності до певної спільноти (національної, регіональної)
+  pos: ж.
+  word: ідентичність
+- definition: процес заселення та освоєння нових територій
+  pos: ж.
+  word: колонізація
+- definition: приведення чого-небудь до єдиної системи, норми, форми
+  pos: ж.
+  word: уніфікація
+- definition: спосіб розповіді та інтерпретації історичних подій, що відображає певну точку зору
+  pos: ч.
+  word: наратив
+- definition: наука, що вивчає, як пишеться історія; історія історичної науки
+  pos: ж.
+  word: історіографія
+- definition: здатність історичних акторів (людей, груп) свідомо діяти та впливати на події
+  pos: ж.
+  word: агентність
+word_target: 5200

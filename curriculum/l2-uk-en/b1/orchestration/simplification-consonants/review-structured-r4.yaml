@@ -1,0 +1,57 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: All 7 content_outline sections present with correct H2 headings. All textbook
+    references integrated (Литвінова p.180 проїЗДНий demo, Авраменко p.109 орфограма
+    + exceptions, Голуб p.93 милозвучність qu
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: '**Critical:** бризки classified as [скн] in section 2 but correctly as
+    [зкн] in section 5 — self-contradiction teaching wrong phonetic analysis. All
+    four Grade 5 textbooks confirm [зкн]→[зн] for бризк'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'Strong PPP flow: situation (classroom dialogue) → pattern (systematic
+    presentation of cluster types) → practice (exercises after each section). 10+
+    examples per major grammar point (section 2 alone ha'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: '**All 14 required vocab** used naturally in prose: спрощення, група приголосних,
+    милозвучність, випадати, вимова, правопис, закріплений, виняток, словотворення,
+    прикметник, іменник, основа, орфограма,'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 5 plan activity_hints matched with correct type, focus, and item count.
+    Markers placed after relevant teaching sections. Error-correction items have unambiguous
+    correct answers mixing both спрощен
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: '**Deductions:** (a) Heavy meta-commentary: "Тепер ви успішно завершили
+    детальне вивчення найважливіших морфонологічних явищ нашої чудової мови" — telling,
+    not showing. (b) Generic enthusiasm: "надзвич'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Clean markdown. All 7 sections present with correct H2 headings matching
+    plan. Word count 4067 ≥ 4000 target. Comparison table well-formatted. **Minor:**
+    Summary says "шість базових груп" but should b
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Fully decolonized — Ukrainian presented on its own terms. Comparison
+    to English silent letters (debt, knight) used to highlight Ukrainian''s logical
+    orthography, not to subordinate Ukrainian. No "like '
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: One dialogue with named speakers (Вчитель, Студент) in a natural classroom
+    setting (Дніпро). Multi-turn with a genuine question and hands-on demonstration
+    ("спробуйте вимовити"). **Deductions:** (a) O
+findings: []

@@ -10,7 +10,6 @@ build_status: draft
 import ErrorCorrection from '@site/src/components/ErrorCorrection';
 import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
-import GroupSort from '@site/src/components/GroupSort';
 import MatchUp from '@site/src/components/MatchUp';
 import Quiz from '@site/src/components/Quiz';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
@@ -22,246 +21,152 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 ## Прига́дуємо відмі́нки (Reviewing Cases)
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Окса́на Іва́нівна:</span> До́брий день! Сіда́йте, будь ла́ска. Як вас зва́ти?</div>
+<div class="dialogue-line"><span class="speaker">То́мас:</span> До́брий день, Олекса́ндре Пе́тровичу! *(Good day, Oleksandr Petrovych!)*</div>
 
-<div class="dialogue-line"><span class="speaker">А́лекс:</span> Добрий день! Ме́не звати Алекс.</div>
+<div class="dialogue-line"><span class="speaker">Олекса́ндр Пе́трович:</span> Добрий день! Ви — нови́й студе́нт? *(Good day! Are you a new student?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Оксана Іванівна:</span> Ду́же приє́мно, А́лексе! Зві́дки ви?</div>
+<div class="dialogue-line"><span class="speaker">Томас:</span> Так, я — студент. Ме́не зва́ти Томас. Я вивча́ю украї́нську мо́ву. *(Yes, I am a student. My name is Thomas. I study the Ukrainian language.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Алекс:</span> Я з Кана́ди. Я з Торо́нто.</div>
+<div class="dialogue-line"><span class="speaker">Олександр Петрович:</span> Ду́же приє́мно, То́масе. Де ви живете́ за́раз? *(Very nice to meet you, Thomas. Where do you live now?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Оксана Іванівна:</span> О, чудо́во! Скі́льки вам ро́кі́в?</div>
+<div class="dialogue-line"><span class="speaker">Томас:</span> Я живу́ в готе́лі в це́нтрі мі́ста. Але́ я шука́ю кварти́ру. *(I live in a hotel in the city center. But I am looking for an apartment.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Алекс:</span> Ме́ні два́дцять п'ять.</div>
+<div class="dialogue-line"><span class="speaker">Олександр Петрович:</span> Розумі́ю. Ви вже бага́то зна́єте! Як ви вивча́єте мову? *(I understand. You already know a lot! How do you study the language?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Оксана Іванівна:</span> А що ви вивча́єте?</div>
+<div class="dialogue-line"><span class="speaker">Томас:</span> Я чита́ю те́ксти і роблю́ впра́ви. *(I read texts and do exercises.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Алекс:</span> Я вивча́ю украї́нську мо́ву. Я дуже хо́чу розмовля́ти ві́льно.</div>
-
-<div class="dialogue-line"><span class="speaker">Оксана Іванівна:</span> Прекра́сно! А де ви за́раз живете́?</div>
-
-<div class="dialogue-line"><span class="speaker">Алекс:</span> Я живу́ в Ки́єві. Вже два місяці́.</div>
-
-<div class="dialogue-line"><span class="speaker">Оксана Іванівна:</span> Алексе, зна́єте що? Ви вже ви́користали чоти́ри відмінки — про́сто не знаєте ї́хніх назв. Сього́дні ми це ви́правимо!</div>
+<div class="dialogue-line"><span class="speaker">Олександр Петрович:</span> Чудо́во! Ласка́во про́симо до на́шої шко́ли. *(Excellent! Welcome to our school.)*</div>
 
 </div>
 
-Did you notice what just happened? In this short conversation, Alex used four different **відмінки** (grammatical cases) without even realizing it. «Я з Канади» uses the genitive. «Мені двадцять п'ять» uses the dative. «Я вивчаю українську мову» uses the accusative. «Я живу в Києві» uses the locative. You already know more than you think — now it is time to give these patterns proper names.
+In the A1 level, you learned that Ukrainian nouns change their endings depending on their role in a sentence. These changes are called cases (**відмінки** *(cases)*). Here is a brief review (**о́гляд**) of the four cases you already know. 
 
-Ukrainian nouns and adjectives change their endings depending on their role in the sentence. This process is called **відмі́нювання** (declension). Ukrainian has seven **відмінки** (cases) in total. During A1, you encountered four of them in everyday phrases — you just did not learn their formal names yet. Each case answers a specific pair of diagnostic questions — **Хто? Що?** (Who? What?) — and each one connects to particular **прийме́нники** (prepositions) or appears without any preposition at all. Mastering these questions is the key to identifying cases in real Ukrainian speech.
+The Nominative case (**Називни́й відмі́нок** *(Nominative case)*) answers the questions **Хто?** *(Who?)* and **Що?** *(What?)*. It is the dictionary form of a word, used for the subject of a sentence—the "name" of things. To recognize the gender of a noun, we look at its Nominative ending. Masculine nouns usually have no ending and finish in a consonant, such as **дім** *(house)* or **стіл** *(table)*. Feminine nouns typically end in **-а** or **-я**, like **шко́ла** *(school)* or **сім'я́** *(family)*. Neuter nouns end in **-о** or **-е**, such as **вікно́** *(window)* and **мо́ре** *(sea)*. Here are five basic words to recall: **студент** *(student)*, **ка́ва** *(coffee)*, **мі́сто** *(city)*, **робо́та** *(work)*, **друг** *(friend)*.
 
-### Називни́й відмі́нок (Nominative — Хто? Що?)
+The Accusative case (**Знахі́дний відмінок** *(Accusative case)*) answers the questions **Кого?** *(Whom?)* and **Що?** *(What?)*. We use it for the direct object of a verb—the thing that receives the action. For example, it is used when you read a book or buy a table. Masculine inanimate nouns and neuter nouns do not change; they look exactly like the Nominative case. You can say **купува́ти стіл** *(to buy a table)* or **ба́чити вікно** *(to see a window)*. However, feminine nouns undergo a clear change: the ending **-а** becomes **-у**, and **-я** becomes **-ю**. You learned to say **чита́ти кни́гу** *(to read a book)*, **пи́ти ка́ву** *(to drink coffee)*, and **писа́ти статтю́** *(to write an article)*. We also use the Accusative case with verbs of motion to show destination, like **іти́ в шко́лу** *(to go to school)*.
 
-The nominative is the **суб'є́кт** (subject) case — it identifies who is doing the action or what simply exists. When you say «Студе́нт чита́є кни́гу», the word «студент» is in the nominative because it answers the question **Хто читає?** Here are more examples:
+The Locative case (**Місце́вий відмінок** *(Locative case)*) answers the questions **Де?** *(Where?)*, **На ко́му?** *(On whom?)*, and **На чому́?** *(On what?)*. We use it to describe static location, answering where someone or something is situated. This case is unique because it is never used without a preposition, such as **в/у** *(in)* or **на** *(on/at)*. For most regular nouns across all three genders, the Locative ending is simply **-і**. This makes it one of the easiest cases to form. You already know how to say **у мі́сті** *(in the city)*, **в апте́ці** *(in the pharmacy)*, **на робо́ті** *(at work)*, and **на столі́** *(on the table)*. Remember that it contrasts with the Accusative: **я йду на робо́ту** *(I am going to work)* uses the Accusative for motion, while **я на роботі** *(I am at work)* uses the Locative for position.
 
-- «Но́вий студент читає.» — A new student is reading.
-- «Га́рна кни́га лежи́ть на столі́.» — A beautiful book is lying on the table.
-- «Вели́ке мі́сто живе́.» — A big city lives.
+The Vocative case (**Кли́чний відмінок** *(Vocative case)*) is used for addressing someone directly (**зверта́ння** *(addressing)*). In Ukrainian culture, it is highly unnatural to call someone by their Nominative name; the Vocative is essential for polite and natural communication. For masculine names and titles, the endings are typically **-у**, **-ю**, or **-е**. For example, you say **Сергі́ю** *(Serhiy!)*, **дру́же** *(friend!)*, and **Па́вле** *(Pavlo!)*. For feminine names, the endings change to **-о** or **-е**, as in **Марі́є** *(Mariya!)*, **Окса́но** *(Oksana!)*, and **ма́мо** *(mom!)*. Using this case immediately makes your Ukrainian sound authentic.
 
-Notice how adjectives agree with their nouns in gender: **новий** (masculine), **нова́** (feminine), **нове́** (neuter). The nominative is also the dictionary form of a noun — the form you look up when searching for a word. Gender determines the typical ending: «студент» (masculine, zero ending), «студе́нтка» (feminine, ending -а), «місто» (neuter, ending -о). Whenever you need to find a word in a dictionary, you are looking for its nominative form.
+There are seven cases in total in the Ukrainian case system (**систе́ма**). You have learned four, and in the A2 level, we will introduce the remaining three. The table below shows the complete system.
 
-### Знахі́дний відмінок (Accusative — Кого? Що?)
+| Відмінок *(Case)* | Пита́ння *(Questions)* | Фу́нкція *(Function)* | Рі́вень *(Level)* |
+| --- | --- | --- | --- |
+| Називний *(Nominative)* | Хто? Що? | Subject, dictionary form | A1 |
+| Знахідний *(Accusative)* | Кого? Що? | Direct object, destination | A1 |
+| Місцевий *(Locative)* | Де? На кому/чому? | Static location | A1 |
+| Кличний *(Vocative)* | (Звертання) | Addressing someone | A1 |
+| Родо́ви́й *(Genitive)* | Кого? Чого́? | Possession, absence, quantity | **A2** |
+| Дава́льний *(Dative)* | Кому? Чому? | Indirect object, to/for whom | **A2** |
+| Ору́дний *(Instrumental)* | Ким? Чим? | Instrument, with whom/what | **A2** |
 
-The accusative marks the **прями́й об'є́кт** (direct object) — the thing or person being acted upon. When you say «Я чита́ю книгу», the word «книгу» answers the question **Що я читаю?**
-
-The rules for forming the accusative depend on gender and animacy:
-
-- Feminine nouns take the ending -у or -ю: «книга → книгу», «ка́ва → ка́ву», «земля́ → зе́млю», «Украї́на → Украї́ну».
-- Neuter nouns and masculine inanimate nouns look exactly like the nominative: «Я читаю лист», «Я п'ю молоко́».
-- For animate masculine nouns, the accusative looks like the genitive: «Я ба́чу студе́нта», «Я зна́ю викладача́».
-
-You already used the accusative throughout A1 without knowing it. Think back to these familiar sentences:
-
-- «Я вивчаю українську мову.» — I study the Ukrainian language.
-- «Я п'ю каву.» — I drink coffee.
-- «Я читаю книгу.» — I read a book.
-- «Я люблю́ Україну.» — I love Ukraine. (feminine accusative)
-
-The diagnostic question **Кого?** (Whom?) applies to people and animals. **Що?** (What?) applies to everything else.
-
-### Місце́вий відмінок (Locative — Де? На ко́му? На чому́?)
-
-The locative is the only case that never appears alone — it always requires a **прийме́нник** (preposition). The two most common prepositions are **в/у** (in, inside) and **на** (on, at):
-
-- «в Києві» — in Kyiv
-- «в університе́ті» — at the university
-- «у шко́лі» — in school
-- «на уроці» — in a lesson
-- «на конце́рті» — at a concert
-- «на робо́ті» — at work
-
-The ending pattern for nouns follows a general rule: hard stems take -і (місто → у мі́сті, університе́т → в університеті), and soft stems also take -і or -ї (земля → на землі́). Adjectives change too: «новий» becomes «у ново́му місті» (neuter/masculine), and «нова» becomes «у нові́й школі» (feminine). Whenever you describe where something is located, you are using the locative case.
-
-### Кли́чний відмінок (Vocative — зверта́ння)
-
-The vocative case is used when you address someone directly — it is the case of **звертання** (direct address). You form it from the nominative:
-
-- «Марі́я → Марі́є!»
-- «Тара́с → Тара́се!»
-- «Олексі́й → Олексі́ю!»
-- «Оксана → Окса́но!»
-- «Наді́я → Наді́є!»
-
-The basic patterns: masculine nouns with hard stems take -е (Тарасе); masculine nouns with soft stems take -ю (Олексію); feminine nouns ending in -а take -о (Оксано); feminine nouns ending in -я take -е (Маріє, Надіє).
-
-Ukrainian uses the vocative where English simply uses the nominative. Compare: «Оксано, де ти?» means "Oksana, where are you?" — but Ukrainian changes the name itself. As the textbook puts it: «Сідайте, будь ласка, бабу́сю» (Заболо́тний, Grade 5) — even «бабу́ся» (grandmother) shifts to the vocative «бабусю» when you speak to her directly.
-
-### По́вна ка́рта відмі́нків (The Full Case Map)
-
-Now you can see all seven Ukrainian cases together. You already know the first four — the remaining three are your goal for A2:
-
-1. **Називний** (Хто? Що?) — суб'єкт: who does the action.
-2. **Знахідний** (Кого? Що?) — прямий об'єкт: what is acted upon.
-3. **Місцевий** (Де? На кому? На чому?) — мі́сце: location, always with a preposition.
-4. **Кличний** (звертання) — адреса́т: the person you address directly.
-5. **Родо́ви́й** (Кого? Чого́?) — belonging, absence, origin. «Я з Канади» — you already used it!
-6. **Дава́льний** (Кому? Чому?) — the recipient. «Мені двадцять п'ять» — you used this one too!
-7. **Ору́дний** (Ким? Чим?) — instrument, accompaniment. How something is done or who accompanies.
-
-Look back at the dialogue. «Я з Канади» uses the родовий. «Мені двадцять п'ять» uses the давальний. You have been touching these cases in real speech since A1 — A2 is where you learn to use them consciously and confidently.
-
-Ви вже знаєте чотири. Три нови́х — це ва́ша ціль на рі́вні А2.
+The Genitive case (**Родовий відмінок** *(Genitive case)*) is used for possession, expressing lack or absence, and counting quantities.
 
 ## Ма́гія украї́нської фоноло́гії (The Magic of Ukrainian Phonology)
 
-Ukrainian phonology follows precise, systematic rules — what looks like an "exception" is almost always a pattern with a name. In A1, you may have noticed that «стіл» becomes «стола́», or that «рука́» becomes «ру́чка». These are not random changes. They follow two types of alternation: **чергува́ння голосни́х** (vowel alternation) and **чергування при́голосних** (consonant alternation). Once you understand these rules, you can predict forms you have never seen before. The same logic applies to **на́голос** (stress) — it shifts within paradigms, and knowing the pattern means knowing the word.
+When looking up Ukrainian words in a dictionary, you may notice that the root sometimes changes. This happens because of a predictable historical pattern known as the "Closed Syllable Rule." In Ukrainian, the vowels (**голосні́**) **о** *(o)* and **е** *(e)* often alternate with the vowel **і** *(i)*. This alternation (**чергува́ння**) happens when a syllable becomes "closed" — meaning it ends in a consonant (**при́голосний**) with no vowel following it. Conversely, when you add an ending that creates an "open" syllable (ending in a vowel), the **і** reverts to **о** or **е**. For example, the Nominative form **стіл** *(table)* has a closed syllable, so it uses **і**. However, when we form the Genitive case, we add an ending: **стола́** *(of the table)*. The syllable opens, and the vowel returns to **о**. You will see this everywhere, from the capital city **Ки́їв** *(Kyiv)* becoming **Ки́єва** *(of Kyiv)*, to seasons like **о́сінь** *(autumn)* becoming **о́сені** *(of autumn)*. Recognizing this rule helps you predict these changes and learn new words.
 
-### Чергування голосних: о/е → і (Vowel Alternation in Closed Syllables)
+Another feature is consonant mutation. The most prominent example is the first palatalization, where the hard consonants **г** *(h)*, **к** *(k)*, and **х** *(kh)* change into the softer, hissing sounds **ж** *(zh)*, **ч** *(ch)*, and **ш** *(sh)*. These changes make the language flow more smoothly. You will encounter these mutations constantly when forming diminutives (affectionate or small forms of words) and when dealing with various case endings. For instance, the word **нога́** *(leg)* transforms into the diminutive **ні́жка** *(little leg)*. The hard **г** becomes a soft **ж**, while the "Closed Syllable Rule" simultaneously changes the **о** to an **і**! Similarly, **рука́** *(hand)* becomes **ру́чка** *(little hand, pen)*, and **ву́хо** *(ear)* softens into **ву́шко** *(little ear)*. Recognizing these consonant shifts allows you to instantly understand new derivations without memorizing them as entirely separate vocabulary items.
 
-The core rule works like this: when a syllable becomes closed (ends in a consonant), the vowel **о** or **е** shifts to **і**. An **open syllable** ends in a vowel sound; a **closed syllable** ends in a consonant sound. Compare: «стіл» is one closed syllable — the vowel is **і**. But «стола» splits into two open syllables: «сто-ла» — so the vowel returns to **о**. The shift happens automatically based on the syllable structure of each form.
+You must also understand how certain consonants behave when placed next to each other. Consider the affricates **дж** *(dzh)* and **дз** *(dz)*. Unlike in English, where similar combinations might be pronounced as two distinct sounds, in Ukrainian, these are single, indivisible units of sound. You can hear this clear, unified pronunciation in words like **джерело́** *(spring, source)* and **дзвіно́к** *(bell)*. Contrast this unified sound with the phenomenon of voicing assimilation. In Ukrainian, when a voiceless consonant sits immediately before a voiced consonant, the strong voiced sound forces its voiceless neighbor to become voiced as well. For example, the word **про́сьба** *(request)* is spelled with a voiceless **с** *(s)* (softened by **ь**), but because the following **б** *(b)* is voiced, the word is pronounced as [проз'ба]. The same rule applies to the word **вокза́л** *(train station)*, which is naturally pronounced as [воґзал]. This assimilation ensures a seamless stream of speech.
 
-More pairs demonstrate the same pattern. «Ніж» (knife) has a closed syllable, so the vowel is **і**. Its genitive form «ножа́» opens the syllable — back to **о**. Similarly: «кінь» (horse) / «коня́», «лід» (ice) / «льо́ду». The test is straightforward: look at the genitive singular. If the syllable opens, you see **о** or **е** where the nominative has **і**.
+Beyond individual letters, the rhythm of Ukrainian is driven by stress, or **на́голос** *(stress)*. Stress is often the only feature that distinguishes one word from another. A classic example is the word **замок**. If you place the stress on the first syllable, **замок** *(castle)*, you are talking about a medieval fortress. However, if you shift the stress to the second syllable, **замок** *(lock)*, you are talking about a padlock for a door! Furthermore, stress often shifts dynamically when a word changes from singular to plural. The word for water is **вода́** *(water)*, with the stress on the final vowel. But when we talk about plural waters, the stress leaps to the first syllable: **во́ди** *(waters)*. There are predictable "stress patterns" that you will learn to recognize to predict pronunciation.
 
-Even proper nouns follow this rule. «Ки́їв» has a closed final syllable with the vowel **и** (this is a different historical pattern), but the genitive «Ки́єва» shows the syllable opening. Practice reading these minimal pairs aloud — the vowel shift is audible. «Ніж» sounds tighter and higher than «ножа». This alternation is one of the reasons Ukrainian sounds so melodic — the vowels shift to accommodate each word's shape.
-
-### Бі́льше чергува́нь голосних (More Vowel Alternations)
-
-The same principle applies across the full paradigm. Take «стіл» through three cases: nominative «стіл» (closed syllable, **і**), genitive «стола» (open, **о**), locative «у столі» (the ending **-і** keeps the root vowel as **о** because the syllable splits differently — «сто-лі»). The locative ending **-і** is a reliable anchor: it appears consistently in this case.
-
-Another set: «піч» (oven) / «пе́чі», «сіль» (salt) / «со́лі». Here the pattern is **і → е** and **і → о** respectively when the syllable opens. «Ліс» (forest) keeps **і** in both nominative and genitive «лі́су» — because the stress pattern is different. And «сік» (juice) / «со́ку» shows **і → о**. Not every word follows the identical direction, because some reflect different historical processes. But the practical question is always the same: before declining a word, ask yourself — is this syllable open or closed in the new form?
-
-### Чергування приголосних: пе́рша палаталіза́ція (First Consonant Alternation: г/ж, к/ч, х/ш)
-
-When certain suffixes follow the consonants **г**, **к**, or **х**, these consonants soften into their palatal counterparts: **г → ж**, **к → ч**, **х → ш**. You see this most clearly in diminutives. «Нога́» (leg, foot) → «ні́жка» (little foot): the root consonant **г** becomes **ж** before the diminutive suffix **-к-**. «Рука» (hand) → «ручка» (little hand, also: pen): **к → ч**. «Му́ха» (fly) → «му́шка» (little fly): **х → ш**.
-
-The same alternation appears in other word-formation contexts. When you see «ручка» in a text, you can immediately identify the root as «рука». When you encounter «кни́жечка» (little book), you know its base word is «книга» (book) — the **г** shifted to **ж** before the suffix. Recognizing these alternations turns what seems like an obstacle into a reading superpower: you can trace unfamiliar diminutives and derived forms back to their roots.
-
-### Чергування приголосних у місце́вому відмі́нку (Consonant Alternation in the Locative: г/з, к/ц, х/с)
-
-A second type of consonant alternation appears specifically in the locative case. When the locative ending **-і** follows **г**, **к**, or **х**, they shift differently than in diminutives: **г → з**, **к → ц**, **х → с**. Compare: «книга» → «у кни́зі» (in a book), «рука» → «у руці» (in a hand), «ву́хо» (ear) → «у ву́сі» (in an ear).
-
-More examples make the pattern unmistakable: «дорога́» (road) → «на доро́зі», «нога» → «на нозі», «апте́ка» (pharmacy) → «в апте́ці», «поті́к» (stream) → «у пото́ці». This is why «у Лу́цьку» sounds different from the nominative «Луцьк» — the **к** shifts to **ц** before the locative **-і** ending.
-
-Contrast the locative with the genitive, which keeps the original consonant untouched: «кни́ги», «ру́ки», «ву́ха». The summary rule is clean: locative **-і** triggers the second alternation; other case endings generally do not.
-
-### Наголос як інструме́нт (Stress as a Tool)
-
-Ukrainian stress is **ві́льний** (free) and **рухо́мий** (mobile) — it can fall on any syllable, and it can shift position within the same word's paradigm. This gives stress two important functions.
-
-First, stress distinguishes words that are otherwise spelled identically. «За́мок» with stress on the first syllable means "castle." «Замок» with stress on the second syllable means "lock." «Дорога» stressed on the first syllable is an adjective meaning "expensive" (feminine). «Дорога» stressed on the second syllable is a noun meaning "road."
-
-Second, stress shifts within declension paradigms. «Вода́» / «води́» / «воду́» — the stress moves from the ending to the root and back. «Земля» / «землі» — the same mobility. «Рука» / «руки» — stress jumps from the last syllable to the first. Mobile stress is one of the key reasons that stress dictionaries matter. You need to memorize the stress together with the word, not just the word's spelling. The Авра́менко Grade 5 textbook includes a short stress dictionary listing over 200 commonly mispronounced words — a resource worth revisiting whenever you are uncertain.
-
-### Систе́ма працю́є ра́зом (The System Works Together)
-
-These three systems — vowel alternation, consonant alternation, and stress — operate together on every Ukrainian word. When you encounter the locative form «у книзі», you can unpack it completely: the root is «книг-» (from «книга»), the consonant **г** shifted to **з** before the locative ending **-і**, and the stress stays on the root. Nothing about this form is arbitrary.
-
-Every "strange" form in Ukrainian is a predictable output of phonological rules operating on a stem. The learner's task at A2 is not to memorize every individual form — that would be impossible. Instead, your goal is to internalize the rules so that the correct forms generate themselves. This is exactly how native speakers think about their language: not as a list of exceptions, but as a living system where sounds respond to structure.
-
-«Ви вже знаєте правила. Тепе́р час їх використо́вувати.»
+This shifting of stress is visible in "Mobile Stress" within noun paradigms. As you learn new cases like the Accusative or Genitive, you will notice that the stress sometimes shifts from the stem of the word directly onto the ending, or vice versa, across different grammatical cases. The primary driver behind these dramatic shifts is the desire for rhythmic balance within the sentence. Consider some common feminine nouns. The Nominative form **голова́** *(head)* has the stress on the final syllable. But when it becomes the direct object in the Accusative case, the stress swings all the way back to the first syllable: **го́лову** *(head, Accusative)*. You see the exact same rhythmic shift with the word **нога** *(leg)*, which becomes **но́гу** *(leg, Accusative)* when used as an object. This rhythmic flexibility helps you speak more naturally.
 
 ## Милозву́чність мо́ви: евфоні́я (The Melody of Language: Euphony)
 
-The system you have just reviewed — alternations, stress shifts — keeps Ukrainian words internally consistent. But Ukrainian also has rules that govern what happens *between* words. These are called **правила милозву́чності** (euphony rules), and their purpose is simple: prevent awkward clusters of consonants or vowels at word boundaries. The language has built-in sound variants for several common particles — **прийменники** (prepositions) and **сполу́чники** (conjunctions) — that automatically adjust depending on the sounds around them. You already follow many of these rules instinctively when speaking. Now we make the patterns explicit.
+Ukrainians alternate between **у** *(in)* and **в** *(in)* for the exact same preposition. This is a core feature of Ukrainian called **милозвучність** *(euphony, melodiousness)*. The goal is to make speech flow smoothly, without awkward pauses. The rule for the **у/в** alternation is driven entirely by the surrounding letters. If the preceding word ends in a consonant and the following word begins with a consonant, we use **у** to create a vocalic bridge: **Він жив у Льво́ві.** *(He lived in Lviv.)* However, if we have vowels involved, we switch to **в** to prevent two vowels from colliding. For example, after a vowel and before a consonant: **Вона́ була́ в Ки́єві.** *(She was in Kyiv.)* Or between two vowels: **Вона жила́ в Оде́сі.** *(She lived in Odesa.)* Applying this rule (**правило**) gives spoken Ukrainian its natural rhythm.
 
-### У/В
+This exact same melodic principle applies to the word for "and." We alternate between **і** *(and)* and **й** *(and)* using logic that mirrors the **у/в** rule. When connecting two words that end and begin with consonants, we use the vowel **і** to smooth the transition: **брат і сестра́** *(brother and sister)*. But if the first word ends in a vowel, we use the consonant **й** to keep the air flowing without a phonetic "hiccup": **ба́тько й ма́ти** *(father and mother)*. When you have a long sentence with multiple items, using the same conjunction repeatedly sounds unnatural. To solve this, Ukrainian offers a third option: **та** *(and)*. You can seamlessly mix **і**, **й**, and **та** to maintain a beautiful cadence throughout your sentence.
 
-The preposition meaning "in" or "at" has two forms: **у** and **в**. The choice depends on the sound that comes before and after.
+The drive for euphony also affects prepositions like **з** *(with, from)*, which transforms into **зі** *(with, from)* or **із** *(with, from)* depending on the phonetic environment. The most important variation to master is **зі**. We use **зі** whenever the following word begins with a heavy cluster of consonants, especially combinations starting with **с**, **з**, **ш**, or **ж**. Saying "з Льво́ва" is a tongue-twister, so the language naturally inserts a vowel to soften the cluster: **Він приї́хав зі Львова.** *(He arrived from Lviv.)* Similarly, you will always hear **зі мно́ю** *(with me)* instead of "з мною", or **зі школи** *(from school)* instead of "з школи". Using **із** is common between consonants to add rhythmic balance to a phrase.
 
-After a vowel sound, use **в**: «Вона́ в університеті» (She is at the university), «Я живу в Кана́ді» (I live in Canada), «Він в Оде́сі» (He is in Odesa). The preceding word ends in a vowel, so **в** flows naturally.
+While these rules might seem technical on paper, native speakers do not actively think about consonants and vowels while talking. They simply "hear" what sounds correct based on an instinct for rhythm. When a rule is broken, the sentence physically feels awkward to say. As you transition into the A2 level, start reading sentences aloud and paying attention to these connecting words. Mastering euphony is the single most effective way to elevate your speech from sounding like a textbook translation to sounding natural and authentic.
 
-After a consonant sound or at the start of a sentence, use **у**: «Студент у школi» (The student is at school), «У мене є пита́ння» (I have a question), «Увечерi вiн чита́в» (In the evening he read). The consonant before the preposition needs a vowel buffer.
+## Що нас чека́є на рі́вні А2? (What Awaits Us in A2?)
 
-Special case: before words beginning with **в** or **ф**, always use **у** to avoid stacking two similar sounds: «У Вiнницi» (In Vinnytsia), «у фойє» (in the foyer).
+The A1 level taught you to introduce yourself, describe your surroundings, and handle basic tasks. Now, the A2 level will expand your vocabulary to handle real-world situations. You will learn how to navigate a supermarket or a clothing store and interact with cashiers: **Я хо́чу купи́ти цю соро́чку.** *(I want to buy this shirt.)* We will cover health and medical emergencies so you can articulate how you feel: **У мене боли́ть голова.** *(My head hurts.)* You will also master vocabulary for travel, booking train tickets, and discussing your profession or daily work routine.
 
-Here is a real textbook example from Litvinova, Grade 5: «Неха́й в ва́ших роди́нах пану́є зла́года!» This sentence contains an error — the word «нехай» ends in the consonant sound й, so the correct form is «у ваших родинах». Spotting and correcting this kind of mistake is a practical skill you will use constantly.
+To express these new topics accurately, you will learn the Genitive case—the most frequently used case in the Ukrainian language. It is essential for expressing possession, absence, and quantities: **У мене нема́є ча́су.** *(I do not have time.)* Next, we will introduce the core concept of Verbal Aspect. You will learn to clearly distinguish between ongoing, unfinished actions and completed results: **Я чита́в книгу.** *(I was reading a book.)* versus **Я прочита́в книгу.** *(I read the book.)* We will also explore verb conjugation patterns and Ukrainian Verbs of Motion, allowing you to describe exactly how and where you are traveling: **Я йду в магази́н.** *(I am going to the store.)*
 
-### І/Й
+This module connects what you already know with A2 concepts. As you progress through the A2 curriculum, you will form more complex thoughts and express your intentions with greater ease.
 
-The conjunction "and" also alternates. Between two consonant sounds, use **і**: «хлiб i ма́сло» (bread and butter), «ма́ти i ба́тько» (mother and father), «зима́ i лiто» (winter and summer). After a vowel sound, use **й**: «книга й ручка» (book and pen), «Марiя й Тарас» (Maria and Taras), «кава й чай» (coffee and tea). At the start of a sentence, always use **і** regardless of what follows. The two forms mean exactly the same thing — the choice is purely phonetic.
+## Підсумок (Summary)
 
-### З/Зі/Із
+In this bridge module, we reviewed the foundational grammar structures from A1 to ensure you are ready for the challenges ahead. We refreshed the four core cases: the Nominative case for subjects, the Accusative case for direct objects, the Locative case for locations, and the Vocative case for addressing people. 
 
-The preposition "from" or "with" has three variants. Use **з** before most words: «з Києва» (from Kyiv), «з дру́гом» (with a friend), «з молоко́м» (with milk). Use **зі** before difficult consonant clusters, especially words beginning with з, с, ш, or two or more consonants together: «зi шко́ли» (from school), «зi Льво́ва» (from Lviv), «зi мно́ю» (with me), «зi студе́нтами» (with students). The form **iз** is interchangeable with **з** in most contexts and appears more often in formal writing: «iз задово́ленням» (with pleasure).
+We also explored phonetic rules, such as vowel and consonant shifts, and formalized the rules of euphony—specifically the alternations of **у/в** *(in/at)* and **і/й** *(and)*—which help maintain the natural rhythm of the language. 
 
-A practical test: say the phrase aloud. If the consonants pile up and the phrase feels clunky, switch to **зi**.
+Test your knowledge with these self-check questions:
 
-### Як це працює разом (How It Works Together)
+* **Яки́й відмінок ми використо́вуємо для звертання до люди́ни?** *(Which case do we use to address a person?)* — **Кличний.** *(Vocative.)*
+* **Чому ми пи́шемо «Київ», але «у Києві»?** *(Why do we write "Kyiv", but "in Kyiv"?)* — **Чергування «о/і» та «е/і» в закри́тому чи відкри́тому скла́ді.** *(Alternation of "o/i" and "e/i" in a closed or open syllable.)*
+* **Ко́ли кра́ще вжива́ти «у», а коли «в»?** *(When is it better to use "u" or "v"?)* — **Зале́жить від голосни́х та при́голосних по́руч.** *(It depends on surrounding vowels and consonants.)*
+* **Які́ три нові́ відмінки ми ви́вчимо на рівні А2?** *(Which three new cases will we learn in A2?)* — **Родовий, Давальний, Орудний.** *(Genitive, Dative, Instrumental.)*
 
-Euphony rules apply in speech first, writing second. Read this sentence aloud: «Вiн в Харковi й у Одесi.» The first **в** is correct — «вiн» ends in a consonant н, but the н in «він» is actually followed by a vowel-like environment because the phrase is rapid speech; however, more precisely, «він» ends in a consonant, so this should be «у Харко́ві». Correction: «Він у Харкові й в Одесі.» Now **у** follows the consonant н, and **в** follows the vowel й. Read Ukrainian texts aloud daily, noticing where the alternations occur — making this automatic takes practice.
-
-«Чита́йте вго́лос — вухо зна́є правила кра́ще за о́чі.»
-
-## Що нас чека́є на рівні А2? (What Awaits Us in A2?)
-
-The A2 level is built around four major themes, and they arrive in a deliberate sequence — each one unlocking new expressive power.
-
-The first theme is **вид дієслова́** (verbal aspect). Ukrainian verbs come in pairs: **доко́наний вид** (perfective aspect) marks a completed action, while **недоко́наний вид** (imperfective aspect) marks an ongoing or habitual one. Consider the pair **написа́ти** (to write — completed) and **писа́ти** (to write — ongoing), or **прочита́ти** (to read through — completed) and **чита́ти** (to read — ongoing). Once you understand aspect, you can talk about past and future events with precision that English often leaves vague.
-
-The second theme is **повна система відмінків** (the complete case system). In A1, you worked with four cases. A2 introduces the remaining three: **родовий** (genitive — possession, absence), **давальний** (dative — recipient, addressee), and **орудний** (instrumental — tool, accompaniment). These three cases are the backbone of fluent Ukrainian. You will learn to say «нема́є ча́су» (there is no time), «книга дру́га» (a friend's book), «да́ти дру́гові» (to give to a friend), «телефонува́ти ма́мі» (to call mom), «писати ру́чкою» (to write with a pen), «йти з другом» (to go with a friend). Seven cases total — and by A2's end, you will use all of them.
-
-The third theme is **дієвідмі́нювання** (verb conjugation) — learning the patterns that govern how verbs change by person and number, including common irregular verbs. The fourth is **дієслова ру́ху** (verbs of motion): «іти́» (to go on foot), «ї́хати» (to go by transport), «леті́ти» (to fly), and their prefixed variants that express direction, departure, and arrival.
-
-In A1, your sentences lived in the present tense: «Я читаю книгу» (I am reading a book). That was enough to get started. At A2, the same thought branches into new directions. You will say: «Я прочита́в книгу» (I read the book — perfective past, meaning you finished it). You will say: «Я чита́тиму книгу» (I will be reading a book — imperfective future, meaning the process will be ongoing). You will say: «Це книга мого друга» (This is my friend's book — genitive showing possession). You will say: «Я дав книгу другові» (I gave the book to my friend — dative marking the recipient). These are not just new grammatical forms — they are new thoughts. Each sentence expresses something you simply could not say at A1. This is where Ukrainian starts to feel like a language you can actually live in, not just survive in.
-
-A1 equipped you with approximately 500 high-frequency words. By the end of A2, you will have encountered and practiced around 1,200 words — the threshold at which learners begin to handle simple authentic texts without constant dictionary lookups. Here is practical advice for right now: find a short Ukrainian children's story — a **ка́зка** (fairy tale) — and read one paragraph per day. Do not translate word by word. Instead, notice what you already recognize. Every case ending you spot, every verb form that looks half-familiar — that is your A1 foundation working. By A2's end, you will fully understand every form you are now only glimpsing.
-
-Рі́вень А2 — це кіне́ць поча́тку. You are leaving the stage where everything needs explaining and entering the stage where Ukrainian starts to explain itself. The three new cases, the aspect system, the motion verbs — they are not obstacles. They are tools. And like all good tools, once you learn to hold them, you will wonder how you ever managed without them. Ласка́во про́симо до ново́го ета́пу.
+*(Reference: Заболо́тний Grade 5, §1-10)*
 
 </TabItem>
 <TabItem label="Словник">
 
-### Обов'язкові слова — Required words
+### Обов'язкові та рекомендовані слова
 
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
-| **відмінок** | case | ім. | ч. |
-| **називний** | nominative | прикм. |  |
-| **знахідний** | accusative | прикм. |  |
-| **місцевий** | locative | прикм. |  |
-| **кличний** | vocative | прикм. |  |
-| **чергування** | alternation | ім. | с. |
-| **голосний** | vowel | прикм. |  |
-| **приголосний** | consonant | прикм. |  |
-| **наголос** | stress (accent | присл. |  |
-
-### Рекомендовані слова — Recommended words
-
-| Слово | Переклад | Частина мови | Рід |
-|-------|----------|-------------|-----|
-| **милозвучність** | euphony, melodiousness | ім. | ж. |
-| **огляд** | review, overview | ім. | ч. |
-| **система** | system | ім. | ж. |
+| **милозву́чність** | euphony, melodiousness | ім. | ж. |
+| **о́гляд** | review, overview | ім. | ч. |
+| **систе́ма** | system | ім. | ж. |
 | **правило** | rule | ім. | с. |
+| **відмі́нок** | case | ім. | ч. |
+| **називни́й** | nominative | прикм. |  |
+| **знахі́дний** | accusative | прикм. |  |
+| **місце́вий** | locative | прикм. |  |
+| **кли́чний** | vocative | прикм. |  |
+| **чергува́ння** | alternation | ім. | с. |
+| **голосни́й** | vowel | прикм. |  |
+| **при́голосний** | consonant | прикм. |  |
+| **на́голос** | stress (accent) | присл. |  |
+| **Родо́ви́й** | genitive | прикм. |  |
+| **Дава́льний** | dative | прикм. |  |
+| **Ору́дний** | instrumental | прикм. |  |
+| **зверта́ння** | addressing | ім. | с. |
+| **склад** | syllable | ім. | ч. |
+| **джерело́** | source, spring | ім. | с. |
+| **дзвіно́к** | bell | ім. |  |
+| **вокза́л** | train station | ім. | ч. |
+| **замок** | castle, lock | ім. | ч. |
+| **по́дорож** | travel, journey | ім. | ж. |
+| **соро́чка** | shirt | ім. | ж. |
+| **вид** | aspect | ім. | ч. |
+
+### Вирази
+
+| Вираз | Переклад |
+|-------|----------|
+| **закритий склад** | closed syllable |
+| **відкритий склад** | open syllable |
+| **Ласкаво просимо!** | Welcome! |
+| **Дуже приємно** | Very nice to meet you |
+| **болить голова** | head hurts |
+| **квиток на поїзд** | train ticket |
+| **дієслова руху** | verbs of motion |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "відмінок", back: "case", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "називний", back: "nominative", subtitle: "прикм." }, { front: "знахідний", back: "accusative", subtitle: "прикм." }, { front: "місцевий", back: "locative", subtitle: "прикм." }, { front: "кличний", back: "vocative", subtitle: "прикм." }, { front: "чергування", back: "alternation", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "голосний", back: "vowel", subtitle: "прикм." }, { front: "приголосний", back: "consonant", subtitle: "прикм." }, { front: "наголос", back: "stress (accent", subtitle: "присл." }, { front: "милозвучність", back: "euphony, melodiousness", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "огляд", back: "review, overview", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "система", back: "system", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "правило", back: "rule", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "милозву́чність", back: "euphony, melodiousness", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "о́гляд", back: "review, overview", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "систе́ма", back: "system", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "правило", back: "rule", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "відмі́нок", back: "case", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "називни́й", back: "nominative", subtitle: "прикм." }, { front: "знахі́дний", back: "accusative", subtitle: "прикм." }, { front: "місце́вий", back: "locative", subtitle: "прикм." }, { front: "кли́чний", back: "vocative", subtitle: "прикм." }, { front: "чергува́ння", back: "alternation", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "голосни́й", back: "vowel", subtitle: "прикм." }, { front: "при́голосний", back: "consonant", subtitle: "прикм." }, { front: "на́голос", back: "stress (accent)", subtitle: "присл." }, { front: "Родо́ви́й", back: "genitive", subtitle: "прикм." }, { front: "Дава́льний", back: "dative", subtitle: "прикм." }, { front: "Ору́дний", back: "instrumental", subtitle: "прикм." }, { front: "зверта́ння", back: "addressing", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "склад", back: "syllable", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "джерело́", back: "source, spring", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "дзвіно́к", back: "bell", subtitle: "ім." }, { front: "вокза́л", back: "train station", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "замок", back: "castle, lock", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "по́дорож", back: "travel, journey", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "соро́чка", back: "shirt", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вид", back: "aspect", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<Quiz client:only="react" questions={[{"question": "«Я вивчаю **українську мову**.» — у якому відмінку виділені слова?", "options": [{"text": "називний (Хто? Що?)", "correct": false}, {"text": "знахідний (Кого? Що?)", "correct": true}, {"text": "місцевий (Де?)", "correct": false}, {"text": "кличний (звертання)", "correct": false}]}, {"question": "«Я живу **в Києві**.» — у якому відмінку слово «Києві»?", "options": [{"text": "називний (Хто? Що?)", "correct": false}, {"text": "знахідний (Кого? Що?)", "correct": false}, {"text": "місцевий (Де?)", "correct": true}, {"text": "кличний (звертання)", "correct": false}]}, {"question": "«**Маріє**, де твій зошит?» — у якому відмінку слово «Маріє»?", "options": [{"text": "називний (Хто? Що?)", "correct": false}, {"text": "знахідний (Кого? Що?)", "correct": false}, {"text": "місцевий (Де?)", "correct": false}, {"text": "кличний (звертання)", "correct": true}]}, {"question": "«**Студент** читає книгу.» — у якому відмінку слово «Студент»?", "options": [{"text": "називний (Хто? Що?)", "correct": true}, {"text": "знахідний (Кого? Що?)", "correct": false}, {"text": "місцевий (Де?)", "correct": false}, {"text": "кличний (звертання)", "correct": false}]}, {"question": "«Я п'ю **каву**.» — у якому відмінку слово «каву»?", "options": [{"text": "називний (Хто? Що?)", "correct": false}, {"text": "знахідний (Кого? Що?)", "correct": true}, {"text": "місцевий (Де?)", "correct": false}, {"text": "кличний (звертання)", "correct": false}]}, {"question": "«Алекс навчається **в університеті**.» — у якому відмінку слово «університеті»?", "options": [{"text": "називний (Хто? Що?)", "correct": false}, {"text": "знахідний (Кого? Що?)", "correct": false}, {"text": "місцевий (Де?)", "correct": true}, {"text": "кличний (звертання)", "correct": false}]}, {"question": "«**Оксано**, добрий день!» — у якому відмінку слово «Оксано»?", "options": [{"text": "називний (Хто? Що?)", "correct": false}, {"text": "знахідний (Кого? Що?)", "correct": false}, {"text": "місцевий (Де?)", "correct": false}, {"text": "кличний (звертання)", "correct": true}]}, {"question": "«**Книга** лежить на столі.» — у якому відмінку слово «Книга»?", "options": [{"text": "називний (Хто? Що?)", "correct": true}, {"text": "знахідний (Кого? Що?)", "correct": false}, {"text": "місцевий (Де?)", "correct": false}, {"text": "кличний (звертання)", "correct": false}]}]} instruction={"Визначте відмінок виділеного слова"} />
+<Quiz client:only="react" questions={[{"question": "Я живу в **готелі**.", "options": [{"text": "Називний", "correct": false}, {"text": "Знахідний", "correct": false}, {"text": "Місцевий", "correct": true}, {"text": "Кличний", "correct": false}]}, {"question": "**Томасе**, де ви живете?", "options": [{"text": "Називний", "correct": false}, {"text": "Знахідний", "correct": false}, {"text": "Місцевий", "correct": false}, {"text": "Кличний", "correct": true}]}, {"question": "Я читаю **текст**.", "options": [{"text": "Називний", "correct": false}, {"text": "Знахідний", "correct": true}, {"text": "Місцевий", "correct": false}, {"text": "Кличний", "correct": false}]}, {"question": "Це новий **студент**.", "options": [{"text": "Називний", "correct": true}, {"text": "Знахідний", "correct": false}, {"text": "Місцевий", "correct": false}, {"text": "Кличний", "correct": false}]}, {"question": "Вона йде на **роботу**.", "options": [{"text": "Називний", "correct": false}, {"text": "Знахідний", "correct": true}, {"text": "Місцевий", "correct": false}, {"text": "Кличний", "correct": false}]}, {"question": "Книга лежить на **столі**.", "options": [{"text": "Називний", "correct": false}, {"text": "Знахідний", "correct": false}, {"text": "Місцевий", "correct": true}, {"text": "Кличний", "correct": false}]}, {"question": "**Маріє**, привіт!", "options": [{"text": "Називний", "correct": false}, {"text": "Знахідний", "correct": false}, {"text": "Місцевий", "correct": false}, {"text": "Кличний", "correct": true}]}, {"question": "**Школа** знаходиться в центрі.", "options": [{"text": "Називний", "correct": true}, {"text": "Знахідний", "correct": false}, {"text": "Місцевий", "correct": false}, {"text": "Кличний", "correct": false}]}]} instruction={"Визначте відмінок виділеного слова"} />
 
-<FillIn client:only="react" items={[{"sentence": "стіл → ______ (родовий відмінок однини)", "answer": "стола", "options": ["стола", "столу", "столі", "столом"]}, {"sentence": "рука → у ______ (місцевий відмінок однини)", "answer": "руці", "options": ["руці", "рукові", "руки", "руку"]}, {"sentence": "книга → у ______ (місцевий відмінок однини)", "answer": "книзі", "options": ["книзі", "книги", "книгу", "книгою"]}, {"sentence": "кінь → ______ (родовий відмінок однини)", "answer": "коня", "options": ["коня", "коні", "коню", "конем"]}, {"sentence": "нога → на ______ (місцевий відмінок однини)", "answer": "нозі", "options": ["нозі", "ноги", "ногу", "ногою"]}, {"sentence": "піч → у ______ (місцевий відмінок однини)", "answer": "печі", "options": ["печі", "піч", "пічці", "піччю"]}, {"sentence": "лід → ______ (родовий відмінок однини)", "answer": "льоду", "options": ["льоду", "ліду", "лоду", "льодом"]}, {"sentence": "дорога → на ______ (місцевий відмінок однини)", "answer": "дорозі", "options": ["дорозі", "дороги", "дорогу", "дорогою"]}]} instruction={"Запишіть правильну форму слова (чергування голосних або приголосних)"} />
+<FillIn client:only="react" items={[{"sentence": "Це великий ____.", "answer": "стіл", "options": ["стіл", "стола", "столі"]}, {"sentence": "Я не бачу ____.", "answer": "стола", "options": ["стіл", "стола", "столі"]}, {"sentence": "Ми живемо в місті ____.", "answer": "Київ", "options": ["Київ", "Києва", "Києві"]}, {"sentence": "Він приїхав із ____.", "answer": "Києва", "options": ["Київ", "Києва", "Києві"]}, {"sentence": "Це чорний ____.", "answer": "кіт", "options": ["кіт", "кота", "коті"]}, {"sentence": "Я люблю цього ____.", "answer": "кота", "options": ["кіт", "кота", "коті"]}, {"sentence": "Сьогодні холодна ____.", "answer": "ніч", "options": ["ніч", "ночі", "ніччю"]}, {"sentence": "Я не сплю посеред ____.", "answer": "ночі", "options": ["ніч", "ночі", "ніччю"]}]} instruction={"Вставте правильну форму слова (чергування о/і, е/і)"} />
 
-<MatchUp client:only="react" pairs={[{"left": "прийменник «в/у» — після голосного звуку", "right": "Вона в університеті."}, {"left": "прийменник «в/у» — після приголосного звуку", "right": "Студент у школі."}, {"left": "прийменник «в/у» — перед словом на «в-» або «ф-»", "right": "Він живе у Вінниці."}, {"left": "сполучник «і/й» — між двома приголосними", "right": "хліб і масло"}, {"left": "сполучник «і/й» — після голосного звуку", "right": "книга й ручка"}, {"left": "сполучник «і/й» — на початку речення", "right": "І студент, і викладач навчаються."}, {"left": "прийменник «з/зі/із» — перед більшістю слів", "right": "з Києва, з другом"}, {"left": "прийменник «з/зі/із» — перед збігом приголосних", "right": "зі Львова, зі школи"}]} instruction={"З'єднайте фонетичне правило милозвучності з відповідним прикладом"} />
+<MatchUp client:only="react" pairs={[{"left": "Він жив", "right": "у Львові."}, {"left": "Вона жила", "right": "в Одесі."}, {"left": "Брат", "right": "і сестра."}, {"left": "Батько", "right": "й мати."}, {"left": "Він приїхав", "right": "зі Львова."}, {"left": "Вона йде", "right": "зі школи."}, {"left": "Анна була", "right": "в Києві."}, {"left": "Я розмовляю", "right": "зі студентом."}]} instruction={"З'єднайте частини речень, дотримуючись правил милозвучності (у/в, і/й)"} />
 
-<GroupSort client:only="react" groups={{"Називний (Хто? Що?)": ["студент", "книга", "місто"], "Знахідний (Кого? Що?)": ["мову", "каву", "книгу"], "Місцевий (Де?)": ["Києві", "університеті", "школі"], "Кличний (звертання)": ["Маріє", "Тарасе", "Оксано"]}} instruction={"Розподіліть форми іменників за відмінками. Яке питання відповідає кожній формі?"} />
-
-<ErrorCorrection client:only="react" items={[{"sentence": "Нехай в ваших родинах панує злагода!", "errorWord": "в", "correctForm": "у", "options": ["у", "в", "із"], "explanation": "«Нехай» закінчується на приголосний «й», тому перед «ваших» потрібна форма «у», а не «в»."}, {"sentence": "Він в школі сьогодні.", "errorWord": "в", "correctForm": "у", "options": ["у", "в", "із"], "explanation": "«Він» закінчується на приголосний «н», тому перед «школі» потрібна форма «у»."}, {"sentence": "Книга і ручка лежать на столі.", "errorWord": "і", "correctForm": "й", "options": ["й", "і", "та"], "explanation": "«Книга» закінчується на голосний «а», тому після нього сполучник звучить як «й», а не «і»."}, {"sentence": "Хліб й масло — це сніданок.", "errorWord": "й", "correctForm": "і", "options": ["і", "й", "та"], "explanation": "«Хліб» закінчується на приголосний «б», а «масло» починається на приголосний «м» — між двома приголосними вживається «і»."}, {"sentence": "Вони повернулися з Львова.", "errorWord": "з", "correctForm": "зі", "options": ["зі", "з", "із"], "explanation": "«Львів» починається зі збігу приголосних «Лв-», тому потрібна форма «зі»."}, {"sentence": "Вона приїхала зі Канади.", "errorWord": "зі", "correctForm": "з", "options": ["з", "зі", "із"], "explanation": "«Канада» починається з однієї приголосної «К», тому вживається звичайна форма «з»."}]} instruction={"Знайдіть і виправте помилку в милозвучності"} />
-
-<Quiz client:only="react" questions={[{"question": "«За́мок» (наголос на першому складі) — що означає це слово?", "options": [{"text": "пристрій для закривання дверей", "correct": false}, {"text": "середньовічна фортеця або палац", "correct": true}, {"text": "тип ключа", "correct": false}, {"text": "вид будівлі в місті", "correct": false}]}, {"question": "«Замо́к» (наголос на другому складі) — що означає це слово?", "options": [{"text": "середньовічна фортеця", "correct": false}, {"text": "пристрій для закривання дверей", "correct": true}, {"text": "синонім до «форт»", "correct": false}, {"text": "назва міста", "correct": false}]}, {"question": "«До́рога» (наголос на першому складі) — яка це частина мови?", "options": [{"text": "іменник (дорога — шлях)", "correct": false}, {"text": "прикметник жіночого роду від «дорогий» (expensive)", "correct": true}, {"text": "прислівник", "correct": false}, {"text": "займенник", "correct": false}]}, {"question": "«Доро́га» (наголос на другому складі) — яка це частина мови?", "options": [{"text": "прикметник (expensive)", "correct": false}, {"text": "іменник (дорога — шлях, вулиця)", "correct": true}, {"text": "дієслово", "correct": false}, {"text": "сполучник", "correct": false}]}, {"question": "Яке твердження про наголос в українській мові є правильним?", "options": [{"text": "Наголос завжди стоїть на першому складі", "correct": false}, {"text": "Наголос завжди стоїть на останньому складі", "correct": false}, {"text": "Наголос вільний і рухомий — може стояти на будь-якому складі", "correct": true}, {"text": "В українській мові немає наголосу", "correct": false}]}, {"question": "У формі «ру́ки» (родовий відмінок від «рука́») — де стоїть наголос?", "options": [{"text": "на першому складі: РУ-ки", "correct": true}, {"text": "на другому складі: ру-КИ", "correct": false}, {"text": "наголос залишається на тому самому складі, що й у називному", "correct": false}, {"text": "наголос залежить від речення", "correct": false}]}]} instruction={"Визначте значення або характеристику слова залежно від наголосу"} />
+<ErrorCorrection client:only="react" items={[{"sentence": "Він жив в Львові.", "errorWord": "в", "correctForm": "у", "options": ["у", "і", "зі"], "explanation": "Після приголосного і перед приголосним використовуємо «у»."}, {"sentence": "Вона була у Києві.", "errorWord": "у", "correctForm": "в", "options": ["в", "й", "із"], "explanation": "Після голосного перед приголосним використовуємо «в»."}, {"sentence": "Брат й сестра йдуть додому.", "errorWord": "й", "correctForm": "і", "options": ["і", "та", "у"], "explanation": "Між двома приголосними використовуємо «і»."}, {"sentence": "Батько і мати вдома.", "errorWord": "і", "correctForm": "й", "options": ["й", "в", "зі"], "explanation": "Після голосного використовуємо «й»."}, {"sentence": "Він приїхав з Львова.", "errorWord": "з", "correctForm": "зі", "options": ["зі", "із", "в"], "explanation": "Перед збігом приголосних (Льв) використовуємо «зі» для полегшення вимови."}, {"sentence": "Я йду з школи.", "errorWord": "з", "correctForm": "зі", "options": ["зі", "із", "у"], "explanation": "Перед збігом приголосних (шк) використовуємо «зі»."}]} instruction={"Знайдіть і виправте помилку милозвучності (у/в, і/й, з/зі)"} />
 
 
 </TabItem>

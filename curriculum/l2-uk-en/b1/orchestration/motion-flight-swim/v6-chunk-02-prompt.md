@@ -3,22 +3,21 @@
 You are writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 30: Летіти, пливти (B1, B1.3 [Motion Verb Universe])
-**Section to write:** Летіти / літати: рух у повітрі (~1000 words total)
-**Word target for this section:** 1000 words (aim for 1100 to account for undershoot)
+**Section to write:** Летіти / літати: рух у повітрі (~1100 words total)
+**Word target for this section:** 1100 words (aim for 1210 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Летіти / літати: рух у повітрі (~1000 words total)
-- P1 (~160 words): [Base pair contrast: Летіти (unidirectional) vs. Літати (multidirectional/habitual). Contrast specific examples: "Дивись, лелека летить!" (now, one direction) vs. "Лелеки літають у небі" (general movement). Discuss "літати" as a general ability: "Я боюся літати" (I am afraid of flying).]
-- P2 (~120 words): [Conjugation patterns. Detail the II-conjugation for "летіти" (лечу, летиш, летять — note the ч/т alternation) and the I-conjugation for "літати" (літаю, літаєш, літають). Provide the past tense: летів/летіла vs. літав/літала.]
-- P3 (~160 words): [Prefixes of Arrival and Departure: прилетіти, вилетіти, відлетіти, полетіти. Focus on airport scenarios. Examples: "Рейс прилетів із запізненням" (The flight arrived late), "Літак вилетів о третій" (The plane took off/departed at three). Explain that "полетіти" emphasizes the start of the action.]
-- P4 (~160 words): [Prefixes of Path and Space: перелетіти (cross), пролетіти (past/through), облетіти (around), залетіти (into). Nature context: "Метелик залетів у кімнату" (The butterfly flew into the room), "Ми облетіли всю гору" (We flew around the whole mountain). Contrast "перелетіти океан" with "пролетіти над хмарами".]
-- P5 (~140 words): [Prefixes of Reach and Target: долетіти (reach), підлетіти (approach). Discuss the difficulty of distance: "Ми нарешті долетіли" (We finally reached/arrived). Discuss physical proximity: "Птах підлетів до годівниці" (The bird flew up to the feeder).]
-- P6 (~150 words): [Aspectual pairs for prefixed air motion. List the imperfective counterparts: прилітати, відлітати, вилітати. Explain that these are used for schedules and repeated actions: "Рейс прилітає щодня" (The flight arrives daily) vs. "Він прилетів сьогодні" (He arrived today).]
-- Exercise: [Quiz, Focus on choosing летіти/літати or the correct prefix, 8 items]
-- Exercise: [Group-sort, Sort prefixed forms of летіти (прилетіти, залетіти, облетіти, etc.) by meaning category (Arrival, Direction, Limit), 12 items]
+## Летіти / літати: рух у повітрі (~1100 words total)
+- P1 (~150 words): [Conjugation and Phonetics of Летіти: Detail the 1st conjugation pattern with the specific "ч/т" alternation in the first person singular: "я лечу," but "ти летиш," "він летить." Provide past tense forms: летів, летіла, летіли. Highlight the stress on the ending in present tense.]
+- P2 (~150 words): [Conjugation and Phonetics of Літати: Detail the stable -а- conjugation class (I conjugation): літаю, літаєш, літає. Contrast the lack of consonant shifts with its unidirectional partner. Provide past tense: літав, літала, літали. Highlight that this is the productive stem for all imperfective prefixed forms.]
+- P3 (~200 words): [Uni- vs Multi-directional Logic in the Air: Re-explain the core distinction using aviation examples. Летіти = the plane is in the air right now (Літак летить у Стамбул). Літати = a general ability (Птахи вміють літати), a habit (Я літаю у відрядження щомісяця), or a round trip (Ми літали в Париж минулого тижня).]
+- P4 (~150 words): [Prefixes Part 1: Arrival and Departure. Explain "прилетіти" (arrival) and "відлетіти/вилетіти" (departure). Contrast "вилетіти" (scheduled departure/flying out of a space) with "відлетіти" (flying away from a person or object). Examples: "Рейс вилетів вчасно," "Птах відлетів від вікна."]
+- P5 (~150 words): [Prefixes Part 2: Crossing and Passing. Explain "перелетіти" (crossing a barrier) and "пролетіти" (passing by or through). Examples: "Перелетіти через океан," "Літак пролетів над будинком." Introduce "залетіти" (flying into/entering) with the example of a butterfly: "Метелик залетів у кімнату."]
+- P6 (~150 words): [Prefixes Part 3: Proximity and Scope. Explain "підлетіти" (approaching/flying up to) and "облетіти" (flying around/circumference). Examples: "Голуб підлетів до крихт," "Екзюпері облетів усю землю." Include "долетіти" for reaching a final goal: "Ми успішно долетіли до Одеси."]
+- Exercise: [Type: group-sort, Focus: Sort 12 prefixed forms of летіти (e.g., вилетіла, прилетів, перелетіли) into categories based on the prefix's directional meaning: Arrival, Departure, Crossing, Proximity.]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -26,7 +25,7 @@ You are writing ONE SECTION of a Ukrainian language module. Write ONLY this sect
 <previous_context>
 [...previous sections truncated...]
 
-поля *(lexical fields)*. Ми також обов'язково зустрінемо деякі граматичні особливості *(grammatical peculiarities)* та певні неправильні форми *(irregular forms)*. Чому рух у повітрі та рух на воді виділено в окрему тему? Ці два середовища *(environments)* є унікальними і вимагають особливої лексики. Вони представляють простори, де людям зазвичай потрібна складна технологія *(technology)* для пересування, як-от пасажирський **літак** *(airplane)* чи великий **корабель** *(ship)*. Або ж цей рух стосується істот із відповідною біологією: диких птахів *(birds)*, які ідеально створені для польоту, чи риб *(fish)*, які від народження живуть у воді. Базові пари дієслів для опису цих доменів — це **летіти / літати** *(to fly)* та **пливти / плавати** *(to swim/sail)*. Важливо постійно пам'ятати, що ці пари чітко підпорядковуються тій самій граматичній логіці *(logic)*, що й уже знайома нам пара **іти / ходити** *(to go on foot)*. Перше дієслово в кожній парі — односпрямоване *(unidirectional)*, воно описує рух у цей конкретний момент часу в одному напрямку. Друге дієслово — різноспрямоване *(multidirectional)*, воно вказує на регулярну дію або загальну здатність пересуватися в цьому середовищі. Щоб найкраще побачити ці дієслова в реальній дії, давайте прочитаємо історію про одну мандрівку. **Подорож до Стамбула** *(A Journey to Istanbul)* Минулого місяця я вирішив полетіти до Туреччини на кілька днів. Моя подорож почалася рано-вранці. Я приїхав у головний міжнародний **аеропорт** *(airport)* нашої столиці. Я знав, що мій **рейс** *(flight/route)* був дуже раннім, тому відразу пройшов реєстрацію. Незабаром по гучномовцю оголосили **посадку** *(boarding)*, і я з радістю зайняв своє місце біля вікна. Наш сучасний **літак вилетів** *(the plane departed/flew out)* абсолютно вчасно, без затримок. Погода була чудова, і ми спокійно **летіли** *(were flying)* високо над білими хмарами. За дві години ми успішно **прилетіли** *(arrived by air)* до теплого Стамбула. Коли літак приземлився, я відчув величезну радість. Але моя подорож на цьому не закінчилася. Мені потрібно було дістатися на інший берег міста. Тому я відразу поїхав у галасливий **порт** *(port/harbor)*. Там біля причалу вже стояв великий білий **пором** *(ferry)*. Я купив квиток і піднявся на верхню **палубу** *(deck)*. Корабель голосно загудів і **відплив** *(sailed away)* від берега. Було трохи прохолодно, але краєвиди були дуже красиві. Ми повільно **пливли** *(were sailing)* через знамениту протоку Босфор. Білі чайки летіли за нашим кораблем і кричали. За пів години ми змогли безпечно **переплисти** *(swim/sail across)* на азійський бік міста. Наш важкий пором обережно **приплив** *(arrived by water)* до нового причалу, і я зійшов на землю, готовий до нових пригод. Давайте проаналізуємо цей текст і звернемо увагу на дієслова. Ви, напевно, помітили, як автор вміло використовує різні слова для опису різних етапів мандрівки. Коли історія описує фінальний результат повітряної подорожі, використовується доконана форма «прилетіли» *(arrived by air)* — ця дія вже закінчена. Натомість, коли автор описує сам тривалий процес руху по воді, він каже «пором плив» *(the ferry was sailing)*, підкреслюючи тривалість. Слово «переплисти» *(to swim/sail across)* ідеально показує подолання перешкоди, рух від одного берега до іншого. Кожен префікс додає важливу деталь до загальної картини. Тепер ми набагато детальніше розглянемо, як саме працюють усі десять префіксів із дієсловами руху в повітрі, щоб ви могли легко описувати будь-які польоти.
+знайомі нам префікси в поєднанні з цими дієсловами іноді розкривають нові нюанси значень. Наприклад, англійське «to take off» не перекладається дослівно, а виражається одним влучним українським словом із правильним префіксом. Крім того, дієслово «пливти» має незвичні зміни в корені, коли ми додаємо до нього деякі префікси, як-от у слові **переплисти** *(to cross by water)*. Сьогодні ми вирушимо в захопливу уявну мандрівку, щоб побачити, як ці слова природно працюють у реальному житті. Наша велика подорож починається рано-вранці. Головний міжнародний **аеропорт** *(airport)* України, Бориспіль, який розташований неподалік від Києва, вже давно прокинувся. Ми заходимо в його сучасний та просторий **термінал** *(terminal)*, де тисячі людей з валізами терпляче чекають на свій **рейс** *(flight)*. Наш амбітний план — швидко та комфортно дістатися до Туреччини. Ми уважно дивимося на електронне табло: наш літак повністю готовий до відправлення. За кілька хвилин ми вже сидимо в зручних м'яких кріслах. Величезний літак повільно виїжджає на довгу **злітну смугу** *(runway)*, швидко набирає необхідну швидкість і нарешті плавно відривається від землі. За розкладом ми мали **вилетіти** *(to depart by air)* рівно о восьмій годині ранку. Зараз наш надійний літак стабільно **летить** *(is flying)* дуже високо над густими білими хмарами. За невеликим вікном яскраво світить сонце, а далеко внизу видніються розмальовані зеленим поля та звивисті сині річки. Досвідчений капітан радісно оголошує, що ми зможемо **долетіти** *(to fly all the way to)* до нашого пункту призначення навіть без найменших затримок. Подорож повітряним транспортом завжди глибоко вражає своєю неймовірною швидкістю. Те, що в минулі століття займало довгі виснажливі тижні, тепер триває лише кілька приємних годин. Ми п'ємо гарячу каву, читаємо свіжі новини, а літак невпинно продовжує свій стрімкий рух на південь. Незабаром ми побачимо теплі береги іншої країни, і наша повітряна частина мандрівки безпечно завершиться. Після швидкого та комфортного перельоту ми опиняємося у Стамбулі — унікальному стародавньому місті, яке велично розкинулося на двох різних континентах. Тепер наш цікавий шлях продовжується по воді. Ми спускаємося в дуже гамірний **порт** *(port)*, де повітря наповнене криками птахів, а також пахне сіллю, водоростями та смаженою рибою. Біля довгого дерев'яного пірсу, який тут називають **причал** *(pier)*, нас уже чекає великий пасажирський **пором** *(ferry)*. На відміну від швидкісного літака, важкий корабель ніколи не поспішає. Він має обережно та спокійно **відпливти** *(to sail away)* від твердого берега, залишаючи за собою довгий білий слід піни на темній холодній воді. Зараз наш надійний корабель дуже повільно, але надзвичайно впевнено **пливе** *(is sailing)*. Ми стоїмо на верхній палубі, уважно слухаємо гучний крик місцевих чайок і приємно відчуваємо на обличчі свіжий морський вітер. Наше головне завдання на сьогоднішній день — безпечно переплисти славетну **затоку** *(bay/strait)* Босфор, щоб романтично потрапити зі старої Європи в загадкову Азію. Рух на воді відчувається зовсім інакше. Тут абсолютно немає тієї шаленої напруженої швидкості, як високо в небі. Коли ти стоїш на палубі корабля, ти маєш достатньо часу роздивитися все навколо: інші маленькі швидкі човни, розкішні старі палаци на березі, грандіозні великі мости прямо над головою. Літак допоміг нам майже миттєво змінити країну, але саме пором дає чудову можливість по-справжньому глибоко відчути безмежний простір і неймовірну велич могутньої водної стихії.
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -39,7 +38,7 @@ module: b1-030
 level: B1
 sequence: 30
 slug: motion-flight-swim
-version: '3.0'
+version: '3.1'
 title: Летіти, пливти
 subtitle: Дієслова руху в повітрі та на воді — з усіма префіксами
 focus: grammar
@@ -146,6 +145,15 @@ content_outline:
       - 'Quick contrastive examples: Літак летить (literal — the plane is flying).
         Час летить (figurative — time flies). Корабель пливе (literal — the ship is
         sailing). Думки пливуть (figurative — thoughts drift).'
+      - 'Ukrainian idioms and collocations with летіти/пливти: Гроші летять (money
+        disappears fast). Все пливе перед очима (everything is blurry/spinning). Пливти
+        за течією (go with the flow). These are high-frequency expressions that learners
+        will encounter in everyday Ukrainian. Compare with English equivalents to show
+        where metaphors overlap and where they diverge.'
+      - 'Practice: learners sort 10-12 sentences into literal vs figurative categories,
+        then explain what the figurative meaning is in each case. Extension: write 3-4
+        original sentences using летіти or пливти figuratively in contexts from their
+        own life — Мої канікули летять! Дні до іспиту пливуть повільно.'
   - section: 'Підсумок: повітряний та водний рух'
     words: 300
     points:
@@ -554,6 +562,8 @@ references:
 </knowledge_packet>
 
 ---
+
+
 
 ## Rules
 

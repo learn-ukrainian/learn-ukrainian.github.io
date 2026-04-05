@@ -1,124 +1,145 @@
-module: hist-053
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння історіографічних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Джерела
+  focus: Розуміння первинного історичного джерела
+  placement: inline
+  type: reading
+- focus: Оцінка первинного джерела — хто написав, навіщо, що упущено?
+  placement: workbook
+  type: source-evaluation
+- focus: Дебат — оцінка значення та наслідків події
+  placement: workbook
+  type: debate
+- focus: Порівняння української та імперської інтерпретацій (Битва під Жовтими Водами)
+  placement: workbook
+  type: comparative-study
+- focus: Есе на тему зв'язку з сучасністю (Битва під Жовтими Водами)
+  placement: workbook
+  type: essay-response
+cefr_min: C1
+connects_to:
+- bohdan-khmelnytskyi
+- zborivska-bila-tserkva
+content_outline:
+- points:
+  - 'Провокація: Перемога під Жовтими Водами — це результат геніальної стратегії Хмельницького чи фатальної самовпевненості
+    польського командування? Що б змінилося, якби Микола Потоцький не недооцінив «бунтівного» гетьмана?'
+  - 'Фрагмент з листа: «...син мій Стефан пішов наперед із частиною війська, щоб придушити бунт у зародку. Чекаю на швидкі
+    та добрі вісті...» — без контексту, студент має вгадати автора та результат.'
+  section: Розминка
+  words: 400
+- points:
+  - 'Дебат 1: [!decolonization] Радянська/імперська історіографія зображувала повстання як стихійний бунт селян. Українська
+    — як війну за незалежність, керовану досвідченим стратегом. Чиї аргументи переконливіші?'
+  - 'Дебат 2: Хто переміг під Жовтими Водами — козаки чи татари? Роль Тугай-бея як вирішального фактора проти ролі козацької
+    піхоти та бунту реєстрових.'
+  - '[!epistemic-humility] Точна кількість військ з обох боків досі є предметом дискусій. Літописи подають різні цифри. Ми
+    аналізуємо співвідношення сил, а не абсолютні числа.'
+  - 'Глобальна синхронність: 1648 рік — кінець Тридцятилітньої війни в Європі (Вестфальський мир), Фронда у Франції, революція
+    в Англії. Козацьке повстання як частина «кризи XVII століття».'
+  section: 'Конфліктна карта: Війна професіоналів чи бунт черні?'
+  words: 900
+- points:
+  - 'Первинне джерело 1: Реконструкція останніх листів Стефана Потоцького до батька. Аналіз зміни тону: від пихатої зверхності
+    до відчаю. Хто є цільовою аудиторією цього листа?'
+  - 'Первинне джерело 2: Фрагмент «Літопису Самовидця» про повстання реєстрових козаків на Кам''яному Затоні. «...полковники
+    наші, Барабаш та Караїмович, вірності королю не зрадили...». Аналіз мови та ідеології автора.'
+  - '[!decolonization] Читання імперських джерел «проти шерсті»: польські звіти про «зраду реєстрових» vs козацький погляд
+    на це як на акт національного возз''єднання. Чому знищення клейнодів було таким важливим символічним актом?'
+  - 'Джерельна критика: порівняння опису однієї події (наприклад, першого штурму) у козацькому літописі та польському звіті.
+    Де розходяться факти, а де — лише інтерпретації?'
+  section: 'Джерела: Листи з табору та літописні оповіді'
+  words: 1600
+- points:
+  - 'Причини та наслідки: Як рішення Потоцького розділити сили призвело до поразки? Аналіз тактичних помилок польського командування.'
+  - 'Наслідок 1: Народження козацько-татарського тактичного союзу. Мобільна кіннота Тугай-бея + козацька піхота та артилерія
+    — формула перемоги.'
+  - 'Наслідок 2: Козацьке військове мистецтво в дії. Використання «шанців» (польових укріплень), тактика «гуляй-города», влаштування
+    засідки в урочищі Княжі Байраки.'
+  - '[!myth-buster] Спростування міфу про «селянську війну». Протистояння двох професійних армій. Перевага козаків не в чисельності,
+    а в тактиці, мотивації та знанні місцевості.'
+  - 'Значення: Психологічний удар по Речі Посполитій. Вперше елітне шляхетське військо було розгромлене «бунтівниками». Це
+    відкрило шлях на Корсунь.'
+  section: 'Аналіз: Наслідки та значення'
+  words: 1600
+- points:
+  - 'Повернення до розминки: Отже, Жовті Води — це геніальність Хмельницького, помилка Потоцького чи просто вдалий збіг обставин?
+    Студент формулює власну аргументовану відповідь.'
+  - 'Ширше питання: Яку роль відіграє «національна гордість» та «пиха» у військових поразках? Порівняйте ситуацію 1648 року
+    з іншими історичними прикладами.'
+  - '[!anti-hagiography] Хмельницький — не безгрішний герой. Союз із татарами означав дозвіл на взяття ясиру з українських
+    земель. Як ми маємо оцінювати такі складні моральні компроміси?'
+  - 'Зв''язок із сьогоденням: Недооцінка супротивника та віра у власну безкарність — як уроки Жовтих Вод актуальні сьогодні?'
+  section: Дискусія та підсумок
+  words: 700
+focus: The first major victory of the Khmelnytsky Uprising, Cossack military art, role of Tatar allies, deconstruction of
+  imperial myths
 level: HIST
+module: hist-053
+objectives:
+- Аналізувати стратегічні та тактичні рішення обох сторін у битві під Жовтими Водами
+- Пояснювати вирішальну роль переходу реєстрових козаків на бік повсталих та союзу з татарами
+- Критично оцінювати історичні джерела (літописи, листи), розрізняючи факти та інтерпретації
+- Спростовувати імперські міфи про «стихійний бунт», аргументуючи тезу про битву як зіткнення професійних армій
+pedagogy: CBI
+persona:
+  role: Стратегічний аналітик, що розбирає битву як шахову партію, фокусуючись на рішеннях, помилках та їхніх наслідках. Говорить
+    мовою тактики, а не пафосу.
+  voice: Military-Historian
+phase: HIST.6 [Khmelnytsky & Cossack State]
+references:
+- note: Опис повстання реєстрових на Кам'яному Затоні та загальний хід повстання.
+  path: http://litopys.org.ua/samovyd/sam.htm
+  type: primary
+  work: Літопис Самовидця
+- author: Михайло Грушевський
+  note: Детальна академічна реконструкція битви, аналіз сил та джерел.
+  path: http://litopys.org.ua/hrushrus/iur.htm
+  type: secondary
+  work: Історія України-Руси. Том VIII.
+- author: Олена Апанович
+  note: Аналіз козацької військової тактики, озброєння та організації.
+  type: secondary
+  work: Збройні сили України першої половини XVIII ст.
 sequence: 53
 slug: bitva-pid-zhovtymy-vodamy
-version: '3.0'
-title: Битва під Жовтими Водами
 subtitle: The Battle of Zhovti Vody
-focus: history
-pedagogy: CBI
-phase: HIST.6 [Khmelnytsky & Cossack State]
-word_target: 5000
-objectives:
-- Учень може описати стратегію Хмельницького у битві під Жовтими Водами
-- Учень може пояснити роль реєстрових козаків у перемозі
-- Учень може проаналізувати значення цієї битви для подальшого ходу повстання
-content_outline:
-- section: 'Вступ: Перший грім'
-  points:
-  - The strategic situation in spring 1648 — 21 April 1648 departure; tension in the steppe
-  - Potocki's plan to split forces — Mykola Potocki's fatal underestimation of 'Khmel'; sending son Stefan ahead while 
-    main forces lagged
-  words: 550
-- section: 'Сили сторін: Давид проти Голіафа?'
-  points:
-  - Structure of the Polish vanguard (Stefan Potocki) — 2500 registered Cossacks, 1500 soldiers; mix of elite hussars 
-    and dragoons
-  - Cossack-Tatar coalition forces — 4000 cavalry of Tugay Bey providing crucial mobility and blockade capability
-  - Armament and morale comparison — Polish artillery advantage vs Cossack 'shanets' (earthworks) tactics; 
-    [!myth-buster] professional armies colliding, not a 'mob of peasants'
-  words: 550
-- section: 'Початок битви: Блокада табору'
-  points:
-  - Establishing the camp at Zhovti Vody — 29 April 1648; Stefan Potocki digs in at the tract
-  - First skirmishes and tactical stalemate — Failed first assault leads to positional warfare (29 April - 2 May)
-  - The role of Tugay Bey's cavalry — Cutting off water and supply lines; psychological pressure of 'The Horde is here'
-  words: 550
-- section: 'Переломний момент: Бунт на Дніпрі'
-  points:
-  - The register Cossacks' journey down the Dnieper — Flotilla movement intended to reinforce Potocki turned into a trap
-  - The uprising at Kamianyi Zaton — 3-4 May; execution of loyalist colonels (Barabash, Karaimovych) who refused to join
-  - Killing of Barabash and joining Khmelnytsky — [!history-bite] Destruction of Polish symbols (kleinods) before 
-    swearing allegiance; doubling Khmelnytsky's forces
-  words: 550
-- section: 'Розгром: Княжі Байраки'
-  points:
-  - The failed attempt to break out — 14 May negotiations fail over surrender of artillery; 16 May night 'hollow camp' 
-    retreat attempt
-  - Total destruction of the Polish vanguard — [!context] Kniazhi Bairaky terrain trap (ravines/forest) prevented hussar
-    deployment; 16 May final rout
-  - Death of Stefan Potocki — Wounded in battle, captured by Tatars, died of gangrene 19 May; symbol of the fall of 
-    noble pride
-  words: 550
-- section: 'Читання: Опис битви в літописі'
-  points:
-  - Excerpt from the Eyewitness Chronicle — [!quote] «Хмельницький... не ожидаючи на Запорожжє...» (analysis of archaic 
-    vs modern narrative)
-  words: 550
-- section: 'Первинні джерела: Листи про поразку'
-  points:
-  - 'Potocki''s last letter to his father — [!source] Reconstruction of emotional state: from arrogance to despair; the ''father''s
-    pride'' narrative'
-  words: 550
-- section: Деколонізаційний погляд
-  points:
-  - Debunking the myth of 'accidental victory' — [!decolonization] Khmelnytsky as a calculated strategist, not a chaotic
-    rebel leader
-  - Cossack military art vs. feudal arrogance — Synthesis of European infantry tactics and Steppe maneuverability vs 
-    rigid Polish doctrine
-  words: 550
-- section: Європа у 1648 році
-  points:
-  - Treaty of Westphalia and the end of the 30 Years' War — Redrawing the map of Europe; synchronicity of events
-  - The Crisis of the 17th Century (Fronde, English Revolution) — Global context of upheaval and state-building
-  - Ukraine entering the European stage — The 'Cossack Revolution' as a new geopolitical player disrupting the balance 
-    of power
-  words: 600
+title: Битва під Жовтими Водами
+version: '4.0'
 vocabulary_hints:
-  required:
-  - 'авангард (війська, польський) — передова частина армії; collocations: розбити авангард, вислати авангард'
-  - 'облога (табору, тривала) — оточення війська; collocations: взяти в облогу, прорвати облогу'
-  - 'переправа (через Дніпро, важка) — подолання водної перешкоди; collocations: захопити переправу'
-  - 'клейноди (військові, втопити) — символи влади (булава, прапор); context: знищення клейнодів як акт непокори'
-  - 'реєстровці (козаки, перехід на бік) — козаки на службі короля; key concept: зміна лояльності'
-  - 'зрада (полковників, національна) — порушення вірності; learner error: treason vs betrayal nuance'
-  - 'капітуляція (умови, відмова) — припинення опору; collocations: підписати капітуляцію, ганебна капітуляція'
-  - 'тріумф (військовий, несподіваний) — видатна перемога; collocations: святкувати тріумф'
-  - байрак (урочище, княжий) — яр, порослий лісом; geographical term crucial for the battle map
-  - 'шанець (земляний, окопатися) — польове укріплення; collocations: будувати шанці'
-  recommended:
-  - урочище (Жовті Води) — natural boundary/tract; specific to Ukrainian geography
-  - 'гармати (артилерія) — cannons; context: Polish advantage neutralized'
-  - оточення (потрапити в) — encirclement; tactical situation
-  - засідка (влаштувати) — ambush; Cossack tactic at Kniazhi Bairaky
-  - шляхта (польська, пихата) — nobility; social class context
-activity_hints:
-- type: reading
-  focus: Analysis of historical texts
-- type: essay-response
-  focus: The role of intelligence and diplomacy in victory
-- type: comparative-study
-  focus: Polish vs. Cossack camp fortifications
-- type: critical-analysis
-  focus: 'Спростування міфів: Myths about the battle'
-  items: 4
-persona:
-  voice: Senior Professor of History
-  role: Cossack Colonel
-grammar:
-- 'Military narrative: descriptions of maneuvers'
-- Cause and effect in historical context
-register: публіцистичний
-prerequisites:
-- bohdan-khmelnytskyi
-connects_to:
-- zborivska-bila-tserkva
-references:
-- name: History of Ukraine-Rus
-  url: http://litopys.org.ua/hrushrus/iur.htm
-  type: reference
-  notes: Detailed reconstruction of the battle
-- name: Military Art of Ukraine
-  url: https://history.org.ua
-  type: secondary
-  notes: Tactical analysis
+- definition: 'передова частина армії, що йде попереду головних сил; collocations: розбити авангард, вислати авангард'
+  pos: ч.
+  word: авангард
+- definition: 'оточення ворожого війська, фортеці чи міста; collocations: тримати в облозі, прорвати облогу'
+  pos: ж.
+  word: облога
+- definition: 'місце або засіб для подолання водної перешкоди; collocations: захопити переправу, наводити переправу'
+  pos: ж.
+  word: переправа
+- definition: 'символи влади та гідності (булава, бунчук, прапор); context: знищення клейнодів як акт непокори'
+  pos: ч. (мн.)
+  word: клейноди
+- definition: 'козаки, що перебували на офіційній військовій службі Речі Посполитої; key concept: зміна лояльності'
+  pos: ч. (мн.)
+  word: реєстровці
+- definition: 'порушення вірності; learner error: treason vs betrayal nuance in historical context'
+  pos: ж.
+  word: зрада
+- definition: 'припинення збройного опору та здача на милість переможця; collocations: підписати капітуляцію, ганебна капітуляція'
+  pos: ж.
+  word: капітуляція
+- definition: яр, глибока балка, поросла лісом і чагарником; geographical term crucial for the battle map
+  pos: ч.
+  word: байрак
+- definition: 'польове земляне укріплення для захисту від ворога; collocations: окопатися в шанцях, будувати шанці'
+  pos: ч.
+  word: шанець
+- definition: природно відокремлена ділянка місцевості з виразними межами (ліс серед поля, болото); specific to Ukrainian
+    geography
+  pos: с.
+  word: урочище
+word_target: 5000

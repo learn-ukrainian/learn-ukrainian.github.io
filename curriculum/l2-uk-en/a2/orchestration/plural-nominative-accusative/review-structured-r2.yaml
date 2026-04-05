@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All 3 content_outline sections present with correct H2 headings. Every
+    plan point covered: I-IV відміна with examples (сестра→сестри, стіл→столи, ніч→ночі,
+    курча→курчата), irregulars (людина→люди, дит'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'All 750 verified words exist in VESUM. All inflected forms correct (verified:
+    друзі, мавп, собак, колег, очі, солі, матері, курчат, серця, плечі — all match
+    VESUM paradigms). No Russianisms, no Surzhy'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Clear PPP flow: introduction presents the situation (zoo dialogue with
+    Nom.Pl and Acc.Pl in action), sections present patterns systematically by відміна,
+    exercises practice each skill. Abundant exampl'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'All 10 required plan vocab items present in prose: множина (section headings),
+    називний відмінок ✓, знахідний відмінок ✓, живий ✓ ("Живий об''єкт — це завжди
+    людина або тварина"), неживий ✓, закінчення'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: '4 markers match all 4 plan activity_hints in type, focus, and item count.
+    Markers placed after relevant teaching sections — learner has the knowledge needed
+    before each exercise. fill-in after Nom.Pl '
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: 'No motivational openers, no meta-commentary, no gamified language, no
+    "magic of…" filler. Tone is direct and explanatory. Examples are specific and
+    grounded: real objects (стіл, ніж, вікно), real situ'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown. All plan sections present as H2 headings in correct order.
+    Introduction and Підсумок are standard framing. Word count 2155 vs. 2000 target
+    — within range (7.75% over). No stray tags, n
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented on its own terms. No "like Russian but…" comparisons.
+    The comparison with singular (masculine-only animate distinction) is framed as
+    a Ukrainian grammar fact, not a Russian paralle
+- dimension: 9
+  name: Dialogue quality
+  score: 9
+  evidence: 'Zoo dialogue (intro): natural parent-child interaction, named speakers
+    (Батько, Дитина), multi-turn, real situation, correctly demonstrates both Nom.Pl
+    and Acc.Pl animate. Guest preparation dialogue ('
+findings: []

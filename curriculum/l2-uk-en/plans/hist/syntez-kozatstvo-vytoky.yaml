@@ -1,106 +1,146 @@
-module: hist-050
-level: HIST
-sequence: 50
-slug: syntez-kozatstvo-vytoky
-version: '3.0'
-title: 'Синтез: Становлення козацтва'
-subtitle: 'Synthesis: The Formation of the Cossacks'
-focus: synthesis
-pedagogy: CBI
-phase: HIST.5 [Rise of Cossacks]
-word_target: 5000
-objectives:
-- Учень може узагальнити етапи становлення козацтва від витоків до середини XVII ст.
-- Учень може проаналізувати козацтво як комплексний військовий, соціальний та культурний феномен
-- Учень може оцінити вплив козацького чинника на європейську геополітику
-content_outline:
-- section: 'Вступ: Козацтво як точка збірки нації'
-  points:
-  - Synthesis of previous modules (41-49) — emphasize 'melting pot' aspect where boyars, townspeople, peasants, and 
-    nobility created a new quality; filling the elite vacuum after Rus' decline
-  - Continuity from Rus' through Lithuanian era to Cossack statehood — [!context] Козацтво як плавильний казан (melting 
-    pot), де змішалися бояри, міщани, селяни та шляхта, створивши нову якість
-  words: 700
-- section: 'Огляд періоду: Хронологія та генеза'
-  points:
-  - 'From ukhodnyky to political knights — trace evolution: 1. Ukhodnyky (seasonal), 2. Military organization (Vyshnevetsky
-    1556), 3. Politicization (Register 1572, 1578), 4. Struggle for rights'
-  - 'Key stages of social evolution — [!myth-buster] Козаки — це не «селяни-втікачі» з вилами, а професійна військова корпорація
-    зі своєю ієрархією; key dates: 1492 (first mention), 1556 (Sich prototype), 1578 (Batory reform)'
-  words: 700
-- section: 'Ключові теми: Війна, Віра та Воля'
-  points:
-  - Military revolution and technological synthesis — [!history-bite] Морські походи козаків на «чайках» як приклад 
-    асиметричної війни XVII ст. (спецпризначенці проти імперського флоту); include Sahaidachny's taking of Kaffa (1616) 
-    and Khotyn (1621)
-  - Religious identity as a consolidating factor — 'Secular sword' of Orthodoxy concept; Sahaidachny joining Kyiv 
-    Brotherhood (1620); Liberty as personal freedom and electoral culture
-  words: 700
-- section: 'Аналіз: Культурна матриця та геополітика'
-  points:
-  - 'Baroque and Academy as identity anchors — [!culture] Козацьке бароко як візуалізація світовідчуття: динамізм, пишність,
-    синтез європейського та національного (Мазепинські церкви); founding of Kyiv-Mohyla Collegium (1632)'
-  - Zaporozhian Host as a factor in European balance of power — balance between PLC, Ottomans, and Muscovy; 
-    participation in Thirty Years' War (mercenaries in France, Austria)
-  words: 700
-- section: 'Читання: Узагальнюючий огляд доби'
-  points:
-  - Analytical text on the significance of the era — [!decolonization] Україна не була «окраїною» імперій, а суб'єктом 
-    геополітики, з яким рахувалися монархи Європи (від Швеції до Туреччини); comparison with American frontiersmen but 
-    with state-building ambitions
-  words: 700
-- section: 'Первинні джерела: Голоси фундаторів'
-  points:
-  - 'Synthesis of key documents — [!quote] Уривок з листа запорожців або універсалу, що демонструє високий стиль та дипломатичний
-    хист канцелярії; include Velychko quote: «Щоб не побоялися стати за давні вольності наші...»'
-  words: 700
-- section: 'Деколонізаційний погляд: Козацька правда'
-  points:
-  - Debunking the 'peasant culture' myth — [!myth-buster] Спростування радянського міфу про «класову боротьбу» як єдиний
-    рушій козацтва; emphasize noble participation (Kosynsky, Nalyvaiko, Sahaidachny)
-  words: 800
-vocabulary_hints:
-  required:
-  - 'становлення (formation/becoming) — становлення козацтва як стану; collocation: процес становлення'
-  - передумова (prerequisite) — передумови виникнення Січі
-  - чинник (factor) — геополітичний чинник
-  - ідентичність (identity) — формування національної ідентичності
-  - суб'єктність (agency/subjectivity) — набуття політичної суб'єктності
-  - феномен (phenomenon) — унікальний соціальний феномен
-  - консолідація (consolidation) — консолідація українських земель
-  - спадкоємність (continuity) — спадкоємність державних традицій Русі
-  - державність (statehood) — ознаки державності Війська Запорозького
-  - вектор (vector) — європейський вектор розвитку
-  recommended:
-  - універсал (universal/decree) — королівський або гетьманський документ
-  - клейноди (insignia) — козацькі клейноди (прапор, булава, бунчук)
-  - уходники (ukhodnyky) — сезонні промисловики, попередники козаків
-  - низове лицарство (grassroots knighthood) — самоназва козаків
-  - фронтир (frontier) — Дике Поле як простір свободи
 activity_hints:
-- type: reading
-  focus: Analytical synthesis of historical processes
-- type: essay-response
-  focus: The role of the Cossack myth in modern national building
-- type: comparative-study
-  focus: Evolution of Cossack identity over 100 years
-persona:
-  voice: Senior Professor of History
-  role: Steppe Scout
-grammar:
-- 'Historical synthesis: cause and effect'
-- Advanced analytical structures
-register: публіцистичний
-prerequisites:
-- morski-pokhody
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння історіографічних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Джерела
+  focus: Розуміння первинного історичного джерела
+  placement: inline
+  type: reading
+- focus: Оцінка первинного джерела — хто написав, навіщо, що упущено?
+  placement: workbook
+  type: source-evaluation
+- focus: Дебат — оцінка значення та наслідків події
+  placement: workbook
+  type: debate
+- focus: 'Порівняння української та імперської інтерпретацій (Синтез: Становлення козацтва)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе на тему зв''язку з сучасністю (Синтез: Становлення козацтва)'
+  placement: workbook
+  type: essay-response
+cefr_min: C1
 connects_to:
 - khmelnychchyna-prychyny
+- morski-pokhody
+content_outline:
+- points:
+  - 'Провокація: Козаки — це «селяни-втікачі» з вилами чи професійна військова корпорація, що заповнила елітний вакуум після
+    занепаду Русі? Де правда?'
+  - Короткий уривок з універсалу Стефана Баторія 1578 року без контексту — студент має припустити, про що йдеться і до кого
+    звертається король.
+  section: Розминка
+  words: 400
+- points:
+  - 'Дебат 1: Радянська історіографія vs сучасний погляд. Козацтво як «класова боротьба селян проти феодалів» чи як складний
+    багатостановий організм, що включав шляхту?'
+  - 'Дебат 2: Еволюція чи задум? Козацтво виникло «стихійно» з уходників, чи від самого початку мало елементи політичної організації
+    та державницьких амбіцій (Дмитро Вишневецький)?'
+  - '[!epistemic-humility] Визнання браку ранніх джерел. Наші знання про початковий етап (до 1550-х) є фрагментарними, що
+    породжує суперечливі інтерпретації.'
+  - 'Глобальна синхронність: Козацтво як східноєвропейський фронтир порівняно з американським фронтиром. Козаки як найманці
+    у Тридцятилітній війні — паралелі з швейцарцями та ландскнехтами.'
+  section: 'Конфліктна карта: Соціальний ліфт чи військова корпорація?'
+  words: 900
+- points:
+  - Аналіз реформи Стефана Баторія 1578 р. — текст універсалу. Що таке «реєстр»? Які права та обов'язки отримували козаки?
+    Кого це перетворювало на «лицарський стан»?
+  - 'Лист козаків до європейського монарха або універсал гетьмана (напр., Сагайдачного). Аналіз стилю: це лист прохачів чи
+    мова рівного партнера? [!decolonization] Демонстрація високого рівня дипломатичної культури та політичної свідомості.'
+  - Акт вступу гетьмана Сагайдачного з усім Військом Запорозьким до Київського братства (1620). Що цей символічний крок говорить
+    про союз світської та духовної влади, ідентичність козацтва як «захисників православ'я»?
+  - Хроніки та мемуари про взяття Кафи (1616). Як описується військова тактика та стратегія козаків (асиметрична війна «чайок»
+    проти імперського флоту)?
+  section: 'Джерела: Голоси фундаторів та закони короля'
+  words: 1600
+- points:
+  - 'Довготривалі наслідки: Козацтво як інститут, що заповнив «елітний вакуум» після занепаду Русі та забезпечив спадкоємність
+    української державної традиції.'
+  - 'Формування ідентичності: Аналіз тріади «Війна, Віра, Воля». Як військова організація, захист православ''я та культура
+    особистої і виборної свободи сформували унікальну козацьку матрицю.'
+  - 'Культурний та геополітичний вплив: Козацьке бароко та Києво-Могилянська академія як стовпи національної культури. Військо
+    Запорозьке як ключовий гравець у балансі сил між Річчю Посполитою, Османською імперією та Московією.'
+  - '[!myth-buster] Спростування міфу про «селянське» походження козацтва. Акцент на ролі шляхти та боярства (К. Косинський,
+    С. Наливайко, П. Сагайдачний) у формуванні козацької еліти та її державницьких прагнень.'
+  section: 'Аналіз: Наслідки та значення'
+  words: 1600
+- points:
+  - 'Повернення до розминки: Отже, козаки — це селяни чи лицарі? Студент формулює nuanced відповідь, пояснюючи еволюцію та
+    складну соціальну структуру.'
+  - 'Зв''язок із сьогоденням: Як козацький міф (волелюбність, спротив імперіям, демократичні традиції) використовується в
+    сучасній українській національній ідеї та у мотивації Збройних Сил України?'
+  - '[!anti-hagiography] Уникнення ідеалізації. Обговорення внутрішніх конфліктів, жорстокості війн того часу та ролі козацтва
+    як дестабілізуючого фактора для сусідніх держав, щоб створити повну, а не однобоку картину.'
+  section: Дискусія та підсумок
+  words: 700
+focus: Синтез становлення козацтва як військового, соціального та політичного феномену. Еволюція від уходників до субʼєкта
+  геополітики. Деконструкція радянських та імперських міфів.
+level: HIST
+module: hist-050
+objectives:
+- Аналізувати ключові історіографічні дебати щодо походження та соціальної структури козацтва.
+- Інтерпретувати первинні джерела (універсали, листи), розрізняючи їхню мету та упередження.
+- Деконструювати імперські та радянські міфи про козацтво, формулюючи аргументовану контрпозицію.
+- Пояснювати роль козацтва як чинника європейської геополітики та його значення для сучасної української ідентичності.
+pedagogy: CBI
+persona:
+  role: Модератор семінару, що ставить під сумнів усталені міфи про козацтво, змушуючи розрізняти романтичний образ та історичну
+    реальність.
+  voice: Debating-Historian
+phase: HIST.5
 references:
-- name: History of Ukrainian Statehood
-  url: https://history.org.ua/uk/lib/54321
-  type: reference
-  notes: General synthesis of the era
-- name: Zaporozhian Cossackdom in the Context of European History
-  url: https://litopys.org.ua/cossack/coss.htm
+- note: Comparative analysis, good for global synchronicity section
+  path: https://litopys.org.ua/cossack/coss.htm
+  type: primary
+  work: Zaporozhian Cossackdom in the Context of European History
+- note: General synthesis of the era, key dates and facts
+  path: https://history.org.ua/uk/lib/54321
   type: academic
-  notes: Comparative analysis
+  work: History of Ukrainian Statehood
+- note: Internal summary of key concepts like 'subiekstnist', 'derzhavnist', and historiographical debates.
+  path: wiki/hist/concepts/cossack-statehood.md
+  type: wiki
+sequence: 50
+slug: syntez-kozatstvo-vytoky
+subtitle: 'Synthesis: The Formation of the Cossacks'
+title: 'Синтез: Становлення козацтва'
+version: '4.0'
+vocabulary_hints:
+- definition: процес виникнення, утворення та розвитку чого-небудь
+  pos: с.
+  word: становлення
+- definition: попередня умова, що робить можливим настання певної події чи явища
+  pos: ж.
+  word: передумова
+- definition: рушійна сила, причина або важлива обставина, що впливає на процес
+  pos: ч.
+  word: чинник
+- definition: усвідомлення своєї належності до певної спільноти, що базується на спільних цінностях, культурі, історії
+  pos: ж.
+  word: ідентичність
+- definition: здатність бути самостійним, активним діячем в історії, а не пасивним об''єктом чужої волі
+  pos: ж.
+  word: суб'єктність
+- definition: виняткове, незвичайне або рідкісне явище, що потребує пояснення
+  pos: ч.
+  word: феномен
+- definition: процес зміцнення, об''єднання та згуртування навколо спільної мети
+  pos: ж.
+  word: консолідація
+- definition: безперервний зв''язок між попередніми та наступними етапами розвитку, наслідування традицій
+  pos: ж.
+  word: спадкоємність
+- definition: сукупність інститутів (політичних, правових, військових), що характеризують державу
+  pos: ж.
+  word: державність
+- definition: вільні люди, що в XV-XVI ст. займалися сезонними промислами (мисливством, рибальством) у Дикому Полі
+  pos: ч.
+  word: уходники
+- definition: офіційний законодавчий або розпорядчий акт, виданий королем або гетьманом
+  pos: ч.
+  word: універсал
+- definition: офіційні символи влади та відзнаки козацького війська (булава, бунчук, прапор, печатка)
+  pos: мн.
+  word: клейноди
+word_target: 5000

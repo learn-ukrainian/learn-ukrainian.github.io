@@ -1,118 +1,144 @@
-module: hist-121
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння історіографічних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Джерела
+  focus: Розуміння первинного історичного джерела
+  placement: inline
+  type: reading
+- focus: Оцінка первинного джерела — хто написав, навіщо, що упущено?
+  placement: workbook
+  type: source-evaluation
+- focus: Дебат — оцінка значення та наслідків події
+  placement: workbook
+  type: debate
+- focus: 'Порівняння української та імперської інтерпретацій (Україна 1991-2004: Становлення)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе на тему зв''язку з сучасністю (Україна 1991-2004: Становлення)'
+  placement: workbook
+  type: essay-response
+cefr_min: C1
+connects_to:
+- hist-119 (Shliakh Nezalezhnosti)
+- hist-123 (Pomarancheva Revoliutsiia)
+content_outline:
+- points:
+  - 'Провокаційне питання: Незалежність 1991 — це була ейфорія перемоги чи тривожний крок у невідомість? Що переважило?'
+  - 'Фрагмент з Акту проголошення незалежності: "Виходячи із смертельної небезпеки, яка нависла була над Україною в зв''язку
+    з державним переворотом в СРСР..." — без контексту, студент має поміркувати, про яку саме небезпеку йдеться.'
+  section: Розминка
+  words: 400
+- points:
+  - 'Дебат 1: Ядерне роззброєння — прагматичне рішення для молодої держави чи стратегічна помилка, що уможливила майбутню
+    агресію? (Будапештський меморандум: "запевнення" vs. "гарантії").'
+  - 'Дебат 2: "Багатовекторність" Кучми — мистецтво політичного маневрування між Заходом та Росією чи консервація залежності
+    та відкладання цивілізаційного вибору?'
+  - '[!epistemic-humility] Історики досі сперечаються, чи існувала реальна альтернатива люстрації та швидких ринкових реформ
+    (як у Балтії та Польщі) в українських умовах.'
+  - 'Глобальна синхронність: У той час як Україна боролася з гіперінфляцією, Польща проводила "шокову терапію", а країни Балтії
+    інтегрувалися в західні структури. Чому їхні шляхи так відрізнялися?'
+  section: 'Конфліктна карта: Втрачені шанси чи неминучий шлях?'
+  words: 900
+- points:
+  - 'Текст Акту проголошення незалежності (24 серпня 1991): аналіз риторики "смертельної небезпеки" та права на самовизначення.
+    Хто був автором? В якій атмосфері приймався?'
+  - 'Текст Будапештського меморандуму (5 грудня 1994): [!decolonization] Уважне читання формулювань "respect sovereignty"
+    vs "provide assistance". Як мова дипломатії приховала відсутність реальних гарантій безпеки для України?'
+  - 'Спогади про "Конституційну ніч" (28 червня 1996): читання фрагментів спогадів депутатів про політичну боротьбу, що передувала
+    ухваленню Конституції.'
+  - 'Перші шпальти газет 1992-1994 рр.: аналіз заголовків про гіперінфляцію, купони-карбованці та економічний хаос. Як медіа
+    відображали настрої суспільства?'
+  section: 'Джерела: Документи, що творили державу'
+  words: 1600
+- points:
+  - 'Короткострокові наслідки: гіперінфляція 10,000% у 1993 році, "кравчучка" як символ виживання, бартеризація економіки,
+    втрата заощаджень населення.'
+  - 'Довгострокові наслідки: формування олігархічної системи. [!decolonization] Як радянські "червоні директори", використовуючи
+    старі зв''язки, приватизували державні активи і стали першими олігархами.'
+  - '[!myth-buster] Конституція 1996 року не була "подарунком" президента. Це результат гострої боротьби між президентом та
+    парламентом, що завершилася ультиматумом і нічним голосуванням.'
+  - 'Оцінка істориків: порівняння поглядів Сергія Плохія, Ореста Субтельного та Ярослава Грицака на ключові рішення 1990-х.
+    Чи була олігархія неминучою ціною за збереження незалежності?'
+  section: 'Аналіз: Наслідки та значення'
+  words: 1600
+- points:
+  - 'Повернення до розминки: Отже, 1991 рік — ейфорія чи тривога? Студент формулює аргументовану відповідь, спираючись на
+    факти з модуля.'
+  - '[!anti-hagiography] Чому здобуття незалежності не принесло швидкого добробуту? Аналіз радянської спадщини, відсутності
+    люстрації та збереження номенклатурних еліт при владі.'
+  - 'Зв''язок із сьогоденням: Як невирішені проблеми 1990-х (корупція, олігархія, слабкі інституції, вплив Росії) стали причинами
+    Помаранчевої революції 2004 року та Революції Гідності 2014 року?'
+  - 'Ключовий висновок: становлення держави — це не одномоментний акт, а складний і болісний процес подолання імперської спадщини.'
+  section: Дискусія та підсумок
+  words: 700
+focus: Proclamation of independence, Budapest Memorandum, Kuchma era, economic crisis of the 90s, formation of the oligarchic
+  system, path to the Orange Revolution.
 level: HIST
+module: hist-121
+objectives:
+- Аналізувати ключові документи, що лягли в основу сучасної української державності (Акт проголошення незалежності, Будапештський
+  меморандум, Конституція 1996)
+- Пояснювати причини та наслідки економічної кризи 1990-х років, включаючи гіперінфляцію
+- Критично оцінювати суперечливі політичні рішення періоду, такі як ядерне роззброєння та політика "багатовекторності"
+- Визначати причини формування олігархічної системи як прямого спадку радянської номенклатури
+- Аргументувати, як невирішені проблеми 1990-х стали передумовою для революцій 2004 та 2014 років
+pedagogy: CBI
+persona:
+  role: Учасник подій 90-х, що бачив і здобутки, і провали зсередини, і тепер аналізує їх без зайвого романтизму.
+  voice: Skeptical-Reformer
+phase: HIST.12
+references:
+- author: Plokhy, Serhii
+  note: Фундаментальна праця для розуміння довгострокових історичних процесів, що призвели до незалежності та сформували її
+    перші роки.
+  type: primary
+  work: The Gates of Europe
+- author: Subtelny, Orest
+  note: Класичний огляд історії України, що містить детальний аналіз періоду 1990-х, зокрема економічних реформ та президентства
+    Кучми.
+  type: primary
+  work: 'Ukraine: A History'
+- note: Внутрішня компіляція ключових дат, постатей та документів періоду 1991-2004.
+  path: wiki/hist/era-of-independence.md
+  type: wiki
 sequence: 121
 slug: nezalezhnist-1991
-version: '3.0'
-title: 'Україна 1991-2004: Становлення'
 subtitle: 'Ukraine 1991-2004: Formation of a State'
-focus: history
-pedagogy: CBI
-phase: HIST.12 [Independence & Modern Era]
-word_target: 5000
-objectives:
-- Учень може описати проголошення незалежності 1991 року
-- Учень може пояснити економічні та політичні виклики раннього періоду
-- Учень може проаналізувати формування олігархічної системи
-- Учень може оцінити президентство Кравчука та Кучми
-content_outline:
-- section: 'Вступ: Народження держави'
-  points:
-  - '24 серпня 1991: Акт проголошення незалежності — include quote ''Виходячи із смертельної небезпеки...''; author Levko
-    Lukyanenko; text written by Levko Lukyanenko; atmosphere of euphoria and anxiety'
-  - '1 грудня 1991: референдум — 90.32% support shock to Moscow; voted YES even in Crimea and Donbas; legal dissolution of
-    USSR; Ukraine as subject of international law'
-  - 'Що означала незалежність для українців — Legal dissolution of USSR; Ukraine as subject of international law; cultural
-    hook: atmosphere of euphoria and anxiety; [!quote] — Цитата з Акту проголошення незалежності про «смертельну небезпеку»'
-  words: 850
-- section: Перші роки (1991-1994)
-  points:
-  - 'Леонід Кравчук: перший президент — Ideologue turned statesman; policy of ''between raindrops'' (між крапельками); avoided
-    civil conflict but stalled reforms; former CPU ideologue; «Маємо те, що маємо» — phrase symbolizing the era of uncertainty'
-  - Будапештський меморандум — 5 Dec 1994; Assurances (запевнення) vs Guarantees; pressure from US/Russia; Ukraine had 
-    3rd largest nuclear arsenal
-  - 'Ядерне роззброєння — Ukraine had 3rd largest arsenal; traded for paper promises; analyze text: «respect sovereignty»
-    vs «defend»'
-  - Економічна криза та гіперінфляція — 10,000% inflation in 1993; 'Kravchuchka' (cart) as symbol of survival; 
-    Coupons/Karbonavtsi era; prices changed daily; salaries in millions of coupons; [!history-bite] — Про «кравчучку» як
-    символ епохи виживання
-  words: 850
-- section: Ера Кучми (1994-2004)
-  points:
-  - Конституція 1996 року — 28 June 1996 'Constitutional Night'; result of fierce political struggle vs 'gifted' myth; 
-    adopted in one night (27-28 June) under threat of parliament dissolution; [!myth-buster] — Constitution was not 
-    «gifted», result of struggle
-  - 'Грошова реформа: гривня — Sept 1996; Viktor Yushchenko (NBU); exchange 100,000:1; stabilization of economy; 1 USD = 1.76
-    UAH at launch'
-  - Формування олігархічної системи — Red directors privatizing assets using Soviet connections; rise of Donetsk and 
-    Dnipro clans; [!decolonization] — «Red directors» became first oligarchs using Soviet ties; direct legacy of Soviet 
-    nomenklatura
-  - Авторитарні тенденції — 'Multi-vector' foreign policy (maneuvering between West/Russia); strong presidential power; 
-    [!context] — «Multi-vector» policy as sitting on two chairs
-  - «Касетний скандал» та «Україна без Кучми» — Nov 2000; Gongadze case; Melnychenko tapes; first mass protests; 
-    crackdown 9 March 2001; rehearsal for Orange Revolution
-  words: 850
-- section: Первинні джерела
-  points:
-  - Акт проголошення незалежності — focus on right to self-determination and 'mortal danger' justification; key document
-  - 'Будапештський меморандум — analyze text: ''respect sovereignty'' vs ''defend'''
-  - 'Промови політиків — Kravchuk inaugural (building state); Chornovil (alternative democratic path); Chornovil: alternative
-    democratic path not chosen'
-  words: 850
-- section: Деколонізаційний погляд
-  points:
-  - 'Радянська спадщина в економіці — Lack of closed production cycles; vulnerability to Moscow blackmail (gas wars); imperial
-    myth: economy unviable without Russia; reality: collapse caused by dependency on Soviet model'
-  - Пострадянські еліти — Nomenklatura remained in power; no lustration (unlike Baltics); 'Sovok' management style; lack
-    of lustration conserved «sovok» management
-  - Незавершеність — Formal vs Mental independence; cultural space dominated by Russia until 2014; formal independence 
-    did not mean mental independence
-  words: 850
-- section: 'Підсумок: До Помаранчевої революції'
-  points:
-  - 'Досягнення та невдачі — State institutions/Currency/Army established vs Corruption/Poverty; success: state institutions,
-    currency, army established; failure: corruption, oligarchy, poverty'
-  - 'Суспільство готове до змін — Cultural hook: Song ''Razom nas bahato''; civil society awakening; [!culture] — Song «Razom
-    nas bahato» as anthem of awakening; civil society outgrew the state'
-  - '2004: точка перелому — Falsified elections as trigger; society outgrew the authoritarian state; falsified elections as
-    trigger for explosion of accumulated discontent'
-  words: 750
+title: 'Україна 1991-2004: Становлення'
+version: '4.0'
 vocabulary_hints:
-  required:
-  - незалежність (independence) — проголошення незалежності, здобуття незалежності, відновлення незалежності
-  - референдум (referendum) — всеукраїнський референдум, провести референдум
-  - конституція (constitution) — прийняти конституцію, гарант конституції, конституційна ніч
-  - президент (president) — інавгурація президента, повноваження президента
-  - олігарх (oligarch) — олігархічний клан, вплив олігархів, червоні директори
-  - приватизація (privatization) — ваучерна приватизація, незаконна приватизація
-  - гіперінфляція (hyperinflation) — галопуюча інфляція, знецінення грошей
-  - реформа (reform) — грошова реформа, земельна реформа
-  recommended:
-  - меморандум (memorandum) — підписати меморандум, порушити меморандум
-  - роззброєння (disarmament) — ядерне роззброєння, відмова від зброї
-  - корупція (corruption) — боротьба з корупцією, корупційні схеми
-  - авторитаризм (authoritarianism) — посилення авторитаризму, авторитарний режим
-  - опозиція (opposition) — політична опозиція, об'єднана опозиція
-  - громадянське суспільство (civil society) — розвиток громадянського суспільства, зрілість суспільства
-  - багатовекторність (multi-vector policy) — політика багатовекторності, сидіти на двох стільцях
-  - кравчучка (kravchuchka) — символ епохи виживання, епоха кравчучок
-activity_hints:
-- type: reading
-  focus: Акт проголошення незалежності
-  source: Офіційні документи
-  items: 4
-- type: essay-response
-  focus: Чому незалежність 1991 року не принесла швидкого добробуту?
-connects_to:
-- hist-123 (Pomarancheva Revoliutsiia)
-- hist-125 (Movna Polityka)
-prerequisites:
-- hist-119 (Shliakh Nezalezhnosti)
-persona:
-  voice: Senior Professor of History
-  role: Parliamentary Deputy
-grammar:
-- Минулий час в історичному наративі
-- Політична та економічна лексика
-- Складнопідрядні речення
-register: публіцистичний
-references: []
+- definition: стан повного державного суверенітету, відсутність підпорядкування іншим державам
+  pos: ж.
+  word: незалежність
+- definition: всенародне голосування для вирішення найважливіших державних питань
+  pos: ч.
+  word: референдум
+- definition: основний закон держави, що визначає її устрій, права та обов'язки громадян
+  pos: ж.
+  word: конституція
+- definition: надзвичайно швидке знецінення грошей, що вимірюється тисячами відсотків на рік
+  pos: ж.
+  word: гіперінфляція
+- definition: особа, що поєднує великий бізнес із політичним впливом для власного збагачення
+  pos: ч.
+  word: олігарх
+- definition: процес передачі державної власності у приватні руки
+  pos: ж.
+  word: приватизація
+- definition: дипломатичний документ, що викладає позицію сторін, але зазвичай не має зобов'язуючої юридичної сили
+  pos: ч.
+  word: меморандум
+- definition: відмова держави від певних видів озброєнь
+  pos: с.
+  word: роззброєння
+- definition: зовнішньополітичний курс, що передбачає одночасний розвиток відносин з різними, часто конкуруючими, центрами
+    сили
+  pos: ж.
+  word: багатовекторність
+- definition: законодавче обмеження доступу до державних посад для осіб, пов'язаних з попереднім недемократичним режимом
+  pos: ж.
+  word: люстрація
+word_target: 5200

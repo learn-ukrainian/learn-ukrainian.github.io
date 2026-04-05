@@ -6,7 +6,7 @@
     {
       "check": "VOCABULARY",
       "severity": "WARNING",
-      "message": "Missing 2/8 required vocab: дія (action), робити / зробити (to do)"
+      "message": "Missing 1/8 required vocab: робити / зробити (to do)"
     },
     {
       "check": "EXERCISES",
@@ -14,5 +14,5 @@
       "message": "Plan expects 4 exercise(s) but content has 0 placeholders"
     }
   ],
-  "timestamp": "2026-03-30T23:20:17.765447+00:00"
+  "timestamp": "2026-04-05T08:39:02.905729+00:00"
 }

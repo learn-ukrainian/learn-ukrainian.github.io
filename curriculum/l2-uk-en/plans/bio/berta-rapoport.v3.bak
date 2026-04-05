@@ -1,0 +1,102 @@
+module: bio-107
+level: BIO
+sequence: 107
+slug: berta-rapoport
+version: '3.0'
+title: 'Берта Рапопорт: Лікарка і громадська діячка'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of берта рапопорт: лікарка і громадська діячка'
+- Evaluate the contributions of жінка, що лікувала і надихала
+- Trace the career and influence of повернення з небуття
+content_outline:
+- section: Вступ — Жінка, що лікувала і надихала
+  points:
+  - Одна з перших жінок-лікарів в Україні
+  - Громадська діячка та феміністка
+  - Боротьба за права жінок у медицині
+  words: 850
+- section: Походження та освіта (1860-ті–1880-ті)
+  points:
+  - Єврейська родина в Одесі
+  - Прагнення до освіти попри перешкоди
+  - Навчання за кордоном (Швейцарія)
+  - Здобуття медичного диплома
+  words: 850
+- section: Медична практика (1880-ті–1900-ті)
+  points:
+  - Повернення до Одеси
+  - Робота в лікарнях та приватна практика
+  - Спеціалізація в гінекології
+  - Допомога бідним верствам населення
+  words: 850
+- section: Громадська діяльність (1890-ті–1910-ті)
+  points:
+  - Участь у жіночому русі
+  - Боротьба за доступ жінок до освіти
+  - Благодійність та соціальна робота
+  - Публіцистична діяльність
+  words: 850
+- section: Революційні роки (1917-1920-ті)
+  points:
+  - Продовження роботи під час хаосу
+  - Ставлення до революційних змін
+  - Останні роки життя
+  - Смерть та забуття в радянський час
+  words: 850
+- section: Спадщина — Повернення з небуття
+  points:
+  - Дослідження істориків
+  - Внесок у розвиток жіночої медицини
+  - Роль у феміністичному русі
+  - Приклад для сучасних жінок-лікарів
+  words: 750
+vocabulary_hints:
+  required:
+  - лікарка (woman doctor)
+  - медична освіта (medical education)
+  - гінекологія (gynecology)
+  - феміністка (feminist)
+  - громадська діячка (public activist)
+  - благодійність (charity)
+  - жіночий рух (women's movement)
+  - дискримінація (discrimination)
+  - емансипація (emancipation)
+  - соціальна робота (social work)
+  recommended:
+  - акушерство (obstetrics)
+  - приватна практика (private practice)
+  - медична етика (medical ethics)
+  - просвітництво (enlightenment)
+  - рівноправність (equal rights)
+activity_hints:
+- type: reading
+  focus: Жінки в медицині XIX-XX ст.
+  source: Historical medical sources
+  items: 3 passages
+- type: essay-response
+  focus: Які перешкоди долали перші жінки-лікарі?
+  output: Analytical essay
+connects_to:
+- bio-33
+- bio-61
+prerequisites:
+- bio-59
+persona:
+  voice: Senior Biographer
+  role: Chief Physician
+module_type: biography
+immersion: 100% Ukrainian
+references:
+- name: Берта Рапопорт (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Рапопорт_Берта_Ісаківна
+  type: primary
+  notes: Biography of the pioneering woman doctor and activist
+- name: Одеська медична спадщина
+  url: https://omu.odessa.ua/
+  type: reference
+  notes: Historical medical archives of Odesa
+register: академічний
+grammar: []

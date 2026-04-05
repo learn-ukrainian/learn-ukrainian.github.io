@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: '**Covered well:** All 6 content_outline sections present with appropriate
+    depth. All vocabulary_hints (12 required + 10 recommended) appear naturally in
+    prose. Full conjugation tables for зайти and ви'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: '**Strong:** All conjugations verified correct against VESUM (зайду/зайдеш/зайде/зайдемо/зайдете/зайдуть
+    ✓; вийду/вийдеш/вийде/вийдемо/вийдете/вийдуть ✓). Preposition+case patterns are
+    accurate (за-+в/'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: '**Good PPP flow:** Section 1 presents situations (Андрій''s morning),
+    Sections 2-3 present patterns (conjugation, aspect pairs, prepositions), Sections
+    4-5 practice. Each grammar point has 3+ examples.'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 12 required vocabulary items used naturally in context: зайти (§1-6),
+    заїхати (§1,2,4), забігти (§1,2,5), занести (§2), вийти (§1,3-6), виїхати (§3,4,5),
+    вибігти (§3,4), винести (§3,4,5), заходити'
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: '**All 6 plan activity hints have markers** with correct types and appropriate
+    focus descriptions. Markers are placed after relevant teaching. **Deductions:**
+    (1) Three markers (fill-in, error-correcti'
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: '**Deductions (heavy):** Pervasive meta-commentary and generic enthusiasm:
+    «надзвичайно важливий граматичний якір» (§4), «Ця надзвичайно строга і передбачувана
+    геометрична симетрія» (§4), «Вони майстер'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: All 6 H2 sections present and correctly ordered. Word count 5943 is well
+    above the 4000 target (✅). Clean markdown throughout. No stray tags or formatting
+    artifacts. Activity markers correctly formatt
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Fully decolonized — Ukrainian presented on its own terms, no «like Russian»
+    comparisons. Cultural details are authentic: Львівська копальня кави (§1), площа
+    Ринок (§1), «Заходьте!» hospitality custom '
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: 'The Олена/Андрій phone conversation (§5) is natural and multi-turn with
+    named speakers, real motivations (picking up child, buying bread), and natural
+    sentence structures. Both speakers have distinct '
+findings: []

@@ -1,0 +1,100 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння літературно-критичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Читання
+  focus: Розуміння літературного тексту (уривок з твору)
+  placement: inline
+  type: reading
+- focus: Етика зображення — чи текст естетизує війну чи свідчить?
+  placement: workbook
+  type: debate
+- focus: Літературна критика — оцінка інтерпретації
+  placement: workbook
+  type: critical-analysis
+- focus: 'Порівняння з іншими творами або інтерпретаціями (Павло Вишебаба: Тільки не пиши мені про війну)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе-аналіз рецепції та сучасного значення (Павло Вишебаба: Тільки не пиши мені про війну)'
+  placement: workbook
+  type: essay-response
+connects_to:
+- yakimchuk-apricots-war
+- zhadan-internat-war
+- war-lit-origins-2014
+content_outline:
+- points:
+  - Павло Вишебаба (1986–) — біографія, Краматорськ, рок-музикант, еко-активіст
+  - Революція Гідності як точка біографічного та поетичного зламу
+  - Покоління «після Майдану» в українській поезії
+  section: Вступ та культурний контекст
+  words: 850
+- points:
+  - Парадокс назви — збірка про війну, що просить не писати про війну
+  - Ключові вірші та їхня тематика — фронт, тил, дім, утрата
+  - Антигероїчний пафос та щоденність війни
+  section: '«Тільки не пиши мені про війну»: аналіз збірки'
+  words: 900
+- points:
+  - Вишебаба як рок-музикант — вплив музичної ритміки на вірш
+  - Слем-поезія та усне виконання — текст як подія
+  - Інтертекстуальні зв'язки з англомовною антивоєнною поезією
+  section: Рок-поетика та перформативність
+  words: 850
+- points:
+  - Розмовна інтонація — вірш як лист, розмова, зізнання
+  - Мінімалізм образності — сила простих слів
+  - Східноукраїнська мовна ідентичність — Краматорськ як топос
+  section: Мова, стиль та поетика
+  words: 800
+- points:
+  - Донбаський українськомовний поет — руйнування стереотипу «русскоязычного Донбасса»
+  - Екоактивізм як форма деколонізації — земля, ландшафт, рідна мова
+  - Війна як каталізатор мовної та культурної свідомості
+  section: Деколонізаційний вимір
+  words: 800
+- points:
+  - Вишебаба в контексті сучасної воєнної поезії (Жадан, Якімчук, Черніловський)
+  - Книжкові презентації та літературні фестивалі як фронт культурного спротиву
+  - Питання для дискусії
+  section: Підсумок та рецепція
+  words: 800
+focus: literature
+grammar: []
+immersion: 100% Ukrainian
+level: LIT-WAR
+module: lit-war-028
+module_type: literature
+objectives:
+- Проаналізувати поезію Павла Вишебаби як голос покоління Майдану та АТО
+- Дослідити синтез рок-поетики, екологічної свідомості та воєнного досвіду
+- Зрозуміти еволюцію від мирного активізму до поезії війни
+pedagogy: Seminar
+persona:
+  role: Listener at the Front Line
+  voice: Senior Philologist & Critic
+phase: WAR.4
+references:
+- name: Павло Вишебаба — поезії та публіцистика
+  notes: Основне джерело
+  type: primary
+  url: https://www.ukrlib.com.ua/
+register: академічний
+sequence: 28
+slug: pavlo-vyshebaba-soldier-poetry
+subtitle: Kramatorsk, Revolution of Dignity, eco-activism, and rock poetry at war
+title: 'Павло Вишебаба: Тільки не пиши мені про війну'
+version: '3.0'
+vocabulary_hints:
+  recommended:
+  - мінімалізм (minimalism)
+  - екоактивізм (eco-activism)
+  - топос (topos)
+  required:
+  - антигероїзм (anti-heroism)
+  - перформативність (performativity)
+  - слем-поезія (slam poetry)
+  - Революція Гідності (Revolution of Dignity)
+word_target: 5000

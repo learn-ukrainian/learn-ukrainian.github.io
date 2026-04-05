@@ -11,13 +11,15 @@ You are writing ONE SECTION of a Ukrainian language module. Write ONLY this sect
 ## Section Skeleton (follow this exactly)
 
 ## Префікс про-: проходження повз або наскрізь (~1000 words total)
-- P1 (~150 words): [Core meaning of *про-*: passing by or passing through. Explain the lack of a "crossing" focus; it's about movement *along* or *through* a space without stopping.]
-- P2 (~150 words): [Passing by (*повз + Accusative*): *пройти повз музей*, *проїхати повз аптеку*. Focus on the "missed opportunity" or "observation from a distance" nuance.]
-- P3 (~150 words): [Passing through (*через + Accusative* or *по + Dative*): *пройти через парк* (through), *проїхати по вулиці* (along). Contrast *через* (entry/exit through a medium) with *по* (movement on a surface).]
-- P4 (~150 words): [Transitive/Guide verbs: *пронести*, *провести*, *провезти*. Scenarios: *пронести сумку через натовп* (carry bag through crowd), *провести екскурсію* (guide through a tour), *провезти товар через кордон*.]
-- P5 (~150 words): [Conjugation focus: *проїхати* (perfective future: *проїду, проїдеш...*) and the imperfective *проїжджати*. Explain the spelling change from *-їха-* to *-їжджа-*.]
-- P6 (~150 words): [Extended/Figurative meanings: *пройти* for time (*час пройшов*); *проїхати зупинку* (to miss a stop); *пробігти очима* (to skim/scan text). Explain the "completion of traversal" logic.]
-- Exercise: [fill-in, Complete direction sentences with про- verbs and prepositions (через, повз, по), 8 items]
+- P1 (~120 words): [Core Meaning 1 - Passing By: "Про-" as movement past a point without stopping. Contrast "зайшов до магазину" (entered) with "пройшов повз магазин" (passed by). Examples: проїхати зупинку, пробігти повз друга.]
+- P2 (~120 words): [Grammar Focus: The preposition "повз" + Accusative. Provide 5 clear examples: повз парк, повз церкву, повз нас, повз будинок, повз пам'ятник.]
+- P3 (~130 words): [Core Meaning 2 - Passing Through: "Про-" as traversing a space from beginning to end. Prepositions: "через" (through) and "по" (along). Example: "пройти через парк" (walking from one gate to the other) vs "пройти по вулиці" (walking the length of the street).]
+- P4 (~130 words): [Verb Expansion: "Пронести" (to carry through) and "провести" (to guide/conduct). Contextualize "провести екскурсію" (guiding someone through a space) and "пронести валізу" (carrying a bag through a crowd).]
+- P5 (~130 words): [Conjugation Table & Drill: Full present/future of "пройти" (пройду, пройдеш...) and "проїхати" (проїду, проїдеш...). Note the past tense "пройшов" vs "проїхав."]
+- P6 (~130 words): [Extended Meaning - Time: Using "пройти" for time. Explain "пройшов рік" (a year passed) and "час іде — час пройшов." Contrast this with the movement of people.]
+- P7 (~130 words): [Extended Meaning - Missing/Scanning: Explain "проїхати свою зупинку" (overshooting) and "пробігти очима" (skimming text). Link these back to the "passing" core meaning.]
+- Exercise: [fill-in, Complete direction-giving sentences using про- verbs and prepositions (повз, через, по), 8 items]
+- P8 (~110 words): [Aspect: "проходити" vs "пройти." Example: "Ми проходили повз цей будинок цілу годину" (process) vs "Ми нарешті пройшли через натовп" (result).]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -25,7 +27,7 @@ You are writing ONE SECTION of a Ukrainian language module. Write ONLY this sect
 <previous_context>
 [...previous sections truncated...]
 
-**перенести дитину через калюжу** *(to carry a child across a puddle)*. Завдяки цьому малюк зовсім не замочить свої ніжки. Якщо ви бачите літню людину на небезпечному пішохідному переході, ви можете запропонувати свою допомогу. Ви можете безпечно **перевести бабусю через дорогу** *(to lead a granny across the road)*, обережно тримаючи її за руку. А коли молода родина купує новий диван або важку шафу, їм доводиться наймати спеціальну вантажну машину. Це потрібно для того, щоб успішно **перевезти меблі** *(to transport furniture)* з магазину до своєї квартири. В усіх цих прикладах ваша дія спрямована на інший об'єкт. Щоб вільно і без помилок користуватися цими словами у спілкуванні, вам обов'язково треба добре пам'ятати правила їхнього відмінювання. Зверніть свою особливу увагу на базове дієслово **перейти**. Як і всі інші українські дієслова доконаного виду, воно взагалі не має форми теперішнього часу. Це дієслово утворює лише форми для майбутнього та минулого часу. У майбутньому часі ми завжди використовуємо такі граматичні форми: «я **перейду**» *(I will cross)*, «ти **перейдеш**» *(you will cross)*. Далі маємо форми: «він або вона **перейде**» *(he/she will cross)*, «ми **перейдемо**» *(we will cross)*. І для множини: «ви **перейдете**» *(you will cross)* та «вони **перейдуть**» *(they will cross)*. Відмінювання цього дієслова в минулому часі має свою цікаву фонетичну особливість, адже тут відбувається зміна суфікса. Запам'ятайте ці короткі форми. Для чоловічого роду ми кажемо «він **перейшов**» *(he crossed)*. Для жіночого роду використовуємо форму «вона **перейшла**» *(she crossed)*. Для середнього роду завжди кажемо «воно **перейшло**» *(it crossed)*, а для множини маємо форму «вони **перейшли**» *(they crossed)*. Ця природна зміна голосних звуків є дуже типовою для українських дієслів руху з коренем «-й-» або «-ш-». Надзвичайно цікаво те, що українська мова часто використовує просторову логіку цього префікса для створення нових, переносних значень. Уявіть собі, що ви берете певний об'єкт і переносите його не через реальну вулицю. Ви переносите його через час, життєві обставини або через мовний бар'єр. Наприклад, знайоме нам дієслово **переїхати** може також означати зміну місця вашого постійного проживання. Це ваш глобальний переїзд з однієї точки життя в іншу. Ми часто кажемо друзям: «Моя родина нарешті вирішила **переїхати в нове місто** *(to relocate to a new city)*». Ми маємо на увазі глибоку зміну, ніби ми перетнули невидимий кордон між нашим минулим і майбутнім. Подібний ментальний процес постійно відбувається з часом. Якщо у вас раптово змінилися плани, ви можете символічно взяти свою зустріч із середи. Потім ви можете перенести її через кілька днів у п'ятницю. Тому дієслово **перенести** часто означає зміну вашого розкладу. Ми кажемо колегам: «Ми мусили **перенести зустріч** *(to reschedule a meeting)* на наступний тиждень». А що відбувається, коли ми працюємо з іноземними мовами? Ми беремо зміст, написаний англійською, і символічно переводимо його через мовний бар'єр. Тому дієслово **перевести** *(to translate)* іноді використовується в значенні перекладу тексту: «Вона швидко **перевела статтю** *(translated an article)* з англійської мови». Хоча зараз частіше кажуть **перекласти** *(to translate)*, просторова логіка історичного слова залишається прозорою. Така метафора робить українську мову дуже логічною і поетичною. <!-- INJECT_ACTIVITY: match-up, Match perfective пере- verbs with their figurative English translations (relocate, reschedule, translate), 8 items -->
+за межі простого фізичного простору. Перше важливе переносне значення стосується зміни вашого постійного місця проживання. Коли ви пакуєте всі свої речі, залишаєте старий будинок і починаєте нове життя в іншому місці, ви використовуєте дієслово «переїхати». Наприклад: «Моя родина вирішила **переїхати до нової квартири** *(move to a new apartment)*». Або: «Після закінчення університету вона планує **переїхати до Києва** *(move to Kyiv)*». Це логічно нагадує англійське дієслово «to move», але в українській мові ми зберігаємо образ «перетинання». Ви ніби перетинаєте умовну межу між своїм минулим життям у старому місті та новим майбутнім у новому місці. Ви також можете **перевезти речі** *(transport belongings)*, що означає процес доставки вашого майна з точки А (старий дім) в точку Б (новий дім). Друге дуже популярне переносне значення пов'язане з часом та мовами. Якщо ваші плани раптово змінилися, і вам потрібно змінити дату події, ви ніби фізично берете цю подію і переносите її через сторінки календаря. Тому ми кажемо: «Нам довелося **перенести зустріч** *(reschedule the meeting)* на наступний вівторок». Інший цікавий аспект стосується мов. Коли ви читаєте текст англійською і хочете зробити його зрозумілим для українців, ви повинні **перекласти статтю** *(translate the article)*. Офіційне і правильне слово для письмового перекладу — це саме **перекласти** *(to translate)*. Проте в розмовній мові або коли йдеться про усний переклад, люди часто використовують дієслово **перевести** *(to translate orally/informally)*. Наприклад: «Допоможи мені **перевести цей текст** *(translate this text)*». Обидва дієслова несуть ідею переміщення глибокого сенсу через невидимий мовний бар'єр, з однієї культурної системи в іншу. Для повного розуміння теми нам потрібно згадати про категорію виду дієслова (aspect). Як і всі українські дієслова, слова з префіксом **пере-** мають ідеальну (perfective) та недосконалу (imperfective) форми. Недосконала форма фокусується на тривалому процесі або регулярній звичці. Наприклад, дієслово **переходити** *(to cross - process/habit)* показує дію в момент її виконання: «Я щодня обережно **переходжу цю вулицю** *(cross this street)*». Тут ми бачимо регулярність. Інший приклад процесу: «Коли я **переходив міст** *(was crossing the bridge)*, я бачив красивий захід сонця». З іншого боку, ідеальна форма **перейти** *(to cross - completion)* фокусується виключно на успішному результаті та завершенні дії. Ви використовуєте її для одиничних, завершених подій: «Я вчора безпечно **перейшов її** *(crossed it)* без жодних пригод». Різниця між процесом та результатом — це основа правильного використання цих слів у реальному спілкуванні. <!-- INJECT_ACTIVITY: match-up, Match пере- verbs with their figurative meanings (relocate, translate, reschedule) --> Підсумовуючи наші знання про префікс **пере-**, варто запам'ятати його найголовнішу функцію. Цей префікс завжди і за будь-яких обставин означає зміну стану відносно певної перешкоди або межі. Незалежно від того, чи це фізична дорога, бурхлива річка, державний кордон, чи абстрактний час у вашому календарі або складна іноземна мова, ви завжди щось долаєте. Ви починаєте свою дію на одному боці реальності і успішно завершуєте її на зовсім іншому боці. Цей рух наскрізь, ця зміна вашої позиції — це і є справжня душа префікса **пере-**. Коли ви бачите або чуєте цей префікс, ваш мозок повинен автоматично малювати лінію, яку хтось або щось щойно успішно залишило позаду. Це базове правило допоможе вам розуміти нові слова навіть без словника.
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -38,7 +40,7 @@ module: b1-028
 level: B1
 sequence: 28
 slug: motion-prefixes-transit
-version: '3.0'
+version: '3.1'
 title: Перейти, проїхати
 subtitle: Префікси пере- (перетинання) та про- (проїжджання повз) з дієсловами 
   руху
@@ -142,9 +144,18 @@ content_outline:
         дому (ви-). Перейшов вулицю (пере-). Зайшов до кав''ярні (за-). Вийшов i пішов
         до зупинки (ви-, пі-). Поїхав автобусом (по-). Проїхав три зупинки (про-).
         Доїхав до центру (до-). Приїхав на роботу (при-).'
+      - 'Prefix system overview table: all 8 prefixes taught so far organized by
+        spatial meaning. ARRIVAL: при- (arrive), до- (reach). DEPARTURE: пі-/по- (set off),
+        від- (move away). IN/OUT: за- (enter), ви- (exit). TRANSIT: пере- (cross), про-
+        (pass through). Learners fill in the table with example sentences for each prefix
+        using the base verb їхати/їздити.'
       - 'Dialogue: giving directions using transit verbs — ''Пройдіть по Хрещатику,
         перейдіть через Майдан, зайдіть у метро.'' Learners practice the natural combination
         of prefixes in navigation contexts.'
+      - 'Production exercise: learners describe their own daily commute or a memorable
+        trip using as many prefixes as possible. Minimum: 6 different prefixes in one
+        connected narrative. Peer review: partners check whether each prefix is used
+        correctly and suggest alternatives where another prefix might work better.'
   - section: 'Підсумок: пере- і про-'
     words: 350
     points:
@@ -540,6 +551,8 @@ references:
 </knowledge_packet>
 
 ---
+
+
 
 ## Rules
 

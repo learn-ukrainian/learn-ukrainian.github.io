@@ -18,7 +18,7 @@ module: a2-003
 level: A2
 sequence: 3
 slug: aspect-in-vocabulary
-version: '1.0'
+version: '1.1'
 title: Дієслова ходять парами
 subtitle: Як утворюються та вивчаються видові пари
 focus: grammar
@@ -26,92 +26,99 @@ pedagogy: PPP
 phase: A2.1 [Foundation and Aspect Introduction]
 word_target: 2000
 objectives:
-- Learner can recognize that most Ukrainian verbs exist in aspectual pairs and understand
-  the importance of learning them together.
-- 'Learner can identify the three main patterns of aspect pair formation: prefixation,
-  suffix/root vowel change, and suppletion.'
-- Learner can list and use approximately 20 essential A2-level aspectual pairs in
-  simple sentences.
-- Given one verb from a common pair, the learner can name its aspectual partner.
+  - Learner can recognize that most Ukrainian verbs exist in aspectual pairs and
+    understand the importance of learning them together.
+  - 'Learner can identify the three main patterns of aspect pair formation: prefixation,
+    suffix/root vowel change, and suppletion.'
+  - Learner can list and use approximately 20 essential A2-level aspectual pairs
+    in simple sentences.
+  - Given one verb from a common pair, the learner can name its aspectual 
+    partner.
 dialogue_situations:
-- setting: 'Cooking varenyky together — one person reads the recipe step by step:
-    Ліпи (impf, keep forming) вареники. Зліпи (pf, form one). Вари (impf) 10 хвилин.
-    Звари (pf) до готовності.'
-  speakers:
-  - Бабуся (teaching recipe)
-  - Онучка (cooking)
-  motivation: 'Aspect pairs in cooking: ліпити/зліпити, варити/зварити'
+  - setting: 'Cooking varenyky together — one person reads the recipe step by step:
+      Ліпи (impf, keep forming) вареники. Зліпи (pf, form one). Вари (impf) 10 хвилин.
+      Звари (pf) до готовності.'
+    speakers:
+      - Бабуся (teaching recipe)
+      - Онучка (cooking)
+    motivation: 'Aspect pairs in cooking: ліпити/зліпити, варити/зварити'
 content_outline:
-- section: Чому дієслова потрібно вчити парами? (Why Verbs Must Be Learned in Pairs)
-  words: 400
-  points:
-  - Reinforce the idea that aspect is fundamental. Learning a verb without its partner
-    is like learning only half a word.
-  - 'Introduce the standard notation: imperfective / perfective (e.g., робити / зробити).'
-  - 'Using a dictionary: how to find aspectual pairs in online or paper dictionaries.'
-- section: 'Спосіб 1: Додавання префікса (Method 1: Adding a Prefix)'
-  words: 600
-  points:
-  - 'The most common way to form a perfective verb: add a prefix to the imperfective
-    base. The prefix often adds a specific meaning, but for now, we focus on its role
-    in creating a perfective verb.'
-  - 'Core examples: писати / **на**писати; читати / **про**читати; робити / **з**робити;
-    бачити / **по**бачити; готувати / **при**готувати.'
-  - 'Practice: given an imperfective verb, learner adds the correct prefix to make
-    it perfective.'
-- section: 'Спосіб 2: Зміна в корені або суфіксі (Method 2: Change in the Root or
-    Suffix)'
-  words: 600
-  points:
-  - 'The ''imperfectivization'' pattern: a complex perfective verb (often with a prefix)
-    gets an ''-ува-'' or ''-юва-'' suffix to become imperfective.'
-  - 'This is a more advanced concept, so we introduce it with simple pairs: відповідати
-    / відповісти; вирішувати / вирішити; запитувати / запитати.'
-  - 'Show the vowel change that often accompanies this: ''о'' -> ''а'' (допомогти
-    / допомагати).'
-- section: 'Спосіб 3: Зовсім інші слова (суплетивізм) (Method 3: Completely Different
-    Words - Suppletion)'
-  words: 400
-  points:
-  - Some of the most common verbs have suppletive pairs that must be memorized.
-  - 'Essential pairs: брати / взяти (to take); говорити / сказати (to say/tell); ловити
-    / зловити (to catch); шукати / знайти (to look for / to find).'
-  - Present a list of the 20 most important aspectual pairs for A2 learners to memorize,
-    covering all three formation types.
+  - section: Чому дієслова потрібно вчити парами? (Why Verbs Must Be Learned in 
+      Pairs)
+    words: 400
+    points:
+      - Reinforce the idea that aspect is fundamental. Learning a verb without 
+        its partner is like learning only half a word.
+      - 'Introduce the standard notation: imperfective / perfective (e.g., робити
+        / зробити).'
+      - 'Using a dictionary: how to find aspectual pairs in online or paper dictionaries.'
+  - section: 'Спосіб 1: Додавання префікса (Method 1: Adding a Prefix)'
+    words: 600
+    points:
+      - 'The most common way to form a perfective verb: add a prefix to the imperfective
+        base. The prefix often adds a specific meaning, but for now, we focus on its
+        role in creating a perfective verb.'
+      - 'Core examples: писати / **на**писати; читати / **про**читати; робити / **з**робити;
+        бачити / **по**бачити; готувати / **при**готувати.'
+      - 'Practice: given an imperfective verb, learner adds the correct prefix to
+        make it perfective.'
+  - section: 'Спосіб 2: Зміна в корені або суфіксі (Method 2: Change in the Root or
+      Suffix)'
+    words: 600
+    points:
+      - 'The ''imperfectivization'' pattern: a complex perfective verb (often with
+        a prefix) gets an ''-ува-'' or ''-юва-'' suffix to become imperfective.'
+      - 'This is a more advanced concept, so we introduce it with simple pairs: відповідати
+        / відповісти; вирішувати / вирішити; запитувати / запитати.'
+      - 'Show the vowel change that often accompanies this: ''о'' -> ''а'' (допомогти
+        / допомагати).'
+  - section: 'Спосіб 3: Зовсім інші слова (суплетивізм) (Method 3: Completely Different
+      Words - Suppletion)'
+    words: 400
+    points:
+      - Some of the most common verbs have suppletive pairs that must be 
+        memorized.
+      - 'Essential pairs: брати / взяти (to take); говорити / сказати (to say/tell);
+        ловити / піймати (to catch); класти / покласти (to put).'
+      - 'Note: шукати (to search) and знайти (to find) are often presented together,
+        but they are different actions, not a true aspect pair. The perfective of
+        шукати is пошукати or відшукати.'
+      - Present a list of the 20 most important aspectual pairs for A2 learners 
+        to memorize, covering all three formation types.
 vocabulary_hints:
   required:
-  - пара (pair)
-  - префікс (prefix)
-  - суфікс (suffix)
-  - корінь (root)
-  - читати / прочитати (to read)
-  - писати / написати (to write)
-  - брати / взяти (to take)
-  - говорити / сказати (to speak / to say)
+    - пара (pair)
+    - префікс (prefix)
+    - суфікс (suffix)
+    - корінь (root)
+    - читати / прочитати (to read)
+    - писати / написати (to write)
+    - брати / взяти (to take)
+    - говорити / сказати (to speak / to say)
   recommended:
-  - утворювати (to form)
-  - словник (dictionary)
-  - запам'ятовувати (to memorize)
-  - базовий (basic)
+    - утворювати (to form)
+    - словник (dictionary)
+    - запам'ятовувати (to memorize)
+    - базовий (basic)
 activity_hints:
-- type: quiz
-  focus: Find the Partner (Verb Matching)
-  items: 8
-- type: fill-in
-  focus: Categorize by Formation Type
-  items: 8
-- type: match-up
-  focus: Fill in the Blanks with the Correct Pair
-  items: 8
-- type: match-up
-  focus: Sentence Translation (Aspect Focus)
-  items: 8
+  - type: quiz
+    focus: Find the Partner (Verb Matching)
+    items: 8
+  - type: fill-in
+    focus: Categorize by Formation Type
+    items: 8
+  - type: match-up
+    focus: Fill in the Blanks with the Correct Pair
+    items: 8
+  - type: fill-in
+    focus: Choose the Correct Aspect Partner
+    items: 8
 references:
-- title: Заболотний Grade 6, §52-54
-  notes: 'Вид дієслова: доконаний і недоконаний'
-- title: 'ULP: Ukrainian Verb Aspect'
-  url: https://www.ukrainianlessons.com/ukrainian-verb-aspect/
-  notes: Imperfective vs perfective
+  - title: Заболотний Grade 6, §52-54
+    notes: 'Вид дієслова: доконаний і недоконаний'
+  - title: 'ULP: Ukrainian Verb Aspect'
+    url: https://www.ukrainianlessons.com/ukrainian-verb-aspect/
+    notes: Imperfective vs perfective
 
 </plan_content>
 
@@ -343,6 +350,29 @@ Skim these for content ideas. Reference specific examples you plan to use.
 
 ## Спосіб 3: Зовсім інші слова (суплетивізм) (Method 3: Completely Different Words - Suppletion)
 
+> **Source:** avramenko, Grade 5
+> **Section:** Сторінка 54
+> **Score:** 0.33
+>
+> 54
+> ЛЕКСИКОЛОГІЯ 
+> Притягтися, розм. — (прийти насилу) приволоктися, приплестися, 
+> причвалати; фам. приплентатися, притарабанитися, притарганитися. 
+> У словнику антонімів протилежні за значенням слова подано парами, 
+> до них додано тлумачення й зразки вживання:
+> МОВЧАТИ ↔ КРИЧАТИ
+> Не видавати звуків, не виявляти 
+> почуттів, зберігати мовчанку. 
+> Видавати голосом сильний, різ-
+> кий звук, репетувати, галасувати.
+> Дурне сало: як у піч, то мовчить, а як із печі, то кричить (Нар. тв.).
+> Подібну будову словникової статті має словник паронімів: 
+> БАГАТИР — БОГАТИР 
+> Багатир — багата людина, багатій: сільський багатир. 
+> Богатир — оспіваний у фольклорі герой, хоробрий воїн: богатир Ілля 
+> Муромець; про людину, високу на зріст, міцної статури, сильну: справж­
+> ній богатир.
+
 > **Source:** zaharijchuk, Grade 1
 > **Section:** Сторінка 30
 > **Score:** 0.50
@@ -418,22 +448,8 @@ Skim these for content ideas. Reference specific examples you plan to use.
 *  
 - Після **м’яких** приголосних у **середині складу** перед о: *чотирьох, дзьоб, сьомий, льодяний, відьом*.
 
-### Речення, його граматична основа
-> **Source:** МійКлас — [Речення, його граматична основа](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/rechennia-iogo-gramatichna-osnova-pidmet-i-prisudok-39372)
-
-### Теорія:
-
-*www.ua.pistacja.tv*  
-Речення
-Реченням називаємо одне або кілька слів, що виражають закінчену думку.
-Саме за допомогою речень ми спілкуємось, висловлюємо прохання, наказ, виражаємо емоції, повідомляємо інформацію.
-Приклад:
-- Весна іде, красу несе \(Нар. творчість\). 
-- Ліс. Тиша. Благодать. 
-Слова в реченні зв'язані між собою **за змістом** і **граматично**. **Граматичний зв'язок** — це поєднання за допомогою **закінчень** і **службових слів**. На початок і кінець речення вказує **інтонація**. Між реченнями робимо **паузи**.
-Ознаки речення
-1. Речення відображає дійсність. Інформація **стверджується** або **заперечується**, сприймається як **реальна** або **нереальна**, **можлива** або **неможлива**.
- 
+### Розряди займенників за значенням
+> **Source:** МійКлас — [Розряди займенників за значенням](h
 
 ... (truncated for context window)
 </knowledge_packet>
@@ -471,7 +487,7 @@ Grand total: ~2000 words
 1. **Every paragraph has ONE clear purpose.** If you can't describe it in one sentence, split it.
 2. **Word budgets must sum to 2000+.** Aim for ~10% overshoot (2200 words) — writers tend to undershoot.
 3. **Section budgets must match the plan's `content_outline` word allocations** (±10%).
-4. **Spread exercises evenly.** Place one after each key teaching point, matching the plan's `activity_hints`.
+4. **Place exercises in the correct section.** Each activity hint in the plan may have a `section:` field that tells you which section it belongs in. Place that exercise AFTER the teaching content of that section, never before. If no `section:` is specified, place the exercise after the most relevant teaching point. **CRITICAL: An exercise must ONLY test concepts already taught above it. Never test a concept from a later section.**
 5. **Name specific Ukrainian examples** you plan to use in each paragraph. This prevents vague skeletons that produce vague content.
 6. **Dialogues count as paragraphs.** Budget 80-120 words per multi-turn dialogue.
 7. **No meta-commentary.** Output only the `<skeleton>` block, nothing else.

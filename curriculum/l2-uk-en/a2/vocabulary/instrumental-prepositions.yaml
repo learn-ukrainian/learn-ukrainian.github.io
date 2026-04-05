@@ -1,0 +1,235 @@
+vocabulary:
+- word: над
+  translation: above, over
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: під
+  translation: under, below
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пе́ред
+  translation: in front of; before (temporal)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: за
+  translation: behind; according to
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: між
+  translation: between
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: буди́нок
+  translation: building, house
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лі́жко
+  translation: bed
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: стіна́
+  translation: wall
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: сте́ля
+  translation: ceiling
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: підло́га
+  translation: floor
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: кут
+  translation: corner
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ро́зклад
+  translation: schedule
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сон
+  translation: sleep, dream
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вікно́
+  translation: window
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: две́рі
+  translation: doors
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: ла́мпа
+  translation: lamp
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: карти́на
+  translation: painting
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ки́лим
+  translation: carpet
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: стіле́ць
+  translation: chair
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ша́фа
+  translation: wardrobe
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: поли́ця
+  translation: shelf
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: дзе́ркало
+  translation: mirror
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: умива́льник
+  translation: sink
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: камі́н
+  translation: fireplace
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ту́мбочка
+  translation: nightstand
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: підва́л
+  translation: basement
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: бібліоте́ка
+  translation: library
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: апте́ка
+  translation: pharmacy
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: перед сном
+  translation: before sleep
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: перед обідом
+  translation: before lunch
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: перед їдою
+  translation: before a meal
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: перед роботою
+  translation: before work
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: перед сніданком
+  translation: before breakfast
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: перед уроком
+  translation: before class
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: за розкладом
+  translation: on schedule
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: за планом
+  translation: according to plan
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: за правилами
+  translation: according to the rules
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Дякую за допомогу
+  translation: Thank you for the help
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Нехай щастить
+  translation: Good luck
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

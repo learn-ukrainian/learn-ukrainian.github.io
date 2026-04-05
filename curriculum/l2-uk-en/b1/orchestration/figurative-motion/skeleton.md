@@ -1,62 +1,44 @@
-## Дієслова руху в переносному значенні (~600 words total)
-- P1 (~100 words): [Introduction to the B1 level transition — moving from the physical mechanics of motion verbs (M28-M34) to the psychological and metaphorical layer. Explain that for a B1 learner, naturalness comes from understanding "переносне значення" (figurative meaning).]
-- P2 (~120 words): [Dialogue based on Avramenko Grade 5: A conversation between siblings where the younger sister asks "А хіба дощ може ходити?" when the brother says "Піде дощ." Use this to illustrate the gap between literal action and linguistic convention.]
-- P3 (~100 words): [Formal explanation of polysemy (багатозначність) using the verb "іти" as the primary example. Contrast "людина йде" (physical) with "урок іде" (temporal) and "дощ іде" (meteorological).]
-- P4 (~100 words): [Linguistic classification based on Vashulenko Grade 3: Define "пряме значення" (literal, primary) vs. "переносне значення" (figurative, secondary). Use the example of "літак іде на посадку" as a specialized figurative use.]
-- P5 (~100 words): [Historical/Cultural note: Why Ukrainian uses motion verbs for inanimate objects. Mention the animistic roots in Slavic languages where natural phenomena (wind, rain, time) are treated as active "goers."]
+## Дієслова руху в переносному значенні (~700 words total)
+- P1 (~175 words): [Bridge from literal to figurative — explain that while learners have mastered the mechanics of walking, driving, and flying (M28-M34), natural Ukrainian relies on these verbs to describe time, weather, and life processes. Introduce the concept of "переносне значення" as the key to moving beyond robotic translation.]
+- P2 (~175 words): [Direct vs. Figurative meaning — explain "пряме" (literal) vs "переносне" (figurative). Use the Avramenko Grade 5 scenario: a child hears "піде дощ" and asks "А хіба дощ може ходити?". Use this to illustrate that motion verbs in Ukrainian describe "action" or "state change" rather than physical legs.]
+- P3 (~175 words): [Polysemy (Багатозначність) — explain how "іти" is the ultimate multi-tool in the dictionary. List the four primary categories of its polysemy: human walking (ідуть футболісти), mechanical motion (літак іде на посадку), time/process (урок іде), and weather (дощ іде).]
+- P4 (~175 words): [Metaphorical logic — explain the Ukrainian worldview: time is a path we walk, news has wings to fly, and thoughts are like water that drifts. Introduce the term "фразеологізм" (idiom) as a subset of these figurative uses.]
 - Exercise: [quiz, focus: Identify whether a motion verb is used literally or figuratively in a sentence, 12 items]
 
 ## Iти / ходити: найширший спектр (~1000 words total)
-- P1 (~120 words): [Detailed breakdown of weather expressions. Explain why "дощ іде" and "сніг іде" are non-negotiable. Mention the intensity modifiers: "іде сильний дощ," "дрібний дощ іде."]
-- P2 (~120 words): [Textbook exercise analysis (Vashulenko Grade 2): Show how "іде" acts as a universal placeholder that can be replaced by more specific verbs: "іде катер" -> "пливе катер," "іде зима" -> "настає зима."]
-- P3 (~120 words): [Time as a journey: "час іде," "дні йдуть," "літо йде до кінця." Explain the perception of time as a steady, walking pace. Use the example "рік іде за роком" to show repetitive progression.]
-- P4 (~120 words): [Processes and events: "фільм іде," "ремонт іде," "переговори йдуть." Explain that if a process is active and ongoing, it "goes." Contrast with "справи йдуть добре" to show evaluative figurative use.]
-- P5 (~120 words): [The abstract powerhouse: "мова йде про" and "йдеться про." Explain the difference between the personal and impersonal construction. Provide examples: "Мова йде про гроші" vs. "Йдеться про твою безпеку."]
-- P6 (~120 words): [Idiomatic "йти": "йти на компроміс," "йти на ризик," "йти назустріч." Explain these as conscious choices/movements toward a goal or another person's position.]
-- P7 (~130 words): [Prefixed figurative motion I: "вийти" (to result/turn out — "вийшов гарний пиріг"), "підійти" (to suit — "цей колір мені підходить"), "дійти" (to reach a mental state — "дійти до висновку").]
-- P8 (~130 words): [Prefixed figurative motion II: "зайти" (to go too far — "зайти надто далеко"), "обійтися" (to manage without — "обійдемося без цукру"), "прийти" (mental arrival — "прийшла думка").]
-- Exercise: [fill-in, focus: Complete Ukrainian figurative expressions with the correct motion verb (focusing on іти/ходити and prefixes), 12 items]
+- P1 (~180 words): [Weather and nature — deep dive into "дощ іде" and "сніг іде". Explain that for Ukrainians, rain doesn't just "fall" (falling is passive); it "goes" (active process). Provide examples like "Надворі йде сильний дощ" and "Вчора цілий день йшов сніг."]
+- P2 (~180 words): [The steady flow of time — explain "час іде", "роки йдуть", and "літо йде до кінця". Use the Vashulenko Grade 2 example of replacing "іде" with synonyms (настає, минає) to show how "іти" acts as a neutral placeholder for progression.]
+- P3 (~180 words): [Events and processes — describe "фільм іде", "концерт іде", and "ремонт іде". Focus on "справи йдуть добре" (things are going well) as the standard way to discuss progress or business status.]
+- P4 (~180 words): [Abstract constructions and "Йдеться про" — introduce the impersonal verb "йтися" (to be about). Explain why "Йдеться про майбутнє" is more natural and academic than simple "Це про...". Cover "йти на ризик" (to take a risk) and "йти на компроміс" (to compromise).]
+- P5 (~180 words): [Prefixed figurative forms — explain "Вийти" as a result ("вийшов гарний пиріг"), "Підійти" as suitability ("це мені підходить"), and "Дійти" as mental arrival ("дійшов до висновку").]
+- Dialogue (~100 words): [Philosophical conversation in a Kyiv park between two friends on a rainy day. Using "дощ іде", "час іде", "справи йдуть", and "мова йде про життя".]
+- Exercise: [fill-in, focus: Complete Ukrainian figurative expressions with the correct motion verb, 12 items]
 
 ## Летіти: швидкість (~550 words total)
-- P1 (~150 words): [Explain "летіти" as the figurative verb for extreme speed and rapid change. Reference Avramenko Grade 10: "час летить" (time flies) vs. "час іде" (time walks). Discuss the emotional connotation of "летіти" — usually implying something is ending too soon.]
-- P2 (~150 words): [Metaphorical spread: "новина облетіла світ" (news flew around the world). Use the example of "ціни злетіли" (prices skyrocketed) to show vertical metaphorical motion for increasing values.]
-- P3 (~150 words): [Colloquial and prefixed speed: "вилетіти з роботи" (to get fired), "пролетіти" (to pass unnoticed — "канікули пролетіли"). Mention "налетіти" for sudden, aggressive arrival like "налетів вітер."]
-- Exercise: [quiz, focus: Distinguish between literal flight and figurative speed in "летіти" sentences, 12 items]
+- P1 (~185 words): [The speed of time — explain "Час летить!" (Time flies!) and "Дні летять". Contrast this with the steady "іти". Use the "Золота хвилина" (Chepurna) textbook concept to emphasize the fleeting nature of "flying" moments.]
+- P2 (~185 words): [Sudden changes and news — explain "Новина облетіла все місто" and "Ціни злетіли" (Prices skyrocketed). Focus on the prefix "з-" (up/away) indicating a sharp, sudden increase or takeoff.]
+- P3 (~185 words): [Colloquial mishaps — explain "Вилетіти з роботи" (to get fired) or "вилетіти з голови" (to forget). Explain how the speed and "direction out" of "летіти" implies a loss of control or sudden removal.]
+- Exercise: [group-sort, focus: Sort motion verb uses: literal / figurative — time / weather / abstract, 12 items]
 
 ## Пливти: плавність і повільність (~450 words total)
-- P1 (~150 words): [Analyze "пливти"/"плинути" as the verb for smooth, effortless, or slow movement. Reference Zabolotnyi Grade 5: "за сонцем хмаронька пливе." Use examples: "мелодія пливе," "думки пливуть."]
-- P2 (~150 words): [The poetic contrast: "Час летить" (stressful speed) vs. "Час пливе" (calm, steady flow). Explain how a writer chooses between these two motion verbs to set the "vibe" of a narrative.]
-- P3 (~50 words): [Specific imagery: "туман пливе над річкою" and "місяць пливе по небу."]
-- Exercise: [match-up, focus: Match figurative motion expressions (летіти vs пливти) with their speed/style meanings, 12 items]
+- P1 (~225 words): [Visual tranquility — explain "Хмари пливуть" and "туман пливе". Use the classic Shevchenko line "За сонцем хмаронька пливе" to show the poetic, smooth motion of drifting objects in the sky.]
+- P2 (~225 words): [Mental and auditory flow — describe "Думки пливуть" (thoughts drift) and "Мелодія пливе" (melody flows). Contrast "час летить" (urgent) with "час пливе" (slow/meditative). Introduce the idiom "пливти за течією" (to go with the flow).]
 
-## Бігти, їхати, нести та інші (~650 words total)
-- P1 (~130 words): [Figurative "бігти": Intermediate speed between walking (іти) and flying (летіти). "Час біжить." Also used for liquids: "вода біжить" and physical sensations: "мурашки біжать по шкірі."]
-- P2 (~130 words): [Colloquial "їхати": "дах їде" (going crazy) and "їхати на темі" (to be obsessed). Explain the informal register of these expressions.]
-- P3 (~130 words): [The weight of "нести/носити": "нести відповідальність" (bear responsibility), "носити ім'я" (bear a name), "виносити рішення" (render a decision). Explain the "bearing" metaphor.]
-- P4 (~130 words): [Leading with "вести/водити": "вести переговори" (conduct negotiations), "вести себе" (behave), "водити за ніс" (to deceive). Explain the "leadership" vs "control" aspect of these metaphors.]
-- P5 (~130 words): [Poetic "нести": "Річка несе свої води." Explain how this elevates literal motion to a grander, narrative scale.]
-- Exercise: [group-sort, focus: Sort motion verb uses: literal / figurative — time / weather / abstract / behavior, 12 items]
+## Бігти, їхати, нести та інші (~660 words total)
+- P1 (~220 words): [Бігти: urgency and nature — explain "Час біжить" (faster than іде, slower than летить). Describe natural flow like "Вода біжить у річці" and the unique sensory expression "Мурашки біжать по шкірі" (goosebumps).]
+- P2 (~220 words): [Їхати: informal metaphors — cover the slang "Дах їде" (going crazy) and "Їхати на чомусь" (being obsessed with something). Note that these are highly informal and should be used with friends, not in business.]
+- P3 (~220 words): [Нести and Вести: responsibilities and social roles — explain "Нести відповідальність" (to bear responsibility) and "Вести переговори" (to conduct negotiations). Contrast "Вести себе" (behaving) with the idiom "Водити за ніс" (to deceive).]
+- Exercise: [match-up, focus: Match figurative motion expressions with their meanings, 12 items]
+- Exercise: [free-write, focus: Write a paragraph about your week using at least 5 figurative motion expressions, 12 items]
 
-## Українські вирази vs англійські кальки (~700 words total)
-- P1 (~150 words): [Direct attack on the "rain falls" calque. Explain that in English, rain is a falling object (*rain falls*), but in Ukrainian, rain is an active agent that "goes" (дощ іде). Warn against using *дощ падає*.]
-- P2 (~150 words): [The "things are" calque: "How are things?" -> English "Things are fine." Ukrainian learners often say *справи є добре*. Correct to "справи йдуть добре."]
-- P3 (~150 words): [Russicism alert: "Мова йде про" vs the incorrect *мова іде*. Explain that while subtle, the use of "й" is the markers of clean Ukrainian. Better yet, push the learner toward the more sophisticated "йдеться про."]
-- P4 (~150 words): [The "time runs" distinction: While English "time runs out," Ukrainian "час вичерпується" or "час іде до кінця." Avoid literal translations of "run" in these contexts.]
-- P5 (~100 words): [Summary of decolonized usage: Thinking in Ukrainian metaphors means seeing the world as a place where things "go," "fly," and "drift" according to their own character, not just gravity.]
+## Українські вирази vs англійські кальки (~660 words total)
+- P1 (~220 words): [The "Rain falls" trap — explain why "Дощ іде" is correct but "*Дощ падає" is an English calque (rain falls) or a misinterpretation of gravity. Reinforce that "падати" is for leaves or people, not for the weather process.]
+- P2 (~220 words): [Decolonizing "Мова йде" — address the common Russicism "*мова іде" vs the authentic Ukrainian "Йдеться про" or "мова мовиться". Use Antonenko-Davydovych's advice to prefer the impersonal reflexive form "йдеться".]
+- P3 (~220 words): [Naturalness vs. Logic — explain why "Справи йдуть" sounds more native than "Справи є", and why "Фільм іде" is preferred over "Фільм показують". Encourage thinking in "processes" rather than static "states".]
 - Exercise: [error-correction, focus: Fix English calques and Russicisms in figurative motion expressions, 12 items]
 
-## Підсумок: буквальне і переносне (~400 words total)
-- P1 (~200 words): [Recap table of key verbs and their figurative domains.
-  - іти: weather (дощ), time (час), process (урок), abstract (мова).
-  - летіти: speed (час летить), news (новина).
-  - пливти: clouds (хмари), melody (мелодія), slow time.
-  - нести: responsibility (відповідальність).
-  - вести: behavior (вести себе), talks (переговори).]
-- P2 (~200 words): [Self-check questions: 
-  1. Чим відрізняється "час іде" від "час летить"?
-  2. Як сказати "It's raining" без кальки?
-  3. Коли ми кажемо "мова йде про", а коли "йдеться про"?
-  4. Як правильно сказати "Things are going well"?]
-- Exercise: [free-write, focus: Write a paragraph about your week using at least 5 figurative motion expressions, 12 items (prompts)]
+## Підсумок (~400 words)
+- P1 (~200 words): [Recap table — create a final mapping: іти (weather, normal time), летіти (fast time, prices), пливти (clouds, slow time), бігти (urgent time, water), нести (responsibility), вести (negotiations). Summarize the "Speed Hierarchy" of time: пливти → іти → бігти → летіти.]
+- P2 (~200 words): [Self-check questions: 1. Як сказати про дощ без кальки? 2. Яке дієслово описує хмари в небі? 3. Чим "час летить" відрізняється від "час іде"? 4. Як сказати "It is about..." професійно? — Preview M36: Подорож Україною, where we combine literal travel with the metaphorical movement of history.]
 
-Grand total: ~4400 words (including exercise text and examples)
+Grand total: ~4420 words

@@ -12,7 +12,7 @@ import FillIn from '@site/src/components/FillIn';
 import FlashcardDeck from '@site/src/components/FlashcardDeck';
 import MatchUp from '@site/src/components/MatchUp';
 import Quiz from '@site/src/components/Quiz';
-import Translate from '@site/src/components/Translate';
+import TrueFalse from '@site/src/components/TrueFalse';
 import YouTubeVideo from '@site/src/components/YouTubeVideo';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
@@ -21,280 +21,140 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ## Чо́му дієслова́ потрі́бно вчи́ти па́рами? (Why Verbs Must Be Learned in Pairs)
 
-Два речення — одне́ сло́во зміни́лося:
+When you learn a new verb in Ukrainian, you are often only learning half of a word. In English, a single verb can describe both the ongoing process of an action and its completed result. In Ukrainian, these two ideas require two different verbs. Think of Ukrainian verbs like a pair of shoes. You need both the left shoe and the right shoe to walk correctly. The left shoe is the **недоко́наний вид** (imperfective aspect), which describes the process, habit, or continuous action. The right shoe is the **доко́наний вид** (perfective aspect), which describes the result, achievement, or completion of that action. If you only learn one form, your vocabulary will always feel incomplete.
 
-> «Я писа́ла листа́ ці́лий ве́чір.»
-
-> «Я написа́ла листа.»
-
-Both sentences describe writing a letter. Both use the same root — *пис-*. But the first sentence stretches across an entire evening: the writing was happening, unfinished, ongoing. The second sentence lands like a stamp on an envelope: done. The letter exists. What changed? A single prefix — **на-** — transformed the verb from a process into a result. This is not decoration. This is the core engine of how Ukrainian verbs work.
-
-In Ukrainian, most verbs live as a **видова́ па́ра** *(aspect pair)* — two forms that belong together like inhale and exhale. One form describes the **process** — the action unfolding, repeated, or habitual. This is the **недоко́наний вид** *(imperfective aspect)*, and it answers the question **що роби́ти?** The other form describes the **completed result** — the action finished, achieved once, done. This is the **доко́наний вид** *(perfective aspect)*, answering **що зроби́ти?** From now on, every verb you learn has a standard notation: imperfective **/** perfective. Not just «писа́ти» — but «**писати / написа́ти**» *(to write / to have written)*. Learning only one form is like owning one chopstick — a real object, but useless without its partner.
-
-Here is the practical consequence: from today, every new verb in your notebook gets two slots. When you look up a word on slovnyk.me or e2u.org.ua, you will see both forms listed together. Ukrainian school textbooks do exactly this — Заболо́тний's Grade 6 textbook (§52) introduces **вид дієслова** by always showing the pair side by side. Dictionaries mark them: **недок.** *(imperfective)* and **док.** *(perfective)*. If you find only one form, search for its partner before moving on.
-
-Think of two columns in your mind:
-
-**Недоконаний вид** — process, duration, repetition. **Доконаний вид** — completed action, one-time result. Three structural patterns explain how most pairs are formed. Some pairs differ by a prefix: «писати / **на**писати». Some change a suffix or vowel: «запи́тувати / запита́ти» *(to ask, repeatedly / to ask, once)*. And a few are completely different words: «бра́ти / взя́ти» *(to take — process / to take — completed)*. You will learn all three patterns in the sections ahead.
-
-But first — aspect in action:
+Here is a common kitchen scenario that shows the difference. When cooking, the difference between doing something and finishing it is very important.
 <div class="dialogue">
 
-<div class="dialogue-line"><span class="speaker">Бабу́ся:</span> «Лі́пи варе́ники — ось так, зно́ву і знову.»</div>
+<div class="dialogue-line"><span class="speaker">Бабу́ся:</span> Що ти за́раз ро́биш? *(What are you doing right now?)*</div>
 
-<div class="dialogue-line"><span class="speaker">Ону́чка:</span> «Я зліпи́ла пе́рший!»</div>
+<div class="dialogue-line"><span class="speaker">Ону́чка:</span> Я **ліплю́** варе́ники. *(I am forming varenyky.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Бабуся:</span> «Чудо́во! Тепе́р вари їх рі́вно де́сять хвили́н.»</div>
+<div class="dialogue-line"><span class="speaker">Бабуся:</span> До́бре. Ко́ли **злі́пиш** усі, скажи́ мені́. *(Good. When you finish forming all of them, tell me.)*</div>
 
-<div class="dialogue-line"><span class="speaker">Онучка:</span> «А скі́льки ще вари́ти?»</div>
+<div class="dialogue-line"><span class="speaker">Онучка:</span> Я вже **зліпи́ла** де́сять штук! *(I have already formed ten pieces!)*</div>
 
-<div class="dialogue-line"><span class="speaker">Бабуся:</span> «Як ті́льки зва́риш — вони́ спливу́ть на пове́рхню.»</div>
+<div class="dialogue-line"><span class="speaker">Бабуся:</span> Молоде́ць! Тепе́р тре́ба їх **вари́ти**. *(Well done! Now we need to boil them.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Онучка:</span> Скі́льки ча́су? *(How much time?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Бабуся:</span> Хвили́н десять. Коли **зва́риш**, ми бу́демо ї́сти. *(About ten minutes. When you have boiled them until ready, we will eat.)*</div>
 
 </div>
 
-Notice the pairs: **ліпи́ти / зліпи́ти** *(to shape, keep going / to finish shaping one)* and **варити / звари́ти** *(to boil, ongoing / to finish boiling)*. Бабуся says «ліпи» — keep forming, one after another, the process continues. Онучка says «зліпила» — one varenyк is done, result achieved. «Вари десять хвилин» — the boiling is a process with duration. «Звариш» — the moment they are fully cooked, finished.
+Notice the difference in meaning. We use the imperfective verbs **ліпи́ти** (to form) and **варити** (to boil) to focus on the ongoing process of cooking. We use the perfective verbs **зліпи́ти** (to finish forming) and **звари́ти** (to finish boiling) to focus on the final result.
 
-The recipe makes the distinction concrete: every kitchen instruction switches between «keep doing this» and «finish doing that.»
+Because these two forms are so closely connected, textbooks and dictionaries always present them together as an aspectual pair. The standard notation you will see is a slash separating the two verbs, like this: **роби́ти / зроби́ти** (to do / to have done). The first verb listed before the slash is almost always the imperfective form. The second verb listed after the slash is the perfective form. When you learn new vocabulary, you must memorize both parts of the pair together. The dictionary form, or the base lemma, is usually the imperfective one. If you want to know how to say the verb for writing, you should learn the entire pair **писа́ти / написа́ти** (to write / to have written) right from the start.
 
-## Спо́сіб 1: Додава́ння пре́фікса
+When you use a Ukrainian **словни́к** (dictionary) like Slovnyk.ua or ULIF, you will see this relationship clearly. If you look up an imperfective verb like **чита́ти** (to read), the dictionary definition will usually include a link to its perfective partner. You will see the abbreviation "док. вид", which stands for perfective aspect, pointing you directly to the result verb **прочита́ти** (to have read). Make it a habit to always check for this abbreviation when you look up a new action word so you can add both forms to your vocabulary list.
 
-The most common way to form a perfective verb in Ukrainian is to add a **префікс** *(prefix)* to the imperfective base. The prefix seals the action — it signals that the verb now describes a completed act with a concrete result. But here is the critical detail: the prefix assigned to each pair is fixed. You cannot guess it. You must learn «писати / **на**писати» as a single unit, the same way you learned «видова пара» in the previous section — two forms, one meaning, always together.
+Ukrainian aspect pairs are not random. There are three highly predictable patterns that will help you group these pairs together and memorize them much faster.
 
-Here are five core pairs. Notice how each prefix is different — and how the meaning stays the same, only the completion changes:
+## Спо́сіб 1: Додава́ння пре́фікса (Method 1: Adding a Prefix)
 
-**писати / написати** *(to write / to write — completed)*
+The most common way to create a perfective verb in Ukrainian is by adding a prefix to the beginning of an imperfective verb. Think of a prefix as a special cap that you place on an action to signal that it is completely finished. Without this cap, the action is open, ongoing, or repeating. Once you add the prefix, you close the action and focus entirely on the final result. The clearest example is the verb **писати** (to write). This is the imperfective form, used when you are in the process of writing or if you write regularly. When you want to say that you have finished writing something, like completing a letter, you add the prefix **на-** to create its perfective partner, **написати** (to finish writing). The core meaning of the action remains exactly the same. You are still dealing with the act of writing. However, the grammatical focus has shifted from the ongoing process to the successful completion of the task. This simple addition is the primary mechanism for forming aspectual pairs.
 
-> «Вона́ **писала** повідо́млення п'ять хвилин.»
-> «Вона **написала** повідомлення.»
+While adding a prefix is the standard method, there is a small catch. There is no single universal prefix that makes every verb perfective. Instead, different verbs require different prefixes to form their pure aspectual pairs. You have already seen **на-** used to create **написати**. The same prefix works with **малюва́ти** (to draw), creating the perfective **намалюва́ти** (to finish drawing). Another very common prefix is **про-**, which often gives the sense of reading or going through something completely. For example, the imperfective verb **читати** (to read) pairs with the perfective **прочитати** (to finish reading).  You will also frequently encounter the prefix **по-**. This prefix is incredibly versatile and pairs with many everyday actions. It creates perfective verbs like **поба́чити** (to catch sight of), **почу́ти** (to catch a sound), and **пообі́дати** (to have lunch). It is important to understand that in other contexts, these prefixes might change the actual meaning of a word. But here, their primary job is simply to mark the action as completed.
 
-**чита́ти / прочита́ти** *(to read / to read — completed)*
+Another important prefix for forming perfective verbs is **з-** (or its variant **с-**). This prefix is often called the resultative prefix because it strongly emphasizes the successful completion of a final product. The most fundamental example is the verb **робити** (to do / to make). To say that you have finished doing or making something, you add the prefix **з-** to create **зробити** (to have done / to have made). You will also see this prefix in **їсти** (to eat), which becomes **з'ї́сти** (to eat up completely). Sometimes, other prefixes step in to serve the exact same resultative function. For instance, the imperfective verb **готува́ти** (to cook / to prepare) uses the prefix **при-** to form its perfective partner **приготува́ти** (to finish cooking). Because there is no strict rule dictating which prefix pairs with which verb, you cannot simply guess. You must memorize which specific prefix goes with which base verb to form the correct aspectual pair.
 
-> «Ми **чита́ли** кни́жку цілий ти́ждень.»
-> «Ми **прочита́ли** її вчо́ра.»
+This prefix rule also applies to verbs of sensory perception, which behave in a specific way. The verbs for seeing and hearing behave in a specific way. The imperfective verbs **ба́чити** (to see) and **чу́ти** (to hear) describe the ongoing state of observing something. We use them when our senses are actively engaged over a period of time. However, when we want to describe the exact moment we first notice something or successfully catch a sound, we use their perfective partners: **побачити** and **почути**. Compare these two examples to feel the difference.
+<div class="dialogue">
 
-**робити / зробити** *(to do, to make / to do — completed)*
+<div class="dialogue-line"><span class="speaker">Окса́на:</span> Я **ба́чу** си́нє не́бо. *(I see the blue sky.)*</div>
 
-> «Він **роби́в** дома́шнє завда́ння.»
-> «Він **зроби́в** усе́ завдання.»
+<div class="dialogue-line"><span class="speaker">Степа́н:</span> А я що́йно **поба́чив** вели́кий літа́к! *(And I just caught sight of a big airplane!)*</div>
 
-**ба́чити / поба́чити** *(to see / to see — completed)*
+</div>
 
-> «Я ча́сто **ба́чила** йо́го в метро́.»
-> «Я **поба́чила** його вчора на ву́лиці.»
+In the first sentence, the observation is continuous. In the second sentence, the perfective verb highlights the sudden, completed event of noticing the airplane.
 
-**готува́ти / приготува́ти** *(to cook, to prepare / to cook — completed)*
+As you learn to recognize these pairs, there is one common pitfall you must avoid. You cannot simply add any prefix to a verb and assume you have created its simple perfective partner. Adding a different prefix usually changes the meaning of the word entirely, creating a brand new verb. Return to our first example, **писати**. We know that **написати** is its pure perfective partner. But what if we add the prefix **під-**? We get the verb **підписа́ти** (to sign). This is no longer just finishing the act of writing; it is a completely different action with its own specific meaning. Another example is adding the prefix **пере-** to get **переписа́ти** (to rewrite). For now, as you build your foundation, we will only focus on the specific, designated prefixes that create the pure, basic partner for each action without changing its core dictionary definition.
 
-> «Ма́ма **готува́ла** вече́рю годи́ну.»
-> «Мама **приготува́ла** борщ.»
+## Спосіб 2: Змі́на в ко́рені або́ су́фіксі (Method 2: Change in the Root or Suffix)
 
-Five verbs, five different prefixes: **на-**, **про-**, **з-**, **по-**, **при-**. Each one is the assigned prefix for that particular verb. Swapping them produces either a wrong word or a completely different meaning.
+In the first method, we saw how adding a short prefix to a basic verb creates a perfective partner. The second method works in the exact opposite direction. We start with a base verb that is already perfective—usually one that inherently contains a prefix—and we intentionally "stretch" it to make it imperfective. This grammatical process is called imperfectivization. By inserting a noticeable suffix into the word, the language visually and acoustically stretches the verb to represent an action that takes time. Compare the perfective verb **відпові́сти́** (to give an answer) with its imperfective partner **відповіда́ти** (to be answering). The perfective form is shorter and more abrupt, perfectly suited for a quick, completed result. The imperfective form physically expands on the page and in the mouth, mimicking the ongoing, continuous nature of the process.
 
-Now five more pairs from everyday A2 vocabulary. The same principle holds — each verb has its own fixed prefix:
+The most common and easily recognizable tools for stretching a perfective verb into an ongoing process are the suffixes **-ува-** and **-юва-**. When you see these syllables appearing in the middle of a verb, you are usually looking at an imperfective process. Let us look at the perfective verb **ви́рішити** (to decide / to solve). To show the long, sometimes difficult process of making that decision or actively solving that problem, we insert the suffix to create **вирі́шувати** (to be deciding / to be solving). Similarly, the quick, one-time action of asking a single question is **запита́ти** (to ask). If someone is repeatedly asking questions, the verb expands into **запи́тувати** (to be asking). This particular suffix gives the verbs a rolling rhythm that naturally sounds like a continuous, uninterrupted activity.
 
-- **варити / зварити** *(to boil / to boil — completed)* — prefix **з-**
-- **вчити / ви́вчити** *(to study / to learn — completed)* — prefix **ви-**
-- **ї́сти / з'ї́сти** *(to eat / to eat — completed)* — prefix **з-**
-- **пи́ти / ви́пити** *(to drink / to drink — completed)* — prefix **ви-**
-- **малюва́ти / намалюва́ти** *(to draw, to paint / to draw — completed)* — prefix **на-**
+Sometimes, simply adding a suffix is not the only structural change that happens when stretching a verb. The Ukrainian language often reinforces this grammatical expansion by simultaneously changing a core vowel deep inside the root of the word. The most frequent internal change you will encounter in these pairs is replacing the vowel **о** with the vowel **а**. For example, the perfective verb **допомогти́** (to help successfully) transforms into the imperfective **допомага́ти** (to be helping). Notice how the tight, round **о** sounds in the root completely shift to the wide, open **а** sounds. You can see the exact same linguistic pattern in the perfective verb **перемогти́** (to win / to overcome) and its imperfective partner **перемага́ти** (to be winning). Here is a useful memory trick: pronouncing the **а** sound requires opening the mouth wider, which you can associate with the openness of an ongoing action.
 
-Notice the variety: **з-**, **ви-**, **на-**. There is no universal rule that tells you which prefix goes with which verb. «Вчити» takes **ви-**, but «їсти» takes **з-**. Each pair must be memorized as a unit.
+In other verb pairs, the aspectual transformation happens entirely inside the root without adding long suffixes at the end. The most important of these internal changes is the specific shift from the vowel **і** to the vowel **и**. Consider the perfective verb **зібра́ти** (to gather / to collect successfully). To describe the ongoing process of collecting things over a period of time, the tight **і** sound drops down to a deeper **и**, creating the imperfective **збира́ти** (to be gathering). You will encounter the exact same internal vowel shift with the perfective verb **надісла́ти** (to send a message or package) and its imperfective counterpart **надсила́ти** (to be sending). While these paired words look and sound very similar, that single internal vowel change completely alters how we perceive the flow of time within the action.
 
-One important warning. A prefix on a verb does not always create a simple aspectual partner. Compare two prefixed forms of «писати»:
+A common communication verb shows this pattern clearly. The perfective verb **розпові́сти́** (to tell / to relate) pairs with the expanded imperfective verb **розповіда́ти** (to be telling). Telling a detailed story is inherently a long, sequential process, so we use the longer, imperfective form when we want to focus on the duration of the speech itself. However, if the conversational focus is merely on the successful delivery of a specific piece of information, we switch to the shorter, perfective form.
+<div class="dialogue">
 
-> «**Написати** листа.» — to write a letter *(completed)*
-> «**Підписа́ти** докуме́нт.» — to sign a document
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Я зараз **розпові́м** тобі́ оди́н ціка́вий секре́т. *(I will tell you one interesting secret now.)*</div>
 
-«Написати» is the perfective partner of «писати» — same meaning, just completed. But «підписати» is a different verb entirely, with a new meaning. The prefix **під-** shifted the action from writing to signing. Here is your test: does the prefixed verb mean the same thing as the imperfective, only completed? If yes — it is an aspectual pair. If the meaning changed — it is a new verb, not a partner.
+<div class="dialogue-line"><span class="speaker">Степан:</span> Мій діду́сь ду́же до́вго **розповіда́в** цю стару́ ка́зку. *(My grandfather was telling this old fairy tale for a very long time.)*</div>
 
-Five more pairs to build your recognition range. These use slightly less obvious patterns:
+</div>
 
-- **розповіда́ти / розпові́сти́** *(to tell, to narrate / to tell — completed)*
-- **забува́ти / забу́ти** *(to forget — habitual / to forget — once)*
-- **відкрива́ти / відкри́ти** *(to open — process / to open — completed)*
-- **закрива́ти / закри́ти** *(to close — process / to close — completed)*
-- **почина́ти / поча́ти** *(to begin — process / to begin — completed)*
+## Спосіб 3: Зо́всім і́нші слова́ (суплетиві́зм) (Method 3: Completely Different Words — Suppletion)
 
-Look closely at «розповідати / розповісти» — the root itself changes: **розповід-** becomes **розповіст-**. And «забувати / забути» drops the **-ва-** suffix entirely. These pairs still use prefixes, but something else is happening inside the word too. That pattern — changes in the root or suffix — is exactly what the next section explores.
+Some of the most basic verbs use completely different words for their partners. Just like in English we say "good" and "better" instead of "gooder", the Ukrainian language has its own historical rebels. This grammatical phenomenon is called suppletion. Instead of neatly adding a prefix or stretching out a root vowel, these verbs demand that you memorize an entirely different word to express the completed action. Because these verbs represent fundamental human actions performed for thousands of years, they appear in nearly every conversation. You will hear and use them every single day.
 
-Now read these five sentences aloud. For each verb in bold, decide: is it imperfective or perfective?
+Here are the "Big Four" essential pairs that every beginner must master. The most common pair is **говори́ти** (to be speaking) and **сказа́ти** (to say successfully). Another vital pair is **бра́ти** (to be taking) and **взя́ти** (to take successfully). For physical objects, we use **кла́сти** (to be laying down / to be putting) and **покла́сти** (to put successfully). Finally, there is the dynamic pair **лови́ти** (to be catching / to hunt) and **пійма́ти** (to catch successfully). Notice how the imperfective forms focus on the ongoing physical process, while their perfective partners abruptly present the final result.
+<div class="dialogue">
 
-> «Я щодня́ **чита́ю** нови́ни. Сього́дні вже **прочита́в** дві статті́.»
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Степа́не, допоможи́ мені! Я не мо́жу **знайти́** свою́ су́мку. *(Stepan, help me! I can't find my bag.)*</div>
 
-> «Він **робив** впра́ви і наре́шті **зробив** усі пра́вильно.»
+<div class="dialogue-line"><span class="speaker">Степан:</span> Де ти її зазвича́й **кладе́ш**? *(Where do you usually put it?)*</div>
 
-> «Вона **готувала** ті́сто й **приготувала** пирі́г до обі́ду.»
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Зазвичай я **кладу́** її на стіле́ць, але́ вчо́ра **покла́ла** на поли́цю. *(Usually I put it on the chair, but yesterday I put it on the shelf.)*</div>
 
-> «Ми **вчи́ли** слова́ і **ви́вчили** всі п'ятна́дцять.»
+<div class="dialogue-line"><span class="speaker">Степан:</span> Зачека́й, я **візьму́** ліхта́рик. Треба **брати** ре́чі і диви́тися під ними. *(Wait, I'll take a flashlight. We need to take things and look under them.)*</div>
 
-> «Він **пив** ка́ву та **ви́пив** ці́лу ча́шку.»
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Я хо́чу **сказати** тобі де́що — я вже годи́ну шука́ю! *(I want to tell you something — I've been searching for an hour!)*</div>
 
-Each sentence pairs a process with its result. The first verb stretches across time — the second one lands.
+<div class="dialogue-line"><span class="speaker">Степан:</span> Не хвилю́йся. Ти за́вжди́ довго **гово́риш** про пробле́му, за́мість **ловити** моме́нт. О, диви́сь — я **пійма́в** її! Ось твоя́ су́мка, під ку́рткою! *(Don't worry. You always talk about the problem for a long time instead of seizing the moment. Oh, look — I caught it! Here's your bag, under the jacket!)*</div>
 
-## Спосіб 2: Змі́на в ко́рені або́ су́фіксі
+</div>
 
-The previous section showed how a prefix turns an imperfective verb into its perfective partner. But Ukrainian has a second pattern that works in the opposite direction. When a perfective verb — often one that already carries a prefix — needs an imperfective partner, Ukrainian builds one by adding a suffix, most commonly **-ува-** or **-юва-**, or by shifting a vowel inside the root. Linguists call this process **imperfectivization** — creating an imperfective from a perfective base. The result is a longer, softer-sounding verb. Compare: **запитати** *(to ask — completed)* is short and decisive, while **запитувати** *(to ask — ongoing)* stretches out with that **-ува-** ending. When you hear **-увати** or **-ювати** at the end of a verb, you can be almost certain it is imperfective.
+There is another pair that learners often group together: **шука́ти** (to search / to look for) and **знайти** (to find). Logically, these two words represent the chronological halves of the same real-world task — you spend time searching, and the ultimate result of that process is finding the object. However, these are actually two different actions, not a true aspectual pair. The real perfective partner of **шукати** is **пошука́ти** (to search for a while) or **відшука́ти** (to track down successfully). Meanwhile, **знайти** is the perfective partner of **знахо́дити** (to find / to be finding). Because **шукати** and **знайти** appear together so naturally in everyday life, many learners treat them as a pair — but grammatically, they describe two separate processes: the act of looking and the act of discovering.
+<div class="dialogue">
 
-The **-ува-** suffix (and its shorter variant **-ва-**) is the most productive pattern. Here are five core pairs with model sentences that show the contrast between completed and ongoing action:
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Я бу́ду довго **шукати** свої́ ключі́, по́ки не змо́жу їх **знайти**. *(I will look for my keys for a long time until I can find them.)*</div>
 
-- **запитати / запитувати** *(to ask — once / to ask — repeatedly)*
+</div>
 
-> «Вона **запита́ла** мене́ про адре́су.»
+Below is a mastery list of the twenty most essential verb pairs for A2 learners. These are ба́зовий (basic) pairs that you must запам'ято́вувати (memorize) as inseparable sets. Knowing both forms will let you describe both ongoing habits and completed events.
 
-> «Він за́вжди́ **запи́тує** мене про пого́ду.»
+1. **робити** / **зробити** (to do / to make)
+2. **писати** / **написати** (to write)
+3. **читати** / **прочитати** (to read)
+4. **бачити** / **побачити** (to see)
+5. **готувати** / **приготувати** (to cook / to prepare)
+6. **ду́мати** / **поду́мати** (to think)
+7. **їсти** / **з'їсти** (to eat)
+8. **пи́ти** / **ви́пити** (to drink)
+9. **відповідати** / **відповісти** (to answer)
+10. **вирішувати** / **вирішити** (to decide / to solve)
+11. **запитувати** / **запитати** (to ask)
+12. **допомагати** / **допомогти** (to help)
+13. **купува́ти** / **купи́ти** (to buy)
+14. **зустріча́ти** / **зустрі́ти** (to meet)
+15. **розумі́ти** / **зрозумі́ти** (to understand)
+16. **говорити** / **сказати** (to speak / to say)
+17. **брати** / **взяти** (to take)
+18. **класти** / **покласти** (to put)
+19. **ловити** / **піймати** (to catch)
+20. **шукати** / **пошукати** (to search)
 
-- **ви́рішити / вирі́шувати** *(to decide, to solve — completed / to decide, to solve — process)*
+## Підсумок (Summary)
 
-> «Ми **ви́рішили** пробле́му.»
-
-> «Вони до́вго **вирі́шували**, куди́ ї́хати.»
-
-- **відпові́сти́ / відповіда́ти** *(to answer — once / to answer — regularly)*
-
-> «Студе́нт **відпові́в** на пита́ння.»
-
-> «Вона **відповіда́є** на листи́ ко́жного ра́нку.»
-
-- **показа́ти / пока́зувати** *(to show — once / to show — repeatedly)*
-
-> «Він **показа́в** мені́ ка́рту.»
-
-> «Учи́телька **пока́зує** нові́ слова на до́шці.»
-
-- **забути / забувати** *(to forget — once / to forget — habitually)*
-
-> «Я **забу́в** ключі́ вдо́ма.»
-
-> «Він часто **забува́є** ре́чі.»
-
-Notice the consistent direction: the perfective ends in **-а́ти** or **-іти́**, and the imperfective partner stretches it out to **-увати** or **-ювати**. The suffix is a reliable signal — it marks the verb that describes the process, not the result. If you see **-увати** at the end, you are looking at the imperfective member of the pair.
-
-Now the second sub-pattern within Method 2: vowel alternation inside the root. Instead of adding a suffix, Ukrainian shifts the root vowel — most commonly **о → а** — to create the imperfective partner.
-
-- **допомогти́ / допомага́ти** *(to help — completed / to help — ongoing)*
-
-> «Він **допомі́г** мені вчора.»
-
-> «Вона завжди **допомага́є** дру́зям.»
-
-Look at the roots: **допомо́г-** becomes **допомаг-** — the **о** stretches into **а**. This is not an irregularity. It is a phonological feature of Ukrainian. The vowel change signals duration, just as the **-ува-** suffix does. The imperfective form sounds longer and more open — it mirrors the open, ongoing nature of the action.
-
-Sometimes both changes happen at once — the root vowel shifts AND the ending changes. Take **розповісти / розповідати** *(to tell — completed / to tell — ongoing)*: the root changes from **розповіс-** to **розповід-**, and the ending shifts from **-ти** to **-ати**. The same double pattern appears in **відповісти / відповідати** — root **відповіс-** becomes **відповід-**, ending **-ти** becomes **-ати**. This combination can look disorienting at first. Two things are changing inside the same word. But the principle stays the same: the longer, more open form is always the imperfective. With repeated exposure, these pairs start to feel natural. Your ear learns to recognize the **-ува-** suffix and the **о → а** root shift as imperfective markers before your conscious mind catches up.
-
-Here is your quick-reference chart — twelve pairs from both methods in one place:
-
-| Недоконаний вид | Доконаний вид | Спосіб |
-|---|---|---|
-| писати | написати | префікс |
-| читати | прочитати | префікс |
-| варити | зварити | префікс |
-| вчити | вивчити | префікс |
-| їсти | з'їсти | префікс |
-| пити | випити | префікс |
-| запитувати | запитати | -ува- |
-| вирішувати | вирішити | -ува- |
-| показувати | показати | -ува- |
-| відповідати | відповісти | -ува- / ко́рінь |
-| допомагати | допомогти | о → а |
-| розповідати | розповісти | корінь |
-
-The left column is always the imperfective — the process, the habit, the ongoing action. The right column is always the perfective — the result, the single event, the completed action. When you need to look up a pair, check the ending first: **-увати** points to Method 2, a bare prefix on a simple root points to Method 1.
-
-Now read these five sentences aloud. In each one, underline the part of the bold verb that signals its aspect — the suffix or the changed root vowel:
-
-> «Він **відповіда́в** довго, по́ки нарешті **відповів** правильно.»
-
-> «Вона **вирі́шувала** зада́чу і зре́штою **ви́рішила** її.»
-
-> «Вона **пока́зувала** фо́то друзям, поки нарешті **показа́ла** всім.»
-
-> «Він **запи́тував** кі́лька разі́в, перш ніж **запита́в** дире́ктора.»
-
-> «Вони **допомага́ли** будува́ти, і ра́зом **допомогли́** заверши́ти.»
-
-Each pair contrasts the stretched-out imperfective with the compact perfective. The first verb in each sentence carries the aspect marker — **-ува-**, **-ід-**, **-а-** in the root — while the second verb snaps shut with its shorter perfective form.
-
-## Спосіб 3: Зо́всім і́нші слова (суплетиві́зм)
-
-The first two methods follow predictable logic — add a prefix, change a suffix, shift a vowel. The third method follows no logic at all. Some of the most common Ukrainian verbs form their aspectual pairs from completely different roots. No prefix trick will connect them. No suffix pattern will help you guess. The imperfective and the perfective simply look like two unrelated words. Linguists call this **суплетивізм** *(suppletion)*. The good news: truly suppletive pairs are few — only three at A2 level. The bad news: they include verbs you will use in almost every conversation.
-
-Here are the three essential suppletive pairs. Read each mini-dialogue and notice how the two verbs share no visible connection:
-
-**брати / взяти** *(to take — ongoing / to take — completed)*
-
-> «Вона **бере́** книжки́ з поли́ці щодня.»
-
-> «Вона **взя́ла** словни́к і ви́йшла.»
-
-**говори́ти / сказа́ти** *(to speak, to talk — ongoing / to say, to tell — completed)*
-
-> «Він завжди **гово́рить** ти́хо.»
-
-> «Вона **сказа́ла** мені пра́вду.»
-
-This pair deserves special attention. **Говорити** describes the ongoing process of speaking — a conversation, a habit, a manner of speech. **Сказати** captures a single utterance — one sentence, one statement, one reply. Ukrainian uses this distinction constantly in storytelling: «Він довго **говори́в**, а по́тім **сказа́в**: "До́сить."»
-
-**лови́ти / злови́ти** *(to catch — ongoing / to catch — completed)*
-
-> «Кіт **лови́в** мете́лика в саду́.»
-
-> «Він нарешті **злови́в** його.»
-
-**шука́ти / знайти́** *(to look for — ongoing / to find — completed)*
-
-> «Ми **шука́ли** ключі всю́ди.»
-
-> «Ми **знайшли́** їх під столо́м.»
-
-Notice that **зловити** shares the root **лов-** with **ловити** and is technically formed with the prefix **з-**, like a Method 1 pair. True suppletion means zero shared material, as in **брати / взяти** or **шукати / знайти**. The pair **ловити / зловити** sits at the border between prefix formation and memorization — the prefix **з-** here is less semantically transparent than **на-** in **написати**, so many learners find it easier to memorize the pair as a unit rather than derive it from a rule.
-
-Why do suppletive pairs exist at all? The most frequent verbs in any language resist regularization. They are used so often, by so many speakers, that their ancient forms survive unchanged across centuries. English has the same phenomenon: *go / went* comes from two different Old English verbs that merged. Ukrainian **брати / взяти** similarly inherits two separate roots from Old Slavic — one for the process, one for the result. Knowing this makes the irregularity feel less random. These are not exceptions. They are survivors.
-
-Here are the twenty most important A2 aspectual pairs across all three methods — your quick-reference master list:
-
-| Недоконаний вид | Доконаний вид | Тип |
-|---|---|---|
-| писати | написати | П |
-| читати | прочитати | П |
-| робити | зробити | П |
-| бачити | побачити | П |
-| готувати | приготувати | П |
-| варити | зварити | П |
-| вчити | вивчити | П |
-| їсти | з'їсти | П |
-| пити | випити | П |
-| малювати | намалювати | П |
-| запитувати | запитати | С |
-| відповідати | відповісти | С |
-| вирішувати | вирішити | С |
-| розповідати | розповісти | С |
-| допомагати | допомогти | К |
-| забувати | забути | С |
-| показувати | показати | С |
-| брати | взяти | З |
-| говорити | сказати | З |
-| шукати | знайти | З |
-
-**П** = префікс, **С** = су́фікс, **К** = корене́ве чергува́ння, **З** = зовсім інші слова.
-
-How do you memorize pairs that share no visible root? Three strategies work:
-
-First, always learn them inside a mini-story — never as isolated words. «Вона шука́ла і знайшла́.» «Він говорив і сказав.» «Я брав і взяв.» The two verbs live together in one sentence, one situation. Your memory binds them through narrative, not through spelling.
-
-Second, notice a practical pattern: the suppletive imperfectives tend to be longer and end in **-ити** or **-ати** — **шукати**, **говорити**, **брати**. Their perfective partners are often shorter or end in a bare **-ти** — **знайти**, **сказати**, **взяти**. This is not a rule, but it is a useful instinct to develop.
-
-Third, put both verbs on one flashcard with the mini-story on the back. Never study one form alone. A verb without its partner is only half a word — and these partners cannot be guessed, only known.
-
-## Summary
-
-Ukrainian verbs live in aspectual pairs — **недоконаний вид** (imperfective, process) and **доконаний вид** (perfective, result). You now know three structural patterns for how these pairs form: prefixation (**писати / написати**), suffix or vowel change (**запитувати / запитати**, **допомагати / допомогти**), and suppletion (**брати / взяти**, **шукати / знайти**). From today, enter every new verb in pairs — one form alone is only half the picture. The notation "impf / pf" is your default tool for organizing vocabulary. When you meet a verb in a text, immediately ask: where is its partner? Which formation type connects them? That reflex will build faster than any grammar table.
-
-**Переві́р себе́** (Self-check):
-
-- Яке́ питання ста́влять до недоко́наного дієслова? — «Що робити?»
-- Яке питання ставлять до доко́наного дієслова? — «Що зробити?»
-- Як утвори́ти доконаний вид у па́рі «читати / ___»? — «Прочитати» — додаємо́ префікс «про-».
-- Яки́й суфікс є сигна́лом недоконаного ви́ду? — Суфікс «-ува-» або «-юва-».
-- На́зви дві суплети́вні па́ри. — «Брати / взяти» і «шукати / знайти».
+Understanding verb aspect is one of the most fundamental steps in mastering the Ukrainian language. You have learned that almost all verbs operate as pairs — one imperfective for the process, and one perfective for the result. Remember that you cannot truly learn a new verb without also memorizing its aspectual partner.
+
+As a quick review, there are three primary ways these aspectual pairs are formed:
+1. **Adding a prefix:** This is the most common method. The base imperfective verb receives a prefix to become perfective (for example, **писати** / **написати** — *to write*).
+2. **Changing a suffix or a root vowel:** Often, a perfective verb alters its suffix to become imperfective. This can also trigger a vowel change inside the root (for example, **вирішити** / **вирішувати** — *to decide*).
+3. **Using completely different words (suppletion):** Some of the most essential and frequently used verbs use entirely different roots for their aspectual forms and simply must be memorized (for example, **брати** / **взяти** — *to take*).
+
+Before finishing this module, ask yourself these four self-check questions to test your understanding:
+- Яка різни́ця між «пити» і «випити»? *(What is the difference between "пити" and "випити"?)*
+- Як знайти па́ру в словнику́? *(How do you find a pair in a dictionary?)*
+- Яка па́ра до дієслова «сказати»? *(What is the pair for the verb "сказати"?)*
+- Чому важли́во зна́ти оби́два слова? *(Why is it important to know both words?)*
 
 </TabItem>
 <TabItem label="Словник">
@@ -303,88 +163,62 @@ Ukrainian verbs live in aspectual pairs — **недоконаний вид** (i
 
 | Слово | Переклад | Частина мови | Рід |
 |-------|----------|-------------|-----|
-| **суплетиві́зм** | suppletion (forming pairs from different roots) | ім. | ч. |
-| **су́фікс** | suffix | ім. | ч. |
-| **ко́рінь** | root (of a word) | ім. |  |
-| **па́ра** | pair | ім. | ж. |
-| **чита́ти / прочита́ти** | to read / to read (completed) |  |  |
-| **писа́ти / написа́ти** | to write / to write (completed) |  |  |
-| **бра́ти / взя́ти** | to take / to take (completed) |  |  |
-| **говори́ти / сказа́ти** | to speak / to say (completed) |  |  |
+| **утво́рювати** | to form | дієсл. |  |
 | **словни́к** | dictionary | ім. | ч. |
 | **запам'ято́вувати** | to memorize | дієсл. |  |
-| **утво́рювати** | to form, to create | дієсл. |  |
-| **ба́зовий** | basic, fundamental | прикм. |  |
-| **роби́ти / зроби́ти** | to do, to make / to do (completed) |  |  |
-| **ба́чити / поба́чити** | to see / to see (completed) |  |  |
-| **готува́ти / приготува́ти** | to cook, to prepare / to cook (completed) |  |  |
-| **вари́ти / звари́ти** | to boil / to boil (completed) |  |  |
-| **вчи́ти / ви́вчити** | to study / to learn (completed) |  |  |
-| **ї́сти / з'ї́сти** | to eat / to eat (completed) |  |  |
-| **пи́ти / ви́пити** | to drink / to drink (completed) |  |  |
-| **малюва́ти / намалюва́ти** | to draw, to paint / to draw (completed) |  |  |
-| **запита́ти / запи́тувати** | to ask (once) / to ask (repeatedly) |  |  |
-| **ви́рішити / вирі́шувати** | to decide, to solve (completed) / to decide (ongoing) |  |  |
-| **відпові́сти́ / відповіда́ти** | to answer (once) / to answer (regularly) |  |  |
-| **показа́ти / пока́зувати** | to show (once) / to show (repeatedly) |  |  |
-| **допомогти́ / допомага́ти** | to help (completed) / to help (ongoing) |  |  |
-| **забу́ти / забува́ти** | to forget (once) / to forget (habitually) |  |  |
-| **зрозумі́ти / розумі́ти** | to understand (at a moment) / to understand (ongoing) |  |  |
-| **розпові́сти́ / розповіда́ти** | to tell (completed) / to tell, to narrate (ongoing) |  |  |
-| **відкри́ти / відкрива́ти** | to open (completed) / to open (process) |  |  |
-| **закри́ти / закрива́ти** | to close (completed) / to close (process) |  |  |
-| **поча́ти / почина́ти** | to begin (completed) / to begin (process) |  |  |
-| **лови́ти / злови́ти** | to catch (ongoing) / to catch (completed) |  |  |
-| **шука́ти / знайти́** | to look for (ongoing) / to find (completed) |  |  |
-| **ліпи́ти / зліпи́ти** | to shape, to form (ongoing) / to finish shaping (completed) |  |  |
-| **підписа́ти** | to sign (a document) | дієсл. |  |
-| **проце́с** | process | ім. | ч. |
-| **результа́т** | result | ім. | ч. |
-| **трива́лість** | duration | ім. | ж. |
-| **чергува́ння** | alternation (of sounds/vowels) | ім. | с. |
-| **недок.** | impf. (dictionary abbreviation for imperfective) |  |  |
-| **док.** | pf. (dictionary abbreviation for perfective) | ім. | ч. |
-| **повідо́млення** | message | ім. | с. |
-| **впра́ва** | exercise | ім. | ж. |
-| **зада́ча** | problem, task (math/logic) | ім. | ж. |
-| **пове́рхня** | surface | ім. | ж. |
-| **поли́ця** | shelf | ім. | ж. |
-| **мете́лик** | butterfly | ім. | ч. |
-| **поступо́во** | gradually | присл. |  |
-| **наре́шті** | finally, at last | присл. |  |
-| **зре́штою** | eventually, in the end | присл. |  |
-| **щодня́** | every day, daily | присл. |  |
-| **всю́ди** | everywhere | присл. |  |
+| **ба́зовий** | basic | прикм. |  |
+| **па́ра** | pair | ім. | ж. |
+| **префікс** | prefix | ім. | ч. |
+| **су́фікс** | suffix | ім. | ч. |
+| **ко́рінь** | root | ім. |  |
+| **бра́ти / взя́ти** | to take |  |  |
+| **говори́ти / сказа́ти** | to speak / to say |  |  |
+| **ліпи́ти / зліпи́ти** | to form / to shape (e.g. dumplings) |  |  |
+| **вари́ти / звари́ти** | to boil / to cook |  |  |
+| **ба́чити / поба́чити** | to see |  |  |
+| **чу́ти / почу́ти** | to hear |  |  |
+| **ї́сти / з'ї́сти** | to eat |  |  |
+| **пи́ти / ви́пити** | to drink |  |  |
+| **відповіда́ти / відпові́сти́** | to answer |  |  |
+| **вирі́шувати / ви́рішити** | to decide / to solve |  |  |
+| **запи́тувати / запита́ти** | to ask |  |  |
+| **допомага́ти / допомогти́** | to help |  |  |
+| **розповіда́ти / розпові́сти́** | to tell / to relate |  |  |
+| **кла́сти / покла́сти** | to put / to lay |  |  |
+| **лови́ти / пійма́ти** | to catch |  |  |
+| **шука́ти / знайти́** | to look for / to find |  |  |
+| **зустріча́ти / зустрі́ти** | to meet |  |  |
+| **розумі́ти / зрозумі́ти** | to understand |  |  |
+| **ду́мати / поду́мати** | to think |  |  |
+| **варе́ник** | varenyk (Ukrainian dumpling) | ім. | ч. |
+| **шту́ка** | piece / item | ім. | ж. |
 
 ### Вирази
 
 | Вираз | Переклад |
 |-------|----------|
-| **видова пара** | aspect pair |
-| **що робити?** | what to do? (imperfective question marker) |
-| **що зробити?** | what to do (and finish)? (perfective question marker) |
-| **кореневе чергування** | root vowel alternation |
-| **домашнє завдання** | homework |
-| **перевір себе** | self-check, check yourself |
+| **Що ти зараз робиш?** | What are you doing right now? |
+| **Молодець!** | Well done! |
+| **Скільки часу?** | How much time? |
 
 ### Картки — Flashcards
 
-<FlashcardDeck client:only="react" cards={[{ front: "суплетиві́зм", back: "suppletion (forming pairs from different roots)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "су́фікс", back: "suffix", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ко́рінь", back: "root (of a word)", subtitle: "ім." }, { front: "па́ра", back: "pair", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "чита́ти / прочита́ти", back: "to read / to read (completed)" }, { front: "писа́ти / написа́ти", back: "to write / to write (completed)" }, { front: "бра́ти / взя́ти", back: "to take / to take (completed)" }, { front: "говори́ти / сказа́ти", back: "to speak / to say (completed)" }, { front: "словни́к", back: "dictionary", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "запам'ято́вувати", back: "to memorize", subtitle: "дієсл." }, { front: "утво́рювати", back: "to form, to create", subtitle: "дієсл." }, { front: "ба́зовий", back: "basic, fundamental", subtitle: "прикм." }, { front: "роби́ти / зроби́ти", back: "to do, to make / to do (completed)" }, { front: "ба́чити / поба́чити", back: "to see / to see (completed)" }, { front: "готува́ти / приготува́ти", back: "to cook, to prepare / to cook (completed)" }, { front: "вари́ти / звари́ти", back: "to boil / to boil (completed)" }, { front: "вчи́ти / ви́вчити", back: "to study / to learn (completed)" }, { front: "ї́сти / з'ї́сти", back: "to eat / to eat (completed)" }, { front: "пи́ти / ви́пити", back: "to drink / to drink (completed)" }, { front: "малюва́ти / намалюва́ти", back: "to draw, to paint / to draw (completed)" }, { front: "запита́ти / запи́тувати", back: "to ask (once) / to ask (repeatedly)" }, { front: "ви́рішити / вирі́шувати", back: "to decide, to solve (completed) / to decide (ongoing)" }, { front: "відпові́сти́ / відповіда́ти", back: "to answer (once) / to answer (regularly)" }, { front: "показа́ти / пока́зувати", back: "to show (once) / to show (repeatedly)" }, { front: "допомогти́ / допомага́ти", back: "to help (completed) / to help (ongoing)" }, { front: "забу́ти / забува́ти", back: "to forget (once) / to forget (habitually)" }, { front: "зрозумі́ти / розумі́ти", back: "to understand (at a moment) / to understand (ongoing)" }, { front: "розпові́сти́ / розповіда́ти", back: "to tell (completed) / to tell, to narrate (ongoing)" }, { front: "відкри́ти / відкрива́ти", back: "to open (completed) / to open (process)" }, { front: "закри́ти / закрива́ти", back: "to close (completed) / to close (process)" }, { front: "поча́ти / почина́ти", back: "to begin (completed) / to begin (process)" }, { front: "лови́ти / злови́ти", back: "to catch (ongoing) / to catch (completed)" }, { front: "шука́ти / знайти́", back: "to look for (ongoing) / to find (completed)" }, { front: "ліпи́ти / зліпи́ти", back: "to shape, to form (ongoing) / to finish shaping (completed)" }, { front: "підписа́ти", back: "to sign (a document)", subtitle: "дієсл." }, { front: "проце́с", back: "process", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "результа́т", back: "result", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "трива́лість", back: "duration", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "чергува́ння", back: "alternation (of sounds/vowels)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "недок.", back: "impf. (dictionary abbreviation for imperfective)" }, { front: "док.", back: "pf. (dictionary abbreviation for perfective)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "повідо́млення", back: "message", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "впра́ва", back: "exercise", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "зада́ча", back: "problem, task (math/logic)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "пове́рхня", back: "surface", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "поли́ця", back: "shelf", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "мете́лик", back: "butterfly", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "поступо́во", back: "gradually", subtitle: "присл." }, { front: "наре́шті", back: "finally, at last", subtitle: "присл." }, { front: "зре́штою", back: "eventually, in the end", subtitle: "присл." }, { front: "щодня́", back: "every day, daily", subtitle: "присл." }, { front: "всю́ди", back: "everywhere", subtitle: "присл." }]} />
+<FlashcardDeck client:only="react" cards={[{ front: "утво́рювати", back: "to form", subtitle: "дієсл." }, { front: "словни́к", back: "dictionary", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "запам'ято́вувати", back: "to memorize", subtitle: "дієсл." }, { front: "ба́зовий", back: "basic", subtitle: "прикм." }, { front: "па́ра", back: "pair", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "префікс", back: "prefix", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "су́фікс", back: "suffix", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ко́рінь", back: "root", subtitle: "ім." }, { front: "бра́ти / взя́ти", back: "to take" }, { front: "говори́ти / сказа́ти", back: "to speak / to say" }, { front: "ліпи́ти / зліпи́ти", back: "to form / to shape (e.g. dumplings)" }, { front: "вари́ти / звари́ти", back: "to boil / to cook" }, { front: "ба́чити / поба́чити", back: "to see" }, { front: "чу́ти / почу́ти", back: "to hear" }, { front: "ї́сти / з'ї́сти", back: "to eat" }, { front: "пи́ти / ви́пити", back: "to drink" }, { front: "відповіда́ти / відпові́сти́", back: "to answer" }, { front: "вирі́шувати / ви́рішити", back: "to decide / to solve" }, { front: "запи́тувати / запита́ти", back: "to ask" }, { front: "допомага́ти / допомогти́", back: "to help" }, { front: "розповіда́ти / розпові́сти́", back: "to tell / to relate" }, { front: "кла́сти / покла́сти", back: "to put / to lay" }, { front: "лови́ти / пійма́ти", back: "to catch" }, { front: "шука́ти / знайти́", back: "to look for / to find" }, { front: "зустріча́ти / зустрі́ти", back: "to meet" }, { front: "розумі́ти / зрозумі́ти", back: "to understand" }, { front: "ду́мати / поду́мати", back: "to think" }, { front: "варе́ник", back: "varenyk (Ukrainian dumpling)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "шту́ка", back: "piece / item", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }]} />
 
 </TabItem>
 <TabItem label="Зошит">
 
-<Quiz client:only="react" questions={[{"question": "писати", "options": [{"text": "написати", "correct": true}, {"text": "записати", "correct": false}, {"text": "підписати", "correct": false}]}, {"question": "читати", "options": [{"text": "відчитати", "correct": false}, {"text": "прочитати", "correct": true}, {"text": "перечитати", "correct": false}]}, {"question": "бачити", "options": [{"text": "передбачити", "correct": false}, {"text": "побачити", "correct": true}, {"text": "забачити", "correct": false}]}, {"question": "їсти", "options": [{"text": "поїсти", "correct": false}, {"text": "доїсти", "correct": false}, {"text": "з'їсти", "correct": true}]}, {"question": "пити", "options": [{"text": "відпити", "correct": false}, {"text": "поїсти", "correct": false}, {"text": "випити", "correct": true}]}, {"question": "малювати", "options": [{"text": "перемалювати", "correct": false}, {"text": "намалювати", "correct": true}, {"text": "замалювати", "correct": false}]}, {"question": "готувати", "options": [{"text": "заготувати", "correct": false}, {"text": "приготувати", "correct": true}, {"text": "підготувати", "correct": false}]}, {"question": "вчити", "options": [{"text": "завчити", "correct": false}, {"text": "навчити", "correct": false}, {"text": "вивчити", "correct": true}]}]} instruction={"Оберіть правильний доконаний вид — справжню видову пару до кожного дієслова"} />
+<Quiz client:only="react" questions={[{"question": "читати", "options": [{"text": "прочитати", "correct": true}, {"text": "зчитати", "correct": false}, {"text": "вичитати", "correct": false}, {"text": "начитати", "correct": false}]}, {"question": "робити", "options": [{"text": "зробити", "correct": true}, {"text": "побити", "correct": false}, {"text": "виробити", "correct": false}, {"text": "пробити", "correct": false}]}, {"question": "писати", "options": [{"text": "написати", "correct": true}, {"text": "прописати", "correct": false}, {"text": "зписати", "correct": false}, {"text": "пописати", "correct": false}]}, {"question": "бачити", "options": [{"text": "побачити", "correct": true}, {"text": "набачити", "correct": false}, {"text": "збачити", "correct": false}, {"text": "вибачити", "correct": false}]}, {"question": "брати", "options": [{"text": "взяти", "correct": true}, {"text": "зібрати", "correct": false}, {"text": "забрати", "correct": false}, {"text": "обрати", "correct": false}]}, {"question": "говорити", "options": [{"text": "сказати", "correct": true}, {"text": "поговорити", "correct": false}, {"text": "наговорити", "correct": false}, {"text": "зговорити", "correct": false}]}, {"question": "ловити", "options": [{"text": "піймати", "correct": true}, {"text": "зловити", "correct": false}, {"text": "наловити", "correct": false}, {"text": "виловити", "correct": false}]}, {"question": "відповідати", "options": [{"text": "відповісти", "correct": true}, {"text": "звідповідати", "correct": false}, {"text": "повідповідати", "correct": false}, {"text": "невідповідати", "correct": false}]}]} instruction={"Оберіть правильну видову пару для дієслова"} />
 
-<FillIn client:only="react" items={[{"sentence": "Пара «писати / написати» утворена за: ___", "answer": "Спосіб 1 (префікс)", "options": ["Спосіб 1 (префікс)", "Спосіб 2а (суфікс -ува-)", "Спосіб 2б (чергування)"]}, {"sentence": "Пара «запитувати / запитати» утворена за: ___", "answer": "Спосіб 2а (суфікс -ува-)", "options": ["Спосіб 1 (префікс)", "Спосіб 2а (суфікс -ува-)", "Спосіб 2б (чергування)"]}, {"sentence": "Пара «допомагати / допомогти» утворена за: ___", "answer": "Спосіб 2б (чергування)", "options": ["Спосіб 1 (префікс)", "Спосіб 2а (суфікс -ува-)", "Спосіб 2б (чергування)"]}, {"sentence": "Пара «читати / прочитати» утворена за: ___", "answer": "Спосіб 1 (префікс)", "options": ["Спосіб 1 (префікс)", "Спосіб 2а (суфікс -ува-)", "Спосіб 2б (чергування)"]}, {"sentence": "Пара «вирішувати / вирішити» утворена за: ___", "answer": "Спосіб 2а (суфікс -ува-)", "options": ["Спосіб 1 (префікс)", "Спосіб 2а (суфікс -ува-)", "Спосіб 2б (чергування)"]}, {"sentence": "Пара «забувати / забути» утворена за: ___", "answer": "Спосіб 2а (суфікс -ува-)", "options": ["Спосіб 1 (префікс)", "Спосіб 2а (суфікс -ува-)", "Спосіб 2б (чергування)"]}, {"sentence": "Пара «готувати / приготувати» утворена за: ___", "answer": "Спосіб 1 (префікс)", "options": ["Спосіб 1 (префікс)", "Спосіб 2а (суфікс -ува-)", "Спосіб 2б (чергування)"]}, {"sentence": "Пара «відповідати / відповісти» утворена за: ___", "answer": "Спосіб 2а (суфікс -ува-)", "options": ["Спосіб 1 (префікс)", "Спосіб 2а (суфікс -ува-)", "Спосіб 2б (чергування)"]}]} instruction={"Визначте спосіб утворення видової пари. Підказка: Спосіб 1 = доданий префікс; Спосіб 2а = суфікс -ува-/-юва- в недоконаному; Спосіб 2б = чергування голосного в корені."} />
+<FillIn client:only="react" items={[{"sentence": "У парі «читати / прочитати» ми додаємо ____.", "answer": "префікс", "options": ["префікс", "суфікс", "інше слово"]}, {"sentence": "У парі «вирішувати / вирішити» змінюється ____.", "answer": "суфікс", "options": ["префікс", "суфікс", "інше слово"]}, {"sentence": "Пара «брати / взяти» — це зовсім ____.", "answer": "інші слова", "options": ["інші префікси", "інші суфікси", "інші слова"]}, {"sentence": "У парі «готувати / приготувати» ми додаємо ____.", "answer": "префікс", "options": ["префікс", "суфікс", "корінь"]}, {"sentence": "У парі «запитувати / запитати» змінюється ____.", "answer": "суфікс", "options": ["префікс", "суфікс", "інше слово"]}, {"sentence": "Пара «говорити / сказати» — це зовсім ____.", "answer": "інші слова", "options": ["інші префікси", "інші суфікси", "інші слова"]}, {"sentence": "У парі «пити / випити» ми додаємо ____.", "answer": "префікс", "options": ["префікс", "суфікс", "корінь"]}, {"sentence": "Пара «ловити / піймати» — це зовсім ____.", "answer": "інші слова", "options": ["інші префікси", "інші суфікси", "інші слова"]}]} instruction={"Вставте правильне слово"} />
 
-<FillIn client:only="react" items={[{"sentence": "Ми ___ ключі цілу годину, але так і не знайшли.", "answer": "шукали", "options": ["шукали", "знайшли", "знайшов"]}, {"sentence": "Він нарешті ___ ключі під столом.", "answer": "знайшов", "options": ["шукав", "знайшов", "знаходив"]}, {"sentence": "Він довго ___ і потім нарешті сів.", "answer": "говорив", "options": ["говорив", "сказав", "скаже"]}, {"sentence": "Вона ___ мені лише одне слово і вийшла.", "answer": "сказала", "options": ["говорила", "сказала", "говорить"]}, {"sentence": "Щодня вона ___ книжки з полиці.", "answer": "бере", "options": ["бере", "взяла", "візьме"]}, {"sentence": "Вона ___ словник зі столу і вийшла.", "answer": "взяла", "options": ["брала", "взяла", "бере"]}, {"sentence": "Кіт ___ метелика в саду цілу годину.", "answer": "ловив", "options": ["ловив", "зловив", "зловить"]}, {"sentence": "Він нарешті ___ рибу!", "answer": "зловив", "options": ["ловив", "зловив", "ловить"]}]} instruction={"Вставте правильну форму дієслова. Зверніть увагу на контекст — тривалість чи завершений результат?"} />
+<MatchUp client:only="react" pairs={[{"left": "читати", "right": "прочитати"}, {"left": "робити", "right": "зробити"}, {"left": "писати", "right": "написати"}, {"left": "бачити", "right": "побачити"}, {"left": "брати", "right": "взяти"}, {"left": "говорити", "right": "сказати"}, {"left": "купувати", "right": "купити"}, {"left": "допомагати", "right": "допомогти"}]} instruction={"З'єднайте дієслово з його видовою парою"} />
 
-<Translate client:only="react" questions={[{"source": "She was reading for an hour.", "options": [{"text": "Вона читала годину.", "correct": true}, {"text": "Вона прочитала годину.", "correct": false}, {"text": "Вона читає годину.", "correct": false}]}, {"source": "He finally found his keys.", "options": [{"text": "Він нарешті шукав ключі.", "correct": false}, {"text": "Він нарешті знайшов ключі.", "correct": true}, {"text": "Він нарешті шукає ключі.", "correct": false}]}, {"source": "They finished cooking the varenyky.", "options": [{"text": "Вони варили вареники.", "correct": false}, {"text": "Вони зварили вареники.", "correct": true}, {"text": "Вони готували вареники.", "correct": false}]}, {"source": "We were helping all evening.", "options": [{"text": "Ми допомогли весь вечір.", "correct": false}, {"text": "Ми допомагали весь вечір.", "correct": true}, {"text": "Ми допомагаємо весь вечір.", "correct": false}]}, {"source": "I wrote the letter (done — finished).", "options": [{"text": "Я писала листа.", "correct": false}, {"text": "Я написала листа.", "correct": true}, {"text": "Я пишу листа.", "correct": false}]}, {"source": "She was always asking me questions.", "options": [{"text": "Вона завжди запитала мене.", "correct": false}, {"text": "Вона завжди запитувала мене.", "correct": true}, {"text": "Вона завжди запитає мене.", "correct": false}]}, {"source": "She said one word and left.", "options": [{"text": "Вона говорила одне слово і пішла.", "correct": false}, {"text": "Вона сказала одне слово і пішла.", "correct": true}, {"text": "Вона скаже одне слово і піде.", "correct": false}]}, {"source": "He was looking for his phone everywhere.", "options": [{"text": "Він знайшов телефон всюди.", "correct": false}, {"text": "Він шукав телефон всюди.", "correct": true}, {"text": "Він знайде телефон всюди.", "correct": false}]}]} instruction={"Оберіть правильний переклад. Зверніть увагу: який вид потрібен — недоконаний (тривалість, звичка) чи доконаний (завершений результат)?"} />
+<FillIn client:only="react" items={[{"sentence": "Я довго ____ книгу і нарешті її закінчив.", "answer": "читав", "options": ["читав", "прочитав"]}, {"sentence": "Вчора вона ____ дуже смачну вечерю для нас.", "answer": "приготувала", "options": ["готувала", "приготувала"]}, {"sentence": "Що ти хочеш ____ сьогодні ввечері?", "answer": "робити", "options": ["робити", "зробити"]}, {"sentence": "Він зайшов у магазин і ____ свіжий хліб.", "answer": "купив", "options": ["купував", "купив"]}, {"sentence": "Студенти ____ словник, щоб знайти нове базове слово.", "answer": "взяли", "options": ["брали", "взяли"]}, {"sentence": "Ми часто ____ нашим друзям.", "answer": "допомагаємо", "options": ["допомагаємо", "допоможемо"]}, {"sentence": "Ти вже ____ цей текст?", "answer": "написав", "options": ["писав", "написав"]}, {"sentence": "Я хочу ____ тобі одну таємницю.", "answer": "сказати", "options": ["говорити", "сказати"]}]} instruction={"Оберіть правильний вид дієслова для кожного речення"} />
 
-<MatchUp client:only="react" pairs={[{"left": "брати", "right": "взяти"}, {"left": "говорити", "right": "сказати"}, {"left": "шукати", "right": "знайти"}, {"left": "ловити", "right": "зловити"}, {"left": "допомагати", "right": "допомогти"}, {"left": "забувати", "right": "забути"}, {"left": "розповідати", "right": "розповісти"}, {"left": "відповідати", "right": "відповісти"}]} instruction={"З'єднайте дієслова у видові пари: недоконаний вид — доконаний вид"} />
+<TrueFalse client:only="react" items={[{"statement": "Дієслова «робити» і «зробити» — це одна видова пара.", "isTrue": true, "explanation": "Так, це пара, утворена за допомогою префікса «з-»."}, {"statement": "Дієслова «шукати» і «знайти» — це одна видова пара.", "isTrue": false, "explanation": "Ні, це два різних дієслова з різними значеннями."}, {"statement": "Щоб сказати про результат, ми використовуємо доконаний вид.", "isTrue": true, "explanation": "Доконаний вид завжди показує результат або завершену дію."}, {"statement": "Пара «брати» і «взяти» утворена за допомогою суфікса.", "isTrue": false, "explanation": "Ні, це зовсім різні слова."}, {"statement": "«Купувати» — це процес, а «купити» — це результат.", "isTrue": true, "explanation": "Так, на процес вказує суфікс «-ува-»."}, {"statement": "В українській мові всі видові пари утворюються тільки префіксами.", "isTrue": false, "explanation": "Ні, пари також утворюються суфіксами або зовсім іншими словами."}]} instruction={"Правда чи ні?"} />
 
-<ErrorCorrection client:only="react" items={[{"sentence": "Вона прочитала книжку цілий місяць.", "errorWord": "прочитала", "correctForm": "читала", "options": ["читала", "перечитала", "читає"], "explanation": "«Цілий місяць» — тривала дія без акценту на результаті. Потрібен недоконаний вид: читала."}, {"sentence": "Він говорив лише одне слово і пішов.", "errorWord": "говорив", "correctForm": "сказав", "options": ["сказав", "говорить", "говоритиме"], "explanation": "«Лише одне слово» — одноразова завершена дія. Потрібен доконаний вид: сказав."}, {"sentence": "Ми знайшли ключі цілу годину, але не могли.", "errorWord": "знайшли", "correctForm": "шукали", "options": ["шукали", "знайдемо", "шукаємо"], "explanation": "«Цілу годину, але не могли» — незавершений тривалий процес. Потрібен недоконаний вид: шукали."}, {"sentence": "Вона щодня запитала мене про погоду.", "errorWord": "запитала", "correctForm": "запитувала", "options": ["запитувала", "запитує", "запитуватиме"], "explanation": "«Щодня» — звичайна повторювана дія. Потрібен недоконаний вид: запитувала."}, {"sentence": "Він нарешті допомагав нам!", "errorWord": "допомагав", "correctForm": "допоміг", "options": ["допоміг", "допомагає", "допоможе"], "explanation": "«Нарешті» — сигнал завершеного результату. Потрібен доконаний вид: допоміг."}, {"sentence": "Вони зварили вареники цілу годину.", "errorWord": "зварили", "correctForm": "варили", "options": ["варили", "зваримо", "варять"], "explanation": "«Цілу годину» — тривала дія. Потрібен недоконаний вид: варили."}]} instruction={"У кожному реченні дієслово вжито не в тому виді. Знайдіть і виправте помилку."} />
+<ErrorCorrection client:only="react" items={[{"sentence": "Я вже читав цю книгу до кінця.", "errorWord": "читав", "correctForm": "прочитав", "options": ["прочитав", "читати", "зчитав"], "explanation": "Дія завершена («до кінця»), тому потрібен доконаний вид — прочитав."}, {"sentence": "Кожного дня я випив каву.", "errorWord": "випив", "correctForm": "пив", "options": ["пив", "п'ю", "попив"], "explanation": "«Кожного дня» вказує на регулярний процес, тому використовуємо недоконаний вид (пив)."}, {"sentence": "Він довго написав листа.", "errorWord": "написав", "correctForm": "писав", "options": ["писав", "пише", "напише"], "explanation": "Слово «довго» вказує на процес, тому використовуємо недоконаний вид."}, {"sentence": "Нарешті я робив домашнє завдання!", "errorWord": "робив", "correctForm": "зробив", "options": ["зробив", "робити", "зробити"], "explanation": "«Нарешті» означає успішний результат, тому потрібен доконаний вид."}, {"sentence": "Я хочу говорити тобі, що ти мій найкращий друг.", "errorWord": "говорити", "correctForm": "сказати", "options": ["сказати", "казати", "поговорити"], "explanation": "Для одноразового повідомлення (результату) використовуємо доконаний вид — сказати."}, {"sentence": "Вчора він дві години вирішив цю проблему.", "errorWord": "вирішив", "correctForm": "вирішував", "options": ["вирішував", "рішав", "вирішує"], "explanation": "«Дві години» — це тривалий час (процес), тому потрібен недоконаний вид."}]} instruction={"Знайдіть і виправте помилку у виборі виду дієслова"} />
 
 
 </TabItem>

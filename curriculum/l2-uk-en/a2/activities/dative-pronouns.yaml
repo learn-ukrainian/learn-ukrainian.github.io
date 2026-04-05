@@ -1,0 +1,236 @@
+version: '1.0'
+module: dative-pronouns
+level: a2
+workbook:
+- id: match-pronouns
+  type: match-up
+  instruction: З'єднайте називний відмінок (хто?) з давальним (кому?)
+  pairs:
+  - left: я
+    right: мені
+  - left: ти
+    right: тобі
+  - left: він
+    right: йому
+  - left: вона
+    right: їй
+  - left: воно
+    right: йому
+  - left: ми
+    right: нам
+  - left: ви
+    right: вам
+  - left: вони
+    right: їм
+- id: fill-in-dative
+  type: fill-in
+  instruction: Вставте правильний займенник у давальному відмінку
+  items:
+  - sentence: Мама дає _____ смачне яблуко.
+    answer: мені
+    options:
+    - мені
+    - я
+    - мене
+    - мій
+  - sentence: Він любить музику. Ми купуємо _____ гітару.
+    answer: йому
+    options:
+    - йому
+    - він
+    - його
+    - наш
+  - sentence: Вона любить спорт. Ми даруємо _____ м'яч.
+    answer: їй
+    options:
+    - їй
+    - вона
+    - її
+    - їх
+  - sentence: Що _____ потрібно робити завтра, пане Андрію?
+    answer: вам
+    options:
+    - вам
+    - ви
+    - вас
+    - ваш
+  - sentence: Вчитель пояснює _____ нові правила.
+    answer: їм
+    options:
+    - їм
+    - вони
+    - їх
+    - свій
+  - sentence: _____ дуже цікаво вивчати українську мову.
+    answer: нам
+    options:
+    - нам
+    - ми
+    - нас
+    - наш
+  - sentence: Я кажу _____ правду, а ти не слухаєш.
+    answer: тобі
+    options:
+    - тобі
+    - ти
+    - тебе
+    - твій
+  - sentence: Лікарю, я хочу сказати _____, що мені краще.
+    answer: вам
+    options:
+    - вам
+    - ви
+    - вас
+    - ваш
+- id: quiz-dative-acc
+  type: quiz
+  instruction: Давальний чи знахідний? Оберіть правильний варіант
+  items:
+  - question: Я добре бачу _____.
+    options:
+    - тебе
+    - тобі
+    - ти
+    - твій
+    correct: 0
+  - question: Я часто телефоную _____.
+    options:
+    - тобі
+    - тебе
+    - ти
+    - твій
+    correct: 0
+  - question: Він дуже кохає _____.
+    options:
+    - її
+    - їй
+    - вона
+    - свій
+    correct: 0
+  - question: Він дарує _____ квіти.
+    options:
+    - їй
+    - її
+    - вона
+    - свій
+    correct: 0
+  - question: Вона чекає _____ на зупинці.
+    options:
+    - його
+    - йому
+    - він
+    - свій
+    correct: 0
+  - question: Вона пише _____ повідомлення.
+    options:
+    - йому
+    - його
+    - він
+    - свій
+    correct: 0
+  - question: Ми знаємо _____ дуже добре.
+    options:
+    - їх
+    - їм
+    - вони
+    - свій
+    correct: 0
+  - question: Ми допомагаємо _____ працювати.
+    options:
+    - їм
+    - їх
+    - вони
+    - свій
+    correct: 0
+- id: tf-impersonal
+  type: true-false
+  instruction: Правда чи ні? Чи правильно побудоване речення?
+  items:
+  - statement: Мені холодно спати.
+    correct: true
+    explanation: Безособова конструкція з давальним відмінком побудована правильно.
+  - statement: Я холодно на вулиці.
+    correct: false
+    explanation: 'Для стану ''холодно'' потрібен давальний відмінок: Мені холодно.'
+  - statement: Тобі цікаво дивитися цей фільм?
+    correct: true
+    explanation: Безособова конструкція з давальним відмінком побудована правильно.
+  - statement: Вона сумно сьогодні.
+    correct: false
+    explanation: 'Для стану ''сумно'' потрібен давальний відмінок: Їй сумно.'
+  - statement: Нам важко читати цей текст.
+    correct: true
+    explanation: Безособова конструкція з давальним відмінком побудована правильно.
+  - statement: Він потрібно йти додому.
+    correct: false
+    explanation: 'Слово ''потрібно'' вимагає давального відмінка: Йому потрібно.'
+  - statement: Їм не можна тут курити.
+    correct: true
+    explanation: Конструкція з 'не можна' і давальним відмінком побудована правильно.
+  - statement: Ви тепло в цій куртці?
+    correct: false
+    explanation: 'Для стану ''тепло'' потрібен давальний відмінок: Вам тепло?'
+- id: unjumble-dative
+  type: unjumble
+  instruction: Складіть правильне речення зі слів
+  items:
+  - words:
+    - дуже
+    - холодно
+    - Мені
+    - сьогодні.
+    correct_order:
+    - Мені
+    - дуже
+    - холодно
+    - сьогодні.
+  - words:
+    - сидіти.
+    - тут
+    - можна
+    - Вам
+    correct_order:
+    - Вам
+    - можна
+    - тут
+    - сидіти.
+  - words:
+    - ти
+    - Кому
+    - подарунок?
+    - купуєш
+    correct_order:
+    - Кому
+    - ти
+    - купуєш
+    - подарунок?
+  - words:
+    - мамі.
+    - квіти
+    - даруємо
+    - Ми
+    correct_order:
+    - Ми
+    - даруємо
+    - квіти
+    - мамі.
+  - words:
+    - йому.
+    - телефоную
+    - часто
+    - Я
+    correct_order:
+    - Я
+    - часто
+    - телефоную
+    - йому.
+  - words:
+    - важко
+    - текст.
+    - читати
+    - Їй
+    correct_order:
+    - Їй
+    - важко
+    - читати
+    - текст.

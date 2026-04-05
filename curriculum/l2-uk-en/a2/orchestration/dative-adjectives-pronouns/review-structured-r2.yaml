@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All 4 content_outline sections present with correct headings. All plan
+    points covered: hard-stem -ому (новому, старому, гарному), soft-stem -ьому (синьому,
+    середньому), feminine -ій (новій, синій, тих'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'All individual word forms VESUM-verified. Declension paradigms for мій,
+    твій, наш, ваш, їхній all correct (verified against textbook tables: Заболотний
+    Grade 6, Літвінова Grade 6). **Deductions:** (A)'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: opens with teacher-handing-back-tests situation (Presentation),
+    moves to pattern tables (Practice pattern recognition), then "Читаємо українською"
+    blocks (Production). Each grammar po'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 10 required vocab items present in context: моєму (dialogue + examples),
+    моїй (Section 2 examples), твоєму (dialogue + examples), нашій (dialogue + examples),
+    цьому (dialogue + examples), тому (de'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: '5 markers for 5 plan activity hints. Well-distributed: 1 per section
+    (with sections 3 getting 2, covering match-up + group-sort). Markers placed after
+    teaching, never before. Cannot fully evaluate exe'
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: No motivational openers, no meta-commentary ("Let us explore..."), no
+    gamified language. Opening dialogue is natural and culturally specific (Ukrainian
+    university, grading system with десятка/дев'ятка
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 'All H2 sections present and correctly ordered matching the plan. Clean
+    markdown formatting. Tip box properly formatted with :::tip. No stray tags or
+    formatting artifacts. Word count 2399 within range '
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented entirely on its own terms — no comparisons to Russian
+    anywhere. Ukrainian names used throughout (Олексій, Марія, Іван, Оксана, Максим,
+    Богдан, Ганна). Ukrainian cultural context (u
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'Natural multi-turn dialogues with named speakers: teacher-students (opening),
+    Анна-Марко (helping brother), Павло-Оксана (buying presents), Оксана-Максим (gifting
+    a book), Ганна-Богдан (giving to chil'
+findings: []

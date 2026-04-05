@@ -1,0 +1,73 @@
+{
+  "total_items": 87,
+  "grounded_items": 78,
+  "ungrounded": [
+    {
+      "word": "люблю",
+      "exercise_type": "quiz",
+      "context": "Я люблю каву _____ молоком."
+    },
+    {
+      "word": "повертаються",
+      "exercise_type": "quiz",
+      "context": "Діти повертаються _____ школи."
+    },
+    {
+      "word": "піде",
+      "exercise_type": "quiz",
+      "context": "Вона піде в театр _____ мною."
+    },
+    {
+      "word": "піти",
+      "exercise_type": "error-correction",
+      "context": "Вона хоче піти в кіно з мною."
+    },
+    {
+      "word": "відпочивати",
+      "exercise_type": "match-up",
+      "context": "Ми поїдемо відпочивати"
+    },
+    {
+      "word": "мої",
+      "exercise_type": "match-up",
+      "context": "Мої друзі живуть"
+    },
+    {
+      "word": "сніданок",
+      "exercise_type": "match-up",
+      "context": "На сніданок я п'ю каву"
+    },
+    {
+      "word": "уроків",
+      "exercise_type": "match-up",
+      "context": "Після уроків діти йдуть"
+    },
+    {
+      "word": "мені",
+      "exercise_type": "match-up",
+      "context": "Він допомагає мені"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 15,
+    "tested_in_exercises": 0,
+    "not_tested": [
+      "вживати",
+      "голосний",
+      "евфонія",
+      "збіг",
+      "межа",
+      "мелодійний",
+      "милозвучність",
+      "правило",
+      "приголосний",
+      "прийменник",
+      "складний",
+      "сполучник",
+      "спрощення",
+      "уникати",
+      "чергування"
+    ]
+  },
+  "all_grounded": false
+}

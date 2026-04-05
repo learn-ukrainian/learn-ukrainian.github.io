@@ -1,26 +1,25 @@
 # Build Summary: motion-flight-swim (B1)
 
-Generated: 2026-04-03 12:59
+Generated: 2026-04-04 13:24
 
 ## Pipeline Phases
 
 | Phase | Status | Timestamp |
 |-------|--------|-----------|
-| check | complete | 2026-04-03 10:00:27 |
-| research | complete | 2026-04-03 10:01:26 |
-| skeleton | complete | 2026-04-03 10:08:29 |
-| pre-verify | complete | 2026-04-03 10:13:07 |
-| write | complete | 2026-04-03 10:24:29 |
-| exercises | complete | 2026-04-03 10:24:29 |
-| activities | complete | 2026-04-03 10:28:43 |
-| verify-exercises | complete | 2026-04-03 10:28:43 |
-| annotate | complete | 2026-04-03 10:28:43 |
-| vocab | complete | 2026-04-03 10:31:59 |
-| enrich | complete | 2026-04-03 10:31:59 |
-| verify | complete | 2026-04-03 10:31:59 |
-| review | complete | 2026-04-03 10:59:25 |
-| stress | complete | 2026-04-03 10:59:31 |
-| publish | complete | 2026-04-03 10:59:33 |
+| check | complete | 2026-04-04 10:35:26 |
+| research | complete | 2026-04-04 10:36:29 |
+| skeleton | complete | 2026-04-04 10:37:18 |
+| pre-verify | complete | 2026-04-04 10:38:04 |
+| write | complete | 2026-04-04 10:44:55 |
+| exercises | complete | 2026-04-04 10:44:55 |
+| verify-exercises | complete | 2026-04-04 10:52:11 |
+| annotate | complete | 2026-04-04 10:52:11 |
+| vocab | complete | 2026-04-04 10:52:59 |
+| enrich | complete | 2026-04-04 10:52:59 |
+| verify | complete | 2026-04-04 10:52:59 |
+| review | complete | 2026-04-04 11:24:07 |
+| stress | complete | 2026-04-04 11:24:17 |
+| publish | complete | 2026-04-04 11:24:19 |
 
 ## Reviews
 
@@ -36,27 +35,25 @@ Generated: 2026-04-03 12:59
 
 | Phase | Agent | Duration | OK |
 |-------|-------|----------|----|
-| pre-verify | gemini-tools (gemini-3-flash-preview) | 277s | ✅ |
-| skeleton | gemini (gemini-3-flash-preview) | 300s | ❌ |
-| skeleton | gemini (auto) | 124s | ✅ |
-| activities | gemini-tools (gemini-3.1-pro-preview) | 254s | ✅ |
-| vocab | gemini (gemini-3-flash-preview) | 193s | ✅ |
-| review | gemini-tools (gemini-3.1-pro-preview) | 16s | ✅ |
-| review | gemini-tools (gemini-3.1-pro-preview) | 202s | ✅ |
-| review | gemini-tools (gemini-3.1-pro-preview) | 10s | ✅ |
-| review | gemini-tools (gemini-3.1-pro-preview) | 503s | ✅ |
-| review | gemini-tools (gemini-3.1-pro-preview) | 10s | ✅ |
-| review | gemini-tools (gemini-3.1-pro-preview) | 407s | ✅ |
-| review | gemini-tools (gemini-3.1-pro-preview) | 7s | ✅ |
-| review | gemini-tools (gemini-3.1-pro-preview) | 285s | ✅ |
-| review | gemini-tools (gemini-3.1-pro-preview) | 10s | ✅ |
-| review | gemini-tools (gemini-3.1-pro-preview) | 193s | ✅ |
-| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 94s | ✅ |
-| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 126s | ✅ |
-| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 137s | ✅ |
-| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 107s | ✅ |
-| write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 151s | ✅ |
-| write-chunk-06 | gemini-tools (gemini-3.1-pro-preview) | 68s | ✅ |
+| pre-verify | gemini-tools (gemini-3-flash-preview) | 46s | ✅ |
+| skeleton | gemini (gemini-3-flash-preview) | 49s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 126s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 105s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 62s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 56s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 84s | ✅ |
+| vocab | gemini (gemini-3-flash-preview) | 44s | ✅ |
+| review | claude-tools (claude-opus-4-6) | 436s | ✅ |
+| review | claude-tools (claude-opus-4-6) | 360s | ✅ |
+| review | claude-tools (claude-opus-4-6) | 347s | ✅ |
+| review | claude-tools (claude-opus-4-6) | 388s | ✅ |
+| review | claude-tools (claude-opus-4-6) | 334s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 50s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 114s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 112s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 55s | ✅ |
+| write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 56s | ✅ |
+| write-chunk-06 | gemini-tools (gemini-3.1-pro-preview) | 23s | ✅ |
 
 ## Files
 

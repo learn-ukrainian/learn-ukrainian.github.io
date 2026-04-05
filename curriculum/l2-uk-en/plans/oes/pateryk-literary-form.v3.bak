@@ -1,0 +1,74 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння філологічних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Текст
+  focus: Транскрипція давньосхіднослов'янського фрагменту
+  placement: inline
+  type: transcription
+- focus: Простежити еволюцію слова від давньосхіднослов'янської до сучасної
+  placement: workbook
+  type: etymology-trace
+- focus: 'Порівняння давньосхіднослов''янських форм із сучасними українськими (Патерик Києво-Печерський: літературна форма)'
+  placement: workbook
+  type: comparative-study
+- focus: Критичний аналіз лінгвістичної класифікації тексту
+  placement: workbook
+  type: critical-analysis
+- focus: 'Есе — що цей текст розповідає про стан мови в цю добу? (Патерик Києво-Печерський: літературна форма)'
+  placement: workbook
+  type: essay-response
+connects_to:
+- davni-teksty-zbirka
+content_outline:
+- points:
+  - 'Beyond individual saints: the Paterikon as a COLLECTION. Genre conventions: how monastic tales are structured. The II
+    Kasiyanivska Redaction (1462) as the definitive version.'
+  section: Вступ
+  words: 1250
+- points:
+  - 'Narrative analysis: miracle story structure, temptation scenes, demon encounters, divine intervention patterns. The Paterikon''s
+    humor (yes, medieval monks had jokes). Literary archetypes: the humble saint, the proud sinner, the wise elder.'
+  section: Основний матеріал
+  words: 1250
+- points:
+  - Comparing Paterikon narratives across different redactions. Identifying formulaic elements vs creative innovation. The
+    Paterikon's influence on later Ukrainian literature.
+  section: Практика
+  words: 1250
+- points:
+  - The Paterikon as a foundational Ukrainian narrative text — the oldest collection of short stories in Ukrainian literary
+    tradition.
+  section: Підсумок
+  words: 1250
+focus: The Paterikon as a complete literary genre — narrative techniques, miracle stories, the art of monastic storytelling
+level: OES
+module: oes-098
+objectives:
+- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
+- Продукувати тексти академічного та професійного рівня за тематикою модуля
+- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- Застосовувати знання з теми «Практика» у власній мовній практиці
+persona:
+  role: Monastery Librarian
+  voice: Hagiography Scholar
+phase: 4
+prerequisites:
+- galytsko-volynskyi-literary-art
+sequence: 98
+slug: pateryk-literary-form
+source_url: http://litopys.org.ua/paterikon/paterikon.htm
+subtitle: 'The Kyiv-Pechersk Paterikon: Literary Form'
+title: 'Патерик Києво-Печерський: літературна форма'
+version: '2.0'
+vocabulary_hints:
+- патерик
+- житіє
+- чудо
+- спокуса
+- аскет
+- редакція
+- оповідь
+word_target: 5000

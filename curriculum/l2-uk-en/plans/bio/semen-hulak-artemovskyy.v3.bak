@@ -1,0 +1,117 @@
+module: bio-038
+level: BIO
+sequence: 38
+slug: semen-hulak-artemovskyy
+version: '3.0'
+title: 'Семен Гулак-Артемовський: Оперний співак'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of семен гулак-артемовський: оперний співак'
+- Evaluate the contributions of творець першої української опери
+content_outline:
+- section: Вступ — Творець першої української опери
+  points:
+  - Значення "Запорожця за Дунаєм"
+  - Гулак-Артемовський як співак і композитор
+  - Його місце в історії українського театру
+  words: 700
+- section: Молодість та музична освіта
+  points:
+  - Походження з Городища
+  - Ранні музичні здібності
+  - Навчання у Києві
+  - Дружба з Глінкою
+  words: 700
+- section: Оперна кар'єра в Петербурзі
+  points:
+  - Дебют на оперній сцені
+  - Головні партії
+  - Визнання як баритона
+  - Гастролі Європою
+  words: 700
+- section: Створення "Запорожця за Дунаєм"
+  points:
+  - Ідея національної опери
+  - Сюжет та персонажі
+  - Музична мова
+  - Прем'єра 1863 року
+  - Успіх та значення
+  words: 700
+- section: Останні роки
+  points:
+  - Пізня творчість
+  - Викладацька діяльність
+  - Смерть у Москві
+  - Поховання в Україні
+  words: 700
+- section: Спадщина
+  points:
+  - '"Запорожець" як національний символ'
+  - Вплив на українську оперу
+  - Постановки твору
+  - Сучасне значення
+  words: 700
+- section: Підсумок — Голос нації
+  points:
+  - Гулак-Артемовський як піонер
+  - Українська опера після нього
+  - Його місце в культурній пам'яті
+  words: 800
+vocabulary_hints:
+  required:
+  - опера (opera)
+  - баритон (baritone)
+  - лібрето (libretto)
+  - прем'єра (premiere)
+  - композитор (composer)
+  - постановка (staging)
+  - арія (aria)
+  - театр (theater)
+  - сцена (stage)
+  - партія (part/role)
+  recommended:
+  - антракт (intermission)
+  - увертюра (overture)
+  - хор (chorus)
+  - диригент (conductor)
+  - декорації (scenery)
+activity_hints:
+- type: reading
+  focus: Reviews and descriptions of "Zaporozhets"
+  source: 19th century sources (adapted)
+  items: 3 passages
+- type: essay-response
+  focus: Why was a Ukrainian opera significant in 1863?
+  output: Analysis of cultural-political context
+- type: critical-analysis
+  focus: How does "Zaporozhets" represent Ukrainian identity?
+  output: Cultural analysis
+connects_to:
+- bio-48 (Mykola Lysenko - later national music)
+- 'bio-52 (Mariya Zankovetska)'
+- 'bio-74 (Solomiya Krushelnytska)'
+prerequisites:
+- bio-34 (Maksym Berezovskyy - earlier opera)
+- 'bio-35 (Dmytro Bortnyanskyy)'
+persona:
+  voice: Senior Biographer
+  role: Baritone
+module_type: biography
+immersion: 100% Ukrainian
+references:
+- name: Семен Гулак-Артемовський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Семен_Гулак-Артемовський
+  type: primary
+  notes: Biography, opera career, composition
+- name: Запорожець за Дунаєм (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Запорожець_за_Дунаєм
+  type: primary
+  notes: First Ukrainian opera details
+- name: Михайло Глінка
+  url: https://uk.wikipedia.org/wiki/Михайло_Глінка
+  type: reference
+  notes: Mentorship context
+register: академічний
+grammar: []

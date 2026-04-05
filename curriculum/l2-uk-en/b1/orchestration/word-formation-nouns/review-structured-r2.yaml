@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All 6 content_outline sections present with correct headings. All plan
+    points covered: core suffixes (§1), feminitives (§1), nationality suffixes (§1),
+    -ня/-ище/-ниця/-тека (§2), prefixal-suffixal (§2'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Two VESUM failures: (1) "існуючого" — Russian-style active participle,
+    not in VESUM, should be "наявного"; (2) "підводницький" — does not exist in VESUM
+    (verified via verify_lemma), teaches learners a'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Excellent PPP flow: each suffix introduced with explanation → multiple
+    examples with base verbs/nouns → pattern generalization. 4-6 examples per suffix
+    (e.g., -ач: читач, слухач, викладач, глядач). Fe'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 10 required vocabulary items used naturally in prose: словотвір (intro
+    paragraph), назва особи (section 1), назва місця (section 2), віддієслівний (section
+    3 title), безафіксний (section 3), слово'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 'All 6 plan activity types present as markers. Types well-matched: quiz
+    tests suffix identification, match-up pairs профessions with workplaces, group-sort
+    classifies by formation method, sentence-buil'
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: 'Several meta-commentary phrases reduce quality: "Давайте дуже уважно
+    та детально розглянемо найяскравіші класичні приклади" (Practice section analysis),
+    "Як ви самі бачите, гнучкий український словотв'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 'All 6 H2 sections present matching plan: Назви осіб за діяльністю, Творення
+    назв місць і приміщень, Віддієслівні іменники, Словотвірний ланцюжок, Практика
+    в контексті, Підсумок. Clean markdown. No str'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Decolonized presentation: Ukrainian presented on its own terms. Feminitives
+    correctly described as "природним явищем" and "норма літературної мови, а не сучасне
+    нововведення" — factually and culturall'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'Two multi-turn dialogues with named speakers (Максим, Оксана). Career
+    fair setting from plan''s dialogue_situations ✓. Natural flow: discussing people
+    at the fair, then pivoting to summer job plans. Go'
+findings: []

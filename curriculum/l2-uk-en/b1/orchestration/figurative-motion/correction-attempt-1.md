@@ -1,7 +1,7 @@
 <correction_directive>
 CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
 
-- FIX: Severe Russianisms: хорошо
+- FIX: Missing section heading: 'Підсумок: буквальне і переносне'
 - NOTE: Latin characters mixed with Cyrillic: I
 - NOTE: Plan expects 6 exercise(s) but content has 0 placeholders
 </correction_directive>

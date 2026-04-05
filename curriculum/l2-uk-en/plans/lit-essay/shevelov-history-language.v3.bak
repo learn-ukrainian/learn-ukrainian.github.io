@@ -1,0 +1,68 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння літературно-критичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Читання
+  focus: Розуміння літературного тексту (уривок з твору)
+  placement: inline
+  type: reading
+- focus: Аналіз авторського задуму — мова як мистецтво
+  placement: workbook
+  type: authorial-intent
+- focus: Аналіз риторичних стратегій та аргументації
+  placement: workbook
+  type: authorial-intent
+- focus: Порівняння з іншими творами або інтерпретаціями (Shevelov History Language)
+  placement: workbook
+  type: comparative-study
+- focus: Есе-аналіз рецепції та сучасного значення (Shevelov History Language)
+  placement: workbook
+  type: essay-response
+content_outline:
+- points: []
+  section: Вступ та контекст
+  words: 800
+- points: []
+  section: Аналіз ключових творів
+  words: 1200
+- points: []
+  section: Стилістика та мова автора
+  words: 1200
+- points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+  section: Деколонізаційна перспектива
+  words: 1000
+- points: []
+  section: Підсумок та спадщина
+  words: 800
+focus: literature
+grammar: []
+immersion: 100% Ukrainian
+level: LIT.ESSAY
+module: lit-essay-025
+objectives:
+- Проаналізувати творчість Shevelov History Language у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+pedagogy: literature
+persona:
+  role: Historical Linguist
+  voice: Senior Specialist
+phase: LIT Expansion
+references: []
+register: академічний
+sequence: 25
+slug: shevelov-history-language
+subtitle: Shevelov History Language
+title: Shevelov History Language
+version: '3.0'
+vocabulary_hints:
+  recommended:
+  - деколонізація
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+word_target: 5000

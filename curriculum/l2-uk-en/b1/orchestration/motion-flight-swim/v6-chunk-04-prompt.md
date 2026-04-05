@@ -11,14 +11,14 @@ You are writing ONE SECTION of a Ukrainian language module. Write ONLY this sect
 ## Section Skeleton (follow this exactly)
 
 ## Авіаційна та морська лексика (~900 words total)
-- P1 (~160 words): [At the Airport (В аеропорту). Detailed walkthrough of the sequence: термінал (terminal), реєстрація на рейс (check-in), посадковий талон (boarding pass), огляд (security), зал очікування (waiting hall). Example: "Пройдіть на реєстрацію в другому терміналі".]
-- P2 (~150 words): [Flight specifics. Introduce рейс (flight), посадка (boarding), зліт (take-off). Explain types of flights: прямий рейс (direct) vs. стикувальний рейс (connecting). Use "пересадка" for a transfer: "У нас пересадка у Варшаві".]
-- P3 (~140 words): [Parts of the Aircraft. Technical vocabulary: крило (wing), хвіст (tail), ілюмінатор (porthole/window), кабіна пілота (cockpit). Mention the polite command: "Пристебніть паски безпеки" (Fasten your seatbelts).]
-- P4 (~160 words): [At the Sea Port (У морському порту). Vessel types: корабель (ship), катер (cutter/motorboat), пором (ferry), яхта (yacht), човен (boat). Infrastructure: причал (pier), пристань (dock/wharf), маяк (lighthouse).]
-- P5 (~150 words): [Onboard the Ship. Life on water: палуба (deck), каюта (cabin), капітан (captain), матрос (sailor). Describe the movement: "Пором відпливає від пристані о восьмій". Discuss the view: "Ми вийшли на палубу помилуватися морем".]
-- P6 (~140 words): [Geographic maritime terms. Locations for motion: берег (shore), острів (island), затока (bay), відкрите море (open sea). "Човен заплив у тиху затоку", "Корабель тримає курс на острів".]
-- Exercise: [Match-up, Match aviation/maritime vocabulary (рейс, пором, причал, ілюмінатор) with definitions in Ukrainian, 8 items]
-- Exercise: [Free-write, Write a travel story involving both a flight and a ferry trip using 6+ prefixed verbs from the module, 6 items]
+- P1 (~150 words): [The Modern Airport (Аеропорт): Introduce terminal navigation. Words: термінал, реєстрація на рейс, злітна смуга, посадка. Explain the difference between "зльот" (takeoff) and "посадка" (landing). Example: "Ваша посадка починається в терміналі D."]
+- P2 (~150 words): [Flight Logistics: Introduce tickets and connections. Words: посадковий талон, пересадка (transfer), прямий рейс, стикувальний рейс. Example sentences showing how these interact with motion verbs: "Ми летимо прямим рейсом," "У нас пересадка у Відні."]
+- P3 (~150 words): [At the Port (Порт): Introduce maritime infrastructure. Words: причал (pier), пристань, пристань, затока (bay). Explain the role of the "пором" (ferry) in Ukrainian transport (e.g., across the Danube or to Istanbul from Chornomorsk).]
+- P4 (~150 words): [Vessels and Crew: Words: корабель, човен (boat), яхта, палуба (deck), каюта, капітан. Contrast the "човен" (small, often rowing/motor) with the "корабель" (large ship). Example: "Капітан стояв на палубі корабля."]
+- P5 (~100 words): [Dialogue 1: At the Check-in Desk. A 5-turn exchange between a passenger and an agent involving "виліт," "рейс," and "реєстрація."]
+- P6 (~100 words): [Dialogue 2: Buying a Ferry Ticket. A 5-turn exchange at an Odessa ticket office involving "відплиття," "причал," and "переправа."]
+- Exercise: [Type: match-up, Focus: Match 8 aviation/maritime terms (e.g., палуба, злітна смуга) with their Ukrainian definitions (e.g., частина корабля, де гуляють пасажири; місце, де літак розганяється).]
+- Exercise: [Type: fill-in, Focus: Complete 8 sentences about a travel itinerary using correct vocabulary: "Мій ___ (рейс) запізнюється," "Ми чекаємо на ___ (причалі)."]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -26,7 +26,7 @@ You are writing ONE SECTION of a Ukrainian language module. Write ONLY this sect
 <previous_context>
 [...previous sections truncated...]
 
-at the very dawn)*. Якщо ж певний об'єкт несподівано з'являється з якогось закритого, вузького або прихованого простору, ми традиційно використовуємо префікс ви- та форму **виплисти** *(to swim/sail out)*. Наприклад, під час захопливої туристичної екскурсії ви можете радісно сказати: «Наш маленький моторний човен дуже обережно **виплив** з глибокої темної морської печери» *(Our small motorboat very carefully sailed out of the deep dark sea cave)*. Наступна важлива група префіксів допомагає нам легко говорити про подолання великої дистанції та успішне досягнення певних фізичних меж на воді. Префікс пере- у дуже поширеному дієслові **переплисти** *(to swim across)* означає прямий рух з одного берега річки чи озера на інший. Це надзвичайно популярне слово для амбітних спортсменів і любителів води: «Цього спекотного літа я маю велику мрію самостійно **переплисти** цей широкий глибокий басейн» *(This hot summer I have a big dream to independently swim across this wide deep pool)*. Якщо вас цікавить виключно сама відстань, яку успішно подолав певний об'єкт чи людина, сміливо використовуйте префікс про- і дієслово **проплисти** *(to sail/swim past or cover distance)*. Наприклад, ви можете гордо розповісти друзям: «Під час учорашніх міських змагань ми дуже швидко **проплисли** цілих п'ять кілометрів» *(During yesterday's city competition we very quickly swam a whole five kilometers)*. Дієслово **доплисти** *(to swim all the way to)* з префіксом до- завжди яскраво акцентує увагу на фінальній точці дуже складного маршруту або ж на межі людських фізичних можливостей. Використовуйте його тоді, коли рух по воді вимагав дійсно значних зусиль: «Вкрай стомлений і знесилений плавець ледве **доплив** до рятувального яскравого буйка» *(The extremely tired and exhausted swimmer barely swam to the bright rescue buoy)*. Останні два надзвичайно важливі префікси дуже часто використовуються в серйозному контексті правил безпеки на відкритій воді. Дієслово **заплисти** *(to swim too far or swim into)* зазвичай означає небезпечний рух далеко за встановлену безпечну межу або ж випадкове потрапляння у заборонену зону. Відпочиваючи на переповненому міському пляжі, ви дуже часто можете почути гучне попередження від місцевих рятувальників: «Шановні туристи, будьте обережні й ніколи не **запливайте** за червоні буйки!» *(Dear tourists, be careful and never swim past the red buoys!)*. Це ж слово також чудово описує повільний рух усередину якоїсь нової водної території: «Невеликий дослідницький корабель випадково заплив у дуже мілку затоку». Дієслово **підплисти** *(to swim up to)* описує лише плавне наближення до іншого об'єкта на воді на максимально коротку відстань, але без прямого фізичного контакту з ним. Це ідеальне та дуже гарне слово для опису несподіваних дружніх зустрічей з дикими морськими тваринами. Наприклад, ви можете захоплено згадувати: «Цікавий маленький дельфін абсолютно несподівано **підплив** до здивованих людей біля самого берега» *(A curious little dolphin absolutely unexpectedly swam up to the surprised people near the very shore)*. Глибоке знання всіх цих корисних префіксів дозволить вам неймовірно точно і красиво описувати абсолютно будь-які цікаві події під час вашого наступного відпочинку на морі чи річці. <!-- INJECT_ACTIVITY: fill-in, Complete maritime sentences with correct prefixed verbs (припливти, переплисти, відпливти), 8 items --> <!-- INJECT_ACTIVITY: error-correction, Fix incorrect air/water motion verb forms like *перепливти or *літати instead of летіти in specific contexts, 6 items -->
+оригінальну, абсолютно правильну основу з літерою «в»: **припливти** *(to arrive by water)*, **відпливти** *(to sail away)*, **запливти** *(to swim into)*, **випливти** *(to swim out)*. | Зміна основи на «-плисти» | Збереження основи «-пливти» | | :--- | :--- | | переплисти (через холодну річку) | припливти (до нового великого порту) | | доплисти (до далекого піщаного берега) | відпливти (від старого дерев'яного причалу) | | обплисти (навколо красивого острова) | запливти (у темну глибоку печеру) | | підплисти (до чужого великого човна) | випливти (з густого ранкового туману) | Ця зручна таблиця обов'язково допоможе вам успішно уникнути типових і дуже поширених помилок при побудові складних речень. Давайте тепер дуже детально розглянемо ці цікаві префіксальні форми в їхньому природному контексті під час реальних захопливих морських та річкових подорожей. Дієслово «припливти» завжди означає успішне прибуття, радісний фініш довгого маршруту або безпечне швартування судна біля берега: «Наш великий пасажирський пором нарешті приплив до головного **порту** *(port/harbor)*» *(Our large passenger ferry finally arrived at the main port)*. Натомість протилежне дієслово «відпливти» означає самий початок руху, повільне віддалення від берега або прощання з землею: «Старий досвідчений рибалка відплив від дерев'яного причалу дуже рано вранці» *(The old experienced fisherman sailed away from the wooden pier very early in the morning)*. Коли ми говоримо про успішне подолання великої водної перешкоди з одного берега на інший протилежний берег, ми використовуємо специфічну форму «переплисти». Наприклад: «Цей надзвичайно сміливий український спортсмен зміг самостійно переплисти широку і небезпечну протоку Босфор» *(This extremely brave Ukrainian athlete managed to independently swim across the wide and dangerous Bosphorus strait)*. Якщо ж активний рух корабля відбувається транзитом, обережно минаючи певний важливий об'єкт без зупинки, ми кажемо **проплисти** *(to sail past)*. Ця форма також належить до групи зі зміненою основою: «Ми дуже обережно і тихо пропливли повз відомий острів Зміїний на нашій новій білосніжній яхті» *(We very carefully and quietly sailed past the famous Zmiinyi Island on our new snow-white yacht)*. Для максимально точного і правильного опису регулярних, часто повторюваних дій або тривалих, ще не завершених процесів на відкритій воді ми використовуємо префіксальні дієслова недоконаного виду *(imperfective aspect)*. Усі вони без жодних винятків або граматичних сюрпризів утворюються від стабільної основи «-плавати». Це надзвичайно зручно для студентів, адже тут абсолютно немає жодних неправильних чи несподіваних форм. Ми кажемо дуже просто і зрозуміло для кожного: припливати, перепливати, допливати, відпливати, випливати, пропливати. Вони ідеально і дуже природно описують рух, який знаходиться в активному процесі виконання або є невід'ємною частиною щоденної рутини. Наприклад: «Кожного теплого літнього ранку до нашого сонячного берега припливає невеликий красивий туристичний катер» *(Every warm summer morning a small beautiful tourist boat arrives at our sunny shore)*. Або інша ситуація: «Ми часто перепливаємо це глибоке спокійне озеро на нашому швидкому човні під час літніх вихідних» *(We often sail across this deep calm lake in our fast boat during the summer weekends)*. Ці форми роблять вашу українську мову живою та дуже динамічною. <!-- INJECT_ACTIVITY: error-correction, Identify 6 sentences with incorrect stem usage (e.g., "*перепливти річку" corrected to "переплисти річку") or wrong conjugation of the base verb пливти -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -39,7 +39,7 @@ module: b1-030
 level: B1
 sequence: 30
 slug: motion-flight-swim
-version: '3.0'
+version: '3.1'
 title: Летіти, пливти
 subtitle: Дієслова руху в повітрі та на воді — з усіма префіксами
 focus: grammar
@@ -146,6 +146,15 @@ content_outline:
       - 'Quick contrastive examples: Літак летить (literal — the plane is flying).
         Час летить (figurative — time flies). Корабель пливе (literal — the ship is
         sailing). Думки пливуть (figurative — thoughts drift).'
+      - 'Ukrainian idioms and collocations with летіти/пливти: Гроші летять (money
+        disappears fast). Все пливе перед очима (everything is blurry/spinning). Пливти
+        за течією (go with the flow). These are high-frequency expressions that learners
+        will encounter in everyday Ukrainian. Compare with English equivalents to show
+        where metaphors overlap and where they diverge.'
+      - 'Practice: learners sort 10-12 sentences into literal vs figurative categories,
+        then explain what the figurative meaning is in each case. Extension: write 3-4
+        original sentences using летіти or пливти figuratively in contexts from their
+        own life — Мої канікули летять! Дні до іспиту пливуть повільно.'
   - section: 'Підсумок: повітряний та водний рух'
     words: 300
     points:
@@ -554,6 +563,8 @@ references:
 </knowledge_packet>
 
 ---
+
+
 
 ## Rules
 

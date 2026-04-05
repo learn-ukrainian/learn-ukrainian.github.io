@@ -1,0 +1,316 @@
+{
+  "total_items": 129,
+  "grounded_items": 69,
+  "ungrounded": [
+    {
+      "word": "листа",
+      "exercise_type": "fill-in",
+      "context": "Я пишу листа синьою ____."
+    },
+    {
+      "word": "ріже",
+      "exercise_type": "fill-in",
+      "context": "Він обережно ріже хліб гострим ____."
+    },
+    {
+      "word": "хліб",
+      "exercise_type": "fill-in",
+      "context": "Він обережно ріже хліб гострим ____."
+    },
+    {
+      "word": "гострим",
+      "exercise_type": "fill-in",
+      "context": "Він обережно ріже хліб гострим ____."
+    },
+    {
+      "word": "ножу",
+      "exercise_type": "fill-in",
+      "context": "ножу"
+    },
+    {
+      "word": "ножа",
+      "exercise_type": "fill-in",
+      "context": "ножа"
+    },
+    {
+      "word": "олівцю",
+      "exercise_type": "fill-in",
+      "context": "олівцю"
+    },
+    {
+      "word": "олівця",
+      "exercise_type": "fill-in",
+      "context": "олівця"
+    },
+    {
+      "word": "гарячий",
+      "exercise_type": "fill-in",
+      "context": "Ми їмо гарячий суп великою ____."
+    },
+    {
+      "word": "ложку",
+      "exercise_type": "fill-in",
+      "context": "ложку"
+    },
+    {
+      "word": "ложки",
+      "exercise_type": "fill-in",
+      "context": "ложки"
+    },
+    {
+      "word": "мама",
+      "exercise_type": "fill-in",
+      "context": "Мама чистить старий килим ____."
+    },
+    {
+      "word": "чистить",
+      "exercise_type": "fill-in",
+      "context": "Мама чистить старий килим ____."
+    },
+    {
+      "word": "килим",
+      "exercise_type": "fill-in",
+      "context": "Мама чистить старий килим ____."
+    },
+    {
+      "word": "щітку",
+      "exercise_type": "fill-in",
+      "context": "щітку"
+    },
+    {
+      "word": "щітки",
+      "exercise_type": "fill-in",
+      "context": "щітки"
+    },
+    {
+      "word": "учениця",
+      "exercise_type": "fill-in",
+      "context": "Учениця акуратно креслить квадрат ____."
+    },
+    {
+      "word": "акуратно",
+      "exercise_type": "fill-in",
+      "context": "Учениця акуратно креслить квадрат ____."
+    },
+    {
+      "word": "квадрат",
+      "exercise_type": "fill-in",
+      "context": "Учениця акуратно креслить квадрат ____."
+    },
+    {
+      "word": "лінійку",
+      "exercise_type": "fill-in",
+      "context": "лінійку"
+    },
+    {
+      "word": "лінійки",
+      "exercise_type": "fill-in",
+      "context": "лінійки"
+    },
+    {
+      "word": "бабуся",
+      "exercise_type": "fill-in",
+      "context": "Бабуся підмітає брудну підлогу ____."
+    },
+    {
+      "word": "підмітає",
+      "exercise_type": "fill-in",
+      "context": "Бабуся підмітає брудну підлогу ____."
+    },
+    {
+      "word": "брудну",
+      "exercise_type": "fill-in",
+      "context": "Бабуся підмітає брудну підлогу ____."
+    },
+    {
+      "word": "підлогу",
+      "exercise_type": "fill-in",
+      "context": "Бабуся підмітає брудну підлогу ____."
+    },
+    {
+      "word": "вінику",
+      "exercise_type": "fill-in",
+      "context": "вінику"
+    },
+    {
+      "word": "віника",
+      "exercise_type": "fill-in",
+      "context": "віника"
+    },
+    {
+      "word": "фарбою",
+      "exercise_type": "fill-in",
+      "context": "фарбою"
+    },
+    {
+      "word": "гарний",
+      "exercise_type": "fill-in",
+      "context": "Художник малює гарний портрет синьою ____."
+    },
+    {
+      "word": "портрет",
+      "exercise_type": "fill-in",
+      "context": "Художник малює гарний портрет синьою ____."
+    },
+    {
+      "word": "фарбу",
+      "exercise_type": "fill-in",
+      "context": "фарбу"
+    },
+    {
+      "word": "фарби",
+      "exercise_type": "fill-in",
+      "context": "фарби"
+    },
+    {
+      "word": "собаку",
+      "exercise_type": "quiz",
+      "context": "з собаку"
+    },
+    {
+      "word": "швидко",
+      "exercise_type": "quiz",
+      "context": "Вона швидко пише текст ____."
+    },
+    {
+      "word": "пише",
+      "exercise_type": "quiz",
+      "context": "Вона швидко пише текст ____."
+    },
+    {
+      "word": "їдемо",
+      "exercise_type": "quiz",
+      "context": "Ми щодня їдемо на роботу ____."
+    },
+    {
+      "word": "автобусу",
+      "exercise_type": "quiz",
+      "context": "автобусу"
+    },
+    {
+      "word": "другом",
+      "exercise_type": "quiz",
+      "context": "з другом"
+    },
+    {
+      "word": "друга",
+      "exercise_type": "quiz",
+      "context": "з друга"
+    },
+    {
+      "word": "молодий",
+      "exercise_type": "quiz",
+      "context": "Молодий художник малює картину ____."
+    },
+    {
+      "word": "довго",
+      "exercise_type": "quiz",
+      "context": "Я довго розмовляю ____."
+    },
+    {
+      "word": "розмовляю",
+      "exercise_type": "quiz",
+      "context": "Я довго розмовляю ____."
+    },
+    {
+      "word": "учителя",
+      "exercise_type": "quiz",
+      "context": "з учителя"
+    },
+    {
+      "word": "учителю",
+      "exercise_type": "quiz",
+      "context": "учителю"
+    },
+    {
+      "word": "чисто",
+      "exercise_type": "quiz",
+      "context": "Мама чисто миє вікно ____."
+    },
+    {
+      "word": "миє",
+      "exercise_type": "quiz",
+      "context": "Мама чисто миє вікно ____."
+    },
+    {
+      "word": "ганчірку",
+      "exercise_type": "quiz",
+      "context": "з ганчірку"
+    },
+    {
+      "word": "батько",
+      "exercise_type": "quiz",
+      "context": "Батько їде у відпустку ____."
+    },
+    {
+      "word": "відпустку",
+      "exercise_type": "quiz",
+      "context": "Батько їде у відпустку ____."
+    },
+    {
+      "word": "родиною",
+      "exercise_type": "quiz",
+      "context": "з родиною"
+    },
+    {
+      "word": "родину",
+      "exercise_type": "quiz",
+      "context": "з родину"
+    },
+    {
+      "word": "швидким",
+      "exercise_type": "group-sort",
+      "context": "Ми їдемо швидким потягом."
+    },
+    {
+      "word": "кіно",
+      "exercise_type": "group-sort",
+      "context": "Я йду в кіно з другом."
+    },
+    {
+      "word": "новим",
+      "exercise_type": "group-sort",
+      "context": "Вона працює з новим колегою."
+    },
+    {
+      "word": "колегою",
+      "exercise_type": "group-sort",
+      "context": "Вона працює з новим колегою."
+    },
+    {
+      "word": "гуляємо",
+      "exercise_type": "group-sort",
+      "context": "Ми гуляємо ввечері з собакою."
+    },
+    {
+      "word": "ввечері",
+      "exercise_type": "group-sort",
+      "context": "Ми гуляємо ввечері з собакою."
+    },
+    {
+      "word": "грає",
+      "exercise_type": "group-sort",
+      "context": "Брат грає на подвір'ї з сестрою."
+    },
+    {
+      "word": "подвір'ї",
+      "exercise_type": "group-sort",
+      "context": "Брат грає на подвір'ї з сестрою."
+    },
+    {
+      "word": "сестрою",
+      "exercise_type": "group-sort",
+      "context": "Брат грає на подвір'ї з сестрою."
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 15,
+    "tested_in_exercises": 12,
+    "not_tested": [
+      "пішки",
+      "трамвай",
+      "транспорт"
+    ]
+  },
+  "all_grounded": false
+}

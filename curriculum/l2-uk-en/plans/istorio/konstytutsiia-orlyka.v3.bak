@@ -1,0 +1,130 @@
+module: istorio-025
+level: ISTORIO
+sequence: 25
+slug: konstytutsiia-orlyka
+version: '3.0'
+title: 'Конституція Орлика: Перша європейська'
+focus: history
+pedagogy: seminar
+word_target: 5000
+objectives:
+- 'Analyze the causes and consequences of конституція орлика: перша європейська'
+- Evaluate the historical significance of конституція в екзилі
+content_outline:
+- section: Вступ — Конституція в екзилі
+  points:
+  - 1710 рік — контекст
+  - Після Полтави — еміграція
+  - Чому «перша європейська»?
+  - Значення документа
+  words: 700
+- section: Історичний контекст
+  points:
+  - Полтава 1709 — катастрофа
+  - Мазепа помирає
+  - Орлик — новий гетьман в екзилі
+  - Потреба легітимації
+  words: 700
+- section: Автор і обставини
+  points:
+  - Пилип Орлик — біографія
+  - Еміграція — Туреччина, Швеція
+  - Укладення Конституції в Бендерах
+  - Підписанти — хто погодився
+  words: 700
+- section: Структура і зміст
+  points:
+  - Преамбула — історична легітимація
+  - Обмеження влади гетьмана
+  - Рада старшин — законодавча влада
+  - Права козаків
+  - Захист від тиранії
+  words: 700
+- section: Фрагмент — Обмеження гетьманської влади
+  points:
+  - Текст (з глосами)
+  - Розподіл влади
+  - Вибори — процедура
+  - Підзвітність гетьмана
+  words: 700
+- section: Чому "конституція"?
+  points:
+  - Порівняння з іншими документами
+  - Республіканські ідеї
+  - Вплив польського конституціоналізму
+  - Чи застосовувалася?
+  words: 700
+- section: Підсумок
+  points:
+  - Символічне значення
+  - Конституція як аргумент
+  - Зв'язок із сучасністю
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+vocabulary:
+- конституція
+- екзиль
+- легітимація
+- обмеження влади
+- рада старшин
+- підзвітність
+- розподіл влади
+- республіка
+- тиранія
+- вибори
+- конституціоналізм
+- преамбула
+- артикул
+- клятва
+- суверенітет
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+activities:
+- type: reading
+  focus: Articles on hetman's power limitation
+- type: comparative-study
+  focus: Compare with other 18th-century constitutions
+- type: critical-analysis
+  focus: What mechanisms check the hetman's power?
+- type: essay-response
+  focus: What if Orlik's constitution was implemented?
+- type: essay-response
+  focus: Чи можна назвати документ Орлика 'конституцією'?
+persona:
+  voice: Academic Historiographer
+  role: Early Modern Legal Historian
+prerequisites:
+- pereyaslavski-statti
+connects_to:
+- lysty-mazepy
+references:
+- name: Конституція Пилипа Орлика (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Конституція_Пилипа_Орлика
+  type: reference
+  notes: Overview
+- name: Текст Конституції
+  url: https://uk.wikisource.org/wiki/Конституція_Пилипа_Орлика
+  type: primary
+  notes: Full text
+- name: Пилип Орлик
+  url: https://uk.wikipedia.org/wiki/Пилип_Орлик
+  type: reference
+  notes: Author biography
+register: академічний
+grammar: []

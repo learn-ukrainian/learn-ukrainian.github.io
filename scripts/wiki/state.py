@@ -130,11 +130,13 @@ def list_wiki_articles() -> list[dict]:
     """
     articles = []
     for md_file in sorted(WIKI_DIR.rglob("*.md")):
-        # Skip state dir, index files, and root-level files
+        # Skip dotdirs (.state, .reviews), index files, and dotfiles
         rel = md_file.relative_to(WIKI_DIR)
-        if ".state" in rel.parts:
+        if any(part.startswith(".") for part in rel.parts):
             continue
         if rel.name == "index.md":
+            continue
+        if rel.name.startswith("."):
             continue
 
         text = md_file.read_text(encoding="utf-8")

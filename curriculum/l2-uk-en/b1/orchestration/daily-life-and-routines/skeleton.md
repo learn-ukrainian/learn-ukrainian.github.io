@@ -1,55 +1,45 @@
-## Мій день: ранок (~780 words total)
-- P1 (~120 words): [Intro: The philosophy of a Ukrainian morning. Discussion on how "ранок" sets the tone for the day. Introduction of the "Day in the Life" vlogger context from Kyiv. Examples: прокидатися з усмішкою, ранкова рутина, початок дня.]
-- P2 (~130 words): [Deep dive into reflexive verbs for routine (M22). Detailed explanation of "прокидатися", "вмиватися", and "вдягатися". Focus on the -ся suffix and its meaning of action directed at oneself. Examples: Я вмиваюся холодною водою, щоб підбадьоритися; Потім я одягаюся i дивлюся у дзеркало.]
-- P3 (~130 words): [Temporal expressions and precise timing. Review of telling time (о пів на сьому, за п'ятнадцять восьма) and frequency adverbs (зазвичай, щодня, рідко). Integration with reflexive verbs. Examples: Я прокидаюся зазвичай о сьомій ранку; О восьмій я вже виходжу з дому.]
-- P4 (~120 words): [Dialogue 1: Roommates planning the morning. Two speakers negotiate bathroom time and breakfast. Use of imperatives (M20) and aspectual contrast. Examples: "Прокидайся швидше!", "Я вже вмиваюся", "Якщо ти поснідаєш зараз, я встигну приготувати каву".]
-- P5 (~130 words): [Aspectual contrast in morning habits. Comparing "щоранку я встаю" (habitual imperfective) with "сьогодні я встав раніше" (specific completed perfective). Discussion on the nuances of "снідати" (process) vs "поснідати" (result). Examples: Кожного ранку я п'ю чай, але сьогодні випив каву.]
-- P6 (~150 words): [Vlog Narrative: "Мій ранок у Києві". A descriptive passage by the vlogger filming their morning. Rich vocabulary for breakfast (каша, бутерброд, ягоди) and the feeling of the city waking up. Examples: Сонце встає над Дніпром, місто прокидається, я поспішаю на зупинку трамвая.]
-- Exercise: [fill-in, focus: Complete a daily routine text with correct reflexive and aspectual verb forms, 12 items]
+## Мій день: ранок (~750 words total)
+- P1 (~200 words): [Context Setting: The "Day in my Life" Vlog. Introduce the Kyiv vlogger persona. Explain the communicative goal: describing morning routines with high-density reflexive verbs (M22). Narrative: "Прокидаюся о сьомій, підводжуся з ліжка, вмиваюся..." Contrast the suffix -ся (self-directed) with active forms: *вмиваюся* (wash myself) vs *вмиваю обличчя* (wash face). List key reflexive pairs for the routine: *прокидатися, підводитися, одягатися, збиратися*.]
+- P2 (~200 words): [Temporal Expressions & Routine Sequence. Integrating time management into the routine. Explain time constructions (о пів на сьому, за чверть восьма) used with routine verbs. Detailed flow: "Зазвичай я прокидаюся о сьомій, але сьогодні встав трохи пізніше. О сьомій п'ятнадцять я вже снідаю..." Discuss the use of *зазвичай* (usually) to trigger the imperfective habitual aspect.]
+- Dialogue 1 (~120 words): [Roommates Planning the Morning. Speakers: Оля and Максим. Motivation: Conflict over bathroom time. Integrates M20 (imperatives) and M18 (real conditionals). Example: "Прокидайся, Максиме! Якщо ти не встанеш зараз, ми запізнимося. — Оля, не поспішай, я вже збираюся."]
+- P3 (~150 words): [Aspectual Contrast in Habits vs Actions. Detailed breakdown of habitual imperfective (*я снідаю*) vs specific perfective actions (*я поснідав*). Narrative expansion: "Щоранку я снідаю кашею, але сьогодні поснідав бутербродом, бо поспішав." Use examples like *вставати/встати, вмиватися/вмитися* to show how routine descriptions shift when talking about a specific "today" vs "every day."]
+- Exercise: [Fill-in, Focus: Complete a morning routine narrative using correct reflexive and aspectual forms (e.g., *я (прокидатися) _____, швидко (вмиватися) _____*), 12 items.]
 
-## Робочий день та навчання (~780 words total)
-- P1 (~120 words): [The transition to work and study. Discussion on "приїжджати" and "заходити". Using prefixed verbs (M24) to describe the start of the professional day. Examples: приїжджаю до офісу, заходжу в кабінет, вмикаю комп'ютер.]
-- P2 (~140 words): [Prefixed verbs for work productivity (M24). Explaining the logic of "пере-" (перевіряти пошту), "об-" (обговорювати плани), and "до-" (допрацювати звіт). How prefixes change the direction and completeness of work actions. Examples: Ми обговорюємо проект; Я перевіряю повідомлення щогодини.]
-- P3 (~130 words): [Verbal nouns in professional and academic registers (M21). Transitioning from "я навчаюся" to "навчання", "я виконую" to "виконання". Discussion on why these forms sound more formal and structured in reports or schedules. Examples: виконання плану, обговорення звіту, вивчення нових слів.]
-- P4 (~120 words): [Dialogue 2: Colleagues at work. Interaction regarding a report and a meeting. Integration of polite conditional forms (M18) and inclusive imperatives (M20). Examples: "Чи не могли б ви переглянути цей файл?", "Давайте обговоримо це після обіду", "Якщо закінчу вчасно, допоможу вам".]
-- P5 (~120 words): [Workplace vocabulary and job hunting. Discussion on "співбесіда" (interview), "колеги", and "обов'язки" (duties). Focus on describing what one *does* at work vs. what one *is responsible for* using verbal nouns. Examples: мої обов'язки включають планування та перевірку.]
-- P6 (~150 words): [Narrative: "Один день в офісі". A detailed description of a busy workday, from the first cup of coffee to the final "збереження" (saving) of a document. Focus on the flow of actions and professional communication. Examples: Робота кипить, колеги радяться, час минає швидко.]
-- Exercise: [match-up, focus: Match professional duties and household chores to their descriptions using verbal nouns and prefixed verbs, 12 items]
+## Робочий день та навчання (~750 words total)
+- P1 (~200 words): [Commute and Workplace Arrival with Prefixed Verbs (M24). Focus on prefix meanings in a professional context. Use *при-* (arrival), *за-* (entry), *пере-* (crossing/change). Narrative: "Я приїжджаю до офісу о дев'ятій. Заходжу в кабінет, перевіряю пошту." Contrast *приходити* (to arrive) with *заходити* (to enter) and *виходити* (to leave).]
+- P2 (~200 words): [Verbal Nouns in Professional Life (M21). Shift to a more formal/descriptive register using віддієслівні іменники. Instead of "I learn/I do", use "Learning/Doing". Narrative: "Навчання нових працівників — це важливо. Виконання щоденних обов'язків займає шість годин. Після обговорення плану ми починаємо працювати." List suffix patterns for verbal nouns: *-ння* (навчання, виконання) and *-ття* (життя, заняття).]
+- Dialogue 2 (~120 words): [Colleagues Negotiating Tasks. Speakers: Колега 1 and Колега 2. Focus: Polite conditionals (M18/19) and inclusive imperatives (M20). Examples: "Чи не могли б ви перевірити цей звіт? Якщо матимете час, допоможіть мені. — Давайте обговоримо це за обідом."]
+- P3 (~150 words): [The Workplace Environment & Duties. Vocabulary focus: *колега, обов'язки, робоче місце, співбесіда*. Narrative: "Мої обов'язки включають написання звітів та спілкування з клієнтами. На співбесіді мене запитали про мій розклад." Integrate the instrumental case for methods: "Я спілкуюся електронною поштою."]
+- Exercise: [Sentence-builder, Focus: Construct sentences describing a work day using prefixes and verbal nouns (e.g., *Після (виконання) завдань я (виходити) з офісу*), 12 items.]
 
-## Хатні справи та побут (~750 words total)
-- P1 (~130 words): [Domestic life and "хатні справи". Vocabulary for cleaning and maintenance. Crucial focus on "прибирати" (tidy), "прати" (wash clothes), and "пилососити" (vacuum). Comparison of "мити" (wet wash) vs. "витирати" (wipe/dust). Examples: Я прибираю у квартирі; Треба випрати білизну.]
-- P2 (~130 words): [Decolonization Focus: Avoiding Russianisms in the home. Explicit instruction on using "прати" instead of "*стирати" and "пилосос" instead of "*пилесос". Explanation of the etymology (пило-сос = dust sucker). Examples: Правильно казати «я перу одяг», а не «я стираю».]
-- P3 (~120 words): [The "Chore Chart" and Imperatives (M20). How to distribute tasks in a household. Using perfective imperatives for specific requests ("Винеси сміття!") and imperfective for general rules ("Завжди прибирай за собою!"). Examples: "Помий посуд, будь ласка", "Витри пил у вітальні".]
-- P4 (~120 words): [Dialogue 3: Family chore distribution. A conversation between family members or roommates using "хай/нехай" imperatives (M20). Examples: "Нехай Марко пилососить", "Хай діти винесуть сміття", "Давай я приготую вечерю".]
-- P5 (~130 words): [Reporting results with Passive Voice (M23). Using -но/-то forms to signal that a task is finished without focusing on who did it. Contrast between "Я помив підлогу" and "Підлогу помито". Examples: Посуд помито, вечерю приготовлено, сміття винесено.]
-- P6 (~120 words): [Cultural Note: The Ukrainian concept of "затишок" (cozy/comfort). How daily routines and household chores contribute to creating a home. Examples: Коли вдома прибрано, стає дуже затишно; Спільна вечеря — це традиція.]
-- Exercise: [error-correction, focus: Fix daily-life vocabulary errors (Russicisms) and incorrect aspectual/passive forms, 12 items]
+## Хатні справи та побут (~700 words total)
+- P1 (~200 words): [Household Chores & Verb Management. Focus on verbs like *прибирати, пилососити, прати, прасувати, виносити сміття*. Detailed description of a cleaning routine: "Я прибираю в кімнаті, потім пилосошу килим. Треба ще випрати білизну та помити посуд." Contrast *прати* (clothes) and *мити* (dishes/floors).]
+- P2 (~150 words): [Imperatives in Domestic Life. Using M20 for requests and commands within the family. "Вимий посуд, будь ласка! Не забудь винести сміття. Хай Марко прибере у своїй кімнаті." Explain the tone difference between soft requests (*будь ласка*) and firm imperatives.]
+- Dialogue 3 (~120 words): [Family Chore Distribution. Speakers: Мама and Син. Focus: Unreal conditionals (M19) and imperatives. Example: "Якби ти прибрав у кімнаті, ми б пішли в кіно. — Я приберу, якщо ти допоможеш мені."]
+- P3 (~150 words): [Passive Resultative Constructions (-но/-то) from M23. Reporting completed chores without focusing on the actor. Narrative: "Роботу закінчено! Посуд помито, підлогу вимито, білизну випрано. Тепер можна відпочивати." Show how these forms simplify "reporting" in daily life compared to active "I washed".]
+- P4 (~80 words): [Cultural & Linguistic Note: Decolonization. Highlight the common Russicism **стирати** (to wash clothes — incorrect) vs the correct Ukrainian **прати**. Mention **пилосос** vs **пилесос**. Emphasize the beauty of the word **хатні справи** over the generic 'homework' confusion.]
 
-## Вільний час та вихідні (~780 words total)
-- P1 (~120 words): [The psychology of rest: "відпочивати" (not reflexive!) vs. "займатися" (reflexive). Discussion on active vs. passive leisure. Vocabulary for hobbies: мандрувати, малювати, читати. Examples: Я відпочиваю вдома; Ми займаємося спортом у парку.]
-- P2 (~130 words): [Planning with Real Conditionals (M18). Using "якщо + future" to make weekend plans. Focus on the agreement of tenses and the use of the future tense. Examples: Якщо завтра буде сонце, ми підемо в ліс; Якщо я встигну, я зателефоную тобі.]
-- P3 (~130 words): [Hobby vocabulary and verbal nouns (M21). Transforming hobby verbs into nouns for more abstract discussion. Discussion on "читання книг", "малювання картин", "катання на велосипеді". Examples: Моє улюблене заняття — це фотографування природи.]
-- P4 (~130 words): [Hypothetical leisure with Unreal Conditionals (M19). Discussing dreams and "what if" scenarios using "якби + past + би". Examples: Якби я мав більше грошей, я б мандрував світом; Якби вихідні тривали три дні, я б більше відпочивав.]
-- P5 (~120 words): [Dialogue 4: Weekend planning. A group of friends deciding between the cinema and a hike. Natural mix of real conditionals for weather and unreal for suggestions. Examples: "Якщо не буде дощу, підемо в парк?", "Я б із задоволенням пішов у кіно, якби був гарний фільм".]
-- P6 (~150 words): [Narrative: "Ідеальні вихідні в Києві". A description of a Saturday spent wandering through Podil, visiting a gallery, and having dinner with friends. Integration of all Phase 3 grammar. Examples: Гуляючи набережною, ми милувалися краєвидом; Справу зроблено — квитки куплено.]
-- Exercise: [sentence-builder, focus: Write plans and "what if" scenarios using real and unreal conditionals and hobby vocabulary, 12 items]
+## Вільний час та вихідні (~750 words total)
+- P1 (~200 words): [Leisure Activities & Reflexive Engagement. Focus on *займатися* + Instrumental. Narrative: "У вільний час я займаюся спортом або розважаюся з друзями. Ми любимо гуляти парком та кататися на велосипедах." Contrast *відпочивати* (non-reflexive) with *розважатися* (reflexive).]
+- P2 (~200 words): [Weekend Planning with Conditionals (M18). Narrative: "Якщо на вихідних буде сонце, ми поїдемо за місто. Якщо ж буде дощ, залишимося вдома й будемо дивитися серіали." Explain the structure: *якщо* + future tense for realistic plans.]
+- Dialogue 4 (~120 words): [Planning a Saturday Night. Speakers: Андрій and Олена. Focus: Invitations and polite imperatives. Example: "Ходімо на концерт! — Я б із задоволенням пішла, якби мала вільний вечір. — Тоді давай зустрінемося наступної суботи."]
+- P3 (~150 words): [Hobby Vocabulary & Verbal Nouns. Expanding on *читання, малювання, мандрування*. Narrative: "Моє улюблене мандрування — це поїздки в Карпати. Читання книжок допомагає мені відпочити. Я люблю вирощувати квіти на балконі." Focus on the distinction between *грати* (instrument) and *гратися* (play as a child/game).]
+- Exercise: [Quiz, Focus: Identify the correct Phase 3 grammar (conditional vs imperative vs passive) for leisure scenarios, 12 items.]
 
-## Розпорядок дня: планування та поради (~730 words total)
-- P1 (~120 words): [Time management terminology. Introduction of "розклад" (schedule), "планувати" (to plan), and "встигати" (to manage/be in time). Discussion on the importance of "план на день". Examples: Мій розклад дуже щільний; Я намагаюся все встигати.]
-- P2 (~130 words): [The struggle of "запізнюватися" (to be late) vs. "заздалегідь" (in advance). Using reflexive verbs and adverbs to describe time pressure. Discussion on "відкладати на потім" (procrastinate). Examples: Я ніколи не запізнююся на зустрічі; Не відкладай на завтра те, що можна зробити сьогодні.]
-- P3 (~130 words): [Giving advice with Conditionals and Imperatives. Using "На вашому місці я б..." (In your place I would...) and "Старайся..." (Try to...). Focus on the polite but firm tone of advice. Examples: На вашому місці я б вставав раніше; Раджу тобі планувати свій день.]
-- P4 (~180 words): [Reading Passage: "Мистецтво керувати часом". An adapted article based on Valuilenko/Holub principles. Tips for students and professionals on how to balance work, study, and rest. Integration of verbal nouns and imperatives. Examples: Починайте з найскладнішого; Вивчення мови потребує регулярності.]
-- P5 (~120 words): [Analysis of the Reading Passage. Guided questions that force the learner to identify Phase 3 structures within the text (conditionals, passive forms, prefixed verbs). Examples: Знайдіть у тексті речення з умовним способом; Які дієслова вказують на пораду?]
-- Exercise: [quiz, focus: Choose the correct Phase 3 grammar structure (conditional vs. imperative vs. passive) for various daily life planning scenarios, 12 items]
+## Розпорядок дня: планування та поради (~650 words total)
+- P1 (~200 words): [Time Management & Vocabulary. Focus on *розклад, план, встигати, запізнюватися, відкладати*. Narrative: "Мій розклад дуже щільний. Я намагаюся встигати все, але іноді запізнююся через затори. Головне — не відкладати справи на потім." Use the reflexive *запізнюватися* and *встигати* to show timing logic.]
+- P2 (~200 words): [Giving Advice with Phase 3 Grammar. Focus on using the conditional for polite suggestions (*Я б на вашому місці...*) and the imperative for direct tips (*Старайся планувати...*). Narrative: "Якщо ви хочете бути успішними, плануйте свій день заздалегідь. Я б радив кожному вести щоденник."]
+- P3 (~250 words): [Reading Passage: "Мистецтво планування" (The Art of Planning). A cohesive text about balancing work, study, and rest. Integrates all concepts: "Навчання вимагає дисципліни. Якщо ви встаєте раніше, у вас з'являється час для себе. Пам'ятайте: час не можна купити, його можна лише правильно розподілити." Includes 3 comprehension questions testing grammar recognition.]
+- Exercise: [Match-up, Focus: Match household chores and time management terms to their definitions or logical counterparts, 12 items.]
+- Exercise: [Error-correction, Focus: Fix Russicisms (*стирати, пилесос*) and wrong aspect/reflexive choices in a "bad schedule" text, 12 items.]
 
-## Підсумок (~400 words)
-- P1 (~150 words): [Grammatical Synthesis. A concise recap of how Phase 3 grammar (M18-24) creates the framework for "daily life" communication. Summary of: Conditionals for planning, Imperatives for chores, Reflexives for routines, Passive for results, and Prefixes/Verbal Nouns for professional accuracy.]
-- P2 (~150 words): [Self-check checklist based on the plan's objectives.
-* Чи можу я описати свій ранок, використовуючи зворотні дієслова? (прокидатися, вмиватися)
-* Чи можу я дати вказівку щодо хатніх справ? (Помий посуд! Хай він прибере.)
-* Чи можу я запланувати вихідні, використовуючи "якщо"? (Якщо буде сонце, підемо гуляти.)
-* Чи можу я розповісти про виконану роботу формою на -но/-то? (Звіт написано, пошту перевірено.)
-* Чи розрізняю я "прати" та "стирати"? (Прати одяг — так! Стирати з дошки — так!)]
-- P3 (~100 words): [Conclusion and Bridge to M26. Final encouragement and a look forward to the upcoming "Контрольна робота 3" where all these skills will be tested in a comprehensive review. Ready to prove mastery of Ukrainian verbs!]
+## Підсумок фази 3 та перехід до M26 (~400 words total)
+- P1 (~200 words): [Phase 3 Grammar Synthesis. A concise recap of how M18-24 work together in "Daily Life": Conditionals for planning, Imperatives for chores/advice, Verbal Nouns for formal routine descriptions, Reflexives for personal hygiene/routines, and Passive -но/-то for result-checking. "Тепер ви знаєте, як не просто назвати дію, а надати їй відтінку умови, наказу чи результату."]
+- P2 (~200 words): [Self-Check & Future Path. Bulleted checklist based on objectives:
+  - Чи можу я описати свій ранок, використовуючи зворотні дієслова? (Я прокидаюся...)
+  - Чи можу я домовитися про зустріч, використовуючи умови? (Якщо ти зможеш...)
+  - Чи можу я дати пораду другу? (Старайся не запізнюватися...)
+  - Чи можу я розрізнити 'прати' та 'мити'?
+  Preview of M26: "The Big Review". Prepare for the Phase 3 exam by revisiting the nuances of aspect and mood covered in this module.]
 
-Grand total: ~4220 words
+Grand total: ~4000 words

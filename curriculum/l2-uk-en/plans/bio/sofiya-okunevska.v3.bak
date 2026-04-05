@@ -1,0 +1,107 @@
+module: bio-064
+level: BIO
+sequence: 64
+slug: sofiya-okunevska
+version: '3.0'
+title: 'Софія Окуневська: Перша жінка-лікар'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of софія окуневська: перша жінка-лікар'
+- Evaluate the contributions of першопрохідниця медицини
+- Trace the career and influence of останні роки та спадщина (1920-1926)
+content_outline:
+- section: Вступ — Першопрохідниця медицини
+  points:
+  - Окуневська як перша українка з медичним дипломом
+  - Подолання бар'єрів для жінок у професії
+  - Поєднання медицини та громадської діяльності
+  words: 850
+- section: Ранні роки та освіта (1865-1887)
+  points:
+  - Народження в сім'ї священика на Галичині
+  - Прагнення до освіти в часи обмежень
+  - Боротьба за право навчатися
+  - Вибір медицини як покликання
+  words: 850
+- section: Навчання за кордоном (1887-1895)
+  points:
+  - Вступ до Цюрихського університету
+  - Труднощі навчання жінки в медицині
+  - Отримання диплому лікаря
+  - Повернення на Батьківщину
+  words: 850
+- section: Медична практика (1895-1920)
+  points:
+  - Відкриття практики у Львові
+  - Лікування жінок та дітей
+  - Боротьба з упередженнями
+  - Безкоштовна допомога бідним
+  words: 850
+- section: Громадська діяльність
+  points:
+  - Участь у жіночому русі
+  - Співпраця з Наталією Кобринською
+  - Боротьба за права жінок у освіті
+  - Публіцистична діяльність
+  words: 850
+- section: Останні роки та спадщина (1920-1926)
+  points:
+  - Продовження практики в складних умовах
+  - Смерть у Львові
+  - Значення для українського жіночого руху
+  - Пам'ять та вшанування
+  words: 750
+vocabulary_hints:
+  required:
+  - лікар (doctor/physician)
+  - медицина (medicine)
+  - диплом (diploma/degree)
+  - практика (medical practice)
+  - гінекологія (gynecology)
+  - педіатрія (pediatrics)
+  - бар'єр (barrier)
+  - упередження (prejudice)
+  - жіночий рух (women's movement)
+  - емансипація (emancipation)
+  recommended:
+  - Цюрихський університет (University of Zurich)
+  - безкоштовна допомога (free assistance)
+  - медична освіта (medical education)
+  - Галичина (Galicia)
+  - священик (priest)
+activity_hints:
+- type: reading
+  focus: Біографія та медична діяльність
+  source: Історичні дослідження та мемуари
+  items: 3 passages
+- type: essay-response
+  focus: Чому жінкам було важко здобути освіту в XIX столітті?
+  output: Історичне есе
+connects_to:
+- bio-24 (Ivan Vyhovskyi)
+- bio-31 (Pylyp Orlyk)
+- bio-60 (Kyrylo Trylovskyi)
+prerequisites:
+- bio-25 (Ivan Sirko)
+persona:
+  voice: Senior Biographer
+  role: Medical Pioneer
+module_type: biography
+immersion: 100% Ukrainian
+references:
+- name: Софія Окуневська (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Окуневська-Морачевська_Софія_Афанасіївна
+  type: primary
+  notes: Біографія, медична кар'єра, громадська діяльність
+- name: Львівський медичний університет
+  url: https://meduniv.lviv.ua
+  type: reference
+  notes: Історія жінок у медицині
+- name: Архів жіночого руху
+  url: https://uma.lvivcenter.org
+  type: reference
+  notes: Жіночий рух на Галичині
+register: академічний
+grammar: []

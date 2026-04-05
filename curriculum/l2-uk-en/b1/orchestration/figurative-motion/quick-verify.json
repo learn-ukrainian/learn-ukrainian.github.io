@@ -1,11 +1,11 @@
 {
-  "attempt": 5,
+  "attempt": 1,
   "passed": false,
   "errors": [
     {
-      "check": "WORD_COUNT",
+      "check": "STRUCTURE",
       "severity": "ERROR",
-      "message": "Too short: 1294 words (target: 4000, minimum: 3400)"
+      "message": "Missing section heading: 'Підсумок: буквальне і переносне'"
     }
   ],
   "warnings": [
@@ -15,15 +15,10 @@
       "message": "Latin characters mixed with Cyrillic: I"
     },
     {
-      "check": "VOCABULARY",
-      "severity": "WARNING",
-      "message": "Missing 2/11 required vocab: переносне значення (figurative meaning), пряме значення (literal meaning)"
-    },
-    {
       "check": "EXERCISES",
       "severity": "WARNING",
       "message": "Plan expects 6 exercise(s) but content has 0 placeholders"
     }
   ],
-  "timestamp": "2026-04-03T09:55:01.593498+00:00"
+  "timestamp": "2026-04-04T11:39:09.679096+00:00"
 }

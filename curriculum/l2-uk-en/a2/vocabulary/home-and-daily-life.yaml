@@ -1,0 +1,367 @@
+vocabulary:
+- word: поме́шкання
+  translation: dwelling, apartment
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: коридо́р
+  translation: hallway
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: віта́льня
+  translation: living room
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ме́блі
+  translation: furniture
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: дива́н
+  translation: sofa
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: крі́сло
+  translation: armchair
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ки́лим
+  translation: carpet, rug
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: балко́н
+  translation: balcony
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ку́хня
+  translation: kitchen
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: спа́льня
+  translation: bedroom
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ванна кімната
+  translation: bathroom
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: телеві́зор
+  translation: TV
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: гара́ж
+  translation: garage
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кімна́та
+  translation: room
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: письмовий стіл
+  translation: desk
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: лі́жко
+  translation: bed
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: книжкова шафа
+  translation: bookcase
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ша́фа
+  translation: wardrobe, cabinet
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: дзе́ркало
+  translation: mirror
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: розпорядок дня
+  translation: daily routine
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: о сьомій годині
+  translation: at seven o'clock
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вмива́тися
+  translation: to wash one's face
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: одяга́тися
+  translation: to get dressed
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: готува́тися
+  translation: to prepare
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: встава́ти
+  translation: to get up
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: сні́дати
+  translation: to have breakfast
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: о пів на восьму
+  translation: at half past seven
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вра́нці
+  translation: in the morning
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вдень
+  translation: in the afternoon, during the day
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: уве́чері
+  translation: in the evening
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вночі́
+  translation: at night
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: після сніданку
+  translation: after breakfast
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: споча́тку
+  translation: first
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: по́тім
+  translation: then
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: після того
+  translation: after that
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: користуватися метро
+  translation: to use the subway
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: о́фіс
+  translation: office
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: коле́га
+  translation: colleague
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: обі́дати
+  translation: to have lunch
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: переку́шувати
+  translation: to have a snack
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: прибирати пилососом
+  translation: to vacuum
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: мити посуд
+  translation: to wash the dishes
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: прасувати одяг
+  translation: to iron clothes
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у вихідні
+  translation: on weekends
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: відпочива́ти
+  translation: to rest, to relax
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ходити у кіно
+  translation: to go to the cinema
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: лягати спати
+  translation: to go to bed
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Заходьте, будь ласка!
+  translation: Come in, please!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: роззува́тися
+  translation: to take off shoes
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Ось ваші капці
+  translation: here are your slippers
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ка́пці
+  translation: slippers
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: гости́нці
+  translation: gifts, treats
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: госпо́дар
+  translation: host
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: дякувати господарям
+  translation: to thank the hosts
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: сідати за стіл
+  translation: to sit down at the table
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пригоща́тися
+  translation: to help oneself (to food)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Хочете чаю чи кави?
+  translation: Do you want tea or coffee?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я буду воду з лимоном
+  translation: I will have water with lemon
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: тро́хи
+  translation: a little
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: бага́то
+  translation: a lot, many
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: а о котрій ви зазвичай снідаєте?
+  translation: and at what time do you usually have breakfast?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

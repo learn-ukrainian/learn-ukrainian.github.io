@@ -1,107 +1,144 @@
-module: hist-062
-level: HIST
-sequence: 62
-slug: syntez-khmelnychchyna
-version: '3.0'
-title: 'Синтез: Козацька революція'
-focus: history
-pedagogy: CBI
-phase: HIST.6 [Khmelnytsky & Cossack State]
-word_target: 5000
-objectives:
-- 'Analyze the causes and consequences of синтез: козацька революція'
-- Evaluate the historical significance of вибух, що змінив усе
-- Trace the development of деколонізаційний погляд
-content_outline:
-- section: 'Вступ: Вибух, що змінив усе'
-  points:
-  - The definition of the Khmelnytsky Uprising as a revolution — change of social order, not just a rebellion; 
-    [!context] — Хмельниччина відбувалася одночасно з Англійською революцією Кромвеля (1640-1660)
-  - 'The scale of changes: social, political, geopolitical — emergence of a new player on the European map; parallels with
-    Westphalian Peace (1648)'
-  words: 700
-- section: 'Причини революції: Чому вибухнуло?'
-  points:
-  - 'Social oppression (serfdom) — [!quote] — Гійом ле Вассер де Боплан про гноблення селян: «Вони живуть у гіршому рабстві,
-    ніж галерники»'
-  - Religious discrimination (Uniate Church) — friction from Union of Brest; Ordinance of 1638 liquidating Cossack 
-    rights
-  - Political lack of rights for Cossacks — attempt to turn Cossacks into peasants; «Золотий спокій» was an illusion
-  - Personal tragedy of Khmelnytsky — raid on Subotiv as the spark
-  words: 700
-- section: 'Етапи боротьби: Від тріумфу до компромісу'
-  points:
-  - Initial victories (Yellow Waters, Korsun) — spring-autumn 1648; Battle of Pyliavtsi
-  - The Treaty of Zboriv (1649) and statehood — recognition of autonomy; Register set at 40,000
-  - Defeats (Berestechko) and the Treaty of Bila Tserkva — June 1651; betrayal by Tatars; Register reduced to 20,000; 
-    [!history-bite] — Битва під Берестечком була однією з найбільших битв Європи XVII ст. (до 300 тис. учасників)
-  - The Pereiaslav Council (1654) and the alliance with Moscow — military alliance against three fronts; choice of 
-    «lesser evil»
-  - The death of Khmelnytsky and the start of the Ruin — 1657; struggle for power begins
-  words: 700
-- section: 'Соціальні трансформації: Народження нації'
-  points:
-  - 'Liquidation of serfdom — de facto freedom on controlled territories; [!culture] — «Покозачення»: масовий перехід селян
-    у козацький стан як спосіб здобути свободу'
-  - Formation of the Cossack starshyna as a new elite — merger of former nobility and meritorious Cossacks
-  - The role of the Orthodox Church — increased influence and consolidation
-  words: 700
-- section: 'Читання: Аналіз історичних документів'
-  points:
-  - Analysis of the Zboriv Treaty — defined three voivodeships (Kyiv, Chernihiv, Bratslav); amnesty and expulsion of 
-    Jesuits/Jews
-  - Analysis of the March Articles — 11 (or 23) points; rights to foreign policy (except Poland/Turkey); confederative 
-    model or protectorate
-  words: 700
-- section: Первинні джерела
-  points:
-  - 'Eyewitness accounts (Paul of Aleppo, etc.) — [!quote] — Павло Алеппський: «Ми помітили в цьому благословенному народі
-    набожність, богобоязливість і благочестя»; notes on high literacy rate'
-  - Khmelnytsky's universals — instrument of executive power; calls to uprising and protection decrees
-  words: 700
-- section: Деколонізаційний погляд
-  points:
-  - 'Debunking the myth of ''reunification'' — [!myth-buster] — Міф про «возз''єднання»: Переяславська рада була військовим
-    союзом, а не злиттям держав; Soviet concept of «вікове прагнення»'
-  - Ukraine as a subject of international law — independent diplomatic relations (Turkey, Sweden)
-  - The European context of the revolution — betrayal by Moscow in Vilna Truce (1656); pragmatism over «brotherhood»
-  - 'Legacy: The birth of the modern Ukrainian state tradition — idea of Cossack statehood persisted until late 18th century'
-  words: 800
-vocabulary_hints:
-  required:
-  - історія (history) — [!collocation] творити історію; переписувати історію
-  - держава (state) — [!collocation] будувати державу; козацька держава; суверенна держава
-  - народ (people) — [!collocation] український народ; воля народу; Paul of Aleppo quote regarding «благословенний 
-    народ»
-  - влада (power) — [!collocation] гетьманська влада; виконавча влада; боротьба за владу
-  - період (period) — [!collocation] період Руїни; перехідний період
-  - подія (event) — [!collocation] історична подія; трагічні події
-  - джерело (source) — [!collocation] первинне джерело; історичні джерела; згідно з джерелами
-  - спадщина (heritage) — [!collocation] козацька спадщина; культурна спадщина
-  recommended:
-  - аналіз (analysis) — [!collocation] критичний аналіз; аналіз договору
-  - контекст (context) — [!collocation] європейський контекст; історичний контекст
-  - вплив (influence) — [!collocation] вплив церкви; політичний вплив
-  - наслідки (consequences) — [!collocation] далекосяжні наслідки; трагічні наслідки
 activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: critical-analysis
-  focus: Аналіз причинно-наслідкових зв'язків між подіями
-  items: 3
-- type: critical-analysis
-  focus: Критична оцінка історичних тверджень та міфів
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння історіографічних дебатів
   items: 5
-prerequisites: '[]'
-persona:
-  voice: Senior Professor of History
-  role: Military Chronicler
-learning_outcomes: '[]'
+  placement: inline
+  type: quiz
+- after_section: Джерела
+  focus: Розуміння первинного історичного джерела
+  placement: inline
+  type: reading
+- focus: Оцінка первинного джерела — хто написав, навіщо, що упущено?
+  placement: workbook
+  type: source-evaluation
+- focus: Дебат — оцінка значення та наслідків події
+  placement: workbook
+  type: debate
+- focus: 'Порівняння української та імперської інтерпретацій (Синтез: Козацька революція)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе на тему зв''язку з сучасністю (Синтез: Козацька революція)'
+  placement: workbook
+  type: essay-response
+cefr_min: C1
 connects_to:
 - ivan-mazepa-derzhavnyk
-references: []
-register: академічний
-grammar: []
+content_outline:
+- points:
+  - 'Провокація: Чи була Хмельниччина лише повстанням, чи повноцінною революцією, що змінила соціальний лад? Що спільного
+    у неї з Англійською революцією Кромвеля, що відбувалася в той же час?'
+  - 'Фрагмент свідчення очевидця без контексту: «Ми помітили в цьому благословенному народі набожність, богобоязливість і
+    благочестя...». Хто і за яких обставин міг так описати Україну в розпалі війни?'
+  section: Розминка
+  words: 400
+- points:
+  - 'Дебат 1: Переяславська рада — це військовий союз рівних чи акт підданства? Аналіз імперського міфу про «возз''єднання»
+    та «вікове прагнення» vs української концепції вимушеного союзу.'
+  - 'Дебат 2: Роль кримських татар — надійні союзники чи зрадники? Розгляд битви під Берестечком та двосторонніх інтересів
+    обох сторін.'
+  - '[!epistemic-humility] Вибір Хмельницьким московського протекторату: чи були реальні альтернативи (Османська імперія,
+    Швеція)? Оцінка ризиків та переваг кожного сценарію, виходячи з обмежених даних того часу.'
+  - 'Глобальна синхронність: Хмельниччина (1648) вибухнула одночасно із завершенням Тридцятилітньої війни в Європі (Вестфальський
+    мир). Як поява нової козацької держави виглядала на тлі перекроювання карти Європи?'
+  section: 'Конфліктна карта: Союз чи "возз''єднання"?'
+  words: 900
+- points:
+  - 'Аналіз універсалів Богдана Хмельницького: мова, аргументація, мета. Як гетьман звертався до народу, старшини та іноземних
+    правителів?'
+  - 'Порівняльний аналіз Зборівського (1649) та Білоцерківського (1651) договорів: як змінювались вимоги та статус козацької
+    держави після перемог та поразок?'
+  - 'Читання «Березневих статей» (1654): що насправді було підписано в Переяславі? Аналіз пунктів про суверенітет, зовнішню
+    політику, податки. [!decolonization] Розвінчання пізніших московських фальсифікацій та дописок.'
+  - 'Свідчення очевидців: Гійом де Боплан («Опис України»), Павло Алеппський («Подорож антіохійського патріарха Макарія»).
+    Якою бачили Україну та козаків іноземці? Критичний аналіз їхніх упереджень та спостережень.'
+  section: 'Джерела: Універсали, договори та свідчення очевидців'
+  words: 1600
+- points:
+  - 'Короткострокові наслідки: створення Гетьманщини, де-факто ліквідація кріпацтва на підконтрольних територіях («покозачення»),
+    початок Руїни після смерті Хмельницького.'
+  - 'Довгострокові наслідки: народження модерної української державної традиції, перетворення козацької старшини на нову політичну
+    еліту, остаточний розрив з Річчю Посполитою та поступове поглинання Московським царством.'
+  - '[!myth-buster] Деконструкція міфу про «возз''єднання». Переяславська рада — це не кінець історії, а початок нового етапу
+    боротьби за суверенітет, цього разу проти нового, сильнішого союзника, що зрадив у Віленському перемир''ї (1656).'
+  - 'Оцінка Хмельницького як історичної постаті: порівняння оцінок Грушевського (державник-революціонер), Липинського (монархіст),
+    та сучасних істориків (Плохій, Яковенко).'
+  section: 'Аналіз: Наслідки та значення'
+  words: 1600
+- points:
+  - 'Повернення до розминки: Отже, революція чи повстання? Студент формулює аргументовану відповідь, спираючись на вивчений
+    матеріал (зміна соціального ладу, створення держави, ідеологія).'
+  - 'Ширше питання: чи є «вибір меншого зла» дієвою стратегією в геополітиці? Уроки Переяслава для сучасної України.'
+  - '[!anti-hagiography] Хмельниччина — це не лише героїчні перемоги, але й величезна трагедія: єврейські погроми, громадянська
+    війна, початок Руїни. Як збалансувати пам''ять про тріумф державотворення та його темні сторони?'
+  - 'Зв''язок із сьогоденням: як досвід Козацької революції та її наслідків впливає на сучасне українське ставлення до договорів,
+    союзників та ідеї державності?'
+  section: Дискусія та підсумок
+  words: 700
+focus: 'Khmelnytsky Uprising as a revolution: causes (social, religious, political), key stages (Zboriv, Pereiaslav), social
+  transformation, and the decolonization of the "reunification" myth.'
+level: HIST
+module: hist-062
+objectives:
+- Аналізувати причини, перебіг та наслідки Козацької революції в європейському контексті
+- Критично оцінювати Переяславську раду, розрізняючи поняття військового союзу та «возз'єднання»
+- Деконструювати радянські та імперські міфи про Хмельниччину, спираючись на первинні джерела та сучасну історіографію
+- Формулювати аргументовану позицію щодо ролі особистості в історії на прикладі Богдана Хмельницького
+pedagogy: CBI
+persona:
+  role: Модератор дискусії, що ставить під сумнів усталені наративи та змушує шукати українську суб'єктність за імперськими
+    інтерпретаціями
+  voice: Decolonial-Skeptic
+phase: HIST.6
+references:
+- note: Compiled from Hrushevsky, Plokhy, Subtelny — synthesis of causes, events, and consequences.
+  path: wiki/hist/khmelnytsky-uprising.md
+  type: wiki
+- author: Павло Алеппський
+  note: Eyewitness account of Ukraine during the Uprising, describes social order, literacy, and customs.
+  type: primary
+  work: Подорож антіохійського патріарха Макарія до Московії
+- author: Сергій Плохій
+  note: Modern decolonial interpretation of the Khmelnytsky Uprising in the context of European history.
+  type: primary
+  work: Брама Європи
+- author: Михайло Грушевський
+  note: Fundamental academic analysis of the Cossack Revolution by the leading Ukrainian historian.
+  type: primary
+  work: Історія України-Руси, Том IX
+sequence: 62
+slug: syntez-khmelnychchyna
+subtitle: The Uprising That Forged a Nation
+title: 'Синтез: Козацька революція'
+version: '4.0'
+vocabulary_hints:
+- definition: докорінний переворот у житті суспільства, що призводить до ліквідації віджилого суспільного ладу
+  pos: ж.
+  word: революція
+- definition: політична форма організації суспільства, що характеризується суверенною владою, територією та апаратом примусу
+  pos: ж.
+  word: держава
+- definition: незалежність держави у зовнішніх і внутрішніх справах
+  pos: ч.
+  word: суверенітет
+- definition: військово-адміністративна верхівка козацтва, що виконувала роль політичної еліти Гетьманщини
+  pos: ж.
+  word: старшина
+- definition: законодавчий або адміністративний акт вищої влади в Гетьманщині, звернений до населення
+  pos: ч.
+  word: універсал
+- definition: письмова угода, яка встановлює взаємні права та обов'язки між двома чи більше сторонами (державами)
+  pos: ч.
+  word: договір
+- definition: ідеологічний термін радянської та російської історіографії для опису Переяславської ради, що маскує факт анексії
+  pos: с.
+  word: возз'єднання
+- definition: результати, до яких призвела певна подія або низка подій
+  pos: мн.
+  word: наслідки
+- definition: історичний документ, текст чи артефакт, що містить інформацію про минуле
+  pos: с.
+  word: джерело
+- definition: сукупність матеріальних і духовних цінностей, залишених попередніми поколіннями
+  pos: ж.
+  word: спадщина
+word_target: 5200

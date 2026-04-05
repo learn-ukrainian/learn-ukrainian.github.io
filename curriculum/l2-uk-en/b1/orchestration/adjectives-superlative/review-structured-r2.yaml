@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'All 7 plan sections present with correct H2 headings. Content outline
+    points well covered: simple superlative formation (Литвінова reference integrated),
+    compound form register distinction, що-/як- in'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Two factual grammar errors: (1) The consonant alternation rule "приголосні
+    г, з, ж змінюються на ж, а к, т — на ч" contradicts Литвінова Grade 6 p.199 which
+    states г, ж, з + ш → жч and с, ст + ш → щ. '
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: dialogue situation → grammar presentation → practice
+    text → exercises. Multiple examples per grammar point (>5 for simple superlative,
+    >5 for compound). Full declension paradigm demon'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: '**Required vocab** all present: найвищий ступінь ✅, префікс ✅, найбільш
+    ✅, найменш ✅, щонайкращий ✅, якнайшвидший ✅, вельми ✅ (verified VESUM), вкрай
+    ✅ (verified VESUM), надзвичайно ✅ (verified VESUM)'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: '6 markers matching all 6 plan activity hints. Well-distributed across
+    sections. Each marker placed after the relevant teaching content. Types are varied:
+    quiz, fill-in, match-up, error-correction, sen'
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: '**Deductions for meta-commentary:** "Тепер ви чудово знаєте, що українська
+    мова пропонує нам одразу кілька зручних способів" (Підсумок), "Використовуйте
+    ці влучні підсилювачі у своєму спілкуванні, щоб'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All 7 plan sections present as H2 headings in correct order. Intro section
+    added naturally. No duplicate summaries, no meta-commentary sections, no stray
+    tags. Word count 4242 is within target range (
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Fully decolonized — Ukrainian presented on its own terms. No "like Russian
+    but..." framing. Russian influence (самий) correctly identified as a calque to
+    avoid. Cultural examples are authentically Ukr
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Named speakers (Пані Олена, Тарас, Оксана, Максим) with distinct voices.
+    Natural classroom setting — teacher asks questions, students answer with enthusiasm
+    and additional details. Multi-turn (5 excha
+findings: []

@@ -1,228 +1,34 @@
 {
-  "total_items": 157,
-  "grounded_items": 115,
-  "ungrounded": [
-    {
-      "word": "котрій",
-      "exercise_type": "quiz",
-      "context": "О котрій годині ти зазвичай _____ з дому вранці?"
-    },
-    {
-      "word": "виходиш",
-      "exercise_type": "quiz",
-      "context": "виходиш"
-    },
-    {
-      "word": "заходиш",
-      "exercise_type": "quiz",
-      "context": "заходиш"
-    },
-    {
-      "word": "грюкнув",
-      "exercise_type": "quiz",
-      "context": "Він _____ з кабінету і голосно грюкнув дверима."
-    },
-    {
-      "word": "вилетів",
-      "exercise_type": "quiz",
-      "context": "вилетів"
-    },
-    {
-      "word": "залетіла",
-      "exercise_type": "quiz",
-      "context": "залетіла"
-    },
-    {
-      "word": "вилетіла",
-      "exercise_type": "quiz",
-      "context": "вилетіла"
-    },
-    {
-      "word": "виїхала",
-      "exercise_type": "quiz",
-      "context": "виїхала"
-    },
-    {
-      "word": "крісло",
-      "exercise_type": "quiz",
-      "context": "Будь ласка, _____ це старе крісло з кімнати."
-    },
-    {
-      "word": "винеси",
-      "exercise_type": "quiz",
-      "context": "винеси"
-    },
-    {
-      "word": "занеси",
-      "exercise_type": "quiz",
-      "context": "занеси"
-    },
-    {
-      "word": "винесу",
-      "exercise_type": "quiz",
-      "context": "винесу"
-    },
-    {
-      "word": "занесеш",
-      "exercise_type": "quiz",
-      "context": "занесеш"
-    },
-    {
-      "word": "поїхали",
-      "exercise_type": "quiz",
-      "context": "Вони _____ з парковки і поїхали головною вулицею."
-    },
-    {
-      "word": "головною",
-      "exercise_type": "quiz",
-      "context": "Вони _____ з парковки і поїхали головною вулицею."
-    },
-    {
-      "word": "виїхали",
-      "exercise_type": "quiz",
-      "context": "виїхали"
-    },
-    {
-      "word": "заїхали",
-      "exercise_type": "quiz",
-      "context": "заїхали"
-    },
-    {
-      "word": "перерву",
-      "exercise_type": "quiz",
-      "context": "Діти почули дзвоник і радісно _____ з класу на перерву."
-    },
-    {
-      "word": "купив",
-      "exercise_type": "fill-in",
-      "context": "Я купив каву і швидко _____ на вулицю."
-    },
-    {
-      "word": "обідню",
-      "exercise_type": "fill-in",
-      "context": "В обідню перерву колега _____ до мого кабінету."
-    },
-    {
-      "word": "мого",
-      "exercise_type": "fill-in",
-      "context": "В обідню перерву колега _____ до мого кабінету."
-    },
-    {
-      "word": "відчинив",
-      "exercise_type": "fill-in",
-      "context": "Я відчинив двері і _____ собаку на вулицю."
-    },
-    {
-      "word": "поїхав",
-      "exercise_type": "fill-in",
-      "context": "Потім я _____ з парковки і поїхав додому."
-    },
-    {
-      "word": "пакунки",
-      "exercise_type": "fill-in",
-      "context": "Я _____ важкі пакунки у квартиру."
-    },
-    {
-      "word": "вивіз",
-      "exercise_type": "fill-in",
-      "context": "вивіз"
-    },
-    {
-      "word": "фінішу",
-      "exercise_type": "group-sort",
-      "context": "Прибуття до фінішу (при- / до-)"
-    },
-    {
-      "word": "приїхати",
-      "exercise_type": "group-sort",
-      "context": "приїхати"
-    },
-    {
-      "word": "долетіти",
-      "exercise_type": "group-sort",
-      "context": "долетіти"
-    },
-    {
-      "word": "дійти",
-      "exercise_type": "group-sort",
-      "context": "дійти"
-    },
-    {
-      "word": "піти",
-      "exercise_type": "group-sort",
-      "context": "піти"
-    },
-    {
-      "word": "поїхати",
-      "exercise_type": "group-sort",
-      "context": "поїхати"
-    },
-    {
-      "word": "віднести",
-      "exercise_type": "group-sort",
-      "context": "віднести"
-    },
-    {
-      "word": "кав'ярнею",
-      "exercise_type": "error-correction",
-      "context": "кав'ярнею"
-    },
-    {
-      "word": "друг",
-      "exercise_type": "error-correction",
-      "context": "Ми заїхали до друг."
-    },
-    {
-      "word": "другу",
-      "exercise_type": "error-correction",
-      "context": "другу"
-    },
-    {
-      "word": "другом",
-      "exercise_type": "error-correction",
-      "context": "другом"
-    },
-    {
-      "word": "школа",
-      "exercise_type": "error-correction",
-      "context": "Вона вибігла із школа."
-    },
-    {
-      "word": "школу",
-      "exercise_type": "error-correction",
-      "context": "школу"
-    },
-    {
-      "word": "школі",
-      "exercise_type": "error-correction",
-      "context": "школі"
-    },
-    {
-      "word": "гаража",
-      "exercise_type": "error-correction",
-      "context": "гаража"
-    },
-    {
-      "word": "гаражу",
-      "exercise_type": "error-correction",
-      "context": "гаражу"
-    },
-    {
-      "word": "гаражі",
-      "exercise_type": "error-correction",
-      "context": "гаражі"
-    }
-  ],
+  "total_items": 0,
+  "grounded_items": 0,
+  "ungrounded": [],
   "vocab_coverage": {
     "plan_vocab_total": 22,
-    "tested_in_exercises": 17,
+    "tested_in_exercises": 0,
     "not_tested": [
+      "вибігти",
+      "вивезти",
+      "вивести",
+      "вийти",
+      "вилетіти",
+      "винести",
       "виносити",
+      "виходити",
       "виїжджати",
+      "виїхати",
       "двір",
+      "забігти",
+      "завезти",
+      "завести",
+      "зайти",
+      "залетіти",
+      "занести",
       "заносити",
-      "заїжджати"
+      "заходити",
+      "заїжджати",
+      "заїхати",
+      "кав'ярня"
     ]
   },
-  "all_grounded": false
+  "all_grounded": true
 }

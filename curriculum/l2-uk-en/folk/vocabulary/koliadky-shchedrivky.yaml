@@ -1,0 +1,283 @@
+vocabulary:
+- word: коля́дка
+  translation: ritual Christmas song (carol)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: щедрі́вка
+  translation: ritual New Year song
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: космого́нія
+  translation: cosmogony
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: світове дерево
+  translation: world tree (axis mundi)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: засіва́ння
+  translation: ritual sowing of grain
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: паралелі́зм
+  translation: parallelism (stylistic device)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: обрядо́вий
+  translation: ritual (adjective)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: автохто́нний
+  translation: autochthonous (local origin)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: стиліза́ція
+  translation: stylization
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: соля́рний
+  translation: solar
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: двовір’я
+  translation: double-faith (dual faith)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: візантійська літургія
+  translation: Byzantine liturgy
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: солярне божество
+  translation: solar deity
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: знащада
+  translation: from the beginning
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: первісний хаос
+  translation: primordial chaos
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: лінгвістична скам’янілість
+  translation: linguistic fossil
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: архаїчний пласт
+  translation: archaic layer
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: етимоло́гія
+  translation: etymology
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: римсько-провінційні впливи
+  translation: Roman-provincial influences
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: диску́сія
+  translation: debate
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: солярний цикл
+  translation: solar cycle
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: домовладика
+  translation: head of the household
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: роди́на
+  translation: family
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: інформа́тор
+  translation: informant
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: деміу́рг
+  translation: demiurge (creator)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пірна́ння
+  translation: diving
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: дрібний пісок
+  translation: fine sand
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: синій камінець
+  translation: blue stone
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Космічна тріада
+  translation: Cosmic Triad
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ґазді́вство
+  translation: household
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: сакраліза́ція
+  translation: sacralization
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ао́рист
+  translation: aorist (ancient past tense)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: імперфе́кт
+  translation: imperfect (ancient past tense)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: за́чи́н
+  translation: ritual opening
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: рефре́н
+  translation: refrain
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: магічна функція
+  translation: magical function
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ла́стівочка
+  translation: swallow (diminutive)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: водіння кози
+  translation: leading of the goat (ritual)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: порі́г
+  translation: threshold
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: віко́нце
+  translation: window (diminutive)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: войовничий атеїзм
+  translation: militant atheism
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: консерватизм побуту
+  translation: domestic conservatism
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: синкрети́зм
+  translation: syncretism
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: темні сторони
+  translation: dark sides
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: заклина́ння
+  translation: incantation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: Колядка дзвонів
+  translation: Carol of the Bells
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: інструмент культурної ідентичності
+  translation: instrument of cultural identity
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

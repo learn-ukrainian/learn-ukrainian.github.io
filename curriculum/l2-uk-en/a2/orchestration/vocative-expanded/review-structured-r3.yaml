@@ -1,0 +1,57 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: All 4 content_outline sections present with correct ordering. Section
+    topics match plan precisely. Formal address covers пане/пані + profession, surnames,
+    cultural context, добродій/добродійко — all p
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'All 25+ vocative forms verified correct against VESUM. Hard/soft group
+    classification confirmed. Adjective-in-vocative rule confirmed by textbook. No
+    Russianisms, surzhyk, or calques. One deduction: i'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow throughout: situations → patterns → practice. Every grammar
+    rule has 3+ Ukrainian examples. The hard/soft group explanation is honest about
+    complexity ("nouns ending in -р can belong t'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 10 required vocabulary items used naturally in prose: кличний ✅,
+    звертання ✅, пан ✅, пані ✅, лікар ✅, вчитель ✅, друг ✅, ввічливий ✅, офіційний
+    ✅, професія ✅. Recommended: добродій ✅, добродійка ✅'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 'All 5 plan activity types present with 8 items each. Good variety: fill-in
+    tests form production, match-up tests recognition, error-correction tests common
+    mistakes, quiz tests register awareness, gro'
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: Dialogues are natural and engaging (clinic visit, classroom, phone call
+    with humor — "сонечко" joke). Cultural context about Soviet suppression is well-handled.
+    No motivational openers or gamified lan
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All H2 headings match plan sections. Clean markdown. Word count 2663 vs
+    2000 target — well above minimum. No duplicate summaries, no stray tags. Підсумок
+    section provides useful self-check questions.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Decolonized treatment of пан/пані restoration. Soviet suppression described
+    accurately without hedging. Feminitives presented as "natural and standard" —
+    correct modern Ukrainian position. No "like Ru
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'Three dialogues with named speakers: (1) Олег + Лікар at clinic — formal
+    vocative in context, natural flow; (2) Вчителька + Марія + Андрій in classroom
+    — professional vocative, natural student questio'
+findings: []

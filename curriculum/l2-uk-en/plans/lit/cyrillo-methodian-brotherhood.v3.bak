@@ -1,0 +1,107 @@
+module: lit-025
+level: LIT
+sequence: 25
+slug: cyrillo-methodian-brotherhood
+version: '3.0'
+title: Кирило-Мефодіївське братство
+subtitle: The Cyrillo-Methodian Brotherhood
+focus: history
+pedagogy: Analysis
+phase: LIT.4 The Intellectuals (Kulish & Kostomarov)
+word_target: 5000
+objectives:
+- Analyze the causes and consequences of кирило-мефодіївське братство
+- Evaluate the historical significance of перша політична організація
+content_outline:
+- section: Вступ — Перша політична організація
+  points:
+  - Київ, 1845-1847 роки
+  - Чому це було революційно
+  - Таємне товариство в імперіях
+  words: 850
+- section: Засновники і члени
+  points:
+  - Микола Костомаров — ідеолог
+  - Пантелеймон Куліш — організатор
+  - Тарас Шевченко — найрадикальніший
+  words: 850
+- section: Книги буття українського народу
+  points:
+  - Жанр і структура документу
+  - Ідея слов'янської федерації
+  - Україна як "месія народів"
+  words: 850
+- section: Політична програма
+  points:
+  - Скасування кріпацтва
+  - Демократія і рівність
+  - Християнський соціалізм
+  words: 850
+- section: Розгром і наслідки
+  points:
+  - Донос і арешти (1847)
+  - Покарання членів
+  - Шевченко — найсуворіший вирок
+  words: 850
+- section: Підсумок — Ідея, що пережила репресії
+  points:
+  - Вплив братства на українську думку
+  - Від 1847 до 1991 року
+  - Завершення фази "Інтелектуалів"
+  words: 750
+vocabulary_hints:
+  required:
+  - братство (brotherhood)
+  - таємне товариство (secret society)
+  - федерація (federation)
+  - месіанізм (messianism)
+  - ідеолог (ideologist)
+  - програма (program)
+  - донос (denunciation)
+  - арешт (arrest)
+  - кріпацтво (serfdom)
+  - рівність (equality)
+  recommended:
+  - маніфест (manifesto)
+  - утопія (utopia)
+  - панславізм (pan-Slavism)
+  - репресії (repressions)
+  - заслання (exile)
+activity_hints:
+- type: reading
+  focus: Уривки з "Книг буття українського народу"
+  source: Wikipedia and historical sources
+  items: 4+
+- type: essay-response
+  focus: Україна як \"месія народів\" — утопія чи візія?
+  output: Політико-філософське есе
+connects_to:
+- lit-26 (Nechuy-Levytsky — наступна фаза)
+- lit-20 (Cult of Shevchenko — Шевченко-революціонер)
+- istorio (Historical modules)
+prerequisites:
+- lit-21 (Panteleimon Kulish)
+- lit-14 (Son — контекст арешту Шевченка)
+persona:
+  voice: Senior Philologist & Critic
+  role: Brotherhood Member
+grammar:
+- Political Terminology
+- Religious Rhetoric
+- Historical Narrative
+module_type: history
+immersion: 100% Ukrainian
+references:
+- name: Кирило-Мефодіївське братство — стаття
+  url: https://uk.wikipedia.org/wiki/Кирило-Мефодіївське_братство
+  type: primary
+  notes: Історія організації
+- name: Книги буття українського народу
+  url: https://uk.wikipedia.org/wiki/Книги_буття_українського_народу
+  type: primary
+  notes: Програмний документ
+- name: Микола Костомаров — біографія
+  url: https://uk.wikipedia.org/wiki/Микола_Костомаров
+  type: secondary
+  notes: Біографія одного з лідерів
+register: академічний

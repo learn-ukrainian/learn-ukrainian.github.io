@@ -1,0 +1,45 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: Missing reference to Заболотний. Marker mapping deviates from the plan
+    outline (`exercise-3` misplaced, `exercise-8` added).
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Two Russianisms found ("давай повторимо", "давай робити") using calqued
+    imperatives.
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent pedagogical flow, effectively using character mistakes to demonstrate
+    the rule of 5-20 ("У мене є п’ять брати... Ні, почекай.").
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required vocabulary is present naturally, but the recommended word
+    "обрати" was substituted with "вибрати".
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: 'Markers are misaligned: `exercise-3` is misplaced in Part 2, and `exercise-8`
+    is hallucinated.'
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: Overuse of meta-commentary ("Let us start by...", "Let us continue...")
+    which tells the learner what to do instead of transitioning smoothly.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Clean markdown, though pacing is extremely heavy for the intended level.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Culturally appropriate context and naming.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: Dialogues serve the grammar well, though slightly transactional.
+findings: []

@@ -1,57 +1,72 @@
-module: lit-150
-level: LIT
-sequence: 150
-slug: teliha-poetry
-version: '3.0'
-title: Teliha Poetry
-subtitle: Teliha Poetry
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння літературно-критичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Читання
+  focus: Розуміння літературного тексту (уривок з твору)
+  placement: inline
+  type: reading
+- focus: Аналіз авторського задуму — мова як мистецтво
+  placement: workbook
+  type: authorial-intent
+- focus: Літературна критика — оцінка інтерпретації
+  placement: workbook
+  type: critical-analysis
+- focus: Порівняння з іншими творами або інтерпретаціями (Teliha Poetry)
+  placement: workbook
+  type: comparative-study
+- focus: Есе-аналіз рецепції та сучасного значення (Teliha Poetry)
+  placement: workbook
+  type: essay-response
+connects_to:
+- olzhych-poetry
+content_outline:
+- points: []
+  section: Вступ та контекст
+  words: 1000
+- points: []
+  section: Аналіз ключових творів
+  words: 1000
+- points: []
+  section: Стилістика та мова автора
+  words: 1000
+- points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+  section: Деколонізаційна перспектива
+  words: 1000
+- points: []
+  section: Підсумок та спадщина
+  words: 1000
 focus: literature
-pedagogy: literature
-phase: LIT Expansion
-word_target: 5000
+grammar: []
+immersion: 100% Ukrainian
+level: LIT
+module: lit-150
 objectives:
 - Проаналізувати творчість Teliha Poetry у контексті української літератури
 - Дослідити вплив автора на формування національної ідентичності
-content_outline:
-- section: Вступ та контекст
-  points: []
-  words: 1000
-- section: Аналіз ключових творів
-  points: []
-  words: 1000
-- section: Стилістика та мова автора
-  points: []
-  words: 1000
-- section: Деколонізаційна перспектива
-  points:
-  - Як цей автор руйнує імперські міфи
-  - Українська суб'єктність у тексті
-  words: 1000
-- section: Підсумок та спадщина
-  points: []
-  words: 1000
+pedagogy: literature
+persona:
+  role: Woman of Steel
+  voice: Senior Philologist & Critic
+phase: LIT Expansion
+prerequisites:
+- malaniuk-poetry
+references: []
+register: академічний
+sequence: 150
+slug: teliha-poetry
+subtitle: Teliha Poetry
+title: Teliha Poetry
+version: '3.0'
 vocabulary_hints:
+  recommended:
+  - деколонізація
   required:
   - історіографія
   - наратив
   - суб'єктність
-  recommended:
-  - деколонізація
-activity_hints:
-- type: reading
-  focus: Аналіз першоджерела
-- type: essay-response
-  focus: Критичне есе
-- type: critical-analysis
-  focus: Деконструкція тексту
-persona:
-  voice: Senior Philologist & Critic
-  role: Woman of Steel
-immersion: 100% Ukrainian
-prerequisites:
-- malaniuk-poetry
-connects_to:
-- olzhych-poetry
-references: []
-register: академічний
-grammar: []
+word_target: 5000

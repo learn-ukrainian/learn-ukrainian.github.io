@@ -1,26 +1,19 @@
-# Section-by-Section Generation — Section 4/4
+# Section-by-Section Generation — Section 4/5
 
 You are writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 1: Ласкаво просимо до рівня А2 (A2, A2.1 [Foundation and Aspect Introduction])
-**Section to write:** Що нас чекає на рівні А2? (What Awaits Us in A2?) (~330 words total)
-**Word target for this section:** 330 words (aim for 363 to account for undershoot)
+**Section to write:** Що нас чекає на рівні А2? (What Awaits Us in A2?) (~300 words total)
+**Word target for this section:** 300 words (aim for 330 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Що нас чекає на рівні А2? (What Awaits Us in A2?) (~330 words total)
-
-- P1 (~100 words): A2 curriculum roadmap. The A2 level has four major themes, introduced in sequence: (1) Вид дієслова (verbal aspect) — the distinction between доконаний вид (perfective: completed action — написати, прочитати) and недоконаний вид (imperfective: ongoing/habitual action — писати, читати). This will unlock the ability to talk about past and future events precisely. (2) Повна система відмінків — completing all 7 cases: родовий (possession, absence: немає часу, книга друга), давальний (recipient: дати другові, телефонувати мамі), орудний (instrument, accompaniment: писати ручкою, йти з другом). (3) Дієвідмінювання — verb conjugation patterns, including irregular verbs. (4) Дієслова руху — verbs of motion (іти, їхати, летіти and their prefixed variants).
-
-- P2 (~100 words): What changes at A2. In A1, you said: «Я читаю книгу» (present only). At A2 you will say: «Я прочитав книгу» (I read/finished the book — perfective past), «Я читатиму книгу» (I will be reading — imperfective future), «Це книга мого друга» (This is my friend's book — genitive possession), «Я дав книгу другові» (I gave the book to my friend — dative recipient). These are not just new forms — they are new thoughts. A2 is where Ukrainian starts to feel like a language you can actually live in, not just survive in.
-
-- P3 (~80 words): Vocabulary milestone and practical advice. A1 equipped you with approximately 500 high-frequency words. By the end of A2, you will have encountered and practiced 1,200 words — the threshold at which research shows learners begin to handle simple authentic texts. Start now: find a short Ukrainian children's story (казка) and read one paragraph per day. Don't translate — notice what you recognize. Every case ending you see is one you will fully master by A2's end.
-
-- P4 (~50 words): Closing thought. Рівень А2 — це кінець початку. You are leaving the stage where everything needs explaining and entering the stage where Ukrainian starts to explain itself. The three new cases, the aspect system, the motion verbs — they are not obstacles but tools. Ласкаво просимо до нового етапу.
-
-Grand total: ~2200 words
+## Що нас чекає на рівні А2? (What Awaits Us in A2?) (~300 words total)
+- P1 (~100 words): [Outline the "Thematic Pillars" of A2. Mention the expansion of daily life vocabulary: shopping, health, travel, and work. Explain that A2 is about "functional independence."]
+- P2 (~100 words): [Outline the "Grammar Pillars." Mention the Genitive case (the most frequent case), the concept of Verbal Aspect (finished vs. unfinished actions), and the complexity of Verbs of Motion. Frame these as "power tools" for communication.]
+- P3 (~100 words): [Final motivational closing. Encourage the learner to embrace the "Bridge" phase. Explain that A2 is where the language stops being a list of words and starts being a living system.]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -28,7 +21,7 @@ Grand total: ~2200 words
 <previous_context>
 [...previous sections truncated...]
 
-в Одесі» (He is in Odesa). The preceding word ends in a vowel, so **в** flows naturally. After a consonant sound or at the start of a sentence, use **у**: «Студент у школi» (The student is at school), «У мене є питання» (I have a question), «Увечерi вiн читав» (In the evening he read). The consonant before the preposition needs a vowel buffer. Special case: before words beginning with **в** or **ф**, always use **у** to avoid stacking two similar sounds: «У Вiнницi» (In Vinnytsia), «у фойє» (in the foyer). Here is a real textbook example from Litvinova, Grade 5: «Нехай в ваших родинах панує злагода!» This sentence contains an error — the word «нехай» ends in the consonant sound й, so the correct form is «у ваших родинах». Spotting and correcting this kind of mistake is a practical skill you will use constantly. ### І/Й The conjunction "and" also alternates. Between two consonant sounds, use **і**: «хлiб i масло» (bread and butter), «мати i батько» (mother and father), «зима i лiто» (winter and summer). After a vowel sound, use **й**: «книга й ручка» (book and pen), «Марiя й Тарас» (Maria and Taras), «кава й чай» (coffee and tea). At the start of a sentence, always use **і** regardless of what follows. The two forms mean exactly the same thing — the choice is purely phonetic. ### З/Зі/Із The preposition "from" or "with" has three variants. Use **з** before most words: «з Києва» (from Kyiv), «з другом» (with a friend), «з молоком» (with milk). Use **зі** before difficult consonant clusters, especially words beginning with з, с, ш, or two or more consonants together: «зi школи» (from school), «зi Львова» (from Lviv), «зi мною» (with me), «зi студентами» (with students). The form **iз** is interchangeable with **з** in most contexts and appears more often in formal writing: «iз задоволенням» (with pleasure). A practical test: say the phrase aloud. If the consonants pile up and the phrase feels clunky, switch to **зi**. ### Як це працює разом (How It Works Together) Euphony rules apply in speech first, writing second. Read this sentence aloud: «Вiн в Харковi й у Одесi.» The first **в** is correct — «вiн» ends in a consonant н, but the н in «він» is actually followed by a vowel-like environment because the phrase is rapid speech; however, more precisely, «він» ends in a consonant, so this should be «у Харкові». Correction: «Він у Харкові й в Одесі.» Now **у** follows the consonant н, and **в** follows the vowel й. Read Ukrainian texts aloud daily, noticing where the alternations occur — making this automatic takes practice. «Читайте вголос — вухо знає правила краще за очі.» <!-- INJECT_ACTIVITY: match-up, Euphony Choice Exercise — 8 items: sentence frame with a blank, learner matches the correct particle (у or в / і or й / з or зі). Items cover all three alternation types. Examples: «Вона живе ___ Харкові.» (у) / «Марта ___ Іван прийшли.» (й) / «Він повернувся ___ школи.» (зі) -->
+(The Melody of Language: Euphony) Have you ever wondered why Ukrainians sometimes say **у** *(in)* and sometimes **в** *(in)* for the exact same preposition? This is a core feature of formal Ukrainian called **милозвучність** *(euphony, melodiousness)*. The goal is simple: speech should flow like a continuous song, without awkward pauses or harsh phonetic clusters. The rule for the **у/в** alternation is driven entirely by the surrounding letters. If the preceding word ends in a consonant and the following word begins with a consonant, we use **у** to create a vocalic bridge: **Він жив у Львові.** *(He lived in Lviv.)* However, if we have vowels involved, we switch to **в** to prevent two vowels from colliding. For example, after a vowel and before a consonant: **Вона була в Києві.** *(She was in Kyiv.)* Or between two vowels: **Вона жила в Одесі.** *(She lived in Odesa.)* Applying this rule is not optional; it is the secret ingredient that gives spoken Ukrainian its signature rhythm. This exact same melodic principle applies to the word for "and." We alternate between **і** *(and)* and **й** *(and)* using logic that mirrors the **у/в** rule. When connecting two words that end and begin with consonants, we use the vowel **і** to smooth the transition: **брат і сестра** *(brother and sister)*. But if the first word ends in a vowel, we use the consonant **й** to keep the air flowing without a phonetic "hiccup": **батько й мати** *(father and mother)*. When you have a long sentence with multiple items, using the same conjunction repeatedly sounds unnatural. To solve this, Ukrainian offers a third option: **та** *(and)*. You can seamlessly mix **і**, **й**, and **та** to maintain a beautiful cadence throughout your sentence. The drive for euphony also affects prepositions like **з** *(with, from)*, which transforms into **зі** *(with, from)* or **із** *(with, from)* depending on the phonetic environment. The most important variation to master is **зі**. We use **зі** whenever the following word begins with a heavy cluster of consonants, especially combinations starting with **с**, **з**, **ш**, or **ж**. Saying "з Львова" is a tongue-twister, so the language naturally inserts a vowel to soften the cluster: **Він приїхав зі Львова.** *(He arrived from Lviv.)* Similarly, you will always hear **зі мною** *(with me)* instead of "з мною", or **зі школи** *(from school)* instead of "з школи". Using **із** is common between consonants to add rhythmic balance to a phrase. <!-- INJECT_ACTIVITY: match-up, Euphony Choice Exercise --> <!-- INJECT_ACTIVITY: error-correction, Euphony Error Correction --> While these rules might seem technical on paper, native speakers do not actively think about consonants and vowels while talking. They simply "hear" what sounds correct based on an instinct for rhythm. When a rule is broken, the sentence physically feels awkward to say. As you transition into the A2 level, start reading sentences aloud and paying attention to these connecting words. Mastering euphony is the single most effective way to elevate your speech from sounding like a textbook translation to sounding natural and authentic.
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -41,7 +34,7 @@ module: a2-001
 level: A2
 sequence: 1
 slug: a2-bridge
-version: '1.0'
+version: '1.2'
 title: Ласкаво просимо до рівня А2
 subtitle: Огляд граматики А1 та підготовка до нових тем
 focus: review
@@ -49,84 +42,96 @@ pedagogy: PPP
 phase: A2.1 [Foundation and Aspect Introduction]
 word_target: 2000
 objectives:
-- Learner can confidently recall and use the Nominative, Accusative, Locative, and
-  Vocative cases for nouns and adjectives learned in A1.
-- Learner can recognize and predict common vowel alternations (e.g., о/і, е/і in closed
-  syllables) and consonant mutations (г/з/ж, к/ц/ч) in noun and verb stems.
-- Learner can actively apply basic euphonic rules (у/в, і/й, з/зі/із) to produce more
-  natural-sounding Ukrainian.
-- Learner can understand the roadmap for the A2 level, including the introduction
-  of the Genitive, Dative, and Instrumental cases.
+  - Learner can confidently recall and use the Nominative, Accusative, Locative,
+    and Vocative cases for nouns and adjectives learned in A1.
+  - Learner can recognize and predict common vowel alternations (e.g., о/і, е/і 
+    in closed syllables) and consonant mutations (г/з/ж, к/ц/ч) in noun and verb
+    stems.
+  - Learner can actively apply basic euphonic rules (у/в, і/й, з/зі/із) to 
+    produce more natural-sounding Ukrainian.
+  - Learner can understand the roadmap for the A2 level, including the 
+    introduction of the Genitive, Dative, and Instrumental cases.
 dialogue_situations:
-- setting: 'Arrival at a Kyiv language school on the first day of A2 — reviewing what
-    you know: Я з Канади (genitive). Мені 25 (dative). Я вивчаю українську мову (accusative).
-    Я живу в Києві (locative).'
-  speakers:
-  - Новий студент
-  - Викладач (teacher)
-  motivation: Review all A1 cases in a natural intro conversation
+  - setting: 'Arrival at a Kyiv language school on the first day of A2 — reviewing
+      what you know: Я — студент (nominative). Я вивчаю українську мову
+      (accusative). Я живу в Києві (locative). Привіт, Оксано! (vocative).'
+    speakers:
+      - Новий студент
+      - Викладач (teacher)
+    motivation: Review all A1 cases in a natural intro conversation
 content_outline:
-- section: Пригадуємо відмінки (Reviewing Cases)
-  words: 600
-  points:
-  - 'Quick review of the four A1 cases: Nominative (Хто? Що?), Accusative (Кого? Що?),
-    Locative (Де? На кому? На чому?), and Vocative (звертання).'
-  - 'Practice exercises: identifying case usage in sentences and declining familiar
-    noun-adjective pairs.'
-  - 'Introducing the full case system map: showing all seven cases and highlighting
-    the three new ones for A2 (Genitive, Dative, Instrumental).'
-- section: Магія української фонології (The Magic of Ukrainian Phonology)
-  words: 700
-  points:
-  - 'Revisiting key vowel alternations: о/і, е/і (e.g., стіл/стола, Київ/Києва). Explaining
-    the ''closed syllable'' rule.'
-  - 'Revisiting key consonant alternations: the first palatalization (г/ж, к/ч, х/ш)
-    and its effect on noun and verb forms (нога/ніжка, рука/ручка).'
-  - 'Introduction to stress patterns: identifying common patterns and using stress
-    to disambiguate words (e.g., замок "castle" vs. замок "lock").'
-- section: 'Милозвучність мови: евфонія (The Melody of Language: Euphony)'
-  words: 400
-  points:
-  - Formalizing the rules for у/в and і/й alternation based on surrounding sounds
-    (vowel vs. consonant).
-  - Explaining the use of з/зі/із before difficult consonant clusters.
-  - Practice creating fluid sentences by choosing the correct euphonic particle.
-- section: Що нас чекає на рівні А2? (What Awaits Us in A2?)
-  words: 300
-  points:
-  - 'A clear roadmap of the A2 curriculum: introduction to aspect, mastering all seven
-    noun cases, verb conjugation patterns, and verbs of motion.'
-  - 'Setting expectations: A2 is where learners begin to express more complex ideas
-    and move beyond simple statements.'
+  - section: Пригадуємо відмінки (Reviewing Cases)
+    words: 600
+    points:
+      - 'Quick review of the four A1 cases: Nominative (Хто? Що?), Accusative (Кого?
+        Що?), Locative (Де? На кому? На чому?), and Vocative (звертання).'
+      - 'Practice exercises: identifying case usage in sentences and declining familiar
+        noun-adjective pairs.'
+      - 'Introducing the full case system map: showing all seven cases and highlighting
+        the three new ones for A2 (Genitive, Dative, Instrumental).'
+  - section: Магія української фонології (The Magic of Ukrainian Phonology)
+    words: 700
+    points:
+      - 'Revisiting key vowel alternations: о/і, е/і (e.g., стіл/стола, Київ/Києва).
+        Explaining the ''closed syllable'' rule.'
+      - 'Revisiting key consonant alternations: the first palatalization (г/ж, к/ч,
+        х/ш) and its effect on noun and verb forms (нога/ніжка, рука/ручка).'
+      - 'Introduction to stress patterns: identifying common patterns and using stress
+        to disambiguate words (e.g., замок "castle" vs. замок "lock").'
+      - 'Consonant assimilation: дж and дз as single sounds (affricates), not two
+        separate consonants — джерело, дзвінок, бджола. Voicing assimilation before
+        voiced consonants: просьба → [проз''ба], боротьба → [бород''ба], вокзал →
+        [воґзал].'
+      - 'Mobile stress in noun paradigms: stress shifts between stem and ending across
+        cases — вода/воду, рука/руки, голова/голову, нога/ногу. Recognizing
+        this pattern helps predict pronunciation of new nouns.'
+  - section: 'Милозвучність мови: евфонія (The Melody of Language: Euphony)'
+    words: 400
+    points:
+      - Formalizing the rules for у/в and і/й alternation based on surrounding 
+        sounds (vowel vs. consonant).
+      - Explaining the use of з/зі/із before difficult consonant clusters.
+      - Practice creating fluid sentences by choosing the correct euphonic 
+        particle.
+  - section: Що нас чекає на рівні А2? (What Awaits Us in A2?)
+    words: 300
+    points:
+      - 'A clear roadmap of the A2 curriculum: introduction to aspect, mastering all
+        seven noun cases, verb conjugation patterns, and verbs of motion.'
+      - 'Setting expectations: A2 is where learners begin to express more complex
+        ideas and move beyond simple statements.'
 vocabulary_hints:
   required:
-  - відмінок (case)
-  - називний (nominative)
-  - знахідний (accusative)
-  - місцевий (locative)
-  - кличний (vocative)
-  - чергування (alternation)
-  - голосний (vowel)
-  - приголосний (consonant)
-  - наголос (stress (accent))
+    - відмінок (case)
+    - називний (nominative)
+    - знахідний (accusative)
+    - місцевий (locative)
+    - кличний (vocative)
+    - чергування (alternation)
+    - голосний (vowel)
+    - приголосний (consonant)
+    - наголос (stress (accent))
   recommended:
-  - милозвучність (euphony, melodiousness)
-  - огляд (review, overview)
-  - система (system)
-  - правило (rule)
+    - милозвучність (euphony, melodiousness)
+    - огляд (review, overview)
+    - система (system)
+    - правило (rule)
 activity_hints:
-- type: quiz
-  focus: Case Identification Drill
-  items: 8
-- type: fill-in
-  focus: Phonological Alternation Pairs
-  items: 8
-- type: match-up
-  focus: Euphony Choice Exercise
-  items: 8
+  - type: quiz
+    focus: Case Identification Drill
+    items: 8
+  - type: fill-in
+    focus: Phonological Alternation Pairs
+    items: 8
+  - type: match-up
+    focus: Euphony Choice Exercise
+    items: 8
+  - type: error-correction
+    focus: Euphony Error Correction
+    items: 6
 references:
-- title: Заболотний Grade 5, §1-10
-  notes: Повторення вивченого в початкових класах
+  - title: Заболотний Grade 5, §1-10
+    notes: Повторення вивченого в початкових класах
 
 </plan_content>
 
@@ -478,6 +483,8 @@ references:
 </knowledge_packet>
 
 ---
+
+
 
 ## Rules
 

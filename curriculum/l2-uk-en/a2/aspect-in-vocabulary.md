@@ -1,281 +1,137 @@
-## Чо́му дієслова́ потрі́бно вчи́ти па́рами? (Why Verbs Must Be Learned in Pairs)
+## Чому дієслова потрібно вчити парами? (Why Verbs Must Be Learned in Pairs)
 
-Два речення — одне́ сло́во зміни́лося:
+When you start learning Ukrainian verbs, you might assume that one English verb translates into one single Ukrainian word. However, verbs in this language are almost always learned in pairs. This essential grammatical concept is called verb aspect. It is a fundamental feature of the language. If you only learn one part of the pair, you are effectively only learning half of the word. The first part describes the ongoing process of doing something. Without memorizing its partner, you will not know how to express that a task is actually finished. You will be unable to state that a result has been successfully achieved. To speak naturally, you need both halves of the picture.
 
-> «Я писа́ла листа́ ці́лий ве́чір.»
+*   **Робити.** (To do / to make — process.)
+*   **Зробити.** (To have done / to have made — result.)
 
-> «Я написа́ла листа.»
+There are two distinct aspects that describe how an action unfolds in time. The first category is the imperfective aspect. You use this aspect to talk about a continuous process, a repeated habit, or an action where the final result is not the focus. The second category is the perfective aspect. This aspect is specifically used to emphasize the completion of an action. It highlights a specific result, a successful accomplishment, or a one-time event. Because these two concepts must always work together, textbooks use a standard notation to present them. You will usually see the imperfective verb listed first, immediately followed by a slash, and then the perfective verb.
 
-Both sentences describe writing a letter. Both use the same root — *пис-*. But the first sentence stretches across an entire evening: the writing was happening, unfinished, ongoing. The second sentence lands like a stamp on an envelope: done. The letter exists. What changed? A single prefix — **на-** — transformed the verb from a process into a result. This is not decoration. This is the core engine of how Ukrainian verbs work.
+*   **Недоконаний вид.** (Imperfective aspect.)
+*   **Доконаний вид.** (Perfective aspect.)
+*   **Читати / прочитати.** (To read / to have read.)
 
-In Ukrainian, most verbs live as a **видова́ па́ра** *(aspect pair)* — two forms that belong together like inhale and exhale. One form describes the **process** — the action unfolding, repeated, or habitual. This is the **недоко́наний вид** *(imperfective aspect)*, and it answers the question **що роби́ти?** The other form describes the **completed result** — the action finished, achieved once, done. This is the **доко́наний вид** *(perfective aspect)*, answering **що зроби́ти?** From now on, every verb you learn has a standard notation: imperfective **/** perfective. Not just «писа́ти» — but «**писати / написа́ти**» *(to write / to have written)*. Learning only one form is like owning one chopstick — a real object, but useless without its partner.
+Let's look at how this concept works in a real situation. Imagine a grandmother teaching her granddaughter how to cook traditional food. Notice how she deliberately switches between verbs that describe the ongoing process and verbs that demand a completed result.
 
-Here is the practical consequence: from today, every new verb in your notebook gets two slots. When you look up a word on slovnyk.me or e2u.org.ua, you will see both forms listed together. Ukrainian school textbooks do exactly this — Заболо́тний's Grade 6 textbook (§52) introduces **вид дієслова** by always showing the pair side by side. Dictionaries mark them: **недок.** *(imperfective)* and **док.** *(perfective)*. If you find only one form, search for its partner before moving on.
+> — **Бабуся:** Ліпи вареники, поки тісто є. *(Keep forming the varenyky while there is dough.)*
+> — **Онучка:** Добре, я ліплю. *(Okay, I am forming them.)*
+> — **Бабуся:** Ось, зліпи цей останній вареник. *(Here, form this last varenyk.)*
+> — **Онучка:** Я вже зліпила. Що далі? *(I have already formed it. What next?)*
+> — **Бабуся:** Тепер вари їх 10 хвилин. *(Now boil them for 10 minutes.)*
+> — **Онучка:** Добре, я варю. *(Okay, I am boiling them.)*
+> — **Бабуся:** Коли звариш, поклич усіх до столу! *(When you have boiled them, call everyone to the table!)*
 
-Think of two columns in your mind:
+In this dialogue, the grandmother uses the imperfective aspect to focus on the continuous cooking process. Then, she uses the perfective partners to focus on finishing the specific task.
 
-**Недоконаний вид** — process, duration, repetition. **Доконаний вид** — completed action, one-time result. Three structural patterns explain how most pairs are formed. Some pairs differ by a prefix: «писати / **на**писати». Some change a suffix or vowel: «запи́тувати / запита́ти» *(to ask, repeatedly / to ask, once)*. And a few are completely different words: «бра́ти / взя́ти» *(to take — process / to take — completed)*. You will learn all three patterns in the sections ahead.
+Because learning pairs is so important, you must know how to find them whenever you learn a new word. A good dictionary is your best tool for this task. The dictionary will usually list the aspectual partner right next to the main word. The standard entry shows the imperfective verb first. Then, it uses an abbreviation to indicate the perfective version.
 
-But first — aspect in action:
+*   **Писати, -аю, -аєш; док. написати.** (To write; perf. to have written.)
 
-> **Бабу́ся:** «Лі́пи варе́ники — ось так, зно́ву і знову.»
->
-> **Ону́чка:** «Я зліпи́ла пе́рший!»
->
-> **Бабуся:** «Чудо́во! Тепе́р вари їх рі́вно де́сять хвили́н.»
->
-> **Онучка:** «А скі́льки ще вари́ти?»
->
-> **Бабуся:** «Як ті́льки зва́риш — вони́ спливу́ть на пове́рхню.»
+This abbreviation tells you exactly which word you must use for the completed action. Some digital dictionaries go even further and provide the full conjugation paradigms for both verbs. Make it a strict habit to write down both verbs in your notes every time you encounter a new action.
 
-Notice the pairs: **ліпи́ти / зліпи́ти** *(to shape, keep going / to finish shaping one)* and **варити / звари́ти** *(to boil, ongoing / to finish boiling)*. Бабуся says «ліпи» — keep forming, one after another, the process continues. Онучка says «зліпила» — one varenyк is done, result achieved. «Вари десять хвилин» — the boiling is a process with duration. «Звариш» — the moment they are fully cooked, finished.
 
-The recipe makes the distinction concrete: every kitchen instruction switches between «keep doing this» and «finish doing that.»
+## Спосіб 1: Додавання префікса (Method 1: Adding a Prefix)
 
-## Спо́сіб 1: Додава́ння пре́фікса
+The most frequent and straightforward method for creating a perfective verb in Ukrainian is by adding a prefix to its imperfective base. A prefix is a short syllable attached to the very beginning of a word. When we form an aspectual pair this way, we use what linguists call a "pure" prefix. This means that the prefix changes only the aspect of the verb, shifting its grammatical focus from an ongoing process to a completed result. Crucially, it does not alter the core dictionary meaning of the action itself. For example, consider the act of reading:
 
-The most common way to form a perfective verb in Ukrainian is to add a **префікс** *(prefix)* to the imperfective base. The prefix seals the action — it signals that the verb now describes a completed act with a concrete result. But here is the critical detail: the prefix assigned to each pair is fixed. You cannot guess it. You must learn «писати / **на**писати» as a single unit, the same way you learned «видова пара» in the previous section — two forms, one meaning, always together.
+* **Читати.** (To read, to be reading.)
+* **Прочитати.** (To have read, to finish reading.)
 
-Here are five core pairs. Notice how each prefix is different — and how the meaning stays the same, only the completion changes:
+The fundamental action remains the exact same in both words. You are still looking at letters and making sense of them. However, the new perfective word explicitly signals that you have successfully reached the end of the text. 
 
-**писати / написати** *(to write / to write — completed)*
+Let us examine some of the most common prefixes used to create perfective partners, starting with the prefix **на-**. This prefix is frequently attached to verbs that describe creating something new, often through writing or drawing. Two of the most essential pairs you will learn at the A2 level are:
 
-> «Вона́ **писала** повідо́млення п'ять хвилин.»
-> «Вона **написала** повідомлення.»
+* **Писати / написати.** (To write / to have written.)
+* **Малювати / намалювати.** (To draw / to have drawn.)
 
-**чита́ти / прочита́ти** *(to read / to read — completed)*
+When you use the perfective form of these verbs, you emphasize that the creative process is completely finished and the final physical product now exists. You are no longer just holding a pen; you have a finished document. Consider this example sentence:
 
-> «Ми **чита́ли** кни́жку цілий ти́ждень.»
-> «Ми **прочита́ли** її вчо́ра.»
+> — **Студент:** Я писав лист годину, і нарешті написав його. *(I was writing a letter for an hour, and finally I wrote it.)*
 
-**робити / зробити** *(to do, to make / to do — completed)*
+In this example, the first verb highlights the long duration of the effort. The second verb proudly announces the successful result of that effort.
 
-> «Він **роби́в** дома́шнє завда́ння.»
-> «Він **зроби́в** усе́ завдання.»
+Another very common prefix for forming aspectual pairs is **по-**. This prefix is often paired with verbs related to our physical senses, such as sight and hearing. 
 
-**ба́чити / поба́чити** *(to see / to see — completed)*
+* **Бачити / побачити.** (To see / to have seen.)
+* **Чути / почути.** (To hear / to have heard.)
 
-> «Я ча́сто **ба́чила** йо́го в метро́.»
-> «Я **поба́чила** його вчора на ву́лиці.»
+In these specific cases, adding the prefix often denotes the sudden, instant moment of perception. It highlights the exact second when a visual image or a sound successfully registers in your mind. This is very different from the continuous state of observing or listening to your surroundings. When you use the perfective verb, you are stating that your eyes or ears have successfully captured the information.
 
-**готува́ти / приготува́ти** *(to cook, to prepare / to cook — completed)*
+You will also frequently encounter the prefix **з-**, along with its phonetic variations **зі-** and **с-**. A fundamental pair to memorize is:
 
-> «Ма́ма **готува́ла** вече́рю годи́ну.»
-> «Мама **приготува́ла** борщ.»
+* **Робити / зробити.** (To do, to make / to have done, to have made.)
 
-Five verbs, five different prefixes: **на-**, **про-**, **з-**, **по-**, **при-**. Each one is the assigned prefix for that particular verb. Swapping them produces either a wrong word or a completely different meaning.
+You must also remember an important spelling and pronunciation rule regarding this prefix. The prefix changes to **с-** when it stands immediately before the consonants **к**, **п**, **т**, **ф**, and **х**. A good example is the pair:
 
-Now five more pairs from everyday A2 vocabulary. The same principle holds — each verb has its own fixed prefix:
+* **Ховати / сховати.** (To hide / to have hidden.)
 
-- **варити / зварити** *(to boil / to boil — completed)* — prefix **з-**
-- **вчити / ви́вчити** *(to study / to learn — completed)* — prefix **ви-**
-- **ї́сти / з'ї́сти** *(to eat / to eat — completed)* — prefix **з-**
-- **пи́ти / ви́пити** *(to drink / to drink — completed)* — prefix **ви-**
-- **малюва́ти / намалюва́ти** *(to draw, to paint / to draw — completed)* — prefix **на-**
+While this prefix is very common, other prefixes are also used to show a completed result for different verbs. For example, the verb **готувати** (to prepare, to cook) takes the prefix **при-** to form its perfective partner **приготувати** (to have prepared, to have cooked). Both prefixes successfully transform the process into a completed achievement.
 
-Notice the variety: **з-**, **ви-**, **на-**. There is no universal rule that tells you which prefix goes with which verb. «Вчити» takes **ви-**, but «їсти» takes **з-**. Each pair must be memorized as a unit.
+The prefix **про-** is another essential tool for building perfective verbs. As we saw earlier, it pairs with the verb that means to read to create a completed action. This prefix is also used with other actions that take time to complete, especially those involving continuous sound or motion.
 
-One important warning. A prefix on a verb does not always create a simple aspectual partner. Compare two prefixed forms of «писати»:
+* **Співати / проспівати.** (To sing / to have sung.)
 
-> «**Написати** листа.» — to write a letter *(completed)*
-> «**Підписа́ти** докуме́нт.» — to sign a document
+When this specific prefix is used to form a pure aspectual pair, it often implies going through the entire action thoroughly, from the very beginning to the absolute end. It suggests that you did not just sing a small part of a melody or read a few random pages. Instead, you covered the whole distance of the task until there was nothing left to process. 
 
-«Написати» is the perfective partner of «писати» — same meaning, just completed. But «підписати» is a different verb entirely, with a new meaning. The prefix **під-** shifted the action from writing to signing. Here is your test: does the prefixed verb mean the same thing as the imperfective, only completed? If yes — it is an aspectual pair. If the meaning changed — it is a new verb, not a partner.
+As you continue your studies, you will notice a wide variety of other prefixes, such as **ви-**, **від-**, and **за-**. It might be tempting to look for a strict, mathematical rule that dictates exactly which prefix belongs to which verb. Unfortunately, there is no single universal logic that applies to every word. The specific prefix chosen for a verb often developed naturally over centuries of language history. Therefore, at the A2 level, you should not try to guess the perfective partner. Instead, your strategy should be to memorize the specific prefix for each core verb as a single, inseparable vocabulary unit. Always learn them exactly as they appear together in the dictionary.
 
-<!-- INJECT_ACTIVITY: quiz, Find the Partner — match imperfective verb to correct perfective from three options; items: писати, читати, бачити, їсти, пити, малювати, готувати, вчити; distractors use plausible-but-wrong prefixes (e.g., записати for читати) -->
+<!-- INJECT_ACTIVITY: quiz, Identifying the perfective partner for common A2 verbs by adding the correct prefix -->
 
-Five more pairs to build your recognition range. These use slightly less obvious patterns:
 
-- **розповіда́ти / розпові́сти́** *(to tell, to narrate / to tell — completed)*
-- **забува́ти / забу́ти** *(to forget — habitual / to forget — once)*
-- **відкрива́ти / відкри́ти** *(to open — process / to open — completed)*
-- **закрива́ти / закри́ти** *(to close — process / to close — completed)*
-- **почина́ти / поча́ти** *(to begin — process / to begin — completed)*
+## Спосіб 2: Зміна в корені або суфіксі (Method 2: Change in the Root or Suffix)
 
-Look closely at «розповідати / розповісти» — the root itself changes: **розповід-** becomes **розповіст-**. And «забувати / забути» drops the **-ва-** suffix entirely. These pairs still use prefixes, but something else is happening inside the word too. That pattern — changes in the root or suffix — is exactly what the next section explores.
+While adding a prefix is the most common way to create a perfective verb, the Ukrainian language also uses a different, almost reverse, strategy. Sometimes, the base verb is already perfective, often because it historically includes a prefix that merged with the root. To create the imperfective partner—the verb that describes the ongoing process or routine—we must alter the end of the word. This process is often called "imperfectivization." Instead of adding something to the front of the word, we change its suffix. The most frequent change involves inserting the suffixes **-ува-** or **-юва-** right before the infinitive ending **-ти**. This stretches the word out, making it longer, which perfectly mirrors the idea of a stretched-out, continuous action. A classic example is the pair for buying. The perfective verb is **купити** (to have bought). To describe the regular process of shopping, we change the suffix to create the imperfective verb **купувати** (to buy, to be buying).
 
-Now read these five sentences aloud. For each verb in bold, decide: is it imperfective or perfective?
+Let us look closer at this **-ува-** and **-юва-** suffix pattern. It is incredibly productive in modern Ukrainian, meaning many new verbs use this system. When you encounter a pair formed this way, a helpful visual rule is that the noticeably longer verb is almost always the imperfective one. The extra syllables visually represent the extra time the action takes. Consider the verbs for deciding. The quick, final act of reaching a conclusion is **вирішити** (to have decided). The agonizing, drawn-out process of weighing your options is **вирішувати** (to be deciding). Similarly, when you want to ask a question, the sudden action of posing it is **запитати** (to have asked). However, if you are conducting an interview and asking questions continuously, you use the longer form **запитувати** (to ask, to be asking). Paying attention to the length of the verb provides a strong hint about its aspectual nature.
 
-> «Я щодня́ **чита́ю** нови́ни. Сього́дні вже **прочита́в** дві статті́.»
+Not all suffix changes involve the long **-ува-** addition. Another very common pattern replaces the final vowel of the root with the suffixes **-а-** or **-я-**. This often happens with verbs that end in **-істи** or **-ти** in their perfective form. These pairs are essential for daily communication. For instance, the verb for answering or replying. The completed result, giving a final answer, is **відповісти** (to have answered). When you change the ending to create the imperfective form, it becomes **відповідати** (to answer, to be answering). A related pair is used for narrating or telling a story. The perfective achievement is **розповісти** (to have told). The ongoing process of sharing a tale is **розповідати** (to tell, to be telling). The addition of **-а-** softens the ending and turns a hard result into a flowing process.
 
-> «Він **робив** впра́ви і наре́шті **зробив** усі пра́вильно.»
+In many cases, when we add these imperfective suffixes like **-а-** or **-я-**, the internal vowels of the root must also shift to accommodate the new pronunciation. This internal change is a clear phonetic marker that you are dealing with an aspectual pair. The most frequent internal vowel shift you will see at the A2 level is the vowel **о** changing into the vowel **а**. You can see this clearly in the verb for helping. The perfective form is **допомогти** (to have helped). When we add the **-а-** suffix to make it a continuous process, the **о** in the root also changes, giving us the imperfective form **допомагати** (to help, to be helping). You will see the exact same pattern in the verb for winning or overcoming. The perfective result is **перемогти** (to have won), while the ongoing struggle is **перемагати** (to win, to be winning).
 
-> «Вона **готувала** ті́сто й **приготувала** пирі́г до обі́ду.»
+Finally, you must be aware of the most subtle aspectual change: a simple shift in stress. In a small group of verb pairs, the spelling remains completely identical, and the only difference between the ongoing process and the completed result is which syllable receives the vocal emphasis. For example, the verb **викликати** (to call, to summon) can be both imperfective and perfective. When the stress falls on the final **-а-**, it is the imperfective process. When the stress shifts back to the prefix **ви-**, it becomes the perfective result. Because we do not write stress marks in everyday Ukrainian text, you must rely entirely on the context of the sentence to know which aspect is being used. As an A2 learner, you should pay close attention to the audio materials and the stress marks provided in your textbooks to master these subtle pairs.
 
-> «Ми **вчи́ли** слова́ і **ви́вчили** всі п'ятна́дцять.»
+<!-- INJECT_ACTIVITY: match-up, Find the Partner (Verb Matching). Focus: Matching imperfective verbs with their suffix-changed perfective partners (купувати, вирішувати, відповідати, допомагати, розповідати, запитувати, зачиняти, вставати). -->
+<!-- INJECT_ACTIVITY: fill-in, Choose the Correct Aspect Partner. Focus: Given a sentence context, choose between the root-change pairs (e.g., "Він завжди [допомагає/допоможе] мені з домашнім завданням"). -->
 
-> «Він **пив** ка́ву та **ви́пив** ці́лу ча́шку.»
 
-Each sentence pairs a process with its result. The first verb stretches across time — the second one lands.
+## Спосіб 3: Зовсім інші слова (Method 3: Completely Different Words)
 
-## Спосіб 2: Змі́на в ко́рені або́ су́фіксі
+The final method of forming aspectual pairs is the most unusual, yet you will encounter it every single day. This linguistic phenomenon is called suppletion (**суплетивізм**). A suppletive pair consists of two words that share the exact same core meaning and function together as a grammatical aspect pair, but they are built from completely different roots. They look and sound nothing alike. You cannot rely on a shared prefix or a predictable suffix to identify them. Instead, you must simply memorize these specific pairs as two sides of the same coin. While this concept might seem intimidating, there is good news. True suppletive verb pairs are quite rare in the Ukrainian language. However, because they describe fundamental human actions, they are among the most frequently used words in daily conversations. You cannot reach basic fluency without knowing them.
 
-The previous section showed how a prefix turns an imperfective verb into its perfective partner. But Ukrainian has a second pattern that works in the opposite direction. When a perfective verb — often one that already carries a prefix — needs an imperfective partner, Ukrainian builds one by adding a suffix, most commonly **-ува-** or **-юва-**, or by shifting a vowel inside the root. Linguists call this process **imperfectivization** — creating an imperfective from a perfective base. The result is a longer, softer-sounding verb. Compare: **запитати** *(to ask — completed)* is short and decisive, while **запитувати** *(to ask — ongoing)* stretches out with that **-ува-** ending. When you hear **-увати** or **-ювати** at the end of a verb, you can be almost certain it is imperfective.
+The single most important suppletive pair you must learn is the verb for taking. The imperfective process is **брати** (to take, to be taking). Its perfective partner, which indicates a successful and completed acquisition, is **взяти** (to have taken). You will use the imperfective form for habits, general statements, or ongoing actions.
 
-The **-ува-** suffix (and its shorter variant **-ва-**) is the most productive pattern. Here are five core pairs with model sentences that show the contrast between completed and ongoing action:
+> Я беру парасольку щодня. *(I take an umbrella every day.)*
 
-- **запитати / запитувати** *(to ask — once / to ask — repeatedly)*
+When the action is completely finished and the result is achieved, you switch to the perfective form.
 
-> «Вона **запита́ла** мене́ про адре́су.»
+> Я взяв парасольку сьогодні. *(I took an umbrella today.)*
 
-> «Він за́вжди́ **запи́тує** мене про пого́ду.»
+This distinction between taking something regularly and having successfully taken something once is fundamental to speaking naturally.
 
-- **ви́рішити / вирі́шувати** *(to decide, to solve — completed / to decide, to solve — process)*
+Another critical suppletive pair relates to communication. The imperfective verb for speaking or talking is **говорити** (to speak, to talk). You use this word to describe the continuous process of producing speech, discussing a topic, or having a conversation. The perfective counterpart is **сказати** (to say, to tell). You use this perfective form when a specific message has been successfully delivered or a definitive statement has been made.
 
-> «Ми **ви́рішили** пробле́му.»
+> Він говорив довго, але нічого не сказав. *(He spoke for a long time, but said nothing.)*
 
-> «Вони до́вго **вирі́шували**, куди́ ї́хати.»
+> Я хочу сказати правду. *(I want to tell the truth.)*
 
-- **відпові́сти́ / відповіда́ти** *(to answer — once / to answer — regularly)*
+Notice how the ongoing process contrasts sharply with the final communicative result.
 
-> «Студе́нт **відпові́в** на пита́ння.»
+There are a few other essential pairs at this level that belong in this highly irregular category. The verb for placing or putting things down is **класти** (to put, to be placing). Its perfective partner for a completed placement is **покласти** (to have put). The verb for catching or hunting is **ловити** (to catch, to be catching), while a successful capture is expressed with **піймати** (to have caught). Finally, you should understand the relationship between searching and finding. The imperfective process of looking for something is **шукати** (to search, to be looking for). The successful achievement of discovering that item is **знайти** (to find). While linguists might debate if these two are a strict grammatical pair because they have slightly different literal meanings, they function exactly like a perfective and imperfective pair in everyday communication. You search continuously, but you find instantly.
 
-> «Вона **відповіда́є** на листи́ ко́жного ра́нку.»
+<!-- INJECT_ACTIVITY: fill-in, Categorize by Formation Type. Focus: Sorting a list of 8 pairs into three groups: Prefixation (написати), Suffix/Root Change (купувати), or Suppletion (взяти). -->
 
-- **показа́ти / пока́зувати** *(to show — once / to show — repeatedly)*
 
-> «Він **показа́в** мені́ ка́рту.»
+## Підсумок (Summary)
 
-> «Учи́телька **пока́зує** нові́ слова на до́шці.»
+To speak Ukrainian naturally, you must learn verbs in their aspectual pairs. You now know the three main ways these pairs are formed: adding a prefix (like **на-**, **по-**, or **з-**), changing a vowel or suffix (like **о** to **а**), or using completely different suppletive words.
 
-- **забути / забувати** *(to forget — once / to forget — habitually)*
+Use this quick self-check to review the core concepts:
 
-> «Я **забу́в** ключі́ вдо́ма.»
+*   **Чому важливо вчити дієслова парами?** *(Why is it important to learn verbs in pairs?)* Because aspect defines the nature of the action—process versus result.
+*   **Який спосіб утворення найпопулярніший?** *(What is the most popular formation method?)* Adding a prefix to the imperfective base.
+*   **Як змінюються слова типу «допомогти»?** *(How do words like "to help" change?)* They undergo an internal vowel change, from **о** to **а**.
+*   **Назвіть партнерів для «брати» та «говорити».** *(Name the partners for "to take" and "to speak".)* Their perfective partners are **взяти** and **сказати**.
+*   **Де шукати пару, якщо ви її забули?** *(Where do you look for a pair if you forget it?)* In the dictionary, usually right after the main entry.
 
-> «Він часто **забува́є** ре́чі.»
-
-Notice the consistent direction: the perfective ends in **-а́ти** or **-іти́**, and the imperfective partner stretches it out to **-увати** or **-ювати**. The suffix is a reliable signal — it marks the verb that describes the process, not the result. If you see **-увати** at the end, you are looking at the imperfective member of the pair.
-
-Now the second sub-pattern within Method 2: vowel alternation inside the root. Instead of adding a suffix, Ukrainian shifts the root vowel — most commonly **о → а** — to create the imperfective partner.
-
-- **допомогти́ / допомага́ти** *(to help — completed / to help — ongoing)*
-
-> «Він **допомі́г** мені вчора.»
-
-> «Вона завжди **допомага́є** дру́зям.»
-
-Look at the roots: **допомо́г-** becomes **допомаг-** — the **о** stretches into **а**. This is not an irregularity. It is a phonological feature of Ukrainian. The vowel change signals duration, just as the **-ува-** suffix does. The imperfective form sounds longer and more open — it mirrors the open, ongoing nature of the action.
-
-Sometimes both changes happen at once — the root vowel shifts AND the ending changes. Take **розповісти / розповідати** *(to tell — completed / to tell — ongoing)*: the root changes from **розповіс-** to **розповід-**, and the ending shifts from **-ти** to **-ати**. The same double pattern appears in **відповісти / відповідати** — root **відповіс-** becomes **відповід-**, ending **-ти** becomes **-ати**. This combination can look disorienting at first. Two things are changing inside the same word. But the principle stays the same: the longer, more open form is always the imperfective. With repeated exposure, these pairs start to feel natural. Your ear learns to recognize the **-ува-** suffix and the **о → а** root shift as imperfective markers before your conscious mind catches up.
-
-<!-- INJECT_ACTIVITY: fill-in, Categorize by Formation Type — eight verb pairs; learner categorizes each into Method 1 (prefix only), Method 2a (-ува- suffix), or Method 2b (vowel change); pairs: писати/написати, запитати/запитувати, допомогти/допомагати, читати/прочитати, вирішити/вирішувати, забути/забувати, готувати/приготувати, відповісти/відповідати -->
-
-Here is your quick-reference chart — twelve pairs from both methods in one place:
-
-| Недоконаний вид | Доконаний вид | Спосіб |
-|---|---|---|
-| писати | написати | префікс |
-| читати | прочитати | префікс |
-| варити | зварити | префікс |
-| вчити | вивчити | префікс |
-| їсти | з'їсти | префікс |
-| пити | випити | префікс |
-| запитувати | запитати | -ува- |
-| вирішувати | вирішити | -ува- |
-| показувати | показати | -ува- |
-| відповідати | відповісти | -ува- / ко́рінь |
-| допомагати | допомогти | о → а |
-| розповідати | розповісти | корінь |
-
-The left column is always the imperfective — the process, the habit, the ongoing action. The right column is always the perfective — the result, the single event, the completed action. When you need to look up a pair, check the ending first: **-увати** points to Method 2, a bare prefix on a simple root points to Method 1.
-
-Now read these five sentences aloud. In each one, underline the part of the bold verb that signals its aspect — the suffix or the changed root vowel:
-
-> «Він **відповіда́в** довго, по́ки нарешті **відповів** правильно.»
-
-> «Вона **вирі́шувала** зада́чу і зре́штою **ви́рішила** її.»
-
-> «Вона **пока́зувала** фо́то друзям, поки нарешті **показа́ла** всім.»
-
-> «Він **запи́тував** кі́лька разі́в, перш ніж **запита́в** дире́ктора.»
-
-> «Вони **допомага́ли** будува́ти, і ра́зом **допомогли́** заверши́ти.»
-
-Each pair contrasts the stretched-out imperfective with the compact perfective. The first verb in each sentence carries the aspect marker — **-ува-**, **-ід-**, **-а-** in the root — while the second verb snaps shut with its shorter perfective form.
-
-## Спосіб 3: Зо́всім і́нші слова (суплетиві́зм)
-
-The first two methods follow predictable logic — add a prefix, change a suffix, shift a vowel. The third method follows no logic at all. Some of the most common Ukrainian verbs form their aspectual pairs from completely different roots. No prefix trick will connect them. No suffix pattern will help you guess. The imperfective and the perfective simply look like two unrelated words. Linguists call this **суплетивізм** *(suppletion)*. The good news: truly suppletive pairs are few — only three at A2 level. The bad news: they include verbs you will use in almost every conversation.
-
-Here are the three essential suppletive pairs. Read each mini-dialogue and notice how the two verbs share no visible connection:
-
-**брати / взяти** *(to take — ongoing / to take — completed)*
-
-> «Вона **бере́** книжки́ з поли́ці щодня.»
-
-> «Вона **взя́ла** словни́к і ви́йшла.»
-
-**говори́ти / сказа́ти** *(to speak, to talk — ongoing / to say, to tell — completed)*
-
-> «Він завжди **гово́рить** ти́хо.»
-
-> «Вона **сказа́ла** мені пра́вду.»
-
-This pair deserves special attention. **Говорити** describes the ongoing process of speaking — a conversation, a habit, a manner of speech. **Сказати** captures a single utterance — one sentence, one statement, one reply. Ukrainian uses this distinction constantly in storytelling: «Він довго **говори́в**, а по́тім **сказа́в**: "До́сить."»
-
-**лови́ти / злови́ти** *(to catch — ongoing / to catch — completed)*
-
-> «Кіт **лови́в** мете́лика в саду́.»
-
-> «Він нарешті **злови́в** його.»
-
-**шука́ти / знайти́** *(to look for — ongoing / to find — completed)*
-
-> «Ми **шука́ли** ключі всю́ди.»
-
-> «Ми **знайшли́** їх під столо́м.»
-
-Notice that **зловити** shares the root **лов-** with **ловити** and is technically formed with the prefix **з-**, like a Method 1 pair. True suppletion means zero shared material, as in **брати / взяти** or **шукати / знайти**. The pair **ловити / зловити** sits at the border between prefix formation and memorization — the prefix **з-** here is less semantically transparent than **на-** in **написати**, so many learners find it easier to memorize the pair as a unit rather than derive it from a rule.
-
-Why do suppletive pairs exist at all? The most frequent verbs in any language resist regularization. They are used so often, by so many speakers, that their ancient forms survive unchanged across centuries. English has the same phenomenon: *go / went* comes from two different Old English verbs that merged. Ukrainian **брати / взяти** similarly inherits two separate roots from Old Slavic — one for the process, one for the result. Knowing this makes the irregularity feel less random. These are not exceptions. They are survivors.
-
-Here are the twenty most important A2 aspectual pairs across all three methods — your quick-reference master list:
-
-| Недоконаний вид | Доконаний вид | Тип |
-|---|---|---|
-| писати | написати | П |
-| читати | прочитати | П |
-| робити | зробити | П |
-| бачити | побачити | П |
-| готувати | приготувати | П |
-| варити | зварити | П |
-| вчити | вивчити | П |
-| їсти | з'їсти | П |
-| пити | випити | П |
-| малювати | намалювати | П |
-| запитувати | запитати | С |
-| відповідати | відповісти | С |
-| вирішувати | вирішити | С |
-| розповідати | розповісти | С |
-| допомагати | допомогти | К |
-| забувати | забути | С |
-| показувати | показати | С |
-| брати | взяти | З |
-| говорити | сказати | З |
-| шукати | знайти | З |
-
-**П** = префікс, **С** = су́фікс, **К** = корене́ве чергува́ння, **З** = зовсім інші слова.
-
-<!-- INJECT_ACTIVITY: match-up, Fill in the Blanks with the Correct Pair — eight sentences with gaps requiring correct aspect form; context clues signal тривалість vs. результат; items: шукати/знайти, говорити/сказати, брати/взяти, ловити/зловити, писати/написати, читати/прочитати, готувати/приготувати, допомагати/допомогти -->
-
-How do you memorize pairs that share no visible root? Three strategies work:
-
-First, always learn them inside a mini-story — never as isolated words. «Вона шука́ла і знайшла́.» «Він говорив і сказав.» «Я брав і взяв.» The two verbs live together in one sentence, one situation. Your memory binds them through narrative, not through spelling.
-
-Second, notice a practical pattern: the suppletive imperfectives tend to be longer and end in **-ити** or **-ати** — **шукати**, **говорити**, **брати**. Their perfective partners are often shorter or end in a bare **-ти** — **знайти**, **сказати**, **взяти**. This is not a rule, but it is a useful instinct to develop.
-
-Third, put both verbs on one flashcard with the mini-story on the back. Never study one form alone. A verb without its partner is only half a word — and these partners cannot be guessed, only known.
-
-## Summary
-
-Ukrainian verbs live in aspectual pairs — **недоконаний вид** (imperfective, process) and **доконаний вид** (perfective, result). You now know three structural patterns for how these pairs form: prefixation (**писати / написати**), suffix or vowel change (**запитувати / запитати**, **допомагати / допомогти**), and suppletion (**брати / взяти**, **шукати / знайти**). From today, enter every new verb in pairs — one form alone is only half the picture. The notation "impf / pf" is your default tool for organizing vocabulary. When you meet a verb in a text, immediately ask: where is its partner? Which formation type connects them? That reflex will build faster than any grammar table.
-
-<!-- INJECT_ACTIVITY: match-up, Sentence Translation with Aspect Focus — eight English prompts requiring Ukrainian translation with correct aspect choice; items: "She was reading for an hour" → impf, "He finally found his keys" → pf, "They cooked the varenyky (finished)" → pf, "We were helping all evening" → impf, "I wrote the letter (completed)" → pf, "We were looking for the keys everywhere" → impf, "She said one word and left" → pf, "He was looking for his phone everywhere" → impf -->
-
-**Переві́р себе́** (Self-check):
-
-- Яке́ питання ста́влять до недоко́наного дієслова? — «Що робити?»
-- Яке питання ставлять до доко́наного дієслова? — «Що зробити?»
-- Як утвори́ти доконаний вид у па́рі «читати / ___»? — «Прочитати» — додаємо́ префікс «про-».
-- Яки́й суфікс є сигна́лом недоконаного ви́ду? — Суфікс «-ува-» або «-юва-».
-- На́зви дві суплети́вні па́ри. — «Брати / взяти» і «шукати / знайти».
+<!-- INJECT_ACTIVITY: match-up, Fill in the Blanks with the Correct Pair. Focus: Choosing between imperfective and perfective forms in context (8 items). -->
+<!-- INJECT_ACTIVITY: fill-in, Choose the Correct Aspect Partner. Focus: Identifying the matching aspect verb (8 items). -->

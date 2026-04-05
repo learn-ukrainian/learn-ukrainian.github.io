@@ -1,0 +1,49 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: All sections from the plan are covered in order. Word count is strictly
+    within the target range (1213 words).
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: The word "ко́шту́є" has a double acute accent which is orthographically
+    incorrect. Otherwise, excellent and accurate Ukrainian.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Strong PPP flow. Good use of accusative case applied immediately to real-world
+    ordering. Clearly explains the patterns (Мені [acc], Дайте [acc], Я буду [acc]).
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words are included naturally ("кафе", "рахунок",
+    "офіціант", "чайові", etc.).
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: '`<!-- INJECT_ACTIVITY: fill-in-dialogue -->` is placed at the end of
+    the "Культура кафе" section, but it tests the dialogue from the first section.
+    It should be placed immediately after the dialogue.'
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Excellent cultural context ("Ми ва́римо каву — значить, ми живемо́"),
+    realistic scenario in Lviv, very engaging without being generic.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Clean markdown, but a minor deduction for clustering three exercise markers
+    together at the end of a single section.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Perfect distinction between "кафе", "ресторан", and "кав'ярня". Nice touch
+    mentioning their role as community hubs post-2014 and 2022.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are natural, multi-turn, and incorporate polite phrases appropriately
+    ("Ось, будь ласка", "Можна карткою?").
+findings: []

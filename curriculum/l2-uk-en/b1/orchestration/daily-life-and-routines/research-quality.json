@@ -1,73 +1,67 @@
 {
   "exists": true,
-  "words": 573,
-  "quality": "stub",
-  "score": 1,
-  "score_raw": 2,
+  "words": 2607,
+  "quality": "solid",
+  "score": 8,
+  "score_raw": 14,
   "score_max": 17,
-  "markers": 1,
+  "markers": 8,
   "profile": "core",
   "dimensions": {
     "state_standard": {
-      "score": 0,
+      "score": 2,
       "max": 2,
-      "detail": "missing"
+      "detail": "8 sections covered"
     },
     "vocabulary": {
-      "score": 0,
+      "score": 1,
       "max": 2,
-      "detail": "missing"
+      "detail": "18 excerpts (need 20+)"
     },
     "cultural_hooks": {
-      "score": 0,
+      "score": 1,
       "max": 2,
-      "detail": "missing"
+      "detail": "1 cultural reference(s)"
     },
     "learner_errors": {
-      "score": 0,
+      "score": 2,
       "max": 2,
-      "detail": "missing"
+      "detail": "N/A for V6 packets"
     },
     "cross_references": {
-      "score": 0,
+      "score": 1,
       "max": 1,
-      "detail": "missing"
+      "detail": "7 authors"
     },
     "pedagogy_notes": {
-      "score": 0,
+      "score": 1,
       "max": 1,
-      "detail": "missing"
+      "detail": "3 pedagogy references"
     },
     "source_verification": {
-      "score": 0,
+      "score": 2,
       "max": 2,
-      "detail": "3 URLs but 0 known-good sources"
+      "detail": "18 cited sources"
     },
     "claim_grounding": {
       "score": 2,
       "max": 2,
-      "detail": "11 cited examples, 239 Ukrainian terms"
+      "detail": "1299 Ukrainian terms"
     },
     "discovery_integration": {
-      "score": 0,
+      "score": 1,
       "max": 1,
-      "detail": "0 resources"
+      "detail": "N/A for V6"
     },
     "specificity": {
-      "score": 0,
+      "score": 1,
       "max": 2,
-      "detail": "1 specific markers (need 5+)"
+      "detail": "2607 words (need 3000+)"
     }
   },
   "gaps": [
-    "state_standard: missing",
-    "vocabulary: missing",
-    "cultural_hooks: missing",
-    "learner_errors: missing",
-    "cross_references: missing",
-    "pedagogy_notes: missing",
-    "source_verification: 3 URLs but 0 known-good sources",
-    "discovery_integration: 0 resources",
-    "specificity: 1 specific markers (need 5+)"
+    "vocabulary: 18 excerpts (need 20+)",
+    "cultural_hooks: 1 cultural reference(s)",
+    "specificity: 2607 words (need 3000+)"
   ]
 }

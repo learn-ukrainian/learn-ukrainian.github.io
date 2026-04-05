@@ -1,0 +1,131 @@
+module: istorio-032
+level: ISTORIO
+sequence: 32
+slug: emskyi-ukaz-tekst
+version: '3.0'
+title: 'Емський указ: Повний текст'
+focus: history
+pedagogy: seminar
+word_target: 5000
+objectives:
+- 'Analyze the causes and consequences of емський указ: повний текст'
+- Evaluate the historical significance of суворіший за валуєва
+content_outline:
+- section: Вступ — Суворіший за Валуєва
+  points:
+  - 1876 рік — 13 років після циркуляра
+  - Чому потрібен новий документ?
+  - Що нового заборонено
+  - Значення для культури
+  words: 700
+- section: Історичний контекст
+  points:
+  - Зростання українського руху
+  - Київська громада
+  - Драгоманов і закордонна діяльність
+  - Імперська реакція
+  words: 700
+- section: Текст указу — детальний аналіз
+  points:
+  - Текст (з глосами)
+  - Заборона ввезення книг
+  - Заборона театру і концертів
+  - Звільнення вчителів
+  - Закриття Київського відділу Географічного товариства
+  words: 700
+- section: Порівняння з Валуєвським циркуляром
+  points:
+  - Що спільного
+  - Що нового — суворіше
+  - Таблиця порівняння
+  - Логіка ескалації
+  words: 700
+- section: Фрагмент — Заборона театру
+  points:
+  - Текст (з глосами)
+  - Чому театр небезпечний?
+  - Культура як загроза
+  - Абсурдність заборони
+  words: 700
+- section: Наслідки і опір
+  points:
+  - Еміграція інтелігенції
+  - Галичина як притулок
+  - Женева — Драгоманов
+  - Підпільна діяльність
+  - Як указ похоронив себе
+  words: 700
+- section: Підсумок
+  points:
+  - Указ як свідчення сили руху
+  - Заборона не спрацювала
+  - Уроки для сьогодення
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+vocabulary:
+- указ
+- заборона
+- ввезення
+- театр
+- концерт
+- звільнення
+- еміграція
+- підпільний
+- ескалація
+- репресія
+- інтелігенція
+- громада
+- притулок
+- культурний рух
+- контрабанда
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+activities:
+- type: reading
+  focus: Full text with glosses
+- type: comparative-study
+  focus: 'Create detailed comparison table: Valuev vs. Ems'
+- type: critical-analysis
+  focus: How did the ban backfire?
+- type: reading
+  focus: Find examples of resistance to the decree
+- type: essay-response
+  focus: Чому заборони не знищили українську культуру?
+persona:
+  voice: Academic Historiographer
+  role: Language Policy Historian
+prerequisites:
+- valuevskyi-tsyrkuliar-tekst
+connects_to:
+- franko-politychni-ese
+references:
+- name: Емський указ (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Емський_указ
+  type: reference
+  notes: Overview
+- name: Текст указу
+  url: https://uk.wikisource.org/wiki/Емський_указ
+  type: primary
+  notes: Full text
+- name: Олександр II
+  url: https://uk.wikipedia.org/wiki/Олександр_II
+  type: reference
+  notes: Emperor context
+register: академічний
+grammar: []

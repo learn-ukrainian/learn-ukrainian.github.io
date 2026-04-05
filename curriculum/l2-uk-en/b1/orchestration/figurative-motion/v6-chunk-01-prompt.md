@@ -3,19 +3,18 @@
 You are writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 31: Час іде, дощ іде (B1, B1.3 [Motion Verb Universe])
-**Section to write:** Дієслова руху в переносному значенні (~600 words total)
-**Word target for this section:** 600 words (aim for 660 to account for undershoot)
+**Section to write:** Дієслова руху в переносному значенні (~700 words total)
+**Word target for this section:** 700 words (aim for 770 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Дієслова руху в переносному значенні (~600 words total)
-- P1 (~100 words): [Introduction to the B1 level transition — moving from the physical mechanics of motion verbs (M28-M34) to the psychological and metaphorical layer. Explain that for a B1 learner, naturalness comes from understanding "переносне значення" (figurative meaning).]
-- P2 (~120 words): [Dialogue based on Avramenko Grade 5: A conversation between siblings where the younger sister asks "А хіба дощ може ходити?" when the brother says "Піде дощ." Use this to illustrate the gap between literal action and linguistic convention.]
-- P3 (~100 words): [Formal explanation of polysemy (багатозначність) using the verb "іти" as the primary example. Contrast "людина йде" (physical) with "урок іде" (temporal) and "дощ іде" (meteorological).]
-- P4 (~100 words): [Linguistic classification based on Vashulenko Grade 3: Define "пряме значення" (literal, primary) vs. "переносне значення" (figurative, secondary). Use the example of "літак іде на посадку" as a specialized figurative use.]
-- P5 (~100 words): [Historical/Cultural note: Why Ukrainian uses motion verbs for inanimate objects. Mention the animistic roots in Slavic languages where natural phenomena (wind, rain, time) are treated as active "goers."]
+## Дієслова руху в переносному значенні (~700 words total)
+- P1 (~175 words): [Bridge from literal to figurative — explain that while learners have mastered the mechanics of walking, driving, and flying (M28-M34), natural Ukrainian relies on these verbs to describe time, weather, and life processes. Introduce the concept of "переносне значення" as the key to moving beyond robotic translation.]
+- P2 (~175 words): [Direct vs. Figurative meaning — explain "пряме" (literal) vs "переносне" (figurative). Use the Avramenko Grade 5 scenario: a child hears "піде дощ" and asks "А хіба дощ може ходити?". Use this to illustrate that motion verbs in Ukrainian describe "action" or "state change" rather than physical legs.]
+- P3 (~175 words): [Polysemy (Багатозначність) — explain how "іти" is the ultimate multi-tool in the dictionary. List the four primary categories of its polysemy: human walking (ідуть футболісти), mechanical motion (літак іде на посадку), time/process (урок іде), and weather (дощ іде).]
+- P4 (~175 words): [Metaphorical logic — explain the Ukrainian worldview: time is a path we walk, news has wings to fly, and thoughts are like water that drifts. Introduce the term "фразеологізм" (idiom) as a subset of these figurative uses.]
 - Exercise: [quiz, focus: Identify whether a motion verb is used literally or figuratively in a sentence, 12 items]
 
 ---
@@ -589,6 +588,8 @@ references:
 </knowledge_packet>
 
 ---
+
+
 
 ## Rules
 

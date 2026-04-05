@@ -1,0 +1,235 @@
+version: '1.0'
+module: instrumental-means
+level: a2
+workbook:
+- id: fill-in-tools
+  type: fill-in
+  instruction: Поставте іменник в орудний відмінок однини (Put the noun in Instrumental
+    singular)
+  items:
+  - sentence: Я пишу листа синьою ____.
+    answer: ручкою
+    options:
+    - ручка
+    - ручкою
+    - ручку
+    - ручки
+  - sentence: Він обережно ріже хліб гострим ____.
+    answer: ножем
+    options:
+    - ножем
+    - ніж
+    - ножу
+    - ножа
+  - sentence: Діти малюють картину ____.
+    answer: олівцем
+    options:
+    - олівцем
+    - олівець
+    - олівцю
+    - олівця
+  - sentence: Ми їмо гарячий суп великою ____.
+    answer: ложкою
+    options:
+    - ложка
+    - ложкою
+    - ложку
+    - ложки
+  - sentence: Мама чистить старий килим ____.
+    answer: щіткою
+    options:
+    - щіткою
+    - щітка
+    - щітку
+    - щітки
+  - sentence: Учениця акуратно креслить квадрат ____.
+    answer: лінійкою
+    options:
+    - лінійка
+    - лінійкою
+    - лінійку
+    - лінійки
+  - sentence: Бабуся підмітає брудну підлогу ____.
+    answer: віником
+    options:
+    - віником
+    - віник
+    - вінику
+    - віника
+  - sentence: Художник малює гарний портрет синьою ____.
+    answer: фарбою
+    options:
+    - фарбою
+    - фарба
+    - фарбу
+    - фарби
+- id: quiz-companion-vs-tool
+  type: quiz
+  instruction: Оберіть правильний варіант (Choose the correct option)
+  items:
+  - question: Я гуляю в парку ____.
+    options:
+    - з собакою
+    - собакою
+    - з собаку
+    - собаку
+    correct: 0
+  - question: Вона швидко пише текст ____.
+    options:
+    - з ручкою
+    - ручкою
+    - з ручку
+    - ручку
+    correct: 1
+  - question: Ми щодня їдемо на роботу ____.
+    options:
+    - з автобусом
+    - автобусом
+    - з автобус
+    - автобусу
+    correct: 1
+  - question: Мій брат іде до школи ____.
+    options:
+    - з другом
+    - другом
+    - з друга
+    - друга
+    correct: 0
+  - question: Молодий художник малює картину ____.
+    options:
+    - з олівцем
+    - олівцем
+    - з олівець
+    - олівцю
+    correct: 1
+  - question: Я довго розмовляю ____.
+    options:
+    - з учителем
+    - учителем
+    - з учителя
+    - учителю
+    correct: 0
+  - question: Мама чисто миє вікно ____.
+    options:
+    - з ганчіркою
+    - ганчіркою
+    - з ганчірку
+    - ганчірку
+    correct: 1
+  - question: Батько їде у відпустку ____.
+    options:
+    - з родиною
+    - родиною
+    - з родину
+    - родину
+    correct: 0
+- id: match-up-transport
+  type: match-up
+  instruction: З'єднайте слова з їхніми формами в орудному відмінку (Match words with
+    their Instrumental forms)
+  pairs:
+  - left: потяг
+    right: потягом
+  - left: літак
+    right: літаком
+  - left: корабель
+    right: кораблем
+  - left: тролейбус
+    right: тролейбусом
+  - left: маршрутка
+    right: маршруткою
+  - left: таксі
+    right: таксі
+  - left: метро
+    right: метро
+  - left: автобус
+    right: автобусом
+- id: group-sort-tool-vs-acc
+  type: group-sort
+  instruction: Розподіліть речення за категоріями (Sort sentences by category)
+  groups:
+  - label: Знаряддя або засіб (Tool/Means)
+    items:
+    - Я пишу синьою ручкою.
+    - Ми їдемо швидким потягом.
+    - Вона малює картину олівцем.
+    - Брат обережно ріже хліб ножем.
+  - label: Супутник (Accompaniment)
+    items:
+    - Я йду в кіно з другом.
+    - Вона працює з новим колегою.
+    - Ми гуляємо ввечері з собакою.
+    - Брат грає на подвір'ї з сестрою.
+- id: unjumble-phrases
+  type: unjumble
+  instruction: Складіть правильне речення зі слів (Make a correct sentence from the
+    words)
+  items:
+  - words:
+    - автобусом.
+    - Я
+    - на
+    - роботу
+    - їду
+    correct_order:
+    - Я
+    - їду
+    - на
+    - роботу
+    - автобусом.
+  - words:
+    - малюють
+    - олівцями.
+    - Діти
+    - кольоровими
+    correct_order:
+    - Діти
+    - малюють
+    - кольоровими
+    - олівцями.
+  - words:
+    - подорожувати
+    - потягом.
+    - Ми
+    - любимо
+    correct_order:
+    - Ми
+    - любимо
+    - подорожувати
+    - потягом.
+  - words:
+    - гострим
+    - м'ясо
+    - ножем.
+    - Брат
+    - ріже
+    correct_order:
+    - Брат
+    - ріже
+    - м'ясо
+    - гострим
+    - ножем.
+  - words:
+    - вікно
+    - Мама
+    - чистою
+    - миє
+    - ганчіркою.
+    correct_order:
+    - Мама
+    - миє
+    - вікно
+    - чистою
+    - ганчіркою.
+  - words:
+    - летять
+    - літаком.
+    - у
+    - відпустку
+    - Вони
+    correct_order:
+    - Вони
+    - летять
+    - у
+    - відпустку
+    - літаком.

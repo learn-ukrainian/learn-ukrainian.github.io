@@ -1,0 +1,57 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All 4 content_outline sections present with matching H2 headings. Section
+    1 covers all plan points: захоплюватися/займатися/цікавитися + instrumental, hobby
+    vocabulary (плавання, малювання, читання, т'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All instrumental case forms verified correct (плаванням, малюванням, музикою,
+    спортом, йогою, etc.). Accusative/Locative pairs all correct (басейн→басейні,
+    виставку→виставці, стадіон→стадіоні). Gender
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Follows PPP flow well: each grammar point introduced with context → rule
+    → 3+ examples → practice marker. Instrumental case taught with 6+ examples per
+    verb (захоплюватися: 3 examples, займатися: 6 ex'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 10 required vocabulary items present in prose: дозвілля (Section
+    2: "наше дозвілля"), хобі (Section 1 opening), захоплюватися (Section 1, taught
+    extensively), займатися (Section 1, taught extensiv'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 5 plan activity types have corresponding markers. Fill-in (8 items,
+    case forms), quiz (8 items, acc vs loc), match-up (8 items, verb+case government),
+    group-sort (8 items, leisure categories), err
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: The two dialogues are natural and well-crafted — Dialogue 1 (Софія at
+    language exchange) has distinct voices and natural flow; Dialogue 2 (colleagues
+    planning weekend) is realistic workplace conversat
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: All plan sections present as H2 headings in correct order. Підсумок section
+    adds useful review. Word count 2843 exceeds 2000 target (142% — well within acceptable
+    range, generously above minimum). Cle
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Ukrainian presented entirely on its own terms — no comparisons to Russian.
+    Cultural note covers authentic Ukrainian leisure activities: Карпати hiking, castle
+    visiting (Кам''янець-Подільський, Олеський'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'Dialogue 1 (Софія + Марко at language exchange): natural self-introduction,
+    multi-turn, named speakers, distinct interests (малювання vs. музика/спорт), ends
+    naturally with "завжди радий скласти компа'
+findings: []

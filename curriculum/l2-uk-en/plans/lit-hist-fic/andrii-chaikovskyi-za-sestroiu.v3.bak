@@ -1,0 +1,100 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння літературно-критичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Читання
+  focus: Розуміння літературного тексту (уривок з твору)
+  placement: inline
+  type: reading
+- focus: Історія vs. вигадка — що задокументовано, що винайдено?
+  placement: workbook
+  type: source-evaluation
+- focus: Літературна критика — оцінка інтерпретації
+  placement: workbook
+  type: critical-analysis
+- focus: 'Порівняння з іншими творами або інтерпретаціями (Андрій Чайковський: За сестрою)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе-аналіз рецепції та сучасного значення (Андрій Чайковський: За сестрою)'
+  placement: workbook
+  type: essay-response
+connects_to:
+- starytsky-bohdan
+- kulish-black-council-revisit
+- lepkyi-mazepa
+content_outline:
+- points:
+  - Андрій Чайковський (1857–1935) — адвокат, громадський діяч, письменник
+  - Галичина кінця XIX — початку XX ст. як культурний простір
+  - Чайковський серед галицьких прозаїків — Франко, Кобилянська, Стефаник
+  section: Вступ та культурний контекст
+  words: 850
+- points:
+  - Сюжет — козацька епоха, пригодницька інтрига, родинна драма
+  - Історичний матеріал та художня вигадка
+  - Жіночі образи та їхня роль у романі
+  section: '«За сестрою»: аналіз роману'
+  words: 900
+- points:
+  - «Сагайдачний» — образ гетьмана як будівничого
+  - «Олюнька» та інші повісті з козацького життя
+  - Педагогічний вимір — проза для юного читача
+  section: Історична проза Чайковського
+  words: 850
+- points:
+  - Галицький літературний варіант української мови
+  - Пригодницький наратив — темп, інтрига, розв'язка
+  - Романтизація козацького минулого як свідомий проект
+  section: Мова, стиль та поетика
+  words: 800
+- points:
+  - Чому СРСР заборонив Чайковського — «виховує українських патріотів»
+  - Історична проза як засіб формування національної свідомості
+  - Повернення Чайковського після 1991 — перевидання та канонізація
+  section: Деколонізаційний вимір
+  words: 800
+- points:
+  - Чайковський як попередник Рутківського та Шкляра
+  - Актуальність пригодницької історичної прози у XXI ст.
+  - Питання для дискусії
+  section: Підсумок та рецепція
+  words: 800
+focus: literature
+grammar: []
+immersion: 100% Ukrainian
+level: LIT-HIST-FIC
+module: lit-hist-fic-019
+module_type: literature
+objectives:
+- Проаналізувати роман «За сестрою» як зразок галицької історичної прози
+- Дослідити заборону творів Чайковського в СРСР та її причини
+- Зрозуміти роль Чайковського у формуванні жанру українського пригодницького історичного роману
+pedagogy: Seminar
+persona:
+  role: Galician Advocate of Memory
+  voice: Senior Philologist & Critic
+phase: HISTFIC.1
+references:
+- name: Андрій Чайковський — проза
+  notes: Основне джерело
+  type: primary
+  url: https://www.ukrlib.com.ua/
+register: академічний
+sequence: 19
+slug: andrii-chaikovskyi-za-sestroiu
+subtitle: Galician historical prose banned in the USSR for breeding Ukrainian patriots
+title: 'Андрій Чайковський: За сестрою'
+version: '3.0'
+vocabulary_hints:
+  recommended:
+  - гетьман (hetman)
+  - Галичина (Galicia)
+  - канонізація (canonization)
+  required:
+  - козацтво (Cossackdom)
+  - пригодницький роман (adventure novel)
+  - заборона (prohibition/ban)
+  - історіографія (historiography)
+word_target: 5000

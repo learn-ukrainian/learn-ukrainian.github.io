@@ -1,50 +1,65 @@
-sequence: 43
-module: lit-essay-43
-level: LIT.ESSAY
-slug: aseyev-the-torture-camp
-version: '2.0'
-title: Aseyev The Torture Camp
-subtitle: Aseyev The Torture Camp
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння літературно-критичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Читання
+  focus: Розуміння літературного тексту (уривок з твору)
+  placement: inline
+  type: reading
+- focus: Свідчення як жанр — етика та естетика свідка
+  placement: workbook
+  type: source-evaluation
+- focus: Літературна критика — оцінка інтерпретації
+  placement: workbook
+  type: critical-analysis
+- focus: Порівняння з іншими творами або інтерпретаціями (Aseyev The Torture Camp)
+  placement: workbook
+  type: comparative-study
+- focus: Есе-аналіз рецепції та сучасного значення (Aseyev The Torture Camp)
+  placement: workbook
+  type: essay-response
 content_outline:
-- section: Вступ та контекст
+- points: []
+  section: Вступ та контекст
   words: 800
-  points: []
-- section: Аналіз ключових творів
+- points: []
+  section: Аналіз ключових творів
   words: 1200
-  points: []
-- section: Стилістика та мова автора
+- points: []
+  section: Стилістика та мова автора
   words: 1200
-  points: []
-- section: Деколонізаційна перспектива
-  words: 1000
-  points:
+- points:
   - Як цей автор руйнує імперські міфи
   - Українська суб'єктність у тексті
-- section: Підсумок та спадщина
+  section: Деколонізаційна перспектива
+  words: 1000
+- points: []
+  section: Підсумок та спадщина
   words: 800
-  points: []
+focus: literature
+immersion: 100% Ukrainian
+level: LIT.ESSAY
+module: lit-essay-43
+objectives:
+- Проаналізувати творчість Aseyev The Torture Camp у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+pedagogy: literature
+persona:
+  role: War Crimes Witness
+  voice: Senior Specialist
+phase: LIT Expansion
+sequence: 43
+slug: aseyev-the-torture-camp
+subtitle: Aseyev The Torture Camp
+title: Aseyev The Torture Camp
+version: '2.0'
 vocabulary_hints:
+  recommended:
+  - деколонізація
   required:
   - історіографія
   - наратив
   - суб'єктність
-  recommended:
-  - деколонізація
-activity_hints:
-- type: reading
-  focus: Аналіз першоджерела
-- type: essay-response
-  focus: Критичне есе
-- type: critical-analysis
-  focus: Деконструкція тексту
-focus: literature
-pedagogy: literature
-immersion: 100% Ukrainian
-phase: LIT Expansion
-objectives:
-- Проаналізувати творчість Aseyev The Torture Camp у контексті української літератури
-- Дослідити вплив автора на формування національної ідентичності
-persona:
-  voice: Senior Specialist
-  role: War Crimes Witness
 word_target: 5000

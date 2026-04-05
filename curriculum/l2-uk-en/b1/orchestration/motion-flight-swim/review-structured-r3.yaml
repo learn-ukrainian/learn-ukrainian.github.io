@@ -2,53 +2,56 @@ round: 3
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 6
-  evidence: The text has 5291 words, which is >30% over the 4000-word target. The
-    writer padded the text with extra paragraphs (e.g., detailing airplane parts like
-    "крило", "хвіст", "кабіна пілота", which were no
+  score: 7
+  evidence: '**Covered well:** All 6 content_outline sections present in correct order;
+    all 10 prefixes for both verbs; both base pair conjugations; reading passage (Boryspil
+    → Stambul → Bosporus ferry) matches pl'
 - dimension: 2
   name: Linguistic accuracy
   score: 7
-  evidence: 'Contains calques: "по гучномовцю" instead of "через гучномовець", "приймає
-    рішення" instead of "ухвалює рішення", and the artificial use of "виключно" as
-    a limiting particle ("виключно сама відстань" '
+  evidence: '**Correct:** All conjugation paradigms verified against VESUM. Stem-change
+    explanation (плив-→плис-) verified. All prefixed forms exist in VESUM. **Critical
+    error:** Idiom «на всіх парусах» conflated '
 - dimension: 3
   name: Pedagogical quality
   score: 8
-  evidence: Explanations of unidirectional vs multidirectional verbs are very thorough.
-    However, placing a combined quiz marker before the second half of the content
-    was taught showed a lack of pedagogical foresi
+  evidence: '**Strong PPP flow:** Opening reading passage (situation) → conjugation
+    tables with examples (pattern) → activity markers (practice). Each grammar point
+    has 3+ Ukrainian examples in context: летіти sec'
 - dimension: 4
   name: Vocabulary coverage
-  score: 10
-  evidence: All required and recommended vocabulary items (аеропорт, рейс, пором,
-    etc.) are included and well-contextualized.
+  score: 8
+  evidence: '**Required (plan):** летіти ✓, літати ✓, пливти ✓, плавати ✓, прилетіти
+    ✓, вилетіти ✓, припливти ✓, переплисти ✓, аеропорт ✓, рейс ✓, посадка ✓, порт
+    ✓, корабель ✓. All 13 required words present and u'
 - dimension: 5
   name: Exercise quality
-  score: 7
-  evidence: The injected markers were artificially narrowed from the plan. A combined
-    air/water quiz was placed after only the air section, testing only air verbs.
-    The fill-in was reduced to just maritime.
+  score: 8
+  evidence: 'All 6 plan activity_hints implemented with matching types and focus.
+    Item counts specified in markers match plan. Marker descriptions are specific:
+    group-sort says "12 prefixed forms," error-correctio'
 - dimension: 6
   name: Engagement & tone
-  score: 6
-  evidence: The tone is often overly meta and instructional ("Ми вже дослідили велику
-    частину всесвіту дієслів руху", "Тепер настав час логічно завершити", "Ви, напевно,
-    помітили, як автор вміло використовує...")
+  score: 7
+  evidence: '**Positive:** The opening reading passage (Boryspil → Stambul → Bosporus)
+    creates genuine narrative momentum. The folk song reference ("Тече вода з-під
+    явора, пливе човен по воді") is culturally rich.'
 - dimension: 7
   name: Structural integrity
   score: 9
-  evidence: All H2 headers match the plan precisely. Markdown is clean and correctly
-    formatted.
+  evidence: All 6 H2 sections present and ordered per plan. Clean markdown, no stray
+    tags. Word count 5310 vs 4000 target (33% over — acceptable, over is fine). Table
+    formatting correct. Activity markers properly
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Excellent context using real-world Ukrainian routes (Boryspil to Istanbul,
-    Dnipro river) and natural settings.
+  score: 9
+  evidence: Decolonized — Ukrainian presented on its own terms, no "like Russian"
+    comparisons. Real Ukrainian geography (Бориспіль, Одеса, Чорноморськ, Дніпро,
+    Чорне море, острів Зміїний). The Saint-Exupéry examp
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 5
-  evidence: The dialogues in the airport and seaport are purely transactional and
-    robotic ("У вас є багаж? Так, одна валіза.", "А скільки коштує квиток в один бік?").
-    They lack natural conversational flow.
+  score: 7
+  evidence: '**Positive:** Two multi-turn dialogues with named speakers (Агент/Пасажир,
+    Касир/Клієнт), distinct voices, natural flow, culturally appropriate (using Ви-form).
+    The port dialogue naturally integrates '
 findings: []

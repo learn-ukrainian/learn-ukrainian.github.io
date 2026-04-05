@@ -1,0 +1,82 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння філологічних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Текст
+  focus: Транскрипція давньосхіднослов'янського фрагменту
+  placement: inline
+  type: transcription
+- focus: Простежити еволюцію слова від давньосхіднослов'янської до сучасної
+  placement: workbook
+  type: etymology-trace
+- focus: 'Порівняння давньосхіднослов''янських форм із сучасними українськими (Кирило Турівський: Проповіді Златоуста руського)'
+  placement: workbook
+  type: comparative-study
+- focus: Критичний аналіз лінгвістичної класифікації тексту
+  placement: workbook
+  type: critical-analysis
+- focus: 'Есе — що цей текст розповідає про стан мови в цю добу? (Кирило Турівський: Проповіді Златоуста руського)'
+  placement: workbook
+  type: essay-response
+connects_to:
+- ilarion-sermon-intro
+- kyrylo-turovskyi-prytchi-molytvy
+content_outline:
+- points:
+  - Kyrylo of Turiv — the greatest orator of Kyivan Rus'
+  - The title "Златоуст руський" — Ukrainian Chrysostom
+  section: Вступ
+  words: 750
+- points:
+  - Palm Sunday sermon — allegorical reading of Christ's entry into Jerusalem
+  - Rhetorical structure — exordium, narratio, peroratio
+  section: Слово на Вербницю
+  words: 900
+- points:
+  - Easter sermon — the Resurrection as cosmic triumph
+  - Nature imagery and liturgical poetry
+  section: Слово на Великдень
+  words: 850
+- points:
+  - Byzantine homiletic tradition — amplificatio, antithesis, anaphora
+  - Kyrylo's innovation within inherited forms
+  section: Візантійська риторика
+  words: 850
+- points:
+  - Close reading of sermon excerpts with glosses
+  - High register Church Slavonic — rhetoric as art
+  section: Мовний аналіз
+  words: 850
+- points:
+  - Kyrylo's legacy in Ukrainian literary history
+  - Vocabulary table
+  section: Підсумок
+  words: 800
+focus: Slovo na Verbnytsiu, Slovo na Velykden, Byzantine rhetoric, "Zlatoust ruskyi"
+level: OES
+module: oes-100
+objectives:
+- Аналізувати проповіді Кирила Турівського як зразок візантійської риторики
+- Інтерпретувати алегоричний метод екзегези у «Слові на Вербницю»
+- Демонструвати розуміння риторичних прийомів давньоукраїнської гомілетики
+persona:
+  role: Homiletics Scholar
+  voice: Senior Paleographer
+phase: 4
+sequence: 100
+slug: kyrylo-turovskyi-propovidi
+subtitle: 'Kyrylo of Turiv: Sermons of the Rus'' Chrysostom'
+title: 'Кирило Турівський: Проповіді Златоуста руського'
+version: '2.0'
+vocabulary_hints:
+- проповідь
+- алегорія
+- риторика
+- метафора
+- екзегеза
+- красномовство
+- антитеза
+- анафора
+word_target: 5000

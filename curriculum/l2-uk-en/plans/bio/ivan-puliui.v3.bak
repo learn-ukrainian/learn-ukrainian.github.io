@@ -1,0 +1,87 @@
+module: bio-049
+level: BIO
+sequence: 49
+slug: ivan-puliui
+version: '3.0'
+title: 'Іван Пулюй: Першовідкривач X-променів'
+focus: biography
+pedagogy: seminar
+phase: BIO
+word_target: 5000
+objectives:
+- Оцінити науковий внесок Івана Пулюя
+- Проаналізувати його діяльність щодо популяризації української мови
+- Дослідити історію відкриття X-променів
+content_outline:
+- section: Вступ — Світовий геній української науки
+  points:
+  - Пулюй як піонер сучасної фізики
+  - Відкриття X-променів (раніше Рентгена)
+  - Поєднання науки та національної справи
+  words: 700
+- section: Життєпис
+  points:
+  - Походження та духовна освіта (Тернопільщина)
+  - Навчання у Віденському університеті
+  - Співпраця з провідними вченими Європи
+  - Академічна кар'єра у Празі
+  words: 700
+- section: Історичний контекст
+  points:
+  - Золота доба європейської фізики
+  - Стан української еміграції в Австро-Угорщині
+  words: 700
+- section: Внесок
+  points:
+  - '"Лампа Пулюя" та її значення'
+  - Наукові праці з електротехніки та фізики
+  words: 700
+- section: Останні роки
+  points:
+  - Громадська діяльність (захист української мови)
+  - Переклад Біблії українською мовою
+  - Смерть та поховання у Празі
+  words: 700
+- section: Спадщина
+  points:
+  - Питання пріоритету у відкритті променів
+  - Вшанування в Україні та світі
+  words: 700
+- section: Підсумок
+  points:
+  - Пулюй як символ інтелектуальної потуги нації
+  words: 800
+vocabulary_hints:
+  required:
+  - X-промені (X-rays)
+  - електротехніка (electrical engineering)
+  - переклад (translation)
+activity_hints:
+- type: reading
+  focus: Порівняння робіт Пулюя та Рентгена
+  source: Scientific articles (adapted)
+- type: critical-analysis
+  focus: Чому Нобелівську премію отримав не Пулюй?
+connects_to:
+- bio-165 (Volodymyr Vakulenko)
+- hist ukrainians-world module
+prerequisites:
+- Розуміння наукового контексту XIX ст.
+persona:
+  voice: Senior Biographer
+  role: X-Ray Pioneer
+grammar:
+- Науковий стиль мовлення
+- Обговорення пріоритету та етики в науці
+module_type: biography
+immersion: 100% Ukrainian
+references:
+- name: Іван Пулюй (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Пулюй_Іван_Павлович
+  type: primary
+  notes: Життя та відкриття
+- name: Пулюй та Рентген
+  url: https://puliui.org.ua/
+  type: reference
+  notes: Музей та архіви
+register: академічний

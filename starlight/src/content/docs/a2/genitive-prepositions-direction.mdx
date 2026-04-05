@@ -1,0 +1,607 @@
+---
+title: "Куди? До якого часу?"
+sidebar:
+  order: 11
+  label: "11. Куди? До якого часу?"
+pipeline: v6
+build_status: draft
+---
+
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import FillIn from '@site/src/components/FillIn';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import GroupSort from '@site/src/components/GroupSort';
+import MatchUp from '@site/src/components/MatchUp';
+import Quiz from '@site/src/components/Quiz';
+import Unjumble from '@site/src/components/Unjumble';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Куди́ ти йдеш? До + родо́ви́й для на́прямку (Where Are You Going? До + Genitive for Direction)
+
+Ми ча́сто подорожу́ємо. *(We often travel.)* І́ноді ми йдемо́ пі́шки, іноді ї́демо на маши́ні. *(Sometimes we walk, sometimes we go by car.)* Але́ куди ми пряму́ємо? *(But where are we heading?)*
+
+In Ukrainian, the preposition **до** *(to, towards)* is your primary tool for expressing movement toward a specific destination. When you want to say that you are going to a place or to see a person, you will frequently use **до**. This preposition always requires the noun that follows it to be in the Genitive case *(родовий відмі́нок)*. The literal meaning of **до** focuses on the approach, the journey, or the movement right up to the boundary of your target.
+
+«Чита́ємо украї́нською»:
+<div class="dialogue">
+
+<div class="dialogue-line">— Яки́й це на́прямок? *(Which direction is this?)*</div>
+
+<div class="dialogue-line">— Я йду до парку. *(I am walking to the park.)*</div>
+
+<div class="dialogue-line">— Ми їдемо до рі́чки. *(We are driving to the river.)*</div>
+
+<div class="dialogue-line">— Вони́ летя́ть до мо́ря. *(They are flying to the sea.)*</div>
+
+<div class="dialogue-line">— Вона́ біжи́ть до лі́су. *(She is running to the forest.)*</div>
+
+<div class="dialogue-line">— Ти йдеш до університе́ту? *(Are you walking to the university?)*</div>
+
+</div>
+
+When your destination is a geographic location, such as a city or a country, **до** is the standard preposition. You will use it when traveling from one city to another, or when flying internationally. For masculine proper nouns ending in a consonant, you add **-а** or **-я**. For feminine proper nouns ending in **-а** or **-я**, the ending changes to **-и** or **-і**.
+
+**Мі́сто → до мі́ста** *(City → to the city)*:
+<div class="dialogue">
+
+<div class="dialogue-line">— Ки́їв → до Ки́єва *(to Kyiv)*</div>
+
+<div class="dialogue-line">— Львів → до Льво́ва *(to Lviv)*</div>
+
+<div class="dialogue-line">— Харків → до Ха́ркова *(to Kharkiv)*</div>
+
+<div class="dialogue-line">— Оде́са → до Оде́си *(to Odesa)*</div>
+
+<div class="dialogue-line">— Полта́ва → до Полта́ви *(to Poltava)*</div>
+
+</div>
+
+**Краї́на → до краї́ни** *(Country → to the country)*:
+<div class="dialogue">
+
+<div class="dialogue-line">— Украї́на → до Украї́ни *(to Ukraine)*</div>
+
+<div class="dialogue-line">— По́льща → до По́льщі *(to Poland)*</div>
+
+<div class="dialogue-line">— Япо́нія → до Япо́нії *(to Japan)*</div>
+
+<div class="dialogue-line">— Аме́рика → до Аме́рики *(to America)*</div>
+
+</div>
+
+«Читаємо українською»:
+<div class="dialogue">
+
+<div class="dialogue-line">— За́втра ми їдемо до Києва на екску́рсію. *(Tomorrow we are going to Kyiv for an excursion.)*</div>
+
+<div class="dialogue-line">— Мій брат часто літа́є до Польщі. *(My brother often flies to Poland.)*</div>
+
+<div class="dialogue-line">— Улі́тку вони пої́дуть до Одеси. *(In the summer they will go to Odesa.)*</div>
+
+<div class="dialogue-line">— Тури́сти приї́хали до Львова вра́нці. *(The tourists arrived in Lviv in the morning.)*</div>
+
+<div class="dialogue-line">— Ко́ли ти лети́ш до Японії? *(When are you flying to Japan?)*</div>
+
+</div>
+
+In English, you might say "I am going to the doctor" or "I am going to my friend's house." In Ukrainian, this idea is expressed simply and elegantly using **до** plus a person in the Genitive case. When you say you are going "to a person," it automatically implies that you are going to their home, their office, their room, or their professional establishment. There is no need to add words for "house" or "office" unless you want to emphasize the physical building.
+
+**До + люди́на** *(To + person)*:
+<div class="dialogue">
+
+<div class="dialogue-line">— друг *(friend)* → до дру́га *(to a friend's place)*</div>
+
+<div class="dialogue-line">— лі́кар *(doctor)* → до лі́каря *(to the doctor)*</div>
+
+<div class="dialogue-line">— бабу́ся *(grandmother)* → до бабу́сі *(to grandma's)*</div>
+
+<div class="dialogue-line">— сестра́ *(sister)* → до сестри́ *(to sister's place)*</div>
+
+<div class="dialogue-line">— стомато́лог *(dentist)* → до стомато́лога *(to the dentist)*</div>
+
+</div>
+
+«Читаємо українською»:
+<div class="dialogue">
+
+<div class="dialogue-line">— Уве́чері я йду до друга гра́ти в ша́хи. *(In the evening I am going to a friend's to play chess.)*</div>
+
+<div class="dialogue-line">— У мене́ боли́ть зуб, я йду до лікаря. *(My tooth hurts, I am going to the doctor.)*</div>
+
+<div class="dialogue-line">— На вихідни́х ми їдемо до бабусі в село́. *(On the weekend we are going to grandma's in the village.)*</div>
+
+<div class="dialogue-line">— Вона часто хо́дить до сусі́дки на ка́ву. *(She often goes to the neighbor's for coffee.)*</div>
+
+<div class="dialogue-line">— Ді́ти побі́гли до ма́ми. *(The children ran to mom.)*</div>
+
+</div>
+
+The Genitive ending depends on the gender of the noun and whether its stem is hard or soft.
+
+**Чолові́чий рід** *(Masculine)*:
+Hard stems take **-а** (for living beings and cities) or **-у** (for many inanimate spaces or buildings). Soft stems take **-я** or **-ю**.
+<div class="dialogue">
+
+<div class="dialogue-line">— буди́нок *(building)* → до буди́нку</div>
+
+<div class="dialogue-line">— магази́н *(store)* → до магази́ну</div>
+
+<div class="dialogue-line">— музе́й *(museum)* → до музе́ю</div>
+
+<div class="dialogue-line">— готе́ль *(hotel)* → до готе́лю</div>
+
+<div class="dialogue-line">— вокза́л *(train station)* → до вокза́лу</div>
+
+</div>
+
+**Жіно́чий рід** *(Feminine)*:
+Hard stems take **-и**. Soft stems take **-і** (or **-ї** after a vowel).
+<div class="dialogue">
+
+<div class="dialogue-line">— шко́ла *(school)* → до шко́ли</div>
+
+<div class="dialogue-line">— апте́ка *(pharmacy)* → до апте́ки</div>
+
+<div class="dialogue-line">— ста́нція *(station)* → до ста́нції</div>
+
+<div class="dialogue-line">— ліка́рня *(hospital)* → до ліка́рні</div>
+
+<div class="dialogue-line">— кімна́та *(room)* → до кімна́ти</div>
+
+</div>
+
+**Сере́дній рід** *(Neuter)*:
+Hard stems take **-а**. Soft stems take **-я**.
+<div class="dialogue">
+
+<div class="dialogue-line">— о́зеро *(lake)* → до о́зера</div>
+
+<div class="dialogue-line">— місто *(city)* → до міста</div>
+
+<div class="dialogue-line">— мо́ре *(sea)* → до моря</div>
+
+</div>
+
+«Читаємо українською»:
+<div class="dialogue">
+
+<div class="dialogue-line">— Студе́нти йдуть до худо́жнього музею. *(The students are going to the art museum.)*</div>
+
+<div class="dialogue-line">— Ми пові́льно йшли до озера. *(We walked slowly to the lake.)*</div>
+
+<div class="dialogue-line">— Авто́бус ї́де до станції метро́. *(The bus goes to the subway station.)*</div>
+
+<div class="dialogue-line">— Він щодня́ ходить до школи пішки. *(He walks to school every day.)*</div>
+
+<div class="dialogue-line">— Вона поверну́лася до кімнати. *(She returned to the room.)*</div>
+
+</div>
+
+You already know that you can use **в** *(in, to)* or **на** *(on, to)* with the Accusative case for direction. For example, you can say:
+— Я йду в магазин. *(I am going to the store.)*
+
+So, what is the difference between this and using **до**? Grammatically, both are correct. Conceptually, **до** often emphasizes the journey, the direction, or approaching the entrance of the place. Meanwhile, **в** or **на** strongly emphasizes the destination itself and the act of entering the interior. However, in modern, everyday Ukrainian, they are frequently interchangeable for general direction. You can use whichever fits the context or feels more natural. There is no strict hierarchy — both are standard. Note that with people, you must always use **до** (you cannot go *into* a person).
+
+Порі́внюємо *(Let's compare)*:
+<div class="dialogue">
+
+<div class="dialogue-line">— Ми йдемо в теа́тр. *(We are going to the theater — focus on the event or entering.)*</div>
+
+<div class="dialogue-line">— Ми йдемо до теа́тру. *(We are walking to the theater — focus on the route or building.)*</div>
+
+<div class="dialogue-line">— Вона їде на робо́ту. *(She is going to work — standard idiom.)*</div>
+
+<div class="dialogue-line">— Вона йде до о́фісу. *(She is walking to the office — focus on the physical place.)*</div>
+
+</div>
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Оле́на:</span> Ти куди за́раз іде́ш? *(Where are you going now?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Марко́:</span> Я йду до суперма́ркету. Тре́ба купи́ти молоко́. *(I am going to the supermarket. I need to buy milk.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Олена:</span> А по́тім? *(And then?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Марко:</span> А потім — додо́му! *(And then — home!)*</div>
+
+</div>
+
+A practical situation where you use **до** constantly is when giving directions to a taxi driver. You simply name your destinations using **до** plus the Genitive case.
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Пасажи́р:</span> До́брий день! До вокзалу, будь ла́ска. *(Good day! To the train station, please.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Такси́ст:</span> Добрий день. Сіда́йте. Їдемо до вокзалу. *(Good day. Have a seat. We are going to the train station.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Пасажир:</span> Ой, зачека́йте. А тепе́р споча́тку до аптеки. *(Oh, wait. And now to the pharmacy first.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Таксист:</span> До́бре, поверта́ємо до аптеки. *(Okay, we are turning to the pharmacy.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Пасажир:</span> Чека́йте до п'я́тої годи́ни. А потім до готелю «Дніпро́». *(And then to the "Dnipro" hotel.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Таксист:</span> Зрозумі́в. Аптека, а потім до готелю. *(Understood. Pharmacy, and then to the hotel.)*</div>
+
+</div>
+
+## До яко́го ча́су? До + родовий для часу (Until When? До + Genitive for Time)
+
+When you want to express how long an action continues, you use the preposition **до** *(until)* with the Genitive case. This structure sets a strict limit or boundary for an ongoing state. It means the action persists steadily right up to that specific moment in time, and then it stops. The preposition **до** clearly marks the absolute end point of the duration.
+
+«Читаємо українською» *(Reading in Ukrainian)*:
+<div class="dialogue">
+
+<div class="dialogue-line">— Я бу́ду на робо́ті до ве́чора. *(I will be at work until evening.)*</div>
+
+<div class="dialogue-line">— На вечі́рці ми танцюва́ли до ра́нку. *(At the party, we danced until morning.)*</div>
+
+<div class="dialogue-line">— Діти гра́ли в парку до но́чі. *(The children played in the park until night.)*</div>
+
+<div class="dialogue-line">— Я плану́ю жи́ти в Ки́єві до лі́та. *(I plan to live in Kyiv until summer.)*</div>
+
+<div class="dialogue-line">— Студенти ува́жно чита́ли текст до кінця́ уро́ку. *(The students read the text attentively until the end of the lesson.)*</div>
+
+<div class="dialogue-line">— Мій друг спав до обі́ду. *(My friend slept until noon.)*</div>
+
+</div>
+
+In all these examples, the action is continuous. The person is at work the whole time, dancing the whole time, or sleeping the whole time until the boundary is reached. The noun after **до** must always take the Genitive case ending: **ве́чір** *(evening)* becomes **до вечора**, **ра́нок** *(morning)* becomes **до ранку**, **лі́то** *(summer)* becomes **до літа**, and **обід** *(noon/lunch)* becomes **до обіду**.
+
+Час — це та́ко́ж дедлайни та важли́ві пла́ни. *(Time is also deadlines and important plans.)* 
+Besides continuous actions, **до** is heavily used to set deadlines for tasks and appointments. In English, this is usually translated as "by" or "no later than". The grammar remains exactly the same: **до** + Genitive case. However, the meaning shifts slightly. Instead of an action continuing the whole time, the event must happen at some point *before* or exactly *at* the limit.
+
+«Читаємо українською» *(Reading in Ukrainian)*:
+<div class="dialogue">
+
+<div class="dialogue-line">— Ме́ні треба зроби́ти цей нови́й проє́кт до п'я́тниці. *(I need to do this new project by Friday.)*</div>
+
+<div class="dialogue-line">— Будь ласка, прийді́ть на зу́стріч до во́сьмої години. *(Please, come to the meeting by eight o'clock.)*</div>
+
+<div class="dialogue-line">— Ви пови́нні написа́ти цей складний тест до завтра. *(You must write this difficult test by tomorrow.)*</div>
+
+<div class="dialogue-line">— Я обов'язко́во поверну́ гроші до понеді́лка. *(I will definitely return the money by Monday.)*</div>
+
+<div class="dialogue-line">— Ми ма́ємо купити квитки́ на по́тяг до субо́ти. *(We have to buy the train tickets by Saturday.)*</div>
+
+</div>
+
+Notice how verbs like **зробити** *(to finish/do)*, **прийти́** *(to come)*, and **купити** *(to buy)* represent single, completed actions. They do not describe a continuous state. The preposition **до** establishes the absolute final moment when this action can occur. Note that words like **завтра** *(tomorrow)* are adverbs and do not change their form after **до**.
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Нача́льник:</span> Коли звіт бу́де гото́вий? *(When will the report be ready?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Ме́неджер:</span> Я напишу́ йо́го до середи́. *(I will write it by Wednesday.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Начальник:</span> Це запі́зно. Мені потрі́бні ци́фри рані́ше. Зробі́ть це до вівто́рка. *(That's too late. I need the numbers earlier. Do it by Tuesday.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Менеджер:</span> Добре, я надішлю́ звіт до вечора. *(Okay, I will send the report by evening.)*</div>
+
+</div>
+
+Від поча́тку і до самого кінця. *(From the beginning and to the very end.)*
+To describe full time ranges, Ukrainian uses paired prepositions. You already know how to set the end point with **до**. To set the starting point, use **від** *(from)* or **з** *(from/since)*. Both of these starting prepositions require the Genitive case. This combination creates a clear, defined block of time. 
+
+«Читаємо українською» *(Reading in Ukrainian)*:
+<div class="dialogue">
+
+<div class="dialogue-line">— Я щодня працю́ю від ранку до вечора. *(I work every day from morning to evening.)*</div>
+
+<div class="dialogue-line">— Цей вели́кий магазин працю́є з понеділка до п'ятниці. *(This big store works from Monday to Friday.)*</div>
+
+<div class="dialogue-line">— Ми чека́ли на тебе́ з тре́тьої до п'ятої години. *(We waited for you from three to five o'clock.)*</div>
+
+<div class="dialogue-line">— Від сі́чня до тра́вня ми вивча́ли украї́нську істо́рію. *(From January to May we studied Ukrainian history.)*</div>
+
+<div class="dialogue-line">— Кав'я́рня зачи́нена на пере́рву з пе́ршої до дру́гої. *(The cafe is closed for a break from one to two.)*</div>
+
+<div class="dialogue-line">— Вона жила́ в цьому́ мі́сті від о́сені до весни́. *(She lived in this city from autumn to spring.)*</div>
+
+</div>
+
+Both **з** and **від** are standard for time ranges. Often, **з** is used with days of the week or specific hours, while **від** is common with general periods like morning, evening, seasons, or months. The second part of the range always uses **до** + Genitive. 
+
+Ро́зклад робо́ти та плани. *(Work schedule and plans.)*
+One of the most practical everyday applications of **до** is reading and discussing schedules, business hours, and daily routines. When you want to know when a place closes, or when a person finishes their shift, you will use **до** with hours or days of the week. To ask "until what time?", you say **До котро́ї години?** *(Until which hour?)*.
+
+«Читаємо українською» *(Reading in Ukrainian)*:
+<div class="dialogue">
+
+<div class="dialogue-line">— На́ша нова́ аптека відчи́нена до дев'я́тої години. *(Our new pharmacy is open until nine o'clock.)*</div>
+
+<div class="dialogue-line">— Музей працює щодня, але в неді́лю ті́льки до шо́стої. *(The museum works every day, but on Sunday only until six.)*</div>
+
+<div class="dialogue-line">— Я зазвича́й працюю до сьо́мої, а потім іду́ додому відпочива́ти. *(I usually work until seven, and then I go home to rest.)*</div>
+
+<div class="dialogue-line">— Суперма́ркет відчи́нений з восьмої ранку до деся́тої вечора. *(The supermarket is open from eight in the morning until ten in the evening.)*</div>
+
+<div class="dialogue-line">— Мій моло́дший брат чита́є ціка́ву кни́гу до пі́зньої ночі. *(My younger brother reads an interesting book until late night.)*</div>
+
+</div>
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Кліє́нт:</span> Ви́бачте, до котрої години ви сього́дні працю́єте? *(Excuse me, until what time do you work today?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Каси́р:</span> Ми працю́ємо до десятої години. *(We work until ten o'clock.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Клієнт:</span> А в неділю гра́фік таки́й самий? *(And on Sunday is the schedule the same?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Касир:</span> Ні, у неділю магазин відчинений тільки до восьмої. *(No, on Sunday the store is open only until eight.)*</div>
+
+</div>
+
+## До + родовий: ре́шта зна́чень та узага́льнення (До + Genitive: Other Meanings and Summary)
+
+Beyond physical movement and time, the preposition **до** with the Genitive case expresses purpose and abstract destinations. Ukrainian has many fixed phrases using this construction that you will hear every day. For example, the standard greeting **до поба́чення** *(goodbye)* literally means "until seeing" or "until the meeting," where **побачення** *(meeting/date)* is in the Genitive. Another very common conversational phrase is **до ре́чі** *(by the way)*, which translates to "to the point" or "to the thing" (**річ** *(thing)* in Genitive). You will also use **до** to show readiness or preparation for a specific event or goal. When you are ready for something, you use the adjective **готовий** *(ready)* for masculine, **гото́ва** *(ready)* for feminine, or **гото́ві** *(ready)* for plural, followed by **до** and the Genitive.
+
+«Читаємо українською» *(Reading in Ukrainian)*:
+<div class="dialogue">
+
+<div class="dialogue-line">— Яка мета́ ва́шої по́дорожі? *(What is the purpose of your trip?)*</div>
+
+<div class="dialogue-line">— Студенти вже добре готові до екза́мену. *(The students are already well ready for the exam.)*</div>
+
+<div class="dialogue-line">— До речі, я вчо́ра купи́в квитки в кіно́. *(By the way, I bought tickets to the cinema yesterday.)*</div>
+
+<div class="dialogue-line">— Я ще не готовий до ціє́ї серйо́зної розмо́ви. *(I am not yet ready for this serious conversation.)*</div>
+
+<div class="dialogue-line">— Ма́ма зараз готу́є смачну́ вече́рю до свя́та. *(Mom is now preparing a tasty dinner for the holiday.)*</div>
+
+<div class="dialogue-line">— До зу́стрічі завтра вранці бі́ля університету! *(See you tomorrow morning near the university!)*</div>
+
+</div>
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Виклада́ч:</span> Добрий день! Ви готові до те́сту? *(Good day! Are you ready for the test?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Студе́нт:</span> Так, я бага́то чита́в. До речі, скі́льки часу ми маємо? *(Yes, I read a lot. By the way, how much time do we have?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Викладач:</span> У вас є одна́ годи́на. *(You have one hour.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Студент:</span> Дякую. До побачення пі́сля уроку! *(Thank you. Goodbye after the lesson!)*</div>
+
+</div>
+
+The preposition **до** also shows addition, connection, or relation between things. When you add a new item to an existing group, you use the verb **дода́ти** *(to add)* followed by **до** *(to)*. For example, you can say **додати до спи́ску** *(to add to the list)* when shopping. In academic or learning contexts, when you ask questions about a specific text, Ukrainians say **ста́вити пита́ння до те́ксту** *(to ask questions to the text)*. Furthermore, **до** expresses your attitude, feelings, or interest directed toward someone or something. You can have **великий інтере́с до мо́ви** *(great interest in the language)*, **любо́в до му́зики** *(love for music)*, or a specific **ста́влення до роботи** *(attitude toward work)*. This shows that your emotions and actions are moving toward a concept.
+
+«Читаємо українською» *(Reading in Ukrainian)*:
+<div class="dialogue">
+
+<div class="dialogue-line">— Продаве́ць дода́в сві́жі я́блука до мого замо́влення. *(The seller added fresh apples to my order.)*</div>
+
+<div class="dialogue-line">— Учи́тель про́сить поста́вити п'ять пита́нь до ново́го тексту. *(The teacher asks to pose five questions to the new text.)*</div>
+
+<div class="dialogue-line">— Мій молодший брат ма́є великий інтерес до істо́рії. *(My younger brother has a great interest in history.)*</div>
+
+<div class="dialogue-line">— У нього за́вжди́ ду́же серйо́зне ставлення до роботи. *(He always has a very serious attitude toward work.)*</div>
+
+<div class="dialogue-line">— Будь ласка, дода́йте холо́дне молоко до моє́ї ка́ви. *(Please, add cold milk to my coffee.)*</div>
+
+</div>
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Менеджер:</span> Як твоє́ нове́ завда́ння? *(How is your new task?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Аналі́тик:</span> Норма́льно. Але я хо́чу додати нові́ да́ні до зві́ту. *(Fine. But I want to add new data to the report.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Менеджер:</span> Добре. Яке́ твоє зага́льне ставлення до цього́ проє́кту? *(Okay. What is your general attitude toward this project?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Аналітик:</span> Я маю великий інтерес до цієї те́ми. *(I have a great interest in this topic.)*</div>
+
+</div>
+
+Let's consolidate the spatial and temporal prepositions you know that always use the Genitive case. You have learned **до** *(toward/until)*, **від** *(away from/since)*, and **після** *(after)*. All three require the Genitive case, but they point in different directions. For physical space, **від** indicates moving away from a starting point, while **до** indicates moving toward an endpoint. For time, **від** sets the starting limit, **до** sets the ending limit, and **після** indicates an action happening later. Understanding these specific vectors helps you navigate both city streets and daily schedules accurately.
+
+«Читаємо українською» *(Reading in Ukrainian)*:
+<div class="dialogue">
+
+<div class="dialogue-line">— Ми шви́дко ї́хали від Києва до Львова п'ять годи́н. *(We rode quickly from Kyiv to Lviv for five hours.)*</div>
+
+<div class="dialogue-line">— Я працюю в о́фісі від ранку до пі́знього вечора. *(I work in the office from morning to late evening.)*</div>
+
+<div class="dialogue-line">— Після вече́рі ми бу́демо спокі́йно відпочивати вдо́ма. *(After dinner we will calmly rest at home.)*</div>
+
+<div class="dialogue-line">— Від вокзалу до на́шого готелю мо́жна швидко дійти́ пішки. *(From the station to our hotel one can quickly walk on foot.)*</div>
+
+<div class="dialogue-line">— Після смачно́го обіду я відра́зу піду́ до лікаря. *(After a tasty lunch I will immediately go to the doctor.)*</div>
+
+</div>
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Тури́ст:</span> Як дої́хати від це́нтру міста до старо́го музею? *(How to get from the city center to the old museum?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Гід:</span> Це дуже бли́зько. Від пло́щі йдіть пря́мо до парку. *(It is very close. From the square walk straight to the park.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Турист:</span> А що ми будемо роби́ти після ціка́вої екску́рсії? *(And what will we do after the interesting excursion?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Гід:</span> Після музею ми ра́зом пі́демо до украї́нського рестора́ну. *(After the museum we will go together to a Ukrainian restaurant.)*</div>
+
+</div>
+
+Here is a summary of the main functions of **до** + Genitive case:
+
+**Напрямок (Мі́сце) / Direction (Place):**
+Moving toward a physical destination.
+<div class="dialogue">
+
+<div class="dialogue-line">— Ми їдемо до школи. *(We are riding to school.)*</div>
+
+<div class="dialogue-line">— Вони йдуть до Львова. *(They are going to Lviv.)*</div>
+
+</div>
+
+**Напрямок (Осо́ба) / Direction (Person):**
+Going to see someone or to their place.
+<div class="dialogue">
+
+<div class="dialogue-line">— Я йду до лікаря. *(I am going to the doctor.)*</div>
+
+<div class="dialogue-line">— Діти ї́дуть до бабусі. *(The children are riding to grandma's.)*</div>
+
+</div>
+
+**Лімі́т часу / Time Limit:**
+Expressing "until" a certain period.
+<div class="dialogue">
+
+<div class="dialogue-line">— Магазин працює до вечора. *(The store works until evening.)*</div>
+
+<div class="dialogue-line">— Ми чекали до понеділка. *(We waited until Monday.)*</div>
+
+</div>
+
+**Дедлайн / Deadline:**
+Expressing "by" a specific time.
+<div class="dialogue">
+
+<div class="dialogue-line">— Зроби́ це до восьмої години. *(Do this by eight o'clock.)*</div>
+
+<div class="dialogue-line">— Проєкт треба зда́ти до завтра. *(The project must be submitted by tomorrow.)*</div>
+
+</div>
+
+**Мета та ста́лі ви́рази / Purpose and Fixed Phrases:**
+Readiness, greetings, and common idioms.
+<div class="dialogue">
+
+<div class="dialogue-line">— Я готовий до екзамену. *(I am ready for the exam.)*</div>
+
+<div class="dialogue-line">— До побачення! *(Goodbye!)*</div>
+
+<div class="dialogue-line">— До речі, де мій телефо́н? *(By the way, where is my phone?)*</div>
+
+</div>
+
+**Зв'язок / Relation:**
+Adding to a set or expressing an attitude.
+<div class="dialogue">
+
+<div class="dialogue-line">— Треба додати це до списку. *(One needs to add this to the list.)*</div>
+
+<div class="dialogue-line">— У не́ї га́рне ставлення до люде́й. *(She has a good attitude toward people.)*</div>
+
+</div>
+
+## Дже́рела (References)
+- Заболо́тний Grade 5, §31: Прийме́нник до з родо́ви́м відмі́нком
+- [ULP: 10 Uses of Genitive Case](https://www.ukrainianlessons.com/genitive-case/)
+
+</TabItem>
+<TabItem label="Словник">
+
+### Обов'язкові та рекомендовані слова
+
+| Слово | Переклад | Частина мови | Рід |
+|-------|----------|-------------|-----|
+| **ста́влення** | attitude | ім. | с. |
+| **інтере́с** | interest | ім. | ч. |
+| **гото́вий** | ready | прикм. |  |
+| **за́втра** | tomorrow | присл. |  |
+| **на́прямок** | direction | ім. | ч. |
+| **мета́** | goal, purpose | ім. | ж. |
+| **музе́й** | museum | ім. | ч. |
+| **лі́кар** | doctor | ім. | ч. |
+| **бабу́ся** | grandmother | ім. | ж. |
+| **ве́чір** | evening | ім. | ч. |
+| **ра́нок** | morning | ім. |  |
+| **екза́мен** | exam | ім. | ч. |
+| **поба́чення** | meeting, date | ім. | с. |
+| **спи́сок** | list | ім. | ч. |
+| **пі́шки** | on foot | присл. |  |
+| **прямува́ти** | to head | дієсл. |  |
+| **мі́сто** | city | ім. | с. |
+| **краї́на** | country | ім. | ж. |
+| **екску́рсія** | excursion | ім. | ж. |
+| **вра́нці** | in the morning | присл. |  |
+| **уве́чері** | in the evening | присл. |  |
+| **вихідні́** | weekend | прикм. |  |
+| **вокза́л** | train station | ім. | ч. |
+| **готе́ль** | hotel | ім. | ч. |
+| **апте́ка** | pharmacy | ім. | ж. |
+| **ліка́рня** | hospital | ім. | ж. |
+| **кімна́та** | room | ім. | ж. |
+| **о́зеро** | lake | ім. | с. |
+| **магази́н** | store | ім. | ч. |
+| **теа́тр** | theater | ім. | ч. |
+| **ста́нція** | station | ім. | ж. |
+| **щодня́** | every day | присл. |  |
+| **тре́ба** | need, necessary |  |  |
+| **по́тім** | then, afterwards | присл. |  |
+| **додо́му** | home | присл. |  |
+| **зу́стріч** | meeting | ім. | ж. |
+| **годи́на** | hour, o'clock | ім. | ж. |
+| **звіт** | report | ім. | ч. |
+| **проє́кт** | project | ім. | ч. |
+| **тест** | test | ім. | ч. |
+| **понеді́лок** | Monday | ім. | ч. |
+| **вівто́рок** | Tuesday | ім. | ч. |
+| **середа́** | Wednesday | ім. | ж. |
+| **п'я́тниця** | Friday | ім. | ж. |
+| **субо́та** | Saturday | ім. | ж. |
+| **неді́ля** | Sunday | ім. | ж. |
+| **лі́то** | summer | ім. | с. |
+| **о́сінь** | autumn | ім. | ж. |
+| **весна́** | spring | ім. | ж. |
+| **відчи́нений** | open | прикм. |  |
+| **зачи́нений** | closed | прикм. |  |
+| **пере́рва** | break | ім. | ж. |
+| **ро́зклад** | schedule | ім. | ч. |
+| **відпочива́ти** | to rest | дієсл. |  |
+| **зазвича́й** | usually | присл. |  |
+
+### Вирази
+
+| Вираз | Переклад |
+|-------|----------|
+| **до побачення** | goodbye |
+| **до речі** | by the way |
+| **до зустрічі** | see you |
+| **До котрої години?** | Until what time? |
+| **ставити питання** | to ask questions |
+| **грати в шахи** | to play chess |
+| **Куди ти йдеш?** | Where are you going? |
+
+### Картки — Flashcards
+
+<FlashcardDeck client:only="react" cards={[{ front: "ста́влення", back: "attitude", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "інтере́с", back: "interest", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "гото́вий", back: "ready", subtitle: "прикм." }, { front: "за́втра", back: "tomorrow", subtitle: "присл." }, { front: "на́прямок", back: "direction", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "мета́", back: "goal, purpose", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "музе́й", back: "museum", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лі́кар", back: "doctor", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "бабу́ся", back: "grandmother", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ве́чір", back: "evening", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ра́нок", back: "morning", subtitle: "ім." }, { front: "екза́мен", back: "exam", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "поба́чення", back: "meeting, date", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "спи́сок", back: "list", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "пі́шки", back: "on foot", subtitle: "присл." }, { front: "прямува́ти", back: "to head", subtitle: "дієсл." }, { front: "мі́сто", back: "city", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "краї́на", back: "country", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "екску́рсія", back: "excursion", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "вра́нці", back: "in the morning", subtitle: "присл." }, { front: "уве́чері", back: "in the evening", subtitle: "присл." }, { front: "вихідні́", back: "weekend", subtitle: "прикм." }, { front: "вокза́л", back: "train station", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "готе́ль", back: "hotel", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "апте́ка", back: "pharmacy", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ліка́рня", back: "hospital", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кімна́та", back: "room", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "о́зеро", back: "lake", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "магази́н", back: "store", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "теа́тр", back: "theater", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ста́нція", back: "station", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "щодня́", back: "every day", subtitle: "присл." }, { front: "тре́ба", back: "need, necessary" }, { front: "по́тім", back: "then, afterwards", subtitle: "присл." }, { front: "додо́му", back: "home", subtitle: "присл." }, { front: "зу́стріч", back: "meeting", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "годи́на", back: "hour, o&#39;clock", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "звіт", back: "report", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "проє́кт", back: "project", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "тест", back: "test", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "понеді́лок", back: "Monday", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вівто́рок", back: "Tuesday", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "середа́", back: "Wednesday", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "п&#39;я́тниця", back: "Friday", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "субо́та", back: "Saturday", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "неді́ля", back: "Sunday", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "лі́то", back: "summer", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "о́сінь", back: "autumn", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "весна́", back: "spring", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "відчи́нений", back: "open", subtitle: "прикм." }, { front: "зачи́нений", back: "closed", subtitle: "прикм." }, { front: "пере́рва", back: "break", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ро́зклад", back: "schedule", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "відпочива́ти", back: "to rest", subtitle: "дієсл." }, { front: "зазвича́й", back: "usually", subtitle: "присл." }]} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+<Quiz client:only="react" questions={[{"question": "Я йду до лікаря.", "options": [{"text": "Напрямок до особи", "correct": true}, {"text": "Напрямок до місця", "correct": false}, {"text": "Ліміт часу", "correct": false}, {"text": "Дедлайн", "correct": false}]}, {"question": "Ми маємо закінчити проєкт до п'ятниці.", "options": [{"text": "Ліміт часу", "correct": false}, {"text": "Мета або готовність", "correct": false}, {"text": "Напрямок до місця", "correct": false}, {"text": "Дедлайн", "correct": true}]}, {"question": "Він спав до обіду.", "options": [{"text": "Ліміт часу", "correct": true}, {"text": "Дедлайн", "correct": false}, {"text": "Напрямок до особи", "correct": false}, {"text": "Ставлення", "correct": false}]}, {"question": "Автобус їде до музею.", "options": [{"text": "Дедлайн", "correct": false}, {"text": "Напрямок до місця", "correct": true}, {"text": "Ліміт часу", "correct": false}, {"text": "Мета або готовність", "correct": false}]}, {"question": "Я ще не готовий до екзамену.", "options": [{"text": "Напрямок до особи", "correct": false}, {"text": "Дедлайн", "correct": false}, {"text": "Мета або готовність", "correct": true}, {"text": "Ліміт часу", "correct": false}]}, {"question": "У нього великий інтерес до історії.", "options": [{"text": "Ставлення або зв'язок", "correct": true}, {"text": "Напрямок до місця", "correct": false}, {"text": "Дедлайн", "correct": false}, {"text": "Ліміт часу", "correct": false}]}, {"question": "Будь ласка, додайте це до списку.", "options": [{"text": "Дедлайн", "correct": false}, {"text": "Ліміт часу", "correct": false}, {"text": "Зв'язок або додавання", "correct": true}, {"text": "Напрямок до особи", "correct": false}]}, {"question": "Вони летять до Америки.", "options": [{"text": "Напрямок до місця", "correct": true}, {"text": "Мета або готовність", "correct": false}, {"text": "Дедлайн", "correct": false}, {"text": "Ліміт часу", "correct": false}]}]} instruction={"Оберіть правильне значення прийменника «до»"} />
+
+<FillIn client:only="react" items={[{"sentence": "Я йду до ____.", "answer": "лікаря", "options": ["лікар", "лікаря", "лікарю", "лікарем"]}, {"sentence": "Ми їдемо до ____.", "answer": "Львова", "options": ["Львів", "Львову", "Львова", "Львові"]}, {"sentence": "Автобус їде до ____.", "answer": "вокзалу", "options": ["вокзал", "вокзалу", "вокзала", "вокзалі"]}, {"sentence": "Вона побігла до ____.", "answer": "бабусі", "options": ["бабуся", "бабусі", "бабусею", "бабусю"]}, {"sentence": "Студенти йдуть до ____.", "answer": "музею", "options": ["музей", "музею", "музея", "музеєм"]}, {"sentence": "Я буду на роботі до ____.", "answer": "вечора", "options": ["вечір", "вечора", "вечору", "вечором"]}, {"sentence": "Зроби це завдання до ____.", "answer": "середи", "options": ["середа", "середи", "середу", "середою"]}, {"sentence": "Магазин працює до ____.", "answer": "ранку", "options": ["ранок", "ранку", "ранка", "ранком"]}]} instruction={"Вставте правильну форму слова (родовий відмінок)"} />
+
+<MatchUp client:only="react" pairs={[{"left": "до лікаря", "right": "Напрямок до особи (Direction to person)"}, {"left": "до Києва", "right": "Напрямок до місця (Direction to place)"}, {"left": "до вечора", "right": "Ліміт часу (Time limit)"}, {"left": "до понеділка", "right": "Дедлайн (Deadline)"}, {"left": "готовий до екзамену", "right": "Мета або готовність (Purpose or readiness)"}, {"left": "інтерес до історії", "right": "Ставлення (Attitude)"}, {"left": "додати до списку", "right": "Зв'язок або додавання (Adding to a set)"}, {"left": "до побачення", "right": "Сталий вираз (Fixed phrase)"}]} instruction={"З'єднайте фразу з її значенням"} />
+
+<GroupSort client:only="react" groups={{"Напрямок (Direction)": ["до школи", "до театру", "до бабусі", "до Львова"], "Час (Time)": ["до ранку", "до завтра", "до середи", "до вечора"], "Інше (Abstract)": ["до побачення", "до речі", "готовий до екзамену", "інтерес до роботи"]}} instruction={"Розподіліть слова та фрази за категоріями"} />
+
+<ErrorCorrection client:only="react" items={[{"sentence": "Я йду до магазин.", "errorWord": "магазин", "correctForm": "магазину", "options": ["магазина", "магазину", "магазином"], "explanation": "Магазин — чоловічий рід, неістота (building), тому закінчення -у."}, {"sentence": "Ми їдемо до Львів.", "errorWord": "Львів", "correctForm": "Львова", "options": ["Львову", "Львова", "Львові"], "explanation": "Львів — місто (city), чоловічий рід, тому закінчення -а."}, {"sentence": "Вона була там до ранок.", "errorWord": "ранок", "correctForm": "ранку", "options": ["ранка", "ранку", "ранком"], "explanation": "Ранок — час, чоловічий рід, тому закінчення -у."}, {"sentence": "Вони готові до екзамен.", "errorWord": "екзамен", "correctForm": "екзамену", "options": ["екзамена", "екзамену", "екзамені"], "explanation": "Екзамен — чоловічий рід, абстрактне поняття, тому закінчення -у."}, {"sentence": "У мене великий інтерес до історія.", "errorWord": "історія", "correctForm": "історії", "options": ["історію", "історії", "історією"], "explanation": "Історія — жіночий рід на -я (soft stem), тому в родовому відмінку буде -ї."}, {"sentence": "Додай це до список.", "errorWord": "список", "correctForm": "списку", "options": ["списка", "списку", "списком"], "explanation": "Список — чоловічий рід, абстрактне/неживе, тому закінчення -у."}, {"sentence": "Ми чекали до ніч.", "errorWord": "ніч", "correctForm": "ночі", "options": ["ніччю", "ночі", "ночю"], "explanation": "Ніч — жіночий рід (3-я відміна), у родовому відмінку закінчення -і."}, {"sentence": "Я йду до лікар.", "errorWord": "лікар", "correctForm": "лікаря", "options": ["лікарю", "лікаря", "лікарем"], "explanation": "Лікар — чоловічий рід, істота (person), тому закінчення -я."}]} instruction={"Знайдіть і виправте помилку у формі слова після «до»"} />
+
+<Unjumble client:only="react" items={[{"words": "лікаря. / йду / Я / до", "answer": "Я йду до лікаря."}, {"words": "їдемо / Ми / до / Львова.", "answer": "Ми їдемо до Львова."}, {"words": "до / працює / Магазин / вечора.", "answer": "Магазин працює до вечора."}, {"words": "проєкт / закінчити / Треба / п'ятниці. / до", "answer": "Треба закінчити проєкт до п'ятниці."}, {"words": "екзамену. / до / Я / готовий", "answer": "Я готовий до екзамену."}, {"words": "це / Додайте / списку. / до", "answer": "Додайте це до списку."}]} instruction={"Складіть правильне речення зі слів"} />
+
+
+</TabItem>
+<TabItem label="Ресурси">
+
+**Джерела — References**
+
+- Заболотний Grade 5, §31
+  _Прийменник до з родовим відмінком_
+- [ULP: 10 Uses of Genitive Case](https://www.ukrainianlessons.com/genitive-case/)
+  _Direction and time uses of до_
+
+**Граматика — Grammar (МійКлас)**
+
+- [МійКлас: Відмінки іменників](https://miyklas.com.ua/p/ukrainska-mova/6-klas/imennik-43064/vidminki-imennikiv-45178) (miyklas.com.ua)
+
+**Anna Ohoiko — Ukrainian Lessons**
+
+- [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
+- [Genitive Case (Родовий відмінок)](https://www.ukrainianlessons.com/genitive-case/)
+- [Noun Genders in Ukrainian](https://www.ukrainianlessons.com/noun-genders-in-ukrainian/)
+
+</TabItem>
+</Tabs>

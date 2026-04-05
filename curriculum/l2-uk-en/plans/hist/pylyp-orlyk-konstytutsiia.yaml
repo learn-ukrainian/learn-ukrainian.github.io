@@ -1,126 +1,144 @@
-module: hist-067
-level: HIST
-sequence: 67
-slug: pylyp-orlyk-konstytutsiia
-version: '3.0'
-title: Пилип Орлик і перша Конституція
-subtitle: Pylyp Orlyk and the First Constitution
-focus: history
-pedagogy: CBI
-phase: HIST.7 [Mazepa & End of Hetmanate]
-word_target: 5000
-objectives:
-- Analyze the causes and consequences of пилип орлик і перша конституція
-- Evaluate the historical significance of гетьман у вигнанні
-- 'Trace the development of деколонізаційний погляд: правова культура'
-content_outline:
-- section: 'Вступ: Гетьман у вигнанні'
-  points:
-  - Orlyk's background and education — Czech noble origin (Barons Orlyk), Jesuit college in Vilnius, Kyiv-Mohyla Academy
-    (pupil of Stefan Yavorsky); born 1672 in Kosuta (Belarus)
-  - 'Election as Hetman in Bendery — April 5 (16), 1710; first election in emigration; cultural hook: [!history-bite] Orlyk
-    was born in Belarus (Kosuta) but became a Ukrainian Hetman'
-  - The tragic context of exile — post-Poltava defeat, death of Mazepa in Bendery, alliance with Charles XII
-  words: 700
-- section: Бендерська Конституція 1710 року
-  points:
-  - 'Structure of the document (Pacts and Constitutions) — Full title «Пакти й Конституції прав і вольностей Війська Запорозького»;
-    Preamble (historical justification), 16 articles, Oath; cultural hook: [!context] 77 years before US Constitution, 81
-    years before French Constitution'
-  - Separation of powers (Hetman, Council, Court) — General Council meets 3 times/year (Christmas, Easter, Pokrova); 
-    General Court independent from Hetman; Hetman limited by law
-  - Protection of social groups — protection of Cossack widows/orphans, ban on Hetman seizing land/property from 
-    Cossacks
-  words: 700
-- section: 'Демократичні ідеї: Україна vs Європа'
-  points:
-  - 'Comparison with European legal thought (Locke, Montesquieu) — cultural hook: [!myth-buster] Orlyk applied separation
-    of powers *before* Montesquieu''s ''Spirit of Laws'' (1748)'
-  - The uniqueness of the contract between the Hetman and the Army — 'social contract' nature vs simple 'election 
-    capitulation' (pacta conventa)
-  - Anti-tyranny safeguards — Hetman cannot execute without court, cannot unilaterally control treasury (skarbnytsia)
-  words: 700
-- section: Дипломатична боротьба Орлика
-  points:
-  - 'Anti-Moscow coalition (Sweden, Turkey, Crimea) — first European anti-Russian coalition; cultural hook: [!decolonization]
-    Ukraine viewed as the ''shield of Europe'' against tyranny'
-  - Campaign of 1711 onto the Right Bank — initial success vs Tatar betrayal and looting causing loss of support and 
-    retreat
-  - Years of wandering in Europe (Thessaloniki, Paris, London) — 12 years in Thessaloniki under surveillance; seeking 
-    support from Louis XV and Vatican; death in Jassy (1742)
-  words: 700
-- section: 'Читання: Текст Конституції'
-  points:
-  - 'Analysis of specific articles (religion, borders, corruption) — Art 1: Orthodoxy under Constantinople (not Moscow); Art
-    2: Borders by Sluch river (Khmelnytsky era); Art 6: Limits on Hetman by General Council'
-  - 'Language and style of the document (Latin/Old Ukrainian) — include quote: «Володарі, що дорожать своїм добрим ім''ям...
-    виставлені на суд загалу»'
-  words: 700
-- section: 'Первинні джерела: Листи та діаріуш'
-  points:
-  - 'Excerpts from Orlyk''s Diary (''Diariusz'') — >2000 pages, travelogue of 18th-century Europe, written in Polish with
-    Latinisms; cultural hook: [!culture] Unique 18th-century travelogue'
-  - 'Letters to European monarchs — ''Manifesto to European Governments'' (1712) explaining war reasons (tyranny vs rights);
-    quote: «Природним правом є визволятися від гноблення і трудитися, аби повернути те, що несправедливістю... було забрано»'
-  words: 700
-- section: 'Деколонізаційний погляд: Правова культура'
-  points:
-  - Ukrainian constitutionalism vs Russian autocracy — refuting the imperial view of the Constitution as a 'fiction' or 
-    simple 'pact'; Ukraine as part of European legal tradition
-  - Myth of 'anarchy' debunked — Ukrainians sought legal order (Constitution), contrary to the 'mazepynstvo' anarchy 
-    narrative invented by empire
-  - Orlyk as a symbol of European Ukraine — continuity with UNR Constitution (1918) and modern Ukraine; 'Ukraine is 
-    Europe, Muscovy is Asia' dichotomy
-  words: 800
-vocabulary_hints:
-  required:
-  - історія (history) — козацька історія, вивчати історію
-  - держава (state) — вільна держава, будувати державу, державний суверенітет
-  - народ (people) — український народ, права народу
-  - влада (power) — поділ влади (separation of powers), обмеження влади, виконавча влада
-  - період (period) — складний період, історичний період
-  - подія (event) — визначна подія, хронологія подій
-  - джерело (source) — історичне джерело, первинні джерела (primary sources)
-  - спадщина (heritage) — правова спадщина, культурна спадщина, епістолярна спадщина
-  - Конституція (Constitution) — перша Конституція, ухвалити Конституцію, Бендерська Конституція
-  - гетьман (Hetman) — обрати гетьмана, влада гетьмана, гетьман у вигнанні
-  - рада (council) — Генеральна Рада, скликати раду, козацька рада
-  - вигнання (exile) — жити у вигнанні, політичне вигнання, еміграція
-  - угода (agreement/treaty) — підписати угоду, порушити угоду, суспільний договір (social contract)
-  - права (rights) — права і вольності, захищати права, природне право
-  recommended:
-  - аналіз (analysis) — критичний аналіз, робити аналіз
-  - контекст (context) — історичний контекст, у контексті подій
-  - вплив (influence) — мати вплив, під впливом
-  - наслідки (consequences) — причини і наслідки, політичні наслідки
-  - тиранія (tyranny) — боротьба проти тиранії, московська тиранія
-  - суверенітет (sovereignty) — державний суверенітет, відстоювати суверенітет
-  - коаліція (coalition) — антимосковська коаліція, створити коаліцію
-  - скарбниця (treasury) — військова скарбниця, розпоряджатися скарбницею
-  - присяга (oath) — скласти присягу, текст присяги
 activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: critical-analysis
-  focus: Аналіз причинно-наслідкових зв'язків між подіями
-  items: 3
-- type: critical-analysis
-  focus: Критична оцінка історичних тверджень та міфів
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння історіографічних дебатів
   items: 5
-prerequisites:
-- 'hist-66: Іван Мазепа III'
-persona:
-  voice: Senior Professor of History
-  role: Constitutional Scribe
-learning_outcomes:
-- Учень розуміє значення Конституції Пилипа Орлика 1710 року
-- Учень може описати структуру та основні ідеї документа
-- Учень знає біографію Пилипа Орлика як наступника Мазепи
+  placement: inline
+  type: quiz
+- after_section: Джерела
+  focus: Розуміння первинного історичного джерела
+  placement: inline
+  type: reading
+- focus: Оцінка первинного джерела — хто написав, навіщо, що упущено?
+  placement: workbook
+  type: source-evaluation
+- focus: Дебат — оцінка значення та наслідків події
+  placement: workbook
+  type: debate
+- focus: Порівняння української та імперської інтерпретацій (Пилип Орлик і перша Конституція)
+  placement: workbook
+  type: comparative-study
+- focus: Есе на тему зв'язку з сучасністю (Пилип Орлик і перша Конституція)
+  placement: workbook
+  type: essay-response
+cefr_min: C1
 connects_to:
 - hryhorii-skovoroda
-references: []
-register: академічний
-grammar: []
+- hist-66-mazepa
+content_outline:
+- points:
+  - 'Провокація: Чи була Конституція Орлика лише символічним жестом гетьмана у вигнанні, чи реальним планом для держави? Де
+    межа між політичною декларацією та дієвим законом?'
+  - 'Історичний контекст: поразка під Полтавою, смерть Мазепи, обрання Пилипа Орлика гетьманом в еміграції у Бендерах 5 квітня
+    1710 року.'
+  section: Розминка
+  words: 400
+- points:
+  - 'Дебат 1: Конституція — українська правова традиція чи фікція? Російська історіографія традиційно називає документ «нереалістичним»
+    і «таким, що не мав сили». Українська — наголошує на тяглості правової думки від Русі до козацтва.'
+  - 'Дебат 2: Оригінальна ідея чи європейський тренд? Дискусія про те, чи Орлик «випередив» Монтеск''є з ідеєю поділу влади,
+    чи був частиною загальноєвропейського правового дискурсу, адаптуючи ідеї Локка та європейських ''pacta conventa''.'
+  - '[!epistemic-humility] Документ ніколи не був повноцінно імплементований, тому оцінка його практичного впливу залишається
+    полем для наукових суперечок, а не доконаних фактів.'
+  - 'Глобальна синхронність: Конституція Орлика (1710) з''явилася в епоху Просвітництва, але до публікації «Духу законів»
+    Монтеск''є (1748) та Конституцій США (1787) і Франції (1791).'
+  section: 'Конфліктна карта: Український закон vs. Московське право'
+  words: 900
+- points:
+  - 'Аналіз структури: «Пакти й Конституції прав і вольностей Війська Запорозького» складаються з преамбули, 16 статей та
+    присяги гетьмана.'
+  - 'Поділ влади: Законодавча (Генеральна Рада збирається тричі на рік), виконавча (обмежена влада гетьмана), судова (незалежний
+    Генеральний Суд).'
+  - 'Антикорупційні та соціальні норми: заборона гетьману привласнювати землі, захист козацьких вдів та сиріт, контроль над
+    військовою скарбницею.'
+  - '[!decolonization] Стаття 1: православна віра підпорядковується Константинопольському патріархату, не Московському. Стаття
+    2: кордони України визначаються по річці Случ, як за часів Хмельницького — пряме заперечення московських претензій.'
+  - 'Критика джерела: аналіз уривків з «Діаріуша» (щоденника) Орлика. Погляд на ті ж події з особистої, емоційної перспективи.
+    Хто аудиторія щоденника, а хто — конституції?'
+  section: 'Джерела: Текст Конституції та діаріуш Гетьмана'
+  words: 1600
+- points:
+  - 'Спроба реалізації: військовий похід 1711 року на Правобережну Україну в союзі зі Швецією, Туреччиною та Кримським ханством.
+    Початковий успіх і зрада татар, що призвела до поразки.'
+  - 'Дипломатична боротьба: роки Орлика у вигнанні в Європі (Швеція, Франція, Османська імперія), де він намагався створити
+    антимосковську коаліцію, апелюючи до європейських монархів.'
+  - 'Правова спадщина: Конституція стала символом неперервності української державної традиції та аргументом у боротьбі з
+    російським автократизмом.'
+  - '[!myth-buster] Твердження, що українці — анархічна маса («мазепинство»), спростовується самим фактом створення настільки
+    детального правового документа, що прагнув до порядку і справедливості, а не до хаосу.'
+  - 'Оцінки істориків: порівняння поглядів Грушевського, Субтельного та Плохія на довгострокове значення Конституції Орлика
+    як фундаменту українського конституціоналізму.'
+  section: 'Аналіз: Наслідки та значення'
+  words: 1600
+- points:
+  - 'Повернення до розминки: Отже, Конституція — це мрія чи документ? Студент формулює аргументовану відповідь, спираючись
+    на матеріали модуля.'
+  - 'Зв''язок із сьогоденням: Як ідеї Конституції 1710 року (суверенітет, європейський вибір, обмеження влади) резонують у
+    сучасній Україні, що знову бореться за свою незалежність від Москви?'
+  - '[!anti-hagiography] Поразка походу 1711 року демонструє небезпеку покладання на ненадійних союзників. Дипломатичні успіхи
+    Орлика були обмежені, а його життя у вигнанні — трагічним. Це історія не тільки про тріумф ідей, але й про реальність
+    політичних поразок.'
+  section: Дискусія та підсумок
+  words: 700
+focus: 'Бендерська Конституція 1710 року: поділ влади, український конституціоналізм vs. російська автократія, дипломатична
+  боротьба Орлика'
+level: HIST
+module: hist-067
+objectives:
+- Аналізувати структуру та ключові ідеї Конституції Пилипа Орлика 1710 року
+- Критично порівнювати українську правову думку з європейськими та російськими політичними моделями того часу
+- Оцінювати історичне значення документа, що не був повністю реалізований, для формування національної ідентичності
+- Розрізняти факти, інтерпретації та міфи в історії українського конституціоналізму
+pedagogy: CBI
+persona:
+  role: Модератор семінару, що порівнює українську правову традицію з європейською та протиставляє її московській автократії
+  voice: Constitutional-Scribe
+phase: HIST.7 [Mazepa & End of Hetmanate]
+references:
+- note: Compiled from Subtelny, Plokhy, Hrushevsky — primary details on the constitution and Orlyk's life
+  path: wiki/hist/era-07/pylyp-orlyk-constitution.md
+  type: wiki
+- author: Пилип Орлик
+  note: Оригінальний текст (переклад) для аналізу статей
+  type: primary
+  work: Пакти й Конституції прав і вольностей Війська Запорозького
+- author: Serhiy Plokhy
+  note: Аналіз місця Конституції Орлика в контексті європейської історії та українсько-російських відносин
+  type: secondary
+  work: The Gates of Europe
+sequence: 67
+slug: pylyp-orlyk-konstytutsiia
+subtitle: Pylyp Orlyk and the First Constitution
+title: Пилип Орлик і перша Конституція
+version: '4.0'
+vocabulary_hints:
+- definition: примусове вислання або залишення батьківщини з політичних чи інших причин
+  pos: с.
+  word: вигнання
+- definition: основний закон держави, що визначає її устрій, права та обов'язки громадян
+  pos: ж.
+  word: конституція
+- definition: право та можливість розпоряджатися, керувати кимсь або чимсь; політичне панування
+  pos: ж.
+  word: влада
+- definition: закріплені законом можливості, свободи та гарантії особистості (права і вольності)
+  pos: мн.
+  word: права
+- definition: повна незалежність держави у її внутрішніх справах і в міжнародних відносинах
+  pos: ч.
+  word: суверенітет
+- definition: політичний або військовий союз держав для спільних дій
+  pos: ж.
+  word: коаліція
+- definition: місце зберігання грошей та коштовностей; державна казна
+  pos: ж.
+  word: скарбниця
+- definition: урочиста офіційна обіцянка або клятва дотримуватися певних зобов'язань
+  pos: ж.
+  word: присяга
+- definition: договір між двома чи більше сторонами (напр., суспільна угода — social contract)
+  pos: ж.
+  word: угода
+- definition: форма державної влади, що встановлюється насильницьким шляхом і ґрунтується на одноосібному правлінні
+  pos: ж.
+  word: тиранія
+word_target: 5000

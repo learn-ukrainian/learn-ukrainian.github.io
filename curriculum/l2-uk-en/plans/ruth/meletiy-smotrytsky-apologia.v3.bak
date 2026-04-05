@@ -1,0 +1,67 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння соціолінгвістичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Текст
+  focus: Транскрипція руського/староукраїнського фрагменту
+  placement: inline
+  type: transcription
+- focus: Простежити еволюцію слова від руської доби до сучасної
+  placement: workbook
+  type: etymology-trace
+- focus: 'Порівняння мовних контактів — полонізми, латинізми, церковнослов''янізми (Мелетій Смотрицький: Апологія)'
+  placement: workbook
+  type: dialect-comparison
+- focus: 'Порівняння — те саме поняття церковнослов''янською, руською та сучасною (Мелетій Смотрицький: Апологія)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе — як цей текст доводить існування української мови до Котляревського? (Мелетій Смотрицький: Апологія)'
+  placement: workbook
+  type: essay-response
+connects_to:
+- comparative-lab-parallel
+content_outline:
+- points:
+  - 'Introduction to Meletiy Smotrytsky: Apologia'
+  section: Вступ
+  words: 1250
+- points:
+  - Primary source analysis and grammar focus
+  section: Основний матеріал
+  words: 1250
+- points:
+  - Exercises and activities
+  section: Практика
+  words: 1250
+- points:
+  - Summary and connection to next module
+  section: Підсумок
+  words: 1250
+focus: Defense of Slavonic as "dignified" language
+grammar: []
+level: RUTH
+module: ruth-047
+objectives:
+- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
+- Продукувати тексти академічного та професійного рівня за тематикою модуля
+- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- Застосовувати знання з теми «Практика» у власній мовній практиці
+persona:
+  role: Uniate Polemicist
+  voice: Baroque Scholar
+phase: 2
+prerequisites:
+- vyshensky-epistles
+references: []
+register: академічний
+sequence: 47
+slug: meletiy-smotrytsky-apologia
+subtitle: 'Meletiy Smotrytsky: Apologia'
+title: 'Мелетій Смотрицький: Апологія'
+version: '3.0'
+vocabulary_hints:
+  recommended: []
+  required: []
+word_target: 5000

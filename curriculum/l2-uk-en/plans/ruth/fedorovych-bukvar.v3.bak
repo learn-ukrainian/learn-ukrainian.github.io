@@ -1,0 +1,72 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння соціолінгвістичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Текст
+  focus: Транскрипція руського/староукраїнського фрагменту
+  placement: inline
+  type: transcription
+- focus: Простежити еволюцію слова від руської доби до сучасної
+  placement: workbook
+  type: etymology-trace
+- focus: Порівняння мовних контактів — полонізми, латинізми, церковнослов'янізми (Буквар Івана Федоровича (1574))
+  placement: workbook
+  type: dialect-comparison
+- focus: Порівняння — те саме поняття церковнослов'янською, руською та сучасною (Буквар Івана Федоровича (1574))
+  placement: workbook
+  type: comparative-study
+- focus: Есе — як цей текст доводить існування української мови до Котляревського? (Буквар Івана Федоровича (1574))
+  placement: workbook
+  type: essay-response
+connects_to:
+- zyzaniy-leksys
+content_outline:
+- points:
+  - 'Historical context: printing arrives in Ukrainian lands. Fedorovych''s journey from Moscow to Lviv. Why Lviv, not Moscow,
+    became his home.'
+  section: Вступ
+  words: 1250
+- points:
+  - Analysis of the Bukvar's structure, alphabet presentation, prayer texts. What the choice of content reveals about educational
+    priorities. The colophon as a literary declaration.
+  section: Основний матеріал
+  words: 1250
+- points:
+  - 'Comparative reading: Fedorovych''s letter forms vs modern Ukrainian. Typography vocabulary. Printing as cultural technology.'
+  section: Практика
+  words: 1250
+- points:
+  - 'Legacy: Lviv as a center of Ukrainian print culture. Connection to Ostrih Bible and brotherhood schools.'
+  section: Підсумок
+  words: 1250
+focus: First printed textbook in Ukrainian lands — Lviv printing tradition as cultural sovereignty
+level: RUTH
+module: ruth-100
+objectives:
+- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
+- Продукувати тексти академічного та професійного рівня за тематикою модуля
+- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- Застосовувати знання з теми «Практика» у власній мовній практиці
+persona:
+  role: Early Print Scholar
+  voice: Cultural Historian
+phase: 5
+prerequisites:
+- philosophical-lab
+sequence: 100
+slug: fedorovych-bukvar
+source_url: http://litopys.org.ua/fedorovych/bf.htm
+subtitle: Ivan Fedorovych's Primer (1574)
+title: Буквар Івана Федоровича (1574)
+version: '2.0'
+vocabulary_hints:
+- друкарство
+- буквар
+- шрифт
+- колофон
+- друкарня
+- набір
+- верстат
+word_target: 5000

@@ -3,19 +3,18 @@
 You are writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 7: Спрощення приголосних (B1, B1.1 [Baselines & Morphophonemics])
-**Section to write:** Що таке спрощення? (~650 words total)
-**Word target for this section:** 650 words (aim for 715 to account for undershoot)
+**Section to write:** Що таке спрощення? (~660 words total)
+**Word target for this section:** 660 words (aim for 726 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Що таке спрощення? (~650 words total)
-- P1 (~120 words): [Intro — Setting the stage by bridging from M08-M10. We have seen sounds change (alternation), but now we see them vanish. Define "спрощення" (simplification) as the dropping of a consonant from a cluster to achieve "милозвучність" (euphony). Use the example of "щастя" (happiness) vs "щасливий" (happy) where the [т] disappears.]
-- P2 (~150 words): [Phonetic logic — Explaining the "Cluster of Three." When word formation creates a sequence like [стн] or [здн], it is heavy for the tongue. Ukrainian prefers a flow of two-consonant clusters. Use the visual from Litvinova Grade 5: "проїЗД + Н = проїЗДНий -> проїзний." Describe the physical feeling of trying to say [здн] versus the smooth [зн].]
-- P3 (~130 words): [Morphophonemic distinction — Crucial comparison between alternation (чергування) and simplification (спрощення). In alternation, the sound transforms (г -> ж in "друг -> друже"). In simplification, it is deleted (т -> zero in "користь -> корисний"). Both serve the same master: the musicality of the language.]
-- Dialogue (~120 words): [Teacher (Вчитель) and students (Студенти) in a Dnipro classroom. The teacher asks why we don't write "серДце." A student tries to pronounce it with the [д] and laughs because it sounds like a hiccup. They conclude that "серце" sounds "lighter" and "more Ukrainian."]
-- P4 (~130 words): [The "Rule of the Middle Man" — Explaining that it is almost always the middle consonant in a triple-cluster that gets sacrificed. In [стн], [т] is between [с] and [н], so it drops. This establishes a predictable pattern for the learner to look for when they see three consonants in a row.]
+## Що таке спрощення? (~660 words total)
+- P1 (~160 words): [Intro/Bridge] Establish continuity from M08-M11. Remind learners that Ukrainian grammar isn't "irregular" but "morphophonemic"—it prioritizes the sound of the language. Introduce "спрощення" (simplification) as the final piece of the phonetic puzzle: whereas "чергування" changes a sound, "спрощення" removes one entirely to achieve "милозвучність" (euphony).
+- P2 (~120 words): [Dialogue] A multi-turn conversation in a Dnipro classroom. A teacher dictates the word "серце" and asks a student why it isn't spelled "сердце" like in some other Slavic languages. The student explains that the [д] is gone because it "hurts the ears" to say it. The teacher introduces the term "милозвучність."
+- P3 (~180 words): [Definition/Concept] Define simplification using Litvinova’s Grade 5 framing: if a cluster of three consonants arises during word formation, one often "drops out" to make pronunciation smoother. Explain the phonetic logic: the human mouth prefers two distinct consonant sounds over a heavy cluster of three or four. Use "тиждень" (noun) vs "тижневий" (adjective) to show the [д] disappearing.
+- P4 (~200 words): [Phonetics vs. Writing] Explain that simplification is a two-stage concept: first, it happens in the mouth (phonetics); second, in most cases, it is "zakriplene na pys'mi" (fixed in writing). This means the letter actually disappears from the page. Contrast this briefly with languages where letters are kept but not pronounced (like "debt" or "knight" in English) to highlight Ukrainian's "write what you say" principle.
 
 ---
 ## Full Plan (for reference)
@@ -616,6 +615,8 @@ references:
 </knowledge_packet>
 
 ---
+
+
 
 ## Rules
 

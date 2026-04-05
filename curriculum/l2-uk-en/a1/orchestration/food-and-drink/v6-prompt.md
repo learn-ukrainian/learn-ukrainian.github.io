@@ -296,77 +296,71 @@ You do NOT need to call tools yourself — the facts are already verified.
 <pre_verified_facts>
 ## VESUM Verification
 
-### Confirmed (33/33 — all words verified):
-їжа, напій, хліб, кава, чай, вода, молоко, сік, м'ясо, риба, суп, сніданок, обід, вечеря, борщ, вареник, каша, сир, масло, яйце, картопля, цукор, сіль, сметана, компот, курка, салат, піца, помідор, огірок, яблуко, банан, лимон
+**Confirmed (33/33 — all words found):**
+- їжа ✅ (noun), напій ✅ (noun), хліб ✅ (noun), кава ✅ (noun), чай ✅ (noun)
+- вода ✅ (noun), молоко ✅ (noun), сік ✅ (noun), м'ясо ✅ (noun), риба ✅ (noun)
+- суп ✅ (noun), сніданок ✅ (noun), обід ✅ (noun), вечеря ✅ (noun), борщ ✅ (noun)
+- вареник ✅ (noun), каша ✅ (noun), сир ✅ (noun), масло ✅ (noun), яйце ✅ (noun)
+- картопля ✅ (noun), цукор ✅ (noun), сіль ✅ (noun), сметана ✅ (noun), компот ✅ (noun)
+- курка ✅ (noun), салат ✅ (noun), піца ✅ (noun), помідор ✅ (noun), огірок ✅ (noun)
+- яблуко ✅ (noun), банан ✅ (noun), лимон ✅ (noun)
 
-### Not found: *(none)*
-
-**Notes:**
-- **сік** matches noun (сік) AND verb (сікти) — use as noun only; context will disambiguate
-- **курка** matches курка (noun, hen/chicken) AND курок (noun, trigger) — noun form курка confirmed correct
+**Not found:** none — all 33 plan vocabulary words confirmed in VESUM.
 
 ---
 
 ## Textbook Excerpts
 
-### Section: Діалоги — At home, meals, food preferences
-> *"Пам'ятай, що компот, молоко, лимонад, сік не мають властивостей звичайної питної води."*
-> **Source: Заболотний, Grade 5, tier 1** — mentions сніданок, meal-related drinks naturally in context; also: *"За двадцять хвилин до сніданку … ковтками випий склянку води"* — natural morning routine language model
+### Section: Діалоги — Сніданок / Обід / Вечеря
+> "Думала Оленка так: «Щоб здоров'я мати, Треба їсти їй буряк, пити чай із м'яти, їсти супчики й борщі, вареники з сиром..."
+> Source: Захарійчук, Grade 4 (tier 2)
 
-> *"Що, на вашу думку, значить правильно харчуватися? Чи важливо, які овочі, фрукти, цукерки, напої споживаємо?"*
-> **Source: Заболотний, Grade 5, tier 1** — discussion prompt about healthy eating; validates "споживати" as natural verb for eating/drinking
+> "Привчіть себе їсти не раніше, ніж через пів години після пробудження... Ось тепер — снідайте. [...] якщо вранці ви не поїли, будьте певні, що за обідом з'їсте мінімум у два рази більше..."
+> Source: Заболотний, Grade 5 (tier 1) — confirms сніданок/обід as natural contrast; also contains phonetic analysis task for слово «сніданок» — directly relevant.
 
 ### Section: Їжа — Food vocabulary by category
-> *"Я готую бутерброд … Я беру шматок хліба. Я намащую масло на хліб. Я кладу лист салату на хліб. Я кладу сир і ковбасу на лист салату. Я їм бутерброд. Смачно!"*
-> **Source: Большакова, Grade 1, tier 2** — perfect A1 food sequence; хліб, масло, сир, салат used in natural action-chain context
+> "Україна завжди славилася своєю кухнею. Її страви знані далеко за межами країни. Усім відомі українські борщі, галушки, вареники, коржі, калачі, гречаники... У багатьох стравах вдало сполучаються овочі та м'ясо. Смачні голубці з м'ясом, перці, фаршировані рисом і м'ясом."
+> Source: Захарійчук, Grade 4 (tier 2) — confirms full category vocabulary as natural school-level Ukrainian.
 
-> *"Прочитай речення про хліб. Половина населення земної кулі харчується рисом. Жоден обід не обходиться без хліба."*
-> **Source: Кравцова, Grade 3, tier 2** — хліб as culturally central food item; validates хліб as primary A1 food word
+> "Картопля зараз дуже популярна. З неї готують багато смачних страв." + "Огірок вважають унікальним овочем (адже він на 95—98 % складається з води)"
+> Source: Літвінова, Grade 5 (tier 1) — confirms овочі (картопля, огірок) at this level.
 
-### Section: Напої — Drinks vocabulary
-> *"Зразок. Компот рідкий, а кисіль густий. Морозиво …, а чай … . Сіль солона, а цукор … . Сік жовтий, а вода … ."*
-> **Source: Большакова, Grade 2, tier 2** — компот, чай, цукор, сік, вода all appear together in antonym exercise; models natural Ukrainian drink vocabulary
+### Section: Напої — Drinks
+> "Пам'ятай, що компот, молоко, лимонад, сік не мають властивостей звичайної питної води."
+> Source: Заболотний, Grade 5 (tier 1) — confirms all four drink words as natural curriculum vocabulary; used in a питний режим text.
 
-> *"Вирощувати й заварювати чай почали в Китаї … Чай буває білий, зелений, чорний … Чай зміцнює імунітет … якщо його споживають без цукру."*
-> **Source: Пономарьова, Grade 4, tier 2** — чай + цукор natural pairing validated
+> "Тато пив чорний чай із пиріжками. Мама пила зелений чай із печивом. Марічка пила квітковий чай із тістечками."
+> Source: Большакова, Grade 1 (tier 2) — confirms **чай з [noun]** chunk pattern is exactly how Grade 1 textbooks present it. Strong pedagogical precedent for the chunk approach.
 
-### Section: Борщ / Ukrainian cultural foods
-> *"Іди, іди, дощику, / Зварю тобі борщику … Вибери продукти для борщу. Назви овочі, з яких варять борщ."*
-> **Source: Захарійчук, Grade 1, tier 1** — борщ introduced at Grade 1; confirms A1 level; овочі for борщ (буряк, капуста, картопля)
+### Section: Борщ / Вареники — Ukrainian iconic foods
+> "Вареники — фірмова страва української кухні. Як начинку в тісто кладуть сир, м'ясо, гриби, вишню, мак, капусту, картоплю... Для українського селянина вареники були стравою святковою, не повсякденною. Вареники в українській культурі — символ заможного, щасливого життя."
+> Source: Авраменко, Grade 7 (tier 1) — excellent cultural note, confirms вареник as cultural identity item.
 
-> *"Вареники — фірмова страва української кухні. Як начинку в тісто кладуть сир, м'ясо, гриби, вишню … Вареники в українській культурі — символ заможного, щасливого життя."*
-> **Source: Авраменко, Grade 7, tier 1** — authoritative cultural note text; validates cultural framing of вареники for the module's cultural note section
-
-> *"Думала Оленка так: «Щоб здоров'я мати, / Треба їсти їй буряк, пити чай із м'яти, / їсти супчики й борщі, вареники з сиром …»"*
-> **Source: Grade 4 Захарійчук, tier 2** — poem listing борщ + вареник з сиром together; validates the plan's pairing
-
-> *"Україна завжди славилася своєю кухнею. Усім відомі українські борщ, галушки, вареник, корж, калач, гречаник."*
-> **Source: Grade 4, Захарійчук, tier 2** — canonical list of Ukrainian dishes for cultural section; validates inclusion of борщ and вареник
+> "Іди, іди, дощику, / Зварю тобі борщику... Вибери продукти для борщу. Назви овочі, з яких варять борщ."
+> Source: Захарійчук, Grade 1 (tier 1) — confirms борщ introduced at earliest grade level; even Grade 1 learners name its ingredients.
 
 ---
 
 ## Grammar Rules
 
-- **Апостроф before я, ю, є, ї after губні (б, п, в, м, ф):** Правопис §7 — *"Апостроф пишемо перед я, ю, є, ї … після букв на позначення губних приголосних б, п, в, м, ф: … м'ясо"*. Directly confirms **м'ясо** spelling. Writer must use апостроф here — it is not optional.
+- **Апостроф після губних (м'ясо, масло[×]):** Правопис §7 — *"Апостроф пишемо перед я, ю, є, ї після букв на позначення губних приголосних б, п, в, м, ф"* — specifically cites **м'ясо** and **рум'яний** as examples. Rule: after губний consonant (м, б, п, в, ф) + я/ю/є/ї → апостроф. Applies directly to **м'ясо** in this module.
 
-- **Conjugation of їсти (2nd person singular):** Антоненко-Давидович — *"ти їси, відповіси, розповіси … а не їш, як то часом … кажуть."* The correct literary form is **їси**, NOT **їш**.
-
-  ⚠️ **CRITICAL FLAG for plan dialogue:**
-  > *"Що ти зазвичай **їш** на обід?"* — **INCORRECT**
-  > Correct form: *"Що ти зазвичай **їси** на обід?"*
-  The plan's dialogue in section "Їжа" uses the non-literary form `їш`. The writer MUST use `їси`.
+- **⚠️ CRITICAL — Conjugation of їсти:** Антоненко-Давидович (§ ДІЄСЛОВА) — *"Виняток становлять дієслова дати, їсти, відповісти, розповісти: ти даси, **їси**, відповіси, розповіси, а не даш, **їш**, відповіш, розповіш"*
+  → The plan dialogue uses **"Що ти їш на обід?"** — this is **INCORRECT**. The correct form is **"Що ти їси на обід?"** This must be fixed before writing.
 
 ---
 
 ## Calque Warnings
 
-- **"приймати їжу"** — ⚠️ CALQUE from Russian *принимать пищу*. Антоненко-Давидович §ad-172 warns broadly against "приймати" where "брати/споживати/їсти" is correct. Correct Ukrainian: **їсти** or **споживати їжу**. This phrase does not appear in the plan but must not be introduced by the writer.
+- **"кава з молоком / чай з цукром"** — ✅ OK — Natural Ukrainian. The instrumental з + noun construction is native Ukrainian, not a calque from Russian. Bolshakova Grade 1 textbook confirms "чай із пиріжками / чай із печивом" as authentic chunk pattern. Safe to use as a memorized phrase.
 
-- **"заказати каву"** — ⚠️ CALQUE/Russianism. Антоненко-Давидович §ad-142 explicitly warns: *"'Вони … заказали собі пива й раків' — тут треба замовили."* Correct Ukrainian: **замовити каву**. Relevant if café ordering appears in dialogues.
+- **"хотіти їсти / хотіти пити"** — ✅ OK — Антоненко-Давидович does not flag хотіти as problematic. "Що ти хочеш?" is standard Ukrainian.
 
-- **"кава з молоком / чай з цукром"** — ✅ OK. No calque issue. These are natural Ukrainian fixed phrase patterns. The plan's chunk-teaching approach ("memorize as one unit") is linguistically sound.
+- **"зазвичай"** (from plan: "Що ти зазвичай їш на обід?") — ✅ OK — Standard Ukrainian adverb, not a calque.
 
-- **"їсти на сніданок/обід/вечерю"** — ✅ OK. Антоненко-Давидович confirms "сніданок" in natural usage. The construction "їсти на сніданок" is standard Ukrainian.
+- **"приймати душ"** (not in this plan, checked proactively) — ❌ CALQUE — "брати душ" is correct. Not present in this module, but worth flagging for future A1 modules.
+
+- **"мусити"** — Style guide warns against overuse: *"Як домовились, йому щоранку мусили давати сніданок — у цім реченні нема й натяку на якийсь мус чи принуку, тому й сніданок повинні були (або мали) щоранку давати."* If the module uses мусити in food contexts, use повинні/треба instead.
 
 ---
 
@@ -376,15 +370,29 @@ You do NOT need to call tools yourself — the facts are already verified.
 |------|-----------|--------|
 | їжа | A1 | ✅ On target |
 | хліб | A1 | ✅ On target |
+| сніданок | A1 | ✅ On target |
+| вода | A1 | ✅ On target |
+| картопля | A1 | ✅ On target |
 | борщ | A1 | ✅ On target |
 | вареник | A1 | ✅ On target |
 | сметана | A1 | ✅ On target |
-| сніданок | A1 | ✅ On target |
-| салат | A1 | ✅ On target |
-| піца | A1 | ✅ On target |
-| компот | **A2** | ⚠️ One level above target — treat as **receptive vocabulary** (recognition only, not production); include but do not require in activities |
+| молоко | A1 | ✅ On target |
+| масло | A1 | ✅ On target |
+| **компот** | **A2** | ⚠️ **Above target** — PULS lists as A2. Include as cultural recognition item (Zaболотний Gr.5 confirms it in curriculum), but do not test it in activities. Mark with `<!-- A2-word -->` note. |
 
-**Summary:** 8/9 checked words are at A1. **компот** is rated A2 by PULS — it is still appropriate for a food/drink module as a culturally relevant item (appears in Grade 2 Большакова), but activities should not require learners to produce it. It can appear in model dialogues and the drink list as a recognition item.
+---
+
+## Summary for Writer
+
+**All clear to proceed** with the following mandatory fix:
+
+1. **⚠️ Fix dialogue immediately:** Change `"Що ти їш на обід?"` → `"Що ти їси на обід?"` — this is a hard grammatical rule (Антоненко-Давидович), not a style preference. The irregular conjugation of їсти is: я їм / ти їси / він їсть / ми їмо / ви їсте / вони їдять.
+
+2. **компот** is A2 per PULS — keep in the module as a cultural/recognition word but do not use in fill-in activities or production tasks. Present passively.
+
+3. **Chunk pedagogy confirmed** — Bolshakova Grade 1 ("чай із пиріжками") and Grade 4 (чай із м'яти) both confirm the з+noun chunk as the exact approach Ukrainian textbooks use at this level. The plan's framing of з+noun as "memorized phrase, not grammar yet" is pedagogically correct and textbook-grounded.
+
+4. **Cultural notes confirmed** — Авраменко Grade 7 provides exact language for вареники cultural note. Grade 1 Zaharijchuk confirms борщ introduced at the very earliest grade. Both dishes are legitimate cultural identity items.
 </pre_verified_facts>
 
 
@@ -846,70 +854,122 @@ A detailed paragraph-level skeleton was generated for this module. You MUST foll
 The skeleton replaces Step 1 (Pacing Plan) — do NOT output a <pacing_plan> block. Start writing immediately from the first section.
 
 <skeleton>
-## Діалоги (~330 words total)
+## Діалоги (Dialogues) (~330 words total)
 
-- P1 (~40 words): Framing paragraph — food is woven into Ukrainian daily life from morning coffee to evening вечеря. These two dialogues show the vocabulary in real use: ordering breakfast at home, and discussing what you eat at each meal.
+- P1 (~40 words): Brief scene-setter: Oksana and her roommate Daria in the kitchen on a weekday morning. Establishes that Ukrainian homes start the day with specific food+drink pairings — set up the chunk pattern naturally.
 
-- Dialogue 1 (~110 words): Morning scene at home — Що ти хочеш на сніданок? exchange between two family members. Full multi-turn dialogue: А я хочу чай з цукром і кашу. / А я — каву з молоком і хліб з маслом. / Добре. Каша на плиті. Annotate each з + noun phrase in a side note: кава з молоком, чай з цукром, хліб з маслом — each is a memorized chunk, not a grammar exercise.
+- D1 (~110 words): **Morning breakfast dialogue** (Оксана + Дарія, ~6 turns):
+  — Що ти хочеш на сніданок?
+  — Каву з молоком і хліб з маслом.
+  — А я хочу чай з цукром і кашу.
+  — Каша з молоком чи без?
+  — З молоком, звичайно!
+  — Добре. Я теж хочу яйце.
+  Each item labeled in margin: кава (coffee, f), молоко (milk, n), хліб (bread, m), масло (butter, n), чай (tea, m), цукор (sugar, m), каша (porridge, f), яйце (egg, n).
 
-- P2 (~40 words): Brief pattern note — these з + noun phrases are building blocks. Repeat them until they feel automatic. You'll learn WHY the ending changes (молоко → молоком) in A2. For now: treat each phrase as one unit, like a single English word.
+- P2 (~30 words): Transition note: Ukrainians eat three meals a day — сніданок, обід, вечеря. Point out that each meal has its own character; the next dialogue shows обід and вечеря.
 
-- Dialogue 2 (~110 words): Discussing daily meals — Що ти зазвичай їш на обід? / Зазвичай суп і салат. Іноді піцу. / А на вечерю? / М'ясо з картоплею або рибу з рисом. А ти? / Я люблю вареники або кашу. Three meal names appear in context: сніданок (said in Dialogue 1), обід, вечеря.
+- D2 (~120 words): **Meals and preferences dialogue** (Марко + Соломія, ~8 turns):
+  — Що ти зазвичай їш на обід?
+  — Суп і салат. Іноді м'ясо з картоплею.
+  — Яке м'ясо ти любиш?
+  — Курку або рибу. А ти?
+  — Я теж люблю рибу з рисом.
+  — А на вечерю?
+  — Зазвичай суп або омлет.
+  — А ти п'єш каву чи чай?
+  — Ввечері — чай з лимоном.
+  Items labeled: суп (soup, m), салат (salad, m), м'ясо (meat, n), картопля (potato, f), курка (chicken, f), риба (fish, f), рис (rice, m), омлет (omelette, m), лимон (lemon, m).
 
-- P3 (~30 words): Meal-time anchors — сніданок happens вранці (in the morning), обід вдень (in the afternoon), вечеря ввечері (in the evening). These time words appear in M37 activities — note them now.
+- P3 (~30 words): Quick callout: Notice кава з молоком / чай з цукром / риба з рисом — all use the same pattern "з + noun." Learn these as whole phrases for now, like one word. You'll learn the grammar reason in A2.
 
----
-
-## Їжа (~330 words total)
-
-- P1 (~65 words): Intro and first two categories — Ukrainian cuisine is rooted in the land. Core staples: Хліб і каша — хліб (bread, the daily staple), каша (porridge — гречана каша with buckwheat is the most Ukrainian), рис (rice), макарони (pasta). М'ясо і риба — м'ясо (meat — umbrella word), курка (chicken — the most common), риба (fish — especially popular on fasting days).
-
-- P2 (~70 words): Vegetables and fruit — Овочі: картопля (potato — the most eaten vegetable in Ukraine, appears in борщ, вареники, деруни), морква (carrot), цибуля (onion), помідор (tomato), огірок (cucumber). Memory hook: картопля is everywhere. Фрукти: яблуко (apple — Ukrainian gardens are famous for apple trees), банан (banana — imported, very popular), апельсин (orange), лимон (lemon — goes into чай).
-
-- P3 (~55 words): Dairy and pantry basics — Молочне: молоко (milk), сир (cheese — also means cottage cheese in Ukrainian; hard cheese = твердий сир), масло (butter; also used for oil — context tells you which), сметана (sour cream — essential on борщ), йогурт. Інше: яйце (egg), цукор (sugar), сіль (salt), олія (vegetable oil — соняшникова олія, sunflower oil, is the Ukrainian kitchen staple).
-
-- P4 (~140 words): Ukrainian iconic foods — cultural identity section. These words are not just vocabulary; they are symbols of Ukrainian identity. Борщ — the national dish, a rich beet soup made with буряк, картопля, капуста, морква, цибуля, and м'ясо, served with a spoonful of сметана. UNESCO added it to the Intangible Cultural Heritage list in 2022. Вареники — half-moon dumplings filled with картопля and сир (most beloved), also with вишня (cherry) for dessert. Families make вареники together; it is a ritual. Сало — cured pork fat, eaten with хліб and часник (garlic); it appears in folk humor and proverbs as the ultimate Ukrainian food. Галушки — soft dumplings from the Poltava region, immortalized in Kotliarevsky's Eneida. Деруни — potato pancakes, crisp and golden, served with сметана. Knowing these dishes is a first step into Ukrainian culture.
-
----
-
-## Напої (~330 words total)
-
-- P1 (~60 words): Hot drinks — Гарячі напої rule the Ukrainian morning and evening. Кава (coffee) is drunk strong, often еспресо or турецька кава (Turkish-style). Чай (tea) is even more common — чорний чай (black tea) and зелений чай (green tea). Both are drunk з цукром, з лимоном, or з медом (with honey — a natural Ukrainian sweetener).
-
-- P2 (~70 words): Cold, dairy, and other drinks — Холодні напої: вода (water) — note вода без газу (still) vs. вода з газом (sparkling). Сік (juice) — апельсиновий сік, яблучний сік, томатний сік. Компот — a traditional Ukrainian drink, fruit (вишня, яблуко, слива) boiled with water and цукор; every grandmother makes it. Лимонад (lemonade/soft drink). Молочні: молоко, кефір (fermented milk, popular and healthy, drunk daily). Алкогольні (for recognition): пиво (beer), вино (wine).
-
-- P3 (~100 words): The з + noun chunk — how it works at A1. In English you say "coffee with milk." In Ukrainian: кава з молоком. The word after з changes its ending: молоко → молоком, цукор → цукром, лимон → лимоном, газ → газом, масло → маслом, картопля → картоплею. This ending change is called the instrumental case (орудний відмінок) — you will study it systematically in A2. At A1, learn each phrase as ONE fixed unit: кава з молоком · чай з цукром · чай з лимоном · вода з газом · хліб з маслом · м'ясо з картоплею. Say each phrase as a single breath. Do not try to produce new combinations yet — just recognize and reproduce these six.
-
-- P4 (~100 words): Using the chunks when ordering — A Kyiv café menu reads: кава з молоком — 65 грн, чай з лимоном — 40 грн, вода з газом — 30 грн. When ordering, say: — Будь ласка, каву з молоком. — Дайте, будь ласка, чай з лимоном. — Мені воду з газом. Notice кава becomes каву and вода becomes воду when you order — the accusative case (знахідний відмінок), also A2. For now memorize the ordering phrases whole. Recognizing the pattern is enough at A1.
-
-- Exercise: fill-in — Use з + noun as memorized chunks (6 blanks): Я хочу каву {з молоком}. / Вона п'є чай {з цукром}. / Він їсть хліб {з маслом}. / Я люблю чай {з лимоном}. / Дайте, будь ласка, воду {з газом}. / Ми їмо м'ясо {з картоплею}. Learners choose from a word bank; no production of new forms required.
-
-- Exercise: match-up — Match 10 Ukrainian words to English: хліб → bread, м'ясо → meat, риба → fish, молоко → milk, вода → water, сік → juice, сніданок → breakfast, обід → lunch, вечеря → dinner, суп → soup. Covers vocabulary from all three teaching sections — placed here because напої words (молоко, вода, сік) are now taught.
-
-- Exercise: group-sort — Categorize 10 words into Їжа and Напої: Їжа → хліб, м'ясо, риба, суп, каша; Напої → кава, чай, вода, сік, молоко. Reinforces that both categories are now fully taught.
-
-- Exercise: quiz — 6 questions on meals and iconic dishes: Що ми їмо вранці? (сніданок) / Що ми їмо ввечері? (вечерю) / Що ми їмо вдень? (обід) / Традиційний український суп — це... (борщ) / Українська страва з тіста і картоплі або сиру: (вареники) / Популярний холодний напій з фруктів: (компот). All items drawn from content taught in sections above.
+- **Exercise — Fill-in** (~0 words prose): *З + noun* chunks: 6 blanks using кава з молоком, чай з цукром, хліб з маслом, чай з лимоном, воду з газом, м'ясо з картоплею. Placed here because з+noun was just introduced in the dialogues above.
 
 ---
 
-## Підсумок (~330 words total)
+## Їжа (Food) (~330 words total)
 
-- P1 (~130 words): Toolkit recap — what you can do now. Summarizes key patterns with full example exchanges: Що ти хочеш? — Каву з молоком. / Що ти їш на сніданок? — Кашу і хліб з маслом. / Що ти їш на обід? — Суп і салат. / Що ти їш на вечерю? — М'ясо з картоплею або рибу з рисом. Consolidated vocabulary count: 25+ food and drink words across six categories (хліб/каша, м'ясо/риба, овочі, фрукти, молочне, напої). Six з + noun chunks memorized as fixed expressions. Three meal names with their time anchors: сніданок — вранці, обід — вдень, вечеря — ввечері.
+- P1 (~50 words): Introduction: Ukrainian food vocabulary organized by category. A simple toolkit — once you know these groups, you can describe almost any meal. Six categories to learn: хліб і каша, м'ясо і риба, овочі, фрукти, молочне, інше.
 
-- P2 (~100 words): Cultural layer — Ukrainian food as identity. Борщ is more than a soup: it is a symbol of home, family, and the Ukrainian land. When a Ukrainian says "як мамин борщ" (like mom's борщ), they mean something irreplaceable. Вареники made together at the table are a family ritual. Сало, often misunderstood by outsiders, is eaten with deep cultural pride — it appears in proverbs, folk songs, and humor. Learning to recognize борщ, вареники, сало on a menu or in a conversation is not just vocabulary: it is your first step into Ukrainian cultural identity.
+- P2 (~100 words): **Food by category** — vocabulary presented in 6 labeled groups with one-line Ukrainian example each:
+  - Хліб і каша: хліб, каша, рис, макарони — Я їм кашу щоранку.
+  - М'ясо і риба: м'ясо, курка, риба — Вона їсть курку на обід.
+  - Овочі: картопля, морква, цибуля, помідор, огірок — Картопля — найпопулярніший овоч в Україні.
+  - Фрукти: яблуко, банан, апельсин — Він їсть яблуко щодня.
+  - Молочне: молоко, сир, масло, сметана, йогурт — Кефір — популярний молочний напій.
+  - Інше: яйце, цукор, сіль, олія — Без солі їжа несмачна.
 
-- P3 (~100 words): Self-check — bulleted Q&A:
-  - Як по-українськи "breakfast"? → сніданок
-  - Як по-українськи "lunch"? → обід
-  - Як по-українськи "dinner"? → вечеря
-  - Назви 5 овочів. → картопля, морква, цибуля, помідор, огірок
-  - Назви 3 напої. → кава, чай, вода (або сік, компот, кефір)
-  - Який традиційний український суп? → борщ
-  - Як сказати "tea with lemon"? → чай з лимоном
-  - Як сказати "sparkling water"? → вода з газом
-  - Яка українська страва з тіста і картоплі? → вареники
+- P3 (~130 words): **Ukrainian iconic dishes — cultural identity, not just vocabulary.** Four dishes every learner must know:
+  - **Борщ** (m) — Ukraine's national soup, made with буряк (beet), картопля, капуста, м'ясо, морква, цибуля, served with a spoonful of сметана. It is Ukraine's most famous dish — a symbol of home.
+  - **Вареники** (pl, вареник m) — filled dumplings made from dough (тісто), stuffed with картопля і сир, or cherries. Eaten with сметана.
+  - **Сало** (n) — cured pork fat, eaten with хліб. Iconic; deeply embedded in Ukrainian cultural humor and identity.
+  - **Деруни** (pl) — potato pancakes made from grated картопля. Often served with сметана.
+  Note: These aren't "exotic" words — they are identity words. A Ukrainian will light up when you name their dishes correctly.
 
-Grand total: ~1320 words
+- P4 (~50 words): Micro-dialogue set at grandma's kitchen: Бабуся teaches Онучка to make борщ, listing ingredients one by one — буряк, картопля, капуста, м'ясо, морква, цибуля — and finishing with a spoonful of сметана. Two lines only, illustrating how these words live in a real moment.
+
+- **Exercise — Quiz** (~0 words prose): 6 questions on meals (сніданок/обід/вечеря) and iconic dishes (борщ, вареники, компот). Placed here because all tested concepts — meal names from Діалоги and dish names from this section — have now been taught.
+
+---
+
+## Напої (Drinks) (~330 words total)
+
+- P1 (~40 words): Introduction: Ukrainian drinks split into four groups — гарячі, холодні, молочні, алкогольні (for recognition only). Short framing sentence: "At a Ukrainian table, you will always find чай, кава, компот, or вода."
+
+- P2 (~100 words): **Drink vocabulary by category** — each with a short example sentence:
+  - Гарячі: кава (f), чай (m) — Я п'ю каву вранці, чай ввечері.
+  - Холодні: вода (f), сік (m), компот (m), лимонад (m) — Компот — традиційний домашній напій з фруктів.
+  - Молочні: молоко (n), кефір (m) — Кефір корисний для здоров'я.
+  - Алкогольні (recognition only): пиво (n), вино (n) — mention without drilling.
+  Note on **компот**: not the Western "compote" — it's a warm or cold fruit drink made at home. A staple of Ukrainian kitchens and school canteens. Different from juice (сік).
+
+- P3 (~120 words): **The з + noun pattern — why it's a chunk, not grammar.** Explicit metalanguage note written for an A1 learner:
+  When you say *кава з молоком*, the word молоком ends in -ом. When you say *чай з лимоном*, лимоном ends in -ом. When you say *вода з газом*, газом ends in -ом. This is the instrumental case — a grammar concept you'll study in A2.
+  For now: treat these as memorized phrases, like single words. Say *кавазмолоком* as one chunk. You don't need to know WHY молоко becomes молоком — just remember the whole phrase.
+  Full chunk list to memorize: кава з молоком, чай з цукром, чай з лимоном, вода з газом, хліб з маслом, м'ясо з картоплею, риба з рисом.
+
+- P4 (~70 words): Mini reading practice — five Ukrainian sentences for learners to read aloud and understand:
+  1. Я п'ю каву з молоком щоранку.
+  2. Вона любить чай з лимоном і без цукру.
+  3. Діти п'ють компот або воду.
+  4. Він не п'є каву — тільки чай.
+  5. На столі є сік, вода і кефір.
+  Brief prompt: Read each sentence. What does each person drink? Can you say what YOU drink?
+
+- **Exercise — Match-up** (~0 words prose): 10 pairs — Ukrainian food/drink words to English. Tests vocabulary from both Їжа and Напої sections, now fully taught: хліб, м'ясо, риба, молоко, вода, сік, сніданок, обід, вечеря, суп.
+
+- **Exercise — Group-sort** (~0 words prose): 10 items categorized into Їжа and Напої (хліб, м'ясо, риба, суп, каша / кава, чай, вода, сік, молоко). Both categories now taught.
+
+---
+
+## Підсумок — Summary (~300 words total)
+
+- P1 (~60 words): **Food and drink toolkit recap.** Two core question patterns introduced this module:
+  — Що ти хочеш? → Каву з молоком. / Хліб з маслом. / Суп і салат.
+  — Що ти їш на сніданок / обід / вечерю? → На сніданок — кашу і чай. На обід — суп. На вечерю — рибу з рисом.
+  These two patterns cover almost any food conversation at A1.
+
+- P2 (~80 words): **Three meals — quick reference:**
+  | Час | Прийом їжі | Що типово їдять |
+  |-----|-----------|----------------|
+  | Вранці | сніданок | каша, яйце, хліб, кава/чай |
+  | Вдень | обід | суп, м'ясо, салат, сік/вода |
+  | Ввечері | вечеря | риба, омлет, сир, чай |
+  Note: вранці = in the morning, вдень = during the day, ввечері = in the evening — these time words appeared in the dialogues. Now they're connected to meals.
+
+- P3 (~80 words): **Ukrainian dishes — your cultural passport.** A learner who knows борщ, вареники, сало, деруни is not just vocabulary-trained — they carry a signal of respect. Every Ukrainian who hears a foreigner name these dishes correctly will respond warmly. Summary: борщ = буряк + картопля + сметана. Вареники = тісто + картопля або сир. Сало = свинина. Деруни = картопля.
+
+- P4 (~80 words): **Self-check:**
+  - Can you name 5 foods? (e.g., хліб, м'ясо, риба, картопля, яйце)
+  - Can you name 3 drinks? (e.g., кава, чай, вода)
+  - Can you say what you eat at each meal? → На сніданок я їм... / На обід я їм... / На вечерю я їм...
+  - Can you say one з+noun chunk from memory? (кава з молоком / чай з цукром)
+  - Can you name one Ukrainian dish and one ingredient it contains?
+  **Connects to:** M37 — І їм, I drink (verbs їсти and пити, present tense conjugation).
+
+---
+
+Grand total: ~1290 words
 </skeleton>
 
 ## Output Format

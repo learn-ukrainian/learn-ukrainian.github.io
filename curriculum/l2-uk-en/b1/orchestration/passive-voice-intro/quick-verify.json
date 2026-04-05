@@ -1,12 +1,18 @@
 {
   "attempt": 1,
-  "passed": true,
-  "errors": [],
+  "passed": false,
+  "errors": [
+    {
+      "check": "STRUCTURE",
+      "severity": "ERROR",
+      "message": "Missing section heading: 'Підсумок та перехід до M24'"
+    }
+  ],
   "warnings": [
     {
       "check": "VOCABULARY",
       "severity": "WARNING",
-      "message": "Missing 2/14 required vocab: перехідне дієслово (transitive verb — takes a direct object), неперехідне дієслово (intransitive verb — no direct object)"
+      "message": "Missing 3/14 required vocab: будуватися (to be built — passive -ся), перехідне дієслово (transitive verb — takes a direct object), неперехідне дієслово (intransitive verb — no direct object)"
     },
     {
       "check": "EXERCISES",
@@ -14,5 +20,5 @@
       "message": "Plan expects 5 exercise(s) but content has 0 placeholders"
     }
   ],
-  "timestamp": "2026-04-03T15:37:19.487620+00:00"
+  "timestamp": "2026-04-04T08:01:45.915630+00:00"
 }

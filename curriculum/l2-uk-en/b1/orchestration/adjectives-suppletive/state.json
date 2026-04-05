@@ -1,0 +1,23 @@
+{
+  "mode": "v6",
+  "track": "b1",
+  "slug": "adjectives-suppletive",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-04T12:58:10.364132+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-04T12:59:54.562668+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-04T13:02:26.619093+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-04T13:05:54.158063+00:00"
+    }
+  }
+}

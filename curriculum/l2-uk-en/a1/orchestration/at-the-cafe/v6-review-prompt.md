@@ -237,8 +237,8 @@ When you want to order (**замовля́ти**) at a Ukrainian **кафе**, t
 - **Дайте, будь ласка, сала́т.** — Give me a salad, please.
 - **Дайте, будь ласка, сік.** — Give me juice, please.
 
-**Pattern 4: Я бу́ду [accusative].**
-- **Я буду пі́цу.** — I'll have pizza.
+**Pattern 4: Я хо́чу / Я бу́ду [accusative].**
+- **Я хо́чу пі́цу.** — I want pizza.
 - **Я буду суп.** — I'll have soup.
 
 All four are polite. **Я буду** is slightly more casual — something you'd say to a friend working behind the counter. **Дайте, будь ласка** is the most formal.
@@ -259,8 +259,6 @@ Once you've ordered, you might want to ask about the **меню**. Here are six 
 Each question gets a real answer. Ask **Скільки коштує борщ?** and the waiter might say: **Борщ коштує вісімдеся́т гривень** (The borshch costs eighty hryvnias).
 
 Try building questions from this mini-menu: **борщ** 80 грн, **піца** 150 грн, **кава** 45 грн. For example: **Скільки коштує кава?** — **Кава коштує со́рок п'ять гривень.** The numbers connect back to what you learned in earlier modules.
-
-<!-- INJECT_ACTIVITY: quiz-cafe-phrases -->
 
 ## Культу́ра кафе (Cafe Culture)
 
@@ -296,6 +294,8 @@ Each phrase fits a micro-situation: you walk in (**Тут вільно?**), you 
 
 <!-- INJECT_ACTIVITY: match-cafe-phrases -->
 
+<!-- INJECT_ACTIVITY: quiz-cafe-phrases -->
+
 ## Підсумок — Summary
 
 Here's your café communication toolkit — screenshot this for your next visit to a Ukrainian **кафе**:
@@ -320,7 +320,7 @@ Ukrainian café culture carries a deeper meaning since 2022. Many Kyiv and Lviv 
 
 In the next module, you'll take your accusative skills from the **кафе** to the **ри́нок** (market). Same patterns, new vocabulary: **карто́пля** (potatoes), **я́блука** (apples), **молоко́** (milk). **Ході́мо!** (Let's go!)
 
-**Deterministic word count: 1210 words** (calculated by pipeline, do NOT estimate manually)
+**Deterministic word count: 1213 words** (calculated by pipeline, do NOT estimate manually)
 
 </generated_module_content>
 

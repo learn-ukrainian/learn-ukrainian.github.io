@@ -1,0 +1,259 @@
+vocabulary:
+- word: відмі́на
+  translation: declension
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: чергува́ння
+  translation: alternation (grammar)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: оде́ржувач
+  translation: recipient
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: немовля́
+  translation: baby, infant
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: студе́нтові
+  translation: to the student (dat.)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сестрі́
+  translation: to the sister (dat.)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: дру́гові
+  translation: to the friend (dat.)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: подарува́ти
+  translation: to give as a gift
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: показа́ти
+  translation: to show
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: написа́ти
+  translation: to write
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: розпові́сти́
+  translation: to tell, to narrate
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: поясни́ти
+  translation: to explain
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відпові́сти́
+  translation: to answer, to reply
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: закі́нчення
+  translation: ending (grammar)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: да́ти
+  translation: to give
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: допомага́ти
+  translation: to help
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: телефонува́ти
+  translation: to call, to phone
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: дякувати
+  translation: to thank
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відда́ти
+  translation: to give back
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відпра́вити
+  translation: to send
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: усміхну́тися
+  translation: to smile at
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: заплати́ти
+  translation: to pay
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: довіря́ти
+  translation: to trust
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: раді́ти
+  translation: to rejoice at
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: співчува́ти
+  translation: to sympathize
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: воді́й
+  translation: driver
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: геро́й
+  translation: hero
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: охоро́нець
+  translation: security guard
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: по́друга
+  translation: female friend
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: до́нька
+  translation: daughter
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: дружи́на
+  translation: wife
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: курча́
+  translation: chick
+  expression: false
+  pos: виг.
+  gender: ''
+  verified: true
+- word: теля́
+  translation: calf
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: на́зва
+  translation: name (of a thing/place)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: знання́
+  translation: knowledge
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: поси́лка
+  translation: package, parcel
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: паку́нок
+  translation: parcel, small package
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: племі́нниця
+  translation: niece
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: дати спокій
+  translation: 'to leave alone (literally: to give peace)'
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: присвятити вірш
+  translation: to dedicate a poem
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зробити сюрприз
+  translation: to make a surprise
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: поставити запитання
+  translation: to ask a question
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: поставити пам'ятник
+  translation: to put up a monument
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

@@ -1,0 +1,72 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння соціолінгвістичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Текст
+  focus: Транскрипція руського/староукраїнського фрагменту
+  placement: inline
+  type: transcription
+- focus: Простежити еволюцію слова від руської доби до сучасної
+  placement: workbook
+  type: etymology-trace
+- focus: Порівняння мовних контактів — полонізми, латинізми, церковнослов'янізми (Лексис Лаврентія Зизанія (1596))
+  placement: workbook
+  type: dialect-comparison
+- focus: Порівняння — те саме поняття церковнослов'янською, руською та сучасною (Лексис Лаврентія Зизанія (1596))
+  placement: workbook
+  type: comparative-study
+- focus: Есе — як цей текст доводить існування української мови до Котляревського? (Лексис Лаврентія Зизанія (1596))
+  placement: workbook
+  type: essay-response
+connects_to:
+- berynda-leksykon
+content_outline:
+- points:
+  - 'Lavrentiy Zyzaniy and the Vilnius brotherhood school. Context: why Ukrainians needed to TRANSLATE Church Slavonic — it
+    was no longer understood.'
+  section: Вступ
+  words: 1250
+- points:
+  - 'Structure of the Lexis: 1061 entries. Analysis of translation strategies. What the vernacular equivalents reveal about
+    spoken Ukrainian in 1596. Sample entries with modern parallels.'
+  section: Основний матеріал
+  words: 1250
+- points:
+  - 'Comparative reading: Zyzaniy''s Ukrainian vs modern Ukrainian. Semantic shifts over 400 years. Identifying still-living
+    vocabulary.'
+  section: Практика
+  words: 1250
+- points:
+  - The Lexis as evidence of Ukrainian as a distinct language. Connection to Berynda's later expansion.
+  section: Підсумок
+  words: 1250
+focus: First printed Ukrainian dictionary — Church Slavonic to 'проста мова' translation as linguistic self-awareness
+level: RUTH
+module: ruth-101
+objectives:
+- Застосовувати перекладацькі стратегії для передачі стилістичних нюансів
+- Аналізувати перекладацькі рішення та оцінювати їхню адекватність
+- Продукувати переклади, що зберігають стилістичну специфіку оригіналу
+- Застосовувати знання з теми «Практика» у власній мовній практиці
+persona:
+  role: Brotherhood Teacher
+  voice: Lexicographer
+phase: 5
+prerequisites:
+- fedorovych-bukvar
+sequence: 101
+slug: zyzaniy-leksys
+source_url: http://litopys.org.ua/zyzlex/zyz.htm
+subtitle: Zyzaniy's Lexis (1596)
+title: Лексис Лаврентія Зизанія (1596)
+version: '2.0'
+vocabulary_hints:
+- лексикон
+- словник
+- тлумачення
+- просторіччя
+- книжна мова
+- синонім
+word_target: 5000

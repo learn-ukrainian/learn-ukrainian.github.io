@@ -1,0 +1,116 @@
+module: istorio-134
+level: ISTORIO
+sequence: 134
+slug: ukrainske-pytannia-xxi
+version: '3.0'
+title: Українське питання XXI століття
+focus: history
+pedagogy: seminar
+word_target: 5000
+objectives:
+- Analyze the causes and consequences of українське питання xxi століття
+- Evaluate the historical significance of українське питання
+content_outline:
+- section: Вступ — Українське питання
+  points:
+  - «Українське питання» — історичний термін
+  - Чи воно вирішене?
+  - Що означає для XXI століття
+  - Структура модуля
+  words: 850
+- section: Всі теми разом
+  points:
+  - Історіографія — як ми знаємо
+  - Джерела — на чому базуємось
+  - Механізми — як працює імперія
+  - Агентність — як Україна відповідає
+  words: 850
+- section: Російське питання
+  points:
+  - Імперія — чи може існувати без України
+  - Війна — не тільки територія
+  - Що Росія втрачає
+  - Майбутнє російсько-українських відносин
+  words: 850
+- section: Європейське питання
+  points:
+  - ЄС — чи готовий до України
+  - Україна — чи готова до ЄС
+  - Що означає інтеграція
+  - Ризики і можливості
+  words: 850
+- section: Глобальне значення
+  points:
+  - Україна як прецедент
+  - Міжнародний порядок
+  - Деколонізація XXI століття
+  - Що світ вчиться від України
+  words: 850
+- section: Підсумок
+  points:
+  - Українське питання — відкрите
+  - Відповідь пишеться зараз
+  - Перехід до фінального синтезу
+  words: 750
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+vocabulary:
+- «українське питання»
+- імперія
+- деколонізація
+- інтеграція
+- міжнародний порядок
+- прецедент
+- агентність
+- майбутнє
+- суверенітет
+- самовизначення
+- «кінець історії»
+- мультиполярність
+- постколоніалізм
+- глобальний Південь
+- трансформація
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+activities:
+- type: critical-analysis
+  focus: What does Ukraine mean for Russia's future?
+- type: critical-analysis
+  focus: EU-Ukraine integration challenges
+- type: critical-analysis
+  focus: Ukraine as global precedent
+- type: essay-response
+  focus: Чи 'українське питання' вирішене?
+persona:
+  voice: Academic Historiographer
+  role: Contemporary Ukraine Analyst
+prerequisites:
+- syntez-ahentsnist
+connects_to:
+- continuity-of-cultural-genocide
+references:
+- name: Україна у XXI столітті (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Історія_України#XXI_століття
+  type: reference
+  notes: 21st century Ukraine
+- name: Російсько-українська війна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Російсько-українська_війна
+  type: reference
+  notes: Current war
+register: академічний
+grammar: []

@@ -2,51 +2,56 @@ round: 2
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 6
-  evidence: Failed to integrate the 3 mandatory textbook references (Авраменко Grade
-    10, Вашуленко Grade 2, Авраменко Grade 7). Missed specific contextual examples
-    required by the plan (e.g., "Рейс на Відень вилі
+  score: 7
+  evidence: '**Covered well:** All 6 content_outline sections present with correct
+    headings. All 10 prefixes for both летіти and пливти covered with examples. Irregular
+    stem change pattern taught. Aviation and mar'
 - dimension: 2
   name: Linguistic accuracy
-  score: 9
-  evidence: 'High overall accuracy, but contains one calque: "по гучномовцю оголосили
-    посадку" instead of "через гучномовець".'
+  score: 7
+  evidence: '**Good:** All conjugation paradigms verified correct against VESUM (лечу/летиш/летить/летимо/летите/летять
+    ✓; пливу/пливеш/пливе/пливемо/пливете/пливуть ✓). Past tense forms correct. Perfective
+    prefix'
 - dimension: 3
   name: Pedagogical quality
   score: 8
-  evidence: Good use of contextualized PPP flow. However, the writer entirely omitted
-    the prefix "поплисти" from the prefix explanation list, which breaks the pedagogical
-    symmetry of teaching all prefixes.
+  evidence: '**Good PPP flow:** Section 1 sets the travel situation, sections 2–3
+    present grammar patterns with 10+ contextual examples each, sections 4–5 extend
+    to vocabulary and figurative uses, section 6 summar'
 - dimension: 4
   name: Vocabulary coverage
   score: 9
-  evidence: Used all required vocabulary. However, missed the recommended vocabulary
-    word "поплисти" in the direct explanations.
+  evidence: '**Required vocab (13 items):** летіти ✓, літати ✓, пливти ✓, плавати
+    ✓, прилетіти ✓, вилетіти ✓, припливти ✓, переплисти ✓, аеропорт ✓, рейс ✓, посадка
+    ✓, порт ✓, корабель ✓ — all 13 present and used '
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: All 6 injected activities perfectly match the plan's `activity_hints`
-    in type, focus, and item count.
+  score: 9
+  evidence: All 6 activity types from plan present with matching item counts. Activities
+    test language skills (prefix choice, stem correction, vocabulary matching) not
+    content recall. Well-distributed across sect
 - dimension: 6
   name: Engagement & tone
-  score: 7
-  evidence: Contains explicit meta-commentary that breaks immersion (e.g., "Давайте
-    проаналізуємо цей текст", "Тепер ми набагато детальніше розглянемо...", "Давайте
-    коротко перевіримо").
+  score: 5
+  evidence: '**Pervasive problems:** (1) Extreme adjective/adverb stacking throughout:
+    "дуже детально і максимально уважно", "абсолютно несподівана", "категорично вимагають",
+    "надзвичайно зручно", "абсолютно ідент'
 - dimension: 7
   name: Structural integrity
-  score: 8
-  evidence: The module deterministic word count is 5267 words, which is more than
-    10% over the 4000-word target. All H2 sections are present and ordered correctly.
+  score: 9
+  evidence: All 6 H2 sections present and correctly ordered. Clean markdown. Word
+    count 5365 — well above 4000 target. Table formatting correct. No stray tags or
+    artifacts. Activity markers properly formatted. On
 - dimension: 8
   name: Cultural accuracy
-  score: 10
-  evidence: Factually correct and uses natural Ukrainian contexts (e.g., traveling
-    to Istanbul via Boryspil) without relying on comparative crutches.
+  score: 9
+  evidence: Decolonized presentation — Ukrainian taught on its own terms, no "like
+    Russian but..." comparisons. Culturally appropriate examples (Бориспіль airport,
+    Одеса, Дніпро, Зміїний island). Folk song citati
 - dimension: 9
   name: Dialogue & conversation quality
   score: 6
-  evidence: Dialogues rely on anonymous em dashes ("— Доброго дня.") instead of named
-    speakers, and are purely transactional (classic textbook "passport and ticket"
-    interrogation).
+  evidence: '**Present:** Two dialogues with named speakers (Агент/Пасажир, Касир/Клієнт).
+    Natural Ukrainian phrasing. Appropriate use of motion verbs (виліт, рейс, відплиття,
+    переправа). **Deductions:** (1) Both '
 findings: []

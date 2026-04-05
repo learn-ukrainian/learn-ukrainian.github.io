@@ -1,0 +1,775 @@
+{
+  "total_items": 300,
+  "grounded_items": 149,
+  "ungrounded": [
+    {
+      "word": "попередній",
+      "exercise_type": "quiz",
+      "context": "Цей готель набагато _____, ніж попередній."
+    },
+    {
+      "word": "добріший",
+      "exercise_type": "quiz",
+      "context": "добріший"
+    },
+    {
+      "word": "учора",
+      "exercise_type": "quiz",
+      "context": "Сьогодні день значно _____, ніж був учора."
+    },
+    {
+      "word": "тепло",
+      "exercise_type": "quiz",
+      "context": "тепло"
+    },
+    {
+      "word": "дорога",
+      "exercise_type": "quiz",
+      "context": "Дорога до лісу стала ще _____."
+    },
+    {
+      "word": "лісу",
+      "exercise_type": "quiz",
+      "context": "Дорога до лісу стала ще _____."
+    },
+    {
+      "word": "вужчою",
+      "exercise_type": "quiz",
+      "context": "вужчою"
+    },
+    {
+      "word": "найвужча",
+      "exercise_type": "quiz",
+      "context": "найвужча"
+    },
+    {
+      "word": "вузчою",
+      "exercise_type": "quiz",
+      "context": "вузчою"
+    },
+    {
+      "word": "намагається",
+      "exercise_type": "quiz",
+      "context": "Він намагається працювати _____."
+    },
+    {
+      "word": "комп'ютер",
+      "exercise_type": "quiz",
+      "context": "Цей комп'ютер має _____ процесор."
+    },
+    {
+      "word": "процесор",
+      "exercise_type": "quiz",
+      "context": "Цей комп'ютер має _____ процесор."
+    },
+    {
+      "word": "найпотужніший",
+      "exercise_type": "quiz",
+      "context": "найпотужніший"
+    },
+    {
+      "word": "потужний",
+      "exercise_type": "quiz",
+      "context": "самий потужний"
+    },
+    {
+      "word": "потужніший",
+      "exercise_type": "quiz",
+      "context": "найбільш потужніший"
+    },
+    {
+      "word": "подруга",
+      "exercise_type": "quiz",
+      "context": "Вона — моя _____ подруга."
+    },
+    {
+      "word": "найкраща",
+      "exercise_type": "quiz",
+      "context": "найкраща"
+    },
+    {
+      "word": "сама",
+      "exercise_type": "quiz",
+      "context": "сама краща"
+    },
+    {
+      "word": "найдобріша",
+      "exercise_type": "quiz",
+      "context": "найдобріша"
+    },
+    {
+      "word": "виявилося",
+      "exercise_type": "quiz",
+      "context": "Це завдання виявилося _____ за інші."
+    },
+    {
+      "word": "складнішим",
+      "exercise_type": "quiz",
+      "context": "складнішим"
+    },
+    {
+      "word": "самим",
+      "exercise_type": "quiz",
+      "context": "самим складним"
+    },
+    {
+      "word": "складніше",
+      "exercise_type": "quiz",
+      "context": "складніше"
+    },
+    {
+      "word": "розібрався",
+      "exercise_type": "fill-in",
+      "context": "Наш новий _____ (працювати) дуже швидко розібрався із завдан"
+    },
+    {
+      "word": "завданням",
+      "exercise_type": "fill-in",
+      "context": "Наш новий _____ (працювати) дуже швидко розібрався із завдан"
+    },
+    {
+      "word": "робітничий",
+      "exercise_type": "fill-in",
+      "context": "робітничий"
+    },
+    {
+      "word": "більшою",
+      "exercise_type": "fill-in",
+      "context": "більшою"
+    },
+    {
+      "word": "купив",
+      "exercise_type": "fill-in",
+      "context": "Куртка, яку я купив, виявилася _____ (великий), ніж я думав."
+    },
+    {
+      "word": "виявилася",
+      "exercise_type": "fill-in",
+      "context": "Куртка, яку я купив, виявилася _____ (великий), ніж я думав."
+    },
+    {
+      "word": "думав",
+      "exercise_type": "fill-in",
+      "context": "Куртка, яку я купив, виявилася _____ (великий), ніж я думав."
+    },
+    {
+      "word": "найбільшою",
+      "exercise_type": "fill-in",
+      "context": "найбільшою"
+    },
+    {
+      "word": "важча",
+      "exercise_type": "fill-in",
+      "context": "важча"
+    },
+    {
+      "word": "дерев'яна",
+      "exercise_type": "fill-in",
+      "context": "Ця дерев'яна шафа значно _____ (важкий) за пластикову."
+    },
+    {
+      "word": "шафа",
+      "exercise_type": "fill-in",
+      "context": "Ця дерев'яна шафа значно _____ (важкий) за пластикову."
+    },
+    {
+      "word": "важкий",
+      "exercise_type": "fill-in",
+      "context": "Ця дерев'яна шафа значно _____ (важкий) за пластикову."
+    },
+    {
+      "word": "пластикову",
+      "exercise_type": "fill-in",
+      "context": "Ця дерев'яна шафа значно _____ (важкий) за пластикову."
+    },
+    {
+      "word": "тяжкіша",
+      "exercise_type": "fill-in",
+      "context": "тяжкіша"
+    },
+    {
+      "word": "простора",
+      "exercise_type": "fill-in",
+      "context": "Мені потрібна простора _____ (читати), щоб зосередитися на к"
+    },
+    {
+      "word": "зосередитися",
+      "exercise_type": "fill-in",
+      "context": "Мені потрібна простора _____ (читати), щоб зосередитися на к"
+    },
+    {
+      "word": "книзі",
+      "exercise_type": "fill-in",
+      "context": "Мені потрібна простора _____ (читати), щоб зосередитися на к"
+    },
+    {
+      "word": "найсмачніша",
+      "exercise_type": "fill-in",
+      "context": "найсмачніша"
+    },
+    {
+      "word": "кав'ярні",
+      "exercise_type": "fill-in",
+      "context": "У цій кав'ярні продається _____ (смак) кава в місті."
+    },
+    {
+      "word": "продається",
+      "exercise_type": "fill-in",
+      "context": "У цій кав'ярні продається _____ (смак) кава в місті."
+    },
+    {
+      "word": "кава",
+      "exercise_type": "fill-in",
+      "context": "У цій кав'ярні продається _____ (смак) кава в місті."
+    },
+    {
+      "word": "місті",
+      "exercise_type": "fill-in",
+      "context": "У цій кав'ярні продається _____ (смак) кава в місті."
+    },
+    {
+      "word": "смачна",
+      "exercise_type": "fill-in",
+      "context": "сама смачна"
+    },
+    {
+      "word": "смачніша",
+      "exercise_type": "fill-in",
+      "context": "більш смачніша"
+    },
+    {
+      "word": "пекарні",
+      "exercise_type": "fill-in",
+      "context": "пекарні"
+    },
+    {
+      "word": "купую",
+      "exercise_type": "fill-in",
+      "context": "Я завжди купую свіжий хліб у сусідній _____ (пекти)."
+    },
+    {
+      "word": "сусідній",
+      "exercise_type": "fill-in",
+      "context": "Я завжди купую свіжий хліб у сусідній _____ (пекти)."
+    },
+    {
+      "word": "пекти",
+      "exercise_type": "fill-in",
+      "context": "Я завжди купую свіжий хліб у сусідній _____ (пекти)."
+    },
+    {
+      "word": "пекарі",
+      "exercise_type": "fill-in",
+      "context": "пекарі"
+    },
+    {
+      "word": "пекар",
+      "exercise_type": "fill-in",
+      "context": "пекар"
+    },
+    {
+      "word": "найшвидше",
+      "exercise_type": "fill-in",
+      "context": "найшвидше"
+    },
+    {
+      "word": "виконав",
+      "exercise_type": "fill-in",
+      "context": "Він виконав своє завдання _____ (швидко) за всіх інших."
+    },
+    {
+      "word": "своє",
+      "exercise_type": "fill-in",
+      "context": "Він виконав своє завдання _____ (швидко) за всіх інших."
+    },
+    {
+      "word": "інших",
+      "exercise_type": "fill-in",
+      "context": "Він виконав своє завдання _____ (швидко) за всіх інших."
+    },
+    {
+      "word": "помилитися",
+      "exercise_type": "fill-in",
+      "context": "Ця _____ (помилитися) може коштувати нам дуже дорого."
+    },
+    {
+      "word": "може",
+      "exercise_type": "fill-in",
+      "context": "Ця _____ (помилитися) може коштувати нам дуже дорого."
+    },
+    {
+      "word": "коштувати",
+      "exercise_type": "fill-in",
+      "context": "Ця _____ (помилитися) може коштувати нам дуже дорого."
+    },
+    {
+      "word": "дорого",
+      "exercise_type": "fill-in",
+      "context": "Ця _____ (помилитися) може коштувати нам дуже дорого."
+    },
+    {
+      "word": "помилковий",
+      "exercise_type": "fill-in",
+      "context": "помилковий"
+    },
+    {
+      "word": "близький",
+      "exercise_type": "match-up",
+      "context": "близький"
+    },
+    {
+      "word": "ближчий",
+      "exercise_type": "match-up",
+      "context": "ближчий"
+    },
+    {
+      "word": "продавати",
+      "exercise_type": "match-up",
+      "context": "продавати"
+    },
+    {
+      "word": "писати",
+      "exercise_type": "match-up",
+      "context": "писати"
+    },
+    {
+      "word": "телевізор",
+      "exercise_type": "error-correction",
+      "context": "Цей телевізор більш кращий, ніж той, що ми бачили вчора."
+    },
+    {
+      "word": "бачили",
+      "exercise_type": "error-correction",
+      "context": "Цей телевізор більш кращий, ніж той, що ми бачили вчора."
+    },
+    {
+      "word": "вчора",
+      "exercise_type": "error-correction",
+      "context": "Цей телевізор більш кращий, ніж той, що ми бачили вчора."
+    },
+    {
+      "word": "київ",
+      "exercise_type": "error-correction",
+      "context": "Київ — це самий великий мегаполіс в Україні."
+    },
+    {
+      "word": "мегаполіс",
+      "exercise_type": "error-correction",
+      "context": "Київ — це самий великий мегаполіс в Україні."
+    },
+    {
+      "word": "україні",
+      "exercise_type": "error-correction",
+      "context": "Київ — це самий великий мегаполіс в Україні."
+    },
+    {
+      "word": "купила",
+      "exercise_type": "error-correction",
+      "context": "Вона купила склянний стіл для вітальні."
+    },
+    {
+      "word": "склянний",
+      "exercise_type": "error-correction",
+      "context": "Вона купила склянний стіл для вітальні."
+    },
+    {
+      "word": "стіл",
+      "exercise_type": "error-correction",
+      "context": "Вона купила склянний стіл для вітальні."
+    },
+    {
+      "word": "вітальні",
+      "exercise_type": "error-correction",
+      "context": "Вона купила склянний стіл для вітальні."
+    },
+    {
+      "word": "сткляний",
+      "exercise_type": "error-correction",
+      "context": "сткляний"
+    },
+    {
+      "word": "скляні",
+      "exercise_type": "error-correction",
+      "context": "скляні"
+    },
+    {
+      "word": "мій",
+      "exercise_type": "error-correction",
+      "context": "Мій брат — дуже хороший читатель."
+    },
+    {
+      "word": "брат",
+      "exercise_type": "error-correction",
+      "context": "Мій брат — дуже хороший читатель."
+    },
+    {
+      "word": "читатель",
+      "exercise_type": "error-correction",
+      "context": "Мій брат — дуже хороший читатель."
+    },
+    {
+      "word": "читник",
+      "exercise_type": "error-correction",
+      "context": "читник"
+    },
+    {
+      "word": "читанець",
+      "exercise_type": "error-correction",
+      "context": "читанець"
+    },
+    {
+      "word": "холодніше",
+      "exercise_type": "error-correction",
+      "context": "холодніше"
+    },
+    {
+      "word": "вулиці",
+      "exercise_type": "error-correction",
+      "context": "Сьогодні на вулиці значно холоднішше, ніж учора."
+    },
+    {
+      "word": "холоднішше",
+      "exercise_type": "error-correction",
+      "context": "Сьогодні на вулиці значно холоднішше, ніж учора."
+    },
+    {
+      "word": "найхолодніше",
+      "exercise_type": "error-correction",
+      "context": "найхолодніше"
+    },
+    {
+      "word": "найдешевший",
+      "exercise_type": "error-correction",
+      "context": "найдешевший"
+    },
+    {
+      "word": "хочу",
+      "exercise_type": "error-correction",
+      "context": "Я хочу знайти самий дешевший варіант ноутбука."
+    },
+    {
+      "word": "ноутбука",
+      "exercise_type": "error-correction",
+      "context": "Я хочу знайти самий дешевший варіант ноутбука."
+    },
+    {
+      "word": "безмежного",
+      "exercise_type": "error-correction",
+      "context": "безмежного"
+    },
+    {
+      "word": "відпочивали",
+      "exercise_type": "error-correction",
+      "context": "Ми відпочивали на березі безмежнного океану."
+    },
+    {
+      "word": "березі",
+      "exercise_type": "error-correction",
+      "context": "Ми відпочивали на березі безмежнного океану."
+    },
+    {
+      "word": "безмежнного",
+      "exercise_type": "error-correction",
+      "context": "Ми відпочивали на березі безмежнного океану."
+    },
+    {
+      "word": "океану",
+      "exercise_type": "error-correction",
+      "context": "Ми відпочивали на березі безмежнного океану."
+    },
+    {
+      "word": "безміжнього",
+      "exercise_type": "error-correction",
+      "context": "безміжнього"
+    },
+    {
+      "word": "поганим",
+      "exercise_type": "error-correction",
+      "context": "найменш поганим"
+    },
+    {
+      "word": "твій",
+      "exercise_type": "error-correction",
+      "context": "Твій проект є найменш гіршим серед усіх представлених."
+    },
+    {
+      "word": "проект",
+      "exercise_type": "error-correction",
+      "context": "Твій проект є найменш гіршим серед усіх представлених."
+    },
+    {
+      "word": "гіршим",
+      "exercise_type": "error-correction",
+      "context": "Твій проект є найменш гіршим серед усіх представлених."
+    },
+    {
+      "word": "представлених",
+      "exercise_type": "error-correction",
+      "context": "Твій проект є найменш гіршим серед усіх представлених."
+    },
+    {
+      "word": "негіршим",
+      "exercise_type": "error-correction",
+      "context": "самим негіршим"
+    },
+    {
+      "word": "оцінюєте",
+      "exercise_type": "fill-in",
+      "context": "— Добрий день. Як ви оцінюєте інфраструктуру Львова? Вона ст"
+    },
+    {
+      "word": "інфраструктуру",
+      "exercise_type": "fill-in",
+      "context": "— Добрий день. Як ви оцінюєте інфраструктуру Львова? Вона ст"
+    },
+    {
+      "word": "львова",
+      "exercise_type": "fill-in",
+      "context": "— Добрий день. Як ви оцінюєте інфраструктуру Львова? Вона ст"
+    },
+    {
+      "word": "самою",
+      "exercise_type": "fill-in",
+      "context": "самою хорошою"
+    },
+    {
+      "word": "хорошою",
+      "exercise_type": "fill-in",
+      "context": "самою хорошою"
+    },
+    {
+      "word": "згоден",
+      "exercise_type": "fill-in",
+      "context": "— Згоден. Але київське метро залишається _____ (великий) тра"
+    },
+    {
+      "word": "київське",
+      "exercise_type": "fill-in",
+      "context": "— Згоден. Але київське метро залишається _____ (великий) тра"
+    },
+    {
+      "word": "метро",
+      "exercise_type": "fill-in",
+      "context": "— Згоден. Але київське метро залишається _____ (великий) тра"
+    },
+    {
+      "word": "залишається",
+      "exercise_type": "fill-in",
+      "context": "— Згоден. Але київське метро залишається _____ (великий) тра"
+    },
+    {
+      "word": "транспортною",
+      "exercise_type": "fill-in",
+      "context": "— Згоден. Але київське метро залишається _____ (великий) тра"
+    },
+    {
+      "word": "системою",
+      "exercise_type": "fill-in",
+      "context": "— Згоден. Але київське метро залишається _____ (великий) тра"
+    },
+    {
+      "word": "великою",
+      "exercise_type": "fill-in",
+      "context": "самою великою"
+    },
+    {
+      "word": "найшвидші",
+      "exercise_type": "fill-in",
+      "context": "найшвидші"
+    },
+    {
+      "word": "одесі",
+      "exercise_type": "fill-in",
+      "context": "— Проте в Одесі ми спостерігаємо _____ (швидкий) темпи розви"
+    },
+    {
+      "word": "спостерігаємо",
+      "exercise_type": "fill-in",
+      "context": "— Проте в Одесі ми спостерігаємо _____ (швидкий) темпи розви"
+    },
+    {
+      "word": "темпи",
+      "exercise_type": "fill-in",
+      "context": "— Проте в Одесі ми спостерігаємо _____ (швидкий) темпи розви"
+    },
+    {
+      "word": "туризму",
+      "exercise_type": "fill-in",
+      "context": "— Проте в Одесі ми спостерігаємо _____ (швидкий) темпи розви"
+    },
+    {
+      "word": "швидкі",
+      "exercise_type": "fill-in",
+      "context": "самі швидкі"
+    },
+    {
+      "word": "швидші",
+      "exercise_type": "fill-in",
+      "context": "швидші"
+    },
+    {
+      "word": "нижчим",
+      "exercise_type": "fill-in",
+      "context": "нижчим"
+    },
+    {
+      "word": "харкові",
+      "exercise_type": "fill-in",
+      "context": "— Так, але рівень інвестицій у Харкові зараз є трохи _____ ("
+    },
+    {
+      "word": "показує",
+      "exercise_type": "fill-in",
+      "context": "— Дніпро також показує неймовірну _____ (потужний), яка роби"
+    },
+    {
+      "word": "неймовірну",
+      "exercise_type": "fill-in",
+      "context": "— Дніпро також показує неймовірну _____ (потужний), яка роби"
+    },
+    {
+      "word": "перспективним",
+      "exercise_type": "fill-in",
+      "context": "— Дніпро також показує неймовірну _____ (потужний), яка роби"
+    },
+    {
+      "word": "потужно",
+      "exercise_type": "fill-in",
+      "context": "потужно"
+    },
+    {
+      "word": "привабливість",
+      "exercise_type": "fill-in",
+      "context": "привабливість"
+    },
+    {
+      "word": "кожне",
+      "exercise_type": "fill-in",
+      "context": "— Кожне місто має свою унікальну _____ (привабливий)."
+    },
+    {
+      "word": "привабливим",
+      "exercise_type": "fill-in",
+      "context": "привабливим"
+    },
+    {
+      "word": "приваблення",
+      "exercise_type": "fill-in",
+      "context": "приваблення"
+    },
+    {
+      "word": "самий'",
+      "exercise_type": "true-false",
+      "context": "Слово 'самий' (наприклад, 'самий розумний') є правильним спо"
+    },
+    {
+      "word": "розумний'",
+      "exercise_type": "true-false",
+      "context": "Слово 'самий' (наприклад, 'самий розумний') є правильним спо"
+    },
+    {
+      "word": "способом",
+      "exercise_type": "true-false",
+      "context": "Слово 'самий' (наприклад, 'самий розумний') є правильним спо"
+    },
+    {
+      "word": "літературній",
+      "exercise_type": "true-false",
+      "context": "Слово 'самий' (наприклад, 'самий розумний') є правильним спо"
+    },
+    {
+      "word": "простою",
+      "exercise_type": "true-false",
+      "context": "Складену форму вищого ступеня не можна поєднувати з простою "
+    },
+    {
+      "word": "дорожчий'",
+      "exercise_type": "true-false",
+      "context": "Складену форму вищого ступеня не можна поєднувати з простою "
+    },
+    {
+      "word": "поганий'",
+      "exercise_type": "true-false",
+      "context": "Вищий ступінь від слова 'поганий' — це 'гірший', оскільки це"
+    },
+    {
+      "word": "гірший'",
+      "exercise_type": "true-false",
+      "context": "Вищий ступінь від слова 'поганий' — це 'гірший', оскільки це"
+    },
+    {
+      "word": "оскільки",
+      "exercise_type": "true-false",
+      "context": "Вищий ступінь від слова 'поганий' — це 'гірший', оскільки це"
+    },
+    {
+      "word": "суплетивна",
+      "exercise_type": "true-false",
+      "context": "Вищий ступінь від слова 'поганий' — це 'гірший', оскільки це"
+    },
+    {
+      "word": "дерев'янний'",
+      "exercise_type": "true-false",
+      "context": "Прикметник 'дерев'янний' завжди пишеться з двома літерами 'н"
+    },
+    {
+      "word": "літерами",
+      "exercise_type": "true-false",
+      "context": "Прикметник 'дерев'янний' завжди пишеться з двома літерами 'н"
+    },
+    {
+      "word": "н'",
+      "exercise_type": "true-false",
+      "context": "Прикметник 'дерев'янний' завжди пишеться з двома літерами 'н"
+    },
+    {
+      "word": "читач'",
+      "exercise_type": "true-false",
+      "context": "Іменник 'читач' утворено за допомогою суфікса '-ач', який вк"
+    },
+    {
+      "word": "утворено",
+      "exercise_type": "true-false",
+      "context": "Іменник 'читач' утворено за допомогою суфікса '-ач', який вк"
+    },
+    {
+      "word": "ач'",
+      "exercise_type": "true-false",
+      "context": "Іменник 'читач' утворено за допомогою суфікса '-ач', який вк"
+    },
+    {
+      "word": "назву",
+      "exercise_type": "true-false",
+      "context": "Іменник 'читач' утворено за допомогою суфікса '-ач', який вк"
+    },
+    {
+      "word": "діяча",
+      "exercise_type": "true-false",
+      "context": "Іменник 'читач' утворено за допомогою суфікса '-ач', який вк"
+    },
+    {
+      "word": "багато'",
+      "exercise_type": "true-false",
+      "context": "Найвищий ступінь прислівника 'багато' — це 'найбагатіше'."
+    },
+    {
+      "word": "найбагатіше'",
+      "exercise_type": "true-false",
+      "context": "Найвищий ступінь прислівника 'багато' — це 'найбагатіше'."
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 7,
+    "tested_in_exercises": 0,
+    "not_tested": [
+      "аналіз",
+      "діагностика",
+      "комплексний",
+      "повторення",
+      "помилок",
+      "рубрика",
+      "самооцінка"
+    ]
+  },
+  "all_grounded": false
+}

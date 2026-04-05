@@ -1,0 +1,65 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння літературно-критичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Читання
+  focus: Розуміння літературного тексту (уривок з твору)
+  placement: inline
+  type: reading
+- focus: Свідчення як жанр — етика та естетика свідка
+  placement: workbook
+  type: source-evaluation
+- focus: Літературна критика — оцінка інтерпретації
+  placement: workbook
+  type: critical-analysis
+- focus: Порівняння з іншими творами або інтерпретаціями (Aseyev Camp Paradise)
+  placement: workbook
+  type: comparative-study
+- focus: Есе-аналіз рецепції та сучасного значення (Aseyev Camp Paradise)
+  placement: workbook
+  type: essay-response
+content_outline:
+- points: []
+  section: Вступ та контекст
+  words: 800
+- points: []
+  section: Аналіз ключових творів
+  words: 1200
+- points: []
+  section: Стилістика та мова автора
+  words: 1200
+- points:
+  - Як цей автор руйнує імперські міфи
+  - Українська суб'єктність у тексті
+  section: Деколонізаційна перспектива
+  words: 1000
+- points: []
+  section: Підсумок та спадщина
+  words: 800
+focus: literature
+immersion: 100% Ukrainian
+level: LIT.WAR
+module: lit-war-19
+objectives:
+- Проаналізувати творчість Aseyev Camp Paradise у контексті української літератури
+- Дослідити вплив автора на формування національної ідентичності
+pedagogy: literature
+persona:
+  role: Forensic Psychologist of Captivity
+  voice: Senior Specialist
+phase: LIT Expansion
+sequence: 19
+slug: aseyev-camp-paradise
+subtitle: Aseyev Camp Paradise
+title: Aseyev Camp Paradise
+version: '2.0'
+vocabulary_hints:
+  recommended:
+  - деколонізація
+  required:
+  - історіографія
+  - наратив
+  - суб'єктність
+word_target: 5000

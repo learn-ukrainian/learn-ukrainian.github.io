@@ -1,0 +1,56 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: '**Covered well:** All 4 content_outline sections present. Dialogue in
+    §1 covers rooms + furniture + cases (Nom, Gen, Loc). §2 covers monologue + daily
+    verbs + time expressions + weekday/weekend contra'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'All Ukrainian forms verified against VESUM (623/623 pass). Grammar explanations
+    are factually correct: Locative endings, Genitive for absence/quantity, Instrumental
+    for transport/accompaniment, partit'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: '**Strengths:** Excellent PPP flow — each section opens with a natural
+    situation (dialogue/monologue), then extracts the grammar pattern, then provides
+    multiple examples. The "з" + Gen vs "з" + Instr d'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: '**Required vocab present:** помешкання ✓, кімната ✓, кухня ✓, спальня
+    ✓, вітальня ✓, меблі ✓, розпорядок дня ✓, вставати ✓, снідати ✓, лягати спати
+    (in summary only — not contextualized in §2). **Reco'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 4 activity types from plan present with correct markers. Well-placed
+    after teaching content. Each tests case usage (language skill), not content recall.
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: '**Adjective padding is pervasive.** Nearly every noun carries 1-3 modifiers,
+    creating an unnaturally dense, LLM-generated feel. Examples: "великий м''який
+    **диван**" → "два дуже зручні **крісла**" → "т'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Clean markdown. All 4 sections + Підсумок present and correctly ordered.
+    H2 headings match plan section titles. Word count 2652 is above the 2000 target
+    (acceptable — over is better than under). No st
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Shoe removal at door with капці (not Russicism "тапочки") ✓. Bringing
+    гостинці when visiting ✓. Host offers food/drink insistently ✓. "Пригощайтеся"
+    ✓. No "like Russian but..." framing. Ukrainian pres
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: 'Named speakers throughout (Олена/Марк, Оксана/Ігор) ✓. Realistic situations:
+    video tour of apartment, visiting friends for dinner ✓. Culturally appropriate
+    hospitality ✓. §3 dialogue is the strongest '
+findings: []

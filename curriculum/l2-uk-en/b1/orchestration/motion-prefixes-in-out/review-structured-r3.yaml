@@ -1,0 +1,57 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: All 6 content_outline sections present and ordered correctly. All grammar
+    points covered (за- entering, за- dropping by, ви- exiting, aspectual pairs, preposition+case
+    patterns, prefix system overview
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: 'All conjugation forms verified against VESUM. Stress rule about ви- perfective
+    correctly stated. Preposition+case patterns (за- + в/у + Зн.в., за- + до + Р.в.,
+    ви- + з/із + Р.в.) are all correct. і→й '
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Good PPP flow: situations (Андрій''s morning, errands) → patterns (conjugation,
+    preposition rules) → practice (dialogues, error correction, aspect pairs). Clear
+    bridge from M29-M30 prefixes. The за- in'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 12 required vocabulary items used naturally in prose: зайти, заїхати,
+    забігти, занести, вийти, виїхати, вибігти, винести, заходити, виходити, заїжджати,
+    виїжджати. All 10 recommended items present'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 6 activity markers present, matching plan hints in type and focus.
+    Markers placed after relevant teaching sections. Group-sort tests prefix categorization
+    (4 groups), match-up tests за-/ви- pairs,
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: '**Deductions:** Heavy meta-commentary throughout: "Тепер давайте детально
+    розглянемо" (sections 3, 4), "Наостанок ми трохи поговоримо" (section 1), "Наостанок
+    обов''язково варто згадати" (section 2), "'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All 6 H2 headings present and ordered per plan. Clean markdown. No stray
+    tags or formatting artifacts. Word count 5781 > 4000 target. Activity markers
+    properly formatted. No duplicate summary sections
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Decolonized throughout — Ukrainian presented on its own terms, no comparisons
+    to Russian. "Вийти заміж" etymology grounded in Ukrainian/Old Ukrainian ("за мужъ"),
+    not framed through Russian. Lviv cult
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: The Олена/Андрій phone conversation is natural, multi-turn, with named
+    speakers and distinct voices. Real situation (planning errands after work, picking
+    up child from daycare). Both speakers use targ
+findings: []

@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "b1",
+  "slug": "adjectives-superlative",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-04T12:08:18.079444+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-04T12:10:13.716813+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-04T12:11:30.835285+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-04T12:13:44.281473+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-04T12:27:26.135790+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-04T12:27:26.141972+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-04T12:31:32.932574+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-04T12:31:33.071172+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-04T12:31:33.093337+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-04T12:32:14.928816+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-04T12:32:14.928958+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-04T12:32:15.256072+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-04T12:57:55.492234+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-04T12:58:04.759244+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-04T12:58:06.855073+00:00"
+    }
+  }
+}

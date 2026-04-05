@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All 4 content_outline sections present with correct headings. All plan
+    points covered: dative vs. accusative distinction (Part 1 — "Я малюю сестру" vs
+    "Я малюю сестрі"), impersonal constructions (Part'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: All Ukrainian forms VESUM-verified (540/540 content words confirmed).
+    Dative endings correct throughout. Consonant alternation examples (г→з, к→ц, х→с)
+    correct. подругі correctly flagged as error form
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: situation (Secret Santa) → pattern (dative forms) →
+    practice (activities). 3+ examples per grammar point consistently (6 pairs for
+    dative vs. accusative, 5 impersonal sentences, 3 под'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: '**Required (8/8):** давальний відмінок (Part 1 intro), допомагати (Part
+    2 — "Він допомагає сусідові"), дякувати (Part 2+4 — "Ми дякуємо вам"), подобатися
+    (Part 1+3 — "Студентові подобається"), подарув'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 4 markers matching all 4 plan activity_hints in type (quiz, fill-in, match-up,
+    error-correction) and focus. Markers placed after relevant content sections. Cannot
+    evaluate generated exercise content (
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Secret Santa scenario is culturally relevant and engaging — creates natural
+    motivation for dative forms. "Правило двох іменників" tip box provides a real
+    stylistic insight that makes learners sound mo
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown. All 4 plan sections present as H2 headings in correct
+    order. Extra Підсумок adds a self-assessment checklist (plan point from Part 4).
+    Tip box correctly formatted. Comparison table wel
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented on its own terms. Impersonal constructions explained
+    as a different LOGIC ("In Ukrainian, we use a different logic"), not as a deficiency.
+    No "like Russian but..." comparisons. The
+- dimension: 9
+  name: Dialogue quality
+  score: 9
+  evidence: 'Part 1 Secret Santa dialogue: 4 speakers (Організатор, Колега 1, Колега
+    2), natural multi-turn, named speakers, culturally specific (New Year tradition).
+    Part 3 continuation: same setting, new gift de'
+findings: []

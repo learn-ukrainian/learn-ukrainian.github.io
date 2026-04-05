@@ -1,0 +1,124 @@
+{
+  "total_items": 141,
+  "grounded_items": 120,
+  "ungrounded": [
+    {
+      "word": "річка",
+      "exercise_type": "fill-in",
+      "context": "Темний ліс починається далеко _____ (річка)."
+    },
+    {
+      "word": "школа",
+      "exercise_type": "fill-in",
+      "context": "Новий міський парк знаходиться _____ (школа і бібліотека)."
+    },
+    {
+      "word": "бібліотека",
+      "exercise_type": "fill-in",
+      "context": "Новий міський парк знаходиться _____ (школа і бібліотека)."
+    },
+    {
+      "word": "сховався",
+      "exercise_type": "match-up",
+      "context": "Кіт сховався на підлозі..."
+    },
+    {
+      "word": "посередині",
+      "exercise_type": "match-up",
+      "context": "Тумбочка стоїть посередині..."
+    },
+    {
+      "word": "столу",
+      "exercise_type": "error-correction",
+      "context": "столу"
+    },
+    {
+      "word": "стола",
+      "exercise_type": "error-correction",
+      "context": "стола"
+    },
+    {
+      "word": "ліжку",
+      "exercise_type": "error-correction",
+      "context": "ліжку"
+    },
+    {
+      "word": "ліжка",
+      "exercise_type": "error-correction",
+      "context": "ліжка"
+    },
+    {
+      "word": "ліжках",
+      "exercise_type": "error-correction",
+      "context": "ліжках"
+    },
+    {
+      "word": "сні",
+      "exercise_type": "error-correction",
+      "context": "сні"
+    },
+    {
+      "word": "сна",
+      "exercise_type": "error-correction",
+      "context": "сна"
+    },
+    {
+      "word": "сну",
+      "exercise_type": "error-correction",
+      "context": "сну"
+    },
+    {
+      "word": "бібліотеки",
+      "exercise_type": "error-correction",
+      "context": "бібліотеки"
+    },
+    {
+      "word": "бібліотеці",
+      "exercise_type": "error-correction",
+      "context": "бібліотеці"
+    },
+    {
+      "word": "бібліотеку",
+      "exercise_type": "error-correction",
+      "context": "бібліотеку"
+    },
+    {
+      "word": "будинки",
+      "exercise_type": "error-correction",
+      "context": "будинки"
+    },
+    {
+      "word": "будинках",
+      "exercise_type": "error-correction",
+      "context": "будинках"
+    },
+    {
+      "word": "допомоги",
+      "exercise_type": "error-correction",
+      "context": "допомоги"
+    },
+    {
+      "word": "допомога",
+      "exercise_type": "error-correction",
+      "context": "допомога"
+    },
+    {
+      "word": "допомогах",
+      "exercise_type": "error-correction",
+      "context": "допомогах"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 15,
+    "tested_in_exercises": 9,
+    "not_tested": [
+      "кут",
+      "обід",
+      "підлога",
+      "розклад",
+      "стеля",
+      "стіна"
+    ]
+  },
+  "all_grounded": false
+}

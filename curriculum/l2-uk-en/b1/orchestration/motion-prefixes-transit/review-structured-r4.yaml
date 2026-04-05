@@ -1,0 +1,57 @@
+round: 4
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'All 6 content_outline sections present and substantially covered. Required
+    vocabulary: 12/12 covered. Recommended vocabulary: 10/10 covered. Section title
+    improved from plan''s incorrect "Шість" to cor'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: '**Critical:** "теперішнього та майбутнього часу (future tense) для доконаного
+    виду" — perfective verbs have NO present tense; this teaches incorrect grammar.
+    **Major:** "перевести означає **лише** фіз'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Excellent PPP flow: introduces concept through narrative (road trip),
+    presents patterns with spatial metaphors (boundary crossing vs. passing by), practices
+    through dialogues and scenarios. 10+ exampl'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 12 required vocabulary items used naturally in prose: перейти ✓,
+    переїхати ✓, перебігти ✓, перенести ✓, перевести ✓, пройти ✓, проїхати ✓, пробігти
+    ✓, переходити ✓, проходити ✓, пішохідний перехід'
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: All 6 plan activity types present with correct focus areas. Quiz (8 items)
+    tests пере-/про- distinction ✓. Fill-in (8 items) tests preposition selection
+    ✓. Match-up (8 items) pairs verbs ✓. Group-sort
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: '**Deductions:** (a) Excessive superlatives throughout: "абсолютно ключовим",
+    "надзвичайно важливим", "кардинально різні просторові історії", "абсолютно правильними",
+    "максимально точно", "абсолютно ст'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Clean markdown throughout. All 6 sections present in correct order. Word
+    count 5098 vs 4000 target ✓. Tables render correctly. Section heading "Вісім префіксів"
+    corrects plan's erroneous "Шість" — the
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Ukrainian presented on its own terms throughout. Russicism warning about
+    "перевести" = translate is decolonizing pedagogy in action. Cultural references
+    authentic: Кам''янець-Подільський фортеця, Хреща'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'Driving lesson dialogue (section 1): natural multi-turn, named speakers
+    (Інструктор з водіння / Учень), realistic error ("Ой, ми проїхали наш поворот?").
+    Direction-giving dialogue (section 5): natural'
+findings: []

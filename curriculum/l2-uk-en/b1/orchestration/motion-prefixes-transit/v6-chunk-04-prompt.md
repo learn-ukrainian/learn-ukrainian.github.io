@@ -11,12 +11,15 @@ You are writing ONE SECTION of a Ukrainian language module. Write ONLY this sect
 ## Section Skeleton (follow this exactly)
 
 ## Пере- чи про-? Різниця у значенні (~900 words total)
-- P1 (~150 words): [The Contrastive Test: *Перейшов дорогу* (I am now on the other side) vs *Пройшов по дорозі* (I walked 1km along the road). Explain how the choice of prefix changes the spatial result.]
-- P2 (~150 words): [Scenario: The Bridge. *Переїхати міст* (crossing from bank to bank) vs *Проїхати міст* (driving past the bridge or through its structure). Explain when each is appropriate.]
-- P3 (~150 words): [Scenario: The City. *Переїхати до міста* (moving/relocating there) vs *Проїхати через місто* (transiting through without staying). Discuss the permanency of *пере-* in relocation.]
-- P4 (~150 words): [The "Mistake" context: explain how *проїхати* often implies missing a target (*проїхав поворот*), while *перейти* implies overshooting a boundary (*перейшов кордон*).]
-- P5 (~150 words): [Prepositional logic summary: *пере-* typically takes *через*; *про-* typically takes *повз*, *через*, or *по*. Provide a comparative list of 5 verb-preposition clusters.]
-- Exercise: [quiz, Choose пере- or про- based on whether movement is crossing a boundary or traversing a length, 8 items]
+- P1 (~130 words): [The Direct Contrast: Side-by-side comparison of crossing vs. traversing. Scenario: A long street. "Перейти вулицю" means you are now on the opposite sidewalk. "Пройти вулицю" means you walked from house #1 to house #100.]
+- P2 (~130 words): [The Bridge Scenario: "Переїхати міст" (reaching the other side of the river) vs. "Проїхати міст" (driving past/through the bridge area). Explain how "пере-" focuses on the result of crossing, while "про-" focuses on the experience of the space.]
+- P3 (~130 words): [Visualizing with Prepositions: Explain that "пере-" almost always pairs with "через," while "про-" is more flexible (повз, через, по, крізь). Use a table to map these affinities.]
+- P4 (~130 words): [Common Mistakes: Why saying "я пройшов дорогу" when you meant you crossed it sounds like you walked 5 kilometers in the middle of the asphalt. Correcting the "Side A to Side B" logic.]
+- P5 (~130 words): [Contextual Nuance: Relocating vs. Passing. Why we say "ми переїхали в Київ" (relocated) but "ми проїхали Київ" (drove past/through it on the way to Odesa).]
+- Exercise: [quiz, Choose пере- or про- based on whether movement is crossing or passing a landmark, 8 items]
+- P6 (~130 words): [Scenario Practice: A series of "Which prefix?" questions with punchy justifications. "A cat runs across the path: перебігла." "You drive past your favorite cafe: проїхали."]
+- Exercise: [error-correction, Fix incorrect transit prefix and preposition choices in navigation sentences, 6 items]
+- P7 (~120 words): [Summary of Distinction: Use Zabolotnyi's "prefix diagram" logic (Grade 5 p.55) to show how adding these two prefixes to "бігти" creates two entirely different spatial stories.]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -24,7 +27,7 @@ You are writing ONE SECTION of a Ukrainian language module. Write ONLY this sect
 <previous_context>
 [...previous sections truncated...]
 
-буває надзвичайно складно **пронести валізу через натовп** *(to carry a suitcase through a crowd)*. Ви повільно долаєте живу людську перешкоду разом зі своїм особистим вантажем. Коли ви працюєте гідом або просто з радістю показуєте місто гостям, ви використовуєте дієслово **провести** *(to lead through/guide)*. Завдяки своїм знанням ви можете надзвичайно цікаво **провести екскурсію** *(to conduct a tour)* історичним центром або ж захопливо **провести друзів по музею** *(to guide friends through a museum)*. У цій приємній ситуації ви є впевненим лідером спільного руху наскрізь. А у сфері логістики та міжнародних подорожей дуже часто використовується дієслово **провезти** *(to transport through)*. Досвідчені водії добре знають, як складно іноді буває легально **провезти товар через кордон** *(to transport goods across/through a border)*. В усіх цих ситуаціях ви берете на себе відповідальність за переміщення іншого об'єкта. Щоб говорити про всі ці динамічні дії впевнено та граматично правильно, нам треба звернути пильну увагу на правила відмінювання. Розгляньмо популярне доконане дієслово **проїхати** *(to drive past/through)* у майбутньому часі. Воно відмінюється за дуже типовим зразком. Ми кажемо: я **проїду** *(I will drive past)*, ти **проїдеш** *(you will drive past)*. Для третьої особи маємо форми: він або вона **проїде** *(he/she will drive past)*. У множині використовуємо такі форми: ми **проїдемо** *(we will drive past)*, ви **проїдете** *(you will drive past)*, і нарешті вони **проїдуть** *(they will drive past)*. У минулому часі ми маємо абсолютно стандартні закінчення: **проїхав**, **проїхала**, **проїхало**, **проїхали**. Але дуже цікаво і незвично поводиться недоконаний вид цього дієслова — **проїжджати** *(to drive past/through)*. Це важливе дієслово означає регулярний процес або ж тривалу дію в конкретний момент мовлення. Зверніть увагу на складну зміну приголосних звуків у корені слова: історичне сполучення «-їха-» перетворюється на дзвінке та багате «-їжджа-». Українцям дуже подобається цей глибокий звук у щоденному спілкуванні. Ми часто кажемо знайомим: «Я щодня із задоволенням **проїжджаю** *(I drive past)* цей чудовий зелений парк по дорозі на роботу». Як і абсолютна більшість українських просторових префіксів, **про-** активно створює багато яскравих переносних значень. Уявіть собі на хвилинку, що наш час — це довга лінія, по якій ми всі постійно рухаємося вперед. Саме тому просте дієслово **пройти** дуже часто стосується абстрактного плину часу. Ми можемо сумно сказати: «Цей важкий **рік пройшов** *(year passed)* дуже швидко і непомітно». Час успішно подолав свою виділену дистанцію і назавжди залишився позаду нас. Інший цікавий і життєвий вираз стосується користування громадським транспортом. Якщо ви глибоко замислилися і вчасно не вийшли там, де планували, ви можете розгублено сказати: «Ой, який жах, я випадково **проїхав зупинку** *(missed a stop)*!». Ви буквально і фізично проїхали повз потрібне вам місце, так і не зробивши там довгоочікуваної зупинки. А коли ви дуже сильно поспішаєте і маєте швидко ознайомитися з довгим робочим текстом, ви не читаєте його уважно. Замість цього ви можете просто **пробігти очима** *(to skim/scan with eyes)* цей важливий документ. Ваші очі дуже швидко рухаються поверхнею тексту, фіксуючи у свідомості лише найголовніше. Це ідеальна метафора проходження наскрізь або швидкого ковзання поверхнею без зупинки на дрібних деталях. <!-- INJECT_ACTIVITY: fill-in, Complete direction sentences with про- verbs and prepositions (через, повз, по), 8 items -->
+she will pass)*. У множині: ми **пройдемо** *(we will pass)*, ви **пройдете** *(you will pass)*, вони **пройдуть** *(they will pass)*. Для дієслова «проїхати» майбутній час будується так: я **проїду** *(I will drive past)*, ти **проїдеш** *(you will drive past)*, він чи вона **проїде** *(he or she will drive past)*. У множині: ми **проїдемо** *(we will drive past)*, ви **проїдете** *(you will drive past)*, вони **проїдуть** *(they will drive past)*. У минулому часі важливо пам'ятати про чергування звуків у слові «пройти». Тут ми маємо такі форми: чоловічий рід — **пройшов** *(passed)*, жіночий — пройшла, середній — пройшло, множина — пройшли. Дієслово «проїхати» змінюється у минулому часі набагато простіше і регулярніше. Його форми: **проїхав** *(drove past)*, проїхала, проїхало, проїхали. Префікс **про-** настільки потужний, що українці постійно використовують його в абстрактних, переносних значеннях. Найпопулярніше з них стосується часу. Час у нашій уяві — це річка, яка невпинно рухається вперед. Тому ми застосовуємо дієслово «пройти» для опису того, як час минає. Ми кажемо: «Непомітно **пройшов рік** *(a year passed)* з моменту нашої останньої зустрічі». Або: «Їхня молодість пройшла дуже швидко і яскраво». В українській мові є цікава філософська паралель. Ми часто говоримо, що зараз **час іде** *(time is going)*, тобто він перебуває у процесі. Але коли цей період завершується і залишається позаду нас, ми констатуємо факт: час пройшов. Це дуже схоже на рух людини, яка йде вулицею, наближається до нас, а потім проходить повз і зникає вдалині. Час рухається крізь наш простір життя так само, як ми рухаємося крізь фізичний простір міста. Інше дуже цікаве абстрактне значення пов'язане з помилками уваги або швидким скануванням інформації. Ви вже знаєте, що «проїхати» означає рух повз об'єкт. Але що станеться, якщо цим об'єктом була ваша мета? Якщо ви читали книгу в автобусі і не помітили потрібну станцію, ви мусите сказати: «Ой, я випадково зміг **проїхати свою зупинку** *(miss one's stop)*». Ви фізично перемістилися далі, ніж планували, залишивши ціль позаду. Ця ж логіка працює з нашими очима. Коли ви не маєте часу читати довгий текст уважно, ви можете лише **пробігти очима** *(skim/scan with eyes)* по його рядках. Ви ніби швидко біжите вздовж тексту, намагаючись вхопити лише найголовніше, не зупиняючись на деталях. Усі ці переносні значення органічно виростають із базової ідеї: швидкий рух повз щось або наскрізь, без глибокої зупинки чи тривалого контакту. <!-- INJECT_ACTIVITY: fill-in, Complete direction-giving sentences using про- verbs and prepositions (повз, через, по) --> На завершення цієї теми обов'язково треба згадати про категорію виду дієслова. Префікс **про-** утворює ідеальну форму, але ми маємо також недосконалі аналоги для опису тривалих процесів. Порівняйте дієслова **проходити** *(to pass - process)* та **пройти** *(to pass - result)*. Якщо ви довго шукали потрібну адресу і блукали містом, ви скажете: «Ми **проходили повз цей будинок** *(were passing by this building)* цілу годину, але не впізнали його». Це був довгий, розтягнутий у часі процес. Але якщо ви описуєте фінальний успіх після важкої подорожі, ви використаєте доконаний вид: «Ми нарешті **пройшли через натовп** *(passed through the crowd)* і змогли вільно зітхнути». Розуміння різниці між процесом та результатом робить ваше мовлення точним і природним.
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -37,7 +40,7 @@ module: b1-028
 level: B1
 sequence: 28
 slug: motion-prefixes-transit
-version: '3.0'
+version: '3.1'
 title: Перейти, проїхати
 subtitle: Префікси пере- (перетинання) та про- (проїжджання повз) з дієсловами 
   руху
@@ -141,9 +144,18 @@ content_outline:
         дому (ви-). Перейшов вулицю (пере-). Зайшов до кав''ярні (за-). Вийшов i пішов
         до зупинки (ви-, пі-). Поїхав автобусом (по-). Проїхав три зупинки (про-).
         Доїхав до центру (до-). Приїхав на роботу (при-).'
+      - 'Prefix system overview table: all 8 prefixes taught so far organized by
+        spatial meaning. ARRIVAL: при- (arrive), до- (reach). DEPARTURE: пі-/по- (set off),
+        від- (move away). IN/OUT: за- (enter), ви- (exit). TRANSIT: пере- (cross), про-
+        (pass through). Learners fill in the table with example sentences for each prefix
+        using the base verb їхати/їздити.'
       - 'Dialogue: giving directions using transit verbs — ''Пройдіть по Хрещатику,
         перейдіть через Майдан, зайдіть у метро.'' Learners practice the natural combination
         of prefixes in navigation contexts.'
+      - 'Production exercise: learners describe their own daily commute or a memorable
+        trip using as many prefixes as possible. Minimum: 6 different prefixes in one
+        connected narrative. Peer review: partners check whether each prefix is used
+        correctly and suggest alternatives where another prefix might work better.'
   - section: 'Підсумок: пере- і про-'
     words: 350
     points:
@@ -539,6 +551,8 @@ references:
 </knowledge_packet>
 
 ---
+
+
 
 ## Rules
 

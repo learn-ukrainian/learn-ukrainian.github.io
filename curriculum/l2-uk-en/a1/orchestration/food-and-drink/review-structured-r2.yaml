@@ -3,49 +3,50 @@ scores:
 - dimension: 1
   name: Plan adherence
   score: 9
-  evidence: Covers all required points and communicative situations, but failed to
-    embed the required target word `їжа` natively into the prose (used only as a header).
+  evidence: 'All sections and required vocabulary are present. Minor deviation: The
+    plan asked for the self-check to include "Name one Ukrainian dish and why it matters",
+    but the generated text asks for "...and on'
 - dimension: 2
   name: Linguistic accuracy
   score: 7
-  evidence: 'CRITICAL ERROR: The text teaches a Russianism by claiming `масло` is
-    also used for oil depending on context. (СУМ-11 confirms `масло` = animal fat,
-    `олія` = plant fat). Otherwise, good use of cases an'
+  evidence: Contains a critical Russian calque ("Давай варити борщ") and a critical
+    grammatical case error ("піца" instead of "піцу" in an accusative context).
 - dimension: 3
   name: Pedagogical quality
-  score: 9
-  evidence: Excellent breakdown of grammar as chunks (PPP applied effectively). Slight
-    deduction due to the clustering of activity markers out of logical sequence.
+  score: 10
+  evidence: Excellent PPP execution. The explanation of "з + noun" as a memorized
+    chunk (explicitly telling learners they don't need to know the Instrumental grammar
+    yet) is perfect for A1 methodology.
 - dimension: 4
   name: Vocabulary coverage
-  score: 9
-  evidence: All recommended items used. Deduction because the required core word `їжа`
-    was only used in a heading, not contextualized in the prose.
+  score: 10
+  evidence: All required and recommended vocabulary items from the plan are integrated
+    naturally into the dialogues and categorical lists.
 - dimension: 5
   name: Exercise quality
-  score: 8
-  evidence: Exercises are well-formed logically, but the placement is flawed. `match-food-drink`
-    and `group-sort` belong before the `з + noun` section, not clustered with the
-    others at the very end.
+  score: 10
+  evidence: The injected markers perfectly match the plan's requested activity types,
+    focus, and logical sequence.
 - dimension: 6
   name: Engagement & tone
-  score: 9
-  evidence: 'Rich cultural notes (UNESCO, Kotliarevsky), but includes minor meta-commentary:
-    "These next words are not just vocabulary — they are symbols of Ukrainian identity."'
+  score: 8
+  evidence: 'Generally engaging, but contains some gamified/corporate phrasing: "These
+    five dishes are not just vocabulary — they are cultural identity" and "you have
+    a solid food and drink toolkit".'
 - dimension: 7
   name: Structural integrity
-  score: 9
-  evidence: Headings match the plan perfectly. The block of 4 consecutive markers
-    slightly disrupts the visual flow.
+  score: 8
+  evidence: Word count is 1543 words, which is ~28% over the target of 1200 words
+    (exceeding the >10% tolerance limit).
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Superb context around Borshch, Salo, and Varenyky. Strong decolonized
-    framework.
+  evidence: Culturally accurate representation of Ukrainian dishes, proper use of
+    authentic textbook quotes, and a crucial clarification that "компот" is a drink,
+    not a thick stew.
 - dimension: 9
   name: Dialogue & conversation quality
   score: 9
-  evidence: 'Logical flaw in Dialogue 1: Marco exclaims "Смачно! Дякую." (Delicious!)
-    immediately after Olenka says "The porridge is on the stove," meaning he reacts
-    to the taste before eating it.'
+  evidence: Dialogues are natural, highly contextualized, and feature distinct speakers,
+    though slightly marred by the aforementioned case error.
 findings: []

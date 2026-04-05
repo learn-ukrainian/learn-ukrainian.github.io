@@ -1,0 +1,47 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The dialogue is missing the specific phrase "Чекайте до п'ятої години"
+    requested in the plan's `dialogue_situations`.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: 'Critical errors found: "Після вечора ми будемо спокійно відпочивати вдома"
+    (paronym error) and "Студенти йдуть до музею мистецтва" (calque).'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow; clearly explains hard/soft stem changes with the Genitive
+    case and offers ample natural examples.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 7
+  evidence: Required words "напрямок" and "мета" only appear as English-translated
+    labels in the final summary list, never in a natural Ukrainian sentence.
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: The text contains 5 activity markers requesting 12 items each, directly
+    violating the plan's specification of 4 activities with 8 items each.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Good use of natural dialogue contexts (e.g., giving directions to a taxi
+    driver).
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: The deterministic word count is 3428 words, which significantly exceeds
+    the target of 2000 words.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Uses accurate Ukrainian city names and typical cultural situations appropriately.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The taxi driver dialogue is natural and provides a realistic scenario
+    for using directional grammar.
+findings: []

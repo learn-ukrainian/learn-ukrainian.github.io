@@ -1,118 +1,141 @@
-module: hist-058
-level: HIST
-sequence: 58
-slug: ruina-i
-version: '3.0'
-title: 'Руїна I: Виговщина і розкол'
-subtitle: 'The Ruin I: Vyhovsky and the Split'
-focus: history
-pedagogy: CBI
-phase: HIST.6 [Khmelnytsky & Cossack State]
-word_target: 5000
-objectives:
-- Учень може пояснити причини громадянської війни (Руїни)
-- Учень може проаналізувати наслідки Конотопської битви
-- Учень може оцінити роль Чорної ради 1663 року в розколі України
-content_outline:
-- section: 'Вступ: Епоха великих надій і розчарувань'
-  points:
-  - Definition of 'The Ruin' (1657-1687) — term coined by Cossack chronicler Samiilo Velychko to describe the 
-    devastation
-  - The vacuum of power after Khmelnytsky — [!context] Ruin as state collapse due to internal strife plus external 
-    intervention
-  words: 600
-- section: 'Гетьман Іван Виговський: Курс на Європу'
-  points:
-  - Vyhovsky's biography and political program — General Chancellor, intellectual, architect of the Hadiach Union; 
-    [!myth-buster] not a 'Polish lackey' but a statist
-  - The suppression of the Pushkar uprising — first act of civil war, inspired and financed by Moscow (Pushkar and 
-    Barabash)
-  - 'Foreign policy: balancing between Moscow and Warsaw — seeking equal status for Ukraine in Europe'
-  words: 600
-- section: Гадяцька унія і війна з Москвою
-  points:
-  - The failure of the alliance with Moscow — violation of Pereyaslav articles by the Tsar
-  - The signing of the Treaty of Hadiach (brief recap) — Grand Duchy of Rus as 3rd member of Commonwealth with own army,
-    treasury, and coin
-  - The start of the Muscovite-Ukrainian war — Moscow declares Vyhovsky a traitor; open military aggression
-  words: 600
-- section: 'Конотопська битва 1659: Втрачена перемога'
-  points:
-  - The siege of Konotop by Trubetskoy — heroic defense by Colonel Hulyanytsky
-  - 'Tactics of the battle: deceptive retreat — luring Muscovites into the marshy Sosnivka river valley'
-  - 'The defeat of the Muscovite cavalry and its consequences — Solovyov quote: ''flower of Moscow cavalry perished''; [!history-bite]
-    Tsar Alexei Mikhailovich in mourning, preparing to evacuate Moscow'
-  words: 600
-- section: Падіння Виговського і початок хаосу
-  points:
-  - The uprising of Ivan Sirko in Zaporizhzhia — forced Tatar allies to return to Crimea, weakening Vyhovsky
-  - The election of Yurii Khmelnytsky — [!decolonization] Vyhovsky lost the information war to populist demagoguery 
-    about 'Polish serfdom'
-  - The Chudniv campaign and the split of the state — cementing the division into Left and Right Banks
-  words: 600
-- section: 'Чорна рада 1663: Тріумф охлократії'
-  points:
-  - The struggle for power on the Left Bank — vacuum filled by populism
-  - Somko vs. Briukhovetsky — [!culture] Panteleimon Kulish's novel 'Chorna rada' depicts this conflict between elite 
-    statist (Somko) and demagogue (Briukhovetsky)
-  - The 'Black Council' in Nizhyn and its tragic outcome — 1663; participation of 'chern' (commoners); execution of 
-    Somko and Zolota
-  words: 600
-- section: 'Первинні джерела: Літопис Самовидця'
-  points:
-  - Reading excerpts about the Black Council — eyewitness account (likely Roman Rakushka-Romanovsky)
-  - Contrast between mob chaos and state order — criticism of both 'chern' for anarchy and 'starshyna' for pride
-  words: 600
-- section: Деколонізаційний погляд
-  points:
-  - 'The myth of ''civil war'' vs. foreign intervention — Moscow''s hybrid war tactics: financing opposition to destabilize
-    the Hetmanate'
-  - Moscow's role in deepening the split — [!quote] irony of Briukhovetsky promising rights but bringing Muscovite 
-    voyevodas
-  words: 800
-vocabulary_hints:
-  required:
-  - руїна (ruin) — capitalized when referring to the period; synonym for devastation
-  - розкол (split/schism) — often used for the division of the Hetmanate
-  - чорна рада (Black Council) — council where commoners (chern) participated; symbol of mob rule
-  - охлократія (ochlocracy) — mob rule; negative term for the events of 1663
-  - міжусобиця (internecine strife) — civil conflict within the state
-  - булава (bulava/mace) — symbol of Hetman's power; 'zrekatysia bulavy' (to resign)
-  - промосковський (pro-Moscow) — political orientation of the Left Bank elite
-  - пропольський (pro-Polish) — political orientation often ascribed to Vyhovsky
-  - лівобережжя (Left Bank) — sphere of Moscow's influence
-  - правобережжя (Right Bank) — sphere of Poland's influence
-  recommended:
-  - наказний гетьман (acting hetman) — temporary title held by Vyhovsky initially
-  - воєвода (voyevoda) — Muscovite military governor installed in Ukrainian cities
-  - зрадник (traitor) — label used by Moscow propaganda against Vyhovsky
 activity_hints:
-- type: reading
-  focus: Analysis of the Black Council description
-- type: essay-response
-  focus: 'Causes of the Ruin: internal or external?'
-- type: comparative-study
-  focus: Vyhovsky vs. Briukhovetsky policies
-- type: critical-analysis
-  focus: 'Верифікація фактів: Facts about Konotop and Nizhyn'
-  items: 4
-persona:
-  voice: Senior Professor of History
-  role: Mercenary Captain
-grammar:
-- 'Historical narrative: description of chaos'
-- 'Political terminology: factions and parties'
-register: публіцистичний
-prerequisites:
-- yurii-nemyrych
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння історіографічних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Джерела
+  focus: Розуміння первинного історичного джерела
+  placement: inline
+  type: reading
+- focus: Оцінка первинного джерела — хто написав, навіщо, що упущено?
+  placement: workbook
+  type: source-evaluation
+- focus: Дебат — оцінка значення та наслідків події
+  placement: workbook
+  type: debate
+- focus: 'Порівняння української та імперської інтерпретацій (Руїна I: Виговщина і розкол)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе на тему зв''язку з сучасністю (Руїна I: Виговщина і розкол)'
+  placement: workbook
+  type: essay-response
+cefr_min: C1
 connects_to:
 - ruina-ii
+content_outline:
+- points:
+  - 'Провокативне питання: Українська Руїна XVII століття — це громадянська війна, породжена амбіціями козацької старшини,
+    чи перша гібридна війна, розв''язана Москвою проти української державності? Де проходить межа між внутрішнім конфліктом
+    і зовнішньою агресією?'
+  - 'Цитата для роздумів (Самійло Величко): "Відтоді, за незгодою старшини, Україна розділилася надвоє... і обидві сторони,
+    порізнившись, почали винищувати одна одну..."'
+  section: Розминка
+  words: 400
+- points:
+  - 'Дебат 1: Іван Виговський — зрадник і «пропольський» олігарх чи державник, що намагався врятувати суверенітет через союз
+    із європейськими монархіями? Погляд московської пропаганди vs оцінка сучасної історіографії.'
+  - 'Дебат 2: Причини Руїни — фатальна помилка еліт, нездатних домовитися (внутрішній фактор), чи цілеспрямована політика
+    Москви з дестабілізації, фінансування опозиції та розколу козацтва (зовнішній фактор)? [!epistemic-humility] Історики
+    сперечаються про первинність цих чинників.'
+  - 'Глобальна синхронність: Поки Гетьманщина шукала місце на карті, Англія переживала Реставрацію Стюартів (1660), Франція
+    Людовіка XIV будувала абсолютизм, а Османська імперія готувалася до нової експансії в Європу. Українська криза була частиною
+    великої геополітичної гри.'
+  section: 'Конфліктна карта: Вибір шляху для Гетьманщини'
+  words: 900
+- points:
+  - 'Аналіз тексту Гадяцького договору (1658): що саме пропонував Виговський? Створення Великого Князівства Руського як третього
+    рівноправного члена Речі Посполитої. Чому цей проєкт провалився?'
+  - 'Читання фрагментів з Літопису Самовидця: опис Чорної ради 1663 року в Ніжині. Хто такий «Самовидець» (ймовірно, Роман
+    Ракушка-Романовський)? Які його симпатії та антипатії? [!decolonization] Це погляд зсередини, який показує, як українці
+    бачили власний хаос, на відміну від московських донесень.'
+  - 'Критика джерел: порівняння опису битви під Конотопом у козацьких літописах та у звітах московського воєводи Трубецького.
+    Де факти, а де пропаганда?'
+  - 'Персоналії: Юрій Немирич — «архітектор» Гадяцької унії, український аристократ європейської освіти. Його трагічна доля
+    як символ нереалізованого потенціалу.'
+  section: 'Джерела: Літопис Самовидця та Гадяцька унія'
+  words: 1600
+- points:
+  - 'Конотопська битва (1659): блискуча тактична перемога (розгром «цвіту московської кінноти»), яка перетворилася на стратегічну
+    поразку. Чому Виговський не зміг скористатися її плодами?'
+  - 'Феномен охлократії: тріумф демагога Івана Брюховецького на Чорній раді. Як обіцянки «знизити податки» та «покарати панів»
+    призвели до страти еліти (Сомко, Золотаренко) і приходу московських воєвод. [!myth-buster] Це не була «народна демократія»,
+    а маніпульований натовп.'
+  - 'Розкол Гетьманщини: остаточне закріплення поділу на Лівобережжя (під московським впливом) та Правобережжя (під польським).
+    Цей поділ визначив українську політику на століття вперед.'
+  - 'Оцінки істориків: Сергій Плохій називає Руїну «колапсом ранньомодерної нації». Орест Субтельний акцентує на соціальному
+    конфлікті між старшиною та «черню». Яка оцінка більш переконлива?'
+  section: 'Аналіз: Наслідки та значення'
+  words: 1600
+- points:
+  - 'Повернення до розминки: Отже, Руїна — це «громадянська війна» чи «гібридна агресія»? Сформулюйте власну аргументовану
+    відповідь, спираючись на матеріал модуля.'
+  - 'Зв''язок із сьогоденням: Які тактики, застосовані Москвою в XVII столітті (підтримка опозиції, інформаційна війна, звинувачення
+    легітимної влади у «зраді», використання «народного гніву»), можна побачити в сучасних гібридних війнах Росії проти України
+    та інших держав?'
+  - '[!anti-hagiography] Руїна — це не лише історія про зовнішню агресію, але й трагічний урок про наслідки внутрішньої незгоди,
+    корупції та нездатності еліт поставити державні інтереси вище за особисті. Які висновки з цього може зробити сучасна Україна?'
+  section: Дискусія та підсумок
+  words: 700
+focus: The first phase of The Ruin (1657-1663), analyzing Ivan Vyhovsky's pro-European course, the lost victory of Konotop,
+  the rise of populism, and the catastrophic Black Council of 1663 as a result of internal strife and Muscovite hybrid warfare.
+level: HIST
+module: hist-058
+objectives:
+- Пояснювати ключові причини Руїни, розрізняючи внутрішні конфлікти та зовнішню агресію
+- Аналізувати Гадяцьку унію як спробу європейської інтеграції та причини її провалу
+- Оцінювати Конотопську битву як приклад військового успіху, що не призвів до політичної перемоги
+- Характеризувати Чорну раду 1663 року як прояв охлократії та інструмент розколу української держави
+pedagogy: CBI
+persona:
+  role: Провокатор семінару, який змушує студентів ставити під сумнів усталені наративи та шукати паралелі між минулим і сьогоденням
+  voice: Історик-ревізіоніст
 references:
 - name: The Ruin - Encyclopedia of Ukraine
-  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CR%5CU%5CRuin.htm
-  type: reference
   notes: Overview of the period
+  type: reference
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CR%5CU%5CRuin.htm
 - name: Chronicle of Eyewitness
-  url: http://litopys.org.ua/samovyd/sam.htm
-  type: primary
   notes: Primary source for the period
+  type: primary
+  url: http://litopys.org.ua/samovyd/sam.htm
+sequence: 58
+slug: ruina-i
+subtitle: 'The Ruin I: Vyhovsky and the Split'
+title: 'Руїна I: Виговщина і розкол'
+version: '4.0'
+vocabulary_hints:
+- definition: період громадянських воєн, розколу держави та іноземної інтервенції в Гетьманщині після смерті Богдана Хмельницького
+    (1657-1687)
+  pos: ж.
+  word: руїна
+- definition: поділ Гетьманщини на Лівобережну та Правобережну частини, що закріпило політичну та територіальну дезінтеграцію
+  pos: ч.
+  word: розкол
+- definition: козацька рада за участі простого народу («черні»), зокрема рада в Ніжині 1663 року, що стала символом охлократії
+  pos: ж.
+  word: чорна рада
+- definition: влада натовпу; негативний термін для опису політичного хаосу, де рішення приймаються під впливом демагогії та
+    емоцій
+  pos: ж.
+  word: охлократія
+- definition: внутрішній збройний конфлікт, війна між різними суспільними групами чи політичними фракціями всередині однієї
+    держави
+  pos: ж.
+  word: міжусобиця
+- definition: символ влади гетьмана; «отримати булаву» означає стати гетьманом, «втратити булаву» — втратити владу
+  pos: ж.
+  word: булава
+- definition: московський військовий та адміністративний намісник, якого царський уряд призначав в українські міста для контролю
+  pos: ч.
+  word: воєвода
+- definition: територія Гетьманщини на лівому березі Дніпра, що після розколу опинилася під сильним впливом Московського царства
+  pos: с.
+  word: лівобережжя
+- definition: територія Гетьманщини на правому березі Дніпра, що залишилася у сфері впливу Речі Посполитої
+  pos: с.
+  word: правобережжя
+- definition: політичне маніпулювання шляхом гри на емоціях, роздачі нездійсненних обіцянок та розпалювання ворожнечі
+  pos: ж.
+  word: демагогія
+word_target: 5200

@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: '**Deductions:** (a) Plan specifies Dialogue 1 should have "12-15 exchanges"
+    — actual dialogue has only ~7 exchanges (Оксана: 4 turns, Андрій: 3 turns). (b)
+    Required vocabulary «визначне місце» (landma'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: '**Critical error:** «у лікаря» presented as Locative case alongside «у
+    лікарні» and «в аптеці». VESUM confirms «лікаря» is Genitive (`v_rod`), not Locative.
+    The Locative forms are лікареві/лікарі/ліка'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: '**Credits:** Clear PPP flow — dialogues present cases in context, explanations
+    extract patterns, exercises practice. Multiple examples per grammar point (e.g.,
+    Instrumental: «з друзями», «кулями», «по'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: '**Required vocab present (9/10):** вечірка ✓ (Dialogue 1 intro), подарунок
+    ✓ (Dialogue 1), лікар ✓ (Dialogue 2), пацієнт ✓ (Dialogue 2), здоров''я ✓ ("Бажаю
+    вам здоров''я!"), ліки ✓ (Dialogue 2), подоро'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 4 markers correctly placed after relevant teaching sections. Types
+    and focus descriptions match plan exactly. Item counts specified (8, 8, 8, 6 —
+    matches plan). Exercises test language skills (cas
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: '**Credits:** Dialogues feel natural — friends planning a party, a realistic
+    doctor visit, friends dreaming about a road trip. Cultural details are specific
+    (birthday person treats guests, Ukrainian ci'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: All 4 H2 sections present and ordered per plan. Clean markdown. No stray
+    tags or formatting artifacts. Word count 2370/2000 = 118.5% — above target. Activity
+    markers cleanly formatted.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Birthday tradition correctly explained ("не гості дарують вечірку, а іменинник
+    частує"). Decolonized — Ukrainian presented on its own terms, no Russian comparisons.
+    Real Ukrainian geography (Київ, Льв
+- dimension: 9
+  name: Dialogue quality
+  score: 8
+  evidence: '**Credits:** Named speakers throughout (Оксана, Андрій, Лікар, Пацієнт,
+    Тарас). Natural scenarios — surprise party planning, describing symptoms, dreaming
+    about a road trip. Culturally appropriate res'
+findings: []

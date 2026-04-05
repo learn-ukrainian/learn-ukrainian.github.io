@@ -1,0 +1,128 @@
+module: istorio-106
+level: ISTORIO
+sequence: 106
+slug: hazova-zbroia
+version: '3.0'
+title: 'Газова зброя: Економічна війна 1991-2022'
+focus: history
+pedagogy: seminar
+word_target: 5000
+objectives:
+- 'Analyze the causes and consequences of газова зброя: економічна війна 1991-2022'
+- Evaluate the historical significance of газ як зброя
+content_outline:
+- section: Вступ — Газ як зброя
+  points:
+  - Енергетична залежність
+  - Росія — постачальник
+  - Газ як інструмент тиску
+  - Структура модуля
+  words: 700
+- section: 1990-ті — Борги і залежність
+  points:
+  - Успадкована залежність
+  - Накопичення боргів
+  - Бартерні схеми
+  - Корупція — з обох сторін
+  words: 700
+- section: 2006 і 2009 — Газові війни
+  points:
+  - Відключення газу
+  - Вплив на Європу
+  - Україна — «ненадійний транзитер»
+  - Хто виграв
+  words: 700
+- section: Nord Stream — обхід України
+  points:
+  - Навіщо Росії
+  - Німеччина — партнер
+  - Втрата транзиту — втрата важеля
+  - Nord Stream 2 — до 24.02.2022
+  words: 700
+- section: Ціна газу як тиск
+  points:
+  - Знижки за лояльність
+  - Харківські угоди 2010
+  - Газ — валюта впливу
+  - Залежність — добровільна?
+  words: 700
+- section: Після 2022
+  points:
+  - Кінець залежності
+  - Диверсифікація
+  - Газ — більше не зброя
+  words: 700
+- section: Підсумок
+  points:
+  - 30 років газового шантажу
+  - Як звільнитися
+  - Перехід до синтезу
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+vocabulary:
+- газова зброя
+- енергетична залежність
+- транзит
+- газопровід
+- відключення
+- шантаж
+- диверсифікація
+- Nord Stream
+- борг
+- тиск
+- ГТС
+- «Газпром»
+- реверс
+- енергетична безпека
+- санкції
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+activities:
+- type: critical-analysis
+  focus: 2006 and 2009 gas wars — causes and outcomes
+- type: critical-analysis
+  focus: Nord Stream as geopolitical weapon
+- type: critical-analysis
+  focus: How gas dependence limited Ukraine's choices
+- type: critical-analysis
+  focus: Post-2022 — end of gas dependence?
+- type: essay-response
+  focus: Як Україна звільнилася від газової залежності?
+persona:
+  voice: Academic Historiographer
+  role: Energy Security Historian
+prerequisites:
+- holodomor-ekonomika
+connects_to:
+- syntez-ekonomichna-kolonizatsiia
+references:
+- name: Газові конфлікти Росія-Україна (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Газові_конфлікти_між_Росією_та_Україною
+  type: reference
+  notes: Gas conflicts
+- name: Газопроводи через Україну (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Газотранспортна_система_України
+  type: reference
+  notes: Transit system
+- name: Nord Stream (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Nord_Stream
+  type: reference
+  notes: Bypass pipelines
+register: академічний
+grammar: []

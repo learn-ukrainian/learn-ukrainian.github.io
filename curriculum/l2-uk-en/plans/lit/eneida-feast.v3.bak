@@ -1,0 +1,107 @@
+module: lit-003
+level: LIT
+sequence: 3
+slug: eneida-feast
+version: '3.0'
+title: 'Енеїда: Філософія Бенкету (Частина II)'
+subtitle: 'Eneida Part II: The Feast'
+focus: literature
+pedagogy: literature
+phase: LIT.1 Burlesque & Folk Origins
+word_target: 5000
+objectives:
+- Analyze the cultural significance of the feast
+- Categorize gastronomical vocabulary
+- Interpret the satire of hell
+content_outline:
+- section: Вступ — \"Енеїда\" як енциклопедія тілесного
+  points:
+  - Тіло у бурлескній традиції
+  - Їжа, напої, секс, смерть
+  - Карнавальна культура (за Бахтіним)
+  words: 850
+- section: Словник Шлунку — гастрономічна лексика
+  points:
+  - Назви страв (борщ, галушки, ковбаса)
+  - Синоніми на позначення їжі та напоїв
+  - Дієслова споживання (їсти, пити, жерти)
+  words: 850
+- section: Бенкет у Дідони — аналіз сцени
+  points:
+  - Опис банкету в Карфагені
+  - Гіперболізація та деталізація
+  - Їжа як показник достатку і культури
+  words: 850
+- section: Пекло і Поминки
+  points:
+  - Спуск до пекла (частина III)
+  - Поминальний обряд і сміх
+  - Грішники та їхні покарання
+  words: 850
+- section: Словник Гріха та Покарання
+  points:
+  - Категорії грішників у "Енеїді"
+  - Лексика пекла та страждання
+  - Сатира на соціальні вади
+  words: 850
+- section: Підсумок — Смак життя у прямому сенсі
+  points:
+  - Тілесний низ як філософія
+  - Зв'язок їжі та ідентичності
+  - Перехід до військової тематики
+  words: 750
+vocabulary_hints:
+  required:
+  - бенкет (feast/banquet)
+  - поминки (funeral feast)
+  - гіперболізація (hyperbolization)
+  - тілесний низ (bodily lower stratum)
+  - карнавал (carnival)
+  - деталізація (detailing)
+  - гастрономія (gastronomy)
+  - грішник (sinner)
+  - покарання (punishment)
+  - пекло (hell)
+  recommended:
+  - насолода (pleasure)
+  - достаток (abundance)
+  - обжерливість (gluttony)
+  - пияцтво (drunkenness)
+  - ненаситність (insatiability)
+activity_hints:
+- type: reading
+  focus: Сцени бенкету та пекла з "Енеїди"
+  source: UkrLib tid=51
+  items: 4+
+- type: essay-response
+  focus: Роль тілесного низу в бурлеску
+  output: Філософське есе
+connects_to:
+- lit-04 (Eneida War — військова лексика)
+- lit-09 (Ethnography — обрядова культура)
+prerequisites:
+- lit-02 (Eneida Part I)
+- Understanding of burlesque carnivalesque culture
+persona:
+  voice: Senior Philologist & Critic
+  role: Feast Toastmaster
+grammar:
+- Culinary vocabulary
+- Hyperbole usage
+- Synonymic series
+module_type: literature
+immersion: 100% Ukrainian
+references:
+- name: Енеїда — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=51
+  type: primary
+  notes: Частини II-III для аналізу бенкету та пекла
+- name: Аналіз "Енеїди"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=51
+  type: secondary
+  notes: Тематичний аналіз
+- name: Народна кухня XVIII ст.
+  url: https://uk.wikipedia.org/wiki/Українська_кухня
+  type: reference
+  notes: Етнографічний контекст страв
+register: академічний

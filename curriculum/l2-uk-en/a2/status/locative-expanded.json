@@ -1,0 +1,59 @@
+{
+  "module": "locative-expanded",
+  "level": "A2",
+  "plan_version": "2.0",
+  "last_audit": "2026-04-05T10:05:03.658871Z",
+  "audit_duration_ms": 0,
+  "source_mtimes": {
+    "md": "2026-04-05T01:18:06.915943Z",
+    "meta": null,
+    "activities": "2026-04-05T01:09:51.812701Z",
+    "vocabulary": "2026-04-05T01:10:24.263689Z",
+    "research": null,
+    "plan": "2026-04-04T22:08:55.239054Z"
+  },
+  "gates": {
+    "meta": {
+      "status": "pass",
+      "violations": 0,
+      "message": "Valid Structure"
+    },
+    "lesson": {
+      "status": "fail",
+      "violations": 3,
+      "message": "1914/2000 (raw: 2101) (86 short) | engagement: 0/3 | pedagogy: 1 violations | immersion: 37.0% LOW (target 40-70% (A2.1))"
+    },
+    "activities": {
+      "status": "pass",
+      "violations": 0,
+      "message": "4/0"
+    },
+    "vocabulary": {
+      "status": "pass",
+      "violations": 0,
+      "message": "44/1"
+    },
+    "naturalness": {
+      "status": "info",
+      "violations": 0,
+      "message": "PENDING \u2014 awaiting review"
+    },
+    "research": {
+      "status": "warn",
+      "violations": 0,
+      "message": "Refresh recommended: Research has 3+ learner errors but content doesn't address common mistakes"
+    },
+    "review": {
+      "status": "pass",
+      "violations": 0,
+      "message": ""
+    }
+  },
+  "overall": {
+    "status": "fail",
+    "blocking_issues": [],
+    "pass_count": 4,
+    "fail_count": 1,
+    "deferred_count": 0
+  }
+}

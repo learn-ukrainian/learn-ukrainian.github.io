@@ -3,20 +3,21 @@
 You are writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 19: Пасивний стан (вступ) (B1, B1.2 [Verbs])
-**Section to write:** Активний і пасивний стан (~850 words total)
-**Word target for this section:** 850 words (aim for 935 to account for undershoot)
+**Section to write:** Активний і пасивний стан (~800 words total)
+**Word target for this section:** 800 words (aim for 880 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Активний і пасивний стан (~850 words total)
-- P1 (~160 words): Define the core concept of "стан дієслова" (voice). Explain Active voice (активний стан) where the subject performs the action: "Студенти читають книгу." Contrast this with Passive voice (пасивний стан) where the subject receives the action: "Книга читається студентами." Focus on the shift of focus from the actor to the object of the action.
-- P2 (~180 words): The Golden Rule of Ukrainian style: "Українська мова уникає пасивних конструкцій." Reference Zabolotnyi (Grade 8, p.95) regarding the strong preference for active verbs. Explain that while English favors passive in formal/academic writing, Ukrainian views excessive passive as "канцелярит" (bureaucratese) and unnatural. Use the example: "Ми отримали листа" (Natural) vs "Лист був отриманий нами" (Awkward).
-- P3 (~170 words): Situations where passive is appropriate and necessary: 1. The agent is unknown or irrelevant ("Закон ухвалено"), 2. The result is the primary focus ("Міст збудовано"), 3. Scientific/technical reporting ("Елемент було відкрито"), 4. Formal documents where the institution is the implied agent.
-- P4 (~160 words): Introduction to the situational context: A guided tour of a renovated Palace of Culture (Палац культури) in Dnipro. The architect uses formal language to describe achievements. Introduce initial examples: "Цей зал був побудований у 1960-х роках," "Стіни були пофарбовані," "Вхід буде відкрито."
-- Dialogue (~100 words): Architect and Journalist. Architect: "Реконструкцію завершено вчасно. Усі зали відкрито для огляду." Journalist: "А ким фінансувався проєкт?" Architect: "Проєкт фінансувався міською радою, але головне — роботу зроблено якісно."
-- Exercise: [quiz, focus: Identify voice (активний стан, пасивний -ся, or пасивний -но/-то), 10 items] (~80 words for instructions and item descriptions).
+## Активний і пасивний стан (~800 words total)
+- P1 (~120 words): [Intro to the concept of Voice (стан дієслова). Define Active Voice (активний стан) where the subject performs the action. Examples: «Студент пише твір», «Мама готує вечерю», «Вітер хитає дерева». Explain that the focus is on the doer.]
+- P2 (~150 words): [Define Passive Voice (пасивний стан) where the subject undergoes the action. Examples: «Твір пишеться студентом», «Вечеря готується мамою». Explain the shift in focus from the doer to the object/result. Introduce the terms підмет (subject) and присудок (predicate) in this context.]
+- P3 (~180 words): [The Golden Rule of Ukrainian Stylistics: Preference for Active Voice. Cite Zabolotnyi (Grade 8) and Avramenko (Grade 11) regarding the avoidance of passive constructions. Explain that while English and Russian use passive frequently in formal styles, natural Ukrainian prefers active: «Ми ухвалили рішення» (natural) vs. «Рішення було ухвалене нами» (heavy/unnatural).]
+- P4 (~150 words): [The concept of Канцелярит (Bureaucratese). Explain how excessive passive voice makes Ukrainian sound wooden, artificial, or "translated." Provide contrastive pairs: «Книга читається учнем» (clunky) vs. «Учень читає книгу» (elegant). Explain that passive should be used sparingly.]
+- P5 (~120 words): [Legitimate uses of Passive in Ukrainian. Explain four key scenarios: 1. Unknown agent («Дім збудували у минулому столітті»), 2. Priority of result over doer («Завдання виконано»), 3. Scientific facts («Елемент було відкрито»), 4. Official/Legal style («Закон ухвалено»).]
+- Exercise: [quiz, focus: Identify voice (активний, пасивний -ся, пасивний -но/-то), 10 items]
+- P6 (~80 words): [Transition to the two grammatical methods of forming passive in Ukrainian: the -ся affix and the impersonal -но/-то forms. Brief mention that -но/-то is the "more Ukrainian" choice.]
 
 ---
 ## Full Plan (for reference)
@@ -524,6 +525,8 @@ references:
 </knowledge_packet>
 
 ---
+
+
 
 ## Rules
 

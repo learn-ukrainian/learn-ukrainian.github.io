@@ -1,97 +1,146 @@
-module: hist-114
-level: HIST
-sequence: 114
-slug: shistdesiatnyky
-version: '3.0'
-title: 'Шістдесятники: Бунт проти сірості'
-focus: history
-pedagogy: CBI
-phase: HIST.11 [Post-War Soviet Ukraine]
-word_target: 5000
-objectives:
-- 'Analyze the causes and consequences of шістдесятники: бунт проти сірості'
-- Evaluate the historical significance of хрущовська відлига
-- Trace the development of деколонізаційний погляд
-content_outline:
-- section: Вступ — Хрущовська відлига
-  points:
-  - The death of Stalin and the partial liberalization of the regime — context of the 20th Congress of the CPSU (1956) 
-    and the 'thaw' as a brief respite between terror and stagnation
-  - 'The emergence of a new generation of intellectuals who demanded truth — young intelligentsia who believed in ''socialism
-    with a human face''; engagement hook: [!context] ''Відлига'' не була справжньою свободою'
-  - 'The Club of Creative Youth ''Suchasnyk'' in Kyiv — founded in 1959 at Zhovtnevyi Palace; organizers: Les Tanyuk, Alla
-    Horska, Viktor Zaretsky; activities: literary evenings, searching for NKVD victims in Bykivnia'
-  words: 1250
-- section: Культурний вибух
-  points:
-  - 'Literature: Vasyl Symonenko, Lina Kostenko, Ivan Drach — works like ''Tysha i hrim'', ''Prominnia zemli'', ''Nizh u sontsi'';
-    focus on metaphorical, intellectual, and sincere new quality of word'
-  - 'Cinema: Serhiy Parajanov and ''Shadows of Forgotten Ancestors'' — 1964 masterpiece; poetic cinema vs. socrealism; world
-    recognition (Argentina, Italy) vs. suspicion at home'
-  - 'Art: Alla Horska and the destroyed stained glass window at Kyiv University — ''Shevchenko. Mother'' (1964); destroyed
-    by hammer on rector''s orders; engagement hook: [!culture] authorities feared art more than weapons'
-  - 'The premiere of ''Shadows'' (1965) as the first public political protest — Sept 4, 1965 at cinema ''Ukraina''; Dzyuba''s
-    call ''Who is against tyranny — stand up!''; engagement hook: [!history-bite] only ~50-60 people stood up, but it changed
-    history'
-  words: 1250
-- section: Первинні джерела
-  points:
-  - 'Excerpts from Vasyl Symonenko''s diary (''Bereh chekan'') — specifically the diary ''Okraitsi dumok'' (1962-1963); quote:
-    «Немає нічого страшнішого за необмежену владу...»; engagement hook: [!quote] Symonenko''s disappointment'
-  - 'Fragments from Ivan Dzyuba''s treatise ''Internationalism or Russification?'' — 1965 samvydav text sent to leadership;
-    engagement hook: [!decolonization] Dzyuba used Marxism to prove Russification contradicted communism'
-  - KGB memos reporting on 'bourgeois nationalism' among youth — documenting 'crimes' like caroling, wearing 
-    vyshyvankas, and speaking Ukrainian in public
-  words: 1250
-- section: Деколонізаційний погляд
-  points:
-  - The fight for the Ukrainian language as a political act — speaking Ukrainian in Russified Kyiv as a conscious choice
-    and resistance
-  - 'Debunking the myth of ''Soviet People'' (homo sovieticus) — the myth as a tool of assimilation; engagement hook: [!myth-buster]
-    Sixtiers proved Ukrainian identity was modern and urban, not ''archaic'''
-  - 'The regime''s response: The arrests of 1965 and the ''Great Pogrom'' of 1972 — first wave (1965) as intimidation; Operation
-    ''Block'' (Jan 1972) targeting Stus, Chornovil, Sverstiuk'
-  - The transformation of cultural figures into political dissidents — the shift from culturalism to political 
-    opposition after the 1965 protest
-  - 'The continuity of resistance: From UPA to Sixtiers to the Helsinki Group — bridging armed resistance and human rights
-    movement; preserving the national ''genetic code'''
-  - The lasting impact on modern Ukrainian culture — creating a high, elite, urban culture that integrated Ukraine into 
-    the world context
-  words: 1250
-vocabulary_hints:
-  required:
-  - історія (history) — переписувати історію (to rewrite history)
-  - держава (state) — тоталітарна держава (totalitarian state)
-  - народ (people) — радянський народ (Soviet people — myth), український народ (Ukrainian people)
-  - влада (power) — радянська влада (Soviet power), необмежена влада (unlimited power)
-  - період (period) — період застою (period of stagnation)
-  - подія (event) — історична подія (historical event)
-  - джерело (source) — первинне джерело (primary source)
-  - спадщина (heritage) — культурна спадщина (cultural heritage)
-  recommended:
-  - аналіз (analysis) — критичний аналіз (critical analysis)
-  - контекст (context) — історичний контекст (historical context)
-  - вплив (influence) — ідеологічний вплив (ideological influence)
-  - наслідки (consequences) — трагічні наслідки (tragic consequences)
 activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: critical-analysis
-  focus: Аналіз причинно-наслідкових зв'язків між подіями
-  items: 3
-- type: critical-analysis
-  focus: Критична оцінка історичних тверджень та міфів
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння історіографічних дебатів
   items: 5
-prerequisites: '[]'
-persona:
-  voice: Senior Professor of History
-  role: Samvydav Editor
-learning_outcomes: '[]'
+  placement: inline
+  type: quiz
+- after_section: Джерела
+  focus: Розуміння первинного історичного джерела
+  placement: inline
+  type: reading
+- focus: Оцінка первинного джерела — хто написав, навіщо, що упущено?
+  placement: workbook
+  type: source-evaluation
+- focus: Дебат — оцінка значення та наслідків події
+  placement: workbook
+  type: debate
+- focus: 'Порівняння української та імперської інтерпретацій (Шістдесятники: Бунт проти сірості)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе на тему зв''язку з сучасністю (Шістдесятники: Бунт проти сірості)'
+  placement: workbook
+  type: essay-response
+cefr_min: C1
 connects_to:
 - ukrainska-helsinska-hrupa
-references: []
-register: академічний
-grammar: []
+content_outline:
+- points:
+  - 'Провокаційне питання: 4 вересня 1965 року в кінотеатрі «Україна» під час прем''єри «Тіней забутих предків» Іван Дзюба
+    закликав «Хто проти тиранії — встаньте!». Встали лише кілька десятків людей. Чому вони ризикнули всім, і чому сотні інших
+    залишилися сидіти? Чи була «відлига» справжнім подихом свободи, чи лише пасткою для інакодумців?'
+  - 'Фрагмент з щоденника Василя Симоненка: «Найстрашніше покарання для будь-якого народу — це коли його історію йому пишуть
+    інші». Як цей рядок пояснює феномен шістдесятництва?'
+  section: Розминка
+  words: 400
+- points:
+  - 'Дебат 1: Шістдесятники — «ленінці, що прозріли» чи антирадянські націоналісти? Одні (Дзюба) намагалися апелювати до «справжнього»
+    ленінізму проти русифікації, інші (Лук''яненко) від самого початку прагнули незалежності.'
+  - 'Дебат 2: Це був культурний феномен чи політичний рух? Суперечка про те, чи була політика початковою метою, чи митці були
+    змушені стати дисидентами через тиск режиму.'
+  - '[!epistemic-humility] Ми не можемо точно знати мотиви кожної людини. Багато хто еволюціонував у поглядах. Важливо аналізувати
+    не лише публічні заяви, а й приватні щоденники та свідчення.'
+  - 'Глобальна синхронність: Шістдесятництво в контексті світових рухів 1960-х — Празька весна, протести у Парижі, рух за
+    громадянські права в США. Спільне прагнення до свободи та самовираження проти застиглих систем.'
+  section: 'Конфліктна карта: Реформатори чи бунтарі?'
+  words: 900
+- points:
+  - Аналіз трактату Івана Дзюби «Інтернаціоналізм чи русифікація?». [!decolonization] Дзюба використовує марксистську риторику,
+    щоб довести антиленінську суть русифікації. Це спроба говорити з владою її ж мовою.
+  - Вивчення щоденників Василя Симоненка («Окрайці думок») та Алли Горської. Приватні думки, розчарування в системі, особиста
+    ціна спротиву. Порівняння з їхньою публічною творчістю.
+  - 'Кіно як спротив: «Тіні забутих предків» Параджанова. Як «поетичне кіно» стало викликом соцреалізму і чому влада боялася
+    естетики більше, ніж прямих політичних гасел.'
+  - '[!biography] Алла Горська як символ руху: від створення клубу «Сучасник» до знищеного вітражу «Шевченко. Мати» та загадкової
+    смерті. Її життя як дзеркало епохи.'
+  - 'Джерело з іншого боку: аналіз звітів та меморандумів КДБ. Як спецслужби інтерпретували культурну діяльність (колядування,
+    носіння вишиванок) як «буржуазний націоналізм» та «антирадянську агітацію».'
+  section: 'Джерела: Щоденники, самвидав та доноси КДБ'
+  words: 1600
+- points:
+  - 'Причина-наслідок: Перетворення митців на політичних дисидентів. Арешти 1965 року як поворотний момент, що змусив багатьох
+    зробити остаточний вибір.'
+  - 'Короткострокові наслідки: хвилі арештів (1965, 1972 — «великий погром»), знищення творів мистецтва, звільнення з роботи,
+    ув''язнення. Операція «Блок».'
+  - 'Довгострокові наслідки: створення сучасної міської української культури, альтернативної радянській. Забезпечення спадкоємності
+    опору: [!decolonization] шістдесятники стали мостом між збройним опором УПА та правозахисним рухом Гельсінської групи.'
+  - '[!myth-buster] Спростування міфу про «братній радянський народ» (homo sovieticus). Шістдесятники довели, що українська
+    ідентичність — це не архаїчне сільське явище, а модерна міська культура.'
+  - 'Оцінка істориків: Порівняння поглядів на значення шістдесятників у працях Касьянова, Грицака, Плохія. Чи був це лише
+    «бунт проти сірості», чи щось більше?'
+  section: 'Аналіз: Наслідки та значення'
+  words: 1600
+- points:
+  - 'Повернення до розминки: Чому вони встали? Студент формулює власну аргументовану відповідь, використовуючи докази з модуля
+    — від особистих мотивів до розуміння історичного моменту.'
+  - 'Зв''язок із сьогоденням: Як боротьба шістдесятників за мову, культуру та правду резонує з сучасною російсько-українською
+    війною? Чому сучасна Росія так само бореться з українською культурою?'
+  - '[!anti-hagiography] Уникнення ідеалізації. Шістдесятництво не було монолітним рухом. Були внутрішні конфлікти, різні
+    погляди, люди, що зламалися під тиском. Важливо бачити їх не іконами, а живими людьми у складних обставинах.'
+  section: Дискусія та підсумок
+  words: 700
+focus: The Sixtiers movement as a cultural and political phenomenon during the Khrushchev Thaw, analyzing its evolution from
+  cultural resistance to political dissidence and its lasting decolonizing impact.
+level: HIST
+module: hist-114
+objectives:
+- Аналізувати причини, прояви та наслідки руху шістдесятників у культурному та політичному контексті СРСР
+- Оцінювати історичне значення «хрущовської відлиги» та її суперечливий вплив на зародження дисидентського руху
+- Простежувати еволюцію шістдесятників від культурного опору до політичного дисидентства
+- Критично аналізувати першоджерела епохи (самвидав, щоденники, документи КДБ), розрізняючи авторські інтенції та упередження
+pedagogy: CBI
+persona:
+  role: Модератор семінару, який змушує студентів відділяти романтичний міф про шістдесятників від складної історичної реальності,
+    повної компромісів та трагічних виборів.
+  voice: Dissident-Historian
+phase: HIST.11 [Post-War Soviet Ukraine]
+references:
+- author: Дзюба І.
+  note: Ключовий програмний текст епохи, що аналізує національну політику СРСР з марксистських позицій.
+  type: primary
+  work: Інтернаціоналізм чи русифікація?
+- author: Симоненко В.
+  note: Відверті роздуми поета про радянську дійсність, розчарування та внутрішній спротив.
+  type: primary
+  work: Окрайці думок (Щоденник)
+- author: Касьянов Г.
+  note: Фундаментальне дослідження дисидентського руху в Україні.
+  type: academic
+  work: 'Незгодні: українська інтелігенція в русі опору 1960-80-х років'
+- author: Заславська І.
+  note: Збірка біографічних нарисів про ключових постатей руху.
+  type: academic
+  work: Шістдесятники. Профілі на тлі покоління
+sequence: 114
+slug: shistdesiatnyky
+subtitle: 'The Sixtiers: A Rebellion Against Soviet Conformity'
+title: 'Шістдесятники: Бунт проти сірості'
+version: '4.0'
+vocabulary_hints:
+- definition: період тимчасової лібералізації в СРСР після смерті Сталіна (1953—1964), що характеризувався частковим ослабленням
+    цензури та репресій
+  pos: ж.
+  word: відлига
+- definition: нова генерація української інтелігенції, що у 1960-х роках виступила на захист національної мови та культури,
+    прав людини
+  pos: мн.
+  word: шістдесятники
+- definition: нелегальне видання та розповсюдження літературних та публіцистичних творів, що були заборонені радянською цензурою
+  pos: ч.
+  word: самвидав
+- definition: людина, що відкрито висловлює погляди, які не збігаються з державною ідеологією; інакодумець
+  pos: ч.
+  word: дисидент
+- definition: політика радянського режиму, спрямована на звуження вжитку та ролі української мови та культури з метою асиміляції
+    українців
+  pos: ж.
+  word: русифікація
+- definition: соціальна група людей, що професійно займаються розумовою працею та розвитком культури; провідна сила шістдесятництва
+  pos: ж.
+  word: інтелігенція
+- definition: панівний клас в СРСР, що складався з партійних та державних чиновників, які мали привілеї та владу
+  pos: ж.
+  word: номенклатура
+- definition: незгода з офіційною ідеологією чи політикою, що в умовах тоталітаризму вважалося злочином
+  pos: с.
+  word: інакодумство
+word_target: 5000

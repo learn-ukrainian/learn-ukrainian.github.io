@@ -1,0 +1,61 @@
+module: ruth-048
+level: RUTH
+sequence: 48
+slug: comparative-lab-parallel
+version: '3.0'
+title: Порівняльна лабораторія
+subtitle: Comparative Lab
+focus: Analyzing one verse across 4 versions
+phase: 2
+word_target: 5000
+content_outline:
+- section: Вступ
+  points:
+  - Introduction to Comparative Lab
+  words: 1250
+- section: Основний матеріал
+  points:
+  - Primary source analysis and grammar focus
+  words: 1250
+- section: Практика
+  points:
+  - Exercises and activities
+  words: 1250
+- section: Підсумок
+  points:
+  - Summary and connection to next module
+  words: 1250
+vocabulary_hints:
+  required: []
+  recommended: []
+activity_hints:
+- type: transcription
+  focus: ''
+  items: 1
+- type: etymology-trace
+  focus: ''
+  items: 1
+- type: grammar-identify
+  focus: ''
+  items: 1
+- type: grammar-lab
+  focus: ''
+  items: 1
+- type: parallel-text
+  focus: ''
+  items: 1
+persona:
+  voice: Baroque Scholar
+  role: Textual Critic
+prerequisites:
+- meletiy-smotrytsky-apologia
+connects_to:
+- need-for-norms
+objectives:
+- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
+- Продукувати тексти академічного та професійного рівня за тематикою модуля
+- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- Застосовувати знання з теми «Практика» у власній мовній практиці
+references: []
+register: академічний
+grammar: []

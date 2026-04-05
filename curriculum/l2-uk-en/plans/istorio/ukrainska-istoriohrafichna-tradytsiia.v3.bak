@@ -1,0 +1,132 @@
+module: istorio-002
+level: ISTORIO
+sequence: 2
+slug: ukrainska-istoriohrafichna-tradytsiia
+version: '3.0'
+title: Українська історіографічна традиція
+focus: history
+pedagogy: seminar
+word_target: 5000
+objectives:
+- Trace the evolution of Ukrainian historical thought
+- Assess the contribution of Mykhailo Hrushevsky
+content_outline:
+- section: Вступ — Чому українська історіографія особлива?
+  points:
+  - Історія бездержавної нації
+  - Писати історію під забороною
+  - Еміграція як збереження традиції
+  - Повернення після 1991
+  words: 700
+- section: Михайло Грушевський — батько української історії
+  points:
+  - Біографія (1866-1934)
+  - Революційна ідея — Україна як окремий суб'єкт історії
+  - «Історія України-Руси» (10 томів) — найбільший проєкт
+  - Схема Грушевського vs. російська імперська схема
+  - Трагічна доля — повернення до СРСР, смерть
+  words: 700
+- section: Львівська школа до 1939
+  points:
+  - Наукове товариство імені Шевченка (НТШ)
+  - Крип'якевич, Томашівський, Кордуба
+  - Галичина як осередок вільної науки
+  - Знищення школи — радянська окупація 1939
+  words: 700
+- section: Діаспорна історіографія (1945-1991)
+  points:
+  - Дмитро Дорошенко — популяризатор
+  - Наталія Полонська-Василенко — продовження Грушевського
+  - Олександр Оглоблин — козацька доба
+  - У|ван, НТШ у Нью-Йорку — інституції
+  - Омелян Пріцак і Гарвардський інститут
+  words: 700
+- section: Західні історики України
+  points:
+  - 'Орест Субтельний — «Ukraine: A History»'
+  - Пол Роберт Маґочі — Carpatho-Ukraine
+  - Тімоті Снайдер — сучасна перспектива
+  - Чому західний погляд важливий?
+  words: 700
+- section: Нова українська історіографія після 1991
+  points:
+  - Звільнення архівів
+  - Переосмислення радянського періоду
+  - Нові теми — Голодомор, ОУН-УПА, репресії
+  - Інститут національної пам'яті
+  words: 700
+- section: Підсумок
+  points:
+  - Безперервність традиції попри переслідування
+  - Від Грушевського до сьогодні
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+vocabulary:
+- історіографічна школа
+- діаспора
+- еміграція
+- архів
+- джерелознавство
+- періодизація
+- схема
+- наукове товариство
+- традиція
+- спадщина
+- магістральний наратив
+- деколонізація
+- переосмислення
+- заборона
+- відродження
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+activities:
+- type: reading
+  focus: Excerpt from Hrushevsky's introduction to History of Ukraine-Rus
+- type: comparative-study
+  focus: Compare Hrushevsky's periodization vs. Russian imperial periodization
+- type: essay-response
+  focus: Чому Грушевського називають батьком української історії?
+- type: reading
+  focus: Find one work by diaspora historian, summarize main argument
+persona:
+  voice: Academic Historiographer
+  role: Dean of Historiography
+prerequisites:
+- shcho-take-istorio
+connects_to:
+- rosiiska-imperialna-istorio
+references:
+- name: Михайло Грушевський (біографія)
+  url: https://uk.wikipedia.org/wiki/Грушевський_Михайло_Сергійович
+  type: reference
+  notes: Key figure, founder of modern Ukrainian historiography
+- name: Історія України-Руси (повний текст)
+  url: https://litopys.org.ua/hrushukr/ihu.htm
+  type: primary
+  notes: Hrushevsky's magnum opus
+- name: Дмитро Дорошенко
+  url: https://uk.wikipedia.org/wiki/Дорошенко_Дмитро_Іванович
+  type: reference
+  notes: Diaspora historian, popularizer
+- name: Наталія Полонська-Василенко
+  url: https://uk.wikipedia.org/wiki/Полонська-Василенко_Наталія_Дмитрівна
+  type: reference
+  notes: Key diaspora historian
+register: академічний
+grammar: []

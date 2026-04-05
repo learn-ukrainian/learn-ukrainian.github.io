@@ -1,0 +1,118 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння літературно-критичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Читання
+  focus: Розуміння літературного тексту (уривок з твору)
+  placement: inline
+  type: reading
+- focus: Аналіз авторського задуму — мова як мистецтво
+  placement: workbook
+  type: authorial-intent
+- focus: Літературна критика — оцінка інтерпретації
+  placement: workbook
+  type: critical-analysis
+- focus: Порівняння з іншими творами або інтерпретаціями (Заповіт)
+  placement: workbook
+  type: comparative-study
+- focus: Есе-аналіз рецепції та сучасного значення (Заповіт)
+  placement: workbook
+  type: essay-response
+connects_to:
+- lit-16 (Biblical Themes — високий стиль)
+- lit-20 (Cult of Shevchenko — рецепція)
+content_outline:
+- points:
+  - Історія написання (1845)
+  - '"Заповіт" як неофіційний гімн'
+  - Переклади на 150+ мов
+  section: Вступ — Найвідоміший вірш України
+  words: 850
+- points:
+  - Наказовий спосіб як політична інструкція
+  - Майбутній час і мрія про волю
+  - Умовні речення
+  section: Граматичний аналіз
+  words: 850
+- points:
+  - Структура (три частини)
+  - Ритм і рима
+  - Лексичний аналіз
+  section: Поетика тексту
+  words: 850
+- points:
+  - '"Вставайте, кайдани порвіте" — заклик до дії'
+  - '"І вражою злою кров''ю" — питання насильства'
+  - Концепція "сім'ї великої, вольної, нової"
+  section: Політичний зміст
+  words: 850
+- points:
+  - '"Заповіт" у радянській ідеології'
+  - '"Заповіт" у діаспорі'
+  - Сучасне прочитання
+  section: Рецепція і використання
+  words: 850
+- points:
+  - Чому цей вірш став символом
+  - Шевченко і національна ідентичність
+  - Перехід до біблійних тем
+  section: Підсумок — Текст як нація
+  words: 750
+focus: literature
+grammar:
+- Imperative Mood
+- Future Tense
+- Conditional Sentences
+immersion: 100% Ukrainian
+level: LIT
+module: lit-015
+module_type: literature
+objectives:
+- Analyze the grammar of the imperative mood in a political context
+- Understand the historical context of 1845
+- Discuss the concept of 'righteous violence' in the poem
+- Recite key lines from memory
+pedagogy: Analysis
+persona:
+  role: National Prophet
+  voice: Senior Philologist & Critic
+phase: LIT.3 The Prophet (Taras Shevchenko)
+prerequisites:
+- lit-11 to lit-14 (Shevchenko modules)
+- Strong grammar foundation
+references:
+- name: Заповіт — повний текст
+  notes: Вірш для детального аналізу
+  type: primary
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=2
+- name: Аналіз "Заповіту"
+  notes: Літературознавчий аналіз
+  type: secondary
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=2
+register: академічний
+sequence: 15
+slug: the-testament
+subtitle: The Testament
+title: Заповіт
+version: '3.0'
+vocabulary_hints:
+  recommended:
+  - могила (grave)
+  - Дніпро (Dnipro)
+  - рев (roar)
+  - степ (steppe)
+  - сім'я (family)
+  required:
+  - заповіт (testament)
+  - наказовий спосіб (imperative mood)
+  - воля (freedom)
+  - кайдани (chains)
+  - ворог (enemy)
+  - гімн (anthem)
+  - рецепція (reception)
+  - символ (symbol)
+  - ідентичність (identity)
+  - політичний (political)
+word_target: 5000

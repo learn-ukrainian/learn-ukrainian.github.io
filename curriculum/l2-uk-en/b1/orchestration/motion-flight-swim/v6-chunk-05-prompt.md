@@ -3,18 +3,19 @@
 You are writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 30: Летіти, пливти (B1, B1.3 [Motion Verb Universe])
-**Section to write:** Переносні значення: час летить, думки пливуть (~600 words total)
-**Word target for this section:** 600 words (aim for 660 to account for undershoot)
+**Section to write:** Переносні значення: час летить, думки пливуть (~650 words total)
+**Word target for this section:** 650 words (aim for 715 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Переносні значення: час летить, думки пливуть (~600 words total)
-- P1 (~150 words): [Metaphors of Speed: Летіти. Explain why "Час летить" is the most common metaphor in Ukrainian (speed, transience). Mention "роки летять", "дні летять". Contrast with the neutral "час іде". Provide an example: "Не встиг я озирнутися, як літо пролетіло".]
-- P2 (~150 words): [Metaphors of Flow: Пливти. Discuss the metaphor of slow, steady, or uncontrolled movement. "Думки пливуть" (thoughts drift), "життя пливе" (life flows/drifts). Explain "пливти за течією" (to go with the flow) as a behavioral idiom.]
-- P3 (~150 words): [Abstract movement. "Летіти" as rushing: "Я лечу до тебе" (I'm rushing to you). "Пливти" for music or sound: "Мелодія пливе над залом". Explain how these verbs enrich literary and daily descriptions.]
-- P4 (~150 words): [Nature metaphors. Clouds as ships: "Хмари пливуть по небу". Falling leaves: "Листя летить на землю". Discuss the fine line between literal motion (leaves actually flying in wind) and the poetic "flight" of autumn.]
+## Переносні значення: час летить, думки пливуть (~650 words total)
+- P1 (~150 words): [Figurative "Летіти" - Speed and Fleetingness: Explain the most common metaphor: "Час летить" (Time flies). Extend this to money ("Гроші летять") and news ("Новина летить"). Emphasize that in these cases, the verb implies extreme speed and lack of control.]
+- P2 (~150 words): [Figurative "Пливти" - Fluidity and Slowness: Explain metaphors of smooth movement: "Хмари пливуть," "Мелодія пливе," "Думки пливуть." Contrast this with "летіти" — where "летіти" is fast and chaotic, "пливти" is calm and continuous. Mention "все пливе перед очима" for dizziness.]
+- P3 (~200 words): [Ukrainian Idioms: Introduce "Пливти за течією" (Go with the flow) and "Летіти на всіх вітрилах" (to rush at full speed). Explain the cultural nuance of "Пливти в руки" (to come easily). Compare these with English equivalents to help B1 learners internalize the logic.]
+- Exercise: [Type: quiz, Focus: Sort 8 sentences into "Literal" vs "Figurative" usage. Examples: "Літак летить у Київ" (L) vs "Моя відпустка летить" (F).]
+- Exercise: [Type: free-write, Focus: Write a 6-sentence paragraph about your last vacation using at least 3 prefixed motion verbs (e.g., прилетів, відпливти, переплисти) and one figurative expression (e.g., час летів).]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -22,7 +23,7 @@ You are writing ONE SECTION of a Ukrainian language module. Write ONLY this sect
 <previous_context>
 [...previous sections truncated...]
 
-веселих коротких морських прогулянок вздовж узбережжя ідеально підійде швидкісний моторний **катер** *(cutter/motorboat)* або звичайний традиційний дерев'яний **човен** *(boat)*. Якщо вам раптом необхідно швидко перевезти власний важкий автомобіль на інший далекий берег річки, ви неодмінно скористаєтеся спеціальним дуже широким судном, що називається **пором** *(ferry)*. А для розкішного літнього відпочинку заможні люди досить часто орендують красиве вітрильне судно — це неймовірно елегантна **яхта** *(yacht)*. Щоб усі пасажири могли абсолютно безпечно зайти на борт, судно завжди обережно швартується біля спеціальної інженерної споруди. Це може бути довгий надійний бетонний **причал** *(pier)* або проста дерев'яна **пристань** *(dock/wharf)*. А темної ночі безпечний шлях усім кораблям надійно показує яскравий високий **маяк** *(lighthouse)* на березі. Щоденне життя на борту будь-якого великого пасажирського корабля завжди підкоряється своїм особливим правилам і має власну цікаву морську лексику. Відкрита і найвища частина корабля, де абсолютно всі пасажири дуже люблять довго гуляти і дихати свіжим прохолодним морським повітрям, називається **палуба** *(deck)*. Ваша особиста невелика і комфортна кімната для солодкого сну і спокійного відпочинку під час тривалої морської подорожі — це затишна **каюта** *(cabin)*. Головна і найважливіша людина на абсолютно будь-якому судні, яка несе повну юридичну відповідальність за життя всіх пасажирів і професійну роботу всієї команди, — це дуже поважний **капітан** *(captain)*. Йому завжди допомагає звичайний працьовитий **матрос** *(sailor)*, який щодня відповідально виконує різноманітну фізичну роботу на борту. Описуючи початок вашої морської мандрівки, ви можете сказати: «Наш великий пором відпливає від пристані о восьмій годині ранку» *(Our large ferry departs from the dock at eight in the morning)*. А ввечері ви обов'язково додасте: «Ми вийшли на верхню палубу помилуватися дуже спокійним нічним морем» *(We went out on the upper deck to admire the very calm night sea)*. Для того щоб завжди точно, красиво і грамотно описувати свій цікавий маршрут чи напрямок руху по воді, вам також обов'язково знадобляться важливі базові географічні терміни. Звичайна тверда земля, яка знаходиться безпосередньо і дуже близько поруч із великою водою, просто називається **берег** *(shore/coast)*. Невелика або досить велика ділянка суші, яка з усіх боків повністю і надійно оточена глибокою водою, — це красивий відокремлений зелений **острів** *(island)*. Та частина великого моря чи океану, яка глибоко вдається в суходіл і зазвичай є чудово захищеною від сильних штормів, називається **затока** *(bay/gulf)*. А ті справді безмежні водні простори, які знаходяться дуже далеко від абсолютно будь-якої твердої землі, — це глибоке і безкрайнє **відкрите море** *(open sea)*. Використовуючи всі ці географічні слова разом із відомими дієсловами руху, ви зможете легко складати дуже красиві й описові речення. Ви можете так розповісти друзям: «Наш маленький дерев'яний човен повільно заплив у мальовничу морську затоку» *(Our small wooden boat slowly swam into a picturesque sea bay)*. Або так описати маршрут великого судна: «Цей пасажирський корабель впевнено тримає свій курс на далекий південний острів» *(This passenger ship confidently holds its course for the distant southern island)*. <!-- INJECT_ACTIVITY: match-up, Match aviation/maritime vocabulary (рейс, пором, причал, ілюмінатор) with definitions in Ukrainian, 8 items --> <!-- INJECT_ACTIVITY: free-write, Write a travel story involving both a flight and a ferry trip using 6+ prefixed verbs from the module, 6 items -->
+від старого причалу рівно за своїм строгим розкладом». На відкритій воді ви завжди можете побачити найрізноманітніші сучасні та традиційні судна. Величезний металевий **корабель** *(ship)* спеціально створений для дуже довгих і небезпечних подорожей у відкритому морі чи океані; він зазвичай має багато різних поверхів, надзвичайно міцний сталевий корпус і складну інженерну конструкцію. Натомість маленький дерев'яний чи гумовий **човен** *(boat)* — це зазвичай дуже просте невелике судно, яким рибалки часто керують виключно за допомогою довгих весел або невеликого шумного мотора; він ідеально підходить для тихої ранкової риболовлі на спокійному озері чи вузькій річці. Якщо ж ви мрієте подорожувати з максимальним комфортом і справжньою розкішшю, вам обов'язково потрібна сучасна приватна білосніжна **яхта** *(yacht)*. Коли ви вже перебуваєте високо на борту великого пасажирського судна, ви можете довго гуляти на свіжому морському повітрі і милуватися красивими хвилями. Ця довга відкрита верхня частина корабля називається **палуба** *(deck)*. Наприклад: «Досвідчений старий капітан довго стояв на верхній палубі корабля і дуже уважно дивився в синю далечінь». А солодко спати і комфортно відпочивати вночі всі мандрівники будуть у своїх невеликих приватних кімнатах, кожна з яких — це затишна і тепла корабельна **каюта** *(cabin)*. Керує всім цим складним і відповідальним навігаційним процесом найголовніша і найповажніша людина на будь-якому судні — строгий **капітан** *(captain)*. > — **Агент:** Доброго дня! Вітаю вас у нашому аеропорті. Дайте, будь ласка, ваш закордонний паспорт. У вас сьогодні прямий рейс до дощового Лондона? > — **Пасажир:** Добрий день! Ні, на жаль, у мене сьогодні стикувальний рейс. У мене буде досить довга пересадка у Франкфурті, я чекатиму там майже три години. > — **Агент:** Зрозуміло, зараз я все перевірю. Ось ваш посадковий талон на обидва літаки. Ваш перший **виліт** *(departure)* з цього міста заплановано рівно на вісімнадцяту годину. > — **Пасажир:** Дуже вам дякую за допомогу! А підкажіть, будь ласка, коли саме починається посадка на мій перший **рейс** *(flight)*? > — **Агент:** Ваша **реєстрація** *(check-in)* вже майже закінчується, а сама посадка почнеться рівно через двадцять хвилин у міжнародному терміналі F. Щасливої вам дороги і м'якої посадки! > — **Касир:** Добрий літній ранок! Чим можу вам сьогодні допомогти в нашій морській касі? > — **Клієнт:** Доброго ранку! Мені дуже потрібен один дорослий квиток на великий пасажирський пором до сонячного Стамбула на завтрашній вечір. > — **Касир:** Добре, зараз я подивлюся в системі. Ваше **відплиття** *(departure/sailing away)* з нашого порту буде рівно о дев'ятій годині вечора. Вам потрібна окрема комфортна каюта для сну? > — **Клієнт:** Ні, дуже дякую, я буду гуляти всю ніч. Підкажіть, будь ласка, скільки годин загалом триває ця цікава морська **переправа** *(crossing)* через глибоке море? > — **Касир:** Ця подорож зазвичай триває близько тридцяти годин за гарної погоди. Ваш пором буде чекати на вас заздалегідь; це наш третій вантажний причал. Щасливої вам подорожі і спокійного моря! <!-- INJECT_ACTIVITY: match-up, Match 8 aviation/maritime terms (палуба, злітна смуга, посадковий талон, термінал, пором, каюта, пересадка, причал) with their Ukrainian definitions (e.g., частина корабля, де гуляють пасажири; місце, де літак розганяється) --> <!-- INJECT_ACTIVITY: fill-in, Complete 8 sentences about a travel itinerary using correct aviation and maritime vocabulary -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -35,7 +36,7 @@ module: b1-030
 level: B1
 sequence: 30
 slug: motion-flight-swim
-version: '3.0'
+version: '3.1'
 title: Летіти, пливти
 subtitle: Дієслова руху в повітрі та на воді — з усіма префіксами
 focus: grammar
@@ -142,6 +143,15 @@ content_outline:
       - 'Quick contrastive examples: Літак летить (literal — the plane is flying).
         Час летить (figurative — time flies). Корабель пливе (literal — the ship is
         sailing). Думки пливуть (figurative — thoughts drift).'
+      - 'Ukrainian idioms and collocations with летіти/пливти: Гроші летять (money
+        disappears fast). Все пливе перед очима (everything is blurry/spinning). Пливти
+        за течією (go with the flow). These are high-frequency expressions that learners
+        will encounter in everyday Ukrainian. Compare with English equivalents to show
+        where metaphors overlap and where they diverge.'
+      - 'Practice: learners sort 10-12 sentences into literal vs figurative categories,
+        then explain what the figurative meaning is in each case. Extension: write 3-4
+        original sentences using летіти or пливти figuratively in contexts from their
+        own life — Мої канікули летять! Дні до іспиту пливуть повільно.'
   - section: 'Підсумок: повітряний та водний рух'
     words: 300
     points:
@@ -550,6 +560,8 @@ references:
 </knowledge_packet>
 
 ---
+
+
 
 ## Rules
 

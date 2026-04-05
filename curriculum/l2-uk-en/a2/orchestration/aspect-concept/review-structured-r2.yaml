@@ -1,0 +1,52 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Missed the specific plan point regarding the word "вчора" working with
+    both aspects depending on emphasis. Deviated from the dialogue prompt's "Вона
+    передала (pf)" by changing it to masculine "Він пер
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Excellent. Aspect rules and forms (e.g., the present tense trap for perfective
+    verbs) are accurately explained. All Ukrainian forms are correct.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: The pedagogical flow is highly effective. The "movie vs. snapshot" analogy
+    and the timeline visualization (— vs X) are superb ways to explain aspect without
+    relying strictly on tense.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items from the plan are integrated
+    naturally and effectively into the prose.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers are placed logically and correspond exactly to the plan's `activity_hints`.
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: Contains significant meta-commentary and instructional transition phrases
+    ("In the previous section, we looked at...", "Now, let us introduce...", "Let's
+    look at a side-by-side comparison"). The openi
+- dimension: 7
+  name: Structural integrity
+  score: 5
+  evidence: 'The 4th header contains an English translation artifact ("## Порівняння
+    пар: Бачимо різницю (Comparing Pairs: Seeing the Difference)"). The text also
+    includes a stray pipeline artifact at the very end'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The concept of aspect is presented effectively on its own terms as a core
+    Ukrainian feature, not as a confusing hurdle.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 6
+  evidence: The dialogue mostly works, but the final line from Maksym responding to
+    a goal ("Це справді неймовірний результат.") is incredibly stilted and robotic
+    for a football match context.
+findings: []

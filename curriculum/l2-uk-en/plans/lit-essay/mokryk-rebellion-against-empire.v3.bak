@@ -1,0 +1,82 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння літературно-критичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Читання
+  focus: Розуміння літературного тексту (уривок з твору)
+  placement: inline
+  type: reading
+- focus: Аналіз авторського задуму — мова як мистецтво
+  placement: workbook
+  type: authorial-intent
+- focus: Аналіз риторичних стратегій та аргументації
+  placement: workbook
+  type: authorial-intent
+- focus: 'Порівняння з іншими творами або інтерпретаціями (Радомир Мокрик: Бунт проти імперії)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе-аналіз рецепції та сучасного значення (Радомир Мокрик: Бунт проти імперії)'
+  placement: workbook
+  type: essay-response
+content_outline:
+- points:
+  - Відмова від пафосу та жертовності
+  - Шістдесятники як молоді, стильні, живі люди
+  - Контекст "Відлиги"
+  section: Вступ — Новий погляд на шістдесятників
+  words: 800
+- points:
+  - '"Сучасник" як центр тяжіння'
+  - Алла Горська, Ліна Костенко, Василь Симоненко
+  - Вечори, виставки, самвидав
+  section: Клуб Творчої Молоді (КТМ)
+  words: 1200
+- points:
+  - Еволюція від культурництва до політичного опору
+  - Арешти 1965 та 1972 років
+  - '"Інтернаціоналізм чи русифікація?" Дзюби'
+  section: Конфлікт з системою
+  words: 1200
+- points:
+  - Наративна легкість та кінематографічність
+  - Вплив європейської есеїстики
+  - Доступність для широкого читача
+  section: Стилістика тексту
+  words: 1000
+- points:
+  - Тяглість поколінь: від шістдесятників до сьогодення
+  - Чому імперія програла культурну війну
+  section: Підсумок
+  words: 800
+focus: literature
+grammar: []
+immersion: 100% Ukrainian
+level: LIT.ESSAY
+module: lit-essay-050
+objectives:
+- Дослідити феномен шістдесятництва через книгу Радомира Мокрика
+- Зрозуміти механізми культурного опору тоталітаризму
+pedagogy: literature
+persona:
+  role: Cultural Critic
+  voice: Literary Historian
+phase: LIT Expansion
+references: []
+register: академічний
+slug: mokryk-rebellion-against-empire
+subtitle: Шістдесятники як предтечі незалежності
+title: 'Радомир Мокрик: Бунт проти імперії'
+version: '3.0'
+vocabulary_hints:
+  recommended:
+  - соцреалізм
+  - тоталітаризм
+  required:
+  - хрущовська відлига
+  - шістдесятництво
+  - нонконформізм
+  - русифікація
+  - дисидентство
+word_target: 5000

@@ -1,0 +1,367 @@
+vocabulary:
+- word: повто́рення
+  translation: review (systematic revision of material)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: самооці́нка
+  translation: self-assessment
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ко́мплексний
+  translation: comprehensive (combining multiple skills)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: діагно́стика
+  translation: diagnostics (identifying knowledge gaps)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ру́брика
+  translation: rubric (assessment criteria)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: аналіз помилок
+  translation: error analysis
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: проста форма вищого ступеня
+  translation: simple comparative form
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: складена форма вищого ступеня
+  translation: compound comparative form
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: найвищий ступінь порівняння
+  translation: superlative degree
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: підсилені форми
+  translation: reinforced forms
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: складена форма найвищого ступеня
+  translation: compound superlative form
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: словотві́р
+  translation: word formation
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: назви діячів
+  translation: agent nouns
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ціна́
+  translation: price
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: зни́жка
+  translation: discount
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: готі́вка
+  translation: cash
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ре́шта
+  translation: change (money back)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: зда́ча
+  translation: change (colloquial)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: примі́рочна
+  translation: fitting room
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: гара́нтія
+  translation: warranty
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: брако́ваний
+  translation: defective
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ва́ги
+  translation: scales
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: поси́лка
+  translation: parcel
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: бандеро́ль
+  translation: small packet
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: доста́вка
+  translation: delivery
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: раху́нок
+  translation: account (bank)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пере́каз
+  translation: transfer (money)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: курс валют
+  translation: exchange rate
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пилотя́г
+  translation: vacuum cleaner
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: поту́жність
+  translation: power
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: наді́йність
+  translation: reliability
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: компа́ктність
+  translation: compactness
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: чистота́
+  translation: cleanliness
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: продукти́вність
+  translation: productivity
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: енергоефективний
+  translation: energy-efficient
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: залі́зний
+  translation: iron / made of iron
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: смачни́й
+  translation: tasty
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: льві́вський
+  translation: Lviv's / from Lviv
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: пари́зький
+  translation: Parisian
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: коза́цький
+  translation: Cossack's
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: жовтува́тий
+  translation: yellowish
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: гарне́нький
+  translation: pretty / cute
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: прекра́сний
+  translation: wonderful
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: безме́жний
+  translation: boundless / limitless
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: надважли́вий
+  translation: crucial / extremely important
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: антикри́зовий
+  translation: anti-crisis
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: триповерхо́вий
+  translation: three-story
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: чита́ч
+  translation: reader
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: продаве́ць
+  translation: seller / shop assistant
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: робітни́к
+  translation: worker
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вчи́тель
+  translation: teacher
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лі́кар
+  translation: doctor
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: письме́нниця
+  translation: female writer
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пека́рня
+  translation: bakery
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: чита́льня
+  translation: reading room
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: схо́вище
+  translation: shelter / repository
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: відкриття́
+  translation: discovery
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: пі́дпис
+  translation: signature
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: якнайкра́щий
+  translation: the very best
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: щонайшви́дше
+  translation: as fast as possible
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: заповнити прогалини
+  translation: fill the gaps
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

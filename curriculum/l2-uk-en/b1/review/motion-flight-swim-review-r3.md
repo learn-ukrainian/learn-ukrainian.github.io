@@ -1,80 +1,124 @@
+Now I have comprehensive verification data. Let me compile the full review.
+
+---
+
 ## Linguistic Scan
-Errors found:
-- "по гучномовцю" (calque from Russian "по громкоговорителю", should be "через гучномовець")
-- "приймає власних рішень" (calque from Russian "принимать решение", should be "ухвалює власні рішення")
-- "виключно сама відстань" (artificial/calque usage of "виключно" as a limiting particle, should be "лише")
+
+### Four separate checks:
+
+**1. Russianisms:** None detected. All 2,014 VESUM-verified words confirmed correct. The 25 not-in-VESUM words are all proper nouns (Стамбул, Босфор, Київ, Лондон, Париж, etc.) except "пливати" which is not used as a standalone lemma — only as the base «-пливати» for prefixed imperfectives (припливати, перепливати, etc.), all of which ARE confirmed in VESUM.
+
+**2. Surzhyk:** None detected.
+
+**3. Calques:** None detected. `search_style_guide` returned no matches for летіти/пливти usage patterns.
+
+**4. Paronyms:** None detected.
+
+**Russian characters (ы, э, ё, ъ):** None.
+
+### CRITICAL: Idiom confusion — «на всіх парусах» vs «на всіх парах»
+
+The module text states:
+> «летіти **на всіх парусах**» *(to rush at full speed)*. Слово «**пари**» *(steam)* натякає на старі парові машини...
+
+This conflates TWO DIFFERENT idioms:
+
+1. **«на всіх парах»** (fraz-006920) — general idiom meaning "very fast," used with бігти, мчати, летіти about people and vehicles. Etymology: пара = steam (steam engines). Confirmed: "Побігли на всіх парах голова з агрономом" (І. Драч), "летить на всіх парах" (Н. Тихий).
+
+2. **«на всіх парусах»** (fraz-006921) — maritime idiom meaning "very fast," used specifically about watercraft. Etymology: парус = sail. Confirmed: "Дуже швидко, на великій швидкості **(про водний транспорт)**."
+
+The module applies the maritime "парусах" idiom to a person rushing to a meeting (wrong), then explains it using "пари" (steam) etymology that belongs to the other idiom. Then introduces "на всіх парусах" again as if it's a separate idiom. This teaches learners incorrect phraseology.
+
+### Conjugation claims — VERIFIED CORRECT
+
+- **Летіти = II дієвідміна** ✓ — VESUM: летять (-ять ending = II). Textbook confirmation: Авраменко Grade 7, p.74: "полетять (майб. час) — ІІ дієвідміна."
+- **Пливти = I дієвідміна** ✓ — VESUM: пливуть (-уть ending = I).
+- **Лечу alternation (т→ч)** ✓ — VESUM confirms лечу (pres:s:1).
+- All conjugation paradigms verified against VESUM for летіти, літати, пливти, плавати. All forms correct.
+
+### Stem-change claims — VERIFIED with nuance
+
+Module's binary table (плив- group vs плис- group) is a **pedagogical simplification**. VESUM shows BOTH заплисти AND запливти exist, and BOTH виплисти AND випливти exist. The table implies these are exclusive groups, which is not fully accurate. However, for B1 level, this simplification is reasonable, and the module does acknowledge "Форми «перепливти», «допливти» трапляються в живому мовленні." Flagging as minor.
+
+### Idioms verified against phraseological dictionary:
+- «пливти за течією» ✓ (fraz-013203) — definition and usage match module
+- «пливти до рук / у руки» ✓ (fraz-013204) — the module uses "пливти в руки" which matches the variant "пливти у руки"
+- «все пливе перед очима» ✓ — confirmed by СУМ-11 (плисти, sense: "Обертатися, крутитися перед очима при запамороченні"). Module's explanation is accurate.
+- «гроші летять» — not found as a registered phraseological entry, but it's a natural colloquial Ukrainian expression. Acceptable.
+
+---
 
 ## Exercise Check
-- The `quiz` marker is placed before water verbs are taught, effectively missing half the required topic. It needs to be moved after the "Пливти / плавати" section to be a combined exercise.
-- The `fill-in` marker was narrowed to only maritime sentences, ignoring the plan's requirement for airport sentences.
-- The `error-correction` marker was overly specific instead of following the broad scope from the plan.
-- The total count is 6, which matches the plan, but their placement and scope need adjustment.
+
+**Marker inventory (6 total — matches plan's 6 activity_hints):**
+
+| # | Plan hint | Module marker | Location | Match? |
+|---|-----------|---------------|----------|--------|
+| 1 | group-sort (12 items, prefixed forms) | `<!-- INJECT_ACTIVITY: group-sort -->` | After летіти section | ✓ |
+| 2 | error-correction (6 items, wrong stems) | `<!-- INJECT_ACTIVITY: error-correction -->` | After пливти section | ✓ |
+| 3 | match-up (8 items, vocab+definitions) | `<!-- INJECT_ACTIVITY: match-up -->` | After vocabulary section | ✓ |
+| 4 | fill-in (8 items, travel sentences) | `<!-- INJECT_ACTIVITY: fill-in -->` | After vocabulary section | ✓ |
+| 5 | quiz (8 items, verb+prefix choice) | `<!-- INJECT_ACTIVITY: quiz -->` | After figurative section | ✓ |
+| 6 | free-write (6 items, travel story) | `<!-- INJECT_ACTIVITY: free-write -->` | After figurative section | ✓ |
+
+**Placement assessment:** Generally good — each marker follows its teaching section. Minor concern: quiz (testing base verb choice летіти/літати vs пливти/плавати) is placed after section 5 (figurative meanings), but the base verb distinction was taught in sections 2–3. Would be better placed earlier. Not critical since the quiz still works after all content is taught.
+
+**Clustering:** Sections 4 and 5 each have 2 markers; sections 1 and 6 have 0. Acceptable distribution.
+
+---
 
 ## Scores
+
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 6/10 | The text has 5291 words, which is >30% over the 4000-word target. The writer padded the text with extra paragraphs (e.g., detailing airplane parts like "крило", "хвіст", "кабіна пілота", which were not in the plan). Exercise markers deviated from plan intents. |
-| 2. Linguistic accuracy | 7/10 | Contains calques: "по гучномовцю" instead of "через гучномовець", "приймає рішення" instead of "ухвалює рішення", and the artificial use of "виключно" as a limiting particle ("виключно сама відстань" instead of "лише сама відстань"). |
-| 3. Pedagogical quality | 8/10 | Explanations of unidirectional vs multidirectional verbs are very thorough. However, placing a combined quiz marker before the second half of the content was taught showed a lack of pedagogical foresight. |
-| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items (аеропорт, рейс, пором, etc.) are included and well-contextualized. |
-| 5. Exercise quality | 7/10 | The injected markers were artificially narrowed from the plan. A combined air/water quiz was placed after only the air section, testing only air verbs. The fill-in was reduced to just maritime. |
-| 6. Engagement & tone | 6/10 | The tone is often overly meta and instructional ("Ми вже дослідили велику частину всесвіту дієслів руху", "Тепер настав час логічно завершити", "Ви, напевно, помітили, як автор вміло використовує..."). Shows a tendency to tell rather than show. |
-| 7. Structural integrity | 9/10 | All H2 headers match the plan precisely. Markdown is clean and correctly formatted. |
-| 8. Cultural accuracy | 10/10 | Excellent context using real-world Ukrainian routes (Boryspil to Istanbul, Dnipro river) and natural settings. |
-| 9. Dialogue & conversation quality | 5/10 | The dialogues in the airport and seaport are purely transactional and robotic ("У вас є багаж? Так, одна валіза.", "А скільки коштує квиток в один бік?"). They lack natural conversational flow. |
+| 1. Plan adherence | 7/10 | **Covered well:** All 6 content_outline sections present in correct order; all 10 prefixes for both verbs; both base pair conjugations; reading passage (Boryspil → Stambul → Bosporus ferry) matches plan. **Missing:** (a) Plan's dialogue_situations specifies a Чорне море beach scene with Батьки/Діти speakers — completely absent, replaced by airport/port dialogues. (b) Summary plan point says "All base pairs now mastered: іти/ходити, їхати/їздити, бігти/бігати, нести/носити, вести/водити, везти/возити, летіти/літати, пливти/плавати" — module's summary only lists the two pairs from this module. (c) Plan vocabulary "зал очікування" and "матрос" not mentioned. |
+| 2. Linguistic accuracy | 7/10 | **Correct:** All conjugation paradigms verified against VESUM. Stem-change explanation (плив-→плис-) verified. All prefixed forms exist in VESUM. **Critical error:** Idiom «на всіх парусах» conflated with «на всіх парах» — module applies maritime-only idiom to person rushing on foot, then incorrectly explains "парусах" using "пари" (steam) etymology. Phraseological dictionary (fraz-006920, fraz-006921) confirms these are two separate idioms with different usage domains. |
+| 3. Pedagogical quality | 8/10 | **Strong PPP flow:** Opening reading passage (situation) → conjugation tables with examples (pattern) → activity markers (practice). Each grammar point has 3+ Ukrainian examples in context: летіти section has 10+ prefixed examples, пливти section has 10+. The stem-change table is a clear visual aid. Conjugation is taught with meaningful sentences, not bare paradigms. **Minor deduction:** Some grammar explanations are overly wordy — e.g., the односпрямований/різноспрямований distinction paragraph for пливти repeats concepts already well-established from the летіти section and prior modules. |
+| 4. Vocabulary coverage | 8/10 | **Required (plan):** летіти ✓, літати ✓, пливти ✓, плавати ✓, прилетіти ✓, вилетіти ✓, припливти ✓, переплисти ✓, аеропорт ✓, рейс ✓, посадка ✓, порт ✓, корабель ✓. All 13 required words present and used in context. **Recommended:** долетіти ✓, полетіти ✓, перелетіти ✓, облетіти ✓, доплисти ✓, поплисти (as попливти) ✓, відпливти ✓, пором ✓, причал ✓, човен ✓, палуба ✓, каюта ✓, термінал ✓, пересадка ✓. All present. **Missing from plan:** зал очікування, матрос. |
+| 5. Exercise quality | 8/10 | All 6 plan activity_hints implemented with matching types and focus. Item counts specified in markers match plan. Marker descriptions are specific: group-sort says "12 prefixed forms," error-correction specifies "incorrect stem usage (*перепливти → переплисти)." Good test design — error-correction targets the stem-change rule just taught, group-sort reinforces prefix semantics. **Minor:** quiz tests base verb choice but is placed after section 5, not after sections 2–3 where the distinction is taught. |
+| 6. Engagement & tone | 7/10 | **Positive:** The opening reading passage (Boryspil → Stambul → Bosporus) creates genuine narrative momentum. The folk song reference ("Тече вода з-під явора, пливе човен по воді") is culturally rich. Dialogues feel natural. **Deductions:** Excessive intensifiers throughout — "абсолютно без помилок," "надзвичайно простим," "категорично вимагають," "абсолютно ідентичною," used repeatedly as filler. Meta-commentary: "Ця зручна таблиця обов'язково допоможе вам" (telling, not showing). Generic enthusiasm: "надзвичайно мелодійно" (about пливти), "неймовірну велич могутньої водної стихії." |
+| 7. Structural integrity | 9/10 | All 6 H2 sections present and ordered per plan. Clean markdown, no stray tags. Word count 5310 vs 4000 target (33% over — acceptable, over is fine). Table formatting correct. Activity markers properly formatted as HTML comments. No duplicate sections. |
+| 8. Cultural accuracy | 9/10 | Decolonized — Ukrainian presented on its own terms, no "like Russian" comparisons. Real Ukrainian geography (Бориспіль, Одеса, Чорноморськ, Дніпро, Чорне море, острів Зміїний). The Saint-Exupéry example for облетіти is non-Ukrainian but appropriate for a world-context example. Зміїний Island reference is culturally significant. |
+| 9. Dialogue & conversation quality | 7/10 | **Positive:** Two multi-turn dialogues with named speakers (Агент/Пасажир, Касир/Клієнт), distinct voices, natural flow, culturally appropriate (using Ви-form). The port dialogue naturally integrates new vocabulary (відплиття, переправа, каюта). **Deductions:** (a) Plan's dialogue_situations (Чорне море beach, Батьки/Діти) is completely missing — this would have been the most engaging dialogue, integrating both fly and swim verbs naturally. (b) Both existing dialogues are transactional (check-in, ticket purchase) — functional but not emotionally engaging. |
+
+---
 
 ## Findings
 
-[2. Linguistic accuracy] [Critical]
-Location: "по гучномовцю оголосили **посадку**"
-Issue: "по гучномовцю" is a calque of the Russian "по громкоговорителю". The correct Ukrainian form requires the preposition "через".
-Fix: Change to "через гучномовець оголосили **посадку**"
+### [LINGUISTIC ACCURACY] [SEVERITY: critical]
+**Location:** Section "Переносні значення," paragraph 3, text: "ми кажемо, що ця відповідальна людина готова «летіти на всіх парусах»... Слово «пари» (steam) натякає на старі парові машини..."
+**Issue:** Conflates two distinct Ukrainian idioms. «На всіх парусах» (fraz-006921) = maritime only ("про водний транспорт"). «На всіх парах» (fraz-006920) = general speed ("зі сл. бігти і под."). Module applies maritime idiom to a person rushing on foot, then explains it using the etymology of the other idiom ("пари"/steam instead of "паруси"/sails). Teaches learners factually wrong phraseology.
+**Fix:** Change "парусах" to "парах" for the person-rushing context; correctly separate the two idioms.
 
-[2. Linguistic accuracy] [Critical]
-Location: "не приймає власних рішень і не бореться"
-Issue: "приймати рішення" is a widespread calque of the Russian "принимать решение" (confirmed by Antonenko-Davydovych). The correct collocation is "ухвалювати рішення".
-Fix: Change to "не ухвалює власних рішень і не бореться"
+### [PLAN ADHERENCE] [SEVERITY: major]
+**Location:** Missing from module entirely.
+**Issue:** Plan's `dialogue_situations` specifies: "At the Чорне море near Одеса — a summer day at the beach: Чайки летять над морем. Діти пливуть до буйка. Літак пролетів над нами. Човен попливе на острів." Speakers: Батьки/Діти. This integrating dialogue that naturally combines both air and water verbs in a single scene is absent.
+**Fix:** Cannot be addressed with find/replace alone — requires content addition (insert_after). Noting for writer.
 
-[2. Linguistic accuracy] [Critical]
-Location: "виключно сама відстань, яку успішно подолав"
-Issue: "виключно" used as a limiting particle is a calque/artificial construction (Antonenko-Davydovych). It should be replaced with "лише" or "тільки".
-Fix: Change to "лише сама відстань, яку успішно подолав"
+### [PLAN ADHERENCE] [SEVERITY: major]
+**Location:** Section "Підсумок," text: "Тепер ви точно знаєте, як правильно та природно описувати переміщення в повітрі та на воді"
+**Issue:** Plan point says: "All base pairs now mastered: іти/ходити, їхати/їздити, бігти/бігати, нести/носити, вести/водити, везти/возити, летіті/літати, пливти/плавати." Module's summary only references летіті/літати and пливти/плавати — the milestone of completing all 8 pairs is not communicated.
+**Fix:** Add sentence listing all 8 pairs after the summary table.
 
-[9. Dialogue & conversation quality] [Major]
-Location: "В аеропорту (At the airport): Працівниця: Доброго дня..."
-Issue: Dialogues are purely transactional and robotic. They read like an old phrasebook without any natural conversational flow or personality.
-Fix: Rewrite the transactional exchanges to include more natural greetings and phrasing.
+### [ENGAGEMENT & TONE] [SEVERITY: minor]
+**Location:** Throughout all sections.
+**Issue:** Excessive filler intensifiers used as padding: "абсолютно без помилок," "надзвичайно простим," "категорично вимагають," "абсолютно ідентичною," "надзвичайно мелодійно," "дуже м'яко, плавно та надзвичайно мелодійно." These add word count without pedagogical value.
+**Fix:** Not fixing with find/replace — the module is already over word target (5310/4000). This is a style note for future builds.
 
-[1. Plan adherence] [Major]
-Location: "Кожен сучасний потужний літак має надзвичайно складну і дуже цікаву будову..."
-Issue: The text is bloated (5291 words vs 4000 target) and includes an entire paragraph detailing airplane parts (хвіст, крило, кабіна) that were not requested in the plan, artificially inflating the word count.
-Fix: Remove the redundant paragraph about airplane parts and update the corresponding activity hint that referenced "ілюмінатор".
+### [VOCABULARY COVERAGE] [SEVERITY: minor]
+**Location:** Section "Авіаційна та морська лексика."
+**Issue:** Plan vocabulary includes "зал очікування" (waiting area) and "матрос" (sailor) — neither appears in the module.
+**Fix:** Minor — module is already over word target. Note for awareness.
 
-[5. Exercise quality] [Major]
-Location: `<!-- INJECT_ACTIVITY: quiz...` and `<!-- INJECT_ACTIVITY: fill-in...`
-Issue: The writer split the combined exercises required by the plan. The plan asked for a quiz choosing between ALL FOUR air/water base verbs and their prefixes, but the generated marker only tests the "летіти/літати" pair because it was placed prematurely in the text.
-Fix: Move the quiz marker to after the water section, and update the marker hints to match the plan's combined scope exactly.
+---
 
 ## Verdict: REVISE
-The module contains critical linguistic errors (Russian calques like "приймати рішення" and "по гучномовцю"), fails the word count target by >30%, and suffers from poorly placed exercise markers that break the pedagogical logic of the plan.
+
+**Justification:** One critical linguistic error (idiom conflation teaching factually wrong phraseology) requires fixing before the module can ship. Two major plan adherence gaps (missing beach dialogue, missing 8-pair milestone in summary). The critical error alone mandates REVISE regardless of scores.
 
 <fixes>
-- find: "по гучномовцю оголосили **посадку**"
-  replace: "через гучномовець оголосили **посадку**"
-- find: "не приймає власних рішень і не бореться"
-  replace: "не ухвалює власних рішень і не бореться"
-- find: "виключно сама відстань, яку успішно подолав"
-  replace: "лише сама відстань, яку успішно подолав"
-- find: "**Працівниця:** Доброго дня. Ваш паспорт і квиток, будь ласка. *(Good afternoon. Your passport and ticket, please.)*\n**Марко:** Доброго дня. Ось мої документи. *(Good afternoon. Here are my documents.)*\n**Працівниця:** У вас є багаж? *(Do you have luggage?)*"
-  replace: "**Працівниця:** Доброго дня! Паспорт і квиток, будь ласка. *(Good afternoon! Passport and ticket, please.)*\n**Марко:** Вітаю. Тримайте, ось мої документи. *(Greetings. Here you go, these are my documents.)*\n**Працівниця:** Дякую. Чи будете здавати багаж? *(Thank you. Will you be checking in any luggage?)*"
-- find: "**Олена:** Перепрошую, о котрій годині пором відпливає на острів? *(Excuse me, what time does the ferry sail to the island?)*\n**Касир:** Наступний пором відпливає о 14:30 від третього причалу. *(The next ferry departs at 2:30 PM from pier three.)*"
-  replace: "**Олена:** Перепрошую, підкажіть, о котрій відпливає найближчий пором на острів? *(Excuse me, could you tell me what time the next ferry sails to the island?)*\n**Касир:** О 14:30. Відправлення від третього причалу. *(At 2:30 PM. Departure is from pier three.)*"
-- find: "Кожен сучасний потужний літак має надзвичайно складну і дуже цікаву будову, з якою завжди корисно бути добре знайомим. З обох боків довгого металевого корпусу розташоване величезне і міцне **крило** *(wing)*, яке допомагає важкому літаку дуже впевнено триматися високо в повітрі під час руху. Задня частина літака традиційно і цілком логічно називається **хвіст** *(tail)*. Під час довгого багаточасового польоту пасажири дуже люблять дивитися у маленьке кругле віконечко, яке в авіації має спеціальну професійну назву — **ілюмінатор** *(porthole/window)*. Керують цим неймовірно великим і технологічним повітряним судном надзвичайно досвідчені пілоти. Їхнє головне робоче місце — це закрита **кабіна пілота** *(cockpit)*, куди звичайним пасажирам вхід завжди суворо і категорично заборонено правилами безпеки. Перед самим початком польоту ви обов'язково почуєте дуже важливу ввічливу команду від старшої стюардеси: «Шановні пасажири, будь ласка, **пристебніть паски безпеки** *(fasten your seatbelts)*». Це найголовніше і непорушне правило чудово гарантує ваш абсолютний спокій та надійний захист під час дуже швидкого руху.\n\n"
-  replace: ""
-- find: "Match aviation/maritime vocabulary (рейс, пором, причал, ілюмінатор)"
-  replace: "Match aviation/maritime vocabulary (рейс, пором, причал, палуба)"
-- find: "майбутні подорожі.\n\n<!-- INJECT_ACTIVITY: quiz, Focus on choosing летіти/літати or the correct prefix, 8 items -->\n<!-- INJECT_ACTIVITY: group-sort, Sort prefixed forms of летіти (прилетіти, залетіти, облетіти, etc.) by meaning category (Arrival, Direction, Limit), 12 items -->\n\n## Пливти / плавати"
-  replace: "майбутні подорожі.\n\n<!-- INJECT_ACTIVITY: group-sort, Sort prefixed forms of летіти (прилетіти, залетіти, облетіти, etc.) by meaning category (Arrival, Direction, Limit), 12 items -->\n\n## Пливти / плавати"
-- find: "відпочинку на морі чи річці.\n\n<!-- INJECT_ACTIVITY: fill-in, Complete maritime sentences with correct prefixed verbs (припливти, переплисти, відпливти), 8 items -->\n<!-- INJECT_ACTIVITY: error-correction, Fix incorrect air/water motion verb forms like *перепливти or *літати instead of летіти in specific contexts, 6 items -->\n\n## Авіаційна та морська"
-  replace: "відпочинку на морі чи річці.\n\n<!-- INJECT_ACTIVITY: quiz, Focus on choosing летіти/літати or пливти/плавати and correct prefix based on context, 8 items -->\n<!-- INJECT_ACTIVITY: fill-in, Complete airport and maritime sentences with correct prefixed motion verbs, 8 items -->\n<!-- INJECT_ACTIVITY: error-correction, Fix incorrect air/water motion verb forms (wrong prefix, wrong base verb), 6 items -->\n\n## Авіаційна та морська"
+- find: "ми кажемо, що ця відповідальна людина готова «**летіти на всіх парусах**» *(to rush at full speed / with all sails set)*. Слово «пари» *(steam)* натякає на старі парові машини, а ідіома підкреслює максимальну фізичну швидкість та енергію. Є також морська ідіома «на всіх парусах» *(under full sail)*, яка означає максимальну швидкість, але вживається саме про водний транспорт: «Корабель летів на всіх парусах»."
+  replace: "ми кажемо, що ця відповідальна людина готова «**летіти на всіх парах**» *(to rush at full speed)*. Слово «пара» *(steam)* натякає на старі парові машини, а ідіома підкреслює максимальну фізичну швидкість та енергію. Окремо існує морська ідіома «**на всіх парусах**» *(under full sail)*, яка також означає максимальну швидкість, але вживається саме про водний транспорт: «Корабель летів на всіх парусах» (М. Рильський). Не плутайте ці два вислови: «на всіх парах» — про людей і машини, «на всіх парусах» — про кораблі."
+- find: "Тепер ви точно знаєте, як правильно та природно описувати переміщення в повітрі та на воді, використовуючи всі десять базових просторових префіксів. Ви навчилися розрізняти односпрямовану та різноспрямовану дію, а також збагатили свій словниковий запас корисною авіаційною та морською лексикою."
+  replace: "Тепер ви точно знаєте, як правильно та природно описувати переміщення в повітрі та на воді, використовуючи всі десять базових просторових префіксів. Ви навчилися розрізняти односпрямовану та різноспрямовану дію, а також збагатили свій словниковий запас корисною авіаційною та морською лексикою. З цим модулем ви завершили вивчення всіх восьми базових пар дієслів руху: іти/ходити, їхати/їздити, бігти/бігати, нести/носити, вести/водити, везти/возити, летіти/літати та пливти/плавати. Це повна система українських дієслів руху!"
 </fixes>

@@ -1,0 +1,325 @@
+vocabulary:
+- word: прислі́вник
+  translation: adverb
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: незмі́нний
+  translation: invariable
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: тво́рення
+  translation: formation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: суфікса́льний
+  translation: suffixal
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: префікса́льний
+  translation: prefixal
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: суфіксально-префікса́льний
+  translation: prefixal-suffixal
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: склада́ння
+  translation: compounding
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: по-украї́нськи
+  translation: in the Ukrainian way
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: по-коза́цьки
+  translation: like a Cossack
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: по-бра́тньому
+  translation: in a brotherly way
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: по-ново́му
+  translation: in a new way
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: зра́нку
+  translation: in the morning
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вночі́
+  translation: at night
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: додо́му
+  translation: homeward
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вго́ру
+  translation: upwards
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: мимово́лі
+  translation: involuntarily
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: самохі́ть
+  translation: of one's own will
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: право́руч
+  translation: to the right
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: чимду́ж
+  translation: as fast as possible
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: пома́лу
+  translation: slowly, gradually
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: позавчо́ра
+  translation: the day before yesterday
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: потро́ху
+  translation: little by little
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ступені порівняння
+  translation: degrees of comparison
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: проста порівняльна форма
+  translation: simple comparative form
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: шви́дше
+  translation: faster
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: тихі́ше
+  translation: more quietly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: пові́льніше
+  translation: more slowly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: краси́віше
+  translation: more beautifully
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: звукові чергування
+  translation: consonant alternations
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: доро́жче
+  translation: more expensively
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ву́жче
+  translation: more narrowly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ду́жче
+  translation: stronger, more
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ви́ще
+  translation: higher
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ни́жче
+  translation: lower
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: проста найвища форма
+  translation: simple superlative form
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: найшви́дше
+  translation: the fastest
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: найкра́ще
+  translation: the best
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: підсилювальні частки
+  translation: intensifying particles
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: якнайшви́дше
+  translation: as fast as possible
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: щонайкра́ще
+  translation: in the best way possible
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: якнайбі́льше
+  translation: as much as possible
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: найбі́льш
+  translation: most
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: найме́нш
+  translation: least
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: забага́то
+  translation: too much
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: надшвидко
+  translation: extremely fast
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: пі́шки
+  translation: on foot
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: верхи
+  translation: on horseback
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: горіли́ць
+  translation: face up
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: чим... тим...
+  translation: the more... the more...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зашви́дко
+  translation: too fast
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: найрані́ше
+  translation: earliest
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: обере́жніше
+  translation: more carefully
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: рівномірні́ше
+  translation: more evenly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: наполе́гливо
+  translation: persistently
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true

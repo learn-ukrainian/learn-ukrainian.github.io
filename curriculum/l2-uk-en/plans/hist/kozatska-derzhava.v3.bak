@@ -1,0 +1,110 @@
+module: hist-055
+level: HIST
+sequence: 55
+slug: kozatska-derzhava
+version: '3.0'
+title: 'Хмельниччина: Козацька держава'
+subtitle: 'The Cossack State: Structure and Administration of the Hetmanate'
+focus: history
+pedagogy: CBI
+phase: HIST.6 [Khmelnytsky & Cossack State]
+word_target: 5000
+objectives:
+- Учень може описати полково-сотенний устрій Гетьманщини
+- Учень може пояснити функції Генеральної старшини
+- Учень може проаналізувати значення Чигирина як політичного центру
+content_outline:
+- section: 'Вступ: Народилася Гетьманщина'
+  points:
+  - The challenge of state-building after victories — після перемог 1648 року постало питання організації влади на 
+    визволених землях
+  - 'Cossack democracy vs. European legal standards — еволюція від «козацьких вольностей» до ідеї суверенної «держави руського
+    народу»; cultural hook: [!context] — Швидкість трансформації повстання у повноцінну державу'
+  words: 600
+- section: 'Структура влади: Гетьман та Генеральна старшина'
+  points:
+  - The role of the Hetman as head of state — поєднання військової, адміністративної та судової влади, фактично 
+    монархічні повноваження
+  - 'Functions of the General Staff (Scribe, Quartermaster, Judge, Treasurer) — Генеральний писар (Іван Виговський) як голова
+    МЗС; cultural hook: [!history-bite] — Генеральна старшина як прообраз сучасного Кабінету Міністрів'
+  words: 600
+- section: 'Адміністративний устрій: Полково-сотенна система'
+  points:
+  - Merging military and territorial structures — ліквідація воєводств, запровадження полків як адміністративних одиниць
+  - 'Role of colonels and centurions in local governance — ієрархія: Гетьман -> Полковник -> Сотник -> Отаман; cultural hook:
+    [!decolonization] — Порівняння устрою з римськими муніципалітетами, а не «анархією»'
+  words: 600
+- section: 'Чигирин: Серце козацької держави'
+  points:
+  - Chyhyryn as a European capital — резиденція, архів та скарбниця, попри дерев'яну забудову
+  - 'Diplomatic etiquette and foreign embassies — прийом послів з Венеції, Москви, Туреччини, Швеції; cultural hook: [!quote]
+    — Альберто Віміна про дипломатичний рух у Чигирині'
+  words: 600
+- section: 'Економіка та право: Скарбниця та суди'
+  points:
+  - Creation of a national financial system — податки (мито, оренда шинків) йдуть до Військового скарбу, а не королю
+  - 'Cossack justice and the Lithuanian Statute — поєднання звичаєвого права («як здавна бувало») та писаного права; cultural
+    hook: [!myth-buster] — Спростування міфу про «беззаконня»'
+  words: 600
+- section: Читання
+  points:
+  - Analysis of state documents — аналіз мови та змісту Універсалу Богдана Хмельницького (1650) про захист прав міщан
+  words: 600
+- section: Первинні джерела
+  points:
+  - 'Alberto Vimina''s notes on Chyhyryn — «Реляція про походження і звичаї козаків»: погляд іноземця на освіченість та любов
+    до свободи'
+  words: 600
+- section: 'Деколонізаційний погляд: Державність проти анархії'
+  points:
+  - Debunking imperial myths of 'Cossack chaos' — протиставлення імперського міфу про «селян-втікачів» реальності 
+    модерної держави
+  - 'The Hetmanate as a mature political project — наявність території, влади, війська, податків та дипломатії; cultural hook:
+    [!analysis] — Чому імперії вигідно зображати козаків як «розбійників»'
+  words: 800
+vocabulary_hints:
+  required:
+  - 'гетьманат (Hetmanate) — держава; collocations: Козацький гетьманат, устрій гетьманату'
+  - 'булава (mace) — символ влади; collocations: гетьманська булава, отримати булаву'
+  - 'канцелярська (chancellery) — official language; collocations: мова документів, генеральна канцелярія'
+  - 'полковник (colonel) — head of regiment/territory; collocations: чернігівський полковник, влада полковника'
+  - 'сотник (centurion) — head of hundred/district; collocations: сотенний устрій, наказ сотника'
+  - 'скарбниця (treasury) — finances; collocations: Військова скарбниця, поповнення скарбниці'
+  - 'універсал (universal) — decree; collocations: видати універсал, універсали Хмельницького'
+  - 'клейноди (regalia) — state symbols; collocations: військові клейноди, втрата клейнодів'
+  - 'підскарбій (treasurer) — finance minister; collocations: генеральний підскарбій, звіт підскарбія'
+  - 'обозний (quartermaster) — logistics/artillery; collocations: генеральний обозний, відати артилерією'
+  recommended:
+  - 'автономія (autonomy) — самоврядування; collocations: політична автономія, широка автономія'
+  - 'дипломатія (diplomacy) — international relations; collocations: козацька дипломатія, гнучка дипломатія'
+  - 'суверенітет (sovereignty) — незалежність; collocations: державний суверенітет, боротьба за суверенітет'
+activity_hints:
+- type: reading
+  focus: Administrative documents and chronicles
+- type: essay-response
+  focus: Continuity of state-building traditions
+- type: critical-analysis
+  focus: 'Спростування міфів: Myths about the Hetmanate governance'
+  items: 4
+- type: comparative-study
+  focus: Cossack vs. Polish administrative models
+persona:
+  voice: Senior Professor of History
+  role: Regimental Chancellor
+grammar:
+- 'Institutional register: administrative terms'
+- Passive voice in official descriptions
+register: публіцистичний
+prerequisites:
+- zborivska-bila-tserkva
+connects_to:
+- pereyaslavska-uhoda
+references:
+- name: History of Ukraine-Rus
+  url: http://litopys.org.ua/hrushrus/iur.htm
+  type: reference
+  notes: Analysis of the Hetmanate structure
+- name: The Cossack Myth
+  url: https://history.org.ua
+  type: reference
+  notes: State-building and identity

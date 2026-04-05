@@ -1,13 +1,24 @@
 {
-  "attempt": 3,
-  "passed": true,
-  "errors": [],
+  "attempt": 1,
+  "passed": false,
+  "errors": [
+    {
+      "check": "TOXIC",
+      "severity": "ERROR",
+      "message": "Severe Russianisms: хорошо"
+    }
+  ],
   "warnings": [
     {
       "check": "VOCABULARY",
       "severity": "WARNING",
-      "message": "Missing 3/21 required vocab: пошук роботи (job search), співбесіда (interview), робоче місце (workplace)"
+      "message": "Missing 4/21 required vocab: снідати / обідати / вечеряти (to have breakfast / lunch / dinner), готувати їжу (to cook food), будильник (alarm clock), співбесіда (interview)"
+    },
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 5 exercise(s) but content has 0 placeholders"
     }
   ],
-  "timestamp": "2026-04-03T05:50:16.972908+00:00"
+  "timestamp": "2026-04-04T08:46:28.517659+00:00"
 }

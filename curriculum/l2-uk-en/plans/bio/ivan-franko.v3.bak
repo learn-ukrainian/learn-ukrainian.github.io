@@ -1,0 +1,102 @@
+module: bio-054
+level: BIO
+sequence: 54
+slug: ivan-franko
+version: '3.0'
+title: 'Іван Франко: Каменяр'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of іван франко: каменяр'
+- Evaluate the contributions of титан праці
+- Trace the career and influence of вічний каменяр
+content_outline:
+- section: Вступ — Титан праці
+  points:
+  - Письменник, поет, вчений, громадський діяч
+  - Символ Галичини і всієї України
+  - Автор понад 6000 творів
+  words: 850
+- section: Юність у Нагуєвичах (1856-1874)
+  points:
+  - Народження в родині сільського коваля
+  - Рання освіта та таланти
+  - Смерть батька та вплив мачухи
+  - Дрогобицька гімназія
+  words: 850
+- section: Студентські роки (1874-1880)
+  points:
+  - Львівський університет
+  - Участь у соціалістичному русі
+  - Перші арешти
+  - Початок літературної діяльності
+  words: 850
+- section: Каменяр української культури (1880-1905)
+  points:
+  - «Мойсей», «Захар Беркут», «Перехресні стежки»
+  - Наукова діяльність та докторат
+  - Журналістика та редакторська робота
+  - Номінація на Нобелівську премію (1916)
+  words: 850
+- section: Хвороба та останні роки (1905-1916)
+  points:
+  - Прогресуюча хвороба
+  - Продовження творчої роботи
+  - Перша світова війна
+  - Смерть у Львові
+  words: 850
+- section: Спадщина — Вічний каменяр
+  points:
+  - Вплив на українську літературу
+  - Франко як національний символ
+  - Університет та інститути його імені
+  - Актуальність ідей Франка сьогодні
+  words: 750
+vocabulary_hints:
+  required:
+  - каменяр (stonemason/pioneer)
+  - титан (titan)
+  - письменник (writer)
+  - громадський діяч (public figure)
+  - соціалізм (socialism)
+  - наукова діяльність (scholarly activity)
+  - журналіст (journalist)
+  - редактор (editor)
+  - поема (long poem)
+  - повість (novella)
+  recommended:
+  - позитивізм (positivism)
+  - народництво (populism)
+  - просвіта (enlightenment)
+  - Галичина (Galicia)
+  - національне відродження (national revival)
+activity_hints:
+- type: reading
+  focus: Українська література XIX ст.
+  source: Literary history sources
+  items: 3 passages
+- type: essay-response
+  focus: Чому Франка називають «титаном праці»?
+  output: Analytical essay
+connects_to:
+- bio-20
+- bio-40
+prerequisites:
+- bio-27
+persona:
+  voice: Senior Biographer
+  role: Intellectual Titan
+module_type: biography
+immersion: 100% Ukrainian
+references:
+- name: Іван Франко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Франко_Іван_Якович
+  type: primary
+  notes: Comprehensive biography of the titan of Ukrainian culture
+- name: Інститут Івана Франка НАН України
+  url: https://ifnan.gov.ua/
+  type: reference
+  notes: Academic institution dedicated to Franko studies
+register: академічний
+grammar: []

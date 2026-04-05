@@ -1,0 +1,128 @@
+module: hist-059
+level: HIST
+sequence: 59
+slug: ruina-ii
+version: '3.0'
+title: 'Руїна II: Дорошенко і надія'
+subtitle: 'The Ruin II: Doroshenko and Hope'
+focus: history
+pedagogy: CBI
+phase: HIST.6 [Khmelnytsky & Cossack State]
+word_target: 5000
+objectives:
+- Учень може пояснити політичну програму Петра Дорошенка
+- Учень може проаналізувати причини та наслідки союзу з Туреччиною
+- Учень може оцінити роль Івана Сірка як опозиції державницькому курсу
+content_outline:
+- section: 'Вступ: Людина, яка хотіла неможливого'
+  points:
+  - Doroshenko as 'The Sun of the Ruin' — reference Vasyl Pachovskyi's drama (1911) which cemented this romantic image; 
+    include [!history-bite] about the literary origin of the moniker
+  - The geopolitical situation in 1665 — Ukraine in ruins, divided, needing a 'state builder' to overcome the chaos of 
+    the post-Khmelnytsky era
+  words: 600
+- section: 'Петро Дорошенко: Шлях до булави'
+  points:
+  - Biography and origins (grandson of a hetman) — grandson of Mykhailo Doroshenko; aristocratic lineage gave him 
+    legitimacy
+  - Creation of a regular army (serdyuks) — 20,000 mercenaries independent of starshyna; personal loyalty to Hetman 
+    ensured stability
+  - 'Goal: Unification of both banks of the Dnipro — strategy of ''Sobornist'' (unity) above all; aimed to reunite the state
+    divided by powerful neighbors'
+  words: 600
+- section: 'Турецький вектор: Союз чи зрада?'
+  points:
+  - The logic of the alliance with the Ottoman Empire — Realpolitik response to Andrusovo Truce (1667) betrayal by 
+    Moscow and Poland; include [!myth-buster] debunking the 'traitor' myth
+  - 'Comparison of conditions: Moscow vs. Poland vs. Turkey — Ottomans offered: no tribute, military aid, border integrity
+    (modeled on Moldavia or Transylvania)'
+  - The Korsun Council of 1669 — Cossacks approved the protectorate; define 'protectorate' vs 'vassalage' and the 
+    specific articles of agreement
+  words: 600
+- section: Похід султана і Бучацький мир 1672
+  points:
+  - The fall of Kamianets-Podilskyi — joint Ottoman-Cossack force led by Mehmed IV and Doroshenko; shock to Europe; 
+    include [!context] on the scale of the campaign
+  - Terms of the Treaty of Buchach — Poland ceded Podillia to Turkey and Bratslav/Kyiv regions to Doroshenko; first 
+    mention of 'Ukrainian State' (Panstwo Ukrainskie) in an international treaty
+  - Reaction of the population and Europe — population feared 'Turkish freedom', churches turned to mosques in Podillia,
+    undermining Doroshenko's authority
+  words: 600
+- section: 'Внутрішній фронт: Дорошенко проти Сірка'
+  points:
+  - Ivan Sirko as the personification of the Zaporozhian opposition — popular hero but destructive element for the 
+    state; include [!perspective] on the conflict between order and chaos
+  - 'Conflict of ideologies: Statehood vs. ''Pure Orthodoxy'' — Hierarchy (Doroshenko) vs Anarchy (Sirko)'
+  - Sirko's raids against Crimea — attacked when Doroshenko needed calm on the southern front, provoking Tatar 
+    retaliation and destabilizing the alliance
+  words: 600
+- section: 'Чигиринські походи: Оборона столиці'
+  points:
+  - First Siege (1677) and Second Siege (1678) — Grand Vizier Kara Mustafa's army vs. Cossack defenders
+  - Heroism of the defenders and destruction of Chyhyryn — Patrick Gordon's diary description 'hell on earth'; include 
+    [!culture] on the intensity of the siege warfare
+  - The symbolic end of the Cossack capital — total destruction of the castle and city marked the end of the Khmelnytsky
+    era
+  words: 600
+- section: Капітуляція і доля гетьмана
+  points:
+  - Abdication in 1676 — surrendered insignias to Samoilovych to avoid further bloodshed after realizing the 
+    hopelessness of the situation
+  - Exile to Muscovy — lived in Vyatka/Yaropolche as voivode; died 1698; great-granddaughter Natalya Goncharova 
+    (Pushkin's wife); include [!decolonization] on his respectful treatment in exile
+  - 'Legacy: The last attempt at independence — ''Sun of the Ruin'' who fought for unity till the end, acting as a sovereign
+    ruler'
+  words: 600
+- section: 'Первинні джерела: Свідчення іноземців'
+  points:
+  - French diplomat's report — described Doroshenko as a man of 'great mind and courage' navigating between three 
+    empires
+  - Cossack chronicles — Litopys Samovydtsia on the 'great sorrow' of the people and the devastation of the land
+  words: 800
+vocabulary_hints:
+  required:
+  - протекторат (protectorate) — військово-політичний союз, не васалітет (як Молдавія)
+  - сюзеренітет (suzerainty) — верховна влада султана над васальною державою
+  - капітуляція (capitulation) — умови здачі Дорошенка та зречення булави
+  - облога (siege) — Чигиринська облога, яку Гордон назвав «пеклом на землі»
+  - данина (tribute) — відсутність данини як ключова умова союзу з Портою
+  - васал (vassal) — міф про «турецького васала» в радянській історіографії
+  - руйнація (destruction/ruin) — епоха Руїни, що характеризувалася війною всіх проти всіх
+  - чвари (strife/discord) — старшинські чвари, що заважали об'єднанню держави
+  - сердюки (serdyuks) — наймане піхотне військо — особиста гвардія гетьмана
+  - соборність (sobornist/unity) — єдність обох берегів Дніпра — головна мета Дорошенка
+  recommended:
+  - булава (bulava/mace) — символ гетьманської влади, яку Дорошенко здав Самойловичу
+  - універсал (universal) — гетьманський указ (зокрема про союз з Туреччиною)
+  - яничари (janissaries) — турецька елітна піхота, що штурмувала Чигирин
+  - експансія (expansion) — османська експансія в Європу, яку використав Дорошенко
+activity_hints:
+- type: reading
+  focus: Analysis of diplomatic correspondence
+- type: essay-response
+  focus: Was the Turkish alliance a mistake?
+- type: comparative-study
+  focus: Doroshenko vs. Sirko
+- type: critical-analysis
+  focus: 'Спростування міфів: Myths about the ''traitor'' Doroshenko'
+  items: 4
+persona:
+  voice: Senior Professor of History
+  role: Foreign Envoy
+grammar:
+- 'Historical narrative: description of battles'
+- 'Political terminology: protectorate vs. alliance'
+register: публіцистичний
+prerequisites:
+- ruina-i
+connects_to:
+- andrusivske-peremyrya
+references:
+- name: Petro Doroshenko - Encyclopedia of Ukraine
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CD%5CO%5CDoroshenkoPetro.htm
+  type: reference
+  notes: Academic biography
+- name: Chyhyryn Campaigns
+  url: http://litopys.org.ua/
+  type: primary
+  notes: Chronicles about the siege

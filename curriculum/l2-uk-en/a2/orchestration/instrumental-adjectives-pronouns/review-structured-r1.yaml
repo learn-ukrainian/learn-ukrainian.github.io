@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All 4 content_outline sections present with correct headings. All subsection
+    points covered: hard group -им/-ою with examples (новим, гарною), soft group -ім/-ьою
+    with examples (синім, літньою, синьою'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Critical error: "Вони пишаються **їхньою** розумною донькою" uses їхньою
+    when subject=possessor (requires своєю). All other morphological forms verified
+    correct against VESUM: моєю ✓, твоєю ✓, нашою ✓'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'Good PPP flow: presentation of rule → pattern with 3-5 examples per point
+    → practice (diary + dialogue). Progressive complexity: hard adjectives → soft
+    adjectives → possessives → demonstratives → full'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 12 required vocabulary words used naturally in prose: мій (з моїм
+    татом), твій (з твоєю мамою), наш (за нашим будинком), ваш (вашою ідеєю), цей
+    (цим автобусом), той (за тією стіною), новий (новим '
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 5 activity markers present, correctly placed after relevant teaching
+    sections. Types and focus match plan hints exactly. Item counts match (8, 8, 8,
+    8, 6). Error-correction marker placed after the
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: 'Significant cheerleading and meta-commentary throughout: "Закінчення
+    -ою звучить дуже м''яко і мелодійно", "Це нове закінчення також звучить дуже красиво
+    і ритмічно", "Усі слова ніби співають одну пісн'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Clean markdown, all 4 plan sections present as H2s in correct order. Additional
+    Підсумок section is a useful review. Word count (2732) above target (2000). No
+    stray tags or formatting artifacts. Activ
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented entirely on its own terms. No "like Russian but..."
+    comparisons. Examples use Ukrainian cultural context (park, кафе, автобус, щоденник).
+    No decolonization issues.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'Oleh/Kateryna dialogue is natural: real situation (friends meeting after
+    a year), named speakers, distinct voices, culturally appropriate (asking about
+    travel, career). Motivation clear (catching up).'
+findings: []

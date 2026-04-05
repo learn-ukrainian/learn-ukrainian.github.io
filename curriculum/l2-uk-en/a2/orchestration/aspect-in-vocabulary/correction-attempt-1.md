@@ -1,7 +1,7 @@
 <correction_directive>
 CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
 
-- FIX: Too short: 325 words (target: 2000, minimum: 1700)
+- FIX: Missing 3/8 required vocab: корінь (root), брати / взяти (to take), говорити / сказати (to speak / to say)
 - NOTE: Plan expects 4 exercise(s) but content has 0 placeholders
 </correction_directive>
 

@@ -246,6 +246,10 @@
             },
             "additionalProperties": false
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -306,6 +310,10 @@
             },
             "additionalProperties": false
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -353,6 +361,10 @@
             },
             "additionalProperties": false
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -404,6 +416,10 @@
             },
             "additionalProperties": false
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -453,6 +469,10 @@
             },
             "additionalProperties": false
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -528,6 +548,10 @@
             },
             "additionalProperties": false
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -583,6 +607,10 @@
             },
             "additionalProperties": false
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -658,6 +686,10 @@
             },
             "additionalProperties": false
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -718,6 +750,10 @@
             },
             "additionalProperties": false
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -762,6 +798,10 @@
             "minimum": 0
           },
           "description": "Zero-based indices of items in correct order"
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -831,6 +871,10 @@
             },
             "additionalProperties": false
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -902,6 +946,10 @@
             },
             "additionalProperties": false
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -960,6 +1008,10 @@
             },
             "additionalProperties": false
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -997,6 +1049,10 @@
           "type": "string",
           "minLength": 1,
           "description": "Question prompting pattern discovery"
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -1051,6 +1107,10 @@
             },
             "additionalProperties": false
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -1092,6 +1152,10 @@
         },
         "criteria": {
           "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -1162,6 +1226,10 @@
             },
             "additionalProperties": false
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -1220,6 +1288,10 @@
             },
             "additionalProperties": false
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -1280,6 +1352,10 @@
             },
             "additionalProperties": false
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -1352,6 +1428,10 @@
             },
             "additionalProperties": false
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -1403,6 +1483,10 @@
             "type": "string",
             "minLength": 1
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -1468,6 +1552,10 @@
             },
             "additionalProperties": false
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -1534,6 +1622,10 @@
         },
         "model_evaluation": {
           "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -1573,6 +1665,10 @@
             "type": "string",
             "minLength": 1
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -1621,6 +1717,10 @@
         },
         "model_answer": {
           "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -1660,6 +1760,10 @@
         },
         "model_answer": {
           "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -1721,6 +1825,10 @@
             "type": "string",
             "minLength": 1
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -1771,6 +1879,10 @@
             },
             "additionalProperties": false
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -1837,6 +1949,10 @@
             "type": "string",
             "minLength": 1
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -1876,6 +1992,10 @@
             "type": "string",
             "minLength": 1
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -1934,6 +2054,10 @@
             },
             "additionalProperties": false
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -2003,6 +2127,10 @@
             },
             "additionalProperties": false
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -2055,6 +2183,10 @@
             },
             "additionalProperties": false
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -2100,6 +2232,10 @@
             },
             "additionalProperties": false
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -2150,6 +2286,10 @@
             },
             "additionalProperties": false
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -2195,6 +2335,10 @@
             "type": "integer",
             "minimum": 0
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false
@@ -2248,6 +2392,10 @@
             },
             "additionalProperties": false
           }
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional display title for the activity"
         }
       },
       "additionalProperties": false

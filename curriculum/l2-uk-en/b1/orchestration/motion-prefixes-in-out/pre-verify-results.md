@@ -1,30 +1,37 @@
 ## VESUM Verification
 - Confirmed: зайти, заїхати, забігти, занести, вийти, виїхати, вибігти, винести, заходити, виходити, заїжджати, виїжджати, завести, завезти, вивести, вивезти, залетіти, вилетіти, заносити, виносити, кав'ярня, двір.
-- Not found: All words from the plan vocabulary are confirmed in VESUM.
+- Not found: None.
 
 ## Textbook Excerpts
-Note: Due to temporary vector DB unavailability, authentic usage was verified via the GRAC corpus (concordance) as a proxy for natural occurrence.
-
 ### Section: Входити і виходити: за- та ви-
-> "Троє офіцерів-роялістів, які перші **зайшли до кав'ярні**, зажадали газет..."
-> Source: GRAC (Usage Example — Modern Literature)
+> Додайте почергово до дієслова бігти префікси. Які додаткові значення вносять вони в лексичне значення дієслова? ... їхати – виїхати.
+> Source: Zabolotnyi, Grade 5
 
-### Section: Практика: за- і ви- в повсякденному житті
-> "Перш ніж **вийти з дому**, понюхайте повітря. Виходячи на Хрещатик..."
-> Source: GRAC (Usage Example — Prose/Journalism)
+### Section: Префікс за-: увійти, забігти, заскочити
+> Зайду за тобою по дорозі.
+> Source: Zabolotnyi, Grade 5 (Вправа 290)
+
+### Section: Префікс ви-: вийти, виїхати, вибігти
+> Пішоходам заборонено виходити на проїзну частину... раптово виходити, вибігати на проїзну частину.
+> Source: Zabolotnyi, Grade 5 (Вправа 288)
+
+### Section: Підсумок: за- і ви-
+> Занести, занесла, занесло, занесли.
+> Source: Zabolotnyi, Grade 7 (Вправа 110/Таблиця)
 
 ## Grammar Rules
-- **Prefix Spelling and Meaning:** Правопис §31 (3) — "Префікс при- пишемо переважно в дієсловах, що означають наближення...". By extension, **за-** denotes entering/behind and **ви-** denotes exiting.
-- **Apostrophe with Prefixes:** Правопис §7 (4) — "Апостроф пишемо після префіксів... що закінчуються на твердий приголосний перед я, ю, є, ї: з'їхати, під'їхати."
-- **Euphony (У/В):** Правопис §23 — "Префікс у- на початку слів... між буквами, що позначають приголосні: Десь у житі...". This affects prefixes like **в-/у-** (ввійти/увійти).
+- **Prefix При-**: Правопис §31.3 — Префікс при- пишемо переважно в дієсловах, що означають наближення, приєднання, частковість дії, результат дії тощо: прибігти, прибудувати. (Note: за- implies entering/stopping by, whereas при- implies arrival).
+- **Simplification in Motion Verbs**: Правопис §28 — У буквосполученнях -ждн-, -здн- випадають д і т на письмі: виїздити — виїзний; проїзд — проїзний.
 
 ## Calque Warnings
-- **зайти в тупик:** CALQUE — Use **зайти у безвихідь**, **зайти у глухий кут**, or **опинитися в глухому куті**.
-- **за хлібом:** Potential CALQUE for purpose — In Ukrainian, **по** is preferred for purpose: **зайти до магазину по хліб**.
-- **вийти на зв'язок:** OK for B1 (modern usage) — but traditionally "зв'язатися з кимось".
+- **зайти в тупик**: Calque — Correct: зайти в безвихідь, опинитися в глухому куті.
+- **вийти з себе**: Calque — Correct: оскаженіти, розлютитися, втратити самовладання.
+- **винести подяку**: Calque — Correct: скласти подяку, висловити подяку.
 
 ## CEFR Check
-- **зайти / вийти:** A2/B1 — OK (Core motion verbs)
-- **заїжджати:** B1 — OK (Imperfective prefixed motion)
-- **кав'ярня:** A2/B1 — OK (Common urban vocabulary)
-- **залетіти:** B1 — OK (Spatial prefix logic applied to 'летіти')
+- **зайти**: A2 — OK
+- **вийти**: A2 — OK
+- **заходити**: A2 — OK
+- **виходити**: A2/B2 — OK (PULS lists B2 for some senses, but A2 for motion)
+- **кав'ярня**: A2 — OK
+- **подвір'я**: A2 — OK (Note: "двір" is listed as B2, "подвір'я" as A2; prefer "подвір'я" for clarity).

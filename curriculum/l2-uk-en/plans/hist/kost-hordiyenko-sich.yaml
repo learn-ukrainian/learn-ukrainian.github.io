@@ -1,123 +1,140 @@
-module: hist-065
-level: HIST
-sequence: 65
-slug: kost-hordiyenko-sich
-version: '3.0'
-title: Кость Гордієнко та Січ
-subtitle: Kost Hordiyenko and the Sich
-focus: history
-pedagogy: CBI
-phase: HIST.7 [Mazepa & End of Hetmanate]
-word_target: 5000
-objectives:
-- Analyze the causes and consequences of кость гордієнко та січ
-- Evaluate the historical significance of непримиренний кошовий
-- 'Trace the development of деколонізаційний погляд: січ як анти-імперський проект'
-content_outline:
-- section: 'Вступ: Непримиренний кошовий'
-  points:
-  - 'The unique personality of Kost Hordiyenko — educated at Kyiv-Mohyla Academy, breaking the stereotype of ''uneducated
-    steppe warriors''; cultural hook: intellectual warrior archetype'
-  - 'The role of the koshovyi otaman — elected leader (1702) representing the will of the Sich; learner error: confused with
-    Hetman'
-  - 'Geopolitical situation at the start of the 18th century — tension between Cossack liberties and Moscow''s centralization
-    (building of Kamiany Zaton fortress); include quote from 1702 letter: «...запорожці будуть збройно з ними битися»'
-  words: 700
-- section: 'Запорозька Січ: Острів свободи в морі імперій'
-  points:
-  - The internal structure of the Sich — Chortomlyk Sich (1652–1709) as a 'Christian Republic' with direct democracy
-  - Democratic traditions and Cossack law — equality of rights vs. Moscow's autocracy; include quote from Adlerfelt on 
-    their love for freedom
-  - 'Conflicts with Moscow''s centralization policy — protests against colonization and fortress construction; context: Kamiany
-    Zaton as a ''stranglehold'' on the Sich'
-  words: 700
-- section: 'Великий союз: Гордієнко, Мазепа та Карл XII'
-  points:
-  - 'Motives for joining the anti-Moscow coalition — ''Moscow wants to enslave us'' (pragmatic alliance to save the Motherland);
-    quote from 1708 letter: «Злість московська здавна на Вітчизну, нашу матір...»'
-  - Meeting between Hordiyenko and Mazepa — Dykanka (or Velyki Budyshcha), March 1709; overcoming personal enmity for 
-    national interest
-  - 'The strategic importance of the Sich for the Swedish campaign — 8000 seasoned warriors joined; myth-buster: Mazepa was
-    not alone'
-  words: 700
-- section: 'Трагедія 1709: Зруйнування Чортомлицької Січі'
-  points:
-  - The campaign of Menshikov and Yakovlev — May 14 (25), 1709; punitive expedition by Colonel Yakovlev
-  - The heroic defense and the betrayal — defense led by Yakym Bohush; betrayal by Hnat Halahan (false promise of 
-    pardon)
-  - 'Symbolism of the Sich''s destruction — massacre of 156 prisoners, bodies on rafts sent down Dnipro; cultural hook: absolute
-    ruthlessness of empire; quote: «Все прибрежжя Дніпра... було завалене трупами»'
-  words: 700
-- section: 'Читання: Козацький дух у документах'
-  points:
-  - Analysis of Hordiyenko's letters — letter to Mazepa (1708) citing 'Moscow's malice'; focus on rhetorical style and 
-    usage of «Вітчизна-мати»
-  - Provisions of the Constitution of Pylyp Orlyk related to the Sich — Hordiyenko signed as representative (April 5, 
-    1710); guarantees of territorial rights and restoration of lands
-  words: 700
-- section: 'Первинні джерела: Свідчення очевидців'
-  points:
-  - Swedish descriptions of the Cossacks — memoirs of Adlerfelt and Nordberg; distinctness from Russian troops and 
-    recognition of their separate identity
-  - Folk songs about Hordiyenko — Duma about the destruction of the Sich ('Ой встань, Петре...'); emotional contrast to 
-    military reports
-  words: 700
-- section: 'Деколонізаційний погляд: Січ як анти-імперський проект'
-  points:
-  - Sich as a democratic alternative to Moscow's autocracy — 'Republic' vs 'Tsardom'; debunking the imperial myth of 
-    'bandits and drunkards'
-  - The myth of 'unlimited loyalty' vs contractual rights — right to rebellion when the sovereign violates the contract
-  - Legacy of Hordiyenko in the fight for independence — exile in Oleshky/Kamianka, resistance until death (1733)
-  words: 800
-vocabulary_hints:
-  required:
-  - історія (history) — історія України, козацька історія
-  - держава (state) — будувати державу, захист держави
-  - народ (people) — український народ, воля народу
-  - влада (power) — імперська влада, козацька влада
-  - період (period) — історичний період, період Руїни
-  - подія (event) — трагічна подія, історична подія
-  - джерело (source) — першоджерело, історичне джерело
-  - спадщина (heritage) — культурна спадщина, козацька спадщина
-  - 'кошовий отаман (koshovyi otaman) — виборний лідер Січі (elected leader of the Sich); collocations: обрати кошового, наказ
-    кошового'
-  - 'Січ (Sich) — Запорозька Січ, Чортомлицька Січ; collocations: зруйнування Січі, закони Січі'
-  - 'вольності (liberties) — козацькі вольності, захист вольностей; context: rights and privileges guaranteed by tradition'
-  recommended:
-  - аналіз (analysis) — критичний аналіз, аналіз джерел
-  - контекст (context) — історичний контекст, геополітичний контекст
-  - вплив (influence) — вплив на історію, політичний вплив
-  - наслідки (consequences) — трагічні наслідки, політичні наслідки
-  - 'зрада (betrayal/treason) — міф про зраду, звинувачення у зраді; decolonization: often used by empires to describe independence
-    movements'
-  - союз (alliance) — військовий союз, шведсько-український союз
-  - Кам'яний Затон (Kamiany Zaton) — фортеця, збудована Москвою (fortress built by Moscow); symbol of colonization
-  - Диканька (Dykanka) — місце зустрічі Мазепи і Гордієнка (meeting place of Mazepa and Hordiyenko)
-  - Чортомлицька Січ (Chortomlyk Sich) — знищена у 1709 році (destroyed in 1709)
 activity_hints:
-- type: reading
-  focus: Первинні джерела
-  items: 4
-- type: essay-response
-  focus: Критичний аналіз
-- type: critical-analysis
-  focus: Аналіз причинно-наслідкових зв'язків між подіями
-  items: 3
-- type: critical-analysis
-  focus: Критична оцінка історичних тверджень та міфів
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння історіографічних дебатів
   items: 5
-prerequisites:
-- 'hist-63: Іван Мазепа I'
-- 'hist-64: Іван Мазепа II'
-persona:
-  voice: Senior Professor of History
-  role: Zaporozhian Envoy
-learning_outcomes:
-- Учень розуміє роль Костя Гордієнка в союзі з Іваном Мазепою та Карлом XII
-- Учень може пояснити ідеологію Запорозької Січі як автономної республіки
-- Учень знає про трагедію Чортомлицької Січі 1709 року
+  placement: inline
+  type: quiz
+- after_section: Джерела
+  focus: Розуміння первинного історичного джерела
+  placement: inline
+  type: reading
+- focus: Оцінка первинного джерела — хто написав, навіщо, що упущено?
+  placement: workbook
+  type: source-evaluation
+- focus: Дебат — оцінка значення та наслідків події
+  placement: workbook
+  type: debate
+- focus: Порівняння української та імперської інтерпретацій (Кость Гордієнко та Січ)
+  placement: workbook
+  type: comparative-study
+- focus: Есе на тему зв'язку з сучасністю (Кость Гордієнко та Січ)
+  placement: workbook
+  type: essay-response
+cefr_min: C1
 connects_to:
 - ivan-mazepa-poltava
-references: []
-register: академічний
-grammar: []
+- pylyp-orlyk-constitution
+content_outline:
+- points:
+  - 'Провокація: Кошовий отаман — це «неосвічений степовий воїн»? Кость Гордієнко, випускник Києво-Могилянської академії,
+    руйнує цей стереотип. Чому імперії було вигідно зображати козаків дикунами?'
+  - 'Фрагмент листа 1702 року без контексту: «...запорожці будуть збройно з ними битися». Хто і кому погрожує? Проти кого
+    готові битися запорожці?'
+  section: Розминка
+  words: 400
+- points:
+  - 'Дебат 1: Січ — це «гніздо бандитів і п''яниць» (імперська версія) чи християнська козацька республіка з власним законом
+    (українська історіографія)?'
+  - 'Дебат 2: Союз із Мазепою — це «зрада» (російська версія) чи єдиний можливий шлях зберегти «козацькі вольності» та Вітчизну
+    від московської централізації?'
+  - '[!epistemic-humility] Особиста ворожнеча між Гордієнком та Мазепою справді існувала. Історики досі сперечаються, що змусило
+    їх об''єднатися — відчай, спільна загроза чи раптове прозріння?'
+  - 'Глобальна синхронність: Початок XVIII ст. — це війна за іспанську спадщину та Велика Північна війна. Боротьба козаків
+    за свої права проти централізаторської монархії Петра I є паралеллю до повстання Ракоці в Угорщині проти Габсбургів.'
+  section: 'Конфліктна карта: Республіка проти Імперії'
+  words: 900
+- points:
+  - 'Аналіз риторики: Лист Гордієнка до Мазепи (1708), де він пише про «злість московську» на «Вітчизну, нашу матір». Розбір
+    метафор та політичної мови.'
+  - 'Конституція Пилипа Орлика (1710): Гордієнко підписав її як представник Січі. Які статті гарантували права Запорожжя?
+    Чому це був безпрецедентний документ для свого часу?'
+  - '[!decolonization] Погляд ззовні: Шведські мемуаристи (Адлерфельт, Нордберг) чітко відрізняли козаків від московських
+    військ, визнаючи їх окремим народом з окремими цілями. Це руйнує імперський міф про «один народ».'
+  - 'Народна пам''ять: Аналіз «Думи про зруйнування Січі» («Ой, встань, Петре...»). Як фольклор зображує трагедію, і чим ця
+    версія відрізняється від сухих військових звітів?'
+  section: 'Джерела: Листи, закони та шведські щоденники'
+  words: 1600
+- points:
+  - 'Причина та наслідок: Союз 8000 запорожців з Мазепою та Карлом XII став останньою краплею для Москви, що призвело до каральної
+    експедиції.'
+  - 'Трагедія Чортомлицької Січі (травень 1709): Детальний аналіз кампанії Меншикова та Яковлєва, героїчної оборони під проводом
+    Якима Богуша та ролі зради Гната Галагана.'
+  - '[!myth-buster] Руйнування Січі — це не просто військова операція, а акт геноциду та терору. Страта 156 полонених та пущені
+    за течією Дніпра плоти з тілами мали на меті залякати все українство.'
+  - 'Довгострокові наслідки: Знищення Січі стало символом московської жорстокості та кінцем «козацької республіки». Спадщина
+    Гордієнка — це опір в екзилі (Олешківська, Кам''янська Січ) до самої смерті у 1733 році.'
+  section: 'Аналіз: Наслідки та значення'
+  words: 1600
+- points:
+  - 'Повернення до розминки: Використовуючи знання з модуля, дайте відповідь: як особистість Костя Гордієнка (освіченого лідера)
+    суперечила імперському міфу про «дикого козака»?'
+  - 'Ширше питання: Яку роль відіграє зрада у знищенні держав та спільнот? Чи могла Січ вижити без зради Галагана?'
+  - '[!anti-hagiography] Союз із Мазепою, хоч і вимушений, був відчайдушним кроком, який призвів до катастрофи для Січі. Чи
+    був у Гордієнка інший, кращий вибір у тій геополітичній ситуації?'
+  - 'Зв''язок із сьогоденням: Історія зруйнування Січі як приклад реакції імперії на прагнення до свободи. Які паралелі можна
+    провести з сучасною історією України?'
+  section: Дискусія та підсумок
+  words: 700
+focus: Kost Hordiyenko's alliance with Mazepa, the Zaporozhian Sich as a democratic republic, the 1709 destruction of Chortomlyk
+  Sich, and the decolonization of the 'traitor' narrative
+level: HIST
+module: hist-065
+objectives:
+- Аналізувати причини та наслідки союзу Костя Гордієнка зі шведами та Іваном Мазепою
+- Пояснювати ідеологію та устрій Запорозької Січі як автономної козацької республіки
+- Критично оцінювати подію та наслідки знищення Чортомлицької Січі у 1709 році
+- Розрізняти український та імперський наративи щодо постаті Гордієнка та ролі Січі
+pedagogy: CBI
+persona:
+  role: Модератор дискусії, що ставить під сумнів імперські наративи та романтичні міфи про козацтво
+  voice: Critical-Historian
+phase: HIST.7 [Mazepa & End of Hetmanate]
+references:
+- note: Compiled from Yavornysky, Subtelny, Plokhy on the destruction of Chortomlyk Sich
+  path: wiki/hist/hetmanate/kost-hordiyenko.md
+  type: wiki
+- author: Дмитро Яворницький
+  note: Класична праця з детальним описом життя, законів та руйнування Січі
+  type: primary
+  work: Історія запорозьких козаків
+- author: Сергій Плохій
+  note: Сучасний аналіз ролі козацтва в українській історії та національній ідентичності
+  type: primary
+  work: The Cossack Myth
+sequence: 65
+slug: kost-hordiyenko-sich
+subtitle: Kost Hordiyenko and the Sich
+title: Кость Гордієнко та Січ
+version: '4.0'
+vocabulary_hints:
+- definition: виборний лідер Запорозької Січі
+  pos: ч.
+  word: кошовий отаман
+- definition: права та привілеї, гарантовані традицією або законом
+  pos: мн.
+  word: вольності
+- definition: процес зосередження державної влади в одному центрі
+  pos: ж.
+  word: централізація
+- definition: форма правління, за якої верховна влада належить одній особі
+  pos: ж.
+  word: автократія
+- definition: форма правління, за якої вищі органи влади обираються населенням
+  pos: ж.
+  word: республіка
+- definition: в імперському дискурсі — будь-який рух за незалежність; в українському — перехід на бік ворога
+  pos: ж.
+  word: зрада
+- definition: угода (часто військова) між двома чи більше сторонами для досягнення спільної мети
+  pos: ч.
+  word: союз
+- definition: одна з найбільших Запорозьких Січей, зруйнована у 1709 році
+  pos: ж.
+  word: Чортомлицька Січ
+- definition: військова операція з метою покарання та залякування населення
+  pos: ж.
+  word: каральна експедиція
+- definition: дії, спрямовані на повне або часткове знищення національної, етнічної, расової чи релігійної групи
+  pos: ч.
+  word: геноцид
+word_target: 5000

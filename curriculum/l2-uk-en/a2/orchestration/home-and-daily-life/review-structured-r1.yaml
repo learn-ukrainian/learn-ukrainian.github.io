@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'All 4 content_outline sections present and well-structured. All 4 objectives
+    addressed. Missing minor vocabulary from outline points: **полиця** (furniture
+    list), **кабінет** (room list), **під час ро'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'CRITICAL: "стіл з дерева" labeled as Instrumental when VESUM confirms
+    "дерева" is Genitive (`v_rod`). MAJOR: "по телевізору" is a Russicism. MAJOR:
+    "у кухні" presented as standard when Avramenko lists'
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: 'Good PPP flow: situation (dialogue) → pattern observation → explicit
+    rule → more examples. Excellent teaching of Acc/Instr contrast "сідайте **за стіл**
+    (direction)" vs "сидимо **за столом** (position'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'All **required** plan vocab present: помешкання ✓, кімната ✓, кухня ✓,
+    спальня ✓, вітальня ✓, меблі ✓, розпорядок дня ✓, вставати ✓, снідати ✓, лягати
+    спати (in Підсумок) ✓. All **recommended**: балко'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 4 markers match plan's `activity_hints` in type and focus. Each placed
+    after its teaching section. Can't evaluate item content (generated separately),
+    but marker logic is sound.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: 'Three named characters (Олена, Марк, Ігор, Оксана) with distinct situations.
+    Dialogues feel natural — apartment tour over video, visiting friends with gifts.
+    Cultural detail is specific (роззуватися, '
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: 'Clean markdown. All H2 sections present and ordered: S1, S2, S3, Speaking
+    Task, Підсумок. Word count 2576 > 2000 target ✓. No stray tags, no formatting
+    artifacts.'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian hospitality scene is authentic (shoes off at door, slippers
+    offered, bringing gifts when visiting, offering tea/coffee). Decolonized — no
+    "like Russian" comparisons anywhere. Ukrainian prese
+- dimension: 9
+  name: Dialogue quality
+  score: 9
+  evidence: Three multi-turn dialogues with named speakers. Олена-Марк video tour
+    is modern and relatable. Оксана-Ігор dinner visit is culturally rich and natural.
+    Routine comparison dialogue feels organic. One s
+findings: []

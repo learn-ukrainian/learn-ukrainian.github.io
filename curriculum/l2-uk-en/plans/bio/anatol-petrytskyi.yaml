@@ -1,92 +1,148 @@
-module: bio-103
-level: BIO
-sequence: 103
-slug: anatol-petrytskyi
-version: '3.0'
-title: 'Анатоль Петрицький: <!-- Title -->'
-focus: biography
-phase: BIO
-word_target: 5000
-objectives:
-- Дізнатися про життя та творчість Анатоль Петрицький
-content_outline:
-- section: Вступ — Painter/designer
-  points:
-  - <!-- point -->
-  words: 850
-- section: Ранні роки та становлення
-  points:
-  - <!-- point -->
-  words: 850
-- section: Творчий шлях та основні здобутки
-  points:
-  - <!-- point -->
-  words: 850
-- section: Роль у Розстріляному відродженні
-  points:
-  - <!-- point -->
-  words: 850
-- section: Переслідування та трагічна доля
-  points:
-  - <!-- point -->
-  words: 850
-- section: Спадщина та значення
-  points:
-  - <!-- point -->
-  words: 750
-vocabulary_hints:
-  required:
-  - Розстріляне відродження
-  - Анатоль Петрицький
-  recommended:
-  - модернізм (modernism)
-  - сатира (satire)
-  - абсурд (absurd)
-  - тоталітаризм (totalitarianism)
 activity_hints:
-- type: reading
-  focus: Фрагменти п'єси «Мина Мазайло»
-  source: Первинне джерело
-  items: 3 passages
-- type: essay-response
-  focus: Мовне питання у творчості Куліша
-  output: Аргументований есей
-- type: critical-analysis
-  focus: Порівняння долі Куліша та Курбаса
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння інтерпретацій постаті
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Тінь
+  focus: Правда чи міф — перевірка стереотипів про постать
+  items: 5
+  placement: inline
+  type: true-false
+- focus: Дебат — герой чи складна постать? Обидві позиції з аргументами
+  placement: workbook
+  type: debate
+- focus: Критичний аналіз спадщини — що залишилось, що спотворено?
+  placement: workbook
+  type: critical-analysis
+- focus: Чому біографи зображували постать саме так?
+  placement: workbook
+  type: authorial-intent
+- focus: 'Есе-рефлексія про Тінь (антиагіографічний аналіз) (Микола Куліш: Драматургія мовного вибору та абсурду)'
+  placement: workbook
+  type: essay-response
+cefr_min: C1
 connects_to:
 - bio/les-kurbas
 - bio/mykola-khvylovyi
+content_outline:
+- annotations:
+  - '[!biography]'
+  points:
+  - 'Парадокс: Як комедія про мову («Мина Мазайло») могла стати смертним вироком для її автора?'
+  - 'Провокаційне питання: Чи можна вважати сатиру на мовні комплекси злочином проти держави?'
+  section: Розминка
+  words: 400
+- annotations:
+  - '[!epistemic-humility]'
+  - '[!decolonization]'
+  points:
+  - 'Дебат 1 (за життя): Куліш — радянський сатирик, що викриває міщанство, чи український інтелектуал, що ставить під сумнів
+    саму суть «українізації»?'
+  - 'Дебат 2 (після смерті): Як радянська пропаганда перетворила драматурга на «буржуазного націоналіста» для виправдання
+    репресій, і як сучасна Україна бачить його як мученика за національну ідею.'
+  - '[!epistemic-humility] Оцінки п''єс Куліша були діаметрально протилежними — від захоплення до звинувачень в ідеологічній
+    диверсії. Чи існує «правильна» інтерпретація?'
+  section: 'Конфліктна карта: Сатирик, націоналіст чи «ворог народу»?'
+  words: 900
+- points:
+  - 'Соціальний контекст: дитинство в умовах імперської політики русифікації.'
+  - 'Освіта та світогляд: як шкільний учитель та офіцер царської армії став провідним радянським драматургом?'
+  - 'Переїзд до Харкова: входження в коло літературної еліти, знайомство з Хвильовим та Курбасом, початок роботи для театру.'
+  section: 'Формування: Від херсонських степів до харківського авангарду'
+  words: 1000
+- points:
+  - 'Аналіз «Мини Мазайла»: сатира на міщанське бажання «покращити» своє прізвище як метафора національного самозречення.'
+  - 'Творчий тандем: легендарна співпраця з режисером-реформатором Лесем Курбасом у театрі «Березіль».'
+  - 'Інші твори: «Народний Малахій», «Патетична соната» — експерименти з формою та філософські пошуки.'
+  section: 'Діяльність: Театр абсурду і сатири — «Мина Мазайло» та «Березіль»'
+  words: 1300
+- annotations:
+  - '[!anti-hagiography]'
+  - '[!myth-buster]'
+  points:
+  - 'Критика та цькування: як вистави Куліша стали «антирадянськими», а він сам — «ворогом народу».'
+  - 'Арешт та допити: звинувачення в участі у «терористичній організації» та сфабрикований судовий процес.'
+  - 'Трагічний фінал: розстріл 3 листопада 1937 року в урочищі Сандармох разом з Лесем Курбасом та сотнями інших представників
+    української інтелігенції.'
+  - '[!anti-hagiography] Куліш не був дисидентом у сучасному розумінні; він намагався творити в рамках радянської системи,
+    доки система не знищила його.'
+  section: 'Тінь: Злам, арешт і Сандармох'
+  words: 900
+- annotations:
+  - '[!decolonization]'
+  points:
+  - 'Повернення до розминки: студент формулює відповідь, чому комедія стала трагедією в умовах тоталітарного режиму.'
+  - 'Спадщина Куліша: чи є він лише жертвою сталінського терору, чи його творчість залишається актуальною сьогодні?'
+  - '[!decolonization] Переоцінка ролі Куліша — від «ворога народу» в СРСР до одного з символів «Розстріляного відродження»
+    в незалежній Україні.'
+  - 'Сучасна релевантність: як п''єси Куліша про мовну політику та національну ідентичність резонують із сьогоденням?'
+  section: 'Дискусія та підсумок: Спадщина'
+  words: 700
+focus: Mykola Kulish's plays (Myna Mazailo), linguistic satire, partnership with Les Kurbas, role in the Executed Renaissance,
+  tragic fate at Sandarmokh
+level: BIO
+module: bio-103
+objectives:
+- Аналізувати сатиру Миколи Куліша як форму художнього дослідження та культурного спротиву.
+- Пояснювати складний зв'язок між творчістю драматурга та політикою «українізації» 1920-х років.
+- Характеризувати унікальність творчого тандему Куліша та Курбаса та їхній вплив на розвиток українського театру.
+- Критично оцінювати причини та наслідки трагічної долі Миколи Куліша в контексті сталінських репресій.
+pedagogy: CBI
+persona:
+  role: Ведучий семінару з історії українського театру, що ставить гострі питання про ціну мистецтва в тоталітарній державі.
+  voice: Literary-Critic
+phase: BIO.3
 prerequisites:
 - hist/rozstriliane-vidrodzennia
 - hist/mekhanizm-teroru
-persona:
-  voice: Senior Biographer
-  role: Constructivist Designer
-module_type: biography
-immersion: 100% Ukrainian
-notes: 'Mykola Kulish is considered the greatest Ukrainian playwright of the 20th century.
-
-  His plays combined modernist techniques with deep exploration of Ukrainian identity
-
-  and the absurdities of Soviet reality. "Myna Mazailo" brilliantly satirized
-
-  linguistic assimilation. His partnership with director Les Kurbas created
-
-  legendary theatrical productions. Both were arrested in 1934 and executed on
-
-  the same day (November 3, 1937) in the Sandarmokh mass execution.
-
-  '
 references:
-- name: Микола Куліш (Енциклопедія історії України)
-  url: https://esu.com.ua/article-7980
-  type: primary
-  notes: Академічна біографія
-- name: Куліш М. П'єси
-  type: primary
-  notes: Збірка драматичних творів
-- name: Жулинський М. Микола Куліш
+- note: Compiled research on Kulish's biography, plays, and critical reception.
+  path: wiki/bio/mykola-kulish.md
+  type: wiki
+- note: Микола Куліш (Енциклопедія Сучасної України), академічна біографія.
+  source_id: esu.com.ua
   type: reference
-  notes: Монографія про творчість
-register: академічний
-grammar: []
+  url: https://esu.com.ua/article-7980
+- author: Куліш М.
+  note: Збірка драматичних творів, першоджерело для аналізу.
+  type: primary
+  work: П'єси
+- author: Жулинський М.
+  note: Монографія про творчість драматурга.
+  type: reference
+  work: Микола Куліш
+sequence: 103
+slug: mykola-kulish
+subtitle: 'Mykola Kulish: The Dramaturgy of Linguistic Choice and Absurdity'
+title: 'Микола Куліш: Драматургія мовного вибору та абсурду'
+version: '4.0'
+vocabulary_hints:
+- definition: літературно-театральне мистецтво, теорія та історія драматичної творчості
+  pos: ж.
+  word: драматургія
+- definition: художній прийом, що викриває та висміює негативні явища суспільства
+  pos: ж.
+  word: сатира
+- definition: безглуздя, нісенітниця; у мистецтві — зображення дійсності, позбавленої логіки та сенсу
+  pos: ч.
+  word: абсурд
+- definition: процес втрати однією етнічною групою своєї мови та культури під впливом іншої, домінантної групи
+  pos: ж.
+  word: асиміляція
+- definition: політика в 1920-х роках, спрямована на впровадження української мови та культури в усі сфери суспільного життя
+  pos: ж.
+  word: українізація
+- definition: загальна назва течій у мистецтві кінця XIX - початку XX ст., що характеризуються розривом з традиційними формами
+  pos: ч.
+  word: модернізм
+- definition: радикальне крило модернізму, що прагнуло докорінного оновлення художньої мови
+  pos: ч.
+  word: авангард
+- definition: політичний режим, що прагне повного контролю держави над усіма аспектами суспільного та особистого життя
+  pos: ч.
+  word: тоталітаризм
+- definition: каральні заходи, покарання, що застосовуються державними органами з політичних мотивів
+  pos: мн.
+  word: репресії
+word_target: 5000

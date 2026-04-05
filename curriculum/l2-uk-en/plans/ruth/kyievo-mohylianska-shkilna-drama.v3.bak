@@ -1,0 +1,83 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння соціолінгвістичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Текст
+  focus: Транскрипція руського/староукраїнського фрагменту
+  placement: inline
+  type: transcription
+- focus: Простежити еволюцію слова від руської доби до сучасної
+  placement: workbook
+  type: etymology-trace
+- focus: Порівняння мовних контактів — полонізми, латинізми, церковнослов'янізми (Шкільна драма Києво-Могилянської академії)
+  placement: workbook
+  type: dialect-comparison
+- focus: Порівняння — те саме поняття церковнослов'янською, руською та сучасною (Шкільна драма Києво-Могилянської академії)
+  placement: workbook
+  type: comparative-study
+- focus: Есе — як цей текст доводить існування української мови до Котляревського? (Шкільна драма Києво-Могилянської академії)
+  placement: workbook
+  type: essay-response
+connects_to:
+- kyiv-mohyla-rhetoric
+- vertep-ukrainskyi-teatr
+content_outline:
+- points:
+  - School drama (шкільна драма) as pedagogical theater at KMA
+  - The tradition — students perform Latin and vernacular plays
+  section: Вступ
+  words: 750
+- points:
+  - Tragicomedy about the Baptism of Rus' — political allegory for Peter's reforms
+  - Structure — 5 acts, chorus, prologue, epilogue
+  - Blending classical form with Slavic content
+  section: Феофан Прокопович — «Володимир»
+  words: 1000
+- points:
+  - Mytrofan Dovhalevsky's poetics manuals
+  - Codification of dramatic rules for students
+  section: Довгалевський та поетики
+  words: 800
+- points:
+  - Allegory, emblem, conceit — baroque dramatic devices
+  - Fusion of Latin erudition and Ukrainian subject matter
+  section: Барокова риторика та синтез
+  words: 800
+- points:
+  - Close reading of excerpts from «Володимир» with linguistic commentary
+  - Macaronic language — Latin, Church Slavonic, vernacular mixing
+  section: Текстовий аналіз
+  words: 850
+- points:
+  - School drama as cradle of Ukrainian theater
+  - Vocabulary table
+  section: Підсумок
+  words: 800
+focus: Prokopovych's Volodymyr, Dovhalevsky's poetics, baroque rhetoric synthesis
+level: RUTH
+module: ruth-112
+objectives:
+- Аналізувати шкільну драму КМА як синтез класичної та барокової поетики
+- Інтерпретувати «Володимира» Прокоповича як політичну алегорію
+- Розуміти роль шкільної драми у становленні українського театру
+persona:
+  role: Baroque Drama Specialist
+  voice: Theater Scholar
+phase: 5
+sequence: 112
+slug: kyievo-mohylianska-shkilna-drama
+subtitle: School Drama of the Kyiv-Mohyla Academy
+title: Шкільна драма Києво-Могилянської академії
+version: '2.0'
+vocabulary_hints:
+- шкільна драма
+- трагікомедія
+- пролог
+- епілог
+- хор
+- барокова поетика
+- алегорія
+- макаронізм
+word_target: 5000

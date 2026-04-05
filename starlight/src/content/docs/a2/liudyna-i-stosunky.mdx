@@ -1,0 +1,376 @@
+---
+title: "Яка вона людина? Описуємо людей навколо нас"
+sidebar:
+  order: 4
+  label: "04. Яка вона людина? Описуємо людей навколо нас"
+pipeline: v6
+build_status: draft
+---
+
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import FillIn from '@site/src/components/FillIn';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import GroupSort from '@site/src/components/GroupSort';
+import MatchUp from '@site/src/components/MatchUp';
+import Order from '@site/src/components/Order';
+import Quiz from '@site/src/components/Quiz';
+import Translate from '@site/src/components/Translate';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Зо́внішність: як вигляда́є люди́на? (Appearance: What Does a Person Look Like?)
+
+When we meet someone new, the first thing we notice is their appearance. In Ukrainian, describing a person's appearance — **зовнішність** — relies heavily on descriptive adjectives. Here is how two friends discuss people in a photograph.
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">По́друга 1:</span> Це твоя́ сестра́ на фо́то? Вона́ висо́ка, темноволо́са. *(Is this your sister in the photo? She is tall, dark-haired.)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Подруга 2:</span> Так, це моя́ сестра. Вона ду́же весе́ла і щи́ра людина. *(Yes, this is my sister. She is a very cheerful and sincere person.)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Подруга 1:</span> А це хто по́руч із не́ю? *(And who is this next to her?)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Подруга 2:</span> А це мій сусі́д. Він за́вжди́ мені́ допомага́є. Учо́ра допомі́г мені з валі́зою. *(And this is my neighbor. He always helps me. Yesterday he helped me with a suitcase.)*</div>
+
+
+</div>
+
+When describing appearance, you need pairs of opposite adjectives. Remember that adjectives in Ukrainian change to match the gender (masculine, feminine, neuter) and number of the noun they describe. Here are the core pairs:
+
+*   **висо́кий** (tall) — **низьки́й** (short)
+*   **худи́й** (thin) — **по́вний** (plump/full)
+*   **молоди́й** (young) — **стари́й** (old)
+*   **темноволо́сий** (dark-haired) — **світловоло́сий** (light-haired/blonde)
+*   **кароо́кий** (brown-eyed) — **блакитноо́кий** (blue-eyed)
+
+Notice how the endings change depending on who is being described:
+
+*   **Цей чолові́к дуже високий.** (This man is very tall.)
+*   **Моя подруга низька́ і худа.** (My friend is short and thin.)
+*   **Наш діду́сь старий, але́ дуже акти́вний.** (Our grandfather is old, but very active.)
+*   **Ця жі́нка — по́вна.** (This woman is plump.)
+*   **Мій брат — світловолосий хло́пець.** (My brother is a blonde guy.)
+*   **Ця ді́вчинка кароо́ка.** (This girl is brown-eyed.)
+
+In Ukrainian, there are two common ways to describe physical features like eyes (**о́чі**) or hair (**воло́сся**). We can use the verb **ма́ти** (to have) with the accusative case, or we can use the preposition **з** (with) followed by the instrumental case. You will learn the full rules for the instrumental case in a later module, but here is a preview of how it looks in common descriptions.
+
+Using **мати** (to have):
+*   **Вона ма́є ка́рі очі.** (She has brown eyes.)
+*   **Він має сві́тле волосся.** (He has light hair.)
+*   **Моя ма́ма має блаки́тні очі.** (My mom has blue eyes.)
+*   **Мій та́то має те́мне волосся.** (My dad has dark hair.)
+*   **Ця ді́вчи́на має зеле́ні очі.** (This girl has green eyes.)
+
+Using **з** (with) + instrumental case:
+*   **Вона — дівчина з ка́рими очи́ма.** (She is a girl with brown eyes.)
+*   **Він — хлопець зі сві́тлим воло́ссям.** (He is a guy with light hair.)
+*   **Це жінка з блаки́тними очима.** (This is a woman with blue eyes.)
+*   **Я ба́чу чолові́ка з те́мним волоссям.** (I see a man with dark hair.)
+*   **Це дити́на із зеле́ними очима.** (This is a child with green eyes.)
+
+Note how the endings **-ими** or **-им** appear on the adjectives after the preposition **з** (which becomes **зі** or **із** for easier pronunciation before certain sounds). 
+
+### Чита́ємо украї́нською (Reading Practice)
+
+**На старі́й фотогра́фії**
+Це стара́ фотогра́фія моє́ї роди́ни. Ось мій тато. Він молодий, високий і темноволосий. Він має карі очі. Поруч стої́ть моя мама. Вона низька, але дуже струнка́. Мама світловоло́са і блакитноо́ка. А це я. Я ще мале́нька дівчинка з карими очима. Ми всі дуже щасли́ві на цьому́ фото.
+
+<FillIn client:only="react" items={[{"sentence": "Це моя сестра. Вона ____.", "answer": "висока", "options": ["високий", "висока", "високе"]}, {"sentence": "Це мій брат. Він ____.", "answer": "темноволосий", "options": ["темноволосий", "темноволоса", "темноволосе"]}, {"sentence": "Це мій дідусь. Він ____.", "answer": "старий", "options": ["старий", "стара", "старе"]}, {"sentence": "Ця жінка ____.", "answer": "повна", "options": ["повний", "повна", "повне"]}, {"sentence": "Цей чоловік ____.", "answer": "молодий", "options": ["молодий", "молода", "молоде"]}, {"sentence": "Ця дівчинка ____.", "answer": "кароока", "options": ["кароокий", "кароока", "карооке"]}, {"sentence": "Цей хлопчик ____.", "answer": "низький", "options": ["низький", "низька", "низьке"]}, {"sentence": "Моя подруга ____.", "answer": "худа", "options": ["худий", "худа", "худе"]}]} instruction={"Вставте правильну форму прикметника, щоб описати зовнішність людини (узгодження за родом)."} />
+
+## Хара́ктер: яка вона людина? (Character: What Kind of Person Is She?)
+
+A person's appearance is only half the picture. In Ukrainian culture, a person's inner world — their **характер** (character, personality) — is considered much more important. Here is a workplace conversation where colleagues discuss character:
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Но́вий працівни́к:</span> Хто ваш керівни́к? Яки́й він? *(Who is your manager? What is he like?)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Досві́дчений коле́га:</span> Він дуже відповіда́льний і терпля́чий. *(He is very responsible and patient.)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Новий працівник:</span> А коле́ги? *(And the colleagues?)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Досвідчений колега:</span> Усі приві́тні, особли́во Окса́на — вона завжди підка́зує нови́м працівника́м. *(Everyone is friendly, especially Oksana — she always helps new employees.)*</div>
+
+
+</div>
+
+To describe a person's character, we use specific personality adjectives. Here are the most common positive traits you will hear in everyday conversation:
+
+*   **приві́тний** (friendly, welcoming)
+*   **щи́рий** (sincere, genuine)
+*   **чу́йний** (responsive, caring)
+*   **до́брий** (kind, good)
+*   **весе́лий** (cheerful)
+*   **розу́мний** (smart, intelligent)
+*   **працьови́тий** (hardworking)
+*   **терплячий** (patient)
+*   **відповідальний** (responsible)
+*   **наполе́гливий** (persistent, determined)
+
+These adjectives can be combined in sentences:
+
+*   **Мій брат дуже привітний.** (My brother is very friendly.)
+*   **Вона — щира людина.** (She is a sincere person.)
+*   **Наш керівник відповідальний і розумний.** (Our manager is responsible and smart.)
+*   **Ця жінка дуже працьови́та.** (This woman is very hardworking.)
+*   **Моя бабу́ся завжди чу́йна.** (My grandmother is always caring.)
+
+Not all traits are entirely positive. There are also challenging traits. However, in Ukrainian culture, some of these can be seen from a different perspective. 
+
+*   **впе́ртий** (stubborn)
+*   **сумни́й** (sad)
+*   **леда́чий** (lazy)
+*   **серйо́зний** (serious)
+*   **ти́хий** (quiet)
+
+:::note
+**Cultural Perspective**
+The word **впертий** literally means "stubborn". While often seen as a negative trait (e.g., refusing to listen to reason), Ukrainians also frequently use it as a positive compliment meaning "persistent" or "principled" when someone refuses to give up in the face of difficulty. A person who achieves great success is often described as **впертий**.
+:::
+
+These challenging traits appear in context:
+
+*   **Цей хлопець дуже ледачий.** (This guy is very lazy.)
+*   **Чо́му ти сього́дні таки́й сумний?** (Why are you so sad today?)
+*   **Моя сестра дуже впе́рта.** (My sister is very stubborn.)
+*   **Цей студе́нт серйозний і тихий.** (This student is serious and quiet.)
+*   **Він впертий, тому́ завжди перемага́є.** (He is stubborn [persistent], that's why he always wins.)
+
+### Expressing Character Through Actions (Aspect Integration)
+
+In Ukrainian, we often describe a person's character not just with adjectives, but by describing what they *do*. This is where verbal aspect becomes crucial. 
+
+When we describe habitual actions — things a person does regularly that prove their character — we use the **imperfective aspect**. 
+
+*   **Він завжди допомагає лю́дям.** (He always helps people. — *Habitual, imperfective*)
+*   **Вона ча́сто підказує коле́гам.** (She often helps colleagues. — *Habitual, imperfective*)
+*   **Мій друг завжди працю́є допі́зна.** (My friend always works late. — *Habitual, imperfective*)
+
+When we want to give a specific, one-time example that proves a person's character, we use the **perfective aspect**.
+
+*   **Вчо́ра він допоміг мені з проє́ктом.** (Yesterday he helped me with a project. — *One-time, perfective*)
+*   **Вона підказа́ла мені правильну адре́су.** (She gave me the right address. — *One-time, perfective*)
+*   **Він попрацюва́в у вихідні́.** (He worked on the weekend. — *One-time, perfective*)
+
+By combining adjectives and verbs of different aspects, you create a rich, natural portrait of a person.
+
+### Читаємо українською (Reading Practice)
+
+**Моя нова́ колега**
+Це моя нова колега, Оле́на. Вона дуже розу́мна і відповіда́льна жінка. Олена приві́тна — вона завжди віта́ється вра́нці. Вона та́ко́ж дуже працьовита. Олена завжди працює шви́дко. Учора був складний день, але вона швидко зроби́ла всю робо́ту. Я ду́маю, що вона щира і до́бра людина. 
+
+<MatchUp client:only="react" pairs={[{"left": "Він багато працює і не любить відпочивати.", "right": "працьовитий"}, {"left": "Вона завжди каже правду.", "right": "щира"}, {"left": "Він часто допомагає людям і підтримує їх.", "right": "чуйний"}, {"left": "Вона ніколи не поспішає і вміє чекати.", "right": "терпляча"}, {"left": "Він швидко вчиться і багато знає.", "right": "розумний"}, {"left": "Вона завжди вітається і посміхається.", "right": "привітна"}, {"left": "Він не хоче працювати і любить довго спати.", "right": "ледачий"}, {"left": "Вона не любить змінювати свою думку.", "right": "вперта"}]} instruction={"З'єднайте опис людини з відповідною рисою характеру."} />
+<GroupSort client:only="react" groups={{"Позитивні риси": ["щирий", "працьовитий", "терплячий", "привітний", "чуйний", "відповідальний"], "Складні риси": ["сумний", "ледачий", "впертий", "серйозний"]}} instruction={"Розподіліть риси характеру на позитивні та складні."} />
+
+## Лю́ди навко́ло нас: ро́дичі, дру́зі, знайо́мі (People Around Us)
+
+Now that you can describe appearance and character, you need the vocabulary to explain who these people are to you. We are constantly surrounded by different types of relationships — **стосу́нки**.
+
+Here is how someone introduces people in a natural conversation:
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Оле́г:</span> А хто це на фотографії? *(And who is this in the photo?)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Марі́я:</span> Це мій дя́дько. Він живе́ поруч. *(This is my uncle. He lives nearby.)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Олег:</span> Який він? *(What is he like?)*</div>
+
+
+<div class="dialogue-line"><span class="speaker">Марія:</span> Він мій найкра́щий друг. Він мене́ поважа́є і завжди слу́хає. *(He is my best friend. He respects me and always listens.)*</div>
+
+
+</div>
+
+Here is the essential vocabulary for relationships:
+
+*   **ро́дич** (relative)
+*   **мати / ба́тько** (mother / father)
+*   **брат / сестра** (brother / sister)
+*   **дідусь / бабуся** (grandfather / grandmother)
+*   **дядько / ті́тка** (uncle / aunt)
+*   **друг / подруга** (male friend / female friend)
+*   **това́риш** (friend / comrade / buddy)
+*   **сусід / сусі́дка** (male neighbor / female neighbor)
+*   **колега** (colleague)
+*   **знайо́мий / знайо́ма** (male acquaintance / female acquaintance)
+
+:::tip
+**Друг vs Товариш vs Знайомий**
+A **друг** is a close, trusted friend. A **товариш** is a casual friend, buddy, or a companion you share activities with. A **знайомий** is simply an acquaintance — someone you know, but are not close to. 
+:::
+
+When talking about your relationships, you can use these common sentence patterns:
+
+*   **Це мій близьки́й родич.** (This is my close relative.)
+*   **Ми дру́жимо вже п'ять ро́кі́в.** (We have been friends for five years.)
+*   **Вона — моя найкра́ща подруга.** (She is my best friend.)
+*   **Він мій сусід — живе поруч.** (He is my neighbor — he lives nearby.)
+*   **Це моя нова знайома.** (This is my new acquaintance.)
+*   **Мій дядько і моя тітка живу́ть там.** (My uncle and my aunt live there.)
+*   **Вона моя колега по робо́ті.** (She is my colleague from work.)
+
+To describe how someone acts toward you in a relationship, you can use verbs that take an object (often in the dative or accusative case).
+
+*   **Вона мені довіря́є.** (She trusts me.)
+*   **Він мене поважає.** (He respects me.)
+*   **Вони́ нам допомага́ють.** (They help us.)
+*   **Мої́ батьки́ мене розумі́ють.** (My parents understand me.)
+*   **Сусі́ди нам часто телефону́ють.** (The neighbors often call us.)
+
+If someone asks you **"А хто це?"** (And who is this?), you can respond with their relationship to you. If they ask **"Який він?"** (What is he like?) or **"Яка вона?"** (What is she like?), you can describe their character or actions.
+
+*   **А хто це? Це мій товариш.** (And who is this? This is my buddy.)
+*   **Який він? Він дуже веселий і щирий.** (What is he like? He is very cheerful and sincere.)
+*   **А хто ця дівчина? Це моя знайома.** (And who is this girl? This is my acquaintance.)
+*   **Яка вона? Вона привітна і розумна.** (What is she like? She is friendly and smart.)
+
+### Читаємо українською (Reading Practice)
+
+**Мої сусіди**
+Це мій сусід Іва́н і йо́го дружи́на Марія. Вони — мої хоро́ші знайомі. Іван дуже працьовитий чоловік. Він часто працює в саду́. Марія — дуже чуйна жінка. Вона завжди вітається і запи́тує про мої спра́ви. Вони нам часто допомагають. Ми поважа́ємо їх. Вони дуже до́брі сусіди.
+
+<Quiz client:only="react" questions={[{"question": "Це людина, яка живе поруч зі мною у будинку. Хто це?", "options": [{"text": "сусід", "correct": true}, {"text": "колега", "correct": false}, {"text": "брат", "correct": false}, {"text": "дядько", "correct": false}]}, {"question": "Ми працюємо разом в одному офісі. Вона моя ___.", "options": [{"text": "подруга", "correct": false}, {"text": "колега", "correct": true}, {"text": "сусідка", "correct": false}, {"text": "тітка", "correct": false}]}, {"question": "Мій батько, моя мати, бабуся і дідусь — це мої ___.", "options": [{"text": "друзі", "correct": false}, {"text": "знайомі", "correct": false}, {"text": "родичі", "correct": true}, {"text": "колеги", "correct": false}]}, {"question": "Людина, яку я знаю, але ми не є близькими друзями. Хто це?", "options": [{"text": "друг", "correct": false}, {"text": "товариш", "correct": false}, {"text": "знайомий", "correct": true}, {"text": "дідусь", "correct": false}]}, {"question": "Цей чоловік завжди всім допомагає і підтримує. Він дуже ___.", "options": [{"text": "ледачий", "correct": false}, {"text": "сумний", "correct": false}, {"text": "чуйний", "correct": true}, {"text": "впертий", "correct": false}]}, {"question": "Моя сестра ніколи не обманює і завжди говорить те, що думає. Яка вона?", "options": [{"text": "щира", "correct": true}, {"text": "серйозна", "correct": false}, {"text": "ледача", "correct": false}, {"text": "тиха", "correct": false}]}, {"question": "Ця дитина має ___ очі.", "options": [{"text": "блакитні", "correct": true}, {"text": "блакитний", "correct": false}, {"text": "блакитна", "correct": false}, {"text": "блакитне", "correct": false}]}, {"question": "У нього ___ волосся.", "options": [{"text": "темні", "correct": false}, {"text": "темний", "correct": false}, {"text": "темна", "correct": false}, {"text": "темне", "correct": true}]}]} instruction={"Оберіть правильний варіант, щоб доповнити опис людини або стосунків."} />
+
+## Опи́суємо люди́ну цілко́м (Describing a Person Fully)
+
+You now have all the tools you need to create a complete portrait of a person: who they are to you, what they look like, and what kind of character they possess. 
+
+In Ukrainian, it is natural to combine all these elements into a cohesive description. You start with the relationship, move to the physical appearance, and finish with their inner qualities.
+
+Here is an example of a complete description:
+
+*   **Мій друг Андрі́й — високий хлопець із карими очима. Він дуже веселий і щирий. Ми познайо́милися в університе́ті.** (My friend Andriy is a tall guy with brown eyes. He is very cheerful and sincere. We met at the university.)
+*   **Це моя тітка Олена. Вона низька жінка зі світлим волоссям. Вона надзвича́йно терпля́ча і відповідальна.** (This is my aunt Olena. She is a short woman with light hair. She is extremely patient and responsible.)
+*   **Мій новий колега — повний чоловік. Він має блакитні очі. Він дуже розумний і працьовитий.** (My new colleague is a plump man. He has blue eyes. He is very smart and hardworking.)
+
+Notice how these paragraphs flow. They paint a complete picture of the individual. Try to think of two or three people you know and describe them using this exact pattern in your head. 
+
+:::caution
+**"Добра людина"**
+In English, saying someone is a "good person" can sometimes sound generic or weak. In Ukrainian culture, calling someone **добра людина** is a powerful and highly respected compliment. It implies they are decent, honest, and morally upright. It is often the highest praise you can give someone's character.
+:::
+
+### Читаємо українською (Reading Practice)
+
+**Мій найкращий друг**
+Мій друг Сергі́й — дуже ціка́ва людина. Він високий і світловолосий хлопець. Він має блакитні очі. Сергій — мій найкращий друг. Ми дружимо вже де́сять років. Він надзвичайно відповідальний і щирий. Він завжди мені допомагає. Учора він допоміг мені перекла́сти текст. Сергій дуже добра людина, і я його поважа́ю.
+
+## Підсумок — Summary
+
+In this module, you learned how to fully describe the people around you in Ukrainian. You started by learning how to describe physical appearance (**зовнішність**) using descriptive adjective pairs like **високий/низький** and **молодий/старий**, as well as how to describe specific features using **мати** or **з + ору́дний відмі́нок**.
+
+You also expanded your vocabulary to describe a person's inner world, their **характер**. You learned positive traits like **щирий** and **працьовитий**, and challenging traits like **впертий** and **ледачий**. Importantly, you saw how to use the imperfective aspect for habitual character traits and the perfective aspect for one-time actions that prove a person's character.
+
+Finally, you learned the vocabulary for relationships (**стосунки**) — from **родичі** to **знайомі** — and how to express how people act toward you. You now have the linguistic tools to confidently answer the questions **"А хто це?"** and **"Який він?"** in any natural conversation.
+
+</TabItem>
+<TabItem label="Словник">
+
+### Обов'язкові та рекомендовані слова
+
+| Слово | Переклад | Частина мови | Рід |
+|-------|----------|-------------|-----|
+| **впе́ртий** | stubborn, persistent | прикм. |  |
+| **чу́йний** | responsive, caring | прикм. |  |
+| **наполе́гливий** | persistent, determined | прикм. |  |
+| **ро́дич** | relative | ім. | ч. |
+| **знайо́мий** | acquaintance | прикм. |  |
+| **люди́на** | person, human being | ім. | ж. |
+| **стосу́нок** | relationship | ім. | ч. |
+| **хара́ктер** | character, personality | ім. | ч. |
+| **зо́внішність** | appearance | ім. | ж. |
+| **приві́тний** | friendly, welcoming | прикм. |  |
+| **щи́рий** | sincere, genuine | прикм. |  |
+| **працьови́тий** | hardworking | прикм. |  |
+| **терпля́чий** | patient | прикм. |  |
+| **сусі́д** | neighbor | ім. | ч. |
+| **опи́сувати** | to describe | дієсл. |  |
+| **висо́кий** | tall | прикм. |  |
+| **низьки́й** | short | прикм. |  |
+| **худи́й** | thin | прикм. |  |
+| **по́вний** | plump, full | прикм. |  |
+| **молоди́й** | young | прикм. |  |
+| **стари́й** | old | прикм. |  |
+| **темноволо́сий** | dark-haired | прикм. |  |
+| **світловоло́сий** | light-haired, blonde | прикм. |  |
+| **кароо́кий** | brown-eyed | прикм. |  |
+| **блакитноо́кий** | blue-eyed | прикм. |  |
+| **о́чі** | eyes | ім. |  |
+| **воло́сся** | hair | ім. | с. |
+| **струнки́й** | slim, slender | прикм. |  |
+| **відповіда́льний** | responsible | прикм. |  |
+| **розу́мний** | smart, intelligent | прикм. |  |
+| **весе́лий** | cheerful | прикм. |  |
+| **до́брий** | kind, good | прикм. |  |
+| **сумни́й** | sad | прикм. |  |
+| **леда́чий** | lazy | прикм. |  |
+| **серйо́зний** | serious | прикм. |  |
+| **ти́хий** | quiet | прикм. |  |
+| **дя́дько** | uncle | ім. | ч. |
+| **ті́тка** | aunt | ім. | ж. |
+| **това́риш** | friend, buddy | ім. | ч. |
+| **коле́га** | colleague | ім. | ч. |
+| **довіря́ти** | to trust | дієсл. |  |
+| **поважа́ти** | to respect | дієсл. |  |
+
+### Вирази
+
+| Вираз | Переклад |
+|-------|----------|
+| **Як справи?** | How are you? |
+| **Який він?** | What is he like? |
+| **Яка вона?** | What is she like? |
+| **добра людина** | good person (compliment) |
+| **А хто це?** | And who is this? |
+
+### Картки — Flashcards
+
+<FlashcardDeck client:only="react" cards={[{ front: "впе́ртий", back: "stubborn, persistent", subtitle: "прикм." }, { front: "чу́йний", back: "responsive, caring", subtitle: "прикм." }, { front: "наполе́гливий", back: "persistent, determined", subtitle: "прикм." }, { front: "ро́дич", back: "relative", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "знайо́мий", back: "acquaintance", subtitle: "прикм." }, { front: "люди́на", back: "person, human being", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "стосу́нок", back: "relationship", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "хара́ктер", back: "character, personality", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "зо́внішність", back: "appearance", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "приві́тний", back: "friendly, welcoming", subtitle: "прикм." }, { front: "щи́рий", back: "sincere, genuine", subtitle: "прикм." }, { front: "працьови́тий", back: "hardworking", subtitle: "прикм." }, { front: "терпля́чий", back: "patient", subtitle: "прикм." }, { front: "сусі́д", back: "neighbor", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "опи́сувати", back: "to describe", subtitle: "дієсл." }, { front: "висо́кий", back: "tall", subtitle: "прикм." }, { front: "низьки́й", back: "short", subtitle: "прикм." }, { front: "худи́й", back: "thin", subtitle: "прикм." }, { front: "по́вний", back: "plump, full", subtitle: "прикм." }, { front: "молоди́й", back: "young", subtitle: "прикм." }, { front: "стари́й", back: "old", subtitle: "прикм." }, { front: "темноволо́сий", back: "dark-haired", subtitle: "прикм." }, { front: "світловоло́сий", back: "light-haired, blonde", subtitle: "прикм." }, { front: "кароо́кий", back: "brown-eyed", subtitle: "прикм." }, { front: "блакитноо́кий", back: "blue-eyed", subtitle: "прикм." }, { front: "о́чі", back: "eyes", subtitle: "ім." }, { front: "воло́сся", back: "hair", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "струнки́й", back: "slim, slender", subtitle: "прикм." }, { front: "відповіда́льний", back: "responsible", subtitle: "прикм." }, { front: "розу́мний", back: "smart, intelligent", subtitle: "прикм." }, { front: "весе́лий", back: "cheerful", subtitle: "прикм." }, { front: "до́брий", back: "kind, good", subtitle: "прикм." }, { front: "сумни́й", back: "sad", subtitle: "прикм." }, { front: "леда́чий", back: "lazy", subtitle: "прикм." }, { front: "серйо́зний", back: "serious", subtitle: "прикм." }, { front: "ти́хий", back: "quiet", subtitle: "прикм." }, { front: "дя́дько", back: "uncle", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ті́тка", back: "aunt", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "това́риш", back: "friend, buddy", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "коле́га", back: "colleague", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "довіря́ти", back: "to trust", subtitle: "дієсл." }, { front: "поважа́ти", back: "to respect", subtitle: "дієсл." }]} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+<TrueFalse client:only="react" items={[{"statement": "Друг — це людина, яку я знаю дуже добре, і ми близькі.", "isTrue": true, "explanation": "Так, друг — це близька і довірена людина."}, {"statement": "Знайомий — це ваш дуже близький родич.", "isTrue": false, "explanation": "Ні, знайомий — це людина, яку ви знаєте, але не обов'язково близька."}, {"statement": "Якщо людина багато і сумлінно працює, вона працьовита.", "isTrue": true, "explanation": "Так, працьовита людина любить працювати."}, {"statement": "Слово 'зовнішність' означає, який у людини внутрішній світ і характер.", "isTrue": false, "explanation": "Ні, зовнішність — це те, як людина виглядає фізично."}, {"statement": "Сусід — це людина, яка живе поруч із вами.", "isTrue": true, "explanation": "Так, сусід живе в сусідньому будинку або квартирі."}, {"statement": "Щира людина завжди намагається вас обдурити.", "isTrue": false, "explanation": "Ні, щира людина чесна і каже правду."}, {"statement": "Колега — це людина, з якою ви працюєте разом.", "isTrue": true, "explanation": "Так, колеги — це працівники однієї компанії."}, {"statement": "Ледача людина завжди першою починає робити складну роботу.", "isTrue": false, "explanation": "Ні, ледача людина не любить працювати."}]} instruction={"Правда чи ні? Прочитайте твердження і визначте, чи воно правильне."} />
+
+<ErrorCorrection client:only="react" items={[{"sentence": "Це моя нова колега. Вона дуже привітний.", "errorWord": "привітний", "correctForm": "привітна", "options": ["привітна", "привітне", "привітні"], "explanation": "Колега (жінка) — це жіночий рід, тому прикметник має закінчуватися на -а (привітна)."}, {"sentence": "Мій дідусь старий, але дуже активна.", "errorWord": "активна", "correctForm": "активний", "options": ["активний", "активне", "активні"], "explanation": "Дідусь — це чоловічий рід, тому прикметник має бути чоловічого роду (активний)."}, {"sentence": "Це висока дівчина з карими очі.", "errorWord": "очі", "correctForm": "очима", "options": ["очами", "очима", "очей"], "explanation": "Після прийменника 'з' (зі) використовується орудний відмінок: з карими очима."}, {"sentence": "Вона має світлим волосся.", "errorWord": "світлим", "correctForm": "світле", "options": ["світлий", "світла", "світле"], "explanation": "Після дієслова 'мати' використовується знахідний відмінок без прийменника: має світле волосся."}, {"sentence": "Він дуже ледача хлопець і не хоче вчитися.", "errorWord": "ледача", "correctForm": "ледачий", "options": ["ледачий", "ледаче", "ледачі"], "explanation": "Хлопець — це чоловічий рід, тому прикметник має бути чоловічого роду (ледачий)."}, {"sentence": "Я бачу чоловіка зі темне волоссям.", "errorWord": "темне", "correctForm": "темним", "options": ["темний", "темним", "темною"], "explanation": "В орудному відмінку прикметник чоловічого і середнього роду має закінчення -им: зі темним волоссям."}]} instruction={"Знайдіть і виправте помилку в узгодженні або граматиці."} />
+
+<Unjumble client:only="react" items={[{"words": "високий. / Цей / дуже / чоловік", "answer": "Цей чоловік дуже високий."}, {"words": "очі. / подруга / має / карі / Моя", "answer": "Моя подруга має карі очі."}, {"words": "дуже / Він / працьовитий. / розумний / і", "answer": "Він дуже розумний і працьовитий."}, {"words": "десять / років. / дружимо / вже / Ми", "answer": "Ми дружимо вже десять років."}, {"words": "і / дуже / дівчина / щира. / Ця / привітна", "answer": "Ця дівчина дуже привітна і щира."}, {"words": "друзям. / своїм / Він / завжди / допомагає", "answer": "Він завжди допомагає своїм друзям."}]} instruction={"Складіть правильне речення зі слів. Зверніть увагу на порядок слів."} />
+
+<Translate client:only="react" questions={[{"source": "She is a very cheerful person.", "options": [{"text": "Вона дуже весела людина.", "correct": true}, {"text": "Вона дуже сумна людина.", "correct": false}, {"text": "Вона дуже ледача людина.", "correct": false}, {"text": "Вона дуже серйозна людина.", "correct": false}]}, {"source": "He has blue eyes.", "options": [{"text": "Він має блакитні очі.", "correct": true}, {"text": "Він має карі очі.", "correct": false}, {"text": "Він має світле волосся.", "correct": false}, {"text": "Він має темне волосся.", "correct": false}]}, {"source": "My neighbor is a hardworking man.", "options": [{"text": "Мій сусід — працьовитий чоловік.", "correct": true}, {"text": "Мій сусід — ледачий чоловік.", "correct": false}, {"text": "Мій знайомий — працьовитий чоловік.", "correct": false}, {"text": "Мій сусід — серйозний чоловік.", "correct": false}]}, {"source": "This is my best friend.", "options": [{"text": "Це мій найкращий друг.", "correct": true}, {"text": "Це мій новий знайомий.", "correct": false}, {"text": "Це мій близький родич.", "correct": false}, {"text": "Це мій добрий товариш.", "correct": false}]}, {"source": "They often help us.", "options": [{"text": "Вони часто нам допомагають.", "correct": true}, {"text": "Вони рідко нам допомагають.", "correct": false}, {"text": "Вони часто нас поважають.", "correct": false}, {"text": "Вони часто нас розуміють.", "correct": false}]}, {"source": "We met at the university.", "options": [{"text": "Ми познайомилися в університеті.", "correct": true}, {"text": "Ми працюємо в університеті.", "correct": false}, {"text": "Ми зустрілися в університеті.", "correct": false}, {"text": "Ми дружимо в університеті.", "correct": false}]}]} instruction={"Оберіть правильний переклад речення українською мовою."} />
+
+<Quiz client:only="react" questions={[{"question": "Мій колега дуже працьовитий. Він завжди ___ багато.", "options": [{"text": "працює", "correct": true}, {"text": "попрацював", "correct": false}, {"text": "працюватиме", "correct": false}, {"text": "працював", "correct": false}]}, {"question": "Моя сусідка чуйна. Учора вона ___ мені з важкою валізою.", "options": [{"text": "допомагала", "correct": false}, {"text": "допомогла", "correct": true}, {"text": "допомагає", "correct": false}, {"text": "допомагатиме", "correct": false}]}, {"question": "Наш керівник дуже відповідальний. Він завжди ___ роботу вчасно.", "options": [{"text": "робить", "correct": true}, {"text": "зробив", "correct": false}, {"text": "зробити", "correct": false}, {"text": "робив", "correct": false}]}, {"question": "Ця жінка привітна. Вона щодня ___ зі всіма колегами.", "options": [{"text": "вітала", "correct": false}, {"text": "привіталася", "correct": false}, {"text": "вітається", "correct": true}, {"text": "привітати", "correct": false}]}, {"question": "Він завжди був дуже щирим. Учора він ___ мені всю правду про цей проєкт.", "options": [{"text": "казав", "correct": false}, {"text": "скаже", "correct": false}, {"text": "каже", "correct": false}, {"text": "сказав", "correct": true}]}, {"question": "Вона дуже розумна. На минулому тижні вона швидко ___ цю складну проблему.", "options": [{"text": "вирішує", "correct": false}, {"text": "вирішила", "correct": true}, {"text": "вирішувала", "correct": false}, {"text": "вирішуватиме", "correct": false}]}, {"question": "Він завжди ___ людям, тому всі вважають його доброю людиною.", "options": [{"text": "допомагає", "correct": true}, {"text": "допоміг", "correct": false}, {"text": "допоможе", "correct": false}, {"text": "допомогти", "correct": false}]}, {"question": "Оксана сьогодні вранці швидко ___ всю роботу, вона дуже працьовита.", "options": [{"text": "робила", "correct": false}, {"text": "зробила", "correct": true}, {"text": "робить", "correct": false}, {"text": "робитиме", "correct": false}]}]} instruction={"Оберіть правильне дієслово: недоконаний вид (регулярна дія) чи доконаний вид (конкретна дія в минулому)."} />
+
+<Order client:only="react" items={["— Це мій дядько. Він живе поруч.", "— Який він?", "— Він мій найкращий друг. Він мене поважає і завжди слухає.", "— А хто це на фотографії?"]} correct_order={[3, 0, 1, 2]} instruction={"Розставте репліки діалогу в правильному порядку."} />
+
+
+</TabItem>
+<TabItem label="Ресурси">
+
+**Джерела — References**
+
+- Заболотний Grade 5, §38-42
+  _Іменник — людина, стосунки, описові тексти_
+- Большакова Grade 1, §14-16
+  _Опис людини, зовнішність і характер у дитячих текстах_
+- [ULP: How to Describe a Person in Ukrainian](https://www.ukrainianlessons.com/describing-people/)
+  _Appearance and personality vocabulary_
+
+**Anna Ohoiko — Ukrainian Lessons**
+
+- [Ukrainian Г vs Ґ](https://www.ukrainianlessons.com/h-g/)
+- [Noun Genders in Ukrainian](https://www.ukrainianlessons.com/noun-genders-in-ukrainian/)
+- [Nouns After Numbers](https://www.ukrainianlessons.com/nouns-after-numbers/)
+
+</TabItem>
+</Tabs>

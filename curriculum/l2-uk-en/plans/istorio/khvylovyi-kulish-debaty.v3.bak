@@ -1,0 +1,130 @@
+module: istorio-054
+level: ISTORIO
+sequence: 54
+slug: khvylovyi-kulish-debaty
+version: '3.0'
+title: 'Хвильовий: «Геть від Москви!»'
+focus: history
+pedagogy: seminar
+word_target: 5000
+objectives:
+- 'Analyze the causes and consequences of хвильовий: «геть від москви!»'
+- Evaluate the historical significance of найсміливіший голос
+content_outline:
+- section: Вступ — Найсміливіший голос
+  points:
+  - Хвильовий — хто він
+  - Памфлети як жанр
+  - Чому так важливі
+  - Структура модуля
+  words: 700
+- section: Біографічний контекст
+  points:
+  - Від комуніста до критика
+  - Участь у революції
+  - Літературна кар'єра
+  - Шлях до памфлетів
+  words: 700
+- section: «Камо грядеши» (1925)
+  points:
+  - Текст (фрагменти з глосами)
+  - «Куди йдеш?» — питання
+  - Критика «Просвіти» і «хуторянства»
+  - Орієнтація на Європу
+  - Що таке «психологічна Європа»
+  words: 700
+- section: «Думки проти течії» (1926)
+  points:
+  - Текст (фрагменти)
+  - Більш радикальна критика
+  - «Геть від Москви» — формулювання
+  - Азіатський ренесанс
+  - Реакція партії
+  words: 700
+- section: Трагічний фінал
+  points:
+  - Вимушена самокритика
+  - Продовження тиску
+  - Самогубство 1933
+  - Листок — «за комунізм, за Гетьмана»
+  - Символічне значення
+  words: 700
+- section: Спадщина Хвильового
+  points:
+  - Заборонений і повернений
+  - Актуальність сьогодні
+  - «Європейський вибір» — пророцтво?
+  - Хвильовий і 2022
+  words: 700
+- section: Підсумок
+  points:
+  - Від слова до долі
+  - Культурний герой
+  - Зв'язок із театром Курбаса
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+vocabulary:
+- памфлет
+- орієнтація
+- «Геть від Москви»
+- психологічна Європа
+- азіатський ренесанс
+- самокритика
+- самогубство
+- хуторянство
+- пророцтво
+- спадщина
+- Просвіта
+- епігонство
+- імперіалізм
+- буржуазний
+- інтернаціоналізм
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+activities:
+- type: reading
+  focus: Key passages from "Kamo hriadeshi"
+- type: critical-analysis
+  focus: Reconstruct Khvylovyi's main argument
+- type: critical-analysis
+  focus: Analyze suicide note — what does it mean?
+- type: essay-response
+  focus: Чому ідеї Хвильового актуальні й сьогодні?
+persona:
+  voice: Academic Historiographer
+  role: Literary Critic
+prerequisites:
+- literaturna-dyskusiia
+connects_to:
+- teatr-kurbasa
+references:
+- name: Хвильовий Микола — памфлети
+  url: https://uk.wikisource.org/wiki/Категорія:Хвильовий_Микола
+  type: primary
+  notes: Pamphlet texts
+- name: Микола Хвильовий (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Хвильовий_Микола_Григорович
+  type: reference
+  notes: Biography
+- name: «Камо грядеши» та інші памфлети
+  url: https://uk.wikipedia.org/wiki/Камо_грядеши_(Хвильовий)
+  type: reference
+  notes: Key work
+register: академічний
+grammar: []

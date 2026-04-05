@@ -1,0 +1,88 @@
+module: lit-223
+level: LIT
+sequence: 223
+slug: mykhailo-stelmakh-shchedryi-vechir
+version: '3.0'
+title: 'Михайло Стельмах: Щедрий вечір'
+subtitle: Autobiographical prose, masterful Ukrainian lyrical sentence, and ethnography within Soviet constraints
+focus: literature
+pedagogy: Seminar
+phase: LIT.4 Resistance and Resilience 1933-1991
+word_target: 5000
+objectives:
+- Проаналізувати автобіографічну прозу Стельмаха як зразок «дозволеної» української лірики
+- Дослідити стилістичну майстерність «Щедрого вечора» — ритм, синестезія, етнографічна деталь
+- Зрозуміти стратегію збереження українського мовного багатства в умовах соцреалізму
+content_outline:
+- section: Вступ та культурний контекст
+  points:
+  - Михайло Стельмах (1912–1983) — біографія, Поділля, селянське дитинство
+  - Стельмах у радянській літературній ієрархії — лауреат, депутат, «офіційний» письменник
+  - Парадокс Стельмаха — як офіційний статус уможливив збереження мовного багатства
+  words: 850
+- section: '«Щедрий вечір»: автобіографічна повість'
+  points:
+  - Сюжет і композиція — дитинство як втрачений рай
+  - Образ діда — носій народної мудрості та усної традиції
+  - Ритуал Святвечора як структурний стрижень тексту
+  words: 900
+- section: Етнографічний вимір
+  points:
+  - Обряди, звичаї, пісні подільського села у прозі Стельмаха
+  - Збирання фольклору через автобіографічну прозу
+  - Стельмах vs Довженко — два підходи до ліричної пам'яті дитинства
+  words: 800
+- section: Мова, стиль та поетика
+  points:
+  - «Стельмахівське речення» — складні синтаксичні конструкції з народною інтонацією
+  - Синестезія та сенсорне письмо — запахи, смаки, кольори
+  - Подільська лексика та фразеологія
+  words: 850
+- section: Деколонізаційний вимір
+  points:
+  - Автобіографічна проза як «тихий» акт культурного спротиву
+  - Що Стельмах зберіг під покровом соцреалізму — мова, обряд, пейзаж
+  - Критика «компромісного» письменника — чи справедливо?
+  words: 800
+- section: Підсумок та рецепція
+  points:
+  - Стельмах у сучасному каноні — переоцінка після 2014
+  - Вплив на «селянську лірику» сучасної прози
+  - Питання для дискусії
+  words: 800
+vocabulary_hints:
+  required:
+  - автобіографія (autobiography)
+  - етнографія (ethnography)
+  - синестезія (synesthesia)
+  - соцреалізм (socialist realism)
+  recommended:
+  - фразеологія (phraseology)
+  - Святвечір (Christmas Eve)
+  - ритуал (ritual)
+activity_hints:
+- type: reading
+  focus: Аналіз уривків із «Щедрого вечора» — етнографічні та ліричні фрагменти
+  source: UkrLib
+  items: 5+
+- type: essay-response
+  focus: Стратегії збереження культурної пам'яті в умовах ідеологічного тиску
+  output: Аналітичне есе
+- type: critical-analysis
+  focus: Порівняння «Щедрого вечора» Стельмаха та «Зачарованої Десни» Довженка
+connects_to:
+- dovzhenko-enchanted-desna
+- honchar-cathedral
+- malyshko-songs
+persona:
+  voice: Senior Philologist & Critic
+  role: Keeper of the Christmas Eve Candle
+module_type: literature
+immersion: 100% Ukrainian
+references:
+- name: Михайло Стельмах — проза
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

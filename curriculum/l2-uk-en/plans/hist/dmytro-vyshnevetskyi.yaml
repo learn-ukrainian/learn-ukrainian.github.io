@@ -1,98 +1,129 @@
-module: hist-043
-level: HIST
-sequence: 43
-slug: dmytro-vyshnevetskyi
-version: '3.0'
-title: 'Дмитро Вишневецький: Перший кошовий'
-subtitle: The Legendary Founder of the First Sich
-focus: history
-pedagogy: CBI
-phase: HIST.5 [Rise of Cossacks]
-word_target: 5000
-objectives:
-- Learner can describe the role of Dmytro Vyshnevetskyi in the founding of the first Sich
-- Learner can analyze the geopolitical significance of the Khortytsia fortress
-- Learner can understand the legendary status of Baida in Ukrainian folklore
-content_outline:
-- section: Вступ
-  points:
-  - 'The transition from princes to cossack leaders — Vyshnevetskyi as the ''last knight'' of the princely era and ''first
-    knight'' of the Cossack era; cultural hook: the synthesis of old aristocracy and new steppe tactics'
-  - Dmytro Vyshnevetskyi as a figure of the frontier — living on the border of settled Rzeczpospolita and nomadic Wild 
-    Fields; [!history-bite] he was an elite magnate, debunking the myth that all Cossacks were runaway serfs
-  words: 700
-- section: 'Шлях князя: Від Волині до Степу'
-  points:
-  - Origins and noble status — born ~1517 in Vyshnivets, Volhynia, of the Gedyminovych lineage
-  - Early military experience — Starosta of Kaniv and Cherkasy (1550-1553), the frontline defense against Tatar raids
-  - Diplomatic maneuvers — realizing passive castle defense was insufficient, shifting to active steppe tactics to 
-    intercept raiders
-  words: 700
-- section: Заснування Малої Хортиці
-  points:
-  - Strategic necessity of the 1550s — establishing a base in 1556 on Mala Khortytsia island to control river crossings;
-    [!context] why Khortytsia was the ideal 'Dnipro castle'
-  - Life in the first fortress — not just a camp, but a fortress with earthworks and wooden log structures
-  - Historical legacy — the first precedent of a permanent Cossack garrison beyond the rapids
-  words: 700
-- section: Читання
-  points:
-  - Analysis of folk ballads and primary accounts — specifically 'Song of Baida' and Marcin Bielski's chronicle; 
-    [!culture] connecting Baida's image to the 'kharakternyk' archetype
-  words: 700
-- section: Геополітика і Дипломатія
-  points:
-  - Relations with Poland, Lithuania, and Moscow — the 'Moscow episode' (1558-1561) as a pragmatic resource grab for the
-    anti-Crimean war; [!myth-buster] Vyshnevetskyi was an ally, not a servant, and left when priorities shifted
-  - The anti-Tatar coalition strategy — attempts to unite Poland, Lithuania, Moscow, and potentially Moldova against the
-    Ottoman threat
-  words: 700
-- section: Первинні джерела
-  points:
-  - Chronicle accounts of Vyshnevetskyi's death — Marcin Bielski's detailed description of his execution in Istanbul 
-    (1563) by hanging from a rib; [!quote] French ambassador's account confirming the legend
-  - Ballad of Baida — symbolism of refusing the Sultan's daughter/faith as an affirmation of Christian knightly honor
-  words: 700
-- section: Деколонізаційний погляд
-  points:
-  - Vyshnevetskyi as an independent actor — acting as a sovereign who sent ambassadors and built fortresses; 
-    [!decolonization] treating him as a geopolitical player, not a vassal
-  - The myth of Moscow's protectorate — refuting the Soviet narrative of 'eternal attraction' to Russia; it was a 
-    situational alliance broken by Vyshnevetskyi
-  words: 800
-vocabulary_hints:
-  required:
-  - історія (history) — козацька історія, історія України, сторінки історії
-  - держава (state) — будувати державу, інтереси держави, захист держави
-  - народ (people) — український народ, пам'ять народу, воля народу
-  - влада (power) — князівська влада, військова влада, боротьба за владу
-  - період (period) — період Руїни, княжий період, історичний період
-  - подія (event) — історична подія, трагічна подія, важлива подія
-  - джерело (source) — першоджерело, історичне джерело, надійне джерело
-  - спадщина (heritage) — культурна спадщина, козацька спадщина, історична спадщина
-  recommended:
-  - аналіз (analysis) — критичний аналіз, аналіз джерел, глибокий аналіз
-  - контекст (context) — історичний контекст, політичний контекст, культурний контекст
-  - вплив (influence) — політичний вплив, культурний вплив, вплив на події
-  - наслідки (consequences) — політичні наслідки, історичні наслідки, непередбачувані наслідки
 activity_hints:
-- type: reading
-  focus: 'Ballad of Baida: Analysis of folk imagery'
-- type: essay-response
-  focus: Vyshnevetskyi as the bridge between Rus princes and Cossack hetmans
-- type: comparative-study
-  focus: Vyshnevetskyi vs later Cossack leaders
-- type: critical-analysis
-  focus: Analyzing primary source accounts of his martyrdom
-persona:
-  voice: Senior Professor of History
-  role: Fortress Builder
-grammar:
-- 'Historical narrative: past perfective'
-- Passive voice in historical descriptions
-register: публіцистичний
-prerequisites:
-- zaporizka-sich
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння історіографічних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Джерела
+  focus: Розуміння первинного історичного джерела
+  placement: inline
+  type: reading
+- focus: Оцінка первинного джерела — хто написав, навіщо, що упущено?
+  placement: workbook
+  type: source-evaluation
+- focus: Дебат — оцінка значення та наслідків події
+  placement: workbook
+  type: debate
+- focus: 'Порівняння української та імперської інтерпретацій (Дмитро Вишневецький: Перший кошовий)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе на тему зв''язку з сучасністю (Дмитро Вишневецький: Перший кошовий)'
+  placement: workbook
+  type: essay-response
+cefr_min: C1
 connects_to:
 - kozatski-povstannia-16
-references: []
+- zaporizka-sich
+content_outline:
+- points:
+  - 'Провокація: Дмитро Вишневецький — останній лицар княжої доби чи перший отаман козацької? Де межа між аристократом і степовим
+    ватажком?'
+  - 'Фрагмент балади: "Ой п’є Байда, не допиває, на свого джуру споглядає..." — хто цей герой і що чекає на нього попереду?'
+  section: Розминка
+  words: 400
+- points:
+  - 'Дебат 1: [!decolonization] Московський епізод (1558-1561) — прагматичний військовий союз проти Криму чи «віковічне тяжіння»
+    до Росії, як стверджує радянська історіографія?'
+  - 'Дебат 2: Соціальне походження козацтва. Вишневецький, магнат і нащадок Гедиміновичів, спростовує міф про те, що раннє
+    козацтво складалося виключно з селян-втікачів.'
+  - '[!epistemic-humility] Джерела про Вишневецького упереджені: польські хроніки бачать його як нелояльного підданого, народні
+    думи — як ідеального героя, московські листи — як тимчасового слугу. Де правда?'
+  - 'Глобальна синхронність: У той час як Вишневецький будує Січ (1556), в Європі тривають релігійні війни, а в Османській
+    імперії править Сулейман Пишний.'
+  section: 'Конфліктна карта: Князь чи Козак?'
+  words: 900
+- points:
+  - 'Первинне джерело 1 (фольклор): Аналіз тексту "Пісні про Байду". Символізм відмови від "султанової дочки" та ісламу як
+    утвердження християнської та лицарської ідентичності.'
+  - 'Первинне джерело 2 (хроніка): Розбір розповіді Марціна Бєльського про страту Вишневецького в Стамбулі (1563) — повішення
+    на гаку за ребро. Порівняння деталей з баладою.'
+  - 'Критика джерел: Хто, коли і навіщо створив ці тексти? Наскільки народна пісня може бути достовірним історичним джерелом?
+    Які мотиви були у Бєльського?'
+  - '[!decolonization] Вишневецький в джерелах постає як незалежний гравець, що відправляє послів і будує фортеці, а не як
+    васал Польщі чи Московії. Він — суб''єкт, а не об''єкт історії.'
+  section: 'Джерела: Балада про Байду та хроніка Бєльського'
+  words: 1600
+- points:
+  - 'Заснування Січі: Стратегічне значення фортеці на Малій Хортиці (1556) як першого постійного козацького гарнізону за порогами.
+    Це змінило тактику з пасивної оборони на активні операції в Степу.'
+  - 'Геополітична стратегія: Спроби Вишневецького створити антитатарську коаліцію з Польщі, Литви та Московії як прецедент
+    для майбутньої зовнішньої політики козаків.'
+  - '[!myth-buster] Міф про "московський протекторат". Союз із Москвою був тимчасовим і ситуативним. Вишневецький розірвав
+    його, коли їхні пріоритети розійшлися, демонструючи свою незалежність.'
+  - 'Оцінки істориків: Як Грушевський, Субтельний та Плохій оцінюють роль Вишневецького у кристалізації козацтва як військово-політичної
+    сили.'
+  section: 'Аналіз: Наслідки та значення'
+  words: 1600
+- points:
+  - 'Повернення до розминки: Отже, князь чи козак? Студент формулює аргументовану відповідь, спираючись на докази з джерел
+    та аналізу.'
+  - '[!anti-hagiography] Переоцінка "героя": чи не був "московський епізод" зрадою інтересів Литви? Вишневецький був прагматиком,
+    а не бездоганним ідеалістом, і діяв у власних інтересах.'
+  - 'Зв''язок із сьогоденням: Образ Байди — воїна, що обирає мученицьку смерть замість підкорення — як архетип українського
+    опору. Від оборони Січі до оборони Азовсталі.'
+  section: Дискусія та підсумок
+  words: 700
+focus: 'Dmytro Vyshnevetskyi as a transitional figure: from Rus'' prince to Cossack hetman, founder of the first Sich on Khortytsia,
+  and the prototype for the legendary Baida.'
+level: HIST
+module: hist-043
+objectives:
+- Описувати роль Дмитра Вишневецького у заснуванні першої Січі на Хортиці та його значення для становлення козацтва.
+- Аналізувати геополітичне становище українських земель у XVI ст. та дипломатичні маневри Вишневецького.
+- Порівнювати історичні факти з фольклорним образом на прикладі постаті Байди-Вишневецького.
+- Критично оцінювати різні історичні джерела (хроніки, листи, фольклор), виявляючи їхні упередження та мотиви.
+pedagogy: CBI
+persona:
+  role: Модератор семінару, що відділяє факти від фольклору і ставить незручні питання про мотивацію "національних героїв".
+  voice: Hrushevsky-School-Realist
+phase: HIST.5
+references:
+- note: Compiled from Hrushevsky, Subtelny, Plokhy on the early Cossack period and the founding of the Sich.
+  path: wiki/hist/figures/dmytro-vyshnevetskyi.md
+  type: wiki
+- author: Marcin Bielski
+  note: Key primary source for the life and, especially, the execution of Vyshnevetskyi.
+  type: primary
+  work: Kronika Polska
+- author: Народна творчість
+  note: The foundational folkloric text that transformed the historical prince into a legendary hero.
+  type: primary
+  work: Дума про Байду
+sequence: 43
+slug: dmytro-vyshnevetskyi
+subtitle: The Legendary Founder of the First Sich
+title: 'Дмитро Вишневецький: Перший кошовий'
+version: '4.0'
+vocabulary_hints:
+- definition: Виборний ватажок, головнокомандувач війська на Запорізькій Січі.
+  pos: ч.
+  word: кошовий
+- definition: Центр, столиця і головна фортеця запорізьких козаків, розташована за дніпровими порогами.
+  pos: ж.
+  word: січ
+- definition: Великий землевласник, представник найвищої аристократії у Речі Посполитій.
+  pos: ч.
+  word: магнат
+- definition: Королівський намісник, голова адміністративно-територіальної одиниці (староства).
+  pos: ч.
+  word: староста
+- definition: У народній традиції — козак, наділений надприродними здібностями, чарівник і невразливий воїн.
+  pos: ч.
+  word: харакерник
+- definition: Полонені, захоплені під час набігу; одна з головних загроз з боку татар, проти якої боролися козаки.
+  pos: ч.
+  word: ясир
+- definition: Середньовічний шляхетний воїн; у контексті Вишневецького — представник старої військової аристократії.
+  pos: ч.
+  word: лицар
+word_target: 5200

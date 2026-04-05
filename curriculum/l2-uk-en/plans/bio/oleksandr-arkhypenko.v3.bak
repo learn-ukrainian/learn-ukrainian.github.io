@@ -1,0 +1,107 @@
+module: bio-090
+level: BIO
+sequence: 90
+slug: oleksandr-arkhypenko
+version: '3.0'
+title: 'Олександр Архипенко: Скульптор авангарду'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of олександр архипенко: скульптор авангарду'
+- Evaluate the contributions of революціонер у скульптурі
+- Trace the career and influence of спадщина та вплив
+content_outline:
+- section: Вступ — Революціонер у скульптурі
+  points:
+  - Архипенко як один із найвидатніших скульпторів XX століття
+  - Новаторство у тривимірному мистецтві
+  - Українське коріння та світова слава
+  words: 850
+- section: Київські роки (1887-1908)
+  points:
+  - Народження в родині інженера
+  - Навчання в Київській художній школі
+  - Вплив української народної творчості
+  - Рішення продовжити освіту в Європі
+  words: 850
+- section: Паризький період (1908-1921)
+  points:
+  - Прибуття до Парижа та інтеграція в авангард
+  - Знайомство з Пікассо, Браком, Модільяні
+  - Розвиток кубістичної скульптури
+  - Винахід «скульптоживопису» та порожнечі як форми
+  words: 850
+- section: Берлінський період (1921-1923)
+  points:
+  - Переїзд до Берліна
+  - Викладання та відкриття власної школи
+  - Виставки та визнання в Німеччині
+  - Вплив німецького експресіонізму
+  words: 850
+- section: Американський період (1923-1964)
+  points:
+  - Еміграція до США
+  - Викладання в провідних університетах
+  - Експерименти з новими матеріалами
+  - Створення «Архипеньо» — світлових скульптур
+  words: 850
+- section: Спадщина та вплив
+  points:
+  - Роль у розвитку абстрактної скульптури
+  - Теоретичні праці про мистецтво
+  - Вплив на подальші покоління скульпторів
+  - Повернення імені в Україну
+  words: 750
+vocabulary_hints:
+  required:
+  - скульптура (sculpture)
+  - авангард (avant-garde)
+  - кубізм (cubism)
+  - порожнеча (void/negative space)
+  - тривимірний (three-dimensional)
+  - форма (form)
+  - простір (space)
+  - абстракція (abstraction)
+  - новаторство (innovation)
+  - скульптоживопис (sculpto-painting)
+  recommended:
+  - експресіонізм (expressionism)
+  - пластика (plastic arts)
+  - матеріал (material)
+  - композиція (composition)
+  - виставка (exhibition)
+activity_hints:
+- type: reading
+  focus: Мистецька біографія
+  source: Уривки з теоретичних праць та каталогів
+  items: 3 passages
+- type: essay-response
+  focus: Як порожнеча може бути елементом скульптури?
+  output: Мистецтвознавче есе
+connects_to:
+- bio-50 (Olena Pchilka)
+- bio-57 (Olha Kobylianska)
+- bio-66 (Mykola Vasylenko)
+prerequisites:
+- bio-45 (Marko Kropyvnytskyi)
+persona:
+  voice: Senior Biographer
+  role: Cubist Sculptor
+module_type: biography
+immersion: 100% Ukrainian
+references:
+- name: Олександр Архипенко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Архипенко_Олександр_Порфирович
+  type: primary
+  notes: Біографія, творчий шлях, інновації
+- name: Archipenko Foundation
+  url: https://www.archipenko.org
+  type: reference
+  notes: Каталог творів та біографічні матеріали
+- name: MoMA Collection
+  url: https://www.moma.org/artists/229
+  type: reference
+  notes: Роботи в колекції Музею сучасного мистецтва
+register: академічний
+grammar: []

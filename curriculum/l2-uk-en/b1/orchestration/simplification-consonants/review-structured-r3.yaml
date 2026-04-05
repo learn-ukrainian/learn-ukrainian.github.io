@@ -1,0 +1,57 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All 7 plan sections covered with correct pacing. All content_outline
+    points addressed: Литвінова вправа 296 demonstration (section 1), complete Заболотний
+    table (section 2), Авраменко орфограма (secti'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'One confirmed Russicism: "діючі правила" — `діючий` NOT in VESUM, active
+    participle form criticized by Антоненко-Давидович. Should be "чинні правила."
+    All other Ukrainian is verified correct: спрощенн'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow: situation (classroom dialogue) → pattern (systematic
+    tables with examples) → practice (5 activities). Excellent pedagogical additions:
+    reverse-engineering method for recognizing simpl'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'All 14 required vocabulary items used naturally in prose with translations:
+    спрощення, група приголосних, милозвучність, випадати, вимова, правопис, закріплений,
+    виняток, словотворення, прикметник, ім'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 5 plan activity_hints have corresponding markers with correct types,
+    foci, and item counts. Good pedagogical sequencing. Error-correction exercise
+    tests both directions (over-application and under
+- dimension: 6
+  name: Engagement & tone
+  score: 7
+  evidence: '**Excessive superlatives and filler:** "абсолютно" (8+ uses: "абсолютно
+    стабільною", "абсолютно необхідною", "абсолютно ствердною", "абсолютно точно",
+    "абсолютно недоторканим" ×2, "абсолютно однаковою'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All 7 H2 headings present and correctly ordered. Clean markdown. 4111
+    words meets 4000 target. No duplicate summary sections, no stray tags, no formatting
+    artifacts. Activity markers properly formatte
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: Decolonized throughout — Ukrainian presented on its own terms. English
+    "debt"/"knight" comparison shows Ukrainian orthography as more logical (positive
+    framing). Factual comparison with Russian "сердц
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: 'The classroom dialogue is natural and well-constructed: named speakers
+    (Вчитель, Студент), real situation (dictation exercise), student asking a genuine
+    question, teacher demonstrating through experie'
+findings: []

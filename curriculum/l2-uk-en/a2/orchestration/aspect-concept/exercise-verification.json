@@ -1,26 +1,340 @@
 {
-  "total_items": 0,
-  "grounded_items": 0,
-  "ungrounded": [],
+  "total_items": 124,
+  "grounded_items": 59,
+  "ungrounded": [
+    {
+      "word": "який",
+      "exercise_type": "quiz",
+      "context": "Який фокус має недоконаний вид дієслова?"
+    },
+    {
+      "word": "фокус",
+      "exercise_type": "quiz",
+      "context": "Який фокус має недоконаний вид дієслова?"
+    },
+    {
+      "word": "має",
+      "exercise_type": "quiz",
+      "context": "Який фокус має недоконаний вид дієслова?"
+    },
+    {
+      "word": "або",
+      "exercise_type": "quiz",
+      "context": "Процес або повторення"
+    },
+    {
+      "word": "тільки",
+      "exercise_type": "quiz",
+      "context": "Тільки результат"
+    },
+    {
+      "word": "одноразова",
+      "exercise_type": "quiz",
+      "context": "Одноразова дія"
+    },
+    {
+      "word": "завершена",
+      "exercise_type": "quiz",
+      "context": "Завершена дія"
+    },
+    {
+      "word": "показує",
+      "exercise_type": "quiz",
+      "context": "Який вид дієслова показує завершений результат?"
+    },
+    {
+      "word": "обидва",
+      "exercise_type": "quiz",
+      "context": "Обидва види"
+    },
+    {
+      "word": "види",
+      "exercise_type": "quiz",
+      "context": "Обидва види"
+    },
+    {
+      "word": "жоден",
+      "exercise_type": "quiz",
+      "context": "Жоден з них"
+    },
+    {
+      "word": "них",
+      "exercise_type": "quiz",
+      "context": "Жоден з них"
+    },
+    {
+      "word": "яке",
+      "exercise_type": "quiz",
+      "context": "Яке з цих слів — маркер недоконаного виду (процесу)?"
+    },
+    {
+      "word": "цих",
+      "exercise_type": "quiz",
+      "context": "Яке з цих слів — маркер недоконаного виду (процесу)?"
+    },
+    {
+      "word": "слів",
+      "exercise_type": "quiz",
+      "context": "Яке з цих слів — маркер недоконаного виду (процесу)?"
+    },
+    {
+      "word": "маркер",
+      "exercise_type": "quiz",
+      "context": "Яке з цих слів — маркер недоконаного виду (процесу)?"
+    },
+    {
+      "word": "недоконаного",
+      "exercise_type": "quiz",
+      "context": "Яке з цих слів — маркер недоконаного виду (процесу)?"
+    },
+    {
+      "word": "виду",
+      "exercise_type": "quiz",
+      "context": "Яке з цих слів — маркер недоконаного виду (процесу)?"
+    },
+    {
+      "word": "процесу",
+      "exercise_type": "quiz",
+      "context": "Яке з цих слів — маркер недоконаного виду (процесу)?"
+    },
+    {
+      "word": "доконаного",
+      "exercise_type": "quiz",
+      "context": "Яке з цих слів — маркер доконаного виду (результату)?"
+    },
+    {
+      "word": "результату",
+      "exercise_type": "quiz",
+      "context": "Яке з цих слів — маркер доконаного виду (результату)?"
+    },
+    {
+      "word": "дієслово",
+      "exercise_type": "quiz",
+      "context": "Дієслово «зробити» — це який вид?"
+    },
+    {
+      "word": "якому",
+      "exercise_type": "quiz",
+      "context": "У якому часі доконаний вид НЕ існує?"
+    },
+    {
+      "word": "часі",
+      "exercise_type": "quiz",
+      "context": "У якому часі доконаний вид НЕ існує?"
+    },
+    {
+      "word": "існує",
+      "exercise_type": "quiz",
+      "context": "У якому часі доконаний вид НЕ існує?"
+    },
+    {
+      "word": "теперішньому",
+      "exercise_type": "quiz",
+      "context": "У теперішньому"
+    },
+    {
+      "word": "минулому",
+      "exercise_type": "quiz",
+      "context": "У минулому"
+    },
+    {
+      "word": "майбутньому",
+      "exercise_type": "quiz",
+      "context": "У майбутньому"
+    },
+    {
+      "word": "всіх",
+      "exercise_type": "quiz",
+      "context": "Він існує у всіх часах"
+    },
+    {
+      "word": "часах",
+      "exercise_type": "quiz",
+      "context": "Він існує у всіх часах"
+    },
+    {
+      "word": "найкраще",
+      "exercise_type": "quiz",
+      "context": "Що найкраще описує концепцію доконаного виду?"
+    },
+    {
+      "word": "описує",
+      "exercise_type": "quiz",
+      "context": "Що найкраще описує концепцію доконаного виду?"
+    },
+    {
+      "word": "концепцію",
+      "exercise_type": "quiz",
+      "context": "Що найкраще описує концепцію доконаного виду?"
+    },
+    {
+      "word": "як",
+      "exercise_type": "quiz",
+      "context": "Це як фотографія результату"
+    },
+    {
+      "word": "фотографія",
+      "exercise_type": "quiz",
+      "context": "Це як фотографія результату"
+    },
+    {
+      "word": "довге",
+      "exercise_type": "quiz",
+      "context": "Це як довге відео"
+    },
+    {
+      "word": "відео",
+      "exercise_type": "quiz",
+      "context": "Це як довге відео"
+    },
+    {
+      "word": "без",
+      "exercise_type": "quiz",
+      "context": "Це дія без кінця"
+    },
+    {
+      "word": "кінця",
+      "exercise_type": "quiz",
+      "context": "Це дія без кінця"
+    },
+    {
+      "word": "щоденна",
+      "exercise_type": "quiz",
+      "context": "Це щоденна звичка"
+    },
+    {
+      "word": "звичка",
+      "exercise_type": "quiz",
+      "context": "Це щоденна звичка"
+    },
+    {
+      "word": "купили",
+      "exercise_type": "fill-in",
+      "context": "купили"
+    },
+    {
+      "word": "купимо",
+      "exercise_type": "fill-in",
+      "context": "купимо"
+    },
+    {
+      "word": "передавав",
+      "exercise_type": "fill-in",
+      "context": "передавав"
+    },
+    {
+      "word": "передасть",
+      "exercise_type": "fill-in",
+      "context": "передасть"
+    },
+    {
+      "word": "попрацюю",
+      "exercise_type": "fill-in",
+      "context": "попрацюю"
+    },
+    {
+      "word": "робила",
+      "exercise_type": "fill-in",
+      "context": "робила"
+    },
+    {
+      "word": "падав",
+      "exercise_type": "fill-in",
+      "context": "падав"
+    },
+    {
+      "word": "падає",
+      "exercise_type": "fill-in",
+      "context": "падає"
+    },
+    {
+      "word": "розуміла",
+      "exercise_type": "fill-in",
+      "context": "розуміла"
+    },
+    {
+      "word": "розуміє",
+      "exercise_type": "fill-in",
+      "context": "розуміє"
+    },
+    {
+      "word": "читаємо",
+      "exercise_type": "match-up",
+      "context": "читаємо"
+    },
+    {
+      "word": "кіт",
+      "exercise_type": "match-up",
+      "context": "Раптом кіт..."
+    },
+    {
+      "word": "працювали",
+      "exercise_type": "match-up",
+      "context": "працювали"
+    },
+    {
+      "word": "купую",
+      "exercise_type": "match-up",
+      "context": "купую хліб"
+    },
+    {
+      "word": "написала",
+      "exercise_type": "match-up",
+      "context": "написала листа"
+    },
+    {
+      "word": "робив",
+      "exercise_type": "error-correction",
+      "context": "робив"
+    },
+    {
+      "word": "писала",
+      "exercise_type": "error-correction",
+      "context": "писала"
+    },
+    {
+      "word": "пише",
+      "exercise_type": "error-correction",
+      "context": "пише"
+    },
+    {
+      "word": "напише",
+      "exercise_type": "error-correction",
+      "context": "напише"
+    },
+    {
+      "word": "ось",
+      "exercise_type": "error-correction",
+      "context": "Я вже робив це завдання, ось результат."
+    },
+    {
+      "word": "купували",
+      "exercise_type": "error-correction",
+      "context": "купували"
+    },
+    {
+      "word": "впаде",
+      "exercise_type": "error-correction",
+      "context": "впаде"
+    },
+    {
+      "word": "працювала",
+      "exercise_type": "error-correction",
+      "context": "працювала"
+    },
+    {
+      "word": "попрацювала",
+      "exercise_type": "error-correction",
+      "context": "Вчора весь день я попрацювала."
+    }
+  ],
   "vocab_coverage": {
     "plan_vocab_total": 14,
-    "tested_in_exercises": 0,
+    "tested_in_exercises": 12,
     "not_tested": [
-      "вид",
-      "доконаний",
-      "дія",
-      "дієслова",
-      "завершений",
-      "зробити",
       "концепція",
-      "недоконаний",
-      "одноразовий",
-      "повторення",
-      "процес",
-      "результат",
-      "робити",
-      "тривалий"
+      "робити"
     ]
   },
-  "all_grounded": true
+  "all_grounded": false
 }

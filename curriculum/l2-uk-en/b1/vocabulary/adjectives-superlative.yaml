@@ -1,0 +1,265 @@
+vocabulary:
+- word: найвищий ступінь
+  translation: superlative degree
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: найбі́льш
+  translation: most (used in compound superlative)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: найме́нш
+  translation: least (used in compound superlative)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: щонайкра́щий
+  translation: the very best possible
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: якнайшви́дший
+  translation: as fast as possible
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ве́льми
+  translation: very, exceedingly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вкрай
+  translation: extremely
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: надзвича́йно
+  translation: extraordinarily
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: підси́лений
+  translation: intensified
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: синонімі́чний
+  translation: synonymic
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: стилісти́чний
+  translation: stylistic
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: прега́рний
+  translation: very beautiful
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: білі́сінький
+  translation: absolutely white
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: зана́дто
+  translation: too much
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: абсолютна перевага
+  translation: absolute superiority
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: суплетиві́зм
+  translation: suppletion (forming degrees from different roots)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: відмі́нюватися
+  translation: to decline (grammatically)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: узго́джуватися
+  translation: to agree (grammatically)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: незмі́нний
+  translation: invariable
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: озна́чення
+  translation: attribute (grammatical role)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: чергува́ння
+  translation: alternation (phonetic change)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: підси́лювач
+  translation: intensifier
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: той самий
+  translation: the same
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: в жодному разі
+  translation: in no case / by no means
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: до речі
+  translation: by the way
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: найви́щий
+  translation: the highest
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: найдо́вший
+  translation: the longest
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: найгли́бший
+  translation: the deepest
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: найбі́льший
+  translation: the largest / the biggest
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: найпопуля́рніший
+  translation: the most popular
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: найкра́щий
+  translation: the best
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: найгі́рший
+  translation: the worst
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: найме́нший
+  translation: the smallest
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: найдоро́жчий
+  translation: the most expensive
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: найцікаві́ший
+  translation: the most interesting
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: видатни́й
+  translation: outstanding
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ваго́мий
+  translation: significant / weighty
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: поту́жний
+  translation: powerful
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: успі́шний
+  translation: successful
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: в межах
+  translation: within the boundaries / limits
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: щоро́ку
+  translation: every year
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: перли́на
+  translation: 'pearl (figuratively: a gem of a place)'
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: атлас
+  translation: atlas
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: віктори́на
+  translation: quiz
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true

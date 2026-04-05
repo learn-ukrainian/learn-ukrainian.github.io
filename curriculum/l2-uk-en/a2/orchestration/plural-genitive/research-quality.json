@@ -1,0 +1,69 @@
+{
+  "exists": true,
+  "words": 1338,
+  "quality": "adequate",
+  "score": 6,
+  "score_raw": 10,
+  "score_max": 17,
+  "markers": 6,
+  "profile": "core",
+  "dimensions": {
+    "state_standard": {
+      "score": 2,
+      "max": 2,
+      "detail": "5 sections covered"
+    },
+    "vocabulary": {
+      "score": 0,
+      "max": 2,
+      "detail": "only 9 excerpts"
+    },
+    "cultural_hooks": {
+      "score": 1,
+      "max": 2,
+      "detail": "2 cultural reference(s)"
+    },
+    "learner_errors": {
+      "score": 2,
+      "max": 2,
+      "detail": "N/A for V6 packets"
+    },
+    "cross_references": {
+      "score": 1,
+      "max": 1,
+      "detail": "6 authors"
+    },
+    "pedagogy_notes": {
+      "score": 0,
+      "max": 1,
+      "detail": "1 pedagogy references"
+    },
+    "source_verification": {
+      "score": 1,
+      "max": 2,
+      "detail": "9 sources"
+    },
+    "claim_grounding": {
+      "score": 2,
+      "max": 2,
+      "detail": "604 Ukrainian terms"
+    },
+    "discovery_integration": {
+      "score": 1,
+      "max": 1,
+      "detail": "N/A for V6"
+    },
+    "specificity": {
+      "score": 0,
+      "max": 2,
+      "detail": "only 1338 words"
+    }
+  },
+  "gaps": [
+    "vocabulary: only 9 excerpts",
+    "cultural_hooks: 2 cultural reference(s)",
+    "pedagogy_notes: 1 pedagogy references",
+    "source_verification: 9 sources",
+    "specificity: only 1338 words"
+  ]
+}

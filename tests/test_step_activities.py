@@ -45,7 +45,8 @@ VALID_YAML = textwrap.dedent("""\
             correct: 0
 
     workbook:
-      - type: match-up
+      - id: match-up-genders
+        type: match-up
         instruction: "З'єднайте пари"
         pairs:
           - left: "стіл"

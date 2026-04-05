@@ -1,0 +1,128 @@
+module: istorio-033
+level: ISTORIO
+sequence: 33
+slug: franko-politychni-ese
+version: '3.0'
+title: 'Франко: Політичні есе'
+focus: history
+pedagogy: seminar
+word_target: 5000
+objectives:
+- 'Analyze the causes and consequences of франко: політичні есе'
+- Evaluate the historical significance of франко як мислитель
+content_outline:
+- section: Вступ — Франко як мислитель
+  points:
+  - Не тільки поет — публіцист
+  - Політичні есе — окремий жанр
+  - «Поза межами можливого» — головний текст
+  - Чому важливо читати сьогодні
+  words: 700
+- section: Контекст — Галичина кінця XIX ст.
+  points:
+  - Австрійська Галичина — інші умови
+  - Політичні партії — як виникали
+  - Франко — соціаліст чи націоналіст?
+  - Еволюція поглядів
+  words: 700
+- section: «Поза межами можливого» (1900)
+  points:
+  - Текст (фрагменти з глосами)
+  - Критика «реальної політики»
+  - Ідеал незалежності
+  - Духовна суверенність
+  - Роль інтелігенції
+  words: 700
+- section: Аналіз аргументації
+  points:
+  - Логіка есе
+  - Полеміка з опонентами
+  - Що таке «можливе»?
+  - Роль мрії в політиці
+  words: 700
+- section: Інші політичні есе
+  points:
+  - Що таке поступ?
+  - Ukraina irredenta
+  - Критика москвофільства
+  - Критика полонофільства
+  words: 700
+- section: Франко vs. Драгоманов
+  points:
+  - Два підходи
+  - Федералізм vs. незалежність
+  - Поколінній конфлікт
+  - Хто виявився правий?
+  words: 700
+- section: Підсумок
+  points:
+  - Франко — ідеолог незалежності
+  - Від публіцистики до політики
+  - Актуальність сьогодні
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+vocabulary:
+- есе
+- публіцистика
+- ідеал
+- незалежність
+- суверенність
+- інтелігенція
+- поступ
+- федералізм
+- полеміка
+- реальна політика
+- ірредента
+- москвофільство
+- полонофільство
+- утопія
+- прагматизм
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+activities:
+- type: reading
+  focus: Excerpt from "Poza mezhamy mozhlyvoho"
+- type: critical-analysis
+  focus: Map Franko's argument structure
+- type: critical-analysis
+  focus: How does Franko's argument apply to 2022?
+- type: essay-response
+  focus: Що означає 'поза межами можливого' для Франка?
+persona:
+  voice: Academic Historiographer
+  role: Intellectual Historian
+prerequisites:
+- emskyi-ukaz-tekst
+connects_to:
+- universaly-unr
+references:
+- name: Іван Франко (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Іван_Франко
+  type: reference
+  notes: Biography
+- name: Поза межами можливого
+  url: https://uk.wikisource.org/wiki/Поза_межами_можливого
+  type: primary
+  notes: Key political essay
+- name: Франко-публіцист
+  url: https://uk.wikipedia.org/wiki/Публіцистика_Івана_Франка
+  type: reference
+  notes: Publicistic works overview
+register: академічний
+grammar: []

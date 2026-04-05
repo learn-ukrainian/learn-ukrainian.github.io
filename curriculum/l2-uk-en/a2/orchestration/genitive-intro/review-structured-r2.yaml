@@ -1,0 +1,50 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'Covered all major grammatical points effectively, but missed incorporating
+    two recommended vocabulary words: `кількість` and `відсутність`.'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'Factually incorrectly categorized the plural-only noun `гроші` as a masculine
+    noun ("The most common examples are гостей (of guests) and грошей (of money)"
+    under the `Чоловічий рід (Masculine Nouns)` '
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent breakdown of `-а/-я` vs `-у/-ю` based on concrete vs abstract
+    concepts. Good PPP flow.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: Required words covered, but the text missed `кількість` and `відсутність`
+    in Ukrainian, using only their English translations in prose.
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: All required exercises are present, but the final three markers are clustered
+    together at the very end of Section 3 instead of being placed immediately after
+    the grammar they test.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: Included several instances of subjective meta-commentary and fluffy language,
+    e.g., "beautiful phonetic harmony", "smooth, melodic flow", "feels like the word
+    is being cut short abruptly", and "very '
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: All sections and headers are present, but the deterministic word count
+    of 3466 exceeds the 2000-word target by >10%.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Used culturally authentic examples (hryvnias, standard Ukrainian names).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are natural, contextual, and highly appropriate for A2 level
+    without feeling robotic.
+findings: []

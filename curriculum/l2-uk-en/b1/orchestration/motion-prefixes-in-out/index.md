@@ -1,50 +1,57 @@
 # Build Summary: motion-prefixes-in-out (B1)
 
-Generated: 2026-04-03 11:02
+Generated: 2026-04-04 11:44
 
 ## Pipeline Phases
 
 | Phase | Status | Timestamp |
 |-------|--------|-----------|
-| check | complete | 2026-04-03 08:20:45 |
-| research | complete | 2026-04-03 08:21:30 |
-| skeleton | complete | 2026-04-03 08:22:01 |
-| pre-verify | complete | 2026-04-03 08:28:26 |
-| write | complete | 2026-04-03 08:47:29 |
-| exercises | complete | 2026-04-03 08:47:29 |
-| activities | complete | 2026-04-03 08:57:37 |
-| verify-exercises | complete | 2026-04-03 08:57:37 |
-| annotate | complete | 2026-04-03 08:57:37 |
-| vocab | complete | 2026-04-03 08:59:56 |
-| enrich | complete | 2026-04-03 08:59:56 |
-| verify | complete | 2026-04-03 08:59:56 |
-| review | complete | 2026-04-03 09:02:39 |
-| stress | complete | 2026-04-03 09:02:48 |
-| publish | complete | 2026-04-03 09:02:49 |
+| check | complete | 2026-04-04 08:51:19 |
+| research | complete | 2026-04-04 08:52:22 |
+| skeleton | complete | 2026-04-04 08:53:05 |
+| pre-verify | complete | 2026-04-04 08:54:52 |
+| write | complete | 2026-04-04 09:01:52 |
+| exercises | complete | 2026-04-04 09:01:52 |
+| verify-exercises | complete | 2026-04-04 09:17:25 |
+| annotate | complete | 2026-04-04 09:17:25 |
+| vocab | complete | 2026-04-04 09:18:59 |
+| enrich | complete | 2026-04-04 09:18:59 |
+| verify | complete | 2026-04-04 09:18:59 |
+| review | complete | 2026-04-04 09:44:24 |
+| stress | complete | 2026-04-04 09:44:33 |
+| publish | complete | 2026-04-04 09:44:35 |
 
 ## Reviews
 
 | Round | File |
 |-------|------|
 | 1 | motion-prefixes-in-out-review-r1.md |
+| 2 | motion-prefixes-in-out-review-r2.md |
+| 3 | motion-prefixes-in-out-review-r3.md |
+| 4 | motion-prefixes-in-out-review-r4.md |
 
 ## Dispatch Log
 
 | Phase | Agent | Duration | OK |
 |-------|-------|----------|----|
-| pre-verify | gemini-tools (gemini-3-flash-preview) | 385s | ✅ |
-| skeleton | gemini (gemini-3-flash-preview) | 31s | ✅ |
-| activities | gemini-tools (gemini-3.1-pro-preview) | 544s | ✅ |
-| activities | gemini-tools (gemini-3.1-pro-preview) | 63s | ✅ |
-| vocab | gemini (gemini-3-flash-preview) | 136s | ✅ |
-| review | gemini-tools (gemini-3.1-pro-preview) | 8s | ✅ |
-| review | gemini-tools (gemini-3.1-pro-preview) | 156s | ✅ |
-| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 233s | ✅ |
-| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 204s | ✅ |
-| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 286s | ✅ |
-| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 194s | ✅ |
-| write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 147s | ✅ |
-| write-chunk-06 | gemini-tools (gemini-3.1-pro-preview) | 80s | ✅ |
+| pre-verify | gemini-tools (gemini-3-flash-preview) | 107s | ✅ |
+| skeleton | gemini (gemini-3-flash-preview) | 43s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 103s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 601s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 111s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 47s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 69s | ✅ |
+| vocab | gemini (gemini-3-flash-preview) | 90s | ✅ |
+| review | claude-tools (claude-opus-4-6) | 442s | ✅ |
+| review | claude-tools (claude-opus-4-6) | 368s | ✅ |
+| review | claude-tools (claude-opus-4-6) | 276s | ✅ |
+| review | claude-tools (claude-opus-4-6) | 437s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 60s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 63s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 77s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 101s | ✅ |
+| write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 39s | ✅ |
+| write-chunk-06 | gemini-tools (gemini-3.1-pro-preview) | 79s | ✅ |
 
 ## Files
 
@@ -59,6 +66,9 @@ Generated: 2026-04-03 11:02
 - `quick-verify.json`
 - `research-quality.json`
 - `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
+- `review-structured-r4.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

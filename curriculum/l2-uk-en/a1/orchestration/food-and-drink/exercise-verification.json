@@ -1,16 +1,41 @@
 {
-  "total_items": 67,
-  "grounded_items": 56,
+  "total_items": 105,
+  "grounded_items": 62,
   "ungrounded": [
     {
+      "word": "дайте",
+      "exercise_type": "fill-in",
+      "context": "Дайте, будь ласка, воду ___."
+    },
+    {
+      "word": "будь",
+      "exercise_type": "fill-in",
+      "context": "Дайте, будь ласка, воду ___."
+    },
+    {
+      "word": "ласка",
+      "exercise_type": "fill-in",
+      "context": "Дайте, будь ласка, воду ___."
+    },
+    {
       "word": "ми",
-      "exercise_type": "quiz",
-      "context": "Що ми їмо вранці?"
+      "exercise_type": "fill-in",
+      "context": "Ми їмо м'ясо ___."
     },
     {
       "word": "їмо",
+      "exercise_type": "fill-in",
+      "context": "Ми їмо м'ясо ___."
+    },
+    {
+      "word": "традиційний",
       "exercise_type": "quiz",
-      "context": "Що ми їмо вранці?"
+      "context": "Традиційний український суп — це..."
+    },
+    {
+      "word": "український",
+      "exercise_type": "quiz",
+      "context": "Традиційний український суп — це..."
     },
     {
       "word": "це",
@@ -18,14 +43,29 @@
       "context": "Традиційний український суп — це..."
     },
     {
-      "word": "сиру",
+      "word": "українська",
       "exercise_type": "quiz",
       "context": "Українська страва з тіста і картоплі або сиру:"
     },
     {
-      "word": "популярний",
+      "word": "страва",
       "exercise_type": "quiz",
-      "context": "Популярний холодний напій з фруктів:"
+      "context": "Українська страва з тіста і картоплі або сиру:"
+    },
+    {
+      "word": "тіста",
+      "exercise_type": "quiz",
+      "context": "Українська страва з тіста і картоплі або сиру:"
+    },
+    {
+      "word": "картоплі",
+      "exercise_type": "quiz",
+      "context": "Українська страва з тіста і картоплі або сиру:"
+    },
+    {
+      "word": "сиру",
+      "exercise_type": "quiz",
+      "context": "Українська страва з тіста і картоплі або сиру:"
     },
     {
       "word": "холодний",
@@ -33,45 +73,164 @@
       "context": "Популярний холодний напій з фруктів:"
     },
     {
-      "word": "фруктів",
+      "word": "сиром",
+      "exercise_type": "true-false",
+      "context": "Вареники — це тісто з картоплею або сиром."
+    },
+    {
+      "word": "гарячий",
+      "exercise_type": "true-false",
+      "context": "Компот — це гарячий напій, як кава."
+    },
+    {
+      "word": "як",
+      "exercise_type": "true-false",
+      "context": "Компот — це гарячий напій, як кава."
+    },
+    {
+      "word": "українці",
+      "exercise_type": "true-false",
+      "context": "На сніданок українці зазвичай їдять суп."
+    },
+    {
+      "word": "молочний",
+      "exercise_type": "true-false",
+      "context": "Сметана — це молочний продукт."
+    },
+    {
+      "word": "тертої",
+      "exercise_type": "true-false",
+      "context": "Деруни — це вареники з тертої картоплі."
+    },
+    {
+      "word": "польський",
+      "exercise_type": "error-correction",
+      "context": "Борщ — це традиційний польський суп."
+    },
+    {
+      "word": "французький",
+      "exercise_type": "error-correction",
+      "context": "французький"
+    },
+    {
+      "word": "іспанський",
+      "exercise_type": "error-correction",
+      "context": "іспанський"
+    },
+    {
+      "word": "готують",
+      "exercise_type": "error-correction",
+      "context": "Вареники готують з тіста з рибою або сиром."
+    },
+    {
+      "word": "рибою",
+      "exercise_type": "error-correction",
+      "context": "Вареники готують з тіста з рибою або сиром."
+    },
+    {
+      "word": "морквою",
+      "exercise_type": "error-correction",
+      "context": "морквою"
+    },
+    {
+      "word": "алкогольний",
+      "exercise_type": "error-correction",
+      "context": "алкогольний"
+    },
+    {
+      "word": "вечірній",
+      "exercise_type": "error-correction",
+      "context": "вечірній"
+    },
+    {
+      "word": "ранковий",
+      "exercise_type": "error-correction",
+      "context": "Вечеря — це ранковий прийом їжі."
+    },
+    {
+      "word": "денний",
+      "exercise_type": "error-correction",
+      "context": "денний"
+    },
+    {
+      "word": "свинини",
+      "exercise_type": "error-correction",
+      "context": "свинини"
+    },
+    {
+      "word": "популярна",
+      "exercise_type": "error-correction",
+      "context": "Сало — це популярна українська страва з курки."
+    },
+    {
+      "word": "курки",
+      "exercise_type": "error-correction",
+      "context": "Сало — це популярна українська страва з курки."
+    },
+    {
+      "word": "риби",
+      "exercise_type": "error-correction",
+      "context": "риби"
+    },
+    {
+      "word": "фрукт",
+      "exercise_type": "error-correction",
+      "context": "фрукт"
+    },
+    {
+      "word": "слово",
       "exercise_type": "quiz",
-      "context": "Популярний холодний напій з фруктів:"
+      "context": "Яке слово означає 'egg' по-українськи?"
     },
     {
-      "word": "вона",
-      "exercise_type": "fill-in",
-      "context": "Вона п'є чай ____."
+      "word": "означає",
+      "exercise_type": "quiz",
+      "context": "Яке слово означає 'egg' по-українськи?"
     },
     {
-      "word": "п'є",
-      "exercise_type": "fill-in",
-      "context": "Вона п'є чай ____."
+      "word": "по",
+      "exercise_type": "quiz",
+      "context": "Яке слово означає 'egg' по-українськи?"
     },
     {
-      "word": "він",
-      "exercise_type": "fill-in",
-      "context": "Він їсть хліб ____."
+      "word": "українськи",
+      "exercise_type": "quiz",
+      "context": "Яке слово означає 'egg' по-українськи?"
     },
     {
-      "word": "їсть",
-      "exercise_type": "fill-in",
-      "context": "Він їсть хліб ____."
+      "word": "таке",
+      "exercise_type": "quiz",
+      "context": "Що таке 'огірок' по-англійськи?"
+    },
+    {
+      "word": "огірок'",
+      "exercise_type": "quiz",
+      "context": "Що таке 'огірок' по-англійськи?"
+    },
+    {
+      "word": "англійськи",
+      "exercise_type": "quiz",
+      "context": "Що таке 'огірок' по-англійськи?"
+    },
+    {
+      "word": "каша'",
+      "exercise_type": "quiz",
+      "context": "Що таке 'каша' по-англійськи?"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 33,
-    "tested_in_exercises": 23,
+    "tested_in_exercises": 24,
     "not_tested": [
       "банан",
       "вареник",
       "курка",
-      "масло",
+      "лимон",
+      "огірок",
+      "помідор",
       "піца",
       "салат",
-      "сир",
-      "сіль",
-      "цукор",
-      "яйце"
+      "сир"
     ]
   },
   "all_grounded": false

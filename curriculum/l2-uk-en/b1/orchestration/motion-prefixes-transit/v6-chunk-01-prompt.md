@@ -11,11 +11,11 @@ You are writing ONE SECTION of a Ukrainian language module. Write ONLY this sect
 ## Section Skeleton (follow this exactly)
 
 ## Перетинати і проходити: рух наскрізь (~600 words total)
-- P1 (~120 words): [Contextual bridge: moving from M29-M31 arrival/departure concepts to "transit" movement. Explain that while *прийти* is arriving and *піти* is leaving, *перейти* and *пройти* describe what happens in between — crossing and passing.]
-- P2 (~200 words): [Reading passage: "Автомобільна подорож" (A Road Trip). Use verbs like *перетнули кордон*, *проїхали через Житомир*, *переїхали міст через Дніпро*, *проїхали повз старовинну церкву*. Narrative focuses on the sequence of transit actions.]
-- P3 (~100 words): [Linguistic analysis of the reading passage: highlight the difference between crossing a boundary (*перетнули*) and traversing a space or passing an object (*проїхали через/повз*).]
-- P4 (~100 words): [Introduction to the semantic "shape" of the prefixes: *пере-* is a horizontal crossing of a line/limit; *про-* is a linear movement along or past a point.]
-- P5 (~80 words): [Pedagogical hook based on Zabolotnyi Grade 5: explain how adding prefixes to the base *бігти* (run) creates distinct spatial "trajectories" for the learner's mental map.]
+- P1 (~120 words): [Hook/Bridge from M27-M29: Recapping arriving (при-), departing (від-), and entering/exiting (за-/ви-). Present the central problem: How do we describe movement that doesn't stop at the destination, but goes through or past it? Introduce "Transit" as the third spatial category of prefixed motion verbs.]
+- P2 (~120 words): [Authentic Reading Passage: A narrative of a weekend trip from Kyiv to Zhytomyr. Describe crossing the Dnipro (переїхали міст), driving through the suburbs (проїхали околиці), and passing a famous gas station (проїхали повз заправку). Use bolding for "пере-" and "про-" verbs to build pattern recognition.]
+- P3 (~120 words): [Semantic focus: Transitioning from the physical act of "moving across" to the linguistic marker. Define "пере-" as the prefix of the boundary (me on one side, then the other) and "про-" as the prefix of the tunnel or the side-view (me going past or through).]
+- P4 (~120 words): [Textbook Context: Reference Ponomarova Grade 3 p.51. Explain the specific phrase "переїхати через Замковий міст" in Kamianets-Podilskyi. Contrast this with "проїхати по мосту" (driving along the bridge) to show how prefixes change the spatial perspective.]
+- P5 (~120 words): [Dialogue: Driving Lesson in Kharkiv. Instructor: "Перейдіть дорогу на світлофорі, а потім проїдьте два перехрестя." Student: "Ми вже проїхали поворот?" Focus on the real-time choice between crossing and passing.]
 
 ---
 ## Full Plan (for reference)
@@ -25,7 +25,7 @@ module: b1-028
 level: B1
 sequence: 28
 slug: motion-prefixes-transit
-version: '3.0'
+version: '3.1'
 title: Перейти, проїхати
 subtitle: Префікси пере- (перетинання) та про- (проїжджання повз) з дієсловами 
   руху
@@ -129,9 +129,18 @@ content_outline:
         дому (ви-). Перейшов вулицю (пере-). Зайшов до кав''ярні (за-). Вийшов i пішов
         до зупинки (ви-, пі-). Поїхав автобусом (по-). Проїхав три зупинки (про-).
         Доїхав до центру (до-). Приїхав на роботу (при-).'
+      - 'Prefix system overview table: all 8 prefixes taught so far organized by
+        spatial meaning. ARRIVAL: при- (arrive), до- (reach). DEPARTURE: пі-/по- (set off),
+        від- (move away). IN/OUT: за- (enter), ви- (exit). TRANSIT: пере- (cross), про-
+        (pass through). Learners fill in the table with example sentences for each prefix
+        using the base verb їхати/їздити.'
       - 'Dialogue: giving directions using transit verbs — ''Пройдіть по Хрещатику,
         перейдіть через Майдан, зайдіть у метро.'' Learners practice the natural combination
         of prefixes in navigation contexts.'
+      - 'Production exercise: learners describe their own daily commute or a memorable
+        trip using as many prefixes as possible. Minimum: 6 different prefixes in one
+        connected narrative. Peer review: partners check whether each prefix is used
+        correctly and suggest alternatives where another prefix might work better.'
   - section: 'Підсумок: пере- і про-'
     words: 350
     points:
@@ -527,6 +536,8 @@ references:
 </knowledge_packet>
 
 ---
+
+
 
 ## Rules
 

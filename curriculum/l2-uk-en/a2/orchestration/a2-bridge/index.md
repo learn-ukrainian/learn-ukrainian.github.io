@@ -1,39 +1,54 @@
 # Build Summary: a2-bridge (A2)
 
-Generated: 2026-03-31 22:55
+Generated: 2026-04-05 10:28
 
 ## Pipeline Phases
 
 | Phase | Status | Timestamp |
 |-------|--------|-----------|
-| check | complete | 2026-03-31 20:02:20 |
-| research | complete | 2026-03-31 20:03:14 |
-| skeleton | complete | 2026-03-31 20:05:50 |
-| pre-verify | complete | 2026-03-31 20:10:27 |
-| write | complete | 2026-03-31 20:26:08 |
-| exercises | complete | 2026-03-31 20:26:08 |
-| activities | complete | 2026-03-31 20:34:07 |
-| verify-exercises | complete | 2026-03-31 20:34:07 |
-| annotate | complete | 2026-03-31 20:34:07 |
-| enrich | complete | 2026-03-31 20:45:35 |
-| verify | complete | 2026-03-31 20:45:36 |
-| review | complete | 2026-03-31 20:55:36 |
-| stress | complete | 2026-03-31 20:55:41 |
-| publish | complete | 2026-03-31 20:55:42 |
+| check | complete | 2026-04-05 08:09:44 |
+| research | complete | 2026-04-05 08:10:39 |
+| skeleton | complete | 2026-04-05 08:11:39 |
+| pre-verify | complete | 2026-04-05 08:12:21 |
+| write | complete | 2026-04-05 08:19:10 |
+| exercises | complete | 2026-04-05 08:19:10 |
+| activities | complete | 2026-04-05 08:20:18 |
+| verify-exercises | complete | 2026-04-05 08:20:18 |
+| annotate | complete | 2026-04-05 08:20:18 |
+| vocab | complete | 2026-04-05 08:23:01 |
+| enrich | complete | 2026-04-05 08:23:01 |
+| verify | complete | 2026-04-05 08:23:01 |
+| review | complete | 2026-04-05 08:28:04 |
+| stress | complete | 2026-04-05 08:28:06 |
+| publish | complete | 2026-04-05 08:28:07 |
+
+## Reviews
+
+| Round | File |
+|-------|------|
+| 1 | a2-bridge-review-r1.md |
+| 2 | a2-bridge-review-r2.md |
+| 3 | a2-bridge-review-r3.md |
 
 ## Dispatch Log
 
 | Phase | Agent | Duration | OK |
 |-------|-------|----------|----|
-| pre-verify | claude-tools (claude-sonnet-4-6) | 140s | ✅ |
-| skeleton | claude (claude-sonnet-4-6) | 155s | ✅ |
-| activities | claude-tools (claude-sonnet-4-6) | 478s | ✅ |
-| vocab | claude (claude-sonnet-4-6) | 180s | ❌ |
-| review | claude-tools (claude-opus-4-6) | 600s | ❌ |
-| write-chunk-01 | claude-tools (claude-opus-4-6) | 236s | ✅ |
-| write-chunk-02 | claude-tools (claude-opus-4-6) | 142s | ✅ |
-| write-chunk-03 | claude-tools (claude-opus-4-6) | 45s | ✅ |
-| write-chunk-04 | claude-tools (claude-opus-4-6) | 30s | ✅ |
+| pre-verify | gemini-tools (gemini-3-flash-preview) | 42s | ✅ |
+| skeleton | gemini (gemini-3-flash-preview) | 60s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 68s | ✅ |
+| vocab | gemini (gemini-3-flash-preview) | 162s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 8s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 97s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 8s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 103s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 7s | ✅ |
+| review | gemini-tools (gemini-3.1-pro-preview) | 81s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 56s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 49s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 31s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 21s | ✅ |
+| write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 252s | ✅ |
 
 ## Friction
 
@@ -41,11 +56,19 @@ Generated: 2026-03-31 22:55
 
 ## Files
 
+- `chunk-01.md`
+- `chunk-02.md`
+- `chunk-03.md`
+- `chunk-04.md`
+- `chunk-05.md`
 - `exercise-verification.json`
 - `friction.yaml`
 - `pre-verify-results.md`
 - `quick-verify.json`
 - `research-quality.json`
+- `review-structured-r1.yaml`
+- `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`
@@ -53,6 +76,7 @@ Generated: 2026-03-31 22:55
 - `v6-chunk-02-prompt.md`
 - `v6-chunk-03-prompt.md`
 - `v6-chunk-04-prompt.md`
+- `v6-chunk-05-prompt.md`
 - `v6-pre-verify-prompt.md`
 - `v6-review-prompt.md`
 - `v6-skeleton-prompt.md`

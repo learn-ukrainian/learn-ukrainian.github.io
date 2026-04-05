@@ -1,68 +1,83 @@
-module: lit-essay-061
-level: LIT.ESSAY
-sequence: 61
-slug: barka-zhovtyi-kniaz
-version: '3.0'
-title: 'Василь Барка: «Жовтий князь» — епос Голодомору'
-subtitle: Vasyl Barka — The Yellow Prince (Holodomor Epic)
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння літературно-критичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Читання
+  focus: Розуміння літературного тексту (уривок з твору)
+  placement: inline
+  type: reading
+- focus: Аналіз авторського задуму — мова як мистецтво
+  placement: workbook
+  type: authorial-intent
+- focus: Аналіз риторичних стратегій та аргументації
+  placement: workbook
+  type: authorial-intent
+- focus: 'Порівняння з іншими творами або інтерпретаціями (Василь Барка: «Жовтий князь» — епос Голодомору)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе-аналіз рецепції та сучасного значення (Василь Барка: «Жовтий князь» — епос Голодомору)'
+  placement: workbook
+  type: essay-response
+content_outline:
+- points:
+  - Барка (1908-2003) — біографія, еміграція, МУР
+  - «Жовтий князь» (1963) — написано в діаспорі через 30 років
+  - Порівняння з «Марією» Самчука — різні часові дистанції
+  section: Вступ та контекст
+  words: 1000
+- points:
+  - Символіка «жовтого князя» — голод як персоніфіковане зло
+  - Родина Катранників — епічна структура
+  - Біблійні паралелі — Голодомор як апокаліпсис
+  section: Аналіз ключових творів
+  words: 1200
+- points:
+  - Поетична проза — ритміка, метафоричність
+  - Фольклорні та міфологічні пласти
+  - Порівняння зі світовою літературою геноциду
+  section: Стилістика та мова автора
+  words: 1200
+- points:
+  - «Жовтий князь» написаний в еміграції — СРСР заборонив би цю книгу
+  - Голодомор як геноцид, а не «голод» — мовне розмежування
+  section: Деколонізаційна перспектива
+  words: 1000
+- points:
+  - Канонічний статус — найважливіший роман про Голодомор
+  - Вплив на культурну пам'ять
+  section: Підсумок та спадщина
+  words: 800
 focus: literature
-pedagogy: literature
-phase: ESSAY.6 Testimony Prose
-word_target: 5000
+grammar: []
+immersion: 100% Ukrainian
+level: LIT.ESSAY
+module: lit-essay-061
 objectives:
 - Проаналізувати «Жовтий князь» як найважливіший роман про Голодомор
 - Дослідити символіку та поетику Барки — біблійні та фольклорні пласти
 - Порівняти із Самчуком — два підходи до Голодомору
-content_outline:
-- section: Вступ та контекст
-  words: 1000
-  points:
-  - Барка (1908-2003) — біографія, еміграція, МУР
-  - «Жовтий князь» (1963) — написано в діаспорі через 30 років
-  - Порівняння з «Марією» Самчука — різні часові дистанції
-- section: Аналіз ключових творів
-  words: 1200
-  points:
-  - Символіка «жовтого князя» — голод як персоніфіковане зло
-  - Родина Катранників — епічна структура
-  - Біблійні паралелі — Голодомор як апокаліпсис
-- section: Стилістика та мова автора
-  words: 1200
-  points:
-  - Поетична проза — ритміка, метафоричність
-  - Фольклорні та міфологічні пласти
-  - Порівняння зі світовою літературою геноциду
-- section: Деколонізаційна перспектива
-  words: 1000
-  points:
-  - «Жовтий князь» написаний в еміграції — СРСР заборонив би цю книгу
-  - Голодомор як геноцид, а не «голод» — мовне розмежування
-- section: Підсумок та спадщина
-  words: 800
-  points:
-  - Канонічний статус — найважливіший роман про Голодомор
-  - Вплив на культурну пам'ять
+pedagogy: literature
+persona:
+  role: Holodomor Literature Specialist
+  voice: Senior Specialist
+phase: ESSAY.6 Testimony Prose
+references:
+- name: Василь Барка — «Жовтий князь»
+  type: primary
+  url: https://www.ukrlib.com.ua/
+register: академічний
+sequence: 61
+slug: barka-zhovtyi-kniaz
+subtitle: Vasyl Barka — The Yellow Prince (Holodomor Epic)
+title: 'Василь Барка: «Жовтий князь» — епос Голодомору'
+version: '3.0'
 vocabulary_hints:
+  recommended:
+  - фольклорний пласт (folkloric layer)
   required:
   - епос (epic)
   - персоніфікація (personification)
   - апокаліпсис (apocalypse)
-  recommended:
-  - фольклорний пласт (folkloric layer)
-activity_hints:
-- type: reading
-  focus: Аналіз першоджерела
-- type: essay-response
-  focus: Порівняльний аналіз Самчук vs Барка
-- type: critical-analysis
-  focus: Символіка «Жовтого князя»
-immersion: 100% Ukrainian
-persona:
-  voice: Senior Specialist
-  role: Holodomor Literature Specialist
-references:
-- name: Василь Барка — «Жовтий князь»
-  url: https://www.ukrlib.com.ua/
-  type: primary
-register: академічний
-grammar: []
+word_target: 5000

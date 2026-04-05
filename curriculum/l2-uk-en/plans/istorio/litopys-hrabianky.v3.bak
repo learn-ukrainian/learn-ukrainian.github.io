@@ -1,0 +1,130 @@
+module: istorio-021
+level: ISTORIO
+sequence: 21
+slug: litopys-hrabianky
+version: '3.0'
+title: 'Літопис Грабянки: Козацький патріотизм'
+focus: history
+pedagogy: seminar
+word_target: 5000
+objectives:
+- 'Analyze the causes and consequences of літопис грабянки: козацький патріотизм'
+- Evaluate the historical significance of патріотичний літопис
+content_outline:
+- section: Вступ — Патріотичний літопис
+  points:
+  - Григорій Грабянка — автор і діяч
+  - Найбільш ідеологічний з трьох
+  - Мета — виправдання козацьких прав
+  - Написано ~1710 року
+  words: 700
+- section: Автор і його позиція
+  points:
+  - Біографія Грабянки
+  - Гадяцький полковник
+  - Політичні переконання
+  - Чому важливо знати автора
+  words: 700
+- section: Структура і зміст
+  points:
+  - Від витоків козацтва
+  - Хмельницький — центральна фігура
+  - До початку XVIII ст.
+  - Міфологічна передісторія
+  words: 700
+- section: Ідеологічна програма
+  points:
+  - Легітимація козацької державності
+  - Шляхетна генеалогія козаків
+  - Козаки як захисники православ'я
+  - Критика Москви — закамуфльована
+  - Ідеал козацької «республіки»
+  words: 700
+- section: Фрагмент — Козацьке походження
+  points:
+  - Текст (з глосами)
+  - Міфічні предки козаків
+  - Риторичні прийоми
+  - Порівняння з реальністю
+  words: 700
+- section: Барокова історіографія
+  points:
+  - Стиль — книжний, риторичний
+  - Бароковий патріотизм
+  - Символіка і алегорії
+  - Вплив польської історіографії
+  words: 700
+- section: Підсумок
+  points:
+  - Літопис як політичний маніфест
+  - Цінність для розуміння ментальності
+  - Порівняння з іншими літописами
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+vocabulary:
+- патріотизм
+- легітимація
+- ідеологія
+- генеалогія
+- барокова історіографія
+- міфологізація
+- риторика
+- православ'я
+- шляхта
+- республіка
+- апологетика
+- панегірик
+- етіологічний міф
+- компіляція
+- ідеалізація
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+activities:
+- type: reading
+  focus: Cossack origin myth passage
+- type: critical-analysis
+  focus: Identify ideological claims — what does author want readers to believe?
+- type: comparative-study
+  focus: Compare Hrabianka's Khmelnytsky with Samovydets'
+- type: critical-analysis
+  focus: How does knowing the author changes interpretation?
+- type: essay-response
+  focus: Чому Грабянка створив міфічну генеалогію козаків?
+persona:
+  voice: Academic Historiographer
+  role: Cossack Officer-Historian
+prerequisites:
+- litopys-samovidtsia
+connects_to:
+- litopys-velychka
+references:
+- name: Літопис Григорія Граб'янки (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Літопис_Григорія_Граб'янки
+  type: reference
+  notes: Overview
+- name: Літопис Грабянки (текст)
+  url: https://litopys.org.ua/grab/hrab.htm
+  type: primary
+  notes: Full text
+- name: Граб'янка Григорій Іванович
+  url: https://uk.wikipedia.org/wiki/Граб'янка_Григорій_Іванович
+  type: reference
+  notes: Author biography
+register: академічний
+grammar: []

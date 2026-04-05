@@ -1,0 +1,107 @@
+module: lit-027
+level: LIT
+sequence: 27
+slug: kaidash-family-characters
+version: '3.0'
+title: 'Кайдашева сім''я: Галерея Характерів'
+subtitle: 'Kaidash Family: A Gallery of Characters'
+focus: literature
+pedagogy: Seminar
+phase: LIT.5 Realism
+word_target: 5000
+objectives:
+- Проаналізувати систему персонажів повісті
+- Зрозуміти архетипи української сільської родини
+- Дослідити психологічну мотивацію героїв
+- Порівняти персонажів з попередніми творами курсу
+content_outline:
+- section: Вступ — Сім'я як мікрокосм
+  points:
+  - Родина в українській літературі
+  - Чому "Кайдашева сім'я" стала класикою
+  - Історичний контекст (після 1861 року)
+  words: 850
+- section: Омелько Кайдаш — патріарх
+  points:
+  - Характеристика голови родини
+  - Слабкості та чесноти
+  - Конфлікт традиції та змін
+  words: 850
+- section: Маруся Кайдашиха — справжня влада
+  points:
+  - Образ свекрухи в українській культурі
+  - Мотиви поведінки Кайдашихи
+  - Сатира vs співчуття
+  words: 850
+- section: Сини і невістки
+  points:
+  - Карпо та Лаврін — два типи синів
+  - Мотря і Мелашка — два типи невісток
+  - Конфлікти поколінь
+  words: 850
+- section: Другорядні персонажі
+  points:
+  - Село як колективний персонаж
+  - Сусіди та їхня роль
+  - Функція гумору
+  words: 850
+- section: Підсумок — Від типу до індивідуальності
+  points:
+  - Як Нечуй створює живих людей
+  - Порівняння з персонажами Квітки та Шевченка
+  - Перехід до конфліктів повісті
+  words: 750
+vocabulary_hints:
+  required:
+  - патріарх (patriarch)
+  - свекруха (mother-in-law)
+  - невістка (daughter-in-law)
+  - архетип (archetype)
+  - характер (character)
+  - мотивація (motivation)
+  - сатира (satire)
+  - психологізм (psychological depth)
+  - традиція (tradition)
+  - конфлікт (conflict)
+  recommended:
+  - індивідуальність (individuality)
+  - типаж (type/character type)
+  - колективний (collective)
+  - гумор (humor)
+  - співчуття (sympathy)
+activity_hints:
+- type: reading
+  focus: Ключові сцени з персонажами
+  source: UkrLib tid=907
+  items: 5+
+- type: essay-response
+  focus: Архетип свекрухи в українській культурі
+  output: Літературознавче есе
+connects_to:
+- lit-28 (Kaidash Family Conflict)
+- lit-05 (Natalka Poltavka)
+prerequisites:
+- lit-26 (Nechuy Levytsky)
+persona:
+  voice: Senior Philologist & Critic
+  role: Character Analyst
+grammar:
+- Character analysis vocabulary
+- Family relationship terms
+- Psychological motivation
+module_type: literature
+immersion: 100% Ukrainian
+references:
+- name: Кайдашева сім'я — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=907
+  type: primary
+  notes: Для цитат і аналізу
+- name: Аналіз "Кайдашевої сім'ї"
+  url: https://www.ukrlib.com.ua/review/printit.php?tid=18137
+  type: primary
+  notes: Літературознавчий аналіз
+- name: Кайдашева сім'я — скорочено
+  url: https://www.ukrlib.com.ua/styslo/printit.php?tid=3505
+  type: reference
+  notes: Для швидкого повторення сюжету
+register: академічний

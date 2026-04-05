@@ -1,0 +1,295 @@
+{
+  "total_items": 135,
+  "grounded_items": 80,
+  "ungrounded": [
+    {
+      "word": "школі",
+      "exercise_type": "fill-in",
+      "context": "У нашій школі багато _____."
+    },
+    {
+      "word": "вікнів",
+      "exercise_type": "fill-in",
+      "context": "вікнів"
+    },
+    {
+      "word": "місті",
+      "exercise_type": "fill-in",
+      "context": "У місті немає вільних _____."
+    },
+    {
+      "word": "вільних",
+      "exercise_type": "fill-in",
+      "context": "У місті немає вільних _____."
+    },
+    {
+      "word": "землів",
+      "exercise_type": "fill-in",
+      "context": "землів"
+    },
+    {
+      "word": "землей",
+      "exercise_type": "fill-in",
+      "context": "землей"
+    },
+    {
+      "word": "сумк",
+      "exercise_type": "fill-in",
+      "context": "сумк"
+    },
+    {
+      "word": "сумків",
+      "exercise_type": "fill-in",
+      "context": "сумків"
+    },
+    {
+      "word": "прочитав",
+      "exercise_type": "fill-in",
+      "context": "Я прочитав багато цікавих _____."
+    },
+    {
+      "word": "цікавих",
+      "exercise_type": "fill-in",
+      "context": "Я прочитав багато цікавих _____."
+    },
+    {
+      "word": "казків",
+      "exercise_type": "fill-in",
+      "context": "казків"
+    },
+    {
+      "word": "нього",
+      "exercise_type": "fill-in",
+      "context": "У нього є п'ять _____."
+    },
+    {
+      "word": "сестрів",
+      "exercise_type": "fill-in",
+      "context": "сестрів"
+    },
+    {
+      "word": "сестр",
+      "exercise_type": "fill-in",
+      "context": "сестр"
+    },
+    {
+      "word": "вона",
+      "exercise_type": "fill-in",
+      "context": "Вона знає багато українських _____."
+    },
+    {
+      "word": "знає",
+      "exercise_type": "fill-in",
+      "context": "Вона знає багато українських _____."
+    },
+    {
+      "word": "українських",
+      "exercise_type": "fill-in",
+      "context": "Вона знає багато українських _____."
+    },
+    {
+      "word": "піснів",
+      "exercise_type": "fill-in",
+      "context": "піснів"
+    },
+    {
+      "word": "пісней",
+      "exercise_type": "fill-in",
+      "context": "пісней"
+    },
+    {
+      "word": "тарілк",
+      "exercise_type": "fill-in",
+      "context": "тарілк"
+    },
+    {
+      "word": "тарілків",
+      "exercise_type": "fill-in",
+      "context": "тарілків"
+    },
+    {
+      "word": "склянк",
+      "exercise_type": "fill-in",
+      "context": "склянк"
+    },
+    {
+      "word": "склянків",
+      "exercise_type": "fill-in",
+      "context": "склянків"
+    },
+    {
+      "word": "форма",
+      "exercise_type": "true-false",
+      "context": "Форма для слова «брат» — це «братей»."
+    },
+    {
+      "word": "книгів",
+      "exercise_type": "true-false",
+      "context": "Форма для слова «книга» — це «книгів»."
+    },
+    {
+      "word": "суддей",
+      "exercise_type": "true-false",
+      "context": "Форма для слова «суддя» — це «суддей»."
+    },
+    {
+      "word": "оків",
+      "exercise_type": "true-false",
+      "context": "Форма для слова «око» — це «оків»."
+    },
+    {
+      "word": "друзі",
+      "exercise_type": "quiz",
+      "context": "друзі"
+    },
+    {
+      "word": "други",
+      "exercise_type": "quiz",
+      "context": "други"
+    },
+    {
+      "word": "друзей",
+      "exercise_type": "quiz",
+      "context": "друзей"
+    },
+    {
+      "word": "вулиці",
+      "exercise_type": "quiz",
+      "context": "Я бачу на вулиці кілька _____."
+    },
+    {
+      "word": "студентей",
+      "exercise_type": "quiz",
+      "context": "студентей"
+    },
+    {
+      "word": "студентов",
+      "exercise_type": "quiz",
+      "context": "студентов"
+    },
+    {
+      "word": "грошам",
+      "exercise_type": "quiz",
+      "context": "грошам"
+    },
+    {
+      "word": "грошів",
+      "exercise_type": "quiz",
+      "context": "грошів"
+    },
+    {
+      "word": "парки",
+      "exercise_type": "quiz",
+      "context": "парки"
+    },
+    {
+      "word": "паркей",
+      "exercise_type": "quiz",
+      "context": "паркей"
+    },
+    {
+      "word": "парков",
+      "exercise_type": "quiz",
+      "context": "парков"
+    },
+    {
+      "word": "яблуки",
+      "exercise_type": "quiz",
+      "context": "яблуки"
+    },
+    {
+      "word": "яблуків",
+      "exercise_type": "quiz",
+      "context": "яблуків"
+    },
+    {
+      "word": "групі",
+      "exercise_type": "quiz",
+      "context": "У нашій групі двадцять _____."
+    },
+    {
+      "word": "учні",
+      "exercise_type": "quiz",
+      "context": "учні"
+    },
+    {
+      "word": "учнев",
+      "exercise_type": "quiz",
+      "context": "учнев"
+    },
+    {
+      "word": "брати",
+      "exercise_type": "quiz",
+      "context": "брати"
+    },
+    {
+      "word": "написала",
+      "exercise_type": "quiz",
+      "context": "Вона написала декілька _____."
+    },
+    {
+      "word": "статті",
+      "exercise_type": "quiz",
+      "context": "статті"
+    },
+    {
+      "word": "статтів",
+      "exercise_type": "quiz",
+      "context": "статтів"
+    },
+    {
+      "word": "статть",
+      "exercise_type": "quiz",
+      "context": "статть"
+    },
+    {
+      "word": "гроша",
+      "exercise_type": "error-correction",
+      "context": "гроша"
+    },
+    {
+      "word": "маю",
+      "exercise_type": "error-correction",
+      "context": "Я маю багато друзі."
+    },
+    {
+      "word": "стола",
+      "exercise_type": "error-correction",
+      "context": "стола"
+    },
+    {
+      "word": "столов",
+      "exercise_type": "error-correction",
+      "context": "столов"
+    },
+    {
+      "word": "гривнів",
+      "exercise_type": "error-correction",
+      "context": "гривнів"
+    },
+    {
+      "word": "вікна",
+      "exercise_type": "error-correction",
+      "context": "У нас мало вікна."
+    },
+    {
+      "word": "ніч",
+      "exercise_type": "group-sort",
+      "context": "ніч"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 16,
+    "tested_in_exercises": 9,
+    "not_tested": [
+      "виняток",
+      "вставний",
+      "відмінок",
+      "голосний",
+      "десяток",
+      "кількість",
+      "родовий"
+    ]
+  },
+  "all_grounded": false
+}

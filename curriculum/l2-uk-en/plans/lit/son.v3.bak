@@ -1,0 +1,107 @@
+module: lit-014
+level: LIT
+sequence: 14
+slug: son
+version: '3.0'
+title: 'Політична Сатира: Сон'
+subtitle: 'LIT-014: Сміхове руйнування влади'
+focus: literature
+pedagogy: literature
+phase: LIT.3 The Prophet (Taras Shevchenko)
+word_target: 5000
+objectives:
+- Analyze the political satire in "The Dream"
+- Deconstruct the myth of the "Good Tsar"
+- Compare Shevchenko's view with Pushkin's
+content_outline:
+- section: Вступ Політична сатира та жанр комедії
+  points:
+  - Політична сатира
+  - Жанр комедії
+  words: 700
+- section: Частина Сюжетна подорож Від України до Петербурга
+  points:
+  - Україна
+  - Сибір
+  - Петербург
+  words: 700
+- section: Частина Імперський гротеск Сцена у палаці
+  points:
+  - Гротеск
+  - Мордобиття
+  words: 700
+- section: Частина Цар і Цариця Образи тиранів
+  points:
+  - Микола I
+  - Цариця
+  words: 700
+- section: Частина Фінал Пробудження та сенс
+  points:
+  - Пробудження
+  - Сенс
+  words: 700
+- section: Частина Історичний контекст Братство
+  points:
+  - Братство
+  - 1844 рік
+  words: 700
+- section: Частина Рецепція та наслідки Арешт
+  points:
+  - Арешт
+  - Значення
+  words: 800
+vocabulary_hints:
+  required:
+  - сатира (satire)
+  - гротеск (grotesque)
+  - іронія (irony)
+  - десакралізація (desacralization)
+  - карикатура (caricature)
+  - імперія (empire)
+  - цар (tsar)
+  - заслання (exile)
+  - пейзаж (landscape)
+  - контраст (contrast)
+  recommended:
+  - парадокс (paradox)
+  - абсурд (absurd)
+  - бал (ball)
+  - маніфест (manifesto)
+  - критика (criticism)
+activity_hints:
+- type: reading
+  focus: Повний текст поеми "Сон"
+  source: UkrLib tid=18
+  items: '1'
+- type: essay-response
+  focus: Роль сатири в десакралізації влади
+  output: Політологічне есе
+connects_to:
+- lit-15 (The Testament)
+- lit-25 (Cyrillo-Methodian Brotherhood — контекст арешту)
+prerequisites:
+- lit-11 to lit-13 (Shevchenko biography and early works)
+- lit-08 (Konotop Witch — для порівняння сатири)
+persona:
+  voice: Senior Philologist & Critic
+  role: Satirical Dreamer
+grammar:
+- Satirical stylistic devices
+- Grotesque and caricature
+- Political rhetoric
+module_type: literature
+immersion: 100% Ukrainian
+references:
+- name: Сон — повний текст
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=18
+  type: primary
+  notes: Поема для детального аналізу
+- name: Аналіз "Сну"
+  url: https://www.ukrlib.com.ua/analiz/printit.php?tid=18
+  type: secondary
+  notes: Літературознавчий аналіз
+- name: Російська імперія — контекст
+  url: https://uk.wikipedia.org/wiki/Російська_імперія
+  type: reference
+  notes: Політичний контекст 1844 року
+register: академічний

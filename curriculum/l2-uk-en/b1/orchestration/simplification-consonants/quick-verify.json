@@ -1,19 +1,18 @@
 {
-  "attempt": 5,
-  "passed": false,
-  "errors": [
-    {
-      "check": "TOXIC",
-      "severity": "ERROR",
-      "message": "Russian characters found: ъ"
-    }
-  ],
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
   "warnings": [
     {
       "check": "VOCABULARY",
       "severity": "WARNING",
-      "message": "Missing 1/14 required vocab: морфонологія (morphophonology — sound changes in morphology)"
+      "message": "Missing 3/14 required vocab: випадати (to drop out — of a sound disappearing), закріплений (fixed — reflected in standard spelling), виняток (exception — case that does not follow the rule)"
+    },
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 5 exercise(s) but content has 0 placeholders"
     }
   ],
-  "timestamp": "2026-04-03T15:06:39.902379+00:00"
+  "timestamp": "2026-04-04T07:15:48.997739+00:00"
 }

@@ -1,0 +1,188 @@
+{
+  "total_items": 100,
+  "grounded_items": 66,
+  "ungrounded": [
+    {
+      "word": "кава",
+      "exercise_type": "match-up",
+      "context": "кава"
+    },
+    {
+      "word": "кавою",
+      "exercise_type": "match-up",
+      "context": "з кавою"
+    },
+    {
+      "word": "п'є",
+      "exercise_type": "fill-in",
+      "context": "Вона п'є каву з (молоко) ____."
+    },
+    {
+      "word": "їмо",
+      "exercise_type": "fill-in",
+      "context": "Ми їмо бутерброди з (масло) ____."
+    },
+    {
+      "word": "зустрічається",
+      "exercise_type": "fill-in",
+      "context": "Вона зустрічається з (хлопець) ____."
+    },
+    {
+      "word": "школою",
+      "exercise_type": "quiz",
+      "context": "_____ школою"
+    },
+    {
+      "word": "добрий",
+      "exercise_type": "fill-in",
+      "context": "— Добрий день! Мені, будь ласка, каву з (молоко) ____."
+    },
+    {
+      "word": "день",
+      "exercise_type": "fill-in",
+      "context": "— Добрий день! Мені, будь ласка, каву з (молоко) ____."
+    },
+    {
+      "word": "нас",
+      "exercise_type": "fill-in",
+      "context": "— Ви будете десерт? У нас є смачні млинці з (сир) ____."
+    },
+    {
+      "word": "сир",
+      "exercise_type": "fill-in",
+      "context": "— Ви будете десерт? У нас є смачні млинці з (сир) ____."
+    },
+    {
+      "word": "ні",
+      "exercise_type": "fill-in",
+      "context": "— Ні, дякую. Дайте ще бутерброд із (м'ясо) ____."
+    },
+    {
+      "word": "дякую",
+      "exercise_type": "fill-in",
+      "context": "— Ні, дякую. Дайте ще бутерброд із (м'ясо) ____."
+    },
+    {
+      "word": "м'ясо",
+      "exercise_type": "fill-in",
+      "context": "— Ні, дякую. Дайте ще бутерброд із (м'ясо) ____."
+    },
+    {
+      "word": "подруги",
+      "exercise_type": "fill-in",
+      "context": "— Добре. А для вашої подруги? Вона буде чай з (мед) ____?"
+    },
+    {
+      "word": "буде",
+      "exercise_type": "fill-in",
+      "context": "— Добре. А для вашої подруги? Вона буде чай з (мед) ____?"
+    },
+    {
+      "word": "так",
+      "exercise_type": "fill-in",
+      "context": "— Так, і ще салат зі (сметана) ____."
+    },
+    {
+      "word": "замовляти",
+      "exercise_type": "fill-in",
+      "context": "— Чудово. А піцу з (гриби) ____ будете замовляти?"
+    },
+    {
+      "word": "куркою",
+      "exercise_type": "fill-in",
+      "context": "куркою"
+    },
+    {
+      "word": "одну",
+      "exercise_type": "fill-in",
+      "context": "— Так, одну велику піцу з (курка) ____."
+    },
+    {
+      "word": "курка",
+      "exercise_type": "fill-in",
+      "context": "— Так, одну велику піцу з (курка) ____."
+    },
+    {
+      "word": "молока",
+      "exercise_type": "error-correction",
+      "context": "молока"
+    },
+    {
+      "word": "молоку",
+      "exercise_type": "error-correction",
+      "context": "молоку"
+    },
+    {
+      "word": "сестри",
+      "exercise_type": "error-correction",
+      "context": "сестри"
+    },
+    {
+      "word": "сестрі",
+      "exercise_type": "error-correction",
+      "context": "сестрі"
+    },
+    {
+      "word": "хлопця",
+      "exercise_type": "error-correction",
+      "context": "хлопця"
+    },
+    {
+      "word": "хлопцю",
+      "exercise_type": "error-correction",
+      "context": "хлопцю"
+    },
+    {
+      "word": "сметаном",
+      "exercise_type": "error-correction",
+      "context": "Ми їмо салат зі сметаном."
+    },
+    {
+      "word": "сметани",
+      "exercise_type": "error-correction",
+      "context": "сметани"
+    },
+    {
+      "word": "сметані",
+      "exercise_type": "error-correction",
+      "context": "сметані"
+    },
+    {
+      "word": "лимона",
+      "exercise_type": "error-correction",
+      "context": "Я люблю чай з лимона."
+    },
+    {
+      "word": "лимону",
+      "exercise_type": "error-correction",
+      "context": "лимону"
+    },
+    {
+      "word": "лимоні",
+      "exercise_type": "error-correction",
+      "context": "лимоні"
+    },
+    {
+      "word": "сиру",
+      "exercise_type": "error-correction",
+      "context": "Мені потрібен бутерброд із сиру."
+    },
+    {
+      "word": "сирі",
+      "exercise_type": "error-correction",
+      "context": "сирі"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 15,
+    "tested_in_exercises": 10,
+    "not_tested": [
+      "відмінок",
+      "компанія",
+      "орудний",
+      "разом",
+      "супутник"
+    ]
+  },
+  "all_grounded": false
+}

@@ -11,13 +11,15 @@ You are writing ONE SECTION of a Ukrainian language module. Write ONLY this sect
 ## Section Skeleton (follow this exactly)
 
 ## Префікс пере-: перетинання (~1000 words total)
-- P1 (~150 words): [Core meaning of *пере-*: movement from side A to side B. Explain the concept of "crossing a boundary" (вулиця, річка, кордон) using 3 examples: *перейти дорогу*, *переплисти річку*, *перелетіти океан*.]
-- P2 (~150 words): [Foot motion focus: *перейти* (perfective) vs *переходити* (imperfective). Explain usage with *через + Accusative* (через міст) and direct Accusative (вулицю). Contrast *перейти* (single crossing) with *переходити* (habitual/process).]
-- P3 (~150 words): [Vehicular and animal motion: *переїхати* and *перебігти*. Discuss safety contexts: *переїхати перехрестя* (cross intersection), *дитина перебігла дорогу* (child ran across). Mention *перелетіти* (fly across) for birds/planes.]
-- P4 (~150 words): [Transitive verbs: *перенести*, *перевести*, *перевезти*. Specific scenarios: *перенести дитину через калюжу* (carry child across puddle), *перевести бабусю через дорогу* (lead granny across road), *перевезти меблі* (transport furniture).]
-- P5 (~100 words): [Conjugation drill for *перейти*: detail the future perfective (*перейду, перейдеш...*) and the past tense with the suffix shift (*перейшов, перейшла, перейшли*).]
-- P6 (~200 words): [Extended/Figurative meanings: *переїхати* as relocation (*переїхати в нове місто*); *перенести* as rescheduling (*перенести зустріч*); *перевести* as translation (*перевести текст*). Explain the "transfer" logic behind these.]
-- Exercise: [match-up, Match perfective пере- verbs with their figurative English translations (relocate, reschedule, translate), 8 items]
+- P1 (~120 words): [Core Spatial Meaning: "Пере-" as crossing from side A to side B. Explain why this requires a boundary (a road, a river, a border). Examples: перейти вулицю, переплисти річку, перелетіти океан.]
+- P2 (~120 words): [Grammar Focus: The preposition "через" + Accusative (Знахідний відмінок). Detail why "перейти через дорогу" is the standard construction. Examples: через міст, через кордон, через поріг.]
+- P3 (~130 words): [Verb Expansion: Applying "пере-" to carrying/leading verbs. Explain the mechanics of "перенести дитину" (carrying across a puddle) and "перевести бабусю" (leading a grandmother across the street). Contrast the direct object (the person) with the spatial object (the road).]
+- P4 (~130 words): [Conjugation Table & Drill: Full present/future conjugation of "перейти" (перейду, перейдеш, перейде...) and "переїхати" (переїду, переїдеш...). Include the irregular past tense of "перейти": перейшов, перейшла, перейшли.]
+- P5 (~130 words): [Figurative Meaning 1 - Relocation: Deep dive into "переїхати до нової квартири." Explain the logic of "crossing over" to a new life/location. Compare with the English "to move."]
+- P6 (~130 words): [Figurative Meaning 2 - Rescheduling & Translation: Explain "перенести зустріч" (moving it across the calendar) and "перекласти/перевести статтю" (moving meaning from one language to another). Note that "перекласти" is standard for text, but "перевести" is often heard for oral or informal translation.]
+- P7 (~130 words): [Aspectual Pairs: Contrast "переходити" (imperfective process/habit) vs. "перейти" (perfective completion). Example: "Я щодня переходжу цю вулицю" vs. "Я вчора перейшов її без пригод."]
+- Exercise: [match-up, Match пере- verbs with their figurative meanings (relocate, translate, reschedule), 8 items]
+- P8 (~120 words): [Summary of "пере-": Recapping the 13j Narrative Completeness—ensure the learner understands that "пере-" always implies a change of state relative to a barrier.]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -25,7 +27,7 @@ You are writing ONE SECTION of a Ukrainian language module. Write ONLY this sect
 <previous_context>
 [...previous sections truncated...]
 
-міста і попрямували на захід. О сьомій ранку ми успішно **перетнули кордон** *(crossed the border)* нашої області. Дорога була вільною, тому ми дуже швидко **проїхали через Житомир** *(drove through Zhytomyr)*, навіть не зупиняючись у центрі на ранкову каву. > > Згодом ми наблизилися до великої і широкої річки. Ми обережно **переїхали міст через Дніпро** *(crossed the bridge over the Dnipro)*, милуючись чудовими ранковими краєвидами з обох боків. Далі наш маршрут пролягав через мальовничі українські села. В одному з них ми повільно **проїхали повз старовинну дерев'яну церкву** *(drove past an ancient wooden church)*, яка стояла прямо біля дороги. Ми не мали часу зупинятися і заходити всередину, а лише подивилися на її красу з вікна нашого автомобіля. > > Ближче до обіду погода раптово зіпсувалася. Почалася сильна літня злива, але ми досить швидко **проїхали крізь грозу** *(drove through the thunderstorm)* і знову побачили яскраве сонце. Нарешті, після кількох годин у дорозі, ми помітили знайомий вказівник нашого пункту призначення. Ми обережно **переїхали залізничний переїзд** *(crossed the railway crossing)* і незабаром щасливо дісталися до бази відпочинку, де на нас вже чекали друзі. Ця довга дорога була дуже цікавою завдяки постійній зміні пейзажів за вікном. Проаналізуймо цей текст. Ви, мабуть, одразу помітили чітку різницю між тими діями, які описують фізичне подолання певної межі, та діями, що вказують на плавний рух уздовж чогось. Коли герої розповіді **перетнули** *(crossed)* кордон або **переїхали** *(crossed/drove over)* міст чи залізничний переїзд, вони здійснили логічний перехід з одного боку перешкоди на інший. Вони фізично опинилися по інший бік річки або колії. Натомість, коли вони **проїхали через** *(drove through)* велике місто або **проїхали повз** *(drove past)* старовинну церкву, вони просто продовжували свій лінійний рух. Вони не долали умовну межу зліва направо, а впевнено рухалися вперед крізь простір або минали об'єкт, який залишався збоку від їхнього головного маршруту. Кожен префікс в українській мові має свою унікальну семантичну «форму» або графічний малюнок. Префікс **пере-** *(over/across)* візуально нагадує міст: це завжди горизонтальний рух через певну лінію, бар'єр чи обмеження, рух з точки А в точку Б через перепону. Наприклад, річка або вулиця є такою умовною лінією. З іншого боку, префікс **про-** *(through/past)* має форму довгої прямої стріли. Це лінійний рух, який розгортається вздовж певного маршруту, повз різні точки на карті або крізь певний об'ємний простір, як-от зелений ліс чи довгий тунель. Цей рух не має на меті перетнути лінію, його головна мета — залишити об'єкт позаду і впевнено рухатися далі. У шкільних підручниках з української мови учням часто пропонують одну цікаву візуальну вправу. Наприклад, її можна знайти у відомому підручнику Олександра Заболотного для п'ятого класу. Учням потрібно взяти базове дієслово, таке як **бігти** *(to run)*, і по черзі додавати до нього всі можливі префікси руху. Це одразу створює абсолютно різні просторові «траєкторії» у нашій уяві. Додаючи префікс **пере-**, ми чітко уявляємо людину, яка швидко перебігає небезпечну дорогу від одного тротуару до іншого. Натомість, додаючи префікс **про-**, ми бачимо професійного бігуна, який стрімко пробігає повз нас на марафоні. Такі префікси не просто змінюють граматичну форму слова — вони талановито малюють точну карту нашого маршруту в просторі.
+ми швидко виїхали з сонячного Києва. Спочатку ми обережно **переїхали** *(crossed by vehicle)* великий міст через широку річку Дніпро. Ранковий рух на дорогах був досить повільним, але ми успішно **проїхали** *(drove through/past)* всі спальні передмістя столиці. По дорозі ми довго слухали улюблену українську музику і розмовляли. Раптом я несподівано помітив, що ми щойно **проїхали повз** *(drove past)* ту саму відому заправку, де зазвичай п'ємо смачну каву. Ми вирішили не зупинятися, бо дуже хотіли швидше дістатися до соснового лісу. Коли ми нарешті **перетнули** *(crossed)* адміністративну межу Житомирської області, раптово почався густий літній дощ. Але ми спокійно продовжили наш запланований шлях». Ці специфічні дієслова чудово показують безперервну подорож, де географічні об'єкти з'являються і швидко зникають з поля зору. Чому ми взагалі використовуємо абсолютно різні префікси для опису транзитного руху? Головний секрет полягає у вашій просторовій перспективі (spatial perspective) та фокусі уваги. Префікс **пере-** завжди означає чітке перетинання певної межі (crossing a boundary). Уявіть собі фізичну лінію: ви щойно були на одному боці, а тепер ви опинилися на іншому. Ви активно перетинаєте глибоку річку, широку вулицю або державний кордон. Префікс **про-**, навпаки, означає плавне проходження наскрізь або рух повз об'єкт (passing by or through). Це візуально нагадує рух через довгий тунель або просто вид об'єкта збоку з вікна автомобіля. Ви не перетинаєте цей об'єкт як перешкоду, ви просто спокійно рухаєтеся вздовж нього або залишаєте його збоку від себе. Наприклад, ви можете **пройти** *(walk past/through)* зелений міський парк, але ви технічно повинні **перейти** *(cross on foot)* небезпечну автомобільну дорогу. У відомому підручнику з української мови для третього класу (автор К. Пономарьова, сторінка 51) є один чудовий ілюстративний приклад. Діти весело поїхали на екскурсію до історичного Кам’янця-Подільського. Щоб нарешті потрапити до старовинної фортеці, їм логічно довелося «**переїхати через Замковий міст**» *(cross over the Castle Bridge)*. Чому авторка використала саме дієслово **переїхати**? Тому що цей унікальний міст фізично з'єднує два високі скелясті береги. Туристи успішно перемістилися з точки А в точку Б через глибокий каньйон. Якби вони просто довго їхали вздовж дуже довгого сучасного моста без семантичного акценту на подолання перешкоди, ситуація була б іншою. Тоді можна було б нейтрально сказати «**проїхати по мосту**» *(drive along the bridge)*. Наші граматичні префікси кардинально змінюють те, як ми подумки бачимо простір. Ми бачимо його або як серйозну перешкоду (**пере-**), або просто як звичайну частину довгого шляху (**про-**). Прочитайте цей реалістичний діалог між досвідченим інструктором з водіння та нервовим учнем на вулицях сучасного Харкова. Зверніть особливу увагу, як швидко змінюються транзитні префікси під час активної міської навігації. > — **Інструктор з водіння:** Спочатку **перейдіть** *(cross)* дорогу на світлофорі, а потім повільно **проїдьте** *(pass through)* два великі **перехрестя** *(intersections)* прямо. > — **Учень:** Ой, мені здається, що ми випадково вже **проїхали** *(passed)* наш потрібний правий поворот? > — **Інструктор з водіння:** Ні, ви все робите абсолютно правильно. Тепер швидко **переїдьте** *(cross by vehicle)* міст та плавно зупиніться біля аптеки. Цей щоденний граматичний вибір між свідомим перетинанням перешкоди (**пере-**) та звичайним проходженням повз об'єкт (**про-**) є абсолютно ключовим. Він необхідний для правильної і точної навігації чистою українською мовою у будь-якому місті.
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -38,7 +40,7 @@ module: b1-028
 level: B1
 sequence: 28
 slug: motion-prefixes-transit
-version: '3.0'
+version: '3.1'
 title: Перейти, проїхати
 subtitle: Префікси пере- (перетинання) та про- (проїжджання повз) з дієсловами 
   руху
@@ -142,9 +144,18 @@ content_outline:
         дому (ви-). Перейшов вулицю (пере-). Зайшов до кав''ярні (за-). Вийшов i пішов
         до зупинки (ви-, пі-). Поїхав автобусом (по-). Проїхав три зупинки (про-).
         Доїхав до центру (до-). Приїхав на роботу (при-).'
+      - 'Prefix system overview table: all 8 prefixes taught so far organized by
+        spatial meaning. ARRIVAL: при- (arrive), до- (reach). DEPARTURE: пі-/по- (set off),
+        від- (move away). IN/OUT: за- (enter), ви- (exit). TRANSIT: пере- (cross), про-
+        (pass through). Learners fill in the table with example sentences for each prefix
+        using the base verb їхати/їздити.'
       - 'Dialogue: giving directions using transit verbs — ''Пройдіть по Хрещатику,
         перейдіть через Майдан, зайдіть у метро.'' Learners practice the natural combination
         of prefixes in navigation contexts.'
+      - 'Production exercise: learners describe their own daily commute or a memorable
+        trip using as many prefixes as possible. Minimum: 6 different prefixes in one
+        connected narrative. Peer review: partners check whether each prefix is used
+        correctly and suggest alternatives where another prefix might work better.'
   - section: 'Підсумок: пере- і про-'
     words: 350
     points:
@@ -540,6 +551,8 @@ references:
 </knowledge_packet>
 
 ---
+
+
 
 ## Rules
 

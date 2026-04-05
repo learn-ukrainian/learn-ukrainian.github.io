@@ -1,0 +1,55 @@
+module: bio-167
+level: BIO
+sequence: 167
+slug: yuriy-ruf
+version: '3.0'
+title: Юрій Руф
+subtitle: Юрій Руф
+focus: history
+pedagogy: seminar
+phase: Executed Renaissance 2.0
+word_target: 5000
+objectives:
+- Дослідити життя та внесок Юрій Руф у сучасну українську культуру
+- Проаналізувати історичну тяглість російських репресій проти української інтелігенції
+content_outline:
+- section: Вступ та контекст
+  points: []
+  words: 1000
+- section: Націоналістичний інтелектуал та воїн
+  points: []
+  words: 1000
+- section: Формування патріотичного світогляду
+  points: []
+  words: 1000
+- section: Деколонізаційна перспектива
+  points:
+  - Зв'язок з Розстріляним Відродженням 1930-х
+  - Українська суб'єктність та опір
+  words: 1000
+- section: Підсумок та спадщина
+  points: []
+  words: 1000
+vocabulary_hints:
+  required:
+  - суб'єктність
+  - тяглість
+  - геноцид
+  recommended:
+  - деколонізація
+activity_hints:
+- type: reading
+  focus: Аналіз життєвого шляху та вибору
+- type: essay-response
+  focus: Критичне есе про ціну культури
+persona:
+  voice: Senior Biographer
+  role: Street Spirit
+immersion: 100% Ukrainian
+prerequisites:
+- oleg-sentsov
+connects_to:
+- oleksandra-matviichuk
+references: []
+register: академічний
+grammar: []

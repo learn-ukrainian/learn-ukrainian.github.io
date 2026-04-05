@@ -1,0 +1,108 @@
+module: hist-040
+level: HIST
+sequence: 40
+slug: syntez-lytva-polska
+version: '3.0'
+title: 'Синтез: Литовсько-польська доба'
+subtitle: Узагальнення литовсько-польського періоду в історії України
+focus: history
+pedagogy: CBI
+phase: HIST.4
+word_target: 5000
+objectives:
+- Синтезувати знання з модулів про ВКЛ і Річ Посполиту
+- Аналізувати причинно-наслідкові зв'язки литовсько-польської доби
+- Формулювати аргументовані висновки про цей період
+content_outline:
+- section: Вступ
+  points:
+  - Литовсько-польська доба — 300 років української історії (1340-1648)
+  - 'Три ключові теми: державність, суспільство, ідентичність'
+  - Зв'язок з Хмельниччиною як результатом цього періоду
+  words: 450
+- section: Первинні джерела
+  points:
+  - Історичні джерела литовсько-польської доби
+  words: 450
+- section: Деколонізаційний погляд
+  points:
+  - Критичний аналіз імперських наративів
+  words: 450
+- section: Читання
+  points:
+  - Історіографічні підходи до литовсько-польської доби
+  words: 450
+- section: 'Хронологія: Литовсько-польська доба'
+  points:
+  - Ключові дати від 1340 до 1648 року
+  - Хронологічне завдання — 10+ подій
+  - Причинно-наслідкові ланцюги
+  words: 450
+- section: 'Огляд термінів: Литовсько-польська доба'
+  points:
+  - Політична лексика — шляхта, магнат, воєводство
+  - Релігійна лексика — унія, братство, митрополит
+  - Соціальна лексика — кріпак, посполитий, фільварок
+  words: 450
+- section: Зв'язок із сьогоденням
+  points:
+  - Спадщина литовсько-польської доби в сучасній Україні
+  - Україно-польські стосунки сьогодні
+  words: 450
+- section: Підсумок
+  points:
+  - Загальна оцінка епохи
+  - Ключові висновки епохи
+  words: 450
+- section: Модулі цієї епохи
+  points:
+  - Список модулів цього періоду
+  words: 450
+- section: Що далі?
+  points:
+  - Перехід до козацької доби
+  words: 450
+- section: Потрібно більше практики?
+  points:
+  - Посилання на додаткові ресурси
+  words: 500
+vocabulary_hints:
+  required:
+  - історія (history)
+  - держава (state)
+  - народ (people)
+  - влада (power)
+  - період (period)
+  - подія (event)
+  - джерело (source)
+  - спадщина (heritage)
+  recommended:
+  - аналіз (analysis)
+  - контекст (context)
+  - вплив (influence)
+  - наслідки (consequences)
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: critical-analysis
+  focus: Аналіз причинно-наслідкових зв'язків між подіями
+  items: 3
+- type: critical-analysis
+  focus: Критична оцінка історичних тверджень та міфів
+  items: 5
+persona:
+  voice: Senior Professor of History
+  role: Visiting Professor from Kyiv-Mohyla Academy
+grammar:
+- Analytical writing
+- Cause-effect structures
+- Historical argumentation
+prerequisites:
+- liudy-ricchi-pospolytoi
+connects_to:
+- kozatstvo-vytoky
+references: []
+register: академічний

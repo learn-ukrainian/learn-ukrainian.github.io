@@ -1,0 +1,265 @@
+vocabulary:
+- word: вказівни́й
+  translation: demonstrative
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: узго́дження
+  translation: agreement (grammar)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: іменнико́ва гру́па
+  translation: noun phrase
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: прикме́тник
+  translation: adjective
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: присві́йний
+  translation: possessive
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: моє́му
+  translation: to my (masc./neut. dat.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: мої́й
+  translation: to my (fem. dat.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: твоє́му
+  translation: to your (masc./neut. dat.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: на́шій
+  translation: to our (fem. dat.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: цьому́
+  translation: to this (masc./neut. dat.)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: тому́
+  translation: to that (masc./neut. dat.)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ново́му
+  translation: to the new (masc./neut. dat.)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: старшому
+  translation: to the older (masc./neut. dat.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ї́хньому
+  translation: to their (masc./neut. dat.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: найкра́щому
+  translation: to the best (masc./neut. dat.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: відо́мому
+  translation: to the famous (masc./neut. dat.)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: си́ньому
+  translation: to the blue (masc./neut. dat.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: лі́тньому
+  translation: to the summer (masc./neut. dat.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: сере́дньому
+  translation: to the middle (masc./neut. dat.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: насту́пному
+  translation: to the next (masc./neut. dat.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ра́нньому
+  translation: to the early (masc./neut. dat.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ти́хій
+  translation: to the quiet (fem. dat.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: дорогі́й
+  translation: to the dear (fem. dat.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: легкі́й
+  translation: to the easy (fem. dat.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: молоді́й
+  translation: to the young (fem. dat.)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: висо́ким
+  translation: to the high/tall (plural dat.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: мале́ньким
+  translation: to the small (masc./neut./plural dat.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: моло́дшому
+  translation: to the younger (masc./neut. dat.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: улю́бленій
+  translation: to the favorite (fem. dat.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: інозе́мному
+  translation: to the foreign (masc./neut. dat.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: таланови́тому
+  translation: to the talented (masc./neut. dat.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: розу́мному
+  translation: to the smart (masc./neut. dat.)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: хи́трій
+  translation: to the sly/cunning (fem. dat.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ва́шому
+  translation: to your (formal/plural masc./neut. dat.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: на́шому
+  translation: to our (masc./neut. dat.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: цій
+  translation: to this (fem. dat.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: тій
+  translation: to that (fem. dat.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: Наступного разу буде краще.
+  translation: Next time it will be better.
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: тиснути руку
+  translation: to shake hands
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: віддавати перевагу
+  translation: to prefer / to give preference to
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: щиро дякувати
+  translation: to thank sincerely
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: щиро співчувати
+  translation: to sympathize sincerely
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: із радістю
+  translation: with joy / happily
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: за́здрити
+  translation: to envy
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true

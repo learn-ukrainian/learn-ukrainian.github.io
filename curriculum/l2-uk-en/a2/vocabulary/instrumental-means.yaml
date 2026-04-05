@@ -1,0 +1,223 @@
+vocabulary:
+- word: знаря́ддя
+  translation: instrument, tool
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: транспорт
+  translation: transport
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пі́шки
+  translation: on foot
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: корабе́ль
+  translation: ship
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ру́чка
+  translation: pen
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: оліве́ць
+  translation: pencil
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: фа́рба
+  translation: paint
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: лінійка
+  translation: ruler
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ніж
+  translation: knife
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: ло́жка
+  translation: spoon
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: авто́бус
+  translation: bus
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: по́тяг
+  translation: train
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: літа́к
+  translation: airplane
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: трамва́й
+  translation: tram
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: за́сіб
+  translation: means, tool
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ганчі́рка
+  translation: rag
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ві́ник
+  translation: broom
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: щі́тка
+  translation: brush
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пра́ска
+  translation: iron
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: троле́йбус
+  translation: trolleybus
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: маршру́тка
+  translation: minibus
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: метро́
+  translation: metro, subway
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: таксі́
+  translation: taxi
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: автомобі́ль
+  translation: car, automobile
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: зато́ри
+  translation: traffic jams
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: но́жиці
+  translation: scissors
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: па́лички
+  translation: chopsticks
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: виде́лка
+  translation: fork
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: по́дорож
+  translation: journey, trip
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ціка́витися
+  translation: to be interested (in)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пахнути
+  translation: to smell (of)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: займа́тися
+  translation: to do, to engage in
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: іти пішки
+  translation: to go on foot
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: їхати автобусом
+  translation: to travel by bus
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: займатися спортом
+  translation: to do sports
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: цікавитися музикою
+  translation: to be interested in music
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пахнути квітами
+  translation: to smell of flowers
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

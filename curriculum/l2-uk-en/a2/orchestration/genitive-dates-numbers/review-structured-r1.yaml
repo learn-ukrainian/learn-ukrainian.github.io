@@ -1,0 +1,52 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Text missed the specific instruction to point out where Nom. Pl. and Gen.
+    Sg. look similar for feminine nouns (e.g., 'сестри'). Also contradicted the plan
+    regarding the genitive ending of 'серпень'.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Text incorrectly claims the month 'серпень' takes the ending '-а' in the
+    Genitive ("дванадцяте серпня"). 'Серпень' takes the standard '-я' ending (серпня).
+    "Ми маємо" is slightly calqued; "У нас є" is
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: The grouping of 'чоловік' (a regular hard stem taking '-ів') under the
+    heading "Some very common masculine words take the ending -ей or change slightly"
+    is pedagogically confusing and incorrect.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary words (число, місяць, січень-грудень, заперечення)
+    are naturally integrated into the text and examples.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 4 required exercise markers are correctly placed, match the required
+    types/focuses from the plan, and logically follow the taught material.
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: Contains some unnecessary flowery meta-commentary ("special, elegant grammatical
+    tradition", "profound expression of deep negation") instead of demonstrating the
+    rule directly.
+- dimension: 7
+  name: Structural integrity
+  score: 8
+  evidence: Clean markdown and all sections present. Deducting because the deterministic
+    word count (3320 words) is massively outside the 2000 target range.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Culturally relevant dates (День Незалежності - 24 серпня) and natural
+    situations (booking a hotel) are used appropriately.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are multi-turn, natural, and use appropriate grammatical features
+    like the Vocative case ("Олександре").
+findings: []

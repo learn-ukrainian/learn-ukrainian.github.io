@@ -1,26 +1,26 @@
 # Build Summary: aspect-in-vocabulary (A2)
 
-Generated: 2026-03-31 18:12
+Generated: 2026-04-04 14:36
 
 ## Pipeline Phases
 
 | Phase | Status | Timestamp |
 |-------|--------|-----------|
-| check | complete | 2026-03-30 23:53:34 |
-| research | complete | 2026-03-30 23:54:18 |
-| skeleton | complete | 2026-03-30 23:56:22 |
-| pre-verify | complete | 2026-03-30 23:58:14 |
-| write | complete | 2026-03-31 00:05:28 |
-| exercises | complete | 2026-03-31 00:05:28 |
-| activities | complete | 2026-03-31 00:13:31 |
-| verify-exercises | complete | 2026-03-31 00:13:31 |
-| annotate | complete | 2026-03-31 00:13:31 |
-| vocab | complete | 2026-03-31 10:31:45 |
-| enrich | complete | 2026-03-31 10:31:47 |
-| verify | complete | 2026-03-31 10:31:47 |
-| review | complete | 2026-03-31 10:43:03 |
-| stress | complete | 2026-03-31 16:12:16 |
-| publish | complete | 2026-03-31 16:12:24 |
+| check | complete | 2026-04-04 12:13:27 |
+| research | complete | 2026-04-04 12:14:36 |
+| skeleton | complete | 2026-04-04 12:15:30 |
+| pre-verify | complete | 2026-04-04 12:17:11 |
+| write | complete | 2026-04-04 12:20:47 |
+| exercises | complete | 2026-04-04 12:20:47 |
+| activities | complete | 2026-04-04 12:24:07 |
+| verify-exercises | complete | 2026-04-04 12:24:07 |
+| annotate | complete | 2026-04-04 12:24:07 |
+| vocab | complete | 2026-04-04 12:26:08 |
+| enrich | complete | 2026-04-04 12:26:08 |
+| verify | complete | 2026-04-04 12:26:08 |
+| review | complete | 2026-04-04 12:36:36 |
+| stress | complete | 2026-04-04 12:36:40 |
+| publish | complete | 2026-04-04 12:36:43 |
 
 ## Reviews
 
@@ -28,36 +28,65 @@ Generated: 2026-03-31 18:12
 |-------|------|
 | 1 | aspect-in-vocabulary-review-r1.md |
 | 2 | aspect-in-vocabulary-review-r2.md |
+| 3 | aspect-in-vocabulary-review-r3.md |
+| 4 | aspect-in-vocabulary-review-r4.md |
+| 5 | aspect-in-vocabulary-review-r5.md |
+| 6 | aspect-in-vocabulary-review-r6.md |
+| 7 | aspect-in-vocabulary-review-r7.md |
 
 ## Dispatch Log
 
 | Phase | Agent | Duration | OK |
 |-------|-------|----------|----|
-| pre-verify | claude-tools (claude-sonnet-4-6) | 112s | ✅ |
-| skeleton | claude (claude-sonnet-4-6) | 124s | ✅ |
-| activities | claude-tools (claude-sonnet-4-6) | 482s | ✅ |
-| vocab | claude (claude-sonnet-4-6) | 25s | ✅ |
-| review | gemini (gemini-3.1-pro-preview) | 2s | ❌ |
-| review | gemini (auto) | 1s | ❌ |
-| review | claude-tools (claude-opus-4-6) | 414s | ✅ |
-| review | gemini (gemini-3.1-pro-preview) | 2s | ❌ |
-| review | gemini (auto) | 1s | ❌ |
-| review | claude-tools (claude-opus-4-6) | 254s | ✅ |
-| section-rewrite | claude-tools (claude-opus-4-6) | 161s | ✅ |
-| write-chunk-01 | claude-tools (claude-opus-4-6) | 47s | ✅ |
-| write-chunk-01 | claude-tools (claude-opus-4-6) | 34s | ✅ |
-| write-chunk-02 | claude-tools (claude-opus-4-6) | 48s | ✅ |
-| write-chunk-02 | claude-tools (claude-opus-4-6) | 43s | ✅ |
-| write-chunk-03 | claude-tools (claude-opus-4-6) | 64s | ✅ |
-| write-chunk-03 | claude-tools (claude-opus-4-6) | 58s | ✅ |
-| write-chunk-04 | claude-tools (claude-opus-4-6) | 48s | ✅ |
-| write-chunk-04 | claude-tools (claude-opus-4-6) | 48s | ✅ |
-| write-chunk-05 | claude-tools (claude-opus-4-6) | 25s | ✅ |
-| write-chunk-05 | claude-tools (claude-opus-4-6) | 19s | ✅ |
+| pre-verify | gemini-tools (gemini-3-flash-preview) | 60s | ✅ |
+| pre-verify | gemini-tools (gemini-3-flash-preview) | 92s | ✅ |
+| pre-verify | gemini-tools (gemini-3-flash-preview) | 127s | ✅ |
+| skeleton | gemini (gemini-3-flash-preview) | 28s | ✅ |
+| skeleton | gemini (gemini-3-flash-preview) | 57s | ✅ |
+| skeleton | gemini (gemini-3-flash-preview) | 43s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 95s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 132s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 144s | ✅ |
+| activities | gemini-tools (gemini-3.1-pro-preview) | 68s | ✅ |
+| vocab | gemini (gemini-3-flash-preview) | 146s | ✅ |
+| vocab | gemini (gemini-3-flash-preview) | 112s | ✅ |
+| vocab | gemini (gemini-3-flash-preview) | 118s | ✅ |
+| review | claude-tools (claude-opus-4-6) | 224s | ✅ |
+| review | claude-tools (claude-opus-4-6) | 257s | ✅ |
+| review | claude-tools (claude-opus-4-6) | 197s | ✅ |
+| review | claude-tools (claude-opus-4-6) | 221s | ✅ |
+| review | claude-tools (claude-opus-4-6) | 265s | ✅ |
+| review | claude-tools (claude-opus-4-6) | 260s | ✅ |
+| review | claude-tools (claude-opus-4-6) | 263s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 45s | ✅ |
+| write-chunk-01 | gemini-tools (gemini-3.1-pro-preview) | 58s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 68s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 65s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 92s | ✅ |
+| write-chunk-02 | gemini-tools (gemini-3.1-pro-preview) | 106s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 57s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 61s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 54s | ✅ |
+| write-chunk-03 | gemini-tools (gemini-3.1-pro-preview) | 57s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 65s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 58s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 54s | ✅ |
+| write-chunk-04 | gemini-tools (gemini-3.1-pro-preview) | 59s | ✅ |
+| write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 25s | ✅ |
+| write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 27s | ✅ |
+| write-chunk-05 | gemini-tools (gemini-3.1-pro-preview) | 30s | ✅ |
+| write-fix | gemini-tools (gemini-3.1-pro-preview) | 63s | ✅ |
+| write-fix | gemini-tools (gemini-3.1-pro-preview) | 51s | ✅ |
+| write-fix | gemini-tools (gemini-3.1-pro-preview) | 98s | ✅ |
+| write-fix | gemini-tools (gemini-3.1-pro-preview) | 160s | ✅ |
 
 ## Files
 
-- `.build.lock`
+- `chunk-01.md`
+- `chunk-02.md`
+- `chunk-03.md`
+- `chunk-04.md`
+- `chunk-05.md`
 - `correction-attempt-1.md`
 - `exercise-verification.json`
 - `pre-verify-results.md`
@@ -65,6 +94,11 @@ Generated: 2026-03-31 18:12
 - `research-quality.json`
 - `review-structured-r1.yaml`
 - `review-structured-r2.yaml`
+- `review-structured-r3.yaml`
+- `review-structured-r4.yaml`
+- `review-structured-r5.yaml`
+- `review-structured-r6.yaml`
+- `review-structured-r7.yaml`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

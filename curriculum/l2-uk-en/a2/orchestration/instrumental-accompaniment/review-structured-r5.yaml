@@ -1,0 +1,57 @@
+round: 5
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All 4 content_outline sections present and ordered correctly. Section
+    points well covered: Introduction (case questions, core meaning, functions overview,
+    connection to other cases ✓), Endings (all th'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: All Ukrainian forms verified correct via VESUM (653 words confirmed).
+    Instrumental endings match textbook rules exactly (Захарійчук с.62, Пономарьова
+    с.53). кашею confirmed in VESUM (кашою NOT found —
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'Strong PPP flow: presents concept (Instrumental = companion/attribute)
+    → patterns (endings by gender/stem) → practice (dialogue, transformation, café
+    ordering). Abundant examples: 5+ per gender group '
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'All 11 required vocabulary items from plan used naturally in prose: орудний
+    відмінок (Section 1), з/із/зі (Section 3), друг→другом (Section 2), подруга→подругою
+    (Section 2), лимон→лимоном (Section 4),'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 'All 4 markers present, matching plan''s activity_hints in type, focus,
+    and item count. Markers placed after relevant teaching: match-up + fill-in after
+    endings table (Section 2), quiz after з/із/зі rul'
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: 'Strong positives: natural picnic dialogue with named speakers (Максим,
+    Олена), specific food collocations (каша з маслом, бутерброд з сиром), café ordering
+    scenario grounded in real Ukrainian culture.'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Clean markdown with all 4 planned H2 sections + a summary (Підсумок).
+    Sections ordered correctly. Comparison table well-formatted with all gender/stem
+    combinations. Word count 2529 above 2000 target ✓
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented on its own terms throughout. No "like Russian but..."
+    comparisons. Euphony (милозвучність) presented as a Ukrainian linguistic concept.
+    Food items culturally appropriate (борщ зі с
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'Picnic dialogue: named speakers (Максим, Олена), natural multi-turn exchange
+    about who''s coming and what food to bring. Matches plan''s dialogue_situation
+    exactly. Speakers have distinct roles (organiz'
+findings: []

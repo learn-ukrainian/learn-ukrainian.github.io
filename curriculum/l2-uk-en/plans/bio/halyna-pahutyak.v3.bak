@@ -1,0 +1,102 @@
+module: bio-155
+level: BIO
+sequence: 155
+slug: halyna-pahutyak
+version: '3.0'
+title: 'Галина Пагутяк: Містична письменниця'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of галина пагутяк: містична письменниця'
+- Evaluate the contributions of голос з іншого світу
+- Trace the career and influence of архітекторка світів
+content_outline:
+- section: Вступ — Голос з іншого світу
+  points:
+  - Майстриня химерного реалізму
+  - Унікальний голос сучасної української прози
+  - Філософський та містичний світогляд
+  words: 850
+- section: Юність та формування (1958-1980)
+  points:
+  - Народження на Львівщині
+  - Дитинство в Карпатах
+  - Навчання у Львівському університеті
+  - Перші літературні спроби
+  words: 850
+- section: Ранній період творчості (1980-1990-ті)
+  points:
+  - Перша книжка «Діти» (1982)
+  - Формування унікального стилю
+  - Теми дитинства та пам'яті
+  - Візнання критиків
+  words: 850
+- section: Химерний реалізм (2000-ні)
+  points:
+  - «Слуга з Добромиля» (2006)
+  - «Урізька готика» (2009)
+  - Магічні елементи та історична проза
+  - Карпати як простір таємниць
+  words: 850
+- section: Філософська проза (2010-ні)
+  points:
+  - Роздуми про природу та людину
+  - Екологічна тематика
+  - Есеїстика та публіцистика
+  - Вплив на молодих письменників
+  words: 850
+- section: Спадщина — Архітекторка світів
+  points:
+  - Місце в сучасній літературі
+  - Переклади іноземними мовами
+  - Літературні премії
+  - Пагутяк і майбутнє української прози
+  words: 750
+vocabulary_hints:
+  required:
+  - химерний реалізм (chimerical realism)
+  - містика (mysticism)
+  - проза (prose)
+  - філософія (philosophy)
+  - готика (Gothic)
+  - магічний реалізм (magical realism)
+  - наратор (narrator)
+  - світогляд (worldview)
+  - метафора (metaphor)
+  - символізм (symbolism)
+  recommended:
+  - есеїстика (essay writing)
+  - екологія (ecology)
+  - фольклор (folklore)
+  - архетип (archetype)
+  - підтекст (subtext)
+activity_hints:
+- type: reading
+  focus: Сучасна українська проза
+  source: Literary criticism
+  items: 3 passages
+- type: essay-response
+  focus: Що таке «химерний реалізм» і як він проявляється у творах Пагутяк?
+  output: Analytical essay
+connects_to:
+- bio-85
+- bio-89
+prerequisites:
+- bio-83
+persona:
+  voice: Senior Biographer
+  role: Gothic Novelist
+module_type: biography
+immersion: 100% Ukrainian
+references:
+- name: Галина Пагутяк (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Пагутяк_Галина_Василівна
+  type: primary
+  notes: Biography of the mystical prose writer
+- name: Видавництво «Піраміда»
+  url: https://www.pyramida.kiev.ua/
+  type: reference
+  notes: Publisher of Pahutyak's major works
+register: академічний
+grammar: []

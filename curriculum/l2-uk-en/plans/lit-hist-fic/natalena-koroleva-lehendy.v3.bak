@@ -1,0 +1,100 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння літературно-критичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Читання
+  focus: Розуміння літературного тексту (уривок з твору)
+  placement: inline
+  type: reading
+- focus: Історія vs. вигадка — що задокументовано, що винайдено?
+  placement: workbook
+  type: source-evaluation
+- focus: Літературна критика — оцінка інтерпретації
+  placement: workbook
+  type: critical-analysis
+- focus: 'Порівняння з іншими творами або інтерпретаціями (Наталена Королева: Легенди старокиївські)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе-аналіз рецепції та сучасного значення (Наталена Королева: Легенди старокиївські)'
+  placement: workbook
+  type: essay-response
+connects_to:
+- zahrebelny-death-in-kyiv
+- zahrebelny-dyvo
+- lepkyi-mazepa
+content_outline:
+- points:
+  - Наталена Королева (1888–1966) — іспанська аристократка, що обрала Україну
+  - Біографія — Барселона, Прага, еміграція, латинський обряд
+  - Унікальність позиції — «зовнішній погляд зсередини»
+  section: Вступ та культурний контекст
+  words: 850
+- points:
+  - Сюжети — княжий Київ, хрещення, побут давньої Русі-України
+  - Структура легенди як жанру — між історією та притчею
+  - Образ Київської Русі через католицьку оптику — діалог цивілізацій
+  section: '«Легенди старокиївські»: аналіз збірки'
+  words: 900
+- points:
+  - Стильова вишуканість та інтелектуальна елегантність
+  - Королева як жіночий голос в чоловічому жанрі історичної прози
+  - Порівняння з іншими еміграційними авторками (Докія Гуменна)
+  section: Аристократична проза та жіноче письмо
+  words: 850
+- points:
+  - Архаїзована, стилізована мова — наближення до літописного регістру
+  - Орнаментальність прози — вплив модернізму
+  - Латинська та західноєвропейська інтертекстуальність
+  section: Мова, стиль та поетика
+  words: 800
+- points:
+  - Альтернатива популістському та народницькому обрамленню історії
+  - Київська Русь як частина європейської цивілізації — проти «русского мира»
+  - Еміграційна література як збереження забороненого погляду
+  section: Деколонізаційний вимір
+  words: 800
+- points:
+  - Повернення Королевої в український літературний простір після 1991
+  - Актуальність європейського погляду на українську історію
+  - Питання для дискусії
+  section: Підсумок та рецепція
+  words: 800
+focus: literature
+grammar: []
+immersion: 100% Ukrainian
+level: LIT-HIST-FIC
+module: lit-hist-fic-021
+module_type: literature
+objectives:
+- Проаналізувати «Легенди старокиївські» як унікальний приклад аристократичної історичної прози
+- Дослідити європейський та католицький погляд Наталени Королевої на давньоукраїнську історію
+- Зрозуміти контраст між елітарним та популістським підходами до національного минулого
+pedagogy: Seminar
+persona:
+  role: Chronicler of the Kyivan Court
+  voice: Senior Philologist & Critic
+phase: HISTFIC.1
+references:
+- name: Наталена Королева — проза
+  notes: Основне джерело
+  type: primary
+  url: https://www.ukrlib.com.ua/
+register: академічний
+sequence: 21
+slug: natalena-koroleva-lehendy
+subtitle: An aristocratic, European, Catholic lens on early Ukrainian history
+title: 'Наталена Королева: Легенди старокиївські'
+version: '3.0'
+vocabulary_hints:
+  recommended:
+  - орнаментальність (ornamentalism)
+  - Русь-Україна (Rus-Ukraine)
+  - інтертекстуальність (intertextuality)
+  required:
+  - легенда (legend)
+  - аристократизм (aristocratism)
+  - літописний (chronicle-like)
+  - еміграція (emigration)
+word_target: 5000

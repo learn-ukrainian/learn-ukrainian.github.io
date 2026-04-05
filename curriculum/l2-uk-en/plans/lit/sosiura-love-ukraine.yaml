@@ -1,85 +1,99 @@
-module: lit-109
-level: LIT
-sequence: 109
-slug: sosiura-love-ukraine
-version: '3.0'
-title: Sosiura Love Ukraine
-subtitle: Sosiura Love Ukraine
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння літературно-критичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Читання
+  focus: Розуміння літературного тексту (уривок з твору)
+  placement: inline
+  type: reading
+- focus: Аналіз авторського задуму — мова як мистецтво
+  placement: workbook
+  type: authorial-intent
+- focus: Літературна критика — оцінка інтерпретації
+  placement: workbook
+  type: critical-analysis
+- focus: Порівняння з іншими творами або інтерпретаціями (Sosiura Love Ukraine)
+  placement: workbook
+  type: comparative-study
+- focus: Есе-аналіз рецепції та сучасного значення (Sosiura Love Ukraine)
+  placement: workbook
+  type: essay-response
+connects_to:
+- lit-113
+content_outline:
+- points:
+  - Історичні умови появи твору/автора
+  - Місце в літературному каноні
+  - Чому цей текст важливий сьогодні
+  section: Вступ та культурний контекст
+  words: 850
+- points:
+  - Ключові етапи життя/розвитку сюжету
+  - Впливи та джерела
+  - Конфлікт як рушійна сила
+  section: 'Аналіз твору: Сюжет та структура'
+  words: 850
+- points:
+  - Детальний розбір символіки
+  - Система персонажів та їхня еволюція
+  - Архетипи та міфологічні підтексти
+  section: Герменевтика та ключові образи
+  words: 850
+- points:
+  - Стилістичні інновації автора
+  - Робота з народною мовою або оказіоналізмами
+  - Особливості ритміки та синтаксису
+  section: Мова, стиль та поетика
+  words: 850
+- points:
+  - Який імперський міф руйнує цей текст?
+  - Агентність українського героя
+  - Опір асиміляції та культурне самоствердження
+  section: Деколонізаційний вимір
+  words: 850
+- points:
+  - Вплив на наступні покоління письменників
+  - Світовий контекст твору
+  - Питання для дискусії
+  section: Підсумок та рецепція
+  words: 750
 focus: literature
-pedagogy: Seminar
-phase: LIT.3 Executed Renaissance 1917-1933
-word_target: 5000
+grammar: []
+immersion: 100% Ukrainian
+level: LIT
+module: lit-109
+module_type: literature
 objectives:
 - Проаналізувати твір Sosiura Love Ukraine у контексті епохи
 - Дослідити стилістичні особливості тексту
 - Зрозуміти деколонізаційне значення автора
-content_outline:
-- section: Вступ та культурний контекст
-  points:
-  - Історичні умови появи твору/автора
-  - Місце в літературному каноні
-  - Чому цей текст важливий сьогодні
-  words: 850
-- section: 'Аналіз твору: Сюжет та структура'
-  points:
-  - Ключові етапи життя/розвитку сюжету
-  - Впливи та джерела
-  - Конфлікт як рушійна сила
-  words: 850
-- section: Герменевтика та ключові образи
-  points:
-  - Детальний розбір символіки
-  - Система персонажів та їхня еволюція
-  - Архетипи та міфологічні підтексти
-  words: 850
-- section: Мова, стиль та поетика
-  points:
-  - Стилістичні інновації автора
-  - Робота з народною мовою або оказіоналізмами
-  - Особливості ритміки та синтаксису
-  words: 850
-- section: Деколонізаційний вимір
-  points:
-  - Який імперський міф руйнує цей текст?
-  - Агентність українського героя
-  - Опір асиміляції та культурне самоствердження
-  words: 850
-- section: Підсумок та рецепція
-  points:
-  - Вплив на наступні покоління письменників
-  - Світовий контекст твору
-  - Питання для дискусії
-  words: 750
+pedagogy: Seminar
+persona:
+  role: Patriot
+  voice: Senior Philologist & Critic
+phase: LIT.3 Executed Renaissance 1917-1933
+prerequisites: []
+references:
+- name: Sosiura Love Ukraine — тексти та аналіз
+  notes: Основне джерело
+  type: primary
+  url: https://www.ukrlib.com.ua/
+register: академічний
+sequence: 109
+slug: sosiura-love-ukraine
+subtitle: Sosiura Love Ukraine
+title: Sosiura Love Ukraine
+version: '3.0'
 vocabulary_hints:
+  recommended:
+  - алегорія (allegory)
+  - контекст (context)
+  - рецепція (reception)
   required:
   - канон (canon)
   - метафора (metaphor)
   - дискурс (discourse)
   - інтерпретація (interpretation)
-  recommended:
-  - алегорія (allegory)
-  - контекст (context)
-  - рецепція (reception)
-activity_hints:
-- type: reading
-  focus: Аналіз ключових уривків sosiura-love-ukraine
-  source: UkrLib
-  items: 5+
-- type: essay-response
-  focus: Філософський або літературознавчий аспект твору
-  output: Аналітичне есе
-connects_to:
-- lit-113
-prerequisites: []
-persona:
-  voice: Senior Philologist & Critic
-  role: Patriot
-module_type: literature
-immersion: 100% Ukrainian
-references:
-- name: Sosiura Love Ukraine — тексти та аналіз
-  url: https://www.ukrlib.com.ua/
-  type: primary
-  notes: Основне джерело
-register: академічний
-grammar: []
+word_target: 5000

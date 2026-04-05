@@ -1,133 +1,151 @@
-module: hist-047
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння історіографічних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Джерела
+  focus: Розуміння первинного історичного джерела
+  placement: inline
+  type: reading
+- focus: Оцінка первинного джерела — хто написав, навіщо, що упущено?
+  placement: workbook
+  type: source-evaluation
+- focus: Дебат — оцінка значення та наслідків події
+  placement: workbook
+  type: debate
+- focus: 'Порівняння української та імперської інтерпретацій (Козацька культура: Кобзарі, думи та бароко)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе на тему зв''язку з сучасністю (Козацька культура: Кобзарі, думи та бароко)'
+  placement: workbook
+  type: essay-response
+cefr_min: C1
+connects_to:
+- khotynska-viyna
+- kozatske-viisko
+content_outline:
+- points:
+  - 'Провокаційне питання: Іван Мазепа — «жадібний зрадник», як 300 років стверджувала російська пропаганда, чи найщедріший
+    меценат в історії України, що будував державу через культуру? Чому імперії було так важливо знищити його репутацію?'
+  - 'Фрагмент опису собору, збудованого Мазепою: «...всередині все сяє від золота, а стіни прикрашені таким розмаїттям, що
+    очі розбігаються». Як такий опис спростовує міф про «селянську» культуру Гетьманщини?'
+  section: Розминка
+  words: 400
+- points:
+  - 'Дебат 1: Українська культура XVII-XVIII ст. — це провінційне наслідування Заходу (імперський погляд) чи унікальний синтез,
+    що сам став донором культури для Москви (деколоніальний погляд)? [!decolonization] Розгляд феномену «Наришкінського бароко»
+    як доказу культурного впливу України на Московію.'
+  - 'Дебат 2: Що було рушієм «золотої доби» культури? Політична воля та державна стратегія гетьманів (Мазепа) чи духовні реформи
+    та освітній прорив (Могила)?'
+  - '[!epistemic-humility] Історики сперечаються, чи можна вважати меценатство Мазепи суто альтруїстичним актом, чи це був
+    прагматичний розрахунок для легітимізації влади в очах козацької старшини та духовенства.'
+  - 'Глобальна синхронність: Козацьке бароко як вияв національної ідентичності vs класицизм Людовіка XIV у Франції як інструмент
+    абсолютної монархії vs стриманий протестантський бароко в Англії. Різні відповіді на однакові виклики епохи.'
+  section: 'Конфліктна карта: Європейський вибір чи культурна ізоляція?'
+  words: 900
+- points:
+  - 'Джерело 1 (Народний епос): Аналіз тексту «Думи про Марусю Богуславку». Розгляд речитативної форми як інструменту імпровізації.
+    [!decolonization] Чому думи як жанр не мають аналогів у російському фольклорі і є маркером окремої української ідентичності?'
+  - 'Джерело 2 (Освіта): Фрагменти статуту Києво-Могилянської академії. Вивчення «семи вільних мистецтв», латина як мова науки.
+    Як навчальний план формував еліту, здатну керувати державою та конкурувати з європейськими інтелектуалами?'
+  - 'Джерело 3 (Архітектура): Аналіз архітектурних особливостей Покровського собору в Харкові та Троїцької надбрамної церкви
+    в Лаврі. Грушоподібні бані, «розірвані» фронтони, рослинний орнамент — як ці елементи створювали унікальний національний
+    стиль?'
+  - 'Джерело 4 (Мистецтво): Порівняння ікони та парсуни (на прикладі портрета Богдана Хмельницького). Як перехід від сакрального
+    до світського портрета свідчить про зміну світогляду та народження модерної ідеї особистості?'
+  section: 'Джерела: Думи, статути та літописи'
+  words: 1600
+- points:
+  - 'Причинно-наслідковий зв''язок: Як випускники («спудеї») Києво-Могилянської академії стали архітекторами не лише Гетьманщини,
+    але й Російської імперії (Феофан Прокопович, Стефан Яворський)?'
+  - 'Довгострокові наслідки: Меценатство гетьманів як стратегія легітимації влади — будівництво церков не лише утверджувало
+    гетьмана як «захисника віри», але й візуально маркувало територію української держави.'
+  - '[!myth-buster] Розвінчання міфу про «зрадника Мазепу». Аналіз конкретних цифр: понад 40 збудованих та відреставрованих
+    церков, мільйонні пожертви на освіту та друк (напр., арабське Євангеліє 1708 р.). Мазепа витрачав на культуру більше,
+    ніж на військо.'
+  - '[!myth-buster] Розвінчання міфу про «відсталу селянську культуру». Висока грамотність серед козаків, розвинена система
+    гільдій (цехів), унікальна таємна мова кобзарів («лебійська мова») — докази існування складної соціальної та професійної
+    структури.'
+  - 'Оцінки істориків: Порівняння поглядів Сергія Плохія та Ореста Субтельного на феномен козацького бароко — чи було воно
+    піком української самобутності, чи початком її асиміляції в загальноімперському просторі?'
+  section: 'Аналіз: Наслідки та значення'
+  words: 1600
+- points:
+  - 'Повернення до розминки: Отже, Мазепа — зрадник чи державотворець? Студент має сформулювати відповідь, спираючись на докази
+    з модуля (меценатство, мета пропаганди, культурний вплив).'
+  - 'Зв''язок із сьогоденням: Чому сучасна Росія продовжує нищити українські культурні пам''ятки? Як руйнування церков, театрів
+    та музеїв є продовженням імперської політики, що почалася 300 років тому?'
+  - 'Ширше питання: Яку роль відіграє культура (архітектура, література, освіта) у виживанні нації під час екзистенційної
+    загрози?'
+  - '[!anti-hagiography] «Золота доба» Гетьманщини не була ідилією. Вона фінансувалася за рахунок визиску селянства та супроводжувалася
+    кривавими війнами. Важливо бачити не лише культурний злет, а й соціальну ціну, яку за нього було сплачено.'
+  section: Дискусія та підсумок
+  words: 700
+focus: Синтез європейських впливів та української традиції в архітектурі козацького бароко, роль кобзарства та дум у формуванні
+  національного етосу, значення Києво-Могилянської академії та меценатства Мазепи як інструменту державотворення.
 level: HIST
+module: hist-047
+objectives:
+- Пояснювати роль кобзарства у збереженні національної пам'яті та історичної свідомості.
+- Аналізувати думи як унікальний жанр українського епосу, відрізняючи їх від пісень та інших фольклорних форм.
+- Характеризувати козацьке бароко як мистецький напрям та як інструмент державної легітимації Гетьманщини.
+- Критично оцінювати імперські та радянські наративи про українську культуру XVII-XVIII ст., спираючись на першоджерела.
+pedagogy: CBI
+persona:
+  role: Куратор виставки "Золота доба Гетьманщини", що розвінчує імперські міфи та показує світовий контекст українського
+    мистецтва
+  voice: Art-Historian-Debunker
+phase: HIST.5
+references:
+- author: Історія української культури
+  note: Комплексний огляд епохи на litopys.org.ua
+  type: primary
+  url: https://litopys.org.ua/istkult/istkult.htm
+  work: 'Том 3: Козацька культура'
+- author: Encyclopedia of Ukraine
+  note: Детальний опис стилю з візуальними прикладами
+  type: primary
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CB%5CA%5CBaroque.htm
+  work: Cossack Baroque
+- author: Величко С. В.
+  note: Першоджерело, що описує події та побут козацької доби, зокрема меценатську діяльність гетьманів.
+  type: primary
+  work: Літопис
 sequence: 47
 slug: kozatska-kultura
-version: '3.0'
-title: Козацька культура — кобзарі, думи та бароко
 subtitle: 'Cossack Culture: Kobzars, Dumas, and Baroque'
-focus: history
-pedagogy: CBI
-phase: HIST.5 [Rise of Cossacks]
-word_target: 5000
-objectives:
-- Learner can explain the role of kobzars in preserving national memory
-- Learner can analyze the genre of dumas as a unique Ukrainian epic
-- Learner can characterize Cossack Baroque and its geopolitical significance
-content_outline:
-- section: Вступ та Контекст
-  points:
-  - 'Cultural intersection: East and West — synthesis of Western European influences and Byzantine-Rus traditions; not passive
-    borrowing but active creation'
-  - The Golden Age of Hetmanate culture — [!context] Ukrainian Baroque was a dialogue where tradition reimagined 
-    European forms; period of 1687 (Mazepa's election) marked the peak
-  words: 550
-- section: 'Кобзарі та лірники: голос народу'
-  points:
-  - The guild system (cekhy) and hierarchy — organized brotherhoods with statutes, treasury, courts, and strict 
-    hierarchy (masters, apprentices)
-  - 'Lebiiska language: the secret code — [!history-bite] kobzars used a secret argot (''lebiiska'') for safety and preserving
-    guild secrets'
-  - Social and political functions of kobzars — not beggars but professional performers; acted as 'live newspapers', 
-    moral authorities, and sometimes scouts
-  words: 550
-- section: 'Українські Думи: Духовний хребет нації'
-  points:
-  - The uniqueness of the genre (recitative) — [!culture] dumas were chanted, not sung, allowing for improvisation based
-    on audience reaction (like jazz)
-  - Improvisation and emotional depth — focus on themes of captivity, escape, and death (e.g., 'Дума про Марусю 
-    Богуславку')
-  - The role of dumas in shaping language — formed the national ethos and historical consciousness of the illiterate 
-    population
-  words: 550
-- section: 'Козацьке бароко: Тріумф національного стилю'
-  points:
-  - 'Differences from Western Baroque — [!decolonization] reverse influence vector: Ukrainian masters brought Baroque to Muscovy
-    (''Naryshkin Baroque'')'
-  - Symbolism and decorative richness — pear-shaped domes, 'torn' pediments, lush stucco decor with plant motifs 
-    (grapes, sunflowers)
-  - Major architectural monuments — Troitska Church (Hustyn), Pokrovsky Cathedral (Kharkiv), Vydubychi Monastery (Kyiv)
-  words: 550
-- section: 'Мистецтво: Феномен козацького бароко'
-  points:
-  - Synthesis of Western and Byzantine traditions — combination of masonry architecture of the princely era with Baroque
-    splendor
-  - Architecture (Mazepa baroque) — term emphasizing the hetman's role; massive reconstruction of ancient temples 
-    (Sophia, St. Michael's)
-  - Portraiture (Parsuna) — transition from iconography to secular portrait; flat and static but with individual 
-    features (e.g., portraits of Khmelnytsky, Sulyma)
-  words: 550
-- section: Меценатство як державна стратегія
-  points:
-  - 'The role of Ivan Mazepa and other hetmans — [!myth-buster] Mazepa was not a ''greedy traitor'' but spent millions on
-    40+ churches and schools; quote: «Все гине там, де володар не є готовий... захищати свою владу»'
-  - Legitimizing the state through art — church construction legitimized the hetman as defender of the faith; support 
-    extended to Athos, Jerusalem, Syria (1708 Arabic Gospel)
-  words: 550
-- section: 'Інтелектуальний центр: Києво-Могилянська академія'
-  points:
-  - Petro Mohyla's reforms — [!quote] «Гарно й почесно бути свічкою... але свічка має світити»; 1632 merger of Lavra and
-    Brotherhood schools
-  - The seven liberal arts and Latin education — 12-year course, Latin as language of science; focus on poetics, 
-    rhetoric, drama
-  - Impact on the entire Eastern European region — graduates (spudei) formed the elite of the Hetmanate and Empire 
-    (Prokopovych, Yavorsky)
-  words: 550
-- section: Первинні джерела та Читання
-  points:
-  - Analysis of Dumas and Academy statutes — examine structure of dumas and student requirements in statutes
-  words: 550
-- section: Деколонізаційний погляд
-  points:
-  - Debunking the 'peasant culture' myth — Hetmanate had high elite culture integrated into Europe; distinct from 
-    Russian isolationism before Peter I
-  - Imperial appropriation of Ukrainian achievements — Kyiv as a donor of culture to Moscow (transfer of ideas, styles, 
-    personnel)
-  words: 600
+title: 'Козацька культура: Кобзарі, думи та бароко'
+version: '4.0'
 vocabulary_hints:
-  required:
-  - кобзар (kobzar/minstrel) — professional performer, member of a guild, keeper of 'lebiiska' secret language
-  - бандура (bandura) — multi-stringed instrument used for accompanying dumas
-  - дума (duma/epic poem) — recitative heroic poem, distinct from songs; 'Дума про Марусю Богуславку'
-  - козацьке бароко (Cossack Baroque) — unique synthesis of Western and Byzantine styles; 'pear-shaped domes'
-  - меценатство (patronage) — Mazepa's state strategy of funding arts/church; 'build the state'
-  - речитатив (recitative) — chanting style of duma performance, allows improvisation
-  - лебійська мова (Lebiiska language) — secret argot of kobzars used for safety
-  - спудей (spudei/student) — student of Kyiv-Mohyla Academy; future elite
-  - епос (epic) — heroic narrative poetry; distinct from byliny
-  - фасад (facade) — architectural front, often with 'torn' pediments in Baroque
-  recommended:
-  - парсуна (parsuna) — early secular portrait retaining iconographic flatness
-  - цех (guild) — professional organization of kobzars with courts and treasury
-  - грушоподібний (pear-shaped) — characteristic shape of Ukrainian Baroque domes
-  - баня (dome) — architectural feature of churches
-  - ліпнина (stucco molding) — decorative element with plant motifs
-activity_hints:
-- type: reading
-  focus: Linguistic analysis of Duma texts and Academy rules
-- type: essay-response
-  focus: The impact of kobzarstvo on national identity
-- type: comparative-study
-  focus: Cossack Baroque vs. Western Baroque styles
-- type: critical-analysis
-  focus: 'Верифікація фактів: Facts about education and guilds'
-  items: 4
-persona:
-  voice: Senior Professor of History
-  role: Wandering Kobzar
-grammar:
-- 'Historical narrative: cultural synthesis'
-- Artistic and academic terminology
-register: публіцистичний
-prerequisites:
-- khotynska-viyna
-connects_to:
-- kozatske-viisko
-references:
-- name: History of Ukrainian Culture
-  url: https://litopys.org.ua/istkult/istkult.htm
-  type: reference
-  notes: Comprehensive overview of the era
-- name: Cossack Baroque - Encyclopedia of Ukraine
-  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CB%5CA%5CBaroque.htm
-  type: reference
-  notes: Detailed description of the style
+- definition: професійний народний співець, виконавець дум, часто член цехової організації
+  pos: ч.
+  word: кобзар
+- definition: жанр українського героїчного епосу, що виконується речитативом під акомпанемент кобзи чи бандури
+  pos: ж.
+  word: дума
+- definition: манера співу, що наближається до виразної розмовної мови; характерний для виконання дум
+  pos: ч.
+  word: речитатив
+- definition: національний архітектурний стиль XVII–XVIII ст., що поєднував європейські барокові форми з українськими традиціями
+  pos: с.
+  word: козацьке бароко
+- definition: фінансова підтримка культури, мистецтва та освіти з боку заможних покровителів, зокрема гетьманів
+  pos: с.
+  word: меценатство
+- definition: студент, учень, зокрема Києво-Могилянської академії
+  pos: ч.
+  word: спудей
+- definition: ранній світський портрет, що зберіг риси іконописного стилю (площинність, статичність)
+  pos: ж.
+  word: парсуна
+- definition: середньовічна професійна організація, зокрема кобзарські братства зі своїми статутами та судами
+  pos: ч.
+  word: цех
+- definition: має форму груші; характеристика форми бань (куполів) українських барокових церков
+  pos: прикм.
+  word: грушоподібний
+- definition: таємна професійна мова (арго) сліпих кобзарів та лірників
+  pos: ж.
+  word: лебійська мова
+word_target: 5200

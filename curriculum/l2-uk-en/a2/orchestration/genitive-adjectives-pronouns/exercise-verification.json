@@ -1,0 +1,159 @@
+{
+  "total_items": 166,
+  "grounded_items": 138,
+  "ungrounded": [
+    {
+      "word": "літнє",
+      "exercise_type": "fill-in",
+      "context": "Ми чекаємо _____ (літнє сонце)."
+    },
+    {
+      "word": "сонце",
+      "exercise_type": "fill-in",
+      "context": "Ми чекаємо _____ (літнє сонце)."
+    },
+    {
+      "word": "важливого",
+      "exercise_type": "fill-in",
+      "context": "важливого документа"
+    },
+    {
+      "word": "документа",
+      "exercise_type": "fill-in",
+      "context": "важливого документа"
+    },
+    {
+      "word": "частину",
+      "exercise_type": "fill-in",
+      "context": "Ми читаємо частину _____ (важливий документ)."
+    },
+    {
+      "word": "моїх",
+      "exercise_type": "quiz",
+      "context": "моїх"
+    },
+    {
+      "word": "твоїх",
+      "exercise_type": "quiz",
+      "context": "твоїх"
+    },
+    {
+      "word": "наші",
+      "exercise_type": "quiz",
+      "context": "наші"
+    },
+    {
+      "word": "ваші",
+      "exercise_type": "quiz",
+      "context": "ваші"
+    },
+    {
+      "word": "нього",
+      "exercise_type": "quiz",
+      "context": "нього"
+    },
+    {
+      "word": "йому",
+      "exercise_type": "quiz",
+      "context": "йому"
+    },
+    {
+      "word": "їх",
+      "exercise_type": "quiz",
+      "context": "їх"
+    },
+    {
+      "word": "них",
+      "exercise_type": "quiz",
+      "context": "них"
+    },
+    {
+      "word": "неї",
+      "exercise_type": "quiz",
+      "context": "неї"
+    },
+    {
+      "word": "тобі",
+      "exercise_type": "quiz",
+      "context": "тобі"
+    },
+    {
+      "word": "важлива",
+      "exercise_type": "fill-in",
+      "context": "У нас немає _____ (ця важлива книга)."
+    },
+    {
+      "word": "країни",
+      "exercise_type": "fill-in",
+      "context": "тієї великої країни"
+    },
+    {
+      "word": "країна",
+      "exercise_type": "fill-in",
+      "context": "Він приїхав з _____ (та велика країна)."
+    },
+    {
+      "word": "стоїмо",
+      "exercise_type": "fill-in",
+      "context": "Ми стоїмо біля _____ (це велике дерево)."
+    },
+    {
+      "word": "дерево",
+      "exercise_type": "fill-in",
+      "context": "Ми стоїмо біля _____ (це велике дерево)."
+    },
+    {
+      "word": "знає",
+      "exercise_type": "fill-in",
+      "context": "Вона не знає _____ (ця молода дівчина)."
+    },
+    {
+      "word": "магазин",
+      "exercise_type": "fill-in",
+      "context": "Вони чекають біля _____ (той новий магазин)."
+    },
+    {
+      "word": "велику",
+      "exercise_type": "error-correction",
+      "context": "велику"
+    },
+    {
+      "word": "синю",
+      "exercise_type": "error-correction",
+      "context": "синю"
+    },
+    {
+      "word": "іде",
+      "exercise_type": "error-correction",
+      "context": "Він іде до старого аптеки."
+    },
+    {
+      "word": "собаки",
+      "exercise_type": "error-correction",
+      "context": "У неї немає того великої собаки."
+    },
+    {
+      "word": "чоловічий",
+      "exercise_type": "group-sort",
+      "context": "-ого / -ього (Чоловічий і середній рід)"
+    },
+    {
+      "word": "середній",
+      "exercise_type": "group-sort",
+      "context": "-ого / -ього (Чоловічий і середній рід)"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 14,
+    "tested_in_exercises": 8,
+    "not_tested": [
+      "вказівний",
+      "дозвіл",
+      "займенник",
+      "прикметник",
+      "присвійний",
+      "узгодження"
+    ]
+  },
+  "all_grounded": false
+}

@@ -1,0 +1,317 @@
+{
+  "total_items": 172,
+  "grounded_items": 112,
+  "ungrounded": [
+    {
+      "word": "підручники",
+      "exercise_type": "fill-in",
+      "context": "підручники"
+    },
+    {
+      "word": "будете",
+      "exercise_type": "fill-in",
+      "context": "Скільки ____ (день) ви будете в Києві?"
+    },
+    {
+      "word": "дні",
+      "exercise_type": "fill-in",
+      "context": "дні"
+    },
+    {
+      "word": "вулиців",
+      "exercise_type": "fill-in",
+      "context": "вулиців"
+    },
+    {
+      "word": "історійов",
+      "exercise_type": "fill-in",
+      "context": "історійов"
+    },
+    {
+      "word": "історії",
+      "exercise_type": "fill-in",
+      "context": "історії"
+    },
+    {
+      "word": "яблуків",
+      "exercise_type": "fill-in",
+      "context": "яблуків"
+    },
+    {
+      "word": "яблука",
+      "exercise_type": "fill-in",
+      "context": "яблука"
+    },
+    {
+      "word": "вивчили",
+      "exercise_type": "fill-in",
+      "context": "Ми вивчили багато нових ____ (слово)."
+    },
+    {
+      "word": "словів",
+      "exercise_type": "fill-in",
+      "context": "словів"
+    },
+    {
+      "word": "слова",
+      "exercise_type": "fill-in",
+      "context": "слова"
+    },
+    {
+      "word": "питаннів",
+      "exercise_type": "fill-in",
+      "context": "питаннів"
+    },
+    {
+      "word": "автобуса",
+      "exercise_type": "fill-in",
+      "context": "автобуса"
+    },
+    {
+      "word": "автобуси",
+      "exercise_type": "fill-in",
+      "context": "автобуси"
+    },
+    {
+      "word": "столі",
+      "exercise_type": "quiz",
+      "context": "столі"
+    },
+    {
+      "word": "стола",
+      "exercise_type": "quiz",
+      "context": "стола"
+    },
+    {
+      "word": "книгів",
+      "exercise_type": "quiz",
+      "context": "книгів"
+    },
+    {
+      "word": "книги",
+      "exercise_type": "quiz",
+      "context": "книги"
+    },
+    {
+      "word": "книгах",
+      "exercise_type": "quiz",
+      "context": "книгах"
+    },
+    {
+      "word": "вона",
+      "exercise_type": "quiz",
+      "context": "Вона купила кілька _____ (сумка)."
+    },
+    {
+      "word": "купила",
+      "exercise_type": "quiz",
+      "context": "Вона купила кілька _____ (сумка)."
+    },
+    {
+      "word": "сумк",
+      "exercise_type": "quiz",
+      "context": "сумк"
+    },
+    {
+      "word": "сумків",
+      "exercise_type": "quiz",
+      "context": "сумків"
+    },
+    {
+      "word": "сумки",
+      "exercise_type": "quiz",
+      "context": "сумки"
+    },
+    {
+      "word": "музеї",
+      "exercise_type": "quiz",
+      "context": "музеї"
+    },
+    {
+      "word": "музеях",
+      "exercise_type": "quiz",
+      "context": "музеях"
+    },
+    {
+      "word": "людин",
+      "exercise_type": "quiz",
+      "context": "людин"
+    },
+    {
+      "word": "людинів",
+      "exercise_type": "quiz",
+      "context": "людинів"
+    },
+    {
+      "word": "завданнів",
+      "exercise_type": "quiz",
+      "context": "завданнів"
+    },
+    {
+      "word": "завданнях",
+      "exercise_type": "quiz",
+      "context": "завданнях"
+    },
+    {
+      "word": "статт",
+      "exercise_type": "quiz",
+      "context": "статт"
+    },
+    {
+      "word": "статтів",
+      "exercise_type": "quiz",
+      "context": "статтів"
+    },
+    {
+      "word": "статті",
+      "exercise_type": "quiz",
+      "context": "статті"
+    },
+    {
+      "word": "олівці",
+      "exercise_type": "quiz",
+      "context": "олівці"
+    },
+    {
+      "word": "олівця",
+      "exercise_type": "quiz",
+      "context": "олівця"
+    },
+    {
+      "word": "воно",
+      "exercise_type": "group-sort",
+      "context": "Середній рід (Воно)"
+    },
+    {
+      "word": "називний",
+      "exercise_type": "quiz",
+      "context": "Називний (однина)"
+    },
+    {
+      "word": "однина",
+      "exercise_type": "quiz",
+      "context": "Називний (однина)"
+    },
+    {
+      "word": "знахідний",
+      "exercise_type": "quiz",
+      "context": "Знахідний (однина)"
+    },
+    {
+      "word": "цікава",
+      "exercise_type": "quiz",
+      "context": "Це цікава **книга**."
+    },
+    {
+      "word": "місцевий",
+      "exercise_type": "quiz",
+      "context": "Місцевий (множина)"
+    },
+    {
+      "word": "новий",
+      "exercise_type": "quiz",
+      "context": "Я бачу новий **стіл**."
+    },
+    {
+      "word": "стара",
+      "exercise_type": "quiz",
+      "context": "Ця **школа** дуже стара."
+    },
+    {
+      "word": "бачимо",
+      "exercise_type": "fill-in",
+      "context": "Ми бачимо багато ____ (жінка) на вулиці."
+    },
+    {
+      "word": "зібралося",
+      "exercise_type": "fill-in",
+      "context": "На площі зібралося багато ____ (громадянин)."
+    },
+    {
+      "word": "прочитали",
+      "exercise_type": "fill-in",
+      "context": "Скільки ____ (стаття) ви прочитали?"
+    },
+    {
+      "word": "автобусав",
+      "exercise_type": "error-correction",
+      "context": "У місті багато машин і автобусав."
+    },
+    {
+      "word": "автобусов",
+      "exercise_type": "error-correction",
+      "context": "автобусов"
+    },
+    {
+      "word": "яблуков",
+      "exercise_type": "error-correction",
+      "context": "Я купив п'ять яблуков."
+    },
+    {
+      "word": "яблуки",
+      "exercise_type": "error-correction",
+      "context": "яблуки"
+    },
+    {
+      "word": "неї",
+      "exercise_type": "error-correction",
+      "context": "У неї немає сестрів."
+    },
+    {
+      "word": "сестрів",
+      "exercise_type": "error-correction",
+      "context": "У неї немає сестрів."
+    },
+    {
+      "word": "сестри",
+      "exercise_type": "error-correction",
+      "context": "сестри"
+    },
+    {
+      "word": "сестр",
+      "exercise_type": "error-correction",
+      "context": "сестр"
+    },
+    {
+      "word": "людов",
+      "exercise_type": "error-correction",
+      "context": "Ми не знаємо цих людов."
+    },
+    {
+      "word": "сім'їв",
+      "exercise_type": "error-correction",
+      "context": "Тут живе кілька сім'їв."
+    },
+    {
+      "word": "сіми",
+      "exercise_type": "error-correction",
+      "context": "сіми"
+    },
+    {
+      "word": "казоків",
+      "exercise_type": "error-correction",
+      "context": "Ми знаємо багато казоків."
+    },
+    {
+      "word": "казків",
+      "exercise_type": "error-correction",
+      "context": "казків"
+    },
+    {
+      "word": "казки",
+      "exercise_type": "error-correction",
+      "context": "казки"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 18,
+    "tested_in_exercises": 14,
+    "not_tested": [
+      "виняток",
+      "вставний",
+      "голосний",
+      "мало"
+    ]
+  },
+  "all_grounded": false
+}

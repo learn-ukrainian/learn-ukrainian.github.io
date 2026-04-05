@@ -3,22 +3,21 @@
 You are writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 30: Летіти, пливти (B1, B1.3 [Motion Verb Universe])
-**Section to write:** Пливти / плавати: рух на воді (~1000 words total)
-**Word target for this section:** 1000 words (aim for 1100 to account for undershoot)
+**Section to write:** Пливти / плавати: рух на воді (~1100 words total)
+**Word target for this section:** 1100 words (aim for 1210 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Пливти / плавати: рух на воді (~1000 words total)
-- P1 (~160 words): [Base pair contrast: Пливти (unidirectional) vs. Плавати (multidirectional/skill). Example: "Ми пливемо до острова" (specific destination) vs. "Я люблю плавати в морі" (habitual skill). Mention "плавати" for objects drifting in various directions: "Листя плаває на воді".]
-- P2 (~120 words): [Conjugation and Stems. Conjugate "пливти" (пливу, пливеш, пливуть) and "плавати" (плаваю, плаваєш). Note the past tense "плив" (he swam/sailed) and its potential for confusion with "плавав" (he was swimming/did a round trip).]
-- P3 (~180 words): [CRITICAL GRAMMAR: The irregular stems in prefixed forms. Explain that when prefixes like пере-, до-, об- are added to "пливти", the stem changes to "-плисти". Examples: переплисти (not *перепливти), доплисти, обплисти, проплисти. Provide 3 clear comparison sentences: "Він переплив річку" (result) vs "Він плив через річку" (process).]
-- P4 (~160 words): [Prefixes of Water Arrival/Departure: припливти, відпливти, виплисти. Maritime focus: "Корабель приплив до причалу" (The ship arrived at the pier), "Човен відплив від берега" (The boat sailed away from the shore). Use "виплисти" for emerging from somewhere: "Ми виплисли з печери".]
-- P5 (~160 words): [Prefixes of Crossing and Limit: переплисти (cross), доплисти (reach), проплисти (cover distance/past). Practical examples: "Я хочу переплисти цей басейн", "Ми проплисли п'ять кілометрів". Explain "доплисти" as reaching a goal: "Він ледве доплив до буйка".]
-- P6 (~150 words): [Other prefixes and safety: заплисти (too far/into), підплисти (approach). Use the beach context: "Не запливайте за буйки!" (Don't swim past the buoys), "Дельфін підплив до людей" (The dolphin swam up to the people).]
-- Exercise: [Fill-in, Complete maritime sentences with correct prefixed verbs (припливти, переплисти, відпливти), 8 items]
-- Exercise: [Error-correction, Fix incorrect air/water motion verb forms like *перепливти or *літати instead of летіти in specific contexts, 6 items]
+## Пливти / плавати: рух на воді (~1100 words total)
+- P1 (~150 words): [Conjugation and Phonetics of Пливти: Detail the specific present tense paradigm: пливу, пливеш, пливе, пливемо, пливете, пливуть. Note the consistent "в" in the stem. Past tense: плив, пливла, пливли. Mention the poetic use in songs (Тече вода, пливе човен).]
+- P2 (~150 words): [Conjugation and Phonetics of Плавати: Detail the -а- conjugation class: плаваю, плаваєш, плаває. This verb follows the same predictable pattern as літати. Past tense: плавав, плавала, плавали. Highlight its use for sport and leisure.]
+- P3 (~200 words): [Uni- vs Multi-directional Logic on Water: Contrast "Він пливе до берега" (specific goal right now) with "Він плаває в басейні" (various directions/exercise). Use maritime vessels for contrast: "Корабель пливе в Одесу" vs "Човен плаває по озеру" (drifting or circular movement).]
+- P4 (~200 words): [The Irregular Stem Shift: CRITICAL GRAMMAR POINT. Explain that while the base verb is "пливти," certain perfective prefixed forms shift to a "-плисти" stem. Detail: переплисти, доплисти, обплисти, підплисти. Contrast these with the regular "припливти," "відпливти," "запливти," "випливти." Provide a table showing the split.]
+- P5 (~150 words): [Prefixed Water Motion in Context: Explain "припливти" (ship docking) vs "відпливти" (setting sail). Use "переплисти" for the Dnipro or the Bosphorus. Introduce "проплисти" (passing a lighthouse or buoy). Example: "Ми пропливли повз острів Зміїний."]
+- P6 (~100 words): [Imperfective Prefixed Forms: Explain that all imperfective variants use the -плавати stem: припливати, перепливати, допливати. Note that these are used for repetitive arrivals or actions in progress.]
+- Exercise: [Type: error-correction, Focus: Identify 6 sentences with incorrect stem usage (e.g., "*перепливти річку" corrected to "переплисти річку") or wrong conjugation of the base verb пливти.]
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -26,7 +25,7 @@ You are writing ONE SECTION of a Ukrainian language module. Write ONLY this sect
 <previous_context>
 [...previous sections truncated...]
 
-префікс **про-**: «Під час сильного шторму наш літак дуже низько **пролетів** над темними хмарами» *(During the severe storm, our plane flew very low over the dark clouds)*. Для опису кругового руху навколо якогось об'єкта існує форма **облетіти**: «Невеликий туристичний гелікоптер повільно **облетів** усю високу гору, щоб пасажири зробили гарні фотографії» *(A small tourist helicopter slowly flew around the whole high mountain so the passengers could take beautiful photos)*. Якщо будь-який об'єкт раптово потрапляє всередину іншого простору, ми використовуємо префікс **за-**. Наприклад: «Учора ввечері величезний нічний метелик **залетів** у мою кімнату через балкон» *(Yesterday evening, a huge night moth flew into my room through the balcony)*. Остання важлива пара префіксів для опису односпрямованого руху — це префікси **до-** та **під-**. Вони завжди фокусуються на досягненні конкретної цілі або ж на максимальному наближенні до неї. Префікс **до-** чітко вказує на те, що рух був успішно завершений у кінцевій точці, дуже часто після тривалого або виснажливого процесу. Він підкреслює подолання великої фізичної дистанції. Наприклад, після дуже довгого міжконтинентального перельоту ви з полегшенням скажете родичам по телефону: «Слава Богу, ми нарешті безпечно **долетіли** додому» *(Thank God, we finally safely reached/flew home)*. Це означає, що складний маршрут було повністю пройдено. З іншого боку, префікс **під-** описує лише наближення до об'єкта на дуже коротку відстань, але без проникнення всередину нього. Цей префікс надзвичайно часто використовується в контексті спостереження за природою. Наприклад, ви можете сказати: «Маленька голодна пташка обережно **підлетіла** до дерев'яної годівниці у нашому саду, щоб з'їсти трохи свіжого зерна» *(A small hungry bird carefully flew up to the wooden feeder in our garden to eat some fresh grain)*. До цього моменту ми постійно говорили про форми доконаного виду *(perfective aspect)*, які описують повністю завершену дію або її фінальний результат. Але що робити, якщо ця подія регулярно повторюється за стабільним розкладом? Для цього українська мова створює видові пари *(aspectual pairs)*. Щоб правильно утворити форму недоконаного виду *(imperfective aspect)* з префіксом, ми беремо різноспрямоване дієслово «літати» і просто додаємо до нього той самий префікс. Таким чином утворюються нові слова: **прилітати** *(to arrive by air)*, **відлітати** *(to fly away)*, **вилітати** *(to depart by air)*, **пролітати** *(to fly past)*, **залітати** *(to fly in)* та всі інші. Вони є абсолютно необхідними для опису регулярних подій, людських звичок або щоденних розкладів міського транспорту. Давайте порівняємо ці дві різні ситуації. Якщо ви радісно констатуєте факт сьогоднішнього прибуття вашого родича, ви використовуєте доконаний вид: «Мій старший брат успішно **прилетів** до Києва сьогодні рано-вранці» *(My older brother successfully arrived in Kyiv early this morning)*. Але якщо ви уважно читаєте офіційний розклад в аеропорту, ви побачите форму недоконаного виду. Наприклад: «Цей міжнародний рейс **прилітає** до нашої столиці щодня о п'ятій вечора» *(This international flight arrives in our capital every day at five in the evening)*. Знання цих видових пар дозволить вам вільно та впевнено говорити про будь-які ваші майбутні подорожі. <!-- INJECT_ACTIVITY: quiz, Focus on choosing летіти/літати or the correct prefix, 8 items --> <!-- INJECT_ACTIVITY: group-sort, Sort prefixed forms of летіти (прилетіти, залетіти, облетіти, etc.) by meaning category (Arrival, Direction, Limit), 12 items -->
+*(Our plane arrived from London absolutely on time)*. Для опису процесу відправлення ми маємо два різні варіанти, які не варто плутати між собою. Дієслово **вилетіти** *(to depart by air/fly out)* логічно фокусується на русі зсередини назовні або на офіційному початку запланованого авіаційного рейсу: «Наш ранковий рейс вилетів суворо за розкладом» *(Our morning flight departed strictly according to schedule)* або «Маленька пташка раптово вилетіла з гнізда» *(The little bird suddenly flew out of the nest)*. Натомість дієслово **відлетіти** *(to fly away)* емоційно підкреслює сам факт швидкого віддалення від якогось конкретного об'єкта, поверхні чи особи: «Наляканий голуб дуже швидко відлетів від нашого відчиненого вікна» *(The frightened pigeon very quickly flew away from our open window)*. Ця тонка семантична різниця є критично важливою. Друга важлива група дієслівних префіксів описує складний процес перетину простору, успішне подолання фізичних перешкод або транзитний рух повз об'єкти. Дієслово **перелетіти** *(to fly across)* означає успішне подолання певної перешкоди або величезної географічної відстані по повітрю: «Сміливі білі лелеки успішно перелетіли через море» *(The brave white storks successfully flew across the sea)* або «Шкіряний м'яч випадково перелетів через високий паркан» *(The leather ball accidentally flew over the high fence)*. Якщо ж швидкий рух відбувається вздовж об'єкта без наміру приземлитися, ми використовуємо дієслово **пролетіти** *(to fly past/through)*: «Великий пасажирський літак дуже гучно пролетів над нашим будинком» *(The big passenger plane very loudly flew over our house)* або «Швидкий птах миттєво пролетів повз моє вікно» *(The fast bird instantly flew past my window)*. Дуже цікавим і часто вживаним у побуті є специфічне дієслово **залетіти** *(to fly in)*. Воно зазвичай означає несподіване, випадкове або досить глибоке проникнення всередину якогось закритого простору. Ми найчастіше використовуємо його, коли говоримо про комах чи птахів: «Величезний нічний метелик випадково залетів у мою темну кімнату» *(A huge night moth accidentally flew into my dark room)*. Третя масштабна група префіксів допомагає нам максимально точно уточнити радіус дії, рівень фізичного наближення до мети та загальне охоплення простору. Дієслово **підлетіти** *(to fly up to)* означає обережне або цілеспрямоване наближення до об'єкта на дуже коротку відстань, але воно не обов'язково означає безпосередню посадку на нього: «Маленька голодна пташка повільно підлетіла до зимової годівниці» *(The little hungry bird slowly flew up to the winter feeder)*. Якщо ж активний рух відбувається по великому колу або повністю охоплює весь периметр якогось великого об'єкта, ми використовуємо дієслово **облетіти** *(to fly around)*. Це може бути як буквальний круговий рух високо у небі, так і глобальна масштабна подорож навколо світу: «Відомий французький льотчик Антуан де Сент-Екзюпері облетів майже усю землю» *(The famous French pilot Antoine de Saint-Exupéry flew around almost the entire earth)*. Нарешті, потужне дієслово **долетіти** *(to fly all the way to)* емоційно підкреслює сам факт довгоочікуваного та успішного досягнення фінальної точки довгого маршруту. Воно часто вживається тоді, коли дорога була важкою, довгою, або коли ми сильно хвилювалися про результат польоту: «Ми були втомлені, але все-таки успішно долетіли до Одеси» *(We were tired, but nevertheless successfully flew all the way to Odesa)*. <!-- INJECT_ACTIVITY: group-sort, Sort 12 prefixed forms of летіти into categories based on prefix meaning -->
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -39,7 +38,7 @@ module: b1-030
 level: B1
 sequence: 30
 slug: motion-flight-swim
-version: '3.0'
+version: '3.1'
 title: Летіти, пливти
 subtitle: Дієслова руху в повітрі та на воді — з усіма префіксами
 focus: grammar
@@ -146,6 +145,15 @@ content_outline:
       - 'Quick contrastive examples: Літак летить (literal — the plane is flying).
         Час летить (figurative — time flies). Корабель пливе (literal — the ship is
         sailing). Думки пливуть (figurative — thoughts drift).'
+      - 'Ukrainian idioms and collocations with летіти/пливти: Гроші летять (money
+        disappears fast). Все пливе перед очима (everything is blurry/spinning). Пливти
+        за течією (go with the flow). These are high-frequency expressions that learners
+        will encounter in everyday Ukrainian. Compare with English equivalents to show
+        where metaphors overlap and where they diverge.'
+      - 'Practice: learners sort 10-12 sentences into literal vs figurative categories,
+        then explain what the figurative meaning is in each case. Extension: write 3-4
+        original sentences using летіти or пливти figuratively in contexts from their
+        own life — Мої канікули летять! Дні до іспиту пливуть повільно.'
   - section: 'Підсумок: повітряний та водний рух'
     words: 300
     points:
@@ -554,6 +562,8 @@ references:
 </knowledge_packet>
 
 ---
+
+
 
 ## Rules
 

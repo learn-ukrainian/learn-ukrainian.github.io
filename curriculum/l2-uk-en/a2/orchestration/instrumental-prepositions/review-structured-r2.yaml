@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'All four content_outline sections covered with correct focus. Required
+    vocabulary all present: над, під, перед, за, між, стіл, будинок, ліжко, стіна,
+    обід — all used naturally in prose. Recommended vo'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Two critical errors in Section 1 grammar recap: (1) "Жіночий рід **завжди**
+    отримує закінчення -ою або -ею / -єю" — wrong for III відміна feminines (ніч→ніччю,
+    любов→любов''ю). (2) "У множині ми **завж'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'Good PPP flow: presentation of each preposition with 3-5 examples, then
+    room-description practice, then temporal extension, then mixed practice. Grammar
+    points introduced with ample Ukrainian examples'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'All 10 required vocabulary items used naturally in prose (not as bare
+    lists). All 5 recommended items present: стеля (dialogue: "повісь лампу високо
+    на стелі"), підлога (section 2: "на підлозі"), кут '
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 4 plan activity_hints implemented with correct type and focus. Markers
+    placed after relevant teaching. 8 items each as specified. Match-up tests spatial
+    recognition; true-false tests room comprehe
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: 'Significant English meta-commentary that adds nothing: "These five prepositions
+    are absolutely essential for describing the physical space around you" (generic
+    motivation), "The preposition ''над'' desc'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: 'Clean markdown, all plan sections present and ordered. H2 headings match
+    plan sections (with minor title simplification on Section 2: "Описуємо кімнату"
+    drops the English subtitle — acceptable). Extra'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented entirely on its own terms. No "like Russian but..."
+    comparisons. Case system explained using Ukrainian metalanguage (орудний відмінок,
+    називний відмінок, знахідний відмінок). Cultu
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'Two dialogues, both strong. Макс/Олена dialogue: natural situation (arranging
+    furniture in a new room), named speakers, multi-turn, practical use of all prepositions,
+    distinct voices. Турист/Місцевий '
+findings: []

@@ -1,0 +1,662 @@
+{
+  "total_items": 254,
+  "grounded_items": 125,
+  "ungrounded": [
+    {
+      "word": "високе",
+      "exercise_type": "fill-in",
+      "context": "високе"
+    },
+    {
+      "word": "темноволосе",
+      "exercise_type": "fill-in",
+      "context": "темноволосе"
+    },
+    {
+      "word": "старе",
+      "exercise_type": "fill-in",
+      "context": "старе"
+    },
+    {
+      "word": "повне",
+      "exercise_type": "fill-in",
+      "context": "повне"
+    },
+    {
+      "word": "молода",
+      "exercise_type": "fill-in",
+      "context": "молода"
+    },
+    {
+      "word": "молоде",
+      "exercise_type": "fill-in",
+      "context": "молоде"
+    },
+    {
+      "word": "карооке",
+      "exercise_type": "fill-in",
+      "context": "карооке"
+    },
+    {
+      "word": "хлопчик",
+      "exercise_type": "fill-in",
+      "context": "Цей хлопчик ____."
+    },
+    {
+      "word": "низьке",
+      "exercise_type": "fill-in",
+      "context": "низьке"
+    },
+    {
+      "word": "худе",
+      "exercise_type": "fill-in",
+      "context": "худе"
+    },
+    {
+      "word": "багато",
+      "exercise_type": "match-up",
+      "context": "Він багато працює і не любить відпочивати."
+    },
+    {
+      "word": "не",
+      "exercise_type": "match-up",
+      "context": "Він багато працює і не любить відпочивати."
+    },
+    {
+      "word": "любить",
+      "exercise_type": "match-up",
+      "context": "Він багато працює і не любить відпочивати."
+    },
+    {
+      "word": "відпочивати",
+      "exercise_type": "match-up",
+      "context": "Він багато працює і не любить відпочивати."
+    },
+    {
+      "word": "каже",
+      "exercise_type": "match-up",
+      "context": "Вона завжди каже правду."
+    },
+    {
+      "word": "правду",
+      "exercise_type": "match-up",
+      "context": "Вона завжди каже правду."
+    },
+    {
+      "word": "підтримує",
+      "exercise_type": "match-up",
+      "context": "Він часто допомагає людям і підтримує їх."
+    },
+    {
+      "word": "ніколи",
+      "exercise_type": "match-up",
+      "context": "Вона ніколи не поспішає і вміє чекати."
+    },
+    {
+      "word": "поспішає",
+      "exercise_type": "match-up",
+      "context": "Вона ніколи не поспішає і вміє чекати."
+    },
+    {
+      "word": "вміє",
+      "exercise_type": "match-up",
+      "context": "Вона ніколи не поспішає і вміє чекати."
+    },
+    {
+      "word": "чекати",
+      "exercise_type": "match-up",
+      "context": "Вона ніколи не поспішає і вміє чекати."
+    },
+    {
+      "word": "вчиться",
+      "exercise_type": "match-up",
+      "context": "Він швидко вчиться і багато знає."
+    },
+    {
+      "word": "знає",
+      "exercise_type": "match-up",
+      "context": "Він швидко вчиться і багато знає."
+    },
+    {
+      "word": "посміхається",
+      "exercise_type": "match-up",
+      "context": "Вона завжди вітається і посміхається."
+    },
+    {
+      "word": "хоче",
+      "exercise_type": "match-up",
+      "context": "Він не хоче працювати і любить довго спати."
+    },
+    {
+      "word": "працювати",
+      "exercise_type": "match-up",
+      "context": "Він не хоче працювати і любить довго спати."
+    },
+    {
+      "word": "довго",
+      "exercise_type": "match-up",
+      "context": "Він не хоче працювати і любить довго спати."
+    },
+    {
+      "word": "спати",
+      "exercise_type": "match-up",
+      "context": "Він не хоче працювати і любить довго спати."
+    },
+    {
+      "word": "змінювати",
+      "exercise_type": "match-up",
+      "context": "Вона не любить змінювати свою думку."
+    },
+    {
+      "word": "свою",
+      "exercise_type": "match-up",
+      "context": "Вона не любить змінювати свою думку."
+    },
+    {
+      "word": "думку",
+      "exercise_type": "match-up",
+      "context": "Вона не любить змінювати свою думку."
+    },
+    {
+      "word": "позитивні",
+      "exercise_type": "group-sort",
+      "context": "Позитивні риси"
+    },
+    {
+      "word": "риси",
+      "exercise_type": "group-sort",
+      "context": "Позитивні риси"
+    },
+    {
+      "word": "складні",
+      "exercise_type": "group-sort",
+      "context": "Складні риси"
+    },
+    {
+      "word": "мною",
+      "exercise_type": "quiz",
+      "context": "Це людина, яка живе поруч зі мною у будинку. Хто це?"
+    },
+    {
+      "word": "будинку",
+      "exercise_type": "quiz",
+      "context": "Це людина, яка живе поруч зі мною у будинку. Хто це?"
+    },
+    {
+      "word": "працюємо",
+      "exercise_type": "quiz",
+      "context": "Ми працюємо разом в одному офісі. Вона моя ___."
+    },
+    {
+      "word": "разом",
+      "exercise_type": "quiz",
+      "context": "Ми працюємо разом в одному офісі. Вона моя ___."
+    },
+    {
+      "word": "одному",
+      "exercise_type": "quiz",
+      "context": "Ми працюємо разом в одному офісі. Вона моя ___."
+    },
+    {
+      "word": "офісі",
+      "exercise_type": "quiz",
+      "context": "Ми працюємо разом в одному офісі. Вона моя ___."
+    },
+    {
+      "word": "яку",
+      "exercise_type": "quiz",
+      "context": "Людина, яку я знаю, але ми не є близькими друзями. Хто це?"
+    },
+    {
+      "word": "знаю",
+      "exercise_type": "quiz",
+      "context": "Людина, яку я знаю, але ми не є близькими друзями. Хто це?"
+    },
+    {
+      "word": "близькими",
+      "exercise_type": "quiz",
+      "context": "Людина, яку я знаю, але ми не є близькими друзями. Хто це?"
+    },
+    {
+      "word": "друзями",
+      "exercise_type": "quiz",
+      "context": "Людина, яку я знаю, але ми не є близькими друзями. Хто це?"
+    },
+    {
+      "word": "всім",
+      "exercise_type": "quiz",
+      "context": "Цей чоловік завжди всім допомагає і підтримує. Він дуже ___."
+    },
+    {
+      "word": "обманює",
+      "exercise_type": "quiz",
+      "context": "Моя сестра ніколи не обманює і завжди говорить те, що думає."
+    },
+    {
+      "word": "говорить",
+      "exercise_type": "quiz",
+      "context": "Моя сестра ніколи не обманює і завжди говорить те, що думає."
+    },
+    {
+      "word": "те",
+      "exercise_type": "quiz",
+      "context": "Моя сестра ніколи не обманює і завжди говорить те, що думає."
+    },
+    {
+      "word": "думає",
+      "exercise_type": "quiz",
+      "context": "Моя сестра ніколи не обманює і завжди говорить те, що думає."
+    },
+    {
+      "word": "серйозна",
+      "exercise_type": "quiz",
+      "context": "серйозна"
+    },
+    {
+      "word": "ледача",
+      "exercise_type": "quiz",
+      "context": "ледача"
+    },
+    {
+      "word": "тиха",
+      "exercise_type": "quiz",
+      "context": "тиха"
+    },
+    {
+      "word": "блакитний",
+      "exercise_type": "quiz",
+      "context": "блакитний"
+    },
+    {
+      "word": "блакитна",
+      "exercise_type": "quiz",
+      "context": "блакитна"
+    },
+    {
+      "word": "блакитне",
+      "exercise_type": "quiz",
+      "context": "блакитне"
+    },
+    {
+      "word": "нього",
+      "exercise_type": "quiz",
+      "context": "У нього ___ волосся."
+    },
+    {
+      "word": "темні",
+      "exercise_type": "quiz",
+      "context": "темні"
+    },
+    {
+      "word": "темний",
+      "exercise_type": "quiz",
+      "context": "темний"
+    },
+    {
+      "word": "темна",
+      "exercise_type": "quiz",
+      "context": "темна"
+    },
+    {
+      "word": "добре",
+      "exercise_type": "true-false",
+      "context": "Друг — це людина, яку я знаю дуже добре, і ми близькі."
+    },
+    {
+      "word": "близькі",
+      "exercise_type": "true-false",
+      "context": "Друг — це людина, яку я знаю дуже добре, і ми близькі."
+    },
+    {
+      "word": "якщо",
+      "exercise_type": "true-false",
+      "context": "Якщо людина багато і сумлінно працює, вона працьовита."
+    },
+    {
+      "word": "сумлінно",
+      "exercise_type": "true-false",
+      "context": "Якщо людина багато і сумлінно працює, вона працьовита."
+    },
+    {
+      "word": "слово",
+      "exercise_type": "true-false",
+      "context": "Слово 'зовнішність' означає, який у людини внутрішній світ і"
+    },
+    {
+      "word": "зовнішність'",
+      "exercise_type": "true-false",
+      "context": "Слово 'зовнішність' означає, який у людини внутрішній світ і"
+    },
+    {
+      "word": "означає",
+      "exercise_type": "true-false",
+      "context": "Слово 'зовнішність' означає, який у людини внутрішній світ і"
+    },
+    {
+      "word": "людини",
+      "exercise_type": "true-false",
+      "context": "Слово 'зовнішність' означає, який у людини внутрішній світ і"
+    },
+    {
+      "word": "внутрішній",
+      "exercise_type": "true-false",
+      "context": "Слово 'зовнішність' означає, який у людини внутрішній світ і"
+    },
+    {
+      "word": "світ",
+      "exercise_type": "true-false",
+      "context": "Слово 'зовнішність' означає, який у людини внутрішній світ і"
+    },
+    {
+      "word": "вами",
+      "exercise_type": "true-false",
+      "context": "Сусід — це людина, яка живе поруч із вами."
+    },
+    {
+      "word": "намагається",
+      "exercise_type": "true-false",
+      "context": "Щира людина завжди намагається вас обдурити."
+    },
+    {
+      "word": "вас",
+      "exercise_type": "true-false",
+      "context": "Щира людина завжди намагається вас обдурити."
+    },
+    {
+      "word": "обдурити",
+      "exercise_type": "true-false",
+      "context": "Щира людина завжди намагається вас обдурити."
+    },
+    {
+      "word": "якою",
+      "exercise_type": "true-false",
+      "context": "Колега — це людина, з якою ви працюєте разом."
+    },
+    {
+      "word": "ви",
+      "exercise_type": "true-false",
+      "context": "Колега — це людина, з якою ви працюєте разом."
+    },
+    {
+      "word": "працюєте",
+      "exercise_type": "true-false",
+      "context": "Колега — це людина, з якою ви працюєте разом."
+    },
+    {
+      "word": "першою",
+      "exercise_type": "true-false",
+      "context": "Ледача людина завжди першою починає робити складну роботу."
+    },
+    {
+      "word": "починає",
+      "exercise_type": "true-false",
+      "context": "Ледача людина завжди першою починає робити складну роботу."
+    },
+    {
+      "word": "робити",
+      "exercise_type": "true-false",
+      "context": "Ледача людина завжди першою починає робити складну роботу."
+    },
+    {
+      "word": "складну",
+      "exercise_type": "true-false",
+      "context": "Ледача людина завжди першою починає робити складну роботу."
+    },
+    {
+      "word": "привітне",
+      "exercise_type": "error-correction",
+      "context": "привітне"
+    },
+    {
+      "word": "активна",
+      "exercise_type": "error-correction",
+      "context": "Мій дідусь старий, але дуже активна."
+    },
+    {
+      "word": "активне",
+      "exercise_type": "error-correction",
+      "context": "активне"
+    },
+    {
+      "word": "активні",
+      "exercise_type": "error-correction",
+      "context": "активні"
+    },
+    {
+      "word": "очами",
+      "exercise_type": "error-correction",
+      "context": "очами"
+    },
+    {
+      "word": "очей",
+      "exercise_type": "error-correction",
+      "context": "очей"
+    },
+    {
+      "word": "світлий",
+      "exercise_type": "error-correction",
+      "context": "світлий"
+    },
+    {
+      "word": "світла",
+      "exercise_type": "error-correction",
+      "context": "світла"
+    },
+    {
+      "word": "вчитися",
+      "exercise_type": "error-correction",
+      "context": "Він дуже ледача хлопець і не хоче вчитися."
+    },
+    {
+      "word": "ледаче",
+      "exercise_type": "error-correction",
+      "context": "ледаче"
+    },
+    {
+      "word": "ледачі",
+      "exercise_type": "error-correction",
+      "context": "ледачі"
+    },
+    {
+      "word": "темною",
+      "exercise_type": "error-correction",
+      "context": "темною"
+    },
+    {
+      "word": "працюватиме",
+      "exercise_type": "quiz",
+      "context": "працюватиме"
+    },
+    {
+      "word": "працював",
+      "exercise_type": "quiz",
+      "context": "працював"
+    },
+    {
+      "word": "важкою",
+      "exercise_type": "quiz",
+      "context": "Моя сусідка чуйна. Учора вона ___ мені з важкою валізою."
+    },
+    {
+      "word": "допомагала",
+      "exercise_type": "quiz",
+      "context": "допомагала"
+    },
+    {
+      "word": "допомогла",
+      "exercise_type": "quiz",
+      "context": "допомогла"
+    },
+    {
+      "word": "допомагатиме",
+      "exercise_type": "quiz",
+      "context": "допомагатиме"
+    },
+    {
+      "word": "вчасно",
+      "exercise_type": "quiz",
+      "context": "Наш керівник дуже відповідальний. Він завжди ___ роботу вчас"
+    },
+    {
+      "word": "робить",
+      "exercise_type": "quiz",
+      "context": "робить"
+    },
+    {
+      "word": "зробив",
+      "exercise_type": "quiz",
+      "context": "зробив"
+    },
+    {
+      "word": "зробити",
+      "exercise_type": "quiz",
+      "context": "зробити"
+    },
+    {
+      "word": "робив",
+      "exercise_type": "quiz",
+      "context": "робив"
+    },
+    {
+      "word": "щодня",
+      "exercise_type": "quiz",
+      "context": "Ця жінка привітна. Вона щодня ___ зі всіма колегами."
+    },
+    {
+      "word": "всіма",
+      "exercise_type": "quiz",
+      "context": "Ця жінка привітна. Вона щодня ___ зі всіма колегами."
+    },
+    {
+      "word": "колегами",
+      "exercise_type": "quiz",
+      "context": "Ця жінка привітна. Вона щодня ___ зі всіма колегами."
+    },
+    {
+      "word": "вітала",
+      "exercise_type": "quiz",
+      "context": "вітала"
+    },
+    {
+      "word": "привіталася",
+      "exercise_type": "quiz",
+      "context": "привіталася"
+    },
+    {
+      "word": "привітати",
+      "exercise_type": "quiz",
+      "context": "привітати"
+    },
+    {
+      "word": "щирим",
+      "exercise_type": "quiz",
+      "context": "Він завжди був дуже щирим. Учора він ___ мені всю правду про"
+    },
+    {
+      "word": "проєкт",
+      "exercise_type": "quiz",
+      "context": "Він завжди був дуже щирим. Учора він ___ мені всю правду про"
+    },
+    {
+      "word": "казав",
+      "exercise_type": "quiz",
+      "context": "казав"
+    },
+    {
+      "word": "скаже",
+      "exercise_type": "quiz",
+      "context": "скаже"
+    },
+    {
+      "word": "сказав",
+      "exercise_type": "quiz",
+      "context": "сказав"
+    },
+    {
+      "word": "минулому",
+      "exercise_type": "quiz",
+      "context": "Вона дуже розумна. На минулому тижні вона швидко ___ цю скла"
+    },
+    {
+      "word": "тижні",
+      "exercise_type": "quiz",
+      "context": "Вона дуже розумна. На минулому тижні вона швидко ___ цю скла"
+    },
+    {
+      "word": "цю",
+      "exercise_type": "quiz",
+      "context": "Вона дуже розумна. На минулому тижні вона швидко ___ цю скла"
+    },
+    {
+      "word": "проблему",
+      "exercise_type": "quiz",
+      "context": "Вона дуже розумна. На минулому тижні вона швидко ___ цю скла"
+    },
+    {
+      "word": "вирішує",
+      "exercise_type": "quiz",
+      "context": "вирішує"
+    },
+    {
+      "word": "вирішила",
+      "exercise_type": "quiz",
+      "context": "вирішила"
+    },
+    {
+      "word": "вирішувала",
+      "exercise_type": "quiz",
+      "context": "вирішувала"
+    },
+    {
+      "word": "вирішуватиме",
+      "exercise_type": "quiz",
+      "context": "вирішуватиме"
+    },
+    {
+      "word": "вважають",
+      "exercise_type": "quiz",
+      "context": "Він завжди ___ людям, тому всі вважають його доброю людиною."
+    },
+    {
+      "word": "доброю",
+      "exercise_type": "quiz",
+      "context": "Він завжди ___ людям, тому всі вважають його доброю людиною."
+    },
+    {
+      "word": "людиною",
+      "exercise_type": "quiz",
+      "context": "Він завжди ___ людям, тому всі вважають його доброю людиною."
+    },
+    {
+      "word": "допоможе",
+      "exercise_type": "quiz",
+      "context": "допоможе"
+    },
+    {
+      "word": "допомогти",
+      "exercise_type": "quiz",
+      "context": "допомогти"
+    },
+    {
+      "word": "робила",
+      "exercise_type": "quiz",
+      "context": "робила"
+    },
+    {
+      "word": "робитиме",
+      "exercise_type": "quiz",
+      "context": "робитиме"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 15,
+    "tested_in_exercises": 11,
+    "not_tested": [
+      "зовнішність",
+      "наполегливий",
+      "описувати",
+      "стосунок"
+    ]
+  },
+  "all_grounded": false
+}

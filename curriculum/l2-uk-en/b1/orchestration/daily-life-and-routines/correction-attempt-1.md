@@ -1,8 +1,8 @@
 <correction_directive>
 CRITICAL: Your previous attempt failed the following checks. Write the module FROM SCRATCH. All original constraints still apply.
 
-- FIX: Missing section heading: 'Підсумок фази 3 та перехід до M26'
-- FIX: Missing 8/21 required vocab: снідати / обідати / вечеряти (to have breakfast / lunch / dinner), прати білизну (to do laundry — NOT *стирати), виносити сміття (to take out the trash), готувати їжу (to cook food), будильник (alarm clock)
+- FIX: Severe Russianisms: хорошо
+- NOTE: Missing 4/21 required vocab: снідати / обідати / вечеряти (to have breakfast / lunch / dinner), готувати їжу (to cook food), будильник (alarm clock), співбесіда (interview)
 - NOTE: Plan expects 5 exercise(s) but content has 0 placeholders
 </correction_directive>
 

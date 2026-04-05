@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'All 4 content_outline sections present and covered. Section 1: пан/пані
+    + profession ✓, surnames ✓, деколоніальний контекст (товариш → пан) ✓, добродій/добродійка
+    ✓. Section 2: masculine -ю/-е pattern'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: '**Critical Error A:** "Ми ніколи не кажемо «мій друже». Це помилка."
+    — FALSE. Рильський: "Нехай живе поезія, мій друже!" (in Glazova Grade 10 textbook,
+    p.209). Both word orders are attested. Module te'
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: 'Good PPP flow: each section introduces the concept, gives multiple examples,
+    then provides practice through dialogues. 5+ examples per grammar point ✓. Grammar
+    scope appropriate for A2 ✓. However, the'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: 'All 10 required vocab items used naturally in prose: кличний ✓, звертання
+    ✓, пан ✓, пані ✓, лікар ✓, вчитель ✓, друг ✓, ввічливий ✓, офіційний ✓, професія
+    ✓. All 5 recommended items present: добродій '
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: All 5 plan activity types present with 8 items each ✓. Good variety. Well-placed
+    after relevant teaching sections. Fill-in and match-up test vocative formation
+    ✓. Quiz tests register selection ✓. Grou
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: No motivational openers or meta-commentary. The cultural explanation of
+    пан/пані replacing товариш is specific and meaningful, not generic. Dialogues
+    are lively (Олег's phone call with friend using "с
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 'All H2 headings from plan present in correct order: Пане, пані (Formal)
+    → Професійні звертання → Друже мій (Emotional) → Який кличний обрати? Clean markdown
+    ✓. No stray tags or formatting artifacts ✓.'
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: 'Decolonized: пан/пані presented as conscious replacement of Soviet товариш
+    ✓. Feminitives presented as "natural and standard" — accurate and affirming ✓.
+    Diaspora добродій/добродійка mentioned respect'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: 'Three dialogues, all with named speakers and natural multi-turn exchanges.
+    Doctor''s office (formal → surname address) ✓. Classroom (teacher ↔ students,
+    professional vocative) ✓. Phone call (emotional '
+findings: []

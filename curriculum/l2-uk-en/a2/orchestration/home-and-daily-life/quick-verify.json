@@ -1,0 +1,13 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 4 exercise(s) but content has 0 placeholders"
+    }
+  ],
+  "timestamp": "2026-04-05T05:40:33.513568+00:00"
+}

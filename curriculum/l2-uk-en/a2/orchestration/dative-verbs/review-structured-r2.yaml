@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'All 4 content_outline sections covered with corresponding points. Vocabulary:
+    all 10 required words present in prose. However: (a) `чекати` from plan''s Section
+    4 replaced with `шукати` (correct change'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'All noun/pronoun dative forms verified correct via VESUM: колезі ✓, братові
+    ✓, вчителеві ✓, подрузі ✓, сусідці ✓, дідусеві ✓. Pronoun paradigm (мені/тобі/йому/їй/нам/вам/їм)
+    correct. Gender agreement '
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow throughout. Each grammar point has 3+ Ukrainian examples
+    before the rule is stated (e.g., "Я допомагаю мамі готувати вечерю," "Син завжди
+    щиро дякує батькові" before explaining dative '
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: All 10 required words (допомагати, дякувати, дзвонити, радити, заважати,
+    подобатися, відповідати, рік, роки, років) appear naturally in prose with contextual
+    examples. Zero of 5 recommended words used
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: 'All 4 markers present, each correctly positioned after its teaching section.
+    Types match plan hints exactly (fill-in, match-up, true-false, quiz). Focus descriptions
+    align with plan: dative forms (hin'
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: 'Some mild meta-commentary: "Давайте згадаємо закінчення давального відмінка"
+    (Let''s recall), "Давайте подивимося на конкретні приклади" (Let''s look at),
+    "Ось повний список для вашої практики" (Here is'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: All 4 plan H2 sections present in correct order. Extra Підсумок (summary)
+    section is standard and helpful. Word count 3030 vs target 2000 — well above minimum.
+    Clean markdown formatting. No stray tags
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented entirely on its own terms. No "like Russian but..."
+    comparisons. Comparisons made only with English (which is the L1). Dative construction
+    explained through Ukrainian logic ("years
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Volunteer-day dialogue has named speakers (Волонтер, Координатор), 7 turns,
+    natural flow, demonstrates 6 dative constructions organically (допомагаю бабусі,
+    дзвонить другові, допомагає Олені, раджу су
+findings: []

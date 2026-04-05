@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'All 7 plan sections present and in order. All content_outline points
+    covered: Литвінова p.180 вправа 296 (проїзний demo), Заболотний p.110 table (all
+    6 cluster types), Авраменко p.109 орфограма, Голуб'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'All Ukrainian confirmed correct by VESUM. All phonetic claims verified
+    against Grade 5 textbooks. Six simplification patterns, three exception categories,
+    and the чергування vs. спрощення distinction '
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'Strong PPP flow: introduces concept with classroom dialogue (Presentation),
+    builds systematic tables of patterns (Practice groundwork), provides exercises
+    after each section (Production). Multiple exa'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'All 14 required vocabulary items present and used in context: спрощення,
+    група приголосних, милозвучність, випадати, вимова, правопис, закріплений, виняток,
+    словотворення, прикметник, іменник, основа,'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 5 plan activity types present with correct placement after relevant
+    teaching. Error-correction items well-designed with mix of "should simplify" and
+    "exception — keep consonant" cases. Fill-in tar
+- dimension: 6
+  name: Engagement & tone
+  score: 5
+  evidence: '**Pervasive issues throughout:** (1) Meta-commentary: "Тепер давайте
+    дамо цьому цікавому фонетичному явищу точне, академічне визначення" (Sec 1), "Тепер
+    ми детально розглянемо найпоширеніші фонетичні '
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: All 7 plan sections present with correct H2 headings. Clean markdown throughout.
+    Word count 4918 exceeds 4000 target. No stray tags or formatting artifacts. No
+    duplicate summaries. Activity markers co
+- dimension: 8
+  name: Cultural accuracy
+  score: 8
+  evidence: 'Decolonized approach: Ukrainian presented on its own terms. Dnipro classroom
+    setting. Cross-Slavic comparison (Russian + Polish) makes a linguistic point rather
+    than defining Ukrainian relative to Rus'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: One dialogue (Dnipro classroom, matching plan). Pedagogically relevant
+    — student asks WHY [д] is missing from серце, teacher demonstrates the difficulty
+    of pronouncing the full cluster. Named speakers
+findings: []

@@ -1,119 +1,144 @@
-module: hist-060
-level: HIST
-sequence: 60
-slug: andrusivske-peremyrya
-version: '3.0'
-title: 'Андрусівське перемир''я: Поділ України'
-subtitle: 'The Truce of Andrusovo: The Partition of Ukraine'
-focus: history
-pedagogy: CBI
-phase: HIST.6 [Khmelnytsky & Cossack State]
-word_target: 5000
-objectives:
-- Учень може пояснити умови Андрусівського перемир'я 1667 року
-- Учень може проаналізувати наслідки поділу України по Дніпру
-- Учень може оцінити роль Ордіна-Нащокіна в дипломатичній грі
-content_outline:
-- section: 'Вступ: Ніч дипломатії в Андрусові'
-  points:
-  - The exhaustion of Poland and Muscovy by 1667 — Poland's 'Rokosz Lubomirskiego' and Muscovy's Copper Riot created 
-    mutual desperation
-  - The secret negotiations without Ukrainian representatives — [!context] Cossack envoys were physically barred from 
-    the meeting hall, highlighting the 'separate peace' nature
-  words: 600
-- section: 'Архітектор поділу: Афанасій Ордин-Нащокін'
-  points:
-  - The figure of the Muscovite diplomat — [!history-bite] Known as 'father of Russian diplomacy' but for Ukraine he was
-    the 'architect of the split'
-  - 'Strategy: divide and rule — Convinced Poles that ''unruly Cossacks'' were a mutual threat to be tamed jointly'
-  - Use of gifts and bribes — Corruption of Polish commissioners to secure favorable terms
-  words: 600
-- section: 'Умови договору: Геополітична ампутація'
-  points:
-  - The border along the Dnipro river — Left Bank + Sivershchyna + Smolensk to Moscow; Right Bank + Belarus to Poland
-  - The fate of Kyiv ('rule of two years') — Formally leased until 1669, but became a permanent occupation (broken 
-    promise)
-  - The status of Zaporizhzhia (condominium) — Joint Polish-Muscovite control to use Cossacks against Tatars; 
-    [!decolonization] 'Little Russian Ukraine' treated as object, not subject
-  words: 600
-- section: 'Реакція України: Шок і гнів'
-  points:
-  - Reaction of Doroshenko and Briukhovetsky — Jan 1668 councils in Chyhyryn and Hadiach rejected both monarchs; 
-    Doroshenko wrote 'we cannot trust...'
-  - 'The murder of Briukhovetsky by the mob — June 1668 at Opishnya: torn apart by Cossacks for his ''Moscow policy'''
-  - The feeling of betrayal by both 'protectors' — [!quote] Samovydets chronicle describes Cossacks 'beating their hats 
-    on the ground' in despair
-  words: 600
-- section: 'Соціальні наслідки: Життя на розломі'
-  points:
-  - Economic collapse and disruption of trade — Dnipro transformed from a trade artery into a 'border of enmity'
-  - Forced migrations ('The Great Drive') — Start of Right Bank depopulation; appearance of the term «тогобочні» (people
-    from the other side)
-  - Religious intolerance on both banks — Catholic expansion on Right Bank vs. Muscovite absorption of Kyiv Metropoly on
-    Left Bank
-  words: 600
-- section: Чому світ промовчав?
-  points:
-  - The international context (wars in Europe) — [!context] Louis XIV's War of Devolution (1667-68) and Anglo-Dutch wars
-    distracted the West
-  - Why a weak Ukraine was beneficial to neighbors — A divided buffer state was easier to manipulate than a strong 
-    Cossack Hetmanate
-  words: 600
-- section: 'Первинні джерела: Текст договору'
-  points:
-  - Analysis of the articles of the truce — Article 3 specifically excludes Cossacks from protection; use of term 
-    «свавільні» (unruly) to delegitimize them
-  words: 600
-- section: Деколонізаційний погляд
-  points:
-  - Debunking the myth of 'stabilization' — [!myth-buster] 1654 'reunification' myth exploded by 1667 betrayal; Moscow 
-    willingly returned 'reunited' lands to Poland
-  - Andrusovo as a crime against statehood — An international conspiracy of two empires to dismember a third nation; 
-    triggered the 'Ruin'
-  words: 800
-vocabulary_hints:
-  required:
-  - перемир'я (truce) — often framed by Ukrainians as «Андрусівська змова» (Andrusovo Conspiracy)
-  - демаркація (demarcation) — establishing the Dnipro border
-  - кондомініум (condominium) — joint control over Zaporizhzhia
-  - розкол (split/schism) — political and social division of the Hetmanate
-  - сепаратний (separate) — сепаратний мир (separate peace) concluded behind ally's back
-  - статус-кво (status quo) — attempt to freeze the conflict
-  - депортація (deportation) — forced movement of populations
-  - біженці (refugees) — fleeing the 'Ruin'
-  - змова (conspiracy) — secret agreement against Ukraine
-  - руйнація (ruin/destruction) — the period triggered by this treaty
-  recommended:
-  - тогобочні (those from the other side) — [!culture] term for Ukrainians across the river
-  - свавільні (unruly/arbitrary) — imperial label for Cossacks in the treaty
-  - ампутація (amputation) — metaphor for the territorial loss
 activity_hints:
-- type: reading
-  focus: Analysis of the Andrusovo treaty text
-- type: essay-response
-  focus: The tragedy of the partition of Ukraine
-- type: comparative-study
-  focus: Zboriv vs. Andrusovo
-- type: critical-analysis
-  focus: 'Спростування міфів: Myths about the truce'
-  items: 4
-persona:
-  voice: Senior Professor of History
-  role: Border Commissioner
-grammar:
-- 'Diplomatic terminology: truce, demarcation'
-- Conditional sentences in historical context
-register: публіцистичний
-prerequisites:
-- ruina-ii
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння історіографічних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Джерела
+  focus: Розуміння первинного історичного джерела
+  placement: inline
+  type: reading
+- focus: Оцінка первинного джерела — хто написав, навіщо, що упущено?
+  placement: workbook
+  type: source-evaluation
+- focus: Дебат — оцінка значення та наслідків події
+  placement: workbook
+  type: debate
+- focus: 'Порівняння української та імперської інтерпретацій (Андрусівське перемир''я: Поділ України)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе на тему зв''язку з сучасністю (Андрусівське перемир''я: Поділ України)'
+  placement: workbook
+  type: essay-response
+cefr_min: C1
 connects_to:
 - ivan-sirko
+- ruina-ii
+content_outline:
+- points:
+  - 'Провокація: Чому українських послів не пустили до зали, де два «захисники» ділили їхню країну? Чи міг один дипломат «розрубати»
+    Гетьманщину навпіл?'
+  - '[!context] 1667 рік: Річ Посполита виснажена «рокошем Любомирського», Московія — «Мідним бунтом». Обом імперіям потрібен
+    був перепочинок за будь-яку ціну.'
+  - 'Фрагмент з літопису Самовидця: «...а козаків у той покій не пускали, кажучи, що государі ваші без вас про вас домовились».'
+  section: Розминка
+  words: 400
+- points:
+  - 'Дебат 1: Московська vs. українська історіографія. Андрусово — це «необхідне перемир''я для стабілізації кордонів» чи
+    «цинічна змова двох імперій з метою ліквідації української державності»?'
+  - 'Дебат 2: Роль Афанасія Ордіна-Нащокіна. Геніальний дипломат, що врятував Московію, чи архітектор поділу, який свідомо
+    грав на розкол, переконуючи поляків, що «свавільні козаки» — спільна загроза?'
+  - '[!epistemic-humility] Точні мотиви Ордіна-Нащокіна — предмет дискусій. Чи вірив він у можливість асимілювати Лівобережжя,
+    чи лише прагнув тимчасової переваги над Польщею?'
+  - 'Глобальна синхронність: Війна за деволюцію Людовіка XIV (1667-68) та англо-голландські війни відволікали увагу Західної
+    Європи, дозволяючи Московії та Польщі діяти безкарно.'
+  section: 'Конфліктна карта: «Стабілізація» чи «державний злочин»?'
+  words: 900
+- points:
+  - 'Первинний документ: Стаття 3 договору прямо виключає козаків із-під захисту та легалізує спільні каральні акції проти
+    них, використовуючи термін «свавільні» для їх делегітимізації.'
+  - 'Географічний вирок: Кордон по Дніпру. Лівобережжя, Сіверщина, Смоленськ — до Москви. Правобережжя, Білорусь — до Польщі.
+    Гетьманщина розрізана навпіл.'
+  - 'Доля Києва: «Оренда на два роки». Формально до 1669 року, але ця тимчасова норма перетворилася на постійну окупацію —
+    класичний приклад порушеної обіцянки.'
+  - '[!decolonization] Статус Запоріжжя як «кондомініуму». Спільний польсько-московський контроль над Січчю для використання
+    козаків проти татар. «Малоросійська Україна» — об''єкт, а не суб''єкт міжнародного права.'
+  section: 'Джерела: Аналіз статей Андрусівської змови'
+  words: 1600
+- points:
+  - 'Політичний шок: Реакція Дорошенка та Брюховецького. Ради в Чигирині та Гадячі відкинули договір. Дорошенко: «Ми не можемо
+    довіряти жодному монарху».'
+  - 'Народний гнів: Убивство Брюховецького натовпом у червні 1668 року за його промосковську політику. Літопис Самовидця описує
+    відчай козаків, що «били шапками об землю».'
+  - 'Соціальна катастрофа: «Великий згін» — початок масових міграцій з спустошеного Правобережжя. Дніпро перетворюється з
+    торговельної артерії на «кордон ворожнечі». З''являється термін «тогобочні».'
+  - '[!myth-buster] Руйнація міфу про «стабілізацію» та «возз''єднання». У 1654 році Москва обіцяла захист, а в 1667 — охоче
+    повернула половину «возз''єднаних» земель полякам, довівши, що її цікавить територія, а не люди.'
+  section: 'Аналіз: Наслідки та значення'
+  words: 1600
+- points:
+  - 'Повернення до розминки: Чому Україну розділили без її участі? Студент формулює відповідь, використовуючи поняття «сепаратний
+    мир», «сфери впливу» та «вичерпання сторін».'
+  - 'Ширше питання: Чи може слабка держава довіряти «гарантіям безпеки» від сильніших сусідів? Андрусів як історичний прецедент.'
+  - '[!anti-hagiography] Договір став наслідком не лише зовнішньої змови, а й внутрішньої боротьби за владу в Гетьманщині,
+    яка ослабила козацьку державу зсередини.'
+  - 'Зв''язок із сьогоденням: Як уроки Андрусова застосовні до сучасних дискусій про нейтралітет, позаблоковий статус та міжнародні
+    переговори, де долю України вирішують без України?'
+  section: Дискусія та підсумок
+  words: 700
+focus: Andrusovo Truce 1667, partition of the Hetmanate, Athanasius Ordin-Nashchokin, Doroshenko's reaction, decolonization
+  of the 'reunification' myth
+level: HIST
+module: hist-060
+objectives:
+- Аналізувати умови Андрусівського перемир''я та його руйнівні наслідки для української державності
+- Пояснювати позиції та мотиви ключових сторін — Московії, Речі Посполитої та Гетьманщини
+- Критично оцінювати імперські наративи про «стабілізацію» та протиставляти їм український деколонізаційний погляд
+- Розпізнавати та застосовувати дипломатичну та історичну лексику для обговорення складних міжнародних угод
+pedagogy: CBI
+persona:
+  role: Історик-міжнародник, який аналізує договір не лише як трагедію, а і як закономірний результат гри великих держав та
+    внутрішніх слабкостей Гетьманщини
+  voice: Diplomatic-Realist
+phase: HIST.6
 references:
-- name: Andrusovo Treaty - Encyclopedia of Ukraine
-  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CA%5CN%5CAndrusovoTreatyof1667.htm
-  type: reference
-  notes: Academic summary
-- name: Text of the Treaty
-  url: http://litopys.org.ua/
+- note: Першоджерело, що описує реакцію козацтва на Андрусівський договір
+  path: http://litopys.org.ua/samovyd/sam.htm
   type: primary
-  notes: Original articles
+  work: Літопис Самовидця
+- author: Encyclopedia of Ukraine
+  note: Загальний академічний огляд умов та наслідків договору
+  path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CA%5CN%5CAndrusovoTreatyof1667.htm
+  type: reference
+  work: Andrusovo, Treaty of
+- author: Яковенко Н.
+  note: Аналіз дипломатичного та соціального контексту Руїни
+  type: primary
+  work: Нарис історії України з найдавніших часів до кінця XVIII ст.
+sequence: 60
+slug: andrusivske-peremyrya
+subtitle: 'The Truce of Andrusovo: The Partition of Ukraine'
+title: 'Андрусівське перемир''я: Поділ України'
+version: '4.0'
+vocabulary_hints:
+- definition: тимчасове припинення воєнних дій за угодою сторін, яке українська традиція часто називає «змовою»
+  pos: с.
+  word: перемир'я
+- definition: визначення і проведення лінії державного кордону на місцевості
+  pos: ж.
+  word: демаркація
+- definition: спільне володіння, спільне управління територією двома або кількома державами
+  pos: ч.
+  word: кондомініум
+- definition: глибоке роз'єднання, поділ суспільства, держави або церкви на ворожі частини
+  pos: ч.
+  word: розкол
+- definition: відокремлений, укладений окремо від союзників (про мирний договір)
+  pos: ч.
+  word: сепаратний
+- definition: історичний термін, яким українці одного берега Дніпра називали українців з іншого після поділу
+  pos: мн.
+  word: тогобочні
+- definition: ті, що діють на власний розсуд, не зважаючи на інших; принизливий епітет, що його застосовували імперії до козаків
+  pos: мн.
+  word: свавільні
+- definition: у переносному значенні — відрізання, насильницьке відокремлення частини території
+  pos: ж.
+  word: ампутація
+- definition: таємна угода кількох осіб, спрямована проти кого-небудь для досягнення певної мети
+  pos: ж.
+  word: змова
+- definition: період в історії України другої половини XVII ст., що характеризувався розпадом державності та загальним занепадом
+  pos: ж.
+  word: Руїна
+word_target: 5200

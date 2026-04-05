@@ -1,0 +1,106 @@
+module: bio-100
+level: BIO
+sequence: 100
+slug: mykola-khvylovyi
+version: '3.0'
+title: 'Микола Хвильовий: Геть від Москви!'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of микола хвильовий: геть від москви!'
+- Evaluate the contributions of бунтар, що обрав смерть
+- Trace the career and influence of спадщина та реабілітація
+content_outline:
+- section: Вступ — Бунтар, що обрав смерть
+  points:
+  - Микола Хвильовий — найяскравіша постать Розстріляного відродження
+  - Від комуніста до ідеолога «психологічної Європи»
+  - Самогубство як останній акт спротиву
+  words: 850
+- section: Ранні роки та революція (1893-1921)
+  points:
+  - Народження на Харківщині (справжнє ім'я — Микола Фітільов)
+  - Участь у революції та громадянській війні
+  - Вступ до Комуністичної партії
+  - Початок літературної діяльності
+  words: 850
+- section: Літературний злет (1921-1925)
+  points:
+  - Збірки «Сині етюди» та «Осінь»
+  - Організація літературних об'єднань — ВАПЛІТЕ
+  - Імпресіоністичний стиль та психологізм
+  - Визнання як провідного прозаїка
+  words: 850
+- section: «Геть від Москви!» (1925-1928)
+  points:
+  - Літературна дискусія про шляхи української культури
+  - Гасло «Геть від Москви!» — орієнтація на Європу
+  - Концепція «азійського ренесансу»
+  - Конфлікт з партійною лінією та примусове каяття
+  words: 850
+- section: Останні роки та самогубство (1928-1933)
+  points:
+  - Тиск влади та творча криза
+  - Голодомор та знищення української інтелігенції
+  - Самогубство 13 травня 1933 року
+  - Передсмертний лист і його значення
+  words: 850
+- section: Спадщина та реабілітація
+  points:
+  - Заборона творів на десятиліття
+  - Реабілітація у 1980-х роках
+  - Вплив на сучасну українську літературу
+  - Хвильовий як символ інтелектуального спротиву
+  words: 750
+vocabulary_hints:
+  required:
+  - Розстріляне відродження (Executed Renaissance)
+  - орієнтація (orientation)
+  - імпресіонізм (impressionism)
+  - дискусія (discussion/debate)
+  - самогубство (suicide)
+  - каяття (repentance)
+  - ренесанс (renaissance)
+  - інтелігенція (intelligentsia)
+  - спротив (resistance)
+  - ідеологія (ideology)
+  recommended:
+  - авангард (avant-garde)
+  - психологізм (psychologism)
+  - модернізм (modernism)
+  - тоталітаризм (totalitarianism)
+  - цензура (censorship)
+activity_hints:
+- type: reading
+  focus: Уривки з памфлетів та прози Хвильового
+  source: Оригінальні твори
+  items: 3 passages
+- type: essay-response
+  focus: Чому гасло «Геть від Москви!» актуальне сьогодні?
+  output: Contemporary analysis
+connects_to:
+- bio-68-olena-teliha
+- bio-77-vasyl-stus
+prerequisites:
+- bio-57-les-kurbas
+persona:
+  voice: Senior Biographer
+  role: Pamphleteer
+module_type: biography
+immersion: 100% Ukrainian
+references:
+- name: Микола Хвильовий (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Микола_Хвильовий
+  type: primary
+  notes: Біографія, творчість, літературна дискусія
+- name: Літературна дискусія 1925-1928
+  url: https://uk.wikipedia.org/wiki/Літературна_дискусія_1925—1928_років
+  type: reference
+  notes: Контекст полеміки «Геть від Москви!»
+- name: Розстріляне відродження
+  url: https://uk.wikipedia.org/wiki/Розстріляне_відродження
+  type: reference
+  notes: Доля української інтелігенції 1920-30-х
+register: академічний
+grammar: []

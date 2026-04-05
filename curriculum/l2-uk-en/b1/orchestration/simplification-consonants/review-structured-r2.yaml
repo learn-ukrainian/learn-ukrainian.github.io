@@ -1,0 +1,57 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'Sections 1-5 and 7 are fully covered. All textbook references cited (Литвінова
+    p.180, Заболотний p.110, Авраменко p.109, Голуб p.93). However, plan section 6
+    bullet 4 — "Cross-reference to real text: '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: All 6 simplification patterns match Заболотний p.110 exactly. All exceptions
+    correct (пестливий, хвастливий, кістлявий confirmed in 3 textbooks). Historical
+    etymology of сонце and серце correct (verif
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'PPP flow present: situation (classroom dialogue) → pattern (rules with
+    table) → practice (5 activities). Each grammar point has 3+ examples. Good bridge
+    from M08-M10 чергування. The reverse-engineerin'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: 'All 14 required vocab items used naturally in prose: спрощення, група
+    приголосних, милозвучність, випадати, вимова, правопис, закріплений, виняток,
+    словотворення, прикметник, іменник, основа, орфограм'
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 5 activity types from plan present with correct item counts. Markers
+    placed after relevant teaching content. Error-correction items test both directions
+    (over-simplification and under-simplificati
+- dimension: 6
+  name: Engagement & tone
+  score: 5
+  evidence: '**Pervasive problems:** (a) "інстинктивно" appears 5× ("інстинктивно
+    обирає", "інстинктивно відкидає", "інстинктивно викидає", "інстинктивно шукає",
+    "інстинктивно зріже") — repetitive crutch word. (b)'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: 'All 7 H2 sections from plan present in correct order. Word count 4663
+    vs 4000 target — above minimum ✅. Clean markdown. No stray tags or artifacts.
+    Section word budgets: section 1 runs significantly o'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented entirely on its own terms. No "like Russian but..."
+    framing. The comparison to English silent letters (debt, knight) is done respectfully,
+    noting Ukrainian's superiority in phoneti
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: 'The classroom dialogue in section 1 is natural, culturally appropriate,
+    and well-situated (Дніпро classroom, dictation exercise). Named speakers (Вчитель,
+    Студент). However: (a) only ONE dialogue in t'
+findings: []

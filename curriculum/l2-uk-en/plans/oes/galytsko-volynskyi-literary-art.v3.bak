@@ -1,0 +1,74 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння філологічних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Текст
+  focus: Транскрипція давньосхіднослов'янського фрагменту
+  placement: inline
+  type: transcription
+- focus: Простежити еволюцію слова від давньосхіднослов'янської до сучасної
+  placement: workbook
+  type: etymology-trace
+- focus: Порівняння давньосхіднослов'янських форм із сучасними українськими (Галицько-Волинський літопис як літературний шедевр)
+  placement: workbook
+  type: comparative-study
+- focus: Критичний аналіз лінгвістичної класифікації тексту
+  placement: workbook
+  type: critical-analysis
+- focus: Есе — що цей текст розповідає про стан мови в цю добу? (Галицько-Волинський літопис як літературний шедевр)
+  placement: workbook
+  type: essay-response
+connects_to:
+- pateryk-literary-form
+content_outline:
+- points:
+  - The GVL as a distinct literary work from PVL. Different authorial voice, different aesthetic. Written in Galician-Volhynian
+    lands, reflecting Western Ukrainian literary consciousness.
+  section: Вступ
+  words: 1250
+- points:
+  - 'Close reading: the famous ''О горе'' passages, battle descriptions as poetic set pieces, nature imagery tied to emotional
+    states. Comparison with PVL''s chronicle style. The GVL''s secular tone vs PVL''s religious framing. Multiple authors,
+    multiple styles.'
+  section: Основний матеріал
+  words: 1250
+- points:
+  - 'Analyzing literary techniques in GVL: metaphor, rhythm, rhetorical figures. Identifying the shift from annalistic to
+    narrative prose.'
+  section: Практика
+  words: 1250
+- points:
+  - The GVL as evidence of Western Ukrainian literary sophistication. A chronicle that is also a work of art — connecting
+    to the later Galician literary tradition.
+  section: Підсумок
+  words: 1250
+focus: GVL's unique literary style — military poetics, nature imagery, 'О горе' laments, rhythmic prose
+level: OES
+module: oes-097
+objectives:
+- Аналізувати ключові поняття та явища модуля на рівні глибокого розуміння
+- Продукувати тексти академічного та професійного рівня за тематикою модуля
+- Демонструвати вільне володіння спеціалізованою лексикою та термінологією
+- Застосовувати знання з теми «Практика» у власній мовній практиці
+persona:
+  role: Galician Chronicler
+  voice: Literary Critic
+phase: 4
+prerequisites:
+- phonology-lab-yers
+sequence: 97
+slug: galytsko-volynskyi-literary-art
+source_url: http://litopys.org.ua/litop/lit22.htm
+subtitle: The Galician-Volhynian Chronicle as Literary Art
+title: Галицько-Волинський літопис як літературний шедевр
+version: '2.0'
+vocabulary_hints:
+- літопис
+- поетика
+- ритмічна проза
+- ламент
+- батальна сцена
+- образність
+word_target: 5000

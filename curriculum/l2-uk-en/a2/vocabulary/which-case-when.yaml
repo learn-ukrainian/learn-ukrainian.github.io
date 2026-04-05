@@ -1,0 +1,271 @@
+vocabulary:
+- word: алгори́тм
+  translation: algorithm
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: конте́кст
+  translation: context
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: керува́ти
+  translation: to manage, drive
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: майбу́тнє
+  translation: future
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: відмі́нок
+  translation: grammatical case
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: прийме́нник
+  translation: preposition
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: дієсло́во
+  translation: verb
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: на́прямок
+  translation: direction
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: мі́сце
+  translation: location, place
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: характери́стика
+  translation: characteristic, description
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ду́мати
+  translation: to think
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: боя́тися
+  translation: to be afraid
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: кори́стува́тися
+  translation: to use
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: керува́ння
+  translation: government (grammatical)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: допомага́ти
+  translation: to help
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: телефонува́ти
+  translation: to call
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ра́дити
+  translation: to advise
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: заважа́ти
+  translation: to disturb, bother
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: нема́є
+  translation: there is no
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: потребува́ти
+  translation: to need, require
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ти́ждень
+  translation: week
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: мі́сяць
+  translation: month
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ви́няток
+  translation: exception
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: о́дяг
+  translation: clothing
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: су́кня
+  translation: dress
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: капелю́х
+  translation: hat
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: светр
+  translation: sweater
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: окуля́ри
+  translation: glasses
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: пальто́
+  translation: coat
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: дити́нство
+  translation: childhood
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: відпу́стка
+  translation: vacation
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: декре́т
+  translation: maternity leave
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: відря́дження
+  translation: business trip
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: світ
+  translation: world
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: пове́рхня
+  translation: surface
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: про́стір
+  translation: space
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: прем'є́р
+  translation: premier, prime minister
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: наступного тижня
+  translation: next week
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: минулого місяця
+  translation: last month
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: наступного року
+  translation: next year
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у дитинстві
+  translation: in childhood
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: у майбутньому
+  translation: in the future
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дякую вам
+  translation: thank you (to you)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дякую за
+  translation: thank you for
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: думати про
+  translation: to think about
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

@@ -1,0 +1,106 @@
+module: bio-065
+level: BIO
+sequence: 65
+slug: mykhailo-hrushevskyi
+version: '3.0'
+title: 'Михайло Грушевський: Історик і президент'
+focus: biography
+phase: BIO
+word_target: 5000
+objectives:
+- 'Analyze the life and legacy of михайло грушевський: історик і президент'
+- Evaluate the contributions of батько української історії
+- Trace the career and influence of смерть та спадщина
+content_outline:
+- section: Вступ — Батько української історії
+  points:
+  - Михайло Грушевський — найвидатніший український історик
+  - Від професора до голови Центральної Ради
+  - Творець української національної історіографії
+  words: 850
+- section: Ранні роки та освіта (1866-1894)
+  points:
+  - Народження в Холмі в родині педагога
+  - Навчання в Київському університеті у Володимира Антоновича
+  - Перші наукові роботи
+  - Формування концепції окремішності української історії
+  words: 850
+- section: Львівський період (1894-1914)
+  points:
+  - Професорство у Львівському університеті
+  - Керівництво Науковим товариством імені Шевченка
+  - Написання «Історії України-Руси»
+  - Розвиток української науки в Галичині
+  words: 850
+- section: Революція та УНР (1917-1918)
+  points:
+  - Повернення до Києва після Лютневої революції
+  - Обрання головою Центральної Ради
+  - Проголошення Української Народної Республіки
+  - Четвертий Універсал та падіння Ради
+  words: 850
+- section: Еміграція та повернення (1919-1934)
+  points:
+  - Еміграція до Австрії та Чехословаччини
+  - Наукова робота в еміграції
+  - Повернення до Радянської України (1924)
+  - Робота в Академії наук під наглядом
+  words: 850
+- section: Смерть та спадщина
+  points:
+  - Загадкова смерть у 1934 році
+  - Посмертні репресії проти родини та учнів
+  - Реабілітація та повернення імені
+  - Грушевський на 50-гривневій банкноті
+  words: 750
+vocabulary_hints:
+  required:
+  - історик (historian)
+  - історіографія (historiography)
+  - Центральна Рада (Central Rada)
+  - Універсал (Universal/proclamation)
+  - незалежність (independence)
+  - академія (academy)
+  - нація (nation)
+  - державність (statehood)
+  - еміграція (emigration)
+  - репресії (repressions)
+  recommended:
+  - архів (archive)
+  - джерелознавство (source studies)
+  - наратив (narrative)
+  - федерація (federation)
+  - автономія (autonomy)
+activity_hints:
+- type: reading
+  focus: Уривки з «Історії України-Руси» та промов
+  source: Наукові та політичні твори
+  items: 3 passages
+- type: essay-response
+  focus: Як історик може змінити свідомість нації?
+  output: Historical analysis
+connects_to:
+- bio-37-mariia-voiakovska
+- bio-44-symon-petliura
+prerequisites:
+- bio-22-mykhailo-drahomanov
+persona:
+  voice: Senior Biographer
+  role: Parliament President
+module_type: biography
+immersion: 100% Ukrainian
+references:
+- name: Михайло Грушевський (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Михайло_Грушевський
+  type: primary
+  notes: Біографія, наукова та політична діяльність
+- name: Історія України-Руси
+  url: https://uk.wikipedia.org/wiki/Історія_України-Руси
+  type: reference
+  notes: Головна наукова праця
+- name: Українська Центральна Рада
+  url: https://uk.wikipedia.org/wiki/Українська_Центральна_Рада
+  type: reference
+  notes: Політична діяльність 1917-1918
+register: академічний
+grammar: []

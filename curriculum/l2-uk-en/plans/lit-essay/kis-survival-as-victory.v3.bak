@@ -1,0 +1,82 @@
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння літературно-критичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Читання
+  focus: Розуміння літературного тексту (уривок з твору)
+  placement: inline
+  type: reading
+- focus: Аналіз авторського задуму — мова як мистецтво
+  placement: workbook
+  type: authorial-intent
+- focus: Аналіз риторичних стратегій та аргументації
+  placement: workbook
+  type: authorial-intent
+- focus: 'Порівняння з іншими творами або інтерпретаціями (Оксана Кісь: Вижити значить перемогти)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе-аналіз рецепції та сучасного значення (Оксана Кісь: Вижити значить перемогти)'
+  placement: workbook
+  type: essay-response
+content_outline:
+- points:
+  - Специфіка жіночих спогадів про ГУЛАГ
+  - Відмінність від чоловічого наративу (Солженіцин, Шаламов)
+  - Методологія усної історії
+  section: Вступ — Жіночий голос у таборовій літературі
+  words: 800
+- points:
+  - Гігієна, одяг, фізіологія як елементи гідності
+  - Сексуальне насильство та стратегії захисту
+  - Материнство в таборах
+  section: Тілесність і Гендер у неволі
+  words: 1200
+- points:
+  - Творчість (вишивання, вірші) як опір
+  - '"Посестримство" — жіноча солідарність'
+  - Збереження людяності через дрібні ритуали
+  section: Стратегії виживання
+  words: 1200
+- points:
+  - Наукова строгість vs емоційна глибина
+  - Як авторка працює зі свідченнями
+  - Деколонізаційний аспект: українки як політичні в'язні
+  section: Аналіз тексту
+  words: 1000
+- points:
+  - Значення книги для розуміння тоталітаризму
+  - '"Перемога" через збереження життя'
+  section: Підсумок
+  words: 800
+focus: literature
+grammar: []
+immersion: 100% Ukrainian
+level: LIT.ESSAY
+module: lit-essay-049
+objectives:
+- Проаналізувати жіночий досвід репресій через призму антропології
+- Оцінити літературну та наукову вартість праці Оксани Кісь
+pedagogy: literature
+persona:
+  role: Gender Researcher
+  voice: Anthropologist
+phase: LIT Expansion
+references: []
+register: академічний
+slug: kis-survival-as-victory
+subtitle: Антропологія жіночого досвіду ГУЛАГу
+title: 'Оксана Кісь: Вижити значить перемогти'
+version: '3.0'
+vocabulary_hints:
+  recommended:
+  - стигматизація
+  - травма
+  required:
+  - гендерна антропологія
+  - тілесність
+  - віктимізація
+  - агентність
+  - солідарність
+word_target: 5000

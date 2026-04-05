@@ -1,58 +1,114 @@
-module: lit-009
-level: LIT
-sequence: 9
-slug: ethnography
-version: '3.0'
-title: 'Етнографія як Література: Український Світ Квітки'
-subtitle: 'LIT-009: Обряд як Сюжетний Каркас'
-focus: culture
-pedagogy: literature
-phase: LIT.2 Sentimentalism (Kvitka-Osnovianenko)
-word_target: 5000
-objectives:
-- Analyze the role of rituals in Kvitka's prose
-- Compare wedding and funeral rites in "Marusya"
-- Evaluate the ethnographic accuracy of Kvitka's works
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння літературно-критичних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Читання
+  focus: Розуміння літературного тексту (уривок з твору)
+  placement: inline
+  type: reading
+- focus: Аналіз авторського задуму — мова як мистецтво
+  placement: workbook
+  type: authorial-intent
+- focus: Літературна критика — оцінка інтерпретації
+  placement: workbook
+  type: critical-analysis
+- focus: 'Порівняння з іншими творами або інтерпретаціями (Етнографія як Література: Український Світ Квітки)'
+  placement: workbook
+  type: comparative-study
+- focus: 'Есе-аналіз рецепції та сучасного значення (Етнографія як Література: Український Світ Квітки)'
+  placement: workbook
+  type: essay-response
+connects_to:
+- lit-10 (Language of Kvitka — обрядова лексика)
+- istorio (Historical modules — культурна пам'ять)
 content_outline:
-- section: Вступ — Обряд як структура оповіді
-  points:
+- points:
   - Роль обряду в класичній українській прозі
   - Весілля і похорон як "каркас" сюжету
   - Квітка як етнограф-письменник
+  section: Вступ — Обряд як структура оповіді
   words: 850
-- section: Весільний обряд — структура і символіка
-  points:
+- points:
   - Сватання (формули ввічливості)
   - Заручини та дівич-вечір
   - Вінчання та весільний бенкет
   - '"Сватання на Гончарівці" як джерело'
+  section: Весільний обряд — структура і символіка
   words: 850
-- section: Похоронний обряд — кульмінація сентименталізму
-  points:
+- points:
   - Голосіння та плач
   - Похоронна процесія
   - Поминки
   - Функція смерті в сентиментальній естетиці
+  section: Похоронний обряд — кульмінація сентименталізму
   words: 850
-- section: Економічна етнографія — феномен чумацтва
-  points:
+- points:
   - Хто такі чумаки
   - Чумацький шлях (Україна — Крим — Одеса)
   - Роль чумацтва в "Марусі"
+  section: Економічна етнографія — феномен чумацтва
   words: 850
-- section: Соціальна топографія села
-  points:
+- points:
   - Церква як духовний центр
   - Шинок як соціальний простір
   - Хата — мікрокосм родини
+  section: Соціальна топографія села
   words: 850
-- section: Підсумок — Код нації
-  points:
+- points:
   - Цінності та страхи українського селянства
   - Квітка як "архіваріус" культури
   - Зв'язок з "Тінями забутих предків"
+  section: Підсумок — Код нації
   words: 750
+focus: culture
+grammar:
+- Ethnographic terminology (weddings, funerals)
+- Ritualistic language formulas
+- Symbolism of material culture (clothing, food)
+immersion: 100% Ukrainian
+level: LIT
+module: lit-009
+module_type: culture
+objectives:
+- Analyze the role of rituals in Kvitka's prose
+- Compare wedding and funeral rites in "Marusya"
+- Evaluate the ethnographic accuracy of Kvitka's works
+pedagogy: literature
+persona:
+  role: Folk Ethnographer
+  voice: Senior Philologist & Critic
+phase: LIT.2 Sentimentalism (Kvitka-Osnovianenko)
+prerequisites:
+- lit-07 (Marusya — етнографічні описи)
+- lit-03 (Eneida Feast — обрядовість бенкету)
+references:
+- name: Маруся — весілля та похорон
+  notes: Етнографічні описи в повісті
+  type: primary
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=252
+- name: Сватання на Гончарівці
+  notes: Весільний обряд у п'єсі
+  type: primary
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=253
+- name: Українські народні обряди
+  notes: Етнографічний контекст
+  type: reference
+  url: https://uk.wikipedia.org/wiki/Українські_народні_обряди
+register: академічний
+sequence: 9
+slug: ethnography
+subtitle: 'LIT-009: Обряд як Сюжетний Каркас'
+title: 'Етнографія як Література: Український Світ Квітки'
+version: '3.0'
 vocabulary_hints:
+  recommended:
+  - заручини (engagement)
+  - вінчання (church wedding)
+  - дівич-вечір (bachelorette party)
+  - хата (cottage)
+  - шинок (tavern)
   required:
   - етнографія (ethnography)
   - обряд (ritual)
@@ -64,46 +120,4 @@ vocabulary_hints:
   - поминки (funeral feast)
   - топографія (topography)
   - символіка (symbolism)
-  recommended:
-  - заручини (engagement)
-  - вінчання (church wedding)
-  - дівич-вечір (bachelorette party)
-  - хата (cottage)
-  - шинок (tavern)
-activity_hints:
-- type: reading
-  focus: Етнографічні описи з творів Квітки
-  source: UkrLib tid=252, 253
-  items: 5+
-- type: essay-response
-  focus: Роль обряду в українській ідентичності
-  output: Культурологічне есе
-connects_to:
-- lit-10 (Language of Kvitka — обрядова лексика)
-- istorio (Historical modules — культурна пам'ять)
-prerequisites:
-- lit-07 (Marusya — етнографічні описи)
-- lit-03 (Eneida Feast — обрядовість бенкету)
-persona:
-  voice: Senior Philologist & Critic
-  role: Folk Ethnographer
-grammar:
-- Ethnographic terminology (weddings, funerals)
-- Ritualistic language formulas
-- Symbolism of material culture (clothing, food)
-module_type: culture
-immersion: 100% Ukrainian
-references:
-- name: Маруся — весілля та похорон
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=252
-  type: primary
-  notes: Етнографічні описи в повісті
-- name: Сватання на Гончарівці
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=253
-  type: primary
-  notes: Весільний обряд у п'єсі
-- name: Українські народні обряди
-  url: https://uk.wikipedia.org/wiki/Українські_народні_обряди
-  type: reference
-  notes: Етнографічний контекст
-register: академічний
+word_target: 5000

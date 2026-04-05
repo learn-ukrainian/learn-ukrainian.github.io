@@ -1,0 +1,433 @@
+version: '1.0'
+module: dative-verbs
+level: a2
+inline:
+- id: fill-in
+  type: fill-in
+  instruction: Вставте правильну форму
+  items:
+  - sentence: Я часто допомагаю ____ готувати вечерю.
+    answer: мамі
+    options:
+    - мамі
+    - маму
+    - мама
+  - sentence: Тарас зараз дзвонить своєму ____.
+    answer: другові
+    options:
+    - другові
+    - друга
+    - друг
+  - sentence: Волонтер допомагає ____ нести сумки.
+    answer: бабусі
+    options:
+    - бабусі
+    - бабусю
+    - бабуся
+  - sentence: Вчитель відповідає ____ на уроці.
+    answer: студентові
+    options:
+    - студентові
+    - студента
+    - студент
+  - sentence: Він показує нову книжку ____.
+    answer: сестрі
+    options:
+    - сестрі
+    - сестру
+    - сестра
+  - sentence: Я раджу ____ прочитати цю нову книгу.
+    answer: колезі
+    options:
+    - колезі
+    - колегу
+    - колега
+  - sentence: Будь ласка, не заважай ____ працювати!
+    answer: мені
+    options:
+    - мені
+    - мене
+    - я
+  - sentence: Ми щиро дякуємо ____ за допомогу!
+    answer: вам
+    options:
+    - вам
+    - вас
+    - ви
+- id: match-up
+  type: match-up
+  instruction: З'єднайте українські речення з їхніми англійськими перекладами
+  pairs:
+  - left: Мені подобається ця книга.
+    right: I like this book.
+  - left: Їй подобається це місто.
+    right: She likes this city.
+  - left: Тобі подобається цей чай.
+    right: You like this tea.
+  - left: Нам дуже подобаються ці гори.
+    right: We like these mountains very much.
+  - left: Йому більше подобається теплий чай.
+    right: He likes warm tea more.
+  - left: Мені зовсім не подобається ця погода.
+    right: I do not like this weather at all.
+  - left: Вам подобаються українські пісні?
+    right: Do you like Ukrainian songs?
+  - left: Їм подобалися ті старі фільми.
+    right: They liked those old movies.
+- id: true-false
+  type: true-false
+  instruction: Правда чи ні? Визначте, чи правильна граматика віку в цих реченнях
+  items:
+  - statement: Мені двадцять один рік.
+    correct: true
+    explanation: Число 21 закінчується на 1, тому ми кажемо 'рік'.
+  - statement: Братові двадцять два років.
+    correct: false
+    explanation: 'Числа, що закінчуються на 2, 3, 4, вимагають форми ''роки''. Правильно:
+      двадцять два роки.'
+  - statement: Сестрі двадцять п'ять років.
+    correct: true
+    explanation: Число 25 закінчується на 5, тому форма 'років' правильна.
+  - statement: Він тридцять років.
+    correct: false
+    explanation: 'Для віку людина завжди стоїть у давальному відмінку: ''Йому тридцять
+      років''.'
+  - statement: Дідусеві вісімдесят роки.
+    correct: false
+    explanation: 'Круглі десятки (80) вимагають форми ''років''. Правильно: вісімдесят
+      років.'
+  - statement: Скільки тебе років?
+    correct: false
+    explanation: Потрібен давальний відмінок 'тобі', а не знахідний 'тебе'.
+  - statement: Дитині три роки.
+    correct: true
+    explanation: Слово 'дитині' в давальному відмінку, а число 3 вимагає форми 'роки'.
+  - statement: Моєму братові двадцять рік.
+    correct: false
+    explanation: 'Число 20 — це круглий десяток, тому потрібна форма ''років''. Правильно:
+      двадцять років.'
+- id: quiz
+  type: quiz
+  instruction: Оберіть правильний варіант (знахідний чи давальний відмінок)
+  items:
+  - question: Я бачу ______.
+    options:
+    - маму
+    - мамі
+    - мама
+    - мамою
+    correct: 0
+  - question: Я допомагаю ______.
+    options:
+    - маму
+    - мамі
+    - мама
+    - мамою
+    correct: 1
+  - question: Він любить ______.
+    options:
+    - свою сестру
+    - своїй сестрі
+    - своя сестра
+    - своєю сестрою
+    correct: 0
+  - question: Він дзвонить ______.
+    options:
+    - свою сестру
+    - своїй сестрі
+    - своя сестра
+    - своєю сестрою
+    correct: 1
+  - question: Ми чекаємо ______.
+    options:
+    - вас
+    - вам
+    - ви
+    - вами
+    correct: 0
+  - question: Ми дякуємо ______.
+    options:
+    - вас
+    - вам
+    - ви
+    - вами
+    correct: 1
+  - question: Вчитель знає ______.
+    options:
+    - студента
+    - студентові
+    - студент
+    - студентом
+    correct: 0
+  - question: Вчитель радить ______.
+    options:
+    - студента
+    - студентові
+    - студент
+    - студентом
+    correct: 1
+workbook:
+- id: workbook-error-correction
+  type: error-correction
+  instruction: Знайдіть і виправте граматичну помилку
+  items:
+  - sentence: Я подобаю цю нову книгу.
+    error: Я подобаю
+    correction: Мені подобається
+    error_type: construction
+    options:
+    - Мені подобається
+    - Я подобаюся
+    - Мене подобає
+    explanation: Дієслово 'подобатися' вимагає давального відмінка для людини-досвідника.
+  - sentence: Моя сестра двадцять років.
+    error: Моя сестра
+    correction: Моїй сестрі
+    error_type: phrase
+    options:
+    - Моїй сестрі
+    - Моєю сестрою
+    - Мою сестру
+    explanation: 'Для віку потрібен давальний відмінок: моїй сестрі.'
+  - sentence: Він допомагає своя мама.
+    error: своя мама
+    correction: своїй мамі
+    error_type: phrase
+    options:
+    - своїй мамі
+    - свою маму
+    - своєю мамою
+    explanation: Дієслово 'допомагати' вимагає давального відмінка.
+  - sentence: Тобі подобається ці пісні?
+    error: подобається
+    correction: подобаються
+    error_type: word
+    options:
+    - подобаються
+    - подобалося
+    - подобалися
+    explanation: Пісні — це множина, тому дієслово має бути у формі множини.
+  - sentence: Я щиро дякую тебе.
+    error: тебе
+    correction: тобі
+    error_type: word
+    options:
+    - тобі
+    - тобою
+    - ти
+    explanation: 'Дієслово ''дякувати'' вимагає давального відмінка: ''тобі''.'
+  - sentence: Він двадцять два роки.
+    error: Він
+    correction: Йому
+    error_type: word
+    options:
+    - Йому
+    - Його
+    - Ним
+    explanation: 'Для віку людина стоїть у давальному відмінку: ''Йому''.'
+- id: workbook-unjumble
+  type: unjumble
+  instruction: Складіть правильне речення зі слів
+  items:
+  - words:
+    - допомагає
+    - мені
+    - брат
+    - Мій
+    - завжди.
+    correct_order:
+    - Мій
+    - брат
+    - завжди
+    - допомагає
+    - мені.
+  - words:
+    - книга?
+    - подобається
+    - ця
+    - Тобі
+    - нова
+    correct_order:
+    - Тобі
+    - подобається
+    - ця
+    - нова
+    - книга?
+  - words:
+    - один
+    - братові
+    - Моєму
+    - двадцять
+    - рік.
+    correct_order:
+    - Моєму
+    - братові
+    - двадцять
+    - один
+    - рік.
+  - words:
+    - радить
+    - Лікар
+    - їй
+    - відпочивати.
+    - більше
+    correct_order:
+    - Лікар
+    - радить
+    - їй
+    - більше
+    - відпочивати.
+  - words:
+    - дуже
+    - Нам
+    - ці
+    - високі
+    - подобаються
+    - гори.
+    correct_order:
+    - Нам
+    - дуже
+    - подобаються
+    - ці
+    - високі
+    - гори.
+  - words:
+    - заважай
+    - не
+    - Будь
+    - мені
+    - ласка,
+    - працювати!
+    correct_order:
+    - Будь
+    - ласка,
+    - не
+    - заважай
+    - мені
+    - працювати!
+- id: workbook-group-sort
+  type: group-sort
+  instruction: Розподіліть дієслова за відмінком, який вони вимагають
+  groups:
+  - label: Давальний (Dative)
+    items:
+    - допомагати
+    - дякувати
+    - дзвонити
+    - радити
+    - заважати
+    - відповідати
+  - label: Знахідний (Accusative)
+    items:
+    - бачити
+    - знати
+    - любити
+    - чекати
+- id: workbook-translate
+  type: translate
+  instruction: Оберіть правильний переклад
+  items:
+  - source: He is twenty years old.
+    options:
+    - text: Йому двадцять років.
+      correct: true
+    - text: Він двадцять років.
+      correct: false
+    - text: Йому двадцять рік.
+      correct: false
+  - source: I like this book.
+    options:
+    - text: Мені подобається ця книга.
+      correct: true
+    - text: Я подобаю цю книгу.
+      correct: false
+    - text: Мені подобаються ця книга.
+      correct: false
+  - source: We thank you very much.
+    options:
+    - text: Ми дуже дякуємо вам.
+      correct: true
+    - text: Ми дуже дякуємо вас.
+      correct: false
+    - text: Ми дуже дякувати вам.
+      correct: false
+  - source: She calls her friend.
+    options:
+    - text: Вона дзвонить подрузі.
+      correct: true
+    - text: Вона дзвонить подругу.
+      correct: false
+    - text: Їй дзвонить подруга.
+      correct: false
+  - source: Do you like these mountains?
+    options:
+    - text: Вам подобаються ці гори?
+      correct: true
+    - text: Вам подобається ці гори?
+      correct: false
+    - text: Ви подобаєте ці гори?
+      correct: false
+  - source: I advise him to rest.
+    options:
+    - text: Я раджу йому відпочивати.
+      correct: true
+    - text: Я раджу його відпочивати.
+      correct: false
+    - text: Мені радить він відпочивати.
+      correct: false
+- id: workbook-match-up-vocab
+  type: match-up
+  instruction: З'єднайте дієслово з його англійським перекладом
+  pairs:
+  - left: довіряти
+    right: to trust
+  - left: вибачати
+    right: to forgive
+  - left: посміхатися
+    right: to smile
+  - left: співчувати
+    right: to sympathize
+  - left: заздрити
+    right: to envy
+  - left: заважати
+    right: to bother
+- id: workbook-fill-in-vocab
+  type: fill-in
+  instruction: Вставте правильне дієслово за змістом
+  items:
+  - sentence: Я завжди ______ своїй мамі.
+    answer: довіряю
+    options:
+    - довіряю
+    - заздрю
+    - заважаю
+  - sentence: Ти часто ______ друзям?
+    answer: посміхаєшся
+    options:
+    - посміхаєшся
+    - вибачаєш
+    - радиш
+  - sentence: Ми ______ людям, у яких проблеми.
+    answer: співчуваємо
+    options:
+    - співчуваємо
+    - заздримо
+    - довіряємо
+  - sentence: Вона ніколи не ______ успіхам інших.
+    answer: заздрить
+    options:
+    - заздрить
+    - вибачає
+    - співчуває
+  - sentence: Вчитель завжди ______ нам хороші книги.
+    answer: радить
+    options:
+    - радить
+    - заважає
+    - вибачає
+  - sentence: Ти завжди ______ мені працювати!
+    answer: заважаєш
+    options:
+    - заважаєш
+    - довіряєш
+    - посміхаєшся

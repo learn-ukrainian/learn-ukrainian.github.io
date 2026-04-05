@@ -1,0 +1,205 @@
+vocabulary:
+- word: вставний голосний
+  translation: fleeting vowel
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ви́няток
+  translation: exception
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: деся́ток
+  translation: ten, ten-unit
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: нульове закінчення
+  translation: zero ending
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: кі́лькість
+  translation: quantity, amount
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: бага́то
+  translation: a lot, many
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ма́ло
+  translation: few, little
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: кі́лька
+  translation: a few, several
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: де́кілька
+  translation: a few, several
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: скі́льки
+  translation: how many, how much
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: гри́вня
+  translation: hryvnia
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: нема́є
+  translation: there is no / are no
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: відмі́на
+  translation: declension group
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: Добрий ранок
+  translation: Good morning
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Добрий день
+  translation: Good afternoon / Hello
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Прошу
+  translation: Here you go
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: люди́на
+  translation: person
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: дити́на
+  translation: child
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: о́ко
+  translation: eye
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: ву́хо
+  translation: ear
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: кінь
+  translation: horse
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вікно́
+  translation: window
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: мі́сто
+  translation: city
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: я́блуко
+  translation: apple
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: сестра́
+  translation: sister
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: сім'я́
+  translation: family
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: тарі́лка
+  translation: plate
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: виде́лка
+  translation: fork
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ло́жка
+  translation: spoon
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: скля́нка
+  translation: glass
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: два́дцять
+  translation: twenty
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: п'ятдеся́т
+  translation: fifty
+  expression: false
+  pos: числ.
+  gender: ''
+  verified: true
+- word: громадя́нин
+  translation: citizen
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кілогра́м
+  translation: kilogram
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true

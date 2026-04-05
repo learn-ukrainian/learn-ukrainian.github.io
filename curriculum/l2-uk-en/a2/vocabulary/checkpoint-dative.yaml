@@ -1,0 +1,181 @@
+vocabulary:
+- word: закі́нчення
+  translation: ending (grammar)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: чергува́ння
+  translation: alternation (grammar)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: узго́дження
+  translation: agreement (grammar)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: допомага́ти
+  translation: to help
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: подо́батися
+  translation: to be pleasing to, to like
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: подарува́ти
+  translation: to give as a gift
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: надісла́ти
+  translation: to send
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: потрі́бно
+  translation: necessary, needed
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: хо́лодно
+  translation: cold (impersonal state)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: Таємний Санта
+  translation: Secret Santa
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: подару́нок
+  translation: gift
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: коле́га
+  translation: colleague
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: знахідний відмінок
+  translation: accusative case
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: безособові речення
+  translation: impersonal sentences
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зме́рзнути
+  translation: to get cold, to freeze
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: су́мно
+  translation: sad
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ве́село
+  translation: having fun, cheerful
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ціка́во
+  translation: interesting
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: пан
+  translation: sir, gentleman
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: воді́й
+  translation: driver
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сусі́д
+  translation: neighbor
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ра́дити
+  translation: to advise
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: співчува́ти
+  translation: to sympathize
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ви́повнитися
+  translation: to turn (age)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Скільки вам років?
+  translation: How old are you?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: тре́ба
+  translation: need to
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: мо́жна
+  translation: allowed, possible
+  expression: false
+  pos: ''
+  gender: ''
+  verified: true
+- word: щи́ро
+  translation: sincerely
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: кавові зерна
+  translation: coffee beans
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: рюкза́к
+  translation: backpack
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true

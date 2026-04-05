@@ -1,0 +1,57 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: All 4 plan sections covered with correct word distribution. Content outline
+    points largely addressed. **Deductions:** (1) Plan Section 4 specifies `розповідати
+    КОМУ (Dat.) ПРО ЩО (Acc.)` as a dual-cas
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: '**Critical error:** `чекати` is listed as accusative-governing but actually
+    takes genitive — *"Дієслова бачити, знати, любити, та **чекати** вимагають знахідного
+    відмінка"* is factually wrong. This er'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow throughout: situation → pattern → practice. Each grammar
+    point has 3+ examples. Section 1 opens with conceptual framing (Dative = case
+    of communication), then shows paradigm with conte'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: All 7 required verbs (допомагати, дякувати, дзвонити, радити, заважати,
+    подобатися, відповідати) appear naturally in contextualized examples throughout.
+    `рік/роки/років` forms covered with number agre
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: All 4 markers match plan activity_hints exactly in type and focus. Well-distributed
+    — one per section. Each tests what was just taught. **Minor concern:** The quiz
+    in Section 4 will include `чекати` a
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: 'Mostly good — no motivational openers, no "magic of" language. The volunteer
+    dialogue is natural and engaging with named speakers. **Deductions:** (1) Some
+    meta-commentary: *"Learners often associate '
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 'All 5 sections present (4 content + summary) with correct H2 headings
+    matching plan. Word count 2984 exceeds 2000 target comfortably. Clean markdown
+    formatting throughout. No stray tags, no duplicate '
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Ukrainian presented on its own terms. No "like Russian but..." comparisons.
+    The подобатися section explicitly compares to English ("I like" vs "Мені подобається")
+    — this is the correct comparison dire
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Volunteer day dialogue (Section 1) is natural, multi-turn (7 exchanges),
+    with named speakers (Волонтер, Координатор) and clear motivations. Naturally integrates
+    6 dative verbs across the conversation.
+findings: []

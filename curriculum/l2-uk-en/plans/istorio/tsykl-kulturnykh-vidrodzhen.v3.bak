@@ -1,0 +1,118 @@
+module: istorio-122
+level: ISTORIO
+sequence: 122
+slug: tsykl-kulturnykh-vidrodzhen
+version: '3.0'
+title: 'Цикл культурних відроджень: Теорія'
+focus: history
+pedagogy: seminar
+word_target: 5000
+objectives:
+- 'Analyze the causes and consequences of цикл культурних відроджень: теорія'
+- Evaluate the historical significance of пригнічення → відродження
+content_outline:
+- section: Вступ — Пригнічення → Відродження
+  points:
+  - Український культурний цикл
+  - 'Паттерн: пригнічення → підпілля → розквіт'
+  - Чому повторюється
+  - Структура модуля
+  words: 850
+- section: Теоретична рамка
+  points:
+  - Культура як резистенція
+  - Мова — головне поле бою
+  - «Смерть» і «відродження»
+  - Порівняння з іншими народами
+  words: 850
+- section: Історичні цикли
+  points:
+  - XVII ст. — козацька культура
+  - XIX ст. — романтичне відродження
+  - 1920-ті — розстріляне відродження
+  - Пост-Сталін — шістдесятники
+  words: 850
+- section: Механізми виживання
+  points:
+  - Самвидав
+  - Діаспора як «ковчег»
+  - Церква — носій культури
+  - Індивідуальна пам'ять
+  words: 850
+- section: Чому культура виживає
+  points:
+  - Що неможливо знищити
+  - Роль травми
+  - Кожне покоління — з нуля?
+  - Континуїтет vs переривання
+  words: 850
+- section: Підсумок
+  points:
+  - Цикл — не фатальність
+  - 2022 — новий виток
+  - Перехід до пост-Емського періоду
+  words: 750
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+vocabulary:
+- культурне відродження
+- цикл
+- пригнічення
+- резистенція
+- самвидав
+- розстріляне відродження
+- шістдесятники
+- континуїтет
+- переривання
+- механізм виживання
+- культурна травма
+- підпілля
+- колективна пам'ять
+- культурний спадок
+- реконструкція
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+activities:
+- type: critical-analysis
+  focus: Build theoretical framework for cultural cycles
+- type: critical-analysis
+  focus: Map all Ukrainian cultural revival cycles
+- type: critical-analysis
+  focus: How culture survived suppression
+- type: comparative-study
+  focus: Ukrainian cycles vs. other colonized cultures
+- type: essay-response
+  focus: Чи українська культура 'вмирала' і 'відроджувалась'?
+persona:
+  voice: Academic Historiographer
+  role: Cultural Cycles Theorist
+prerequisites:
+- syntez-yevrei-ukraina
+connects_to:
+- pislya-emsa-halychyna
+references:
+- name: Українське національне відродження (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Українське_національне_відродження
+  type: reference
+  notes: National revival overview
+- name: Культурна політика (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Культурна_політика
+  type: reference
+  notes: Cultural policy context
+register: академічний
+grammar: []

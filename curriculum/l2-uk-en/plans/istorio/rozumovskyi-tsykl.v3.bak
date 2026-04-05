@@ -1,0 +1,129 @@
+module: istorio-084
+level: ISTORIO
+sequence: 84
+slug: rozumovskyi-tsykl
+version: '3.0'
+title: 'Розумовський цикл: Останній гетьман'
+focus: history
+pedagogy: seminar
+word_target: 5000
+objectives:
+- 'Analyze the causes and consequences of розумовський цикл: останній гетьман'
+- Evaluate the historical significance of фаворит, що скасував себе
+content_outline:
+- section: Вступ — Фаворит, що скасував себе
+  points:
+  - Розумовський — брат фаворита
+  - Гетьман з ласки цариці
+  - Як він завершив гетьманат
+  - Структура модуля
+  words: 700
+- section: Фаза 1 — Кооптація через родину
+  points:
+  - Олексій Розумовський — коханець Єлизавети
+  - Кирило — президент Академії в 18 років
+  - Гетьманство — 1750
+  - Найвищий статус українця в імперії
+  words: 700
+- section: Фаза 2 — Ілюзія автономії
+  points:
+  - Реформи гетьмана
+  - Батурин — нова столиця
+  - Культурне життя
+  - Але під контролем Петербурга
+  words: 700
+- section: Фаза 3 — Спроба спадковості
+  points:
+  - Клопотання про спадкове гетьманство
+  - Катерина II — відмова
+  - «Що за гетьмани?»
+  - Виклик до Петербурга
+  words: 700
+- section: Фаза 4 — Добровільна (?) капітуляція
+  points:
+  - 1764 — зречення
+  - Що отримав натомість
+  - Компенсація чи примус
+  - Кінець Гетьманщини
+  words: 700
+- section: Аналіз — чому погодився
+  points:
+  - Особиста безпека
+  - Родинні інтереси
+  - Відсутність альтернатив
+  - Урок для еліт
+  words: 700
+- section: Підсумок
+  points:
+  - Розумовський — кооптована еліта
+  - Цикл завершився ліквідацією
+  - Перехід до радянського періоду
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+vocabulary:
+- Розумовський
+- останній гетьман
+- фаворит
+- ліквідація
+- зречення
+- спадковість
+- Гетьманщина
+- кооптація
+- компенсація
+- капітуляція
+- Малоросійська колегія
+- губернія
+- інкорпорація
+- імперська інтеграція
+- статус
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+activities:
+- type: critical-analysis
+  focus: Map Rozumovsky through co-optation cycle
+- type: critical-analysis
+  focus: Rozumovsky brothers — different paths
+- type: critical-analysis
+  focus: 1764 — what were Rozumovsky's real options?
+- type: comparative-study
+  focus: Compare Mazepa (resistance) vs. Rozumovsky (capitulation)
+- type: essay-response
+  focus: Чи міг Розумовський врятувати Гетьманщину?
+persona:
+  voice: Academic Historiographer
+  role: Enlightenment Aristocrat
+prerequisites:
+- mazepa-tsykl
+connects_to:
+- radianska-ukrainizatsiia
+references:
+- name: Кирило Розумовський (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Кирило_Розумовський
+  type: reference
+  notes: Biography
+- name: Ліквідація Гетьманщини (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Ліквідація_Гетьманщини
+  type: reference
+  notes: End of Hetmanate
+- name: Олексій Розумовський (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Олексій_Розумовський
+  type: reference
+  notes: Brother context
+register: академічний
+grammar: []

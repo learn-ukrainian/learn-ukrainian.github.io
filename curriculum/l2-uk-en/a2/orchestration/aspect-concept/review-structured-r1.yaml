@@ -2,48 +2,52 @@ round: 1
 scores:
 - dimension: 1
   name: Plan adherence
-  score: 9
-  evidence: Covered all outline points and followed the examples requested by the
-    plan. However, some required vocabulary terms (`дія`, `повторення`, `результат`,
-    `процес`) were discussed conceptually but not exp
+  score: 6
+  evidence: 'Failed to follow dialogue instructions: "Вона передала (pf) м''яч (m,
+    ball)" and "гра(f)" were missing, substituted with "Він щойно передав м''яч".
+    Recommended vocabulary was skipped entirely.'
 - dimension: 2
   name: Linguistic accuracy
   score: 8
-  evidence: 'Contained an English calque: "Вони зробили це!" instead of natural Ukrainian
-    victory expressions. Used "писав лист" instead of the more idiomatic "писав листа".'
+  evidence: 'One critical error: using the delimitative verb «попрацював» to mean
+    "successfully completed result". The rest of the grammar is highly accurate.'
 - dimension: 3
   name: Pedagogical quality
-  score: 10
-  evidence: Exceptional pedagogy. The abstract concept of aspect is vividly explained
-    with the "film playing vs 'The End' screen" and the "three doors" analogies.
+  score: 8
+  evidence: Generally excellent analogies (movie vs. snapshot), but teaching *попрацював*
+    as a completive destination is fundamentally flawed and will confuse learners.
 - dimension: 4
   name: Vocabulary coverage
-  score: 8
-  evidence: Missing explicit inline translation introductions for `дія`, `процес`,
-    `результат`, and `повторення`, despite them being in the `vocabulary_hints.required`
-    list.
+  score: 6
+  evidence: Required vocabulary was covered well, but all recommended words (*завершений,
+    тривалий, одноразовий, концепція*) were entirely missing and translated to English
+    instead.
 - dimension: 5
   name: Exercise quality
-  score: 10
-  evidence: All 4 requested activities are properly contextualized and placed immediately
-    after the relevant theory sections.
+  score: 8
+  evidence: Proper distribution and pedagogical alignment, but injected markers included
+    full sentences in the ID slot instead of clean IDs.
 - dimension: 6
   name: Engagement & tone
-  score: 10
-  evidence: Very natural and encouraging tone without being overly meta or robotic.
-    Explanations are vivid and easy to grasp.
+  score: 7
+  evidence: Heavy use of meta-commentary ("Let's look at a side-by-side comparison",
+    "Let us introduce") and gamified language ("Mastering this... is the ultimate
+    key to unlocking").
 - dimension: 7
   name: Structural integrity
-  score: 10
-  evidence: Clean Markdown formatting. All H2 headings from the plan outline are perfectly
-    mapped and used.
+  score: 7
+  evidence: 'Fails two limits: it includes a `## Підсумок (Summary)` section which
+    was not in the plan, and the deterministic word count (2767) is nearly 40% over
+    the target of 2000 words.'
 - dimension: 8
   name: Cultural accuracy
   score: 10
-  evidence: Dialogues are culturally grounded (football, cooking borsch, calling grandma).
+  evidence: Authentic scenario (watching football), no problematic claims, natural
+    names.
 - dimension: 9
   name: Dialogue & conversation quality
-  score: 9
-  evidence: Dialogues are natural and serve the pedagogical purpose well, except for
-    the single calqued phrase at the end of the second dialogue.
+  score: 7
+  evidence: The dialogue is mostly natural, but the final line «Це справді неймовірний
+    результат» (This is truly an incredible result) is stilted and robotic for two
+    friends watching football.
 findings: []

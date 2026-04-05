@@ -1,0 +1,121 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: '**Covered well:** All 6 content_outline sections present and correctly
+    ordered. Bridge from previous modules (section 1), пере- with conjugations and
+    extended meanings (section 2), про- with conjugati'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: '**CRITICAL:** Two wrong grammatical terms in the пере- section: "Недосконала
+    форма" (should be "Недоконана форма") and "ідеальна форма" (should be "доконана
+    форма"). The module correctly introduces "д'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'Strong PPP flow: situation (road trip narrative) → pattern extraction
+    (пере- vs про- rules with 10+ examples each) → practice (6 activity markers).
+    Grammar scope appropriate for B1.3. Good contextuali'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: '**Required vocab (12 items):** перейти ✓, переїхати ✓, перебігти ✓, перенести
+    ✓, перевести ✓, пройти ✓, проїхати ✓, пробігти ✓, переходити ✓, проходити ✓, пішохідний
+    перехід ✓, перехрестя ✓. All 12 pr'
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: 'All 6 plan activity types present with matching item counts. Markers
+    placed after relevant teaching. Good variety: quiz (recognition), fill-in (production),
+    match-up (association), group-sort (categor'
+- dimension: 6
+  name: Engagement & tone
+  score: 6
+  evidence: '**Consistent pattern of adverbial padding/filler:** "абсолютно ключовим",
+    "абсолютно стандартною", "абсолютно правильно", "надзвичайно важливим", "максимально
+    точно", "максимально цілеспрямованим", "к'
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: 'All 6 H2 headings present and ordered per plan. Clean markdown. No stray
+    tags or formatting artifacts. Word count 4944 — exceeds 4000 target. No duplicate
+    summary sections. One minor issue: the compar'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'Ukrainian presented on its own terms throughout. No "like Russian but..."
+    framing. References Ukrainian textbooks (Заболотний, Голуб, Пономарьова). Cultural
+    examples: Кам''янець-Подільський, Хрещатик, '
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: '**Driving lesson dialogue** (section 1): named speakers (Інструктор з
+    водіння, Учень), realistic scenario, multi-turn, shows natural prefix switching.
+    **Direction-giving dialogue** (section 5): named '
+findings:
+- dimension: LINGUISTIC ACCURACY
+  severity: CRITICAL
+  location: 'Section "Префікс пере-: перетинання", paragraph starting "Для повного
+    розуміння теми..."'
+  issue: '"Недосконала форма фокусується на тривалому процесі або регулярній звичці"
+    — uses "Недосконала" (= imperfect/flawed, quality adjective) instead of "Недоконана"
+    (= imperfective, grammatical term). The module correctly introduces "недоконаний
+    вид" two sentences earlier, then uses the wrong synonym. B1 learners will memorize
+    incorrect terminology.'
+  fix: Replace "Недосконала форма" with "Недоконана форма"
+- dimension: LINGUISTIC ACCURACY
+  severity: CRITICAL
+  location: 'Section "Префікс пере-: перетинання", same paragraph'
+  issue: '"ідеальна форма **перейти** *(to cross - completion)* фокусується виключно
+    на успішному результаті" — uses "ідеальна" (= ideal) instead of "доконана" (=
+    perfective). "Ідеальний" is not a Ukrainian grammatical term. This is a calque
+    from English "perfect → ideal."'
+  fix: Replace "ідеальна форма" with "доконана форма"
+- dimension: PLAN ADHERENCE
+  severity: MAJOR
+  location: 'Section "Префікс про-: проходження повз або наскрізь"'
+  issue: Plan section 3 explicitly requires examples for пролетіти ("Літак пролетів
+    над містом"), проплисти ("Човен проплив повз берег"), and провезти ("Провезли
+    вантаж через кордон") in the "passing by" subsection. None of these appear in
+    the generated prose. The content covers пройти, проїхати, пробігти, пронести,
+    провести but omits these three verbs from the recommended vocabulary.
+  fix: Insert examples for the three missing verbs after the existing "passing by"
+    examples.
+- dimension: PLAN ADHERENCE
+  severity: MAJOR
+  location: 'Section "Шість префіксів разом: подорож етапами"'
+  issue: 'Plan specifies "Prefix system overview table: all 8 prefixes taught so far
+    organized by spatial meaning" with learners filling in example sentences. The
+    content describes the categories in prose paragraphs but does NOT include the
+    actual TABLE. This is a key plan deliverable — a reference table learners can
+    revisit.'
+  fix: Add a markdown table after the prose description of the four prefix groups.
+- dimension: ENGAGEMENT & TONE
+  severity: MAJOR
+  location: Throughout all sections
+  issue: 'At least 15 instances of empty intensifiers that pad word count without
+    adding meaning: "абсолютно ключовим", "абсолютно стандартною", "абсолютно правильно",
+    "надзвичайно важливим", "максимально точно", "максимально цілеспрямованим", "кардинально
+    змінює", "абсолютно ідентична", "неймовірно динамічною", "абсолютно будь-який",
+    "надзвичайне багатство". Also gamified cheerleading: "Ви чудово впоралися з цим
+    етапом! Ваша просторова навігація стає все більш досконалою та природною."'
+  fix: Remove or tone down the worst offenders (fixes below target the most egregious
+    instances).
+- dimension: PLAN ADHERENCE
+  severity: MINOR
+  location: 'Section "Перетинати і проходити: рух наскрізь"'
+  issue: Reference to "підручнику з української мови для третього класу (автор К.
+    Пономарьова, сторінка 51)" is NOT in the plan's references list (which cites only
+    Заболотний, Голуб, Авраменко). Unverifiable claim.
+  fix: Either verify against RAG or replace with a reference from the plan. Not blocking
+    since content around it is pedagogically sound.
+- dimension: EXERCISE QUALITY
+  severity: MINOR
+  location: match-up activity marker
+  issue: Plan specifies "Match пере- verbs with their про- counterparts and identify
+    the meaning shift" but the marker reads "Match пере- verbs with their figurative
+    meanings (relocate, translate, reschedule)." The pedagogical focus is different
+    — plan intended cross-prefix comparison, marker tests only пере- figurative meanings.
+  fix: Update marker to match plan focus.

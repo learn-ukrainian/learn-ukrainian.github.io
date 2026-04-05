@@ -1,0 +1,78 @@
+module: bio-018
+level: BIO
+sequence: 18
+slug: severyn-nalyvaiko
+version: '3.0'
+title: 'Северин Наливайко: Лідер козацького повстання'
+subtitle: 'Severyn Nalyvaiko: The Cossack Rebel Leader'
+focus: biography
+pedagogy: CBI
+phase: BIO
+word_target: 5000
+objectives:
+- Understand the causes of the first Cossack rebellions
+- Analyze Nalyvaiko's tactics and goals
+content_outline:
+- section: Вступ — Перший бунтар
+  points:
+  - Лідер першого масштабного козацького повстання (1594-1596)
+  - Перехід від найманства до соціальної боротьби
+  - Трагічна смерть у Варшаві
+  words: 1000
+- section: Життєпис
+  points:
+  - Походження з роду Наливайків
+  - Служба у князя Острозького
+  - Походи на Молдову
+  - Повстання та Солоницька трагедія
+  words: 1000
+- section: Історичний контекст
+  points:
+  - Криза Речі Посполитої
+  - Релігійний фактор (Берестейська унія)
+  words: 1000
+- section: Внесок та Спадщина
+  points:
+  - Ідея Козацької держави
+  - Військове мистецтво
+  - Образ у літературі
+  words: 1000
+- section: Порівняльний аналіз
+  points:
+  - Наливайко vs. Хмельницький
+  words: 1000
+vocabulary_hints:
+  required:
+  - повстання (uprising)
+  - бунт (rebellion)
+  - ватажок (leader)
+  - табір (camp)
+  - облога (siege)
+  - страта (execution)
+  - зрада (betrayal)
+  - найманець (mercenary)
+  - поразка (defeat)
+activity_hints:
+- type: reading
+  focus: Chronicle description of Solonytsia
+- type: essay-response
+  focus: Hero or Bandit? Perspectives on Nalyvaiko
+persona:
+  voice: Senior Biographer
+  role: Insurgent Captain
+grammar:
+- Military terminology
+- Action narrative
+immersion: 100% Ukrainian
+prerequisites:
+- iov-boretskyi
+connects_to:
+- meletii-smotrytskyi
+references:
+- name: Северин Наливайко (Wikipedia UA)
+  url: https://uk.wikipedia.org/wiki/Северин_Наливайко
+  type: primary
+- name: Повстання Наливайка
+  url: https://uk.wikipedia.org/wiki/Повстання_Наливайка
+  type: primary
+register: академічний

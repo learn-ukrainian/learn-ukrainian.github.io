@@ -1,0 +1,145 @@
+vocabulary:
+- word: довіря́ти
+  translation: to trust
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вибача́ти
+  translation: to forgive
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: посміха́тися
+  translation: to smile (at someone)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: співчува́ти
+  translation: to sympathize (with someone)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: за́здрити
+  translation: to envy
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: допомага́ти
+  translation: to help
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: дзвони́ти
+  translation: to call, to phone
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ра́дити
+  translation: to advise
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: заважа́ти
+  translation: to bother, to disturb
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: подо́батися
+  translation: to be pleasing to, to like
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відповіда́ти
+  translation: to answer (someone)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ро́ки́
+  translation: years (used with numbers 2, 3, 4)
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: ро́кі́в
+  translation: years (used with numbers 5+ and tens)
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: дава́ти
+  translation: to give
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: каза́ти
+  translation: to say, to tell
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: пока́зувати
+  translation: to show
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: скі́льки
+  translation: how many, how much
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вік
+  translation: age
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ду́же
+  translation: very, very much
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: бі́льше
+  translation: more
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: зовсім не
+  translation: not at all
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Скільки тобі років?
+  translation: How old are you?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: мені́
+  translation: to me (dative)
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: тобі́
+  translation: to you (dative)
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true

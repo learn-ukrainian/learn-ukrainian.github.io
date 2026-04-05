@@ -1,120 +1,138 @@
-module: hist-048
+activity_hints:
+- after_section: Конфліктна карта
+  focus: Перевірка розуміння історіографічних дебатів
+  items: 5
+  placement: inline
+  type: quiz
+- after_section: Джерела
+  focus: Розуміння первинного історичного джерела
+  placement: inline
+  type: reading
+- focus: Оцінка первинного джерела — хто написав, навіщо, що упущено?
+  placement: workbook
+  type: source-evaluation
+- focus: Дебат — оцінка значення та наслідків події
+  placement: workbook
+  type: debate
+- focus: Порівняння української та імперської інтерпретацій (Козацьке військо та озброєння)
+  placement: workbook
+  type: comparative-study
+- focus: Есе на тему зв'язку з сучасністю (Козацьке військо та озброєння)
+  placement: workbook
+  type: essay-response
+cefr_min: C1
+connects_to:
+- kozatska-kultura
+- morski-pokhody
+content_outline:
+- points:
+  - 'Провокація: Чи було козацьке військо анархічною юрбою степових розбійників, як писали в імперських підручниках, чи першою
+    професійною армією України європейського зразка?'
+  - 'Цитата без контексту: "Дисципліна в них така, що за вживання алкоголю під час походу — смерть". Про яку армію це — шведську,
+    османську чи українську козацьку?'
+  section: Розминка
+  words: 400
+- points:
+  - 'Дебат 1: Козацтво — військовий орден чи демократична республіка? Порівняння концепції "лицарського люду" з жорсткою ієрархією
+    (гетьман, старшина, суворий кодекс).'
+  - 'Дебат 2: Військове мистецтво — східне чи західне? Аналіз тактики табору (вагенбург), шаблі (східний тип) проти тактики
+    тришеренгового вогню та участі в європейських війнах (Тридцятилітня війна).'
+  - '[!epistemic-humility] Більшість джерел про козаків написані іноземцями (Боплан, Лясота), що мали власні упередження.
+    Українські літописи (Самовидця, Граб''янки) створені пізніше і часто ідеалізують минуле.'
+  - 'Глобальна синхронність: Поки козаки штурмували Дюнкерк (1646), в Англії точилася громадянська війна, а в Китаї маньчжури
+    завойовували імперію Мін.'
+  section: 'Конфліктна карта: Демократія чи диктатура?'
+  words: 900
+- points:
+  - 'Первинне джерело: Аналіз уривків з «Опису України» Гійома Левассера де Боплана (французького інженера на польській службі).'
+  - 'Свідчення про вишкіл: Боплан про витривалість, навички орієнтування, стійкість до голоду та спеки, вміння робити порох.'
+  - 'Свідчення про тактику: Опис морських походів на "чайках", підводне дихання через очеретини (пластуни), тактика "вогнем
+    і сталлю" (мушкет і шабля).'
+  - '[!decolonization] Читання Боплана "проти шерсті": він служив Речі Посполитій, тому описує козаків водночас із захопленням
+    (як воїнів) і зневагою (як "бунтівників"). Його свідчення треба критично аналізувати, а не приймати на віру.'
+  section: 'Джерела: Козаки очима інженера Боплана'
+  words: 1600
+- points:
+  - 'Структура як держава: Дублювання адміністративного поділу (полки, сотні) у військовій структурі. Гетьманщина як "військовий
+    табір".'
+  - 'Озброєння та логістика: Пріоритет вогнепальної зброї ("самопал"), роль артилерії ("гармата") та її психологічний вплив.
+    Значення військового обозу та старшини (обозний, писар, суддя).'
+  - '[!myth-buster] "Шабля — душа козака": насправді, шабля була зброєю кавалерії або останнього шансу. Основа успіху піхоти
+    — мушкет. Міф про "анархію" спростовується жорсткою дисципліною та кодексом.'
+  - 'Символіка влади: Клейноди (булава, бунчук, печатка) як інституційні, а не особисті атрибути влади. Сакральне значення
+    прапора (хоругви).'
+  section: 'Аналіз: Наслідки та значення козацької військової машини'
+  words: 1600
+- points:
+  - 'Повернення до розминки: Студент формулює аргументовану відповідь — чим козацьке військо було схоже на європейські армії,
+    а в чому його унікальність?'
+  - 'Вплив на європейську військову науку: Запозичення тактики легкої кавалерії та піхотних прийомів європейськими арміями.'
+  - '[!anti-hagiography] "Золотий вік" козацтва також мав свої темні сторони: жорстокість до полонених, внутрішні конфлікти
+    ("чорні ради"), політичні інтриги старшини.'
+  - 'Зв''язок із сьогоденням: Як концепція "народу-війська" та військової демократії часів Гетьманщини резонує із сучасною
+    обороною України?'
+  section: Дискусія та підсумок
+  words: 700
+focus: Cossack military structure, weaponry, tactics, and their decolonization from imperial myths (anarchy, banditry) to
+  a professional European army
 level: HIST
+module: hist-048
+objectives:
+- Критично аналізувати імперські та романтичні міфи про козацьке військо, спираючись на першоджерела
+- Описувати структуру, ієрархію та ключові тактичні прийоми козацької армії
+- Порівнювати козацьке військове мистецтво з тогочасними європейськими та східними аналогами
+- Розрізняти функції різних видів озброєння (самопал, шабля, гармата) та символіку клейнодів
+pedagogy: CBI
+persona:
+  role: Модератор семінару, що ставить під сумнів усталені міфи ("шабля-душа", "анархія") і вимагає доказів з першоджерел,
+    порівнюючи козацьке військо з іншими арміями того часу.
+  voice: Military-Historian-Skeptic
+phase: HIST.5
+references:
+- author: Guillaume Le Vasseur de Beauplan
+  note: Ключове джерело від іноземного спостерігача XVII ст. про тактику, вишкіл та побут козаків.
+  type: primary
+  work: Опис України
+- note: Наукова стаття про військове мистецтво українського козацтва.
+  path: https://resource.history.org.ua/item/0002345
+  type: academic
+- note: Музейний проєкт з візуальними та технічними деталями про козацьку зброю.
+  path: https://warmuseum.kyiv.ua
+  type: reference
 sequence: 48
 slug: kozatske-viisko
-version: '3.0'
+subtitle: 'Cossack Army: A Decolonized Military History'
 title: Козацьке військо та озброєння
-subtitle: Cossack Army and Weaponry
-focus: history
-pedagogy: CBI
-phase: HIST.5 [Rise of Cossacks]
-word_target: 5000
-objectives:
-- Учень може описати структуру та ієрархію козацького війська
-- Учень може аналізувати типи озброєння та їхнє походження
-- Учень може пояснити тактичні переваги козацької піхоти та кавалерії
-content_outline:
-- section: 'Вступ: Феномен козацького війська'
-  points:
-  - Universal military service and democracy — concept of 'Лицарський люд' (Knightly people) and distinct social status
-  - International reputation of Cossack mercenaries — valued from France (Dunkirk) to Persia; [!history-bite] about 
-    Thirty Years' War participation
-  words: 600
-- section: 'Структура та Ієрархія: Від коша до полку'
-  points:
-  - The role of the Hetman and General Staff — Oboznyi (logistics), Suddia (justice), Pysar (intelligence/records), 
-    Osavuly (aides), Khorunzhyi (flag-bearer)
-  - Territorial and functional divisions — [!context] Administrative division of Hetmanate (regiments/hundreds) 
-    duplicated military structure; state as 'military camp'
-  - Discipline and military code — strict alcohol ban during campaigns; death penalty for disobedience
-  words: 600
-- section: 'Озброєння: Шабля, самопал та гармата'
-  points:
-  - 'Individual weaponry: fire and steel — priority of firearms (muskets/samopaly); 3-rank volley fire tactic (fire-pass-load)'
-  - The cult of the sabre (shablya) — [!myth-buster] Sabre as 'weapon of last resort' or cavalry, while infantry relied 
-    on fire; curved eastern type
-  - 'Artillery: mobility and psychological impact — light field falconets transported on wagons; high status of artillery
-    masters'
-  words: 600
-- section: 'Тактика бою: Козацький табір та розвідка'
-  points:
-  - The 'tabor' as a defensive fort — [!decolonization] Wagenburg (moving fortress of chained wagons) as prototype of 
-    modern armored units
-  - 'Cossack ''plastuny'' (scouts) — special operations skills: underwater breathing (reeds), camouflage in steppe'
-  - Siege warfare and river raids — use of 'chaika' boats for sea raids (e.g., Kafa); engineering skills (mining, 
-    earthworks)
-  words: 600
-- section: 'Символіка та Клейноди: Знаки влади'
-  points:
-  - Bulava, bunchuk, and seals — Bulava (Hetman), Bunchuk (horse tail command symbol), Seal ('Knight with Musket')
-  - The sacred meaning of the banner (khoruhva) — [!culture] Loss of khoruhva equated to defeat/shame; Crimson banner 
-    with Archangel Michael
-  words: 600
-- section: 'Читання: Опис козацького вишколу'
-  points:
-  - Account of a foreign observer on Cossack training — Guillaume Le Vasseur de Beauplan on endurance, orientation, and 
-    gunpowder making
-  words: 600
-- section: 'Первинні джерела: Голоси епохи'
-  points:
-  - Analysis of official documents and letters — Khmelnytskyi's diplomatic correspondence vs Cossack chronicles 
-    (Hrabianka/Velychko)
-  words: 600
-- section: Деколонізаційний погляд
-  points:
-  - Cossacks as a modern professional army, not a 'rabble' — debunking 'anarchy/bandit' myths; 'Christian Republic' 
-    concept
-  - Influence on European military science — adoption of Cossack infantry tactics and light cavalry models by Europe
-  - Ukraine's military subjectivity — [!perspective] 'Antemurale Christianitatis' (Bulwark of Christianity); recognized 
-    by European monarchs and Pope
-  words: 800
+version: '4.0'
 vocabulary_hints:
-  required:
-  - булава (mace/baton) — символ влади гетьмана; вручалася на раді
-  - пернач (mace with flanges) — символ влади полковника
-  - самопал (musket/firearm) — основна зброя козацької піхоти; 'козак з самопалом'
-  - шабля (sabre) — символічна зброя; 'козацька шабля', 'гостра шабля'
-  - гармата (cannon) — 'козацька артилерія', 'влучити з гармати'
-  - полк (regiment) — адміністративно-військова одиниця; 'Київський полк'
-  - сотня (company/hundred) — підрозділ полку; 'козацька сотня'
-  - кіш (encampment/command) — 'Запорозький Кіш', центр управління
-  - обоз (baggage train) — 'військовий обоз', логістика
-  - хоругва (banner) — 'військова хоругва', символ честі
-  recommended:
-  - клейноди (regalia) — символи влади (булава, бунчук, печатка)
-  - реєстровець (registered Cossack) — професійний військовий на службі
-  - пластун (scout) — козацький розвідник
-  - чайка (boat) — бойовий човен для морських походів
-  - табір (camp/wagon fort) — 'рухома фортеця', тактичний прийом
-  - курінь (battalion/barracks) — військова одиниця на Січі
-  - довбиш (drummer) — відповідальний за литаври і скликання ради
-activity_hints:
-- type: reading
-  focus: Primary sources on military structure
-- type: essay-response
-  focus: Cossack military ethics and modern parallels
-- type: comparative-study
-  focus: Cossack vs Western European military organization
-- type: critical-analysis
-  focus: 'Верифікація фактів: Facts about weaponry and ranks'
-  items: 4
-persona:
-  voice: Senior Professor of History
-  role: Artillery Master
-grammar:
-- Military terminology and formations
-- Historical narrative register
-register: публіцистичний
-prerequisites:
-- kozatska-kultura
-connects_to:
-- morski-pokhody
-references:
-- name: Military Art of Ukrainian Cossacks
-  url: https://resource.history.org.ua/item/0002345
-  type: academic
-  notes: Detailed analysis of tactics
-- name: Cossack Weaponry - Museum Project
-  url: https://warmuseum.kyiv.ua
-  type: reference
-  notes: Visual and technical details
+- definition: символи влади козацької старшини (булава, бунчук, печатка)
+  pos: мн.
+  word: клейноди
+- definition: стара назва рушниці, мушкета; основна вогнепальна зброя козацької піхоти
+  pos: ч.
+  word: самопал
+- definition: рухома фортеця зі скріплених возів (вагенбург), унікальний тактичний прийом козаків
+  pos: ч.
+  word: табір
+- definition: козацький розвідник, що спеціалізувався на диверсіях та несподіваних нападах
+  pos: ч.
+  word: пластун
+- definition: легкий, маневрений бойовий човен козаків для морських походів
+  pos: ж.
+  word: чайка
+- definition: символ найвищої влади гетьмана
+  pos: ж.
+  word: булава
+- definition: військовий прапор, втрата якого вважалася найбільшою ганьбою
+  pos: ж.
+  word: хоругва
+- definition: система підпорядкування нижчих за посадою вищим; структура влади
+  pos: ж.
+  word: ієрархія
+- definition: воїн, що служить за гроші в іноземній армії
+  pos: ч.
+  word: найманець
+- definition: німецька назва рухомої фортеці з возів, аналог козацького табору
+  pos: ч.
+  word: вагенбург
+word_target: 5200

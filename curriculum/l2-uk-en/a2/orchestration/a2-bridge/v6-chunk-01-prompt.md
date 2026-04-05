@@ -1,34 +1,23 @@
-# Section-by-Section Generation — Section 1/4
+# Section-by-Section Generation — Section 1/5
 
 You are writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 1: Ласкаво просимо до рівня А2 (A2, A2.1 [Foundation and Aspect Introduction])
-**Section to write:** Пригадуємо відмінки (Reviewing Cases) (~660 words total)
-**Word target for this section:** 660 words (aim for 726 to account for undershoot)
+**Section to write:** Пригадуємо відмінки (Reviewing Cases) (~600 words total)
+**Word target for this section:** 600 words (aim for 660 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Пригадуємо відмінки (Reviewing Cases) (~660 words total)
-
-- Dialogue (~100 words): Перший день занять у київській мовній школі. Teacher (Оксана Іванівна) greets new student (Alex from Canada): «Звідки ви?» — «Я з Канади» (genitive preview). «Скільки вам років?» — «Мені двадцять п'ять» (dative preview). «Що ви вивчаєте?» — «Я вивчаю українську мову» (accusative). «Де ви живете?» — «Я живу в Києві» (locative). Teacher says: «Чудово! Ви вже знаєте чотири відмінки — просто не знаєте їхніх назв.» Opens the door to systematic review.
-
-- P1 (~70 words): What is a відмінок? Ukrainian nouns and adjectives change their endings depending on their role in the sentence — this is відмінювання (declension). Ukrainian has 7 відмінки. In A1, learners encountered four: називний, знахідний, місцевий, кличний. Introduce the two diagnostic questions: Хто? Що? identify each case. Each case is also associated with specific prepositions or their absence.
-
-- P2 (~100 words): Називний відмінок (Nominative — Хто? Що?). This is the subject case — who is doing the action or what simply exists. Examples: новий студент читає, гарна книга лежить, велике місто живе. Adjective agreement: новий (m.) / нова (f.) / нове (n.). Note: the nominative is also the dictionary form of a noun — the form you look up in the dictionary. Gender determines the ending: студент (m., zero ending), студентка (f., -а), місто (n., -о).
-
-- P3 (~110 words): Знахідний відмінок (Accusative — Кого? Що?). The direct object case — what is being acted upon. For inanimate nouns: feminine nouns take -у/-ю (книгу, каву, землю, Україну); neuter and masculine inanimate nouns look like the nominative (читаю лист, п'ю молоко). For animate masculine nouns, accusative = genitive: Я бачу студента, Я знаю викладача. Key sentences from A1: Я вивчаю українську мову. Я п'ю каву. Я читаю книгу. Note: «Я люблю Україну» — feminine accusative.
-
-- P4 (~100 words): Місцевий відмінок (Locative — Де? На кому? На чому?). Always used with a preposition — never alone. Key prepositions: в/у (location inside: в Києві, в університеті, у школі) and на (location on/at: на уроці, на концерті, на роботі). Ending pattern for nouns: hard stems take -і (місто → у місті, університет → в університеті), soft stems take -і or -ї (земля → на землі). Adjectives: новий → у новому місті, нова → у новій школі.
-
-- P5 (~80 words): Кличний відмінок (Vocative — звертання). Used when addressing someone directly. Formed from the nominative: Марія → Маріє!, Тарас → Тарасе!, пан вчитель → пане вчителю! Masculine nouns with hard stems: -е (Тарасе, Олексію); feminine nouns with -а/-я: -о/-є (Маріє, Надіє, Оксано). Ukrainian uses vocative where English just uses the nominative: «Оксано, де ти?» = "Oksana, where are you?" Textbook excerpt: «Сідайте, будь ласка, бабусю» (Заболотний, Grade 5).
-
-- P6 (~100 words): Full case system map — all seven відмінки with their questions and key roles. Present as a numbered list (not a table) to aid memorization. Називний (Хто? Що?) — суб'єкт. Знахідний (Кого? Що?) — прямий об'єкт. Місцевий (Де? На кому?) — місце, завжди з прийменником. Кличний (звертання) — адресат. Then preview the three A2 cases: Родовий (Кого? Чого?) — belongs to, absence of. Давальний (Кому? Чому?) — recipient. Орудний (Ким? Чим?) — instrument, accompaniment. Conclude: «Ви вже знаєте чотири. Три нових — це ваша ціль на рівні А2.»
-
-- Exercise: Quiz — Case Identification Drill (8 items). Each item: one Ukrainian sentence with one noun underlined; learner identifies which of the 4 A1 cases it is and which question it answers. Examples draw from the dialogue and paragraphs above: «Я вивчаю *українську мову*.» / «Ми живемо *в Канаді*.» / «*Маріє*, де твій зошит?» / «*Студент* читає книгу.»
-
----
+## Пригадуємо відмінки (Reviewing Cases) (~600 words total)
+- Dialogue (~120 words): [Setting: First day at a language school in Kyiv. A new student interacts with a teacher. The dialogue uses Nominative for identity (*Я — студент*), Accusative for goals (*Я вивчаю мову*), Locative for origin/residence (*Я живу в готелі*), and Vocative for greeting (*Добрий день, Олександре Петровичу!*).]
+- P1 (~100 words): [Explain the Nominative (Хто? Що?) as the "name" of things. Review the lack of endings for masculine (*дім*) vs. *-а/-я* for feminine (*школа*) and *-о/-е* for neuter (*вікно*). Provide a list of 5 A1 nouns for learners to recall.]
+- P2 (~100 words): [Review the Accusative (Кого? Що?) for direct objects. Focus on feminine noun changes (*книгу, каву, статтю*) vs. masculine inanimate staying the same (*купувати стіл*). Contrast the usage with verbs of motion vs. location.]
+- P3 (~100 words): [Review the Locative (Де? На кому? На чому?) for static location. Explain the universal *-і* ending for most nouns (*у місті, в аптеці, на роботі*) and the mandatory use of prepositions *в/на*.]
+- P4 (~80 words): [Review the Vocative (звертання). Explain its cultural importance in Ukraine for natural address. Provide masculine examples in *-у/ю/е* (*Сергію, друже, Павле*) and feminine in *-о/е* (*Маріє, Оксано*).]
+- P5 (~100 words): [Introduce the "Great Map" of Ukrainian cases. Present a table showing the 4 A1 cases alongside the 3 "frontier" cases for A2: Genitive (Родовий), Dative (Давальний), and Instrumental (Орудний). Briefly explain that Genitive will be the first major milestone of A2.]
+- Exercise: [Quiz, Case Identification Drill, 8 items: Identify the case of highlighted words in short sentences like "Я бачу *собаку*" or "Ми в *Києві*".]
 
 ---
 ## Full Plan (for reference)
@@ -38,7 +27,7 @@ module: a2-001
 level: A2
 sequence: 1
 slug: a2-bridge
-version: '1.0'
+version: '1.2'
 title: Ласкаво просимо до рівня А2
 subtitle: Огляд граматики А1 та підготовка до нових тем
 focus: review
@@ -46,84 +35,96 @@ pedagogy: PPP
 phase: A2.1 [Foundation and Aspect Introduction]
 word_target: 2000
 objectives:
-- Learner can confidently recall and use the Nominative, Accusative, Locative, and
-  Vocative cases for nouns and adjectives learned in A1.
-- Learner can recognize and predict common vowel alternations (e.g., о/і, е/і in closed
-  syllables) and consonant mutations (г/з/ж, к/ц/ч) in noun and verb stems.
-- Learner can actively apply basic euphonic rules (у/в, і/й, з/зі/із) to produce more
-  natural-sounding Ukrainian.
-- Learner can understand the roadmap for the A2 level, including the introduction
-  of the Genitive, Dative, and Instrumental cases.
+  - Learner can confidently recall and use the Nominative, Accusative, Locative,
+    and Vocative cases for nouns and adjectives learned in A1.
+  - Learner can recognize and predict common vowel alternations (e.g., о/і, е/і 
+    in closed syllables) and consonant mutations (г/з/ж, к/ц/ч) in noun and verb
+    stems.
+  - Learner can actively apply basic euphonic rules (у/в, і/й, з/зі/із) to 
+    produce more natural-sounding Ukrainian.
+  - Learner can understand the roadmap for the A2 level, including the 
+    introduction of the Genitive, Dative, and Instrumental cases.
 dialogue_situations:
-- setting: 'Arrival at a Kyiv language school on the first day of A2 — reviewing what
-    you know: Я з Канади (genitive). Мені 25 (dative). Я вивчаю українську мову (accusative).
-    Я живу в Києві (locative).'
-  speakers:
-  - Новий студент
-  - Викладач (teacher)
-  motivation: Review all A1 cases in a natural intro conversation
+  - setting: 'Arrival at a Kyiv language school on the first day of A2 — reviewing
+      what you know: Я — студент (nominative). Я вивчаю українську мову
+      (accusative). Я живу в Києві (locative). Привіт, Оксано! (vocative).'
+    speakers:
+      - Новий студент
+      - Викладач (teacher)
+    motivation: Review all A1 cases in a natural intro conversation
 content_outline:
-- section: Пригадуємо відмінки (Reviewing Cases)
-  words: 600
-  points:
-  - 'Quick review of the four A1 cases: Nominative (Хто? Що?), Accusative (Кого? Що?),
-    Locative (Де? На кому? На чому?), and Vocative (звертання).'
-  - 'Practice exercises: identifying case usage in sentences and declining familiar
-    noun-adjective pairs.'
-  - 'Introducing the full case system map: showing all seven cases and highlighting
-    the three new ones for A2 (Genitive, Dative, Instrumental).'
-- section: Магія української фонології (The Magic of Ukrainian Phonology)
-  words: 700
-  points:
-  - 'Revisiting key vowel alternations: о/і, е/і (e.g., стіл/стола, Київ/Києва). Explaining
-    the ''closed syllable'' rule.'
-  - 'Revisiting key consonant alternations: the first palatalization (г/ж, к/ч, х/ш)
-    and its effect on noun and verb forms (нога/ніжка, рука/ручка).'
-  - 'Introduction to stress patterns: identifying common patterns and using stress
-    to disambiguate words (e.g., замок "castle" vs. замок "lock").'
-- section: 'Милозвучність мови: евфонія (The Melody of Language: Euphony)'
-  words: 400
-  points:
-  - Formalizing the rules for у/в and і/й alternation based on surrounding sounds
-    (vowel vs. consonant).
-  - Explaining the use of з/зі/із before difficult consonant clusters.
-  - Practice creating fluid sentences by choosing the correct euphonic particle.
-- section: Що нас чекає на рівні А2? (What Awaits Us in A2?)
-  words: 300
-  points:
-  - 'A clear roadmap of the A2 curriculum: introduction to aspect, mastering all seven
-    noun cases, verb conjugation patterns, and verbs of motion.'
-  - 'Setting expectations: A2 is where learners begin to express more complex ideas
-    and move beyond simple statements.'
+  - section: Пригадуємо відмінки (Reviewing Cases)
+    words: 600
+    points:
+      - 'Quick review of the four A1 cases: Nominative (Хто? Що?), Accusative (Кого?
+        Що?), Locative (Де? На кому? На чому?), and Vocative (звертання).'
+      - 'Practice exercises: identifying case usage in sentences and declining familiar
+        noun-adjective pairs.'
+      - 'Introducing the full case system map: showing all seven cases and highlighting
+        the three new ones for A2 (Genitive, Dative, Instrumental).'
+  - section: Магія української фонології (The Magic of Ukrainian Phonology)
+    words: 700
+    points:
+      - 'Revisiting key vowel alternations: о/і, е/і (e.g., стіл/стола, Київ/Києва).
+        Explaining the ''closed syllable'' rule.'
+      - 'Revisiting key consonant alternations: the first palatalization (г/ж, к/ч,
+        х/ш) and its effect on noun and verb forms (нога/ніжка, рука/ручка).'
+      - 'Introduction to stress patterns: identifying common patterns and using stress
+        to disambiguate words (e.g., замок "castle" vs. замок "lock").'
+      - 'Consonant assimilation: дж and дз as single sounds (affricates), not two
+        separate consonants — джерело, дзвінок, бджола. Voicing assimilation before
+        voiced consonants: просьба → [проз''ба], боротьба → [бород''ба], вокзал →
+        [воґзал].'
+      - 'Mobile stress in noun paradigms: stress shifts between stem and ending across
+        cases — вода/воду, рука/руки, голова/голову, нога/ногу. Recognizing
+        this pattern helps predict pronunciation of new nouns.'
+  - section: 'Милозвучність мови: евфонія (The Melody of Language: Euphony)'
+    words: 400
+    points:
+      - Formalizing the rules for у/в and і/й alternation based on surrounding 
+        sounds (vowel vs. consonant).
+      - Explaining the use of з/зі/із before difficult consonant clusters.
+      - Practice creating fluid sentences by choosing the correct euphonic 
+        particle.
+  - section: Що нас чекає на рівні А2? (What Awaits Us in A2?)
+    words: 300
+    points:
+      - 'A clear roadmap of the A2 curriculum: introduction to aspect, mastering all
+        seven noun cases, verb conjugation patterns, and verbs of motion.'
+      - 'Setting expectations: A2 is where learners begin to express more complex
+        ideas and move beyond simple statements.'
 vocabulary_hints:
   required:
-  - відмінок (case)
-  - називний (nominative)
-  - знахідний (accusative)
-  - місцевий (locative)
-  - кличний (vocative)
-  - чергування (alternation)
-  - голосний (vowel)
-  - приголосний (consonant)
-  - наголос (stress (accent))
+    - відмінок (case)
+    - називний (nominative)
+    - знахідний (accusative)
+    - місцевий (locative)
+    - кличний (vocative)
+    - чергування (alternation)
+    - голосний (vowel)
+    - приголосний (consonant)
+    - наголос (stress (accent))
   recommended:
-  - милозвучність (euphony, melodiousness)
-  - огляд (review, overview)
-  - система (system)
-  - правило (rule)
+    - милозвучність (euphony, melodiousness)
+    - огляд (review, overview)
+    - система (system)
+    - правило (rule)
 activity_hints:
-- type: quiz
-  focus: Case Identification Drill
-  items: 8
-- type: fill-in
-  focus: Phonological Alternation Pairs
-  items: 8
-- type: match-up
-  focus: Euphony Choice Exercise
-  items: 8
+  - type: quiz
+    focus: Case Identification Drill
+    items: 8
+  - type: fill-in
+    focus: Phonological Alternation Pairs
+    items: 8
+  - type: match-up
+    focus: Euphony Choice Exercise
+    items: 8
+  - type: error-correction
+    focus: Euphony Error Correction
+    items: 6
 references:
-- title: Заболотний Grade 5, §1-10
-  notes: Повторення вивченого в початкових класах
+  - title: Заболотний Grade 5, §1-10
+    notes: Повторення вивченого в початкових класах
 
 </plan_content>
 
@@ -475,6 +476,8 @@ references:
 </knowledge_packet>
 
 ---
+
+
 
 ## Rules
 

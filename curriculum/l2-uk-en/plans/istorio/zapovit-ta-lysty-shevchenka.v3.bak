@@ -1,0 +1,131 @@
+module: istorio-030
+level: ISTORIO
+sequence: 30
+slug: zapovit-ta-lysty-shevchenka
+version: '3.0'
+title: «Заповіт» і листи Шевченка
+focus: history
+pedagogy: seminar
+word_target: 5000
+objectives:
+- Analyze the causes and consequences of «заповіт» і листи шевченка
+- Evaluate the historical significance of шевченко як джерело
+content_outline:
+- section: Вступ — Шевченко як джерело
+  points:
+  - Поезія vs. історичне джерело
+  - Листи — приватний голос
+  - «Заповіт» — політичний маніфест
+  - Як читати Шевченка критично
+  words: 700
+- section: «Заповіт» — аналіз тексту
+  points:
+  - Текст із коментарями
+  - Поховайте та вставайте
+  - Кайдани порвіте
+  - Революційний заклик
+  - Чому став гімном
+  words: 700
+- section: Контекст написання
+  points:
+  - 1845 рік — де, коли
+  - Особисті обставини
+  - Політичний клімат
+  - Чому саме цей текст
+  words: 700
+- section: Листи Шевченка
+  points:
+  - До кого писав
+  - Листи з заслання — цензура
+  - Приватні думки
+  - Мова листів — українська vs. російська
+  - Що дізнаємося про людину
+  words: 700
+- section: Фрагмент — Лист із заслання
+  points:
+  - Текст (з глосами)
+  - Умови заслання
+  - Заборона писати і малювати
+  - Внутрішній стан
+  words: 700
+- section: Шевченко в історичній пам'яті
+  points:
+  - Культ Шевченка — як формувався
+  - Різні інтерпретації
+  - Радянський Шевченко vs. національний
+  - Критичний погляд сьогодні
+  words: 700
+- section: Підсумок
+  points:
+  - Поет як джерело
+  - Від особистого до політичного
+  - Зв'язок із культом і пам'яттю
+  words: 800
+vocabulary_hints:
+  required:
+  - історія (history)
+  - подія (event)
+  - джерело (source)
+  - аналіз (analysis)
+  recommended:
+  - контекст (context)
+  - інтерпретація (interpretation)
+  - наслідки (consequences)
+vocabulary:
+- заповіт
+- заслання
+- кайдани
+- революційний
+- культ особистості
+- цензура
+- приватний
+- політичний маніфест
+- інтерпретація
+- пам'ять
+- мартирологія
+- канонізація
+- міф
+- символ
+- ідол
+activity_hints:
+- type: reading
+  focus: Первинні джерела
+  items: 4
+- type: essay-response
+  focus: Критичний аналіз
+- type: true-false
+  focus: Факти та інтерпретації
+  items: 10
+activities:
+- type: reading
+  focus: Line-by-line analysis of "Zapovit"
+- type: reading
+  focus: Letter from exile with glosses
+- type: comparative-study
+  focus: Compare "Zapovit" in Soviet vs. diaspora interpretations
+- type: critical-analysis
+  focus: What can letters tell us that poems cannot?
+- type: essay-response
+  focus: Чи можна використовувати поезію як історичне джерело?
+persona:
+  voice: Academic Historiographer
+  role: Shevchenko Studies Expert
+prerequisites:
+- knyhy-butiia-shevchenko
+connects_to:
+- valuevskyi-tsyrkuliar-tekst
+references:
+- name: Заповіт (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Заповіт_(Шевченко)
+  type: reference
+  notes: Poem overview
+- name: Тарас Шевченко (Вікіпедія)
+  url: https://uk.wikipedia.org/wiki/Тарас_Шевченко
+  type: reference
+  notes: Biography
+- name: Листування Шевченка
+  url: https://uk.wikisource.org/wiki/Листи_Тараса_Шевченка
+  type: primary
+  notes: Letters collection
+register: академічний
+grammar: []

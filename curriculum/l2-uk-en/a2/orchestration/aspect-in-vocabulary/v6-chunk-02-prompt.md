@@ -3,40 +3,21 @@
 You are writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** 3: Дієслова ходять парами (A2, A2.1 [Foundation and Aspect Introduction])
-**Section to write:** Спосіб 1: Додавання префікса (~660 words total)
-**Word target for this section:** 660 words (aim for 726 to account for undershoot)
+**Section to write:** Спосіб 1: Додавання префікса (~650 words total)
+**Word target for this section:** 650 words (aim for 715 to account for undershoot)
 
 ---
 
 ## Section Skeleton (follow this exactly)
 
-## Спосіб 1: Додавання префікса (~660 words total)
-
-- P1 (~80 words): State the rule: the most common way to form a perfective verb in Ukrainian is to add a prefix to the imperfective base. The prefix "seals" the action — it signals that the verb now describes a completed act. Crucially, the prefix chosen for a given pair is fixed. You must learn писати / **на**писати as a single unit, not guess a prefix.
-
-- P2 (~160 words): Present the five core pairs with the prefix marked visually. For each pair, include one short model sentence (imperfective + perfective) to show the contrast in use:
-  - писати / **на**писати — "Вона **писала** повідомлення п'ять хвилин. / Вона **написала** повідомлення."
-  - читати / **про**читати — "Ми **читали** книжку цілий тиждень. / Ми **прочитали** її вчора."
-  - робити / **з**робити — "Він **робив** домашнє завдання. / Він **зробив** усе завдання."
-  - бачити / **по**бачити — "Я часто **бачила** його в метро. / Я **побачила** його вчора на вулиці."
-  - готувати / **при**готувати — "Мама **готувала** вечерю годину. / Мама **приготувала** борщ."
-
-- P3 (~100 words): Extend with five more pairs drawn from everyday A2 vocabulary — показати / показувати here inverted to show both directions: варити / **з**варити, вчити / **ви**вчити, їсти / **з**їсти, пити / **ви**пити, малювати / **на**малювати. Note the variety of prefixes (з-, ви-, на-) — each is the "assigned" prefix for that particular verb. There is no universal rule for which prefix goes with which verb; each pair must be memorized.
-
-- P4 (~100 words): Important warning: a prefix on a verb does not always create a simple aspectual partner. Compare написати (pf partner of писати — same meaning, just completed) vs. підписати (to sign — a different meaning). When a prefix adds a new meaning, it produces a new verb, not just an aspect partner. The learner's test: does the prefixed verb mean the same thing as the imperfective, but completed? If yes → aspectual pair. If the meaning shifted → new verb.
-
-- Exercise (quiz — Find the Partner, 8 items): Eight imperfective verbs; learner selects the correct perfective from three options. Pairs used: писати, читати, бачити, їсти, пити, малювати, готувати, вчити. Distractors include plausible-but-wrong prefixed forms (e.g., записати as distractor for читати) to reinforce that each pair's prefix is fixed.
-
-- P5 (~120 words): Introduce five more pairs with slightly less obvious prefixes to build recognition range — розповідати / розповісти, забувати / забути, відкривати / відкрити, закривати / закрити, починати / почати. Note that розповідати / розповісти uses a root change too (розповід- / розповіст-), previewing Method 2. This foreshadows the next section naturally.
-
-- P6 (~100 words): Reading practice block — five Ukrainian sentences using prefix pairs from this section. Learner reads aloud and identifies whether each verb is imperfective or perfective:
-  1. "Я щодня **читаю** новини. Сьогодні вже **прочитав** дві статті."
-  2. "Він **робив** вправи і нарешті **зробив** усі правильно."
-  3. "Вона **готувала** тісто й **приготувала** пиріг до обіду."
-  4. "Ми **вчили** слова і **вивчили** всі п'ятнадцять."
-  5. "Він **пив** каву та **випив** цілу чашку."
-
----
+## Спосіб 1: Додавання префікса (~650 words total)
+- P1 (~120 words): Explain that prefixation is the most common way to create a perfective verb. A "pure" prefix changes only the aspect, not the core meaning of the action. Contrast *читати* (the act of reading) with *прочитати* (having finished the book).
+- P2 (~90 words): Focus on the prefix **на-**. Provide examples like *писати / написати* (to write) and *малювати / намалювати* (to draw). Use a sentence example: "Я писав лист годину, і нарешті написав його."
+- P3 (~90 words): Focus on the prefix **по-**. Use *бачити / побачити* (to see) and *чути / почути* (to hear). Explain that these often denote the sudden moment of perception.
+- P4 (~90 words): Focus on the prefix **з- (зі-, с-)**. Provide *робити / зробити* (to do/make) and *готувати / приготувати* (to prepare/cook). Remind learners of the rule: use **с-** before *к, п, т, ф, х* (*сховати*).
+- P5 (~90 words): Focus on the prefix **про-**. Use *читати / прочитати* and *співати / проспівати*. Explain that this prefix often implies going through the whole thing from start to finish.
+- P6 (~70 words): Summary of prefix variety. Mention that while there are many prefixes (*при-, від-, ви-*), at the A2 level, learners should focus on memorizing the specific "partner" prefix for each core verb rather than guessing.
+- Exercise: Add the correct prefix. Focus: Identifying the perfective partner for common A2 verbs (*писати, малювати, готувати, робити, бачити, чути, читати, співати*). (quiz, 8 items)
 
 ---
 ## Previous Sections (for continuity — do NOT repeat this content)
@@ -44,7 +25,7 @@ You are writing ONE SECTION of a Ukrainian language module. Write ONLY this sect
 <previous_context>
 [...previous sections truncated...]
 
-— одне слово змінилося: > «Я писала листа цілий вечір.» > «Я написала листа.» Both sentences describe writing a letter. Both use the same root — *пис-*. But the first sentence stretches across an entire evening: the writing was happening, unfinished, ongoing. The second sentence lands like a stamp on an envelope: done. The letter exists. What changed? A single prefix — **на-** — transformed the verb from a process into a result. This is not decoration. This is the core engine of how Ukrainian verbs work. In Ukrainian, most verbs live as a **видова пара** *(aspect pair)* — two forms that belong together like inhale and exhale. One form describes the **process** — the action unfolding, repeated, or habitual. This is the **недоконаний вид** *(imperfective aspect)*, and it answers the question **що робити?** The other form describes the **completed result** — the action finished, achieved once, done. This is the **доконаний вид** *(perfective aspect)*, answering **що зробити?** From now on, every verb you learn has a standard notation: imperfective **/** perfective. Not just «писати» — but «**писати / написати**» *(to write / to have written)*. Learning only one form is like owning one chopstick — a real object, but useless without its partner. Here is the practical consequence: from today, every new verb in your notebook gets two slots. When you look up a word on slovnyk.ua or e2u.org.ua, you will see both forms listed together. Ukrainian school textbooks do exactly this — Заболотний's Grade 6 textbook (§52) introduces **вид дієслова** by always showing the pair side by side. Dictionaries mark them: **недок.** *(imperfective)* and **док.** *(perfective)*. If you find only one form, search for its partner before moving on. Think of two columns in your mind: **Недоконаний вид** — process, duration, repetition. **Доконаний вид** — completed action, one-time result. Three structural patterns explain how most pairs are formed. Some pairs differ by a prefix: «писати / **на**писати». Some change a suffix or vowel: «запитувати / запитати» *(to ask, repeatedly / to ask, once)*. And a few are completely different words: «брати / взяти» *(to take — process / to take — completed)*. You will learn all three patterns in the sections ahead. But first — aspect in action: > **Бабуся:** «Ліпи вареники — ось так, знову і знову.» > > **Онучка:** «Я зліпила перший!» > > **Бабуся:** «Чудово! Тепер вари їх рівно десять хвилин.» > > **Онучка:** «А скільки ще варити?» > > **Бабуся:** «Як тільки звариш — вони спливуть на поверхню.» Notice the pairs: **ліпити / зліпити** *(to shape, keep going / to finish shaping one)* and **варити / зварити** *(to boil, ongoing / to finish boiling)*. Бабуся says «ліпи» — keep forming, one after another, the process continues. Онучка says «зліпила» — one varenyк is done, result achieved. «Вари десять хвилин» — the boiling is a process with duration. «Звариш» — the moment they are fully cooked, finished. The recipe makes the distinction concrete: every kitchen instruction switches between «keep doing this» and «finish doing that.»
+you are effectively only learning half of the word. The first part describes the ongoing process of doing something. Without memorizing its partner, you will not know how to express that a task is actually finished. You will be unable to state that a result has been successfully achieved. To speak naturally, you need both halves of the picture. * **Робити.** (To do / to make — process.) * **Зробити.** (To have done / to have made — result.) There are two distinct aspects that describe how an action unfolds in time. The first category is the imperfective aspect. You use this aspect to talk about a continuous process, a repeated habit, or an action where the final result is not the focus. The second category is the perfective aspect. This aspect is specifically used to emphasize the completion of an action. It highlights a specific result, a successful accomplishment, or a one-time event. Because these two concepts must always work together, textbooks use a standard notation to present them. You will usually see the imperfective verb listed first, immediately followed by a slash, and then the perfective verb. * **Недоконаний вид.** (Imperfective aspect.) * **Доконаний вид.** (Perfective aspect.) * **Читати / прочитати.** (To read / to have read.) Let's look at how this concept works in a real situation. Imagine a grandmother teaching her granddaughter how to cook traditional food. Notice how she deliberately switches between verbs that describe the ongoing process and verbs that demand a completed result. > — **Бабуся:** Ліпи вареники, поки тісто є. *(Keep forming the varenyky while there is dough.)* > — **Онучка:** Добре, я ліплю. *(Okay, I am forming them.)* > — **Бабуся:** Ось, зліпи цей останній вареник. *(Here, form this last varenyk.)* > — **Онучка:** Я вже зліпила. Що далі? *(I have already formed it. What next?)* > — **Бабуся:** Тепер вари їх 10 хвилин. *(Now boil them for 10 minutes.)* > — **Онучка:** Добре, я варю. *(Okay, I am boiling them.)* > — **Бабуся:** Коли звариш, поклич усіх до столу! *(When you have boiled them, call everyone to the table!)* In this dialogue, the grandmother uses the imperfective aspect to focus on the continuous cooking process. Then, she uses the perfective partners to focus on finishing the specific task. Because learning pairs is so important, you must know how to find them whenever you learn a new word. A good dictionary is your best tool for this task. The dictionary will usually list the aspectual partner right next to the main word. The standard entry shows the imperfective verb first. Then, it uses an abbreviation to indicate the perfective version. * **Писати, -аю, -аєш; док. написати.** (To write; perf. to have written.) This abbreviation tells you exactly which word you must use for the completed action. Some digital dictionaries go even further and provide the full conjugation paradigms for both verbs. Make it a strict habit to write down both verbs in your notes every time you encounter a new action.
 </previous_context>
 
 Continue naturally from where the previous section ended. Do not re-introduce concepts already covered.
@@ -57,7 +38,7 @@ module: a2-003
 level: A2
 sequence: 3
 slug: aspect-in-vocabulary
-version: '1.0'
+version: '1.1'
 title: Дієслова ходять парами
 subtitle: Як утворюються та вивчаються видові пари
 focus: grammar
@@ -65,92 +46,99 @@ pedagogy: PPP
 phase: A2.1 [Foundation and Aspect Introduction]
 word_target: 2000
 objectives:
-- Learner can recognize that most Ukrainian verbs exist in aspectual pairs and understand
-  the importance of learning them together.
-- 'Learner can identify the three main patterns of aspect pair formation: prefixation,
-  suffix/root vowel change, and suppletion.'
-- Learner can list and use approximately 20 essential A2-level aspectual pairs in
-  simple sentences.
-- Given one verb from a common pair, the learner can name its aspectual partner.
+  - Learner can recognize that most Ukrainian verbs exist in aspectual pairs and
+    understand the importance of learning them together.
+  - 'Learner can identify the three main patterns of aspect pair formation: prefixation,
+    suffix/root vowel change, and suppletion.'
+  - Learner can list and use approximately 20 essential A2-level aspectual pairs
+    in simple sentences.
+  - Given one verb from a common pair, the learner can name its aspectual 
+    partner.
 dialogue_situations:
-- setting: 'Cooking varenyky together — one person reads the recipe step by step:
-    Ліпи (impf, keep forming) вареники. Зліпи (pf, form one). Вари (impf) 10 хвилин.
-    Звари (pf) до готовності.'
-  speakers:
-  - Бабуся (teaching recipe)
-  - Онучка (cooking)
-  motivation: 'Aspect pairs in cooking: ліпити/зліпити, варити/зварити'
+  - setting: 'Cooking varenyky together — one person reads the recipe step by step:
+      Ліпи (impf, keep forming) вареники. Зліпи (pf, form one). Вари (impf) 10 хвилин.
+      Звари (pf) до готовності.'
+    speakers:
+      - Бабуся (teaching recipe)
+      - Онучка (cooking)
+    motivation: 'Aspect pairs in cooking: ліпити/зліпити, варити/зварити'
 content_outline:
-- section: Чому дієслова потрібно вчити парами? (Why Verbs Must Be Learned in Pairs)
-  words: 400
-  points:
-  - Reinforce the idea that aspect is fundamental. Learning a verb without its partner
-    is like learning only half a word.
-  - 'Introduce the standard notation: imperfective / perfective (e.g., робити / зробити).'
-  - 'Using a dictionary: how to find aspectual pairs in online or paper dictionaries.'
-- section: 'Спосіб 1: Додавання префікса (Method 1: Adding a Prefix)'
-  words: 600
-  points:
-  - 'The most common way to form a perfective verb: add a prefix to the imperfective
-    base. The prefix often adds a specific meaning, but for now, we focus on its role
-    in creating a perfective verb.'
-  - 'Core examples: писати / **на**писати; читати / **про**читати; робити / **з**робити;
-    бачити / **по**бачити; готувати / **при**готувати.'
-  - 'Practice: given an imperfective verb, learner adds the correct prefix to make
-    it perfective.'
-- section: 'Спосіб 2: Зміна в корені або суфіксі (Method 2: Change in the Root or
-    Suffix)'
-  words: 600
-  points:
-  - 'The ''imperfectivization'' pattern: a complex perfective verb (often with a prefix)
-    gets an ''-ува-'' or ''-юва-'' suffix to become imperfective.'
-  - 'This is a more advanced concept, so we introduce it with simple pairs: відповідати
-    / відповісти; вирішувати / вирішити; запитувати / запитати.'
-  - 'Show the vowel change that often accompanies this: ''о'' -> ''а'' (допомогти
-    / допомагати).'
-- section: 'Спосіб 3: Зовсім інші слова (суплетивізм) (Method 3: Completely Different
-    Words - Suppletion)'
-  words: 400
-  points:
-  - Some of the most common verbs have suppletive pairs that must be memorized.
-  - 'Essential pairs: брати / взяти (to take); говорити / сказати (to say/tell); ловити
-    / зловити (to catch); шукати / знайти (to look for / to find).'
-  - Present a list of the 20 most important aspectual pairs for A2 learners to memorize,
-    covering all three formation types.
+  - section: Чому дієслова потрібно вчити парами? (Why Verbs Must Be Learned in 
+      Pairs)
+    words: 400
+    points:
+      - Reinforce the idea that aspect is fundamental. Learning a verb without 
+        its partner is like learning only half a word.
+      - 'Introduce the standard notation: imperfective / perfective (e.g., робити
+        / зробити).'
+      - 'Using a dictionary: how to find aspectual pairs in online or paper dictionaries.'
+  - section: 'Спосіб 1: Додавання префікса (Method 1: Adding a Prefix)'
+    words: 600
+    points:
+      - 'The most common way to form a perfective verb: add a prefix to the imperfective
+        base. The prefix often adds a specific meaning, but for now, we focus on its
+        role in creating a perfective verb.'
+      - 'Core examples: писати / **на**писати; читати / **про**читати; робити / **з**робити;
+        бачити / **по**бачити; готувати / **при**готувати.'
+      - 'Practice: given an imperfective verb, learner adds the correct prefix to
+        make it perfective.'
+  - section: 'Спосіб 2: Зміна в корені або суфіксі (Method 2: Change in the Root or
+      Suffix)'
+    words: 600
+    points:
+      - 'The ''imperfectivization'' pattern: a complex perfective verb (often with
+        a prefix) gets an ''-ува-'' or ''-юва-'' suffix to become imperfective.'
+      - 'This is a more advanced concept, so we introduce it with simple pairs: відповідати
+        / відповісти; вирішувати / вирішити; запитувати / запитати.'
+      - 'Show the vowel change that often accompanies this: ''о'' -> ''а'' (допомогти
+        / допомагати).'
+  - section: 'Спосіб 3: Зовсім інші слова (суплетивізм) (Method 3: Completely Different
+      Words - Suppletion)'
+    words: 400
+    points:
+      - Some of the most common verbs have suppletive pairs that must be 
+        memorized.
+      - 'Essential pairs: брати / взяти (to take); говорити / сказати (to say/tell);
+        ловити / піймати (to catch); класти / покласти (to put).'
+      - 'Note: шукати (to search) and знайти (to find) are often presented together,
+        but they are different actions, not a true aspect pair. The perfective of
+        шукати is пошукати or відшукати.'
+      - Present a list of the 20 most important aspectual pairs for A2 learners 
+        to memorize, covering all three formation types.
 vocabulary_hints:
   required:
-  - пара (pair)
-  - префікс (prefix)
-  - суфікс (suffix)
-  - корінь (root)
-  - читати / прочитати (to read)
-  - писати / написати (to write)
-  - брати / взяти (to take)
-  - говорити / сказати (to speak / to say)
+    - пара (pair)
+    - префікс (prefix)
+    - суфікс (suffix)
+    - корінь (root)
+    - читати / прочитати (to read)
+    - писати / написати (to write)
+    - брати / взяти (to take)
+    - говорити / сказати (to speak / to say)
   recommended:
-  - утворювати (to form)
-  - словник (dictionary)
-  - запам'ятовувати (to memorize)
-  - базовий (basic)
+    - утворювати (to form)
+    - словник (dictionary)
+    - запам'ятовувати (to memorize)
+    - базовий (basic)
 activity_hints:
-- type: quiz
-  focus: Find the Partner (Verb Matching)
-  items: 8
-- type: fill-in
-  focus: Categorize by Formation Type
-  items: 8
-- type: match-up
-  focus: Fill in the Blanks with the Correct Pair
-  items: 8
-- type: match-up
-  focus: Sentence Translation (Aspect Focus)
-  items: 8
+  - type: quiz
+    focus: Find the Partner (Verb Matching)
+    items: 8
+  - type: fill-in
+    focus: Categorize by Formation Type
+    items: 8
+  - type: match-up
+    focus: Fill in the Blanks with the Correct Pair
+    items: 8
+  - type: fill-in
+    focus: Choose the Correct Aspect Partner
+    items: 8
 references:
-- title: Заболотний Grade 6, §52-54
-  notes: 'Вид дієслова: доконаний і недоконаний'
-- title: 'ULP: Ukrainian Verb Aspect'
-  url: https://www.ukrainianlessons.com/ukrainian-verb-aspect/
-  notes: Imperfective vs perfective
+  - title: Заболотний Grade 6, §52-54
+    notes: 'Вид дієслова: доконаний і недоконаний'
+  - title: 'ULP: Ukrainian Verb Aspect'
+    url: https://www.ukrainianlessons.com/ukrainian-verb-aspect/
+    notes: Imperfective vs perfective
 
 </plan_content>
 
@@ -380,6 +368,29 @@ references:
 
 ## Спосіб 3: Зовсім інші слова (суплетивізм) (Method 3: Completely Different Words - Suppletion)
 
+> **Source:** avramenko, Grade 5
+> **Section:** Сторінка 54
+> **Score:** 0.33
+>
+> 54
+> ЛЕКСИКОЛОГІЯ 
+> Притягтися, розм. — (прийти насилу) приволоктися, приплестися, 
+> причвалати; фам. приплентатися, притарабанитися, притарганитися. 
+> У словнику антонімів протилежні за значенням слова подано парами, 
+> до них додано тлумачення й зразки вживання:
+> МОВЧАТИ ↔ КРИЧАТИ
+> Не видавати звуків, не виявляти 
+> почуттів, зберігати мовчанку. 
+> Видавати голосом сильний, різ-
+> кий звук, репетувати, галасувати.
+> Дурне сало: як у піч, то мовчить, а як із печі, то кричить (Нар. тв.).
+> Подібну будову словникової статті має словник паронімів: 
+> БАГАТИР — БОГАТИР 
+> Багатир — багата людина, багатій: сільський багатир. 
+> Богатир — оспіваний у фольклорі герой, хоробрий воїн: богатир Ілля 
+> Муромець; про людину, високу на зріст, міцної статури, сильну: справж­
+> ній богатир.
+
 > **Source:** zaharijchuk, Grade 1
 > **Section:** Сторінка 30
 > **Score:** 0.50
@@ -455,37 +466,26 @@ references:
 *  
 - Після **м’яких** приголосних у **середині складу** перед о: *чотирьох, дзьоб, сьомий, льодяний, відьом*.
 
-### Речення, його граматична основа
-> **Source:** МійКлас — [Речення, його граматична основа](https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/vidomosti-z-sintaksisu-i-punktuatciyi-14562/rechennia-iogo-gramatichna-osnova-pidmet-i-prisudok-39372)
-
-### Теорія:
-
-*www.ua.pistacja.tv*  
-Речення
-Реченням називаємо одне або кілька слів, що виражають закінчену думку.
-Саме за допомогою речень ми спілкуємось, висловлюємо прохання, наказ, виражаємо емоції, повідомляємо інформацію.
-Приклад:
-- Весна іде, красу несе \(Нар. творчість\). 
-- Ліс. Тиша. Благодать. 
-Слова в реченні зв'язані між собою **за змістом** і **граматично**. **Граматичний зв'язок** — це поєднання за допомогою **закінчень** і **службових слів**. На початок і кінець речення вказує **інтонація**. Між реченнями робимо **паузи**.
-Ознаки речення
-1. Речення відображає дійсність. Інформація **стверджується** або **заперечується**, сприймається як **реальна** або **нереальна**, **можлива** або **неможлива**.
- 
+### Розряди займенників за значенням
+> **Source:** МійКлас — [Розряди займенників за значенням](h
 
 ... (truncated for context window)
 </knowledge_packet>
 
 ---
 
+
+
 ## Rules
 
-TARGET: 45-65% Ukrainian.
+TARGET: 20-40% Ukrainian. Bridge modules continue from A1 (which ends at 20-41%).
 LANGUAGE ROLES:
-- THEORY: English prose for grammar explanations that would be too complex in Ukrainian at this level.
-- EXAMPLES & CONTEXT: Ukrainian — dialogues, example sentences, cultural context.
+- THEORY: English prose for grammar review and metalanguage introduction.
+- EXAMPLES & CONTEXT: Ukrainian — dialogues, example sentences, pattern boxes.
 - HEADERS: Ukrainian with English in parentheses.
-- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English — never mix languages within a sentence. Ukrainian paragraphs and dialogues carry most content. English appears for grammar theory and in callout boxes.
-A2 register ONLY. Concrete everyday vocabulary. No literary/poetic language. No abstract nouns. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only (який/що/коли). Aspect pairs introduced. No participles.
+- STRUCTURAL RULE: Each sentence is 100% Ukrainian OR 100% English — never mix.
+These are review/bridge modules. English theory is expected. Ukrainian content comes from dialogues, example sentences, paradigm tables, and pattern boxes.
+A2 register ONLY. Concrete everyday vocabulary. No literary/poetic language. Ukrainian sentences max 15 words. Max 2 clauses. All cases allowed. Simple subordinate clauses only (який/що/коли). Aspect pairs introduced. No participles.
 
 GRAMMAR RULES:
 - Max 15 words per Ukrainian sentence
@@ -504,7 +504,10 @@ GRAMMAR RULES:
 - **Zero Russian, zero Surzhyk, zero calques.**
 - **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
-- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own line.
+- **Dialogue formatting:** Use blockquote `>` with speaker names in bold. Each turn on its own `>` line. NO blank lines between turns — all lines must be consecutive. Example:
+  > — **Оксана:** Привіт! *(Hi!)*
+  > — **Степан:** Добрий день! *(Good day!)*
+  > — **Оксана:** Як справи? *(How are you?)*
 
 ## Output
 

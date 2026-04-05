@@ -1,0 +1,238 @@
+{
+  "total_items": 112,
+  "grounded_items": 66,
+  "ungrounded": [
+    {
+      "word": "предмети",
+      "exercise_type": "group-sort",
+      "context": "Предмети (Objects)"
+    },
+    {
+      "word": "кольори",
+      "exercise_type": "group-sort",
+      "context": "Кольори (Colors)"
+    },
+    {
+      "word": "білий",
+      "exercise_type": "group-sort",
+      "context": "білий"
+    },
+    {
+      "word": "жовтий",
+      "exercise_type": "group-sort",
+      "context": "жовтий"
+    },
+    {
+      "word": "числа",
+      "exercise_type": "group-sort",
+      "context": "Числа (Numbers)"
+    },
+    {
+      "word": "біле",
+      "exercise_type": "quiz",
+      "context": "біле"
+    },
+    {
+      "word": "маленька",
+      "exercise_type": "quiz",
+      "context": "маленька"
+    },
+    {
+      "word": "маленьке",
+      "exercise_type": "quiz",
+      "context": "маленьке"
+    },
+    {
+      "word": "цікавий",
+      "exercise_type": "quiz",
+      "context": "цікавий"
+    },
+    {
+      "word": "цікава",
+      "exercise_type": "quiz",
+      "context": "цікава"
+    },
+    {
+      "word": "цікаве",
+      "exercise_type": "quiz",
+      "context": "цікаве"
+    },
+    {
+      "word": "коричнева",
+      "exercise_type": "quiz",
+      "context": "коричнева"
+    },
+    {
+      "word": "коричневе",
+      "exercise_type": "quiz",
+      "context": "коричневе"
+    },
+    {
+      "word": "гарний",
+      "exercise_type": "quiz",
+      "context": "гарний"
+    },
+    {
+      "word": "книгу",
+      "exercise_type": "quiz",
+      "context": "книгу"
+    },
+    {
+      "word": "книгах",
+      "exercise_type": "quiz",
+      "context": "книгах"
+    },
+    {
+      "word": "столу",
+      "exercise_type": "quiz",
+      "context": "столу"
+    },
+    {
+      "word": "стола",
+      "exercise_type": "quiz",
+      "context": "стола"
+    },
+    {
+      "word": "вікну",
+      "exercise_type": "quiz",
+      "context": "вікну"
+    },
+    {
+      "word": "вікні",
+      "exercise_type": "quiz",
+      "context": "вікні"
+    },
+    {
+      "word": "вікном",
+      "exercise_type": "quiz",
+      "context": "вікном"
+    },
+    {
+      "word": "вишиванок",
+      "exercise_type": "quiz",
+      "context": "вишиванок"
+    },
+    {
+      "word": "вишиванці",
+      "exercise_type": "quiz",
+      "context": "вишиванці"
+    },
+    {
+      "word": "вишиванку",
+      "exercise_type": "quiz",
+      "context": "вишиванку"
+    },
+    {
+      "word": "глечика",
+      "exercise_type": "quiz",
+      "context": "глечика"
+    },
+    {
+      "word": "глечику",
+      "exercise_type": "quiz",
+      "context": "глечику"
+    },
+    {
+      "word": "глечиків",
+      "exercise_type": "quiz",
+      "context": "глечиків"
+    },
+    {
+      "word": "ламп",
+      "exercise_type": "quiz",
+      "context": "ламп"
+    },
+    {
+      "word": "лампи",
+      "exercise_type": "quiz",
+      "context": "лампи"
+    },
+    {
+      "word": "лампі",
+      "exercise_type": "quiz",
+      "context": "лампі"
+    },
+    {
+      "word": "лампу",
+      "exercise_type": "quiz",
+      "context": "лампу"
+    },
+    {
+      "word": "намисту",
+      "exercise_type": "quiz",
+      "context": "намисту"
+    },
+    {
+      "word": "намисті",
+      "exercise_type": "quiz",
+      "context": "намисті"
+    },
+    {
+      "word": "намистах",
+      "exercise_type": "quiz",
+      "context": "намистах"
+    },
+    {
+      "word": "писанок",
+      "exercise_type": "quiz",
+      "context": "писанок"
+    },
+    {
+      "word": "писанку",
+      "exercise_type": "quiz",
+      "context": "писанку"
+    },
+    {
+      "word": "писанці",
+      "exercise_type": "quiz",
+      "context": "писанці"
+    },
+    {
+      "word": "сорок",
+      "exercise_type": "fill-in",
+      "context": "сорок"
+    },
+    {
+      "word": "чотири",
+      "exercise_type": "fill-in",
+      "context": "чотири"
+    },
+    {
+      "word": "сімдесят",
+      "exercise_type": "fill-in",
+      "context": "сімдесят"
+    },
+    {
+      "word": "великі",
+      "exercise_type": "error-correction",
+      "context": "великі"
+    },
+    {
+      "word": "моє",
+      "exercise_type": "error-correction",
+      "context": "Моє"
+    },
+    {
+      "word": "мої",
+      "exercise_type": "error-correction",
+      "context": "Мої"
+    },
+    {
+      "word": "червоні",
+      "exercise_type": "error-correction",
+      "context": "червоні"
+    },
+    {
+      "word": "картини",
+      "exercise_type": "match-up",
+      "context": "картини"
+    },
+    {
+      "word": "ті",
+      "exercise_type": "quiz",
+      "context": "Ті"
+    }
+  ],
+  "vocab_coverage": {},
+  "all_grounded": false
+}

@@ -1,0 +1,108 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: '**Deduction:** Plan specifies "Extended dialogue (12-15 exchanges)" for
+    Dialogue 1, but the actual dialogue has only **7 exchanges** (Оксана×4, Андрій×3).
+    Dialogue 2 has ~9 exchanges (borderline). Dia'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: '**Deduction:** (1) "Вона **знаходиться** прямо біля лікарні" — calque
+    of Russian "находиться", confirmed by Антоненко-Давидович (ad-148). (2) "знаходитися"
+    taught as a standard Locative verb in the ca'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: '**Reward:** Clear PPP flow — dialogues provide the situation, prose extracts
+    patterns, activities practice. Multiple examples per grammar point (3+ for each
+    case). Singular/plural contrast explained w'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: '**All 10 required words used naturally:** вечірка ("велику вечірку"),
+    подарунок ("купив подарунок Олені"), лікар ("працюють лікарі"), пацієнт ("Пацієнт:
+    Добрий день"), здоров''я ("Бажаю вам здоров''я!")'
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: '**Reward:** All 4 plan activity types represented with markers. Placement
+    is pedagogically sound — each after its teaching section. Focus descriptions in
+    markers closely match plan hints. **Deduction:'
+- dimension: 6
+  name: Engagement & tone
+  score: 8
+  evidence: '**Reward:** Dialogues feel natural — friends planning a party is relatable.
+    Hospital visit is practical. Travel planning across real Ukrainian cities with
+    real geography. Cultural note about birthday '
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: All 4 H2 sections present and correctly ordered. Word count 2388 > 2000
+    target ✓. Clean markdown formatting. No stray tags. No duplicate summary sections.
+    Activity markers cleanly placed.
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: Birthday tradition correct — іменинник частує гостей ✓. No "like Russian
+    but..." framing anywhere. Ukrainian geography presented on its own terms. Vocative
+    usage in social context (пане докторе, лікар
+- dimension: 9
+  name: Dialogue quality
+  score: 7
+  evidence: '**Reward:** Named speakers with distinct roles (Оксана/Андрій planning,
+    Лікар/Пацієнт consulting, Тарас/Андрій dreaming). Situations are realistic and
+    culturally grounded. Speakers have personality (А'
+findings:
+- dimension: LINGUISTIC ACCURACY
+  severity: CRITICAL
+  location: Dialogue 2 prose — "Вона знаходиться прямо біля лікарні."
+  issue: '"знаходитися" for indicating location is a calque of Russian "находиться".
+    Confirmed by Антоненко-Давидович (ad-148): this verb means "to find oneself" in
+    Ukrainian, not "to be located." For static location, use "є", "міститься", or
+    restructure.'
+  fix: Replace "Вона знаходиться прямо біля лікарні" → "Вона прямо біля лікарні" or
+    "Вона є прямо біля лікарні."
+- dimension: LINGUISTIC ACCURACY
+  severity: CRITICAL
+  location: Case cheat sheet, §6 Місцевий відмінок — "знаходитися *(to be located)*"
+  issue: Teaching "знаходитися" as a standard Locative verb perpetuates the calque.
+    Learners will internalize this as correct Ukrainian. Антоненко-Давидович says
+    to use "бути, перебувати, міститися" instead.
+  fix: Replace "знаходитися *(to be located)*" → "міститися *(to be located)*" in
+    the cheat sheet verb list.
+- dimension: LINGUISTIC ACCURACY
+  severity: CRITICAL
+  location: Dialogue 2 prose — "or sit «на прийомі» *(at an appointment)*"
+  issue: 'The lemma "прийом" is NOT IN VESUM (verified via verify_lemma and verify_words).
+    This is a Russicism from Russian "приём". Ukrainian alternative: "на прийманні"
+    (from "приймання", which IS in VESUM).'
+  fix: Replace «на прийомі» with «на прийманні» or restructure to «у лікаря».
+- dimension: PLAN ADHERENCE
+  severity: MAJOR
+  location: 'Діалог 1: Організовуємо день народження'
+  issue: Plan requires "Extended dialogue (12-15 exchanges)" but the actual dialogue
+    has only 7 exchanges. This is roughly half the planned length. The module is above
+    word target overall (2388 vs 2000), so the short dialogue reflects an imbalance
+    — too much English explanation, not enough Ukrainian dialogue.
+  fix: 'Expand Dialogue 1 to at least 12 exchanges. Add exchanges covering: deciding
+    on a time, discussing who to invite specifically, debating between two restaurants,
+    discussing what to wear — all using different cases.'
+- dimension: DIALOGUE QUALITY
+  severity: MAJOR
+  location: All three dialogues
+  issue: While all dialogues are natural in tone, they are all shorter than "extended"
+    — Dialogue 1 (7 exchanges), Dialogue 2 (~9 exchanges), Dialogue 3 (8 exchanges).
+    For a synthesis module that aims to practice all 7 cases in dialogue, more exchanges
+    = more natural case variety.
+  fix: Expand each dialogue by 3-5 exchanges to create more organic case usage opportunities.
+    This also addresses the plan adherence gap.
+- dimension: ENGAGEMENT
+  severity: MINOR
+  location: Section 1 explanation paragraph — "In this dialogue, we see how the Vocative
+    case and the Nominative plural function in a natural conversation."
+  issue: Meta-commentary ("we see how X functions") — slightly lectured rather than
+    demonstrated. Better to lead with the example.
+  fix: 'Rephrase to lead with the observation: "When the friends address each other,
+    they use the Vocative case..."'

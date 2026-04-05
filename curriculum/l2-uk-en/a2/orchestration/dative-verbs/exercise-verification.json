@@ -1,0 +1,234 @@
+{
+  "total_items": 168,
+  "grounded_items": 124,
+  "ungrounded": [
+    {
+      "word": "друга",
+      "exercise_type": "fill-in",
+      "context": "друга"
+    },
+    {
+      "word": "бабусю",
+      "exercise_type": "fill-in",
+      "context": "бабусю"
+    },
+    {
+      "word": "відповідає",
+      "exercise_type": "fill-in",
+      "context": "Вчитель відповідає ____ на уроці."
+    },
+    {
+      "word": "студента",
+      "exercise_type": "fill-in",
+      "context": "студента"
+    },
+    {
+      "word": "студент",
+      "exercise_type": "fill-in",
+      "context": "студент"
+    },
+    {
+      "word": "сестру",
+      "exercise_type": "fill-in",
+      "context": "сестру"
+    },
+    {
+      "word": "колегу",
+      "exercise_type": "fill-in",
+      "context": "колегу"
+    },
+    {
+      "word": "дякуємо",
+      "exercise_type": "fill-in",
+      "context": "Ми щиро дякуємо ____ за допомогу!"
+    },
+    {
+      "word": "мамою",
+      "exercise_type": "quiz",
+      "context": "мамою"
+    },
+    {
+      "word": "любить",
+      "exercise_type": "quiz",
+      "context": "Він любить ______."
+    },
+    {
+      "word": "своїй",
+      "exercise_type": "quiz",
+      "context": "своїй сестрі"
+    },
+    {
+      "word": "своя",
+      "exercise_type": "quiz",
+      "context": "своя сестра"
+    },
+    {
+      "word": "своєю",
+      "exercise_type": "quiz",
+      "context": "своєю сестрою"
+    },
+    {
+      "word": "сестрою",
+      "exercise_type": "quiz",
+      "context": "своєю сестрою"
+    },
+    {
+      "word": "чекаємо",
+      "exercise_type": "quiz",
+      "context": "Ми чекаємо ______."
+    },
+    {
+      "word": "вами",
+      "exercise_type": "quiz",
+      "context": "вами"
+    },
+    {
+      "word": "знає",
+      "exercise_type": "quiz",
+      "context": "Вчитель знає ______."
+    },
+    {
+      "word": "студентом",
+      "exercise_type": "quiz",
+      "context": "студентом"
+    },
+    {
+      "word": "подобаюся",
+      "exercise_type": "error-correction",
+      "context": "Я подобаюся"
+    },
+    {
+      "word": "подобає",
+      "exercise_type": "error-correction",
+      "context": "Мене подобає"
+    },
+    {
+      "word": "моїй",
+      "exercise_type": "error-correction",
+      "context": "Моїй сестрі"
+    },
+    {
+      "word": "моєю",
+      "exercise_type": "error-correction",
+      "context": "Моєю сестрою"
+    },
+    {
+      "word": "мою",
+      "exercise_type": "error-correction",
+      "context": "Мою сестру"
+    },
+    {
+      "word": "тобою",
+      "exercise_type": "error-correction",
+      "context": "тобою"
+    },
+    {
+      "word": "ним",
+      "exercise_type": "error-correction",
+      "context": "Ним"
+    },
+    {
+      "word": "довіряю",
+      "exercise_type": "fill-in",
+      "context": "довіряю"
+    },
+    {
+      "word": "заздрю",
+      "exercise_type": "fill-in",
+      "context": "заздрю"
+    },
+    {
+      "word": "заважаю",
+      "exercise_type": "fill-in",
+      "context": "заважаю"
+    },
+    {
+      "word": "посміхаєшся",
+      "exercise_type": "fill-in",
+      "context": "посміхаєшся"
+    },
+    {
+      "word": "друзям",
+      "exercise_type": "fill-in",
+      "context": "Ти часто ______ друзям?"
+    },
+    {
+      "word": "вибачаєш",
+      "exercise_type": "fill-in",
+      "context": "вибачаєш"
+    },
+    {
+      "word": "радиш",
+      "exercise_type": "fill-in",
+      "context": "радиш"
+    },
+    {
+      "word": "співчуваємо",
+      "exercise_type": "fill-in",
+      "context": "співчуваємо"
+    },
+    {
+      "word": "яких",
+      "exercise_type": "fill-in",
+      "context": "Ми ______ людям, у яких проблеми."
+    },
+    {
+      "word": "проблеми",
+      "exercise_type": "fill-in",
+      "context": "Ми ______ людям, у яких проблеми."
+    },
+    {
+      "word": "заздримо",
+      "exercise_type": "fill-in",
+      "context": "заздримо"
+    },
+    {
+      "word": "довіряємо",
+      "exercise_type": "fill-in",
+      "context": "довіряємо"
+    },
+    {
+      "word": "заздрить",
+      "exercise_type": "fill-in",
+      "context": "заздрить"
+    },
+    {
+      "word": "успіхам",
+      "exercise_type": "fill-in",
+      "context": "Вона ніколи не ______ успіхам інших."
+    },
+    {
+      "word": "вибачає",
+      "exercise_type": "fill-in",
+      "context": "вибачає"
+    },
+    {
+      "word": "співчуває",
+      "exercise_type": "fill-in",
+      "context": "співчуває"
+    },
+    {
+      "word": "хороші",
+      "exercise_type": "fill-in",
+      "context": "Вчитель завжди ______ нам хороші книги."
+    },
+    {
+      "word": "заважаєш",
+      "exercise_type": "fill-in",
+      "context": "заважаєш"
+    },
+    {
+      "word": "довіряєш",
+      "exercise_type": "fill-in",
+      "context": "довіряєш"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 15,
+    "tested_in_exercises": 14,
+    "not_tested": [
+      "подобатися"
+    ]
+  },
+  "all_grounded": false
+}

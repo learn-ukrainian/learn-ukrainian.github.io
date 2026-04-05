@@ -1,0 +1,253 @@
+vocabulary:
+- word: добро́дій
+  translation: sir (literary/diaspora)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: добро́дійка
+  translation: madam (literary/diaspora)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: емоці́йний
+  translation: emotional
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ні́жний
+  translation: tender, affectionate
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: коле́га
+  translation: colleague
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кли́чний
+  translation: vocative (case)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: зверта́ння
+  translation: address, appeal
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: па́ні
+  translation: Mrs., Ms., madam
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вві́чливий
+  translation: polite
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: офіці́йний
+  translation: official, formal
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: кличний відмінок
+  translation: vocative case
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пане директоре
+  translation: Mr. Director
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пане лікарю
+  translation: Mr. Doctor
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пані вчителько
+  translation: Mrs. Teacher
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: лі́карка
+  translation: doctor (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: дире́кторка
+  translation: director (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: прі́звище
+  translation: surname
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: това́риш
+  translation: comrade
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: воді́й
+  translation: driver
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: секрета́р
+  translation: secretary
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: профе́сор
+  translation: professor
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: суддя́
+  translation: judge
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ма́йстер
+  translation: master, craftsman
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: по́друга
+  translation: female friend
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: лю́бий
+  translation: dear, beloved
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: люба́
+  translation: dear, beloved (female)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: коханий
+  translation: beloved (romantic)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: кохана
+  translation: beloved (female, romantic)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: се́рде́нько
+  translation: sweetheart (little heart)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: со́нечко
+  translation: sunshine (little sun)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: зі́ронько
+  translation: little star (term of endearment)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: до́нечко
+  translation: daughter (affectionate form)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: синку́
+  translation: son (affectionate form)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: друже мій
+  translation: my friend (vocative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: люба моя
+  translation: my dear (vocative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: коханий мій
+  translation: my beloved (vocative)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Боже мій!
+  translation: My God!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Господи!
+  translation: Lord!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Вельмишано́вний
+  translation: Highly respected
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: вві́чливість
+  translation: politeness
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пане водію
+  translation: Mr. driver
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: сонечко моє
+  translation: my sunshine
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

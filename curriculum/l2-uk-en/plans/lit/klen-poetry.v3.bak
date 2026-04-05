@@ -1,0 +1,85 @@
+module: lit-093
+level: LIT
+sequence: 93
+slug: klen-poetry
+version: '3.0'
+title: Klen Poetry
+subtitle: Klen Poetry
+focus: literature
+pedagogy: Seminar
+phase: LIT.4 Diaspora and Dissidence 1933-1991
+word_target: 5000
+objectives:
+- Проаналізувати поезію Клена у контексті діаспорного неокласицизму
+- Дослідити стилістичні особливості тексту
+- Зрозуміти деколонізаційне значення автора
+content_outline:
+- section: Вступ та культурний контекст
+  points:
+  - Юрій Клен / Освальд Бурґгардт — неокласик в еміграції
+  - Місце в літературному каноні
+  - Чому цей текст важливий сьогодні
+  words: 850
+- section: 'Аналіз твору: Сюжет та структура'
+  points:
+  - Ключові твори — «Попіл Клена» та лірика
+  - Впливи та джерела
+  - Конфлікт між батьківщиною і вигнанням
+  words: 850
+- section: Герменевтика та ключові образи
+  points:
+  - Детальний розбір символіки
+  - Образ спаленого клена як метафора культурного знищення
+  - Архетипи та класичні підтексти
+  words: 850
+- section: Мова, стиль та поетика
+  points:
+  - Стилістичні інновації автора
+  - Синтез класичної і сучасної поетики
+  - Особливості ритміки та синтаксису
+  words: 850
+- section: Деколонізаційний вимір
+  points:
+  - Який імперський міф руйнує цей текст?
+  - Еміграція як культурний опір
+  - Опір асиміляції та культурне самоствердження
+  words: 850
+- section: Підсумок та рецепція
+  points:
+  - Вплив на МУРівську та Нью-Йоркську групи
+  - Світовий контекст діаспорної поезії
+  - Питання для дискусії
+  words: 750
+vocabulary_hints:
+  required:
+  - канон (canon)
+  - метафора (metaphor)
+  - дискурс (discourse)
+  - інтерпретація (interpretation)
+  recommended:
+  - алегорія (allegory)
+  - контекст (context)
+  - рецепція (reception)
+activity_hints:
+- type: reading
+  focus: Аналіз ключових уривків klen-poetry
+  source: UkrLib
+  items: 5+
+- type: essay-response
+  focus: Філософський або літературознавчий аспект твору
+  output: Аналітичне есе
+connects_to:
+- lit-209
+prerequisites: []
+persona:
+  voice: Senior Philologist & Critic
+  role: Exile Poet
+module_type: literature
+immersion: 100% Ukrainian
+references:
+- name: Klen Poetry — тексти та аналіз
+  url: https://www.ukrlib.com.ua/
+  type: primary
+  notes: Основне джерело
+register: академічний
+grammar: []

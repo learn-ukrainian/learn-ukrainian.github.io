@@ -1,107 +1,55 @@
 ## Linguistic Scan
-1 linguistic error found:
-- Russian calque / Semantic error: `масло (butter — also used for oil; context tells you which)`. This is a critical factual error. In Ukrainian, `масло` refers exclusively to animal fat (butter), while `олія` refers to liquid plant fat (oil). Treating them as the same word depending on context is a direct transfer of Russian semantics (`масло` means both in Russian). 
+Errors found:
+- **Calque**: "Давай варити борщ" is a grammatical calque of the Russian imperative ("давай варить"). The correct Ukrainian 1st person plural imperative uses the "-мо" suffix (e.g., "Зварімо борщ").
+- **Case error**: "Зазвичай суп, омлет або піца" used in response to "Що ти їси на вечерю?" requires the accusative case for the direct object. "Піца" must be "піцу".
 
 ## Exercise Check
-- Marker IDs match the `activity_hints` from the plan.
-- The DSL formats and exercise logic match the expected output.
-- **ISSUE**: All four `<!-- INJECT_ACTIVITY -->` markers are clustered consecutively at the end of the `Напої` section. This violates the rule against clustering exercises at the end and tests concepts out of rhythm with the prose.
+- `<!-- INJECT_ACTIVITY: fill-in-z-chunks -->` (Matches plan: fill-in, 'з + noun', 6 items) — placed correctly after the chunk pattern explanation.
+- `<!-- INJECT_ACTIVITY: match-food-drink -->` (Matches plan: match-up, 10 items) — placed correctly after the Reading Practice.
+- `<!-- INJECT_ACTIVITY: group-sort-food-drinks -->` (Matches plan: group-sort, 10 items) — placed correctly.
+- `<!-- INJECT_ACTIVITY: quiz-meals-dishes -->` (Matches plan: quiz, 6 items) — placed correctly in the summary section.
+*All markers match the plan's `activity_hints` in type and are spaced appropriately.*
 
 ## Scores
 | Dimension | Score | Evidence |
 |-----------|-------|----------|
-| 1. Plan adherence | 9/10 | Covers all required points and communicative situations, but failed to embed the required target word `їжа` natively into the prose (used only as a header). |
-| 2. Linguistic accuracy | 7/10 | CRITICAL ERROR: The text teaches a Russianism by claiming `масло` is also used for oil depending on context. (СУМ-11 confirms `масло` = animal fat, `олія` = plant fat). Otherwise, good use of cases and vocabulary. |
-| 3. Pedagogical quality | 9/10 | Excellent breakdown of grammar as chunks (PPP applied effectively). Slight deduction due to the clustering of activity markers out of logical sequence. |
-| 4. Vocabulary coverage | 9/10 | All recommended items used. Deduction because the required core word `їжа` was only used in a heading, not contextualized in the prose. |
-| 5. Exercise quality | 8/10 | Exercises are well-formed logically, but the placement is flawed. `match-food-drink` and `group-sort` belong before the `з + noun` section, not clustered with the others at the very end. |
-| 6. Engagement & tone | 9/10 | Rich cultural notes (UNESCO, Kotliarevsky), but includes minor meta-commentary: "These next words are not just vocabulary — they are symbols of Ukrainian identity." |
-| 7. Structural integrity | 9/10 | Headings match the plan perfectly. The block of 4 consecutive markers slightly disrupts the visual flow. |
-| 8. Cultural accuracy | 10/10 | Superb context around Borshch, Salo, and Varenyky. Strong decolonized framework. |
-| 9. Dialogue & conversation quality | 9/10 | Logical flaw in Dialogue 1: Marco exclaims "Смачно! Дякую." (Delicious!) immediately after Olenka says "The porridge is on the stove," meaning he reacts to the taste before eating it. |
+| 1. Plan adherence | 9/10 | All sections and required vocabulary are present. Minor deviation: The plan asked for the self-check to include "Name one Ukrainian dish and why it matters", but the generated text asks for "...and one ingredient it contains". |
+| 2. Linguistic accuracy | 7/10 | Contains a critical Russian calque ("Давай варити борщ") and a critical grammatical case error ("піца" instead of "піцу" in an accusative context). |
+| 3. Pedagogical quality | 10/10 | Excellent PPP execution. The explanation of "з + noun" as a memorized chunk (explicitly telling learners they don't need to know the Instrumental grammar yet) is perfect for A1 methodology. |
+| 4. Vocabulary coverage | 10/10 | All required and recommended vocabulary items from the plan are integrated naturally into the dialogues and categorical lists. |
+| 5. Exercise quality | 10/10 | The injected markers perfectly match the plan's requested activity types, focus, and logical sequence. |
+| 6. Engagement & tone | 8/10 | Generally engaging, but contains some gamified/corporate phrasing: "These five dishes are not just vocabulary — they are cultural identity" and "you have a solid food and drink toolkit". |
+| 7. Structural integrity | 8/10 | Word count is 1543 words, which is ~28% over the target of 1200 words (exceeding the >10% tolerance limit). |
+| 8. Cultural accuracy | 10/10 | Culturally accurate representation of Ukrainian dishes, proper use of authentic textbook quotes, and a crucial clarification that "компот" is a drink, not a thick stew. |
+| 9. Dialogue & conversation quality | 9/10 | Dialogues are natural, highly contextualized, and feature distinct speakers, though slightly marred by the aforementioned case error. |
 
 ## Findings
 [Linguistic accuracy] [critical]
-Location: `**масло** (butter — also used for oil; context tells you which)`
-Issue: Critical Russianism/Factual Error. In Ukrainian, "масло" is strictly animal fat (butter), while "олія" is plant-based fat (oil). Claiming "масло" is used for both is teaching Russian semantics as Ukrainian.
-Fix: Remove the incorrect parenthetical note.
+Location: Їжа (Food) — Final dialogue
+Issue: "Давай варити борщ" is a Russian grammatical calque. The proper Ukrainian 1st person plural imperative uses the "-мо" suffix.
+Fix: Replace "Давай варити борщ." with "Зварімо борщ."
 
-[Vocabulary coverage] [minor]
-Location: `Food is woven into Ukrainian daily life...`
-Issue: The required vocabulary word "їжа" (food) is not explicitly introduced in the prose text, only appearing as a section header.
-Fix: Introduce it naturally in the opening sentence.
+[Linguistic accuracy] [critical]
+Location: Діалоги (Dialogues) — Second dialogue
+Issue: The noun "піца" is in the Nominative case, but it functions as the direct object of the elided verb "їм" (answering "Що ти їси на вечерю?"). Like "курку або рибу", it must be in the Accusative case ("піцу").
+Fix: Replace "Зазвичай суп, омлет або піца." with "Зазвичай суп, омлет або піцу."
 
-[Dialogue & conversation quality] [minor]
-Location: `> **Оленка:** Добре. Каша на плиті. *(Good. The porridge is on the stove.)* \n> **Марко:** Смачно! Дякую. *(Delicious! Thanks.)*`
-Issue: Logical flaw. Marco exclaims "Delicious!" when the porridge is still on the stove and he hasn't tasted it yet.
-Fix: Change Marco's response to "Супер! Дякую."
-
-[Exercise quality] [major]
-Location: `<!-- INJECT_ACTIVITY: fill-in-z-chunks -->` through `<!-- INJECT_ACTIVITY: quiz-meals-dishes -->`
-Issue: All four activity markers are clustered together at the end of the "Напої" section. They should be distributed after the relevant concepts are taught.
-Fix: Move the `match-food-drink` and `group-sort-food-drinks` markers before the `How «з + noun» works at A1` subsection.
+[Structural integrity] [major]
+Location: Entire module
+Issue: The generated deterministic word count (1543 words) exceeds the plan's target (1200 words) by over 28%, violating the 10% tolerance rule.
+Fix: No automated fix provided (requires manual structural edits), but noted for future conciseness.
 
 [Engagement & tone] [minor]
-Location: `These next words are not just vocabulary — they are symbols of Ukrainian identity.`
-Issue: Meta-commentary ("telling instead of showing"). The cultural importance should be self-evident from the excellent descriptions of the dishes.
-Fix: Delete the sentence.
+Location: Підсумок — Self-check
+Issue: The phrase "you have a solid food and drink toolkit in Ukrainian" is slightly gamified and feels like "telling instead of showing."
+Fix: No automated fix provided.
 
 ## Verdict: REVISE
-The module has a critical linguistic error teaching Russian semantics for the word "масло" instead of distinguishing it from "олія". The clustering of activities and the logical hiccup in the dialogue also require straightforward deterministic fixes. 
+The module is highly pedagogical, culturally rich, and effectively executes the PPP flow to introduce grammar chunks exactly as prescribed for the A1 level. However, the presence of a Russian imperative calque and a direct object case error requires a REVISE to ensure learners memorize accurate Ukrainian forms from the start.
 
 <fixes>
-- find: "**масло** (butter — also used for oil; context tells you which)"
-  replace: "**масло** (butter)"
-- find: "Food is woven into Ukrainian daily life"
-  replace: "Food (**їжа**) is woven into Ukrainian daily life"
-- find: |
-    > **Оленка:** Добре. Каша на плиті. *(Good. The porridge is on the stove.)*
-    > **Марко:** Смачно! Дякую. *(Delicious! Thanks.)*
-  replace: |
-    > **Оленка:** Добре. Каша на плиті. *(Good. The porridge is on the stove.)*
-    > **Марко:** Супер! Дякую. *(Super! Thanks.)*
-- find: |
-    :::
-
-    These next words are not just vocabulary — they are symbols of Ukrainian identity.
-
-    **Борщ** — the national dish
-  replace: |
-    :::
-
-    **Борщ** — the national dish
-- find: |
-    **Алкогольні напої** (for recognition only): **пиво** (beer), **вино** (wine).
-
-    ### How «з + noun» works at A1
-  replace: |
-    **Алкогольні напої** (for recognition only): **пиво** (beer), **вино** (wine).
-
-    <!-- INJECT_ACTIVITY: match-food-drink -->
-
-    <!-- INJECT_ACTIVITY: group-sort-food-drinks -->
-
-    ### How «з + noun» works at A1
-- find: |
-    Recognizing the pattern is enough at A1.
-    :::
-
-    <!-- INJECT_ACTIVITY: fill-in-z-chunks -->
-
-    <!-- INJECT_ACTIVITY: match-food-drink -->
-
-    <!-- INJECT_ACTIVITY: group-sort-food-drinks -->
-
-    <!-- INJECT_ACTIVITY: quiz-meals-dishes -->
-
-    ## Підсумок — Summary
-  replace: |
-    Recognizing the pattern is enough at A1.
-    :::
-
-    <!-- INJECT_ACTIVITY: fill-in-z-chunks -->
-
-    <!-- INJECT_ACTIVITY: quiz-meals-dishes -->
-
-    ## Підсумок — Summary
+- find: "Давай варити борщ."
+  replace: "Зварімо борщ."
+- find: "Зазвичай суп, омлет або піца."
+  replace: "Зазвичай суп, омлет або піцу."
 </fixes>

@@ -68,6 +68,20 @@ class TestCheckHeadingLevels:
         summary_violations = [v for v in violations if 'підсумок' in v.get('issue', '').lower()]
         assert len(summary_violations) == 0
 
+    def test_core_track_allows_h2_summary(self):
+        """Core tracks also use H2 for Summary — all A1/A2 modules use ## Summary."""
+        content = "---\nmodule: 1\n---\n\n# Title\n\n## Content Section\n\n## Summary\n\nRecap."
+        violations = check_heading_levels(content, level_code='a2')
+        summary_violations = [v for v in violations if 'summary' in v.get('issue', '').lower()]
+        assert len(summary_violations) == 0
+
+    def test_core_track_allows_h2_pidsumok(self):
+        """Core tracks allow H2 for Підсумок too."""
+        content = "---\nmodule: 1\n---\n\n# Title\n\n## Підсумок — Summary\n\nRecap."
+        violations = check_heading_levels(content, level_code='a1')
+        summary_violations = [v for v in violations if 'підсумок' in v.get('issue', '').lower()]
+        assert len(summary_violations) == 0
+
 
 # =============================================================================
 # TEST: check_table_column_consistency
