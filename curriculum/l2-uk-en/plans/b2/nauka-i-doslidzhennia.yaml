@@ -123,12 +123,12 @@ activities:
   total_min_items: 20
 
 activity_hints:
-  - type: cloze
+  - type: reading
     focus: "Заповнити пропуски у науковому тексті правильними термінами та кліше."
-  - type: fill-in
+  - type: essay-response
     focus: "Доповнити академічні формулювання: 'У статті розглянуто...', 'Автор доводить...',
       'Перспективним є...'."
-  - type: match-up
+  - type: comparative-study
     focus: "Зіставити наукову дисципліну з її специфічною термінологією."
   - type: select
     focus: "Обрати правильний регістр наукового стилю для конкретного контексту."

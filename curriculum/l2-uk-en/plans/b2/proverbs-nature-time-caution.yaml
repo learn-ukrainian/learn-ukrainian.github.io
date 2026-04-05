@@ -120,11 +120,11 @@ writing_tasks:
       їх до сучасних реалій (кібербезпека, екологія тощо)."
 
 activity_hints:
-  - type: match-up
+  - type: comparative-study
     focus: "Зіставити прислів'я про природу та час із їхнім тлумаченням."
-  - type: fill-in
+  - type: essay-response
     focus: "Доповнити прислів'я пропущеним словом або частиною."
-  - type: group-sort
+  - type: critical-analysis
     focus: "Розподілити прислів'я за тематичними групами: природа, час, обережність."
   - type: select
     focus: "Обрати доречне прислів'я для описаної ситуації з-поміж чотирьох варіантів."

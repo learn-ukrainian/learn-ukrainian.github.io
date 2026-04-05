@@ -121,11 +121,11 @@ activities:
   total_min_items: 20
 
 activity_hints:
-  - type: match-up
+  - type: comparative-study
     focus: "Зіставити зооморфний фразеологізм із його тлумаченням (значенням)."
-  - type: fill-in
+  - type: essay-response
     focus: "Доповнити ідіому пропущеною назвою тварини."
-  - type: group-sort
+  - type: critical-analysis
     focus: "Розподілити зооморфні ідіоми за конотацією: позитивні (працелюбність,
       мудрість) та негативні (лінощі, підступність)."
   - type: select

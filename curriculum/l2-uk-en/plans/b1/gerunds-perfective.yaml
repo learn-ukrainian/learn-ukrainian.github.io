@@ -135,10 +135,10 @@ vocabulary_hints:
     - "зібравшись (having gathered — reflexive perfective gerund)"
     - "принісши (having brought — consonant-stem gerund)"
 activity_hints:
-  - type: fill-in
+  - type: essay-response
     focus: "Form perfective gerunds from given verbs, including reflexives"
     items: 10
-  - type: quiz
+  - type: reading
     focus: "Choose imperfective or perfective gerund based on temporal logic (simultaneous
       vs sequential)"
     items: 10
@@ -148,7 +148,7 @@ activity_hints:
   - type: error-correction
     focus: "Fix errors: wrong вид, dangling gerund, awkward consonant-stem forms"
     items: 6
-  - type: match-up
+  - type: comparative-study
     focus: "Match gerund sentences to their clause equivalents"
     items: 8
 connects_to:

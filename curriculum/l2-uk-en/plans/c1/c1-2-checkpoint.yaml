@@ -122,10 +122,10 @@ activity_hints:
   - type: error-correction
     description: "Fix канцеляризми, calques, and register inconsistencies in a
       mixed professional/journalistic text."
-  - type: fill-in
+  - type: essay-response
     description: "Complete sentences across C1.2 thematic fields (politics, economics,
       media, sports, health) with appropriate terminology."
-  - type: match-up
+  - type: comparative-study
     description: "Match C1.2 key concepts (медіаграмотність, діловий етикет, суспільний
       дискурс) with definitions and contextual examples."
 

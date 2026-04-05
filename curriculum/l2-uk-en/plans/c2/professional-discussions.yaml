@@ -139,7 +139,7 @@ activity_hints:
   - type: error-correction
     focus: Виправити порушення стилю та логіки аргументації у тексті професійної
       полеміки
-  - type: fill-in
+  - type: essay-response
     focus: 'Доповнити текст термінологією переговорного процесу: контраргументація,
       фасилітація, консенсус, редукція'
 phase: C2.3 [Professional Specialization]

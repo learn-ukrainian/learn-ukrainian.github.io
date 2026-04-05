@@ -121,7 +121,7 @@ activity_hints:
   - type: error-correction
     description: "Identify and correct manipulative language techniques in news headlines
       — replace clickbait and emotional markers with neutral formulations."
-  - type: match-up
+  - type: comparative-study
     description: "Match media manipulation techniques (фреймінг, клікбейт, дискредитація)
       with real-world examples and countermeasures."
   - type: select

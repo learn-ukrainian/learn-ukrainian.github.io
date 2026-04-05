@@ -184,19 +184,19 @@ vocabulary_hints:
     - "сортувати (to sort — waste sorting)"
     - "екосистема (ecosystem — biological community)"
 activity_hints:
-  - type: quiz
+  - type: reading
     focus: "Identify погода vocabulary from descriptions, match тварини/рослини to
       their Ukrainian names, and classify environmental terms."
     items: 12
-  - type: match-up
+  - type: comparative-study
     focus: "Match Ukrainian рослини/тварини to their descriptions or images, match
       weather terms to weather phenomena."
     items: 12
-  - type: fill-in
+  - type: essay-response
     focus: "Complete a weather forecast and nature description with appropriate vocabulary,
       using correct gender agreement and cases."
     items: 12
-  - type: group-sort
+  - type: critical-analysis
     focus: "Sort vocabulary into categories: погода, дерева, квіти, дикі тварини,
       свійські тварини, екологія."
     items: 12

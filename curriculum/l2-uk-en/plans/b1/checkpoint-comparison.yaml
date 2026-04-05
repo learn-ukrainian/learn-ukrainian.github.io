@@ -121,16 +121,16 @@ vocabulary_hints:
     - "рубрика (rubric — assessment criteria)"
     - "аналіз помилок (error analysis)"
 activity_hints:
-  - type: quiz
+  - type: reading
     focus: "Comprehensive comparison formation quiz (all types, including suppletive)"
     items: 10
-  - type: fill-in
+  - type: essay-response
     focus: "Mixed word formation and comparison exercises"
     items: 8
   - type: error-correction
     focus: "Find and fix errors across all Phase 5 topics"
     items: 8
-  - type: match-up
+  - type: comparative-study
     focus: "Match base forms to comparatives, superlatives, derived nouns"
     items: 10
   - type: free-write

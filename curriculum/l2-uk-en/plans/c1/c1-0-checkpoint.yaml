@@ -117,7 +117,7 @@ activity_hints:
   - type: error-correction
     description: "Fix academic register violations, logical inconsistencies, and
       stylistic errors in a mixed-register text."
-  - type: fill-in
+  - type: essay-response
     description: "Complete an academic text with appropriate discourse markers,
       hedging expressions, and logical connectors."
   - type: select

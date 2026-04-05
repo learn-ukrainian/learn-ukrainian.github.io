@@ -120,7 +120,7 @@ activity_hints:
   - type: error-correction
     description: "Fix diplomatic protocol violations and terminology errors in a draft
       diplomatic note."
-  - type: match-up
+  - type: comparative-study
     description: "Match international organizations (ООН, Рада Європи, ОБСЄ, НАТО)
       with their functions, Ukrainian terminology, and Ukraine's role."
   - type: select

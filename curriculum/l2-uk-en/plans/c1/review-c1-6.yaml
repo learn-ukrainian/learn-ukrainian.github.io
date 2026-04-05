@@ -119,10 +119,10 @@ activity_hints:
   - type: error-correction
     description: "Fix errors across all C1.6 topics in a single text: case usage,
       complex sentences, stylistic figures, literary terminology."
-  - type: match-up
+  - type: comparative-study
     description: "Match C1.6 key concepts (стилістичні фігури, відмінкові функції,
       літературні напрями) with definitions and examples."
-  - type: fill-in
+  - type: essay-response
     description: "Complete sentences using grammatical structures from the entire
       C1.3-C1.6 program: cases, conditional mood, complex syntax."
   - type: select

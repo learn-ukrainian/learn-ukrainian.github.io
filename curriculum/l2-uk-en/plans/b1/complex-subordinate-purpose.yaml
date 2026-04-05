@@ -112,10 +112,10 @@ vocabulary_hints:
     - "навіщо (what for — question word for purpose)"
     - "для чого (what for — question phrase for purpose)"
 activity_hints:
-  - type: fill-in
+  - type: essay-response
     focus: "Complete purpose sentences: щоб + infinitive or щоб + past-tense form"
     items: 10
-  - type: quiz
+  - type: reading
     focus: "Classify: з'ясувальне чи обставинне мети?"
     items: 8
   - type: sentence-builder
@@ -124,7 +124,7 @@ activity_hints:
   - type: error-correction
     focus: "Fix verb form errors after щоб (future → past-tense correction)"
     items: 6
-  - type: match-up
+  - type: comparative-study
     focus: "Match purpose clauses to their prepositional equivalents (щоб ↔ для +
       Р.в.)"
     items: 6

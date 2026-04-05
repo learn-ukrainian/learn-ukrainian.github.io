@@ -131,13 +131,13 @@ vocabulary_hints:
     - "а втім (but then again)"
     - "зате (but on the other hand)"
 activity_hints:
-  - type: quiz
+  - type: reading
     focus: "Classify сполучники and смислові зв'язки in складносурядних реченнях"
     items: 10
-  - type: fill-in
+  - type: essay-response
     focus: "Insert correct сполучник (єднальний/протиставний/розділовий) and punctuation"
     items: 10
-  - type: match-up
+  - type: comparative-study
     focus: "Match складносурядні речення to their смислові зв'язки types"
     items: 8
   - type: error-correction

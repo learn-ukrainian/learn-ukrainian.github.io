@@ -173,15 +173,15 @@ vocabulary_hints:
     - "прописом (in words — writing numbers as words, not digits)"
     - "власна назва (proper name)"
 activity_hints:
-  - type: quiz
+  - type: reading
     focus: "Decode абревіатури: match abbreviated forms to full names, determine граматичний
       рід, and identify type of abbreviation."
     items: 10
-  - type: match-up
+  - type: comparative-study
     focus: "Match графічні скорочення to their full forms (вул. ↔ вулиця, грн ↔ гривня,
       р-н ↔ район)."
     items: 8
-  - type: fill-in
+  - type: essay-response
     focus: "Write dates, times, addresses, and measurements using correct Ukrainian
       скорочення and number agreement."
     items: 8
@@ -189,7 +189,7 @@ activity_hints:
     focus: "Find and correct errors in абревіатури usage: wrong gender agreement,
       incorrect скорочення format, missing/extra крапки."
     items: 6
-  - type: group-sort
+  - type: critical-analysis
     focus: "Sort абревіатури by type: літерні, звукові, складноскорочені. Sort скорочення
       by rules: з крапкою vs без крапки."
     items: 10

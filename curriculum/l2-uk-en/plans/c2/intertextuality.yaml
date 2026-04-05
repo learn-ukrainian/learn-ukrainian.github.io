@@ -133,7 +133,7 @@ activity_hints:
   - type: essay-response
     focus: Написати оповідання з алюзіями на твір української класики, 
       обґрунтувавши вибір прецедентного тексту
-  - type: match-up
+  - type: comparative-study
     focus: 'Зіставити типи інтертекстуальних зв''язків з їхніми визначеннями: пастиш,
       пародія, алюзія, ремінісценція'
 phase: C2.1 [Stylistic Perfection]

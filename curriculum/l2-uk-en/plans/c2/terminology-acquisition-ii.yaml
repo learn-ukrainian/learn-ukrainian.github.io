@@ -142,7 +142,7 @@ activity_hints:
   - type: error-correction
     focus: 'Виправити калькування та інтерференцію у фаховому тексті: хибні друзі
       перекладача'
-  - type: match-up
+  - type: comparative-study
     focus: 'Зіставити автентичні українські терміни з їхніми калькованими еквівалентами:
       питома форма vs кальки'
 phase: C2.3 [Professional Specialization]

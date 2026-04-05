@@ -148,13 +148,13 @@ activities:
   total_min_items: 32
 
 activity_hints:
-  - type: match-up
+  - type: comparative-study
     description: "Ukrainian political term matched to its definition (e.g., суверенітет↔повна
       незалежність держави)"
-  - type: fill-in
+  - type: essay-response
     description: "Complete a political news text with correct terms (e.g., Верховна
       Рада ухвалила ___)"
-  - type: group-sort
+  - type: critical-analysis
     description: "Sort vocabulary into суспільно-політична vs побутова лексика"
   - type: error-correction
     description: "Fix Russianisms in political language (e.g., 'вибори пройшли'→'вибори

@@ -174,15 +174,15 @@ vocabulary_hints:
     - "ділове листування (business correspondence)"
     - "шановний (esteemed/dear — formal address)"
 activity_hints:
-  - type: quiz
+  - type: reading
     focus: "Identify which text belongs to офіційно-діловий стиль vs other styles,
       and recognize характерні ознаки of the formal register."
     items: 8
-  - type: match-up
+  - type: comparative-study
     focus: "Match канцеляризми and штампи to their розмовні equivalents (e.g., доводжу
       до вашого відома ↔ хочу сказати)."
     items: 8
-  - type: fill-in
+  - type: essay-response
     focus: "Complete a заява or автобіографія template with correct formal vocabulary
       and case forms."
     items: 8

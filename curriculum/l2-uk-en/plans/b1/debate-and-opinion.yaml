@@ -179,15 +179,15 @@ vocabulary_hints:
     - "підсумовуючи (summarizing — concluding marker)"
     - "істина (truth — goal of discussion)"
 activity_hints:
-  - type: quiz
+  - type: reading
     focus: "Identify теза, аргумент, приклад in text excerpts. Recognize logical fallacies.
       Choose correct формули дискусії."
     items: 12
-  - type: fill-in
+  - type: essay-response
     focus: "Complete argumentative sentences with correct складнопідрядні сполучники
       (тому що, щоб, якщо, хоча) and вставні слова."
     items: 12
-  - type: match-up
+  - type: comparative-study
     focus: "Match аргументація terms to definitions, формули дискусії to their functions
       (agreeing, disagreeing, summarizing)."
     items: 12

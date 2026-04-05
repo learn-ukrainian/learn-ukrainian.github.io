@@ -142,7 +142,7 @@ activity_hints:
   - type: essay-response
     focus: Написати текст промови для двох різних аудиторій на одну тему з 
       різним регістром
-  - type: match-up
+  - type: comparative-study
     focus: 'Зіставити мовленнєві акти з їхніми культурно-специфічними реалізаціями:
       прохання, відмова, комплімент'
   - type: error-correction

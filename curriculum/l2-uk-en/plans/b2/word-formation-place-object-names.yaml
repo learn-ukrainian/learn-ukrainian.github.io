@@ -141,11 +141,11 @@ activities:
   total_min_items: 40
 
 activity_hints:
-  - type: fill-in
+  - type: essay-response
     description: "Form place/object names from verbs (e.g., пекти→пекарня, читати→читальня)"
-  - type: match-up
+  - type: comparative-study
     description: "Match verb/noun to the derived place name"
-  - type: group-sort
+  - type: critical-analysis
     description: "Sort words by suffix: -ня / -ище / -арня / -ач / -ник"
   - type: select
     description: "Choose the correct derivation for a given meaning"

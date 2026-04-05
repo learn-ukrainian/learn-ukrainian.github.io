@@ -141,7 +141,7 @@ activity_hints:
   - type: error-correction
     focus: Виправити кальки, плеоназми та порушення керування у тексті наукового
       стилю
-  - type: match-up
+  - type: comparative-study
     focus: Зіставити варіантні морфологічні форми з їхнім стилістичним 
       маркуванням
 phase: C2.4 [Meta-Skills & Capstone]

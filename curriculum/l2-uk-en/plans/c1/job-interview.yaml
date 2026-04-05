@@ -119,7 +119,7 @@ activity_hints:
   - type: error-correction
     description: "Fix register violations in interview responses — replace colloquial
       expressions with professional Ukrainian formulations."
-  - type: match-up
+  - type: comparative-study
     description: "Match interview question types (поведінкове, ситуативне, ціннісне)
       with appropriate response strategies and Ukrainian formulas."
   - type: select

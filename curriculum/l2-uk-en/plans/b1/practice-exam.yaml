@@ -48,9 +48,9 @@ content_outline:
       - "Expressing opinion on familiar topic with arguments"
       - "Spontaneous Q&A on personal topics"
 activity_hints:
-  - type: quiz
+  - type: reading
     focus: "Reading comprehension — multiple choice"
-  - type: fill-in
+  - type: essay-response
     focus: "Listening gap-fill"
   - type: translate
     focus: "Writing tasks"

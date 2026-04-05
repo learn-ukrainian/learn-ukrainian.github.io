@@ -146,7 +146,7 @@ activity_hints:
   - type: error-correction
     focus: Виправити порушення академічної доброчесності та стилю цитування у 
       професійному звіті
-  - type: fill-in
+  - type: essay-response
     focus: 'Доповнити текст термінологією звітності: верифікація, когерентність, модальність,
       імперативність'
 phase: C2.3 [Professional Specialization]

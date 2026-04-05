@@ -106,10 +106,10 @@ vocabulary:
     - морфологія
 
 activity_hints:
-  - type: fill-in
+  - type: essay-response
     description: "Complete sentences with correct forms of irregular verbs (дати→даси,
       їсти→їжте, бути→буде) in various tenses and moods."
-  - type: match-up
+  - type: comparative-study
     description: "Match irregular verb infinitives with their conjugation patterns
       and identify the type of stem alternation."
   - type: error-correction

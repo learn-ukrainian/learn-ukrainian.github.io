@@ -145,16 +145,16 @@ vocabulary_hints:
     - "основа (stem — the part of a word without the ending)"
     - "мотивувальне слово (motivating word — base of derivation)"
 activity_hints:
-  - type: quiz
+  - type: reading
     focus: "Identify the suffix and formation method for agent and place nouns"
     items: 8
-  - type: fill-in
+  - type: essay-response
     focus: "Form agent nouns (m. and f.) from verbs and nouns"
     items: 8
-  - type: match-up
+  - type: comparative-study
     focus: "Match agent noun to its workplace (лікар-лікарня, пекар-пекарня)"
     items: 8
-  - type: group-sort
+  - type: critical-analysis
     focus: "Sort derived nouns by formation method: suffixal, prefixal-suffixal, zero-derivation"
     items: 10
   - type: sentence-builder

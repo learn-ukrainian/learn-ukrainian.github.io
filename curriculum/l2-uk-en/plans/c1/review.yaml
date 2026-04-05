@@ -113,7 +113,7 @@ activity_hints:
   - type: error-correction
     description: "Fix morphological, syntactic, and stylistic errors in a mixed-style
       text — including surzhyk forms, calques, and incorrect participial phrases."
-  - type: match-up
+  - type: comparative-study
     description: "Match linguistic terms from C1.1-C1.4 modules (парадигма, когерентність,
       предикативність) with correct definitions and example sentences."
   - type: critical-analysis
@@ -122,7 +122,7 @@ activity_hints:
   - type: essay-response
     description: "Write a synthesis paragraph connecting language, identity, and culture
       using at least 5 complex sentence types studied in C1."
-  - type: fill-in
+  - type: essay-response
     description: "Complete a review exercise with correct morphological forms — numeral
       declension, participial phrases, and complex punctuation."
 

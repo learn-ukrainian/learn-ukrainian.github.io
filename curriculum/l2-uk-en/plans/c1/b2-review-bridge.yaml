@@ -122,10 +122,10 @@ activity_hints:
   - type: essay-response
     description: "Write a structured paragraph (100-150 words) arguing whether language
       can be a tool for decolonization, using complex syntax."
-  - type: fill-in
+  - type: essay-response
     description: "Complete sentences with appropriate discourse markers and logical
       connectors from academic Ukrainian register."
-  - type: match-up
+  - type: comparative-study
     description: "Match abstract academic terms (парадигма, дискурс, контекст) with
       their definitions and example sentences."
 

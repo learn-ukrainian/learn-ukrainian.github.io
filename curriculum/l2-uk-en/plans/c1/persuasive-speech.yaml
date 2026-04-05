@@ -122,7 +122,7 @@ activity_hints:
   - type: reading
     description: "Read an excerpt from Ukrainian Baroque oratory (Феофан Прокопович)
       and identify the classical rhetorical structure (inventio, dispositio, elocutio)."
-  - type: match-up
+  - type: comparative-study
     description: "Match rhetorical concepts (етос, пафос, логос, інвенція, елокуція)
       with their definitions, functions, and examples from Ukrainian speeches."
 

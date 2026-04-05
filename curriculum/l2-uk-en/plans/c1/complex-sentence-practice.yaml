@@ -122,7 +122,7 @@ activity_hints:
   - type: essay-response
     description: "Write a structured academic paragraph (150-200 words) using at least
       one example of each complex sentence type (ССР, СПР, БСР, змішане)."
-  - type: match-up
+  - type: comparative-study
     description: "Match sentence types with their most common functional contexts
       (науковий стиль, публіцистика, офіційно-діловий)."
   - type: select

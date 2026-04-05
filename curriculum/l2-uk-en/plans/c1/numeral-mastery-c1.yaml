@@ -120,7 +120,7 @@ vocabulary:
     - варіантність
 
 activity_hints:
-  - type: fill-in
+  - type: essay-response
     description: "Complete financial/statistical sentences with correctly declined
       compound numerals (e.g., 'семисот п'ятдесяти чотирьох гривень')."
   - type: error-correction
@@ -129,7 +129,7 @@ activity_hints:
   - type: select
     description: "Choose the correct case form of numerals in context — instrumental,
       genitive, or dative in date/time expressions."
-  - type: match-up
+  - type: comparative-study
     description: "Match numeral types (збірний, дробовий, порядковий, кількісний)
       with their usage rules and example sentences."
   - type: critical-analysis

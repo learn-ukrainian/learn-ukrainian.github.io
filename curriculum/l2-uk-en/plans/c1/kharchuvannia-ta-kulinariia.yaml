@@ -110,10 +110,10 @@ vocabulary:
     - автентичний
 
 activity_hints:
-  - type: fill-in
+  - type: essay-response
     description: "Complete recipes and culinary descriptions with appropriate Ukrainian
       cooking vocabulary — preparation methods, seasonings, taste descriptions."
-  - type: match-up
+  - type: comparative-study
     description: "Match Ukrainian dishes with their regions, ingredients, and cultural
       significance."
   - type: critical-analysis

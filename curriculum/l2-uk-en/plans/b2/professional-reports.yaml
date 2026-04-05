@@ -166,11 +166,11 @@ activities:
   total_min_items: 25
 
 activity_hints:
-  - type: fill-in
+  - type: essay-response
     focus: "Доповнити звіт термінологією, конекторами та висновками"
   - type: error-correction
     focus: "Виправити двозначність та нечіткість у звітному документі"
-  - type: unjumble
+  - type: critical-analysis
     focus: "Відновити правильний порядок розділів звіту"
   - type: essay-response
     focus: "Написати Executive Summary за наданим аналітичним звітом"

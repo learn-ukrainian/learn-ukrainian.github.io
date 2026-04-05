@@ -136,7 +136,7 @@ activity_hints:
   - type: critical-analysis
     focus: Оцінити аргументацію у тексті про етику відповідального туризму та 
       овертуризм
-  - type: fill-in
+  - type: essay-response
     focus: 'Доповнити текст термінологією тревел-індустрії: гейміфікація, овертуризм,
       гастротуризм'
   - type: error-correction

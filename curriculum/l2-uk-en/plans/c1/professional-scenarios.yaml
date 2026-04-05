@@ -122,7 +122,7 @@ activity_hints:
   - type: select
     description: "Choose the most appropriate communication strategy for different
       professional crisis scenarios (press conference, investor meeting, media interview)."
-  - type: match-up
+  - type: comparative-study
     description: "Match negotiation strategies (Win-Win, жорсткий стиль, компроміс)
       with their linguistic markers and example phrases."
   - type: error-correction

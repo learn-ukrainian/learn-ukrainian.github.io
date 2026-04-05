@@ -143,9 +143,9 @@ activities:
   total_min_items: 20
 
 activity_hints:
-  - type: match-up
+  - type: comparative-study
     focus: "Зіставити природничий фразеологізм із його значенням."
-  - type: fill-in
+  - type: essay-response
     focus: "Доповнити ідіому пропущеним природничим елементом (вода, вогонь, вітер,
       земля)."
   - type: select

@@ -145,16 +145,16 @@ vocabulary_hints:
     - "перемога (victory)"
     - "експозиція (exposition, exhibit)"
 activity_hints:
-  - type: fill-in
+  - type: essay-response
     focus: "Complete texts about holidays and culture using correct складні речення"
     items: 12
-  - type: quiz
+  - type: reading
     focus: "Match Ukrainian holidays to their traditions and dates"
     items: 12
   - type: sentence-builder
     focus: "Express opinions about cultural events using Phase 8 syntax patterns"
     items: 12
-  - type: match-up
+  - type: comparative-study
     focus: "Match leisure/cultural vocabulary to descriptions"
     items: 12
   - type: error-correction

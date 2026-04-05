@@ -141,7 +141,7 @@ activity_hints:
   - type: error-correction
     focus: Виправити стилістичні помилки та порушення етикету у тексті 
       супровідного листа
-  - type: fill-in
+  - type: essay-response
     focus: 'Доповнити текст портфоліо термінологією самопрезентації: компетентність,
       ціннісна пропозиція, результативність'
 phase: C2.3 [Professional Specialization]

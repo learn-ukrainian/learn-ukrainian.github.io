@@ -142,13 +142,13 @@ vocabulary_hints:
     - "заважати (to bother/disturb — governs Д.в.)"
     - "завдячувати (to owe gratitude — governs Д.в.)"
 activity_hints:
-  - type: quiz
+  - type: reading
     focus: "Identify why dative is used in each sentence (state, age, recipient, etc.)"
     items: 8
-  - type: fill-in
+  - type: essay-response
     focus: "Put pronouns/nouns into correct dative form in impersonal constructions"
     items: 8
-  - type: match-up
+  - type: comparative-study
     focus: "Match impersonal predicate/verb to its dative experiencer sentence"
     items: 8
   - type: sentence-builder

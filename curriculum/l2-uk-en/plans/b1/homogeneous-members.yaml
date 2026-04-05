@@ -133,11 +133,11 @@ vocabulary_hints:
     - "відокремлений (detached/parenthetical — contrasted with однорідний)"
     - "асиндетон (asyndeton — listing without conjunctions)"
 activity_hints:
-  - type: fill-in
+  - type: essay-response
     focus: "Розставте розділові знаки в реченнях з однорідними членами: коми, двокрапки,
       тире"
     items: 10
-  - type: quiz
+  - type: reading
     focus: "Визначте тип сполучника (єднальний, протиставний, розділовий) і чи потрібна
       кома"
     items: 10
@@ -145,10 +145,10 @@ activity_hints:
     focus: "Знайдіть і виправте пунктуаційні помилки в реченнях з однорідними членами
       та узагальнювальним словом"
     items: 8
-  - type: group-sort
+  - type: critical-analysis
     focus: "Розподіліть сполучники за типами: єднальні, протиставні, розділові"
     items: 10
-  - type: match-up
+  - type: comparative-study
     focus: "З'єднайте пунктуаційне правило з прикладом: одиничний і → без коми,
       повторюваний і...і → кома"
     items: 8

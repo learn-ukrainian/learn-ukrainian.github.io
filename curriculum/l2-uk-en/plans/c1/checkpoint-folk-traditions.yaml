@@ -116,7 +116,7 @@ activity_hints:
   - type: error-correction
     description: "Fix factual errors in a text about folk traditions — misattributed
       regions, wrong ritual sequences, confused terminology."
-  - type: match-up
+  - type: comparative-study
     description: "Match folk rituals (Коляда, Купала, весілля, хрестини) with their
       seasons, symbols, and regional specifics."
   - type: true-false

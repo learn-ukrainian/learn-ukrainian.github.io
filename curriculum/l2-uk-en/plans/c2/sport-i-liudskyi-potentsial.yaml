@@ -138,7 +138,7 @@ activity_hints:
   - type: critical-analysis
     focus: Оцінити аргументацію у дискусії про відсторонення національних 
       збірних за політичні причини
-  - type: fill-in
+  - type: essay-response
     focus: 'Доповнити текст спортивною термінологією: допінг-контроль, паралімпізм,
       рекреація, біохакінг'
   - type: error-correction

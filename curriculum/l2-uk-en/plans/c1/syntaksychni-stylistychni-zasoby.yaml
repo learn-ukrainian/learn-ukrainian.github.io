@@ -123,7 +123,7 @@ activity_hints:
   - type: select
     description: "Identify the syntactic figure used in given sentences from Ukrainian
       poetry and oratory — distinguish градація from паралелізм, еліпсис from апозіопеза."
-  - type: match-up
+  - type: comparative-study
     description: "Match syntactic figures (інверсія, еліпсис, асиндетон, полісиндетон,
       анафора, градація) with definitions, examples, and emotional effects."
   - type: essay-response

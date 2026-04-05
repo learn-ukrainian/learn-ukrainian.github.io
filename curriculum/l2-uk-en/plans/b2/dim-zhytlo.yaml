@@ -177,7 +177,7 @@ activities:
   total_min_items: 25
 
 activity_hints:
-  - type: fill-in
+  - type: essay-response
     focus: "Вставити правильні пасивні форми для опису стану житла (пофарбовано,
       замінено, відремонтовано)"
   - type: error-correction
@@ -185,7 +185,7 @@ activity_hints:
       форми)"
   - type: select
     focus: "Обрати доречний варіант для побутової ситуації (скарга, прохання, опис)"
-  - type: match-up
+  - type: comparative-study
     focus: "Зіставити тип приміщення з його описом та характеристиками"
 
 references:

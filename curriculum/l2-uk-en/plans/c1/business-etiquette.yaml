@@ -119,7 +119,7 @@ activity_hints:
   - type: error-correction
     description: "Fix etiquette violations in business communication examples — correct
       forms of address, inappropriate familiarity, and protocol breaches."
-  - type: match-up
+  - type: comparative-study
     description: "Match business situations (знайомство, нарада, конфлікт) with appropriate
       Ukrainian etiquette formulas and register choices."
   - type: select

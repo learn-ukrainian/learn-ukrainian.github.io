@@ -140,7 +140,7 @@ activity_hints:
       порівнянням методологій
   - type: error-correction
     focus: Виправити порушення логіки та стилю у тексті літературного огляду
-  - type: match-up
+  - type: comparative-study
     focus: 'Зіставити типи джерел з методами їх верифікації: первинні, вторинні, цифрові,
       архівні'
 phase: C2.3 [Professional Specialization]

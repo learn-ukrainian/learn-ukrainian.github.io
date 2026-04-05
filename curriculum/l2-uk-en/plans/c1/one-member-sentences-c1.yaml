@@ -125,7 +125,7 @@ activity_hints:
   - type: essay-response
     description: "Rewrite a text passage first using only називні речення for a static,
       contemplative effect, then using дієслівні односкладні for dynamic impact."
-  - type: fill-in
+  - type: essay-response
     description: "Complete text passages with appropriate one-member sentence constructions
       matching the required register and stylistic effect."
 

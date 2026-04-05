@@ -120,12 +120,12 @@ activities:
   total_min_items: 20
 
 activity_hints:
-  - type: match-up
+  - type: comparative-study
     focus: "Зіставити релігійний термін із його визначенням (єпархія, томос, літургія,
       конфесія)."
-  - type: fill-in
+  - type: essay-response
     focus: "Доповнити текст про релігійні свята правильною спеціалізованою лексикою."
-  - type: group-sort
+  - type: critical-analysis
     focus: "Розподілити лексику за категоріями: конфесійна (церковна) vs побутова
       (повсякденна)."
   - type: select

@@ -139,13 +139,13 @@ vocabulary_hints:
     - "забагато (too much — governs Р.в.)"
     - "замало (too little — governs Р.в.)"
 activity_hints:
-  - type: quiz
+  - type: reading
     focus: "Choose correct noun form after cardinal, collective, and quantity words"
     items: 8
-  - type: fill-in
+  - type: essay-response
     focus: "Complete quantity expressions with correct numeral + case agreement"
     items: 8
-  - type: match-up
+  - type: comparative-study
     focus: "Match numeral type (cardinal/collective/indefinite) to noun category"
     items: 8
   - type: error-correction
@@ -154,7 +154,7 @@ activity_hints:
   - type: sentence-builder
     focus: "Build sentences with quantity expressions for recipes and statistics"
     items: 6
-  - type: group-sort
+  - type: critical-analysis
     focus: "Sort nouns into 'use cardinal' vs 'use collective' numeral categories"
     items: 10
 connects_to:

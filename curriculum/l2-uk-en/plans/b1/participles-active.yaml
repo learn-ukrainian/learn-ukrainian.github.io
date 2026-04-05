@@ -159,20 +159,20 @@ vocabulary_hints:
     - "мийний (washing/cleaning — replaces Russian calque миючий)"
     - "завідувач (head/manager — replaces Russian calque завідуючий)"
 activity_hints:
-  - type: quiz
+  - type: reading
     focus: "Identify дієприкметники in sentences: is it active or passive? present
       or past?"
     items: 10
-  - type: fill-in
+  - type: essay-response
     focus: "Form active participles from given verbs using correct suffixes"
     items: 8
   - type: error-correction
     focus: "Replace Russian calque participles with natural Ukrainian equivalents"
     items: 8
-  - type: match-up
+  - type: comparative-study
     focus: "Match active participles to their base verbs and meanings"
     items: 8
-  - type: group-sort
+  - type: critical-analysis
     focus: "Sort participles into categories: natural Ukrainian vs Russian calque"
     items: 12
   - type: sentence-builder

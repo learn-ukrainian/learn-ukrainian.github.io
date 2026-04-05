@@ -117,17 +117,17 @@ vocabulary_hints:
     - "відколи (since when)"
     - "кореляція (correlation — aspect/tense matching)"
 activity_hints:
-  - type: fill-in
+  - type: essay-response
     focus: "Insert correct temporal conjunction (коли/поки/щойно/перш ніж/після того
       як)"
     items: 10
-  - type: quiz
+  - type: reading
     focus: "Is this одночасність or різночасність? Determine temporal relation"
     items: 8
   - type: sentence-builder
     focus: "Combine two events into temporal clauses with correct aspect/tense"
     items: 8
-  - type: match-up
+  - type: comparative-study
     focus: "Match temporal clauses to their дієприслівник equivalents"
     items: 8
   - type: error-correction

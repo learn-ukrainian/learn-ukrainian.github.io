@@ -166,12 +166,12 @@ activities:
   total_min_items: 40
 
 activity_hints:
-  - type: fill-in
+  - type: essay-response
     focus: "Вставити правильну відмінкову форму після прийменника в складному
       тексті"
   - type: error-correction
     focus: "Знайти та виправити всі відмінкові помилки в аналітичному тексті"
-  - type: group-sort
+  - type: critical-analysis
     focus: "Класифікувати вжиті відмінки за функцією (частковий родовий, орудний
       порівняння тощо)"
   - type: select

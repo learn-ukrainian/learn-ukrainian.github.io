@@ -144,13 +144,13 @@ vocabulary_hints:
     - "зранку (from the morning — temporal adverb)"
     - "о (at — clock time: о п'ятій годині)"
 activity_hints:
-  - type: quiz
+  - type: reading
     focus: "Choose correct temporal preposition + case for given time expressions"
     items: 8
-  - type: fill-in
+  - type: essay-response
     focus: "Complete sentences with через/за/протягом/перед/після + correct case"
     items: 8
-  - type: match-up
+  - type: comparative-study
     focus: "Match temporal preposition to its governed case and meaning"
     items: 8
   - type: error-correction
@@ -159,7 +159,7 @@ activity_hints:
   - type: sentence-builder
     focus: "Build a daily schedule using various temporal prepositions"
     items: 6
-  - type: group-sort
+  - type: critical-analysis
     focus: "Sort temporal expressions by preposition + case pattern"
     items: 10
 connects_to:

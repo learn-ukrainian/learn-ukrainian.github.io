@@ -114,13 +114,13 @@ activity_hints:
   - type: essay-response
     description: "Write a detailed essay outline (100-150 words) with thesis, three
       key arguments, and conclusion on a Ukrainian cultural topic."
-  - type: fill-in
+  - type: essay-response
     description: "Complete transition sentences between essay paragraphs with appropriate
       cohesion devices."
-  - type: match-up
+  - type: comparative-study
     description: "Match essay components (вступ, теза, аргумент, висновок) with their
       functions and example sentences."
-  - type: cloze
+  - type: reading
     description: "Fill in missing structural elements and transition phrases in a
       partially written essay about urban decolonization."
 

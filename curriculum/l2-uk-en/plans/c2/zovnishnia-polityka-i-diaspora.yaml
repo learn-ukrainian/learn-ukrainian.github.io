@@ -140,7 +140,7 @@ activity_hints:
   - type: critical-analysis
     focus: Оцінити аргументацію у тексті про роль діаспори як 'голосу України' 
       на міжнародній арені
-  - type: fill-in
+  - type: essay-response
     focus: 'Доповнити текст дипломатичною термінологією: суб''єктність, євроінтеграція,
       м''яка сила'
   - type: error-correction

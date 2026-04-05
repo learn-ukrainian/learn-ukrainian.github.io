@@ -112,13 +112,13 @@ vocabulary:
     - редукція
 
 activity_hints:
-  - type: fill-in
+  - type: essay-response
     description: "Insert the correct punctuation mark (comma, semicolon, colon, or
       dash) in asyndetic complex sentences based on semantic relations."
   - type: error-correction
     description: "Fix punctuation errors in asyndetic sentences — wrong choice between
       colon and dash, missing semicolons in extended constructions."
-  - type: match-up
+  - type: comparative-study
     description: "Match punctuation marks in asyndetic sentences with the semantic
       relations they signal (пояснення → двокрапка, наслідок → тире)."
   - type: critical-analysis

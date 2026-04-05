@@ -121,13 +121,13 @@ activities:
   total_min_items: 20
 
 activity_hints:
-  - type: match-up
+  - type: comparative-study
     focus: "Зіставити синонім із його типом: абсолютний, ідеографічний (поняттєвий),
       стилістичний, контекстуальний."
-  - type: group-sort
+  - type: critical-analysis
     focus: "Побудувати синонімічні ряди: згрупувати слова навколо домінанти за семантичною
       близькістю."
-  - type: fill-in
+  - type: essay-response
     focus: "Замінити підкреслене слово в тексті на точніший синонім зі запропонованого
       списку."
   - type: select

@@ -111,10 +111,10 @@ activity_hints:
   - type: select
     description: "Choose the most appropriate academic cliché for describing research
       purpose, novelty, and results in an abstract."
-  - type: fill-in
+  - type: essay-response
     description: "Complete abstract sentences with standardized Ukrainian academic
       formulas (У статті розкрито..., встановлено що..., обґрунтовано доцільність...)."
-  - type: match-up
+  - type: comparative-study
     description: "Match abstract components (мета, об'єкт, предмет, новизна) with
       example formulations."
   - type: error-correction

@@ -146,20 +146,20 @@ vocabulary_hints:
     - "зварений (boiled/cooked — perfective participle)"
     - "варений (cooked — lexicalized adjective from варити)"
 activity_hints:
-  - type: fill-in
+  - type: essay-response
     focus: "Form passive participles from given verbs with correct suffixes and alternations"
     items: 10
-  - type: quiz
+  - type: reading
     focus: "Choose the correct passive participle form (testing suffix choice and
       alternations)"
     items: 10
-  - type: match-up
+  - type: comparative-study
     focus: "Match passive participles to their base verbs, identifying alternations"
     items: 8
   - type: error-correction
     focus: "Fix incorrectly formed passive participles (wrong suffix, missing alternation)"
     items: 6
-  - type: group-sort
+  - type: critical-analysis
     focus: "Sort passive participles by suffix type: -н- vs -ен-/-єн- vs -т-"
     items: 12
   - type: sentence-builder

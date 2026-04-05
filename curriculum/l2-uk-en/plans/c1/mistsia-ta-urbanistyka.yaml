@@ -111,10 +111,10 @@ vocabulary:
     - набережна
 
 activity_hints:
-  - type: fill-in
+  - type: essay-response
     description: "Complete texts about urban planning and city development with
       appropriate C1 vocabulary — infrastructure, zoning, transport, architecture."
-  - type: match-up
+  - type: comparative-study
     description: "Match urban elements (площа, набережна, мікрорайон, промзона) with
       their functions, characteristics, and examples from Ukrainian cities."
   - type: critical-analysis

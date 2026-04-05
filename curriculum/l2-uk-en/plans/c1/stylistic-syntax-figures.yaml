@@ -116,13 +116,13 @@ activity_hints:
   - type: select
     description: "Identify the syntactic figure in each excerpt: period, antithesis,
       chiasmus, anaphora, epiphora, asyndeton, or polysyndeton."
-  - type: match-up
+  - type: comparative-study
     description: "Match definitions of syntactic figures with examples from Ukrainian
       literature and public speeches."
   - type: critical-analysis
     description: "Analyze a speech by Іван Франко — identify all syntactic figures,
       explain their persuasive function, and evaluate their effectiveness."
-  - type: unjumble
+  - type: critical-analysis
     description: "Reorder sentence elements to create specific syntactic figures:
       chiasmus from parallel structure, antithesis from neutral statements."
   - type: essay-response

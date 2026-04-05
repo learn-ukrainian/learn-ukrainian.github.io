@@ -131,7 +131,7 @@ activity_hints:
   - type: essay-response
     focus: Написати аргументативне есе із використанням ланцюгового та 
       паралельного зв'язку між реченнями
-  - type: fill-in
+  - type: essay-response
     focus: 'Доповнити текст логічними конекторами: сполучники, вставні слова, анафоричні
       займенники'
 phase: C2.1 [Stylistic Perfection]

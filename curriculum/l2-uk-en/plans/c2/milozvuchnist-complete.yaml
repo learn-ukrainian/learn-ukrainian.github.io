@@ -99,7 +99,7 @@ activity_hints:
   - type: error-correction
     hint: Виправте порушення евфонії (збіг приголосних, неправильне у/в, і/й) у 
       поданих реченнях
-  - type: fill-in
+  - type: essay-response
     hint: Вставте правильний евфонічний варіант (у/в, і/й, з/із/зі) у контексті 
       художнього та наукового стилів
   - type: critical-analysis

@@ -154,14 +154,14 @@ activities:
   total_min_items: 25
 
 activity_hints:
-  - type: match-up
+  - type: comparative-study
     focus: "Зіставити ідіому з її значенням та контекстом"
   - type: error-correction
     focus: "Знайти лексичні помилки: неточний синонім, русизм-калька,
       спотворений фразеологізм"
-  - type: fill-in
+  - type: essay-response
     focus: "Комплексний текст з пропусками: ідіоми, неологізми, синоніми"
-  - type: group-sort
+  - type: critical-analysis
     focus: "Класифікувати: синонім / паронім / ідіома / неологізм / запозичення"
 
 references:

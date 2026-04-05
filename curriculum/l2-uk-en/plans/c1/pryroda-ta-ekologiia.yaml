@@ -114,10 +114,10 @@ vocabulary:
     - відновлюваний
 
 activity_hints:
-  - type: fill-in
+  - type: essay-response
     description: "Complete ecological texts with appropriate C1 vocabulary — pollution
       types, conservation terms, sustainable development concepts."
-  - type: match-up
+  - type: comparative-study
     description: "Match Ukrainian natural reserves and national parks with their
       locations, features, and conservation significance."
   - type: critical-analysis

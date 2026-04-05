@@ -125,7 +125,7 @@ activity_hints:
   - type: error-correction
     description: "Fix coherence and cohesion errors in a poorly structured text —
       misplaced paragraphs, broken referential chains, missing connectors."
-  - type: match-up
+  - type: comparative-study
     description: "Match text-linguistics terms (когезія, когерентність, архітектоніка,
       актуальне членування) with definitions and textual examples."
   - type: essay-response

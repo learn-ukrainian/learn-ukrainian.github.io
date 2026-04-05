@@ -130,7 +130,7 @@ activity_hints:
     description: "Fix register violations in a professional text — replace inappropriate
       direct language with euphemisms, and remove manipulative euphemisms that obscure
       facts."
-  - type: match-up
+  - type: comparative-study
     description: "Match euphemistic expressions with their direct equivalents and
       classify by sphere (дипломатія, медицина, військова справа, бізнес)."
   - type: essay-response

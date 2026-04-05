@@ -119,7 +119,7 @@ activity_hints:
   - type: select
     description: "Identify the register level (офіційний, розмовний, інтимний) of
       given text excerpts and explain the linguistic markers that signal each level."
-  - type: match-up
+  - type: comparative-study
     description: "Match types of diminutive suffixes (-очк-, -ечк-, -еньк-, -ісіньк-)
       with their emotional coloring and usage contexts (ніжність, іронія, зменшення)."
   - type: critical-analysis

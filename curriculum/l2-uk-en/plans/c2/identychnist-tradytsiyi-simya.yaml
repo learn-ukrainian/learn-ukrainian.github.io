@@ -141,7 +141,7 @@ activity_hints:
   - type: critical-analysis
     focus: Оцінити аргументацію у тексті про трансформацію гендерних ролей в 
       українській сім'ї
-  - type: fill-in
+  - type: essay-response
     focus: 'Доповнити текст термінологією ідентичності: самоідентифікація, культурний
       код, неофольклор'
   - type: error-correction

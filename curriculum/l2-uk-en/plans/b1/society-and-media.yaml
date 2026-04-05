@@ -180,15 +180,15 @@ vocabulary_hints:
     - "прес-конференція (press conference — media briefing)"
     - "електорат (electorate — body of voters)"
 activity_hints:
-  - type: quiz
+  - type: reading
     focus: "Distinguish facts from opinions in text excerpts. Identify manipulation
       techniques. Match media terms to definitions."
     items: 12
-  - type: fill-in
+  - type: essay-response
     focus: "Complete news article templates with correct vocabulary, стиль markers,
       and абревіатури. Write a лід paragraph."
     items: 12
-  - type: match-up
+  - type: comparative-study
     focus: "Match суспільно-політична лексика to definitions, media types to categories,
       manipulation techniques to examples."
     items: 12
@@ -200,7 +200,7 @@ activity_hints:
     focus: "Write a response to a news article (100-150 words) using аргументація
       structure and публіцистичний стиль language."
     items: 12
-  - type: group-sort
+  - type: critical-analysis
     focus: "Sort statements into факти vs думки, and sort vocabulary into публіцистичний
       vs розмовний register."
     items: 12

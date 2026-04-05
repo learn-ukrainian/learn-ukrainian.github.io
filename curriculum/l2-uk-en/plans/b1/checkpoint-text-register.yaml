@@ -144,11 +144,11 @@ vocabulary_hints:
     - "оцінювання (evaluation)"
     - "завдання (task/exercise)"
 activity_hints:
-  - type: quiz
+  - type: reading
     focus: "Mixed quiz across all Phase 9 topics: style identification, абревіатури,
       negation patterns, вставні слова classification."
     items: 12
-  - type: fill-in
+  - type: essay-response
     focus: "Complete texts with correct register vocabulary, negation forms, вставні
       слова, and nature vocabulary."
     items: 10
@@ -156,11 +156,11 @@ activity_hints:
     focus: "Find and correct errors across all Phase 9 areas: register mixing, wrong
       скорочення, negation errors, вставні commas."
     items: 8
-  - type: match-up
+  - type: comparative-study
     focus: "Match style excerpts to стилі мовлення, художні засоби to definitions,
       абревіатури to full forms."
     items: 10
-  - type: group-sort
+  - type: critical-analysis
     focus: "Sort mixed vocabulary and expressions by register, negation type, вставне
       group, and nature category."
     items: 12

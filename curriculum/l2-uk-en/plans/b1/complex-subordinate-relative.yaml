@@ -114,16 +114,16 @@ vocabulary_hints:
     - "антецедент (antecedent — formal term for означуване слово)"
     - "постпозиція (postposition — clause always after the noun)"
 activity_hints:
-  - type: fill-in
+  - type: essay-response
     focus: "Insert correct form of який (gender + case) in означальних реченнях"
     items: 12
-  - type: quiz
+  - type: reading
     focus: "Choose between який/що/де/куди/коли as the connector"
     items: 8
   - type: sentence-builder
     focus: "Construct означальні речення to describe given nouns"
     items: 8
-  - type: match-up
+  - type: comparative-study
     focus: "Match sentence halves: main clause + correct означальне"
     items: 8
   - type: error-correction

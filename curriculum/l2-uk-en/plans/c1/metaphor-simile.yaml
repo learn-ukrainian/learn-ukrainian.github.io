@@ -115,7 +115,7 @@ activity_hints:
     description: "Analyze metaphorical systems in a poem by Богдан-Ігор Антонич —
       identify donor and recipient domains, classify metaphor types (мовна, мовленнєва,
       авторська)."
-  - type: match-up
+  - type: comparative-study
     description: "Match stylistic devices (метафора, метонімія, синекдоха, персоніфікація,
       катахреза) with their definitions and literary examples."
   - type: select

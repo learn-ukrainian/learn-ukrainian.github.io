@@ -120,7 +120,7 @@ activity_hints:
   - type: error-correction
     description: "Fix register and style errors in a debate preparation script — inappropriate
       colloquialisms, weak argumentation phrases, missing hedging."
-  - type: match-up
+  - type: comparative-study
     description: "Match rhetorical figures (анафора, антитеза, градація) with their
       definitions and examples from Ukrainian political speeches."
   - type: essay-response

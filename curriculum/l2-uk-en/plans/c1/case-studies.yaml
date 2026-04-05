@@ -120,10 +120,10 @@ activity_hints:
   - type: error-correction
     description: "Fix logical and stylistic errors in a draft analytical report —
       broken cause-effect chains, mixed registers, imprecise terminology."
-  - type: match-up
+  - type: comparative-study
     description: "Match strategic planning terms (SWOT-аналіз, місія, візія, стейкголдери)
       with their Ukrainian definitions and usage examples."
-  - type: fill-in
+  - type: essay-response
     description: "Complete sentences in a case study with appropriate causal connectors
       and analytical vocabulary (внаслідок, з огляду на, відповідно до)."
 

@@ -132,7 +132,7 @@ activity_hints:
   - type: error-correction
     focus: Виправити плеоназми, тавтологію та порушення логіки викладу у 
       фрагменті наукового тексту
-  - type: fill-in
+  - type: essay-response
     focus: Вставити відповідні дискурс-маркери для забезпечення когерентності 
       між розділами наукового тексту
 phase: C2.4 [Meta-Skills & Capstone]

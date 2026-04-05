@@ -134,16 +134,16 @@ vocabulary_hints:
     - "похідне слово (derived word — the newly formed word)"
     - "мотивувальне слово (motivating word — the word from which another is derived)"
 activity_hints:
-  - type: quiz
+  - type: reading
     focus: "Identify formation method and correct suffix for given adjectives"
     items: 8
-  - type: fill-in
+  - type: essay-response
     focus: "Form adjectives from nouns with correct suffix and -н-/-нн- spelling"
     items: 8
-  - type: match-up
+  - type: comparative-study
     focus: "Match noun/verb base to its derived adjective"
     items: 8
-  - type: group-sort
+  - type: critical-analysis
     focus: "Sort adjectives by formation method: суфіксальний, префіксальний, складання"
     items: 10
   - type: error-correction

@@ -135,7 +135,7 @@ activity_hints:
   - type: critical-analysis
     focus: Оцінити аргументацію у тексті про джентрифікацію та соціальні 
       наслідки урбанізації
-  - type: fill-in
+  - type: essay-response
     focus: 'Доповнити текст урбаністичною термінологією: ревіталізація, психогеографія,
       універсальний дизайн'
   - type: error-correction

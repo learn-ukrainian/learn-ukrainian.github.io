@@ -119,7 +119,7 @@ activity_hints:
   - type: select
     description: "Identify whether excerpts use гіпербола, літота, мейозис, or градація
       — and classify their pragmatic function (persuasion, humor, politeness)."
-  - type: match-up
+  - type: comparative-study
     description: "Match examples of hyperbole and litotes from different registers
       (folklore, academic, diplomatic, media) with their stylistic function."
   - type: essay-response

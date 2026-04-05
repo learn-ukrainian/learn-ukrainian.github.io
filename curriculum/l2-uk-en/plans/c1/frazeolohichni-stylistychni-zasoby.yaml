@@ -115,7 +115,7 @@ activity_hints:
   - type: select
     description: "Identify whether a given phraseological unit is authentic Ukrainian
       or a calque from Russian — choose the correct Ukrainian equivalent."
-  - type: match-up
+  - type: comparative-study
     description: "Match phraseological units with their sources (біблеїзми, античні
       ремінісценції, козацький фольклор, крилаті вислови класиків)."
   - type: error-correction

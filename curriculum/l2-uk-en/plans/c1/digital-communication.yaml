@@ -120,7 +120,7 @@ activity_hints:
   - type: error-correction
     description: "Fix tone and register violations in professional digital messages
       — adjust for appropriate platform (email vs Telegram vs LinkedIn)."
-  - type: match-up
+  - type: comparative-study
     description: "Match digital communication platforms (email, Slack, LinkedIn) with
       appropriate register, formality level, and message structure."
   - type: select

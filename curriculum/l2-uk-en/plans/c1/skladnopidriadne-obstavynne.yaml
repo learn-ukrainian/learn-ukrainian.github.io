@@ -112,13 +112,13 @@ vocabulary:
     - аналогічно
 
 activity_hints:
-  - type: fill-in
+  - type: essay-response
     description: "Complete sentences with appropriate subordinating conjunctions for
       different adverbial clause types (аби, якби, оскільки, незважаючи на те що)."
   - type: error-correction
     description: "Fix errors in adverbial clauses — incorrect conjunction choice,
       wrong mood in conditional clauses, punctuation with compound conjunctions."
-  - type: match-up
+  - type: comparative-study
     description: "Match adverbial clause types (причини, мети, умови, наслідку, допустове)
       with their conjunctions and example sentences."
   - type: critical-analysis

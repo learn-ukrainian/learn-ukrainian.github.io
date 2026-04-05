@@ -169,7 +169,7 @@ activity_hints:
   - type: critical-analysis
     focus: Оцінити аргументацію у тексті про маргіналізацію та інклюзивність в
       українському суспільстві
-  - type: fill-in
+  - type: essay-response
     focus: 'Доповнити текст соціологічною термінологією: стратифікація,
       маргіналізація, самоідентифікація'
   - type: error-correction

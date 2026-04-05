@@ -114,10 +114,10 @@ activity_hints:
   - type: error-correction
     description: "Edit a draft essay for logical coherence, academic style violations,
       and citation format errors."
-  - type: match-up
+  - type: comparative-study
     description: "Match essay evaluation criteria (логічність, когерентність, стилістика,
       аргументація) with specific strengths/weaknesses in sample texts."
-  - type: fill-in
+  - type: essay-response
     description: "Complete essay framework sentences with appropriate hedging, citation
       introductions, and concluding formulas."
 

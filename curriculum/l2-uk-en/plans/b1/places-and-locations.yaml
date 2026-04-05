@@ -143,18 +143,18 @@ vocabulary_hints:
     - "район (district — administrative area)"
     - "берег (bank/shore — edge of water)"
 activity_hints:
-  - type: fill-in
+  - type: essay-response
     focus: "Поставте іменник у правильний відмінок: У [Київ] є багато парків. Вона
       з [Одеса]. Ми їдемо до [Львів]."
     items: 10
-  - type: quiz
+  - type: reading
     focus: "Оберіть правильний прийменник: у/в чи на? з чи із? Поясніть вибір."
     items: 10
-  - type: match-up
+  - type: comparative-study
     focus: "З'єднайте географічний об'єкт з описом: рівнина, височина, узбережжя, долина,
       заповідник"
     items: 10
-  - type: group-sort
+  - type: critical-analysis
     focus: "Розподіліть лексику за категоріями: рельєф, водойми, поселення, міські
       об'єкти"
     items: 12

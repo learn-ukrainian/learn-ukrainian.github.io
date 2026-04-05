@@ -121,10 +121,10 @@ activity_hints:
   - type: error-correction
     description: "Fix punctuation and structural errors in multi-clause sentences
       — missing commas at conjunction boundaries, dangling subordinate clauses."
-  - type: fill-in
+  - type: essay-response
     description: "Complete multi-clause sentences with appropriate conjunctions at
       the boundaries between different connection types."
-  - type: match-up
+  - type: comparative-study
     description: "Match structural diagrams of complex sentences with their written
       forms and identify the type of connection in each block."
   - type: select

@@ -172,13 +172,13 @@ activities:
   total_min_items: 25
 
 activity_hints:
-  - type: fill-in
+  - type: essay-response
     focus: "Вставити обрядову лексику та символіку у текст про свято"
   - type: error-correction
     focus: "Виправити фактичні помилки в описі українських традицій"
   - type: select
     focus: "Обрати правильне свято для опису обряду"
-  - type: match-up
+  - type: comparative-study
     focus: "Зіставити обрядову страву з відповідним святом"
 
 references:

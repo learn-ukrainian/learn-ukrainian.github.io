@@ -112,16 +112,16 @@ vocabulary_hints:
     - "хай/нехай (even if — literary concessive)"
     - "зате (but on the other hand — correlative)"
 activity_hints:
-  - type: fill-in
+  - type: essay-response
     focus: "Complete concessive sentences with correct conjunction and correlative"
     items: 10
-  - type: quiz
+  - type: reading
     focus: "Classify: причинне, умовне, чи допустове речення?"
     items: 10
   - type: sentence-builder
     focus: "Construct concessive sentences from given contrasting facts"
     items: 8
-  - type: match-up
+  - type: comparative-study
     focus: "Match допустові сполучники to register levels and usage patterns"
     items: 6
   - type: error-correction

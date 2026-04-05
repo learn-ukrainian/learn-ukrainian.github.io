@@ -144,7 +144,7 @@ activity_hints:
   - type: essay-response
     focus: Написати лінгвістичну експертизу тексту з класифікацією помилок та 
       відредагованими варіантами
-  - type: match-up
+  - type: comparative-study
     focus: Зіставити помилкові форми (кальки, росіянізми) з їхніми правильними 
       українськими відповідниками
 phase: C2.4 [Meta-Skills & Capstone]

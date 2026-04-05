@@ -135,7 +135,7 @@ activity_hints:
   - type: critical-analysis
     focus: Оцінити аргументацію у публіцистичному тексті про свободу слова vs 
       національну безпеку
-  - type: fill-in
+  - type: essay-response
     focus: 'Доповнити текст термінами медіаграмотності: фактчекінг, верифікація, дезінформація,
       місінформація'
   - type: error-correction

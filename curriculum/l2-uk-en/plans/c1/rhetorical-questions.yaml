@@ -121,7 +121,7 @@ activity_hints:
   - type: select
     description: "Determine whether a given question is genuine or rhetorical based
       on context, and explain the intended communicative effect."
-  - type: match-up
+  - type: comparative-study
     description: "Match rhetorical figures (риторичне питання, риторичний оклик, апострофа)
       with their definitions, functions, and literary examples."
   - type: essay-response

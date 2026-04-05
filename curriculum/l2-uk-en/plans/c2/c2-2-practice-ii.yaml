@@ -139,7 +139,7 @@ activity_hints:
   - type: essay-response
     focus: Написати есе-рефлексію з інтеграцією цитат з української класики та 
       алюзій на сучасні події
-  - type: match-up
+  - type: comparative-study
     focus: Зіставити типи інтертекстуальних зв'язків (алюзія, ремінісценція, 
       пастіш) з конкретними прикладами з тексту
 phase: C2.2 [Literary Mastery]

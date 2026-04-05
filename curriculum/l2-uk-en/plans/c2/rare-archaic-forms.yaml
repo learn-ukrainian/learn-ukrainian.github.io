@@ -138,7 +138,7 @@ activity_hints:
   - type: essay-response
     focus: Написати лінгвістичний аналіз ролі архаїзмів у формуванні сучасного 
       культурного коду
-  - type: match-up
+  - type: comparative-study
     focus: 'Зіставити архаїчні форми з їхніми сучасними відповідниками: двоїна, аорист,
       давні флексії'
   - type: error-correction

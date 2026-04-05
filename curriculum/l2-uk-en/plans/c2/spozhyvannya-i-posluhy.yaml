@@ -135,7 +135,7 @@ activity_hints:
   - type: critical-analysis
     focus: Оцінити аргументацію у тексті про свідоме споживання та циркулярну 
       економіку
-  - type: fill-in
+  - type: essay-response
     focus: 'Доповнити текст термінологією сфери послуг: рекламація, публічна оферта,
       персоналізація'
   - type: error-correction

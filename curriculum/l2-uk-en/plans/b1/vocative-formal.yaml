@@ -136,13 +136,13 @@ vocabulary_hints:
     - "листування (correspondence)"
     - "панове (gentlemen — plural formal address)"
 activity_hints:
-  - type: quiz
+  - type: reading
     focus: "Choose correct vocative form for names, patronymics, and titles"
     items: 8
-  - type: fill-in
+  - type: essay-response
     focus: "Form vocative for given names with patronymics in formal address"
     items: 8
-  - type: match-up
+  - type: comparative-study
     focus: "Match formality level to correct address pattern"
     items: 8
   - type: error-correction

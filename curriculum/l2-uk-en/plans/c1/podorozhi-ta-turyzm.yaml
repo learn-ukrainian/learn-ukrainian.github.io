@@ -110,10 +110,10 @@ vocabulary:
     - гастрономічний
 
 activity_hints:
-  - type: fill-in
+  - type: essay-response
     description: "Complete travel planning dialogues and descriptions with appropriate
       C1-level vocabulary — booking, complaints, impressions, recommendations."
-  - type: match-up
+  - type: comparative-study
     description: "Match types of tourism (зелений, культурний, екстремальний,
       гастрономічний) with their characteristics, activities, and Ukrainian destinations."
   - type: critical-analysis

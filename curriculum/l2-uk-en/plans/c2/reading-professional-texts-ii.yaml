@@ -136,10 +136,10 @@ activity_hints:
   - type: error-correction
     focus: Виправити порушення юридичної точності та стилю у тексті 
       нормативно-правового акта
-  - type: match-up
+  - type: comparative-study
     focus: 'Зіставити типи професійних текстів з їхніми жанровими ознаками: патент,
       контракт, регламент, аналітика'
-  - type: fill-in
+  - type: essay-response
     focus: 'Доповнити текст галузевою термінологією: прецизійність, імперативність,
       стейкхолдери, верифікація'
 phase: C2.3 [Professional Specialization]

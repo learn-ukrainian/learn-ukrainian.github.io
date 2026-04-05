@@ -127,7 +127,7 @@ activities:
   total_min_items: 20
 
 activity_hints:
-  - type: cloze
+  - type: reading
     focus: "Екзаменаційний комплексний текст із пропусками: граматика, лексика, фразеологія."
   - type: error-correction
     focus: "Фінальний пошук помилок: всі типи (граматичні, лексичні, стилістичні,

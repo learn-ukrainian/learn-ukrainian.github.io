@@ -117,10 +117,10 @@ activities:
   total_min_items: 20
 
 activity_hints:
-  - type: match-up
+  - type: comparative-study
     focus: "Зіставити тип аргументу з прикладом: логічний (факти/статистика), емоційний
       (апеляція до почуттів), авторитетний (посилання на експерта)."
-  - type: fill-in
+  - type: essay-response
     focus: "Сформулювати контраргумент до наданої тези."
   - type: select
     focus: "Ідентифікувати логічну помилку (хибна дилема, ad hominem, post hoc) у

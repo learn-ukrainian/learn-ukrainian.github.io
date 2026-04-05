@@ -111,10 +111,10 @@ vocabulary:
     - фізіотерапія
 
 activity_hints:
-  - type: match-up
+  - type: comparative-study
     description: "Match sports terminology (types of competitions, training methods,
       body parts, injuries) with definitions and example contexts."
-  - type: fill-in
+  - type: essay-response
     description: "Complete sentences about sports, health, and fitness with appropriate
       C1-level vocabulary — anatomical terms, training concepts, medical procedures."
   - type: select

@@ -126,10 +126,10 @@ activity_hints:
   - type: select
     description: "Choose the most appropriate form of encouragement for different
       social contexts — direct command, polite request, inclusive invitation (-мо)."
-  - type: match-up
+  - type: comparative-study
     description: "Match imperative alternatives (наказовий спосіб, інфінітив, перформатив,
       майбутній час) with their pragmatic functions and register."
-  - type: fill-in
+  - type: essay-response
     description: "Complete sentences with correct imperative forms of irregular verbs
       and appropriate politeness particles."
 

@@ -120,7 +120,7 @@ activity_hints:
   - type: error-correction
     description: "Fix factual and stylistic errors in a text about Ukrainian folk
       traditions — mixed regional traditions, anachronisms, incorrect terminology."
-  - type: match-up
+  - type: comparative-study
     description: "Match traditional Ukrainian cultural elements (вишиванка, писанка,
       хата, колядка) with their regional variants, symbolic meanings, and historical
       contexts."

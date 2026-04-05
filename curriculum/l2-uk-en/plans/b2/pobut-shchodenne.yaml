@@ -173,14 +173,14 @@ activities:
   total_min_items: 25
 
 activity_hints:
-  - type: fill-in
+  - type: essay-response
     focus: "Вставити зворотні дієслова в побутовому контексті (прокидатися,
       одягатися, збиратися)"
   - type: error-correction
     focus: "Виправити русизми в побутовій лексиці (пилесос→пилосос, стірка→прання)"
   - type: select
     focus: "Обрати доречну побутову фразу для ситуації (прохання, скарга, пропозиція)"
-  - type: match-up
+  - type: comparative-study
     focus: "Зіставити побутову техніку з дією, яку вона виконує"
 
 references:

@@ -116,9 +116,9 @@ activities:
   total_min_items: 20
 
 activity_hints:
-  - type: match-up
+  - type: comparative-study
     focus: "Зіставити мистецький або літературознавчий термін із його визначенням."
-  - type: fill-in
+  - type: essay-response
     focus: "Описати твір мистецтва, використовуючи відповідну критичну лексику."
   - type: reading
     focus: "Прочитати та проаналізувати уривок мистецького огляду (рецензії)."

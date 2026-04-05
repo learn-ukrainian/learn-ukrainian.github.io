@@ -123,7 +123,7 @@ activity_hints:
   - type: error-correction
     description: "Fix euphony violations in a text — restore proper consonant/vowel
       alternation patterns according to Ukrainian phonotactic rules."
-  - type: match-up
+  - type: comparative-study
     description: "Match phonetic stylistic devices (алітерація, асонанс, ономатопея,
       какофонія) with their definitions and examples from Ukrainian poetry."
   - type: essay-response

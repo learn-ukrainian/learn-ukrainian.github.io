@@ -185,15 +185,15 @@ vocabulary_hints:
     - "контекст (context — surrounding text that helps meaning)"
     - "відгук (review/response — written reaction to a text)"
 activity_hints:
-  - type: quiz
+  - type: reading
     focus: "Identify художні засоби in literary excerpts: name the device and explain
       its function in the text."
     items: 12
-  - type: match-up
+  - type: comparative-study
     focus: "Match художні засоби terms to their definitions and to concrete examples
       from Ukrainian literature."
     items: 12
-  - type: fill-in
+  - type: essay-response
     focus: "Complete literary analysis sentences: identify the художній засіб and
       its effect in given excerpts."
     items: 12
@@ -205,7 +205,7 @@ activity_hints:
     focus: "Write a structured response (відгук) to a literary excerpt: враження,
       аналіз засобів, особисте ставлення (10-12 sentences)."
     items: 12
-  - type: group-sort
+  - type: critical-analysis
     focus: "Sort text excerpts by стиль мовлення: художній, науковий, публіцистичний,
       офіційно-діловий."
     items: 12
