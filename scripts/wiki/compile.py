@@ -584,8 +584,8 @@ def _review_article(article_path: Path, track: str, slug: str,
 
     print(f"  🔍 Reviewing: {track}/{slug}")
 
-    if article_path.stat().st_size < 100:
-        print("  ⚠️  Article too short to review")
+    if not article_path.exists() or article_path.stat().st_size < 100:
+        print("  ⚠️  Article missing or too short to review")
         return
 
     prompt_type = TRACK_PROMPT.get(track, DEFAULT_PROMPT)
