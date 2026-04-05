@@ -354,8 +354,6 @@ YOUTUBE_CHANNELS = [
      "imtgsh.jsonl", "imtgsh — history content"),
     ("istoria-movy", "https://www.youtube.com/@Istoria-Movy/videos",
      "istoria_movy.jsonl", "Istoria-Movy — history of Ukrainian language"),
-    ("speak-ukrainian", "https://www.youtube.com/@SpeakUkrainian/videos",
-     "speak_ukrainian.jsonl", "Speak Ukrainian — A1-A2 pedagogy"),
     ("komik-istoryk", "https://www.youtube.com/@komikistoryk/videos",
      "komik_istoryk.jsonl", "Комік Історик — Ukrainian history, entertaining format"),
 ]
