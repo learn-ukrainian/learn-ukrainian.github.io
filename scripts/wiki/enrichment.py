@@ -23,7 +23,7 @@ CORE_TRACK_GRADES: dict[str, list[int]] = {
     "b1": [5, 6, 7],       # Complex grammar, syntax, advanced cases
     "b2": [7, 8, 9],       # Stylistics, complex syntax, literary analysis
     "c1": [9, 10, 11],     # Academic writing, advanced stylistics
-    "c2": [10, 11],        # Mastery, literary criticism, professional
+    "c2": [9, 10, 11],     # Mastery, literary criticism, professional
 }
 
 # ── Track-specific literary source mappings ──────────────────────
