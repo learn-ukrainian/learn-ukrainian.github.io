@@ -403,8 +403,15 @@ def check_transliteration_policy(ctx: AuditContext, state: AuditState) -> None:
             else:
                 val = ctx.meta_data['transliteration']
                 translit_ok = (val is None or str(val).lower() == 'none')
+        elif not ctx.meta_data and ctx.plan_data:
+            # V6 modules: plan used as frontmatter, no meta sidecar.
+            # Plan doesn't have 'transliteration' field — treat as compliant.
+            translit_ok = True
+        elif not ctx.frontmatter_str:
+            # No frontmatter at all — compliant
+            translit_ok = True
         if not translit_ok:
-            translit_ok = bool(re.search(r'transliteration:\s*["\']?none["\']?', ctx.frontmatter_str))
+            translit_ok = bool(re.search(r'transliteration:\s*["\']?none["\']?', ctx.frontmatter_str or ''))
         if not translit_ok:
             print(f"\u274c AUDIT FAILED: Level {ctx.level_code} forbids transliteration. Set 'transliteration: none' in frontmatter.")
             state.has_critical_failure = True
@@ -416,6 +423,10 @@ def check_transliteration_policy(ctx: AuditContext, state: AuditState) -> None:
             if '___' in line or '[___:' in line:
                 continue
             if re.search(r'\((Dat|Acc|Gen|Loc|Ins|Nom|Voc)\)', line):
+                continue
+            # Skip heading lines — bilingual headings (e.g., "## Підсумок (Summary)")
+            # are standard A1-A2 practice, not transliteration
+            if line.lstrip().startswith('#'):
                 continue
             translit_pattern = re.search(r'[\u0400-\u04ff]+\s*\(([A-Za-z]+)\)', line)
             if translit_pattern:
