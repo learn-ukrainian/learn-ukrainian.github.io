@@ -43,11 +43,26 @@ VALID_YAML = textwrap.dedent("""\
           - question: "_____ стіл"
             options: ["мій", "моя", "моє"]
             correct: 0
+          - question: "_____ книжка"
+            options: ["мій", "моя", "моє"]
+            correct: 1
+          - question: "_____ вікно"
+            options: ["мій", "моя", "моє"]
+            correct: 2
+          - question: "_____ лампа"
+            options: ["мій", "моя", "моє"]
+            correct: 1
+          - question: "_____ телефон"
+            options: ["мій", "моя", "моє"]
+            correct: 0
+          - question: "_____ крісло"
+            options: ["мій", "моя", "моє"]
+            correct: 2
 
     workbook:
       - id: match-up-genders
         type: match-up
-        instruction: "З'єднайте пари"
+        instruction: "З'єднайте іменник із правильним займенником"
         pairs:
           - left: "стіл"
             right: "він"
@@ -55,6 +70,74 @@ VALID_YAML = textwrap.dedent("""\
             right: "вона"
           - left: "вікно"
             right: "воно"
+          - left: "ключ"
+            right: "він"
+          - left: "ручка"
+            right: "вона"
+          - left: "крісло"
+            right: "воно"
+      - id: tf-gender-check
+        type: true-false
+        instruction: "Правда чи ні?"
+        items:
+          - statement: "Стіл — це він."
+            correct: true
+            explanation: "Стіл ends in consonant → чоловічий рід → він."
+          - statement: "Книжка — це він."
+            correct: false
+            explanation: "Книжка ends in -а → жіночий рід → вона."
+          - statement: "Вікно — це воно."
+            correct: true
+            explanation: "Вікно ends in -о → середній рід → воно."
+          - statement: "Крісло — це він."
+            correct: false
+            explanation: "Крісло ends in -о → середній рід → воно."
+          - statement: "Ключ — це він."
+            correct: true
+            explanation: "Ключ ends in consonant → чоловічий рід → він."
+          - statement: "Дзеркало — це воно."
+            correct: true
+            explanation: "Дзеркало ends in -о → середній рід → воно."
+      - id: error-possessives
+        type: error-correction
+        instruction: "Виправте помилку"
+        items:
+          - sentence: "Це мій книжка."
+            error: "мій"
+            correction: "моя"
+            error_type: "word"
+            options: ["мій", "моя", "моє"]
+            explanation: "Книжка is feminine → моя книжка."
+          - sentence: "Це моя стіл."
+            error: "моя"
+            correction: "мій"
+            error_type: "word"
+            options: ["мій", "моя", "моє"]
+            explanation: "Стіл is masculine → мій стіл."
+          - sentence: "Де мій вікно?"
+            error: "мій"
+            correction: "моє"
+            error_type: "word"
+            options: ["мій", "моя", "моє"]
+            explanation: "Вікно is neuter → моє вікно."
+          - sentence: "Це моє лампа."
+            error: "моє"
+            correction: "моя"
+            error_type: "word"
+            options: ["мій", "моя", "моє"]
+            explanation: "Лампа is feminine → моя лампа."
+          - sentence: "Це моя телефон."
+            error: "моя"
+            correction: "мій"
+            error_type: "word"
+            options: ["мій", "моя", "моє"]
+            explanation: "Телефон is masculine → мій телефон."
+          - sentence: "Де мій крісло?"
+            error: "мій"
+            correction: "моє"
+            error_type: "word"
+            options: ["мій", "моя", "моє"]
+            explanation: "Крісло is neuter → моє крісло."
 """)
 
 VALID_YAML_WITH_FENCE = f"```yaml\n{VALID_YAML}```"
@@ -277,7 +360,7 @@ class TestStepActivitiesIntegration:
         data = yaml.safe_load(result.read_text())
         assert data["version"] == "1.0"
         assert len(data.get("inline", [])) == 1
-        assert len(data.get("workbook", [])) == 1
+        assert len(data.get("workbook", [])) == 3
 
     def test_step_retries_on_invalid_yaml(self, tmp_module):
         """step_activities retries when YAML is invalid, then succeeds."""
