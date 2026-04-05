@@ -643,7 +643,12 @@ def _review_article(article_path: Path, track: str, slug: str,
             print(f"  ⚠️  Score regressed ({best_score} → {score}) — reverting to peak")
             article_path.write_text(best_article, "utf-8")
             score = best_score
-            break
+            last_applied = 0  # Don't trigger final review — peak is the final state
+            if review_text:
+                final_path = review_dir / f"{slug}-review.md"
+                final_path.write_text(review_text, "utf-8")
+            print(f"  📝 Final score: {score}/10 (peak from round {round_num - 1})")
+            return
 
         # Step 5: Check if we're done
         if score >= 9.0:
