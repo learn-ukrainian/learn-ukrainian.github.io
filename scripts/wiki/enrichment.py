@@ -228,6 +228,12 @@ def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
             print(f"  📖 +{len(sampled)} chunks from {lit_path.name}")
             all_chunks.extend(sampled)
 
+    # 7. External resources (articles, YouTube, ULP) — reference metadata
+    ext_chunks = _load_external_resources(track, slug)
+    if ext_chunks:
+        print(f"  🌐 +{len(ext_chunks)} external reference sources")
+        all_chunks.extend(ext_chunks)
+
     if not all_chunks:
         print(f"  ⚠️  No source material found for {track}/{slug}")
         all_chunks = [{"text": f"Topic: {slug.replace('-', ' ')}", "chunk_id": "no-source"}]
@@ -322,6 +328,83 @@ def _load_relevant_chunks(filenames: list[str], slug: str,
             all_relevant.append(chunk)
 
     return all_relevant
+
+
+# Cached external resources (loaded once per process)
+_EXT_RESOURCES: dict | None = None
+
+
+def _get_external_resources() -> dict:
+    """Load and cache external_resources.yaml."""
+    global _EXT_RESOURCES
+    if _EXT_RESOURCES is None:
+        ext_path = PROJECT_ROOT / "docs" / "resources" / "external_resources.yaml"
+        if ext_path.exists():
+            with open(ext_path, encoding="utf-8") as f:
+                data = yaml.safe_load(f)
+            _EXT_RESOURCES = data.get("resources", {}) if data else {}
+        else:
+            _EXT_RESOURCES = {}
+    return _EXT_RESOURCES
+
+
+def _load_external_resources(track: str, slug: str) -> list[dict]:
+    """Load external resource references for a module.
+
+    Reads docs/resources/external_resources.yaml and returns article titles,
+    URLs, YouTube channels, and ULP references as source chunks. These give
+    Gemini awareness of the pedagogical landscape for the topic.
+
+    Keys in the YAML are formatted as "{level}-{slug}" (e.g. "a1-sounds-letters-and-hello").
+    """
+    resources = _get_external_resources()
+    key = f"{track}-{slug}"
+    entry = resources.get(key)
+    if not entry:
+        return []
+
+    chunks = []
+
+    # Articles
+    for article in entry.get("articles", []):
+        if article.get("relevance") != "high":
+            continue
+        title = article.get("title", "")
+        url = article.get("url", "")
+        source = article.get("source", "")
+        text = (
+            f"External pedagogical reference: {title}\n"
+            f"Source: {source}\n"
+            f"URL: {url}\n"
+            f"Note: This is a reference for HOW other teachers approach this topic. "
+            f"Study the pedagogical approach, not the specific wording."
+        )
+        chunks.append({
+            "text": text,
+            "chunk_id": f"ext-article-{len(chunks)}",
+            "source_type": "external_article",
+        })
+
+    # YouTube
+    for video in entry.get("youtube", []):
+        if video.get("relevance") != "high":
+            continue
+        title = video.get("title", "")
+        channel = video.get("channel", "")
+        url = video.get("url", "")
+        text = (
+            f"External video reference: {title}\n"
+            f"Channel: {channel}\n"
+            f"URL: {url}\n"
+            f"Note: Reference for pedagogical approach and presentation style."
+        )
+        chunks.append({
+            "text": text,
+            "chunk_id": f"ext-video-{len(chunks)}",
+            "source_type": "external_video",
+        })
+
+    return chunks
 
 
 def _load_local_data(track: str, slug: str) -> list[dict]:
