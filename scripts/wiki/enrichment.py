@@ -9,6 +9,7 @@ and cross-references to build a rich context for wiki article compilation.
 """
 
 import json
+import re
 from pathlib import Path
 
 import yaml
@@ -444,9 +445,12 @@ def _search_external_articles(ukr_keywords: set[str],
 
         text = entry.get("text", "")
         title = entry.get("title", "")
-        # Word boundary matching: pad with spaces to match whole words only
-        searchable = f" {title} {text} ".lower()
-        score = sum(1 for w in ukr_keywords if f" {w} " in searchable)
+        # Word boundary matching via regex — handles punctuation (село, → село)
+        searchable = f"{title} {text}".lower()
+        score = sum(
+            1 for w in ukr_keywords
+            if re.search(rf"(?<!\w){re.escape(w)}(?!\w)", searchable)
+        )
         if score >= 2:
             chunk = {
                 "text": (
