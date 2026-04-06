@@ -605,25 +605,22 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
 
 async def handle_search_text(args: dict) -> list[TextContent]:
     query = args["query"]
-    grade = args.get("grade")
-    subject = args.get("subject")
-    trust_tier = args.get("trust_tier")
     limit = min(args.get("limit", 5), 20)
 
-    # Run in thread pool since embedding is CPU-bound
-    from rag.query import search_text
-    hits = await asyncio.to_thread(search_text, query, grade, subject, trust_tier, limit)
+    from wiki.sources_db import search_textbooks
+    keywords = {w for w in query.lower().split() if len(w) >= 3}
+    hits = await asyncio.to_thread(search_textbooks, keywords, limit)
 
     if not hits:
         return [TextContent(type="text", text="No results found.")]
 
     lines = [f"Found {len(hits)} results for: \"{query}\"\n"]
     for i, hit in enumerate(hits, 1):
-        lines.append(f"### Result {i} (score: {hit['score']:.4f})")
-        lines.append(f"- **Section**: {hit['section_title']}")
-        lines.append(f"- **Source**: Grade {hit['grade']}, {hit['author']}, tier {hit['trust_tier']}")
-        lines.append(f"- **Chunk ID**: `{hit['chunk_id']}`")
-        lines.append(f"- **Text**:\n{hit['text']}")
+        lines.append(f"### Result {i}")
+        lines.append(f"- **Section**: {hit.get('section_title', hit.get('title', ''))}")
+        lines.append(f"- **Source**: Grade {hit.get('grade', '?')}, {hit.get('author', '?')}")
+        lines.append(f"- **Chunk ID**: `{hit.get('chunk_id', '')}`")
+        lines.append(f"- **Text**:\n{hit.get('text', '')}")
         lines.append("")
 
     return [TextContent(type="text", text="\n".join(lines))]
@@ -631,27 +628,22 @@ async def handle_search_text(args: dict) -> list[TextContent]:
 
 async def handle_search_literary(args: dict) -> list[TextContent]:
     query = args["query"]
-    work = args.get("work")
-    genre = args.get("genre")
-    period = args.get("period")
     limit = min(args.get("limit", 5), 20)
 
-    from rag.query import search_literary
-    hits = await asyncio.to_thread(search_literary, query, work, genre, period, limit)
+    from wiki.sources_db import search_literary
+    keywords = {w for w in query.lower().split() if len(w) >= 3}
+    hits = await asyncio.to_thread(search_literary, keywords, limit)
 
     if not hits:
         return [TextContent(type="text", text="No literary results found.")]
 
     lines = [f"Found {len(hits)} results for: \"{query}\"\n"]
     for i, hit in enumerate(hits, 1):
-        lines.append(f"### Result {i} (score: {hit['score']:.4f})")
-        lines.append(f"- **Work**: {hit['work']} ({hit['year']})")
-        lines.append(f"- **Author**: {hit['author']}")
-        lines.append(f"- **Genre/Period**: {hit['genre']} / {hit['language_period']}")
-        lines.append(f"- **Chunk ID**: `{hit['chunk_id']}`")
-        lines.append(f"- **Text**:\n{hit['text']}")
-        if hit.get("original_text"):
-            lines.append(f"- **Original text**:\n{hit['original_text']}")
+        lines.append(f"### Result {i}")
+        lines.append(f"- **Author**: {hit.get('author', '?')}")
+        lines.append(f"- **Source**: {hit.get('source_file', '?')}")
+        lines.append(f"- **Chunk ID**: `{hit.get('chunk_id', '')}`")
+        lines.append(f"- **Text**:\n{hit.get('text', '')}")
         lines.append("")
 
     return [TextContent(type="text", text="\n".join(lines))]
@@ -662,84 +654,53 @@ async def handle_get_full_text(args: dict) -> list[TextContent]:
     work = args["work"]
     max_chars = args.get("max_chars", 50000)
 
-    from rag.query import get_full_text
-    result = await asyncio.to_thread(get_full_text, work, max_chars)
+    from wiki.sources_db import search_literary
+    keywords = {w for w in work.lower().split() if len(w) >= 3}
+    hits = await asyncio.to_thread(search_literary, keywords, 100)
 
-    if "error" in result:
-        return [TextContent(type="text", text=result["error"])]
+    if not hits:
+        return [TextContent(type="text", text=f"No literary text found for: '{work}'")]
 
-    lines = [
-        f"# {result['work']} ({result['year']})",
-        f"**Author**: {result['author']}",
-        f"**Genre/Period**: {result['genre']} / {result['language_period']}",
-        f"**Chunks**: {result['chunk_count']}, **Truncated**: {result['truncated']}",
-        "",
-        "---",
-        "",
-        result["text"],
-    ]
-    return [TextContent(type="text", text="\n".join(lines))]
+    # Concatenate all matching chunks up to max_chars
+    text_parts = []
+    total = 0
+    for h in hits:
+        chunk_text = h.get("text", "")
+        if total + len(chunk_text) > max_chars:
+            break
+        text_parts.append(chunk_text)
+        total += len(chunk_text)
+
+    return [TextContent(type="text", text="\n\n---\n\n".join(text_parts))]
 
 
 async def handle_search_images(args: dict) -> list[TextContent]:
-    query = args["query"]
-    grade = args.get("grade")
-    teaching_value = args.get("teaching_value")
-    subject = args.get("subject")
-    limit = min(args.get("limit", 5), 20)
-
-    from rag.query import search_images
-    hits = await asyncio.to_thread(
-        search_images, query, grade,
-        teaching_value=teaching_value, subject=subject, limit=limit,
-    )
-
-    if not hits:
-        return [TextContent(type="text", text="No image results found.")]
-
-    lines = [f"Found {len(hits)} images for: \"{query}\"\n"]
-    for i, hit in enumerate(hits, 1):
-        lines.append(f"### Image {i} (score: {hit['score']:.4f})")
-        lines.append(f"- **Path**: `{hit['image_path']}`")
-        lines.append(f"- **Source**: Grade {hit['grade']}, {hit['author']}, page {hit['page']}")
-        lines.append(f"- **Size**: {hit['width']}x{hit['height']}")
-        if hit.get("description_uk"):
-            lines.append(f"- **Description**: {hit['description_uk']}")
-        if hit.get("associated_text_uk"):
-            lines.append(f"- **Associated text**: {hit['associated_text_uk']}")
-        if hit.get("teaching_value"):
-            lines.append(f"- **Teaching value**: {hit['teaching_value']}")
-        lines.append("")
-
-    return [TextContent(type="text", text="\n".join(lines))]
+    return [TextContent(type="text", text="Image search deferred — will be available for l2-uk-direct track.")]
 
 
 async def handle_get_chunk_context(args: dict) -> list[TextContent]:
     chunk_id = args["chunk_id"]
-    window = args.get("window", 2)
 
-    from rag.query import get_chunk_context
-    chunks = await asyncio.to_thread(get_chunk_context, chunk_id, window)
+    from wiki.sources_db import _get_conn
+    try:
+        conn = _get_conn()
+    except FileNotFoundError:
+        return [TextContent(type="text", text="Sources database not found.")]
 
-    if not chunks:
-        return [TextContent(type="text", text=f"No context found for chunk: {chunk_id}")]
+    # Search all tables for the chunk_id
+    for table in ("textbooks", "literary_texts"):
+        row = conn.execute(
+            f"SELECT * FROM {table} WHERE chunk_id = ?", (chunk_id,)
+        ).fetchone()
+        if row:
+            return [TextContent(type="text", text=f"**[{chunk_id}]** — {dict(row).get('title', '')}\n\n{dict(row).get('text', '')}")]
 
-    if len(chunks) == 1 and "error" in chunks[0]:
-        return [TextContent(type="text", text=chunks[0]["error"])]
-
-    lines = [f"Context for `{chunk_id}` (window={window}):\n"]
-    for chunk in chunks:
-        marker = ">>>" if chunk.get("is_target") else "   "
-        lines.append(f"{marker} **[{chunk['chunk_id']}]** — {chunk['section_title']}")
-        lines.append(chunk["text"])
-        lines.append("")
-
-    return [TextContent(type="text", text="\n".join(lines))]
+    return [TextContent(type="text", text=f"No context found for chunk: {chunk_id}")]
 
 
 async def handle_collection_stats(args: dict) -> list[TextContent]:
-    from rag.query import collection_stats
-    stats = await asyncio.to_thread(collection_stats)
+    from wiki.sources_db import list_tables
+    stats = await asyncio.to_thread(list_tables)
     return [TextContent(type="text", text=json.dumps(stats, indent=2))]
 
 
@@ -1054,31 +1015,45 @@ async def handle_query_pravopys(args: dict) -> list[TextContent]:
 
 
 async def handle_dict_search(args: dict, collection: str, label: str) -> list[TextContent]:
-    """Generic handler for dictionary/reference collection searches (#1022)."""
-    query = args["query"]
+    """Generic handler for dictionary/reference collection searches — uses SQLite."""
+    query = args.get("query", args.get("word", ""))
     limit = min(args.get("limit", 3), 10)
 
-    from rag.query import search_dictionary
-    hits = await asyncio.to_thread(search_dictionary, query, collection, limit)
+    # Map old Qdrant collection names to sources_db functions
+    from wiki import sources_db as sdb
+    _LOOKUP = {
+        "style_guide": sdb.search_style_guide,
+        "puls_cefr": sdb.query_cefr_level,
+        "sum11": sdb.search_definitions,
+        "grinchenko_dict": sdb.search_etymology,
+        "frazeolohichnyi": sdb.search_idioms,
+        "ukrajinet": sdb.search_synonyms,
+        "balla_en_uk": sdb.translate_en_uk,
+    }
+
+    func = _LOOKUP.get(collection)
+    if not func:
+        return [TextContent(type="text", text=f"Unknown collection: {collection}")]
+
+    hits = await asyncio.to_thread(func, query, limit)
 
     if not hits:
         return [TextContent(type="text", text=f"No results in {label} for: \"{query}\"")]
 
     lines = [f"Found {len(hits)} results in **{label}** for: \"{query}\"\n"]
     for i, hit in enumerate(hits, 1):
-        lines.append(f"### Result {i} (score: {hit['score']:.4f})")
-        if hit.get("headword"):
-            lines.append(f"- **Headword**: {hit['headword']}")
+        lines.append(f"### Result {i}")
+        word = hit.get("word", hit.get("words", ""))
+        if word:
+            lines.append(f"- **Headword**: {word}")
         if hit.get("source"):
             lines.append(f"- **Source**: {hit['source']}")
+        definition = hit.get("definition", hit.get("definitions", ""))
+        if definition:
+            lines.append(f"- **Definition**: {str(definition)[:500]}")
         text = hit.get("text", "")
-        if text:
+        if text and text != definition:
             lines.append(f"- **Text**: {text[:500]}")
-        meta = hit.get("metadata", {})
-        if meta:
-            meta_str = ", ".join(f"{k}: {v}" for k, v in list(meta.items())[:5] if v)
-            if meta_str:
-                lines.append(f"- **Metadata**: {meta_str}")
         lines.append("")
 
     return [TextContent(type="text", text="\n".join(lines))]
@@ -1098,20 +1073,13 @@ async def main_sse(host: str = "127.0.0.1", port: int = 8766):
     from starlette.responses import Response
     from starlette.routing import Mount, Route
 
-    # Pre-load embedding model at startup to avoid lazy-load crashes in async threads.
-    # The BGE-M3 model uses PyTorch which can fail with "Cannot copy out of meta tensor"
-    # when lazy-loaded inside asyncio.to_thread() after the server has been running.
-    print("Pre-loading embedding model...")
+    # Verify SQLite sources database exists
+    from wiki.sources_db import source_count
     try:
-        from rag.query import get_text_encoder
-        encoder = get_text_encoder()
-        encoder._load()
-        # Warm up with a test encode to ensure weights are materialized
-        encoder.encode(["тест"], batch_size=1)
-        print("Embedding model pre-loaded and verified ✅")
-    except Exception as e:
-        print(f"⚠️  Embedding model pre-load failed: {e}")
-        print("   search_text and dictionary searches will not work until model loads successfully")
+        total = source_count()
+        print(f"SQLite sources database: {total:,} entries ✅")
+    except FileNotFoundError:
+        print("⚠️  Sources database not found. Run: .venv/bin/python scripts/wiki/build_sources_db.py")
 
     sse = SseServerTransport("/messages/")
 
