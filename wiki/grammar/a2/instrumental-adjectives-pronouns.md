@@ -4,185 +4,173 @@
 slug: instrumental-adjectives-pronouns
 domain: grammar/a2
 tracks: [a2, b1]
-sources: [6-klas-ukrmova-betsa-2023_s0180, 6-klas-ukrmova-avramenko-2023_s0144, 6-klas-ukrmova-zabolotnyi-2020_s0210, 6-klas-ukrmova-avramenko-2023_s0195, 6-klas-ukrmova-betsa-2023_s0181, 10-klas-ukrmova-karaman-2018_s0290, 11-klas-ukrajinska-mova-glazova-2019_s0011, 6-klas-ukrmova-avramenko-2023_s0141, 6-klas-ukrmova-avramenko-2023_s0184, 6-klas-ukrmova-avramenko-2023_s0194, 6-klas-ukrmova-golub-2023_s0126, 6-klas-ukrmova-golub-2023_s0140, 6-klas-ukrmova-golub-2023_s0178, 6-klas-ukrmova-golub-2023_s0182, 6-klas-ukrmova-litvinova-2023_s0266, 6-klas-ukrmova-litvinova-2023_s0267, 6-klas-ukrmova-zabolotnyi-2020_s0211, 7-klas-ukrmova-litvinova-2024_s0085, 8-klas-ukrmova-zabolotnyi-2025_s0039, 9-klas-ukrajinska-mova-zabolotnij-2017_s0020, 11-klas-ukrajinska-mova-glazova-2019_s0013, 11-klas-ukrajinska-mova-glazova-2019_s0025, 11-klas-ukrajinska-mova-voron-2019_s0212, 11-klas-ukrajinska-mova-voron-2019_s0397, 4-klas-ukrmova-zaharijchuk_s0070, 4-klas-ukrmova-zaharijchuk_s0092, 4-klas-ukrmova-zaharijchuk_s0180, 4-klas-ukrmova-zaharijchuk_s0182, 5-klas-ukrmova-golub-2022_s0101, 5-klas-ukrmova-zabolotnyi-2023_s0013, 5-klas-ukrmova-zabolotnyi-2023_s0029, 6-klas-ukrmova-avramenko-2023_s0130, 6-klas-ukrmova-avramenko-2023_s0125, 6-klas-ukrmova-avramenko-2023_s0133, 6-klas-ukrmova-avramenko-2023_s0139, 6-klas-ukrmova-avramenko-2023_s0140, 6-klas-ukrmova-avramenko-2023_s0236, 6-klas-ukrmova-betsa-2023_s0113, 6-klas-ukrmova-betsa-2023_s0119, 6-klas-ukrmova-betsa-2023_s0125]
-compiled: 2026-04-06
+sources: [ext-ulp_youtube-12, ext-ulp_youtube-16, ext-ulp_youtube-139, ext-istoria_movy-19, ext-ulp_youtube-250, 6-klas-ukrmova-betsa-2023_s0181, 6-klas-ukrmova-zabolotnyi-2020_s0198, 4-klas-ukrmova-zaharijchuk_s0092, 6-klas-ukrmova-avramenko-2023_s0236, 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0078, ext-istoria_movy-27, ext-ulp_youtube-258, 6-klas-ukrmova-betsa-2023_s0180, 6-klas-ukrmova-zabolotnyi-2020_s0210, 10-klas-ukrmova-karaman-2018_s0290, 4-klas-ukrayinska-mova-varzatska-2021-1_s0093, 6-klas-ukrmova-zabolotnyi-2020_s0145, 6-klas-ukrmova-litvinova-2023_s0267, 6-klas-ukrmova-avramenko-2023_s0194, 4-klas-ukrmova-zaharijchuk_s0070, 6-klas-ukrmova-zabolotnyi-2020_s0261, 11-klas-ukrmova-zabolotnyi-2019_s0030, 6-klas-ukrmova-zabolotnyi-2020_s0211, 8-klas-ukrlit-zabolotnyi-2025_s0062, 10-klas-ukrmova-karaman-2018_s0288, 6-klas-ukrmova-golub-2023_s0137, 6-klas-ukrmova-avramenko-2023_s0140, 8-klas-ukrlit-avramenko-2025_s0083, ext-ulp_blogs-120, ext-other_blogs-67, 6-klas-ukrmova-litvinova-2023_s0266, 11-klas-ukrajinska-mova-glazova-2019_s0011, 6-klas-ukrmova-avramenko-2023_s0184, 6-klas-ukrmova-avramenko-2023_s0195]
+compiled: 2026-04-07
 -->
 
 ## Як це пояснюють у школі (How Schools Teach This)
-The declension of adjectives and possessive pronouns is a core topic in Ukrainian grammar, typically introduced in depth around the 6th grade. The pedagogical approach is systematic and builds on prior knowledge of noun cases.
 
-1.  **Foundation in Adjective Groups:** The system hinges on classifying adjectives into two declension groups: **тверда група** (hard group) and **м'яка група** (soft group). This classification is based on the final consonant of the adjective's stem (Source `11-klas-ukrajinska-mova-glazova-2019_s0011`).
-    *   **Тверда група:** Adjectives with a stem ending in a hard consonant (`новий`, `цікавий`).
-    *   **М'яка група:** Adjectives with a stem ending in a soft consonant, typically `[н']` or `[й]` (`синій`, `вечірній`, `крайній`) (Source `6-klas-ukrmova-avramenko-2023_s0140`).
+Українські шкільні підручники вводять відмінювання прикметників та займенників системно, зазвичай у 6-му класі, після того, як учні засвоїли відмінки іменників (Джерело: `6-klas-ukrmova-zabolotnyi-2020_s0261`, `6-klas-ukrmova-avramenko-2023_s0236`).
 
-2.  **Pronouns as Adjectives:** Ukrainian textbooks explicitly teach that possessive (`мій`, `твій`, `наш`), demonstrative (`цей`, `той`), and definitive (`кожен`, `весь`) pronouns decline *like* adjectives (Source `6-klas-ukrmova-zabolotnyi-2020_s0210`, Source `6-klas-ukrmova-golub-2023_s0182`). They are often presented in the same lesson or chapter. For instance, `наш` and `ваш` are taught as declining like hard-group adjectives, while `їхній` follows the soft-group pattern (Source `6-klas-ukrmova-avramenko-2023_s0195`).
+Основний принцип, за яким будується пояснення — це поділ прикметників на **тверду** та **м'яку групи** залежно від кінцевого приголосного основи (Джерело: `6-klas-ukrmova-zabolotnyi-2020_s0145`, `6-klas-ukrmova-avramenko-2023_s0140`).
 
-3.  **The "Special" Pronouns:**
-    *   **`мій`, `твій`, `свій`:** These are treated as a unique sub-group. While they share some endings with soft adjectives, they have their own characteristic vowel alternation (`і` -> `о` or `е`, e.g., `мій` -> `мого`) and stress shifts (`моя́`, `твого́`) which are explicitly pointed out (Source `6-klas-ukrmova-litvinova-2023_s0267`, Source `6-klas-ukrmova-zabolotnyi-2020_s0210`).
-    *   **The `його`, `її`, `їх` Exception:** A critical point of instruction is the distinction between personal and possessive uses of `його`, `її`, `їх`. When used to show possession (`чий?`), these pronouns are **indeclinable** (незмінні). This is contrasted directly with their personal pronoun forms, which do decline (Source `6-klas-ukrmova-betsa-2023_s0180`, Source `6-klas-ukrmova-zabolotnyi-2020_s0211`). For example: `Я бачу його` (personal) vs. `Я бачу його брата` (possessive).
+1.  **Тверда група (Hard Group):** Прикметники з основою на твердий приголосний (`новий`, `цікавий`, `дружний`). Це базова, найпоширеніша модель відмінювання.
+2.  **М'яка група (Soft Group):** Прикметники з основою на м'який приголосний `-н-` або `-й-` (`синій`, `вечірній`, `безкраїй`). Їхні закінчення часто містять `і` там, де у твердій групі `и`. (Джерело: `11-klas-ukrajinska-mova-glazova-2019_s0011`).
 
-4.  **Superlatives:** The formation of superlative adjectives (`найкращий`) is also covered. The key rule taught is that they are formed by adding the prefix `най-` to the comparative form (`кращий`). These then decline like any regular adjective of the corresponding hard/soft group. Common errors, such as redundant words (`*більш кращий` or `*самий кращий`), are explicitly corrected in exercises (Source `11-klas-ukrajinska-mova-glazova-2019_s0025`, Source `8-klas-ukrmova-zabolotnyi-2025_s0039`).
+Присвійні займенники (`мій`, `твій`, `наш`, `ваш`, `їхній`, `свій`) та вказівні (`цей`, `той`) вивчаються в цьому ж контексті. Підручники наголошують, що вони відмінюються подібно до прикметників (Джерело: `6-klas-ukrmova-zabolotnyi-2020_s0210`, `6-klas-ukrmova-avramenko-2023_s0195`).
+- `наш`, `ваш` відмінюються як прикметники **твердої групи** (Джерело: `6-klas-ukrmova-betsa-2023_s0180`).
+- `їхній` відмінюється як прикметник **м'якої групи** (Джерело: `6-klas-ukrmova-betsa-2023_s0180`).
+- `мій`, `твій`, `свій` мають особливий тип відмінювання, який потрібно запам'ятати, але він також має риси прикметникового.
+- Займенники `його`, `її` у присвійному значенні **не відмінюються** (Джерело: `6-klas-ukrmova-zabolotnyi-2020_s0211`).
 
-Instruction relies heavily on declension tables and pattern-based exercises, such as filling in missing endings, declining entire phrases (`провідміняйте словосполучення`), and transforming sentences (Source `6-klas-ukrmova-litvinova-2023_s0267`, Source `6-klas-ukrmova-betsa-2023_s0125`).
+Вправи зазвичай включають:
+- Провідміняти словосполучення «присвійний займенник + іменник» (`моя мама`, `твій клас`) (Джерело: `6-klas-ukrmova-betsa-2023_s0181`).
+- Поставити займенники в дужках у правильну форму в реченні (Джерело: `6-klas-ukrmova-litvinova-2023_s0267`, `6-klas-ukrmova-zabolotnyi-2020_s0211`).
+- Складання речень з поданими словосполученнями (Джерело: `6-klas-ukrmova-betsa-2023_s0181`).
 
 ## Повна парадигма (Full Paradigm)
 
-The instrumental case (`Орудний відмінок`) is used to express the instrument or means by which an action is performed, to accompany someone (`з ким?`), or to describe a state of being. Its endings for adjectives and pronouns depend on gender, number, and declension group.
+Парадигми орудного відмінка для прикметників та займенників, що узгоджуються з іменниками.
 
-### 1. Adjective Declension: Hard vs. Soft Group
+### 1. Прикметники (Adjectives)
 
-Adjectives agree in gender, number, and case with the noun they modify. The instrumental endings are key identifiers of the declension group. (Source: `6-klas-ukrmova-avramenko-2023_s0141`, `11-klas-ukrajinska-mova-glazova-2019_s0011`).
+Відмінкові закінчення орудного відмінка для прикметників (Джерело: `6-klas-ukrmova-zabolotnyi-2020_s0145`, `6-klas-ukrmova-litvinova-2023_s0209`).
 
-| Case | Masculine / Neuter | Feminine | Plural |
-| --- | --- | --- | --- |
-| | **Тверда група (новий/нове)** | **Тверда група (нова)** | **Тверда група (нові)** |
-| **О.в.** | **-им** (нов**им**) | **-ою** (нов**ою**) | **-ими** (нов**ими**) |
-| | **М'яка група (синій/синє)** | **М'яка група (синя)** | **М'яка група (сині)** |
-| **О.в.** | **-ім** (син**ім**) | **-ьою** (син**ьою**) | **-іми** (син**іми**) |
+| Група | Чоловічий рід (Masc.) | Середній рід (Neut.) | Жіночий рід (Fem.) | Множина (Plural) |
+| :---- | :--- | :--- | :--- | :--- |
+| **Тверда** (`новий`) | нов**им** | нов**им** | нов**ою** | нов**ими** |
+| **М'яка** (`синій`) | син**ім** | син**ім** | син**ьою** | син**іми** |
 
-### 2. Possessive Pronouns
+**Важливо:** У жіночому роді закінчення завжди `-ою`, навіть для прикметників м'якої групи (`синь**ою**`, а не `синь**ею**`) (Джерело: `6-klas-ukrmova-zabolotnyi-2020_s0145`).
 
-#### Group 1: `мій`, `твій`, `свій`
-These pronouns have a unique declension pattern with a vowel change (`і` > `о`/`е`) from the nominative. (Source: `6-klas-ukrmova-zabolotnyi-2020_s0210`).
+### 2. Присвійні займенники (Possessive Pronouns)
 
-| Case | Masculine / Neuter | Feminine | Plural |
-| --- | --- | --- | --- |
-| **Н.в.** | мій / моє | моя | мої |
-| **О.в.** | **моїм** | **моєю** | **моїми** |
-| **Н.в.** | твій / твоє | твоя | твої |
-| **О.в.** | **твоїм** | **твоєю** | **твоїми** |
-| **Н.в.** | свій / своє | своя | свої |
-| **О.в.** | **своїм** | **своєю** | **своїми** |
+| Займенник | Чоловічий рід (Masc.) | Середній рід (Neut.) | Жіночий рід (Fem.) | Множина (Plural) | Джерело |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **мій** (my) | мо**їм** | мо**їм** | мо**єю** | мо**їми** | `6-klas-ukrmova-zabolotnyi-2020_s0210` |
+| **твій** (your, sg.) | тво**їм** | тво**їм** | тво**єю** | тво**їми** | `6-klas-ukrmova-litvinova-2023_s0267` |
+| **свій** (one's own) | сво**їм** | сво**їм** | сво**єю** | сво**їми** | `6-klas-ukrmova-avramenko-2023_s0195` |
+| **наш** (our) | наш**им** | наш**им** | наш**ою** | наш**ими** | `6-klas-ukrmova-betsa-2023_s0180` |
+| **ваш** (your, pl.) | ваш**им** | ваш**им** | ваш**ою** | ваш**ими** | `6-klas-ukrmova-betsa-2023_s0180` |
+| **їхній** (their) | їхн**ім** | їхн**ім** | їхнь**ою** | їхн**іми** | `6-klas-ukrmova-betsa-2023_s0180` |
+| **його** (his) | **його** (незмінний) | **його** (незмінний) | **його** (незмінний) | **його** (незмінний) | `6-klas-ukrmova-zabolotnyi-2020_s0211`|
+| **її** (her) | **її** (незмінний) | **її** (незмінний) | **її** (незмінний) | **її** (незмінний) | `6-klas-ukrmova-zabolotnyi-2020_s0211`|
+| **їх** (their) | **їх** (незмінний) | **їх** (незмінний) | **їх** (незмінний) | **їх** (незмінний) | `6-klas-ukrmova-zabolotnyi-2020_s0211`|
 
-Note the stress shift in non-nominative forms: `мого́`, `моє́му`, `мої́м` (Source: `6-klas-ukrmova-litvinova-2023_s0267`).
+### 3. Вказівні та означальні займенники (Demonstrative & Definitive Pronouns)
 
-#### Group 2: `наш`, `ваш`
-These decline exactly like hard-group adjectives. (Source: `6-klas-ukrmova-avramenko-2023_s0195`).
-- **О.в.** (m/n): **нашим, вашим**
-- **О.в.** (f): **нашою, вашою**
-- **О.в.** (pl): **нашими, вашими**
-
-#### Group 3: `їхній`
-This pronoun declines exactly like a soft-group adjective. (Source: `6-klas-ukrmova-avramenko-2023_s0195`).
-- **О.в.** (m/n): **їхнім**
-- **О.в.** (f): **їхньою**
-- **О.в.** (pl): **їхніми**
-
-#### Group 4: The Indeclinables `його`, `її`, `їх`
-When used as possessives, these forms **DO NOT DECLINE**. They remain unchanged regardless of the case of the noun they modify. This is a fundamental rule. (Source: `6-klas-ukrmova-zabolotnyi-2020_s0211`).
-- Я розмовляю з **його** братом. (I talk with his brother.)
-- Я пишаюся **її** роботою. (I am proud of her work.)
-- Ми поїхали з **їх** друзями. (We went with their friends.)
-
-### 3. Superlative Adjectives (`найкращий`)
-Superlatives decline like regular adjectives of the corresponding group. `Найкращий` is a hard-group adjective.
-- **О.в.** (m/n): з **найкращим** другом / з **найкращим** почуттям
-- **О.в.** (f): з **найкращою** подругою
-- **О.в.** (pl): з **найкращими** друзями
+| Займенник | Чоловічий рід (Masc.) | Середній рід (Neut.) | Жіночий рід (Fem.) | Множина (Plural) | Джерело |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **той** (that) | т**им** | т**им** | т**ією** / т**ою** | т**ими** | `6-klas-ukrmova-betsa-2023_s0180` |
+| **цей** (this) | ц**им** | ц**им** | ц**ією** | ц**ими** | `10-klas-ukrmova-karaman-2018_s0288` |
+| **такий** (such) | так**им** | так**им** | так**ою** | так**ими** | `6-klas-ukrmova-betsa-2023_s0180` |
+| **весь** (all) | вс**ім** | вс**ім** | всі**єю** | вс**іма** | `6-klas-ukrmova-betsa-2023_s0181` |
+| **кожен** (every) | кожн**им** | кожн**им** | кожн**ою** | кожн**ими** | `6-klas-ukrmova-betsa-2023_s0181` |
 
 ## Частотність і пріоритети (Frequency & Priorities)
 
-For an A2 learner, not all forms are equally important. The focus should be on high-frequency patterns that unlock the most communication.
+Для рівня А2/B1 пріоритетним є впевнене володіння формами орудного відмінка **однини** з прийменником `з` (`з моїм другом`, `з твоєю сестрою`). Це найпоширеніший патерн у розмовній мові.
 
-1.  **Highest Priority (Must Master):**
-    *   **Instrumental with `з` for accompaniment:** This is the core of the phrase "з моїм найкращим другом". Learners must master the `з + Instrumental` construction.
-    *   **The core pronouns `мій`, `твій`, `свій`, `наш`, `ваш`:** The instrumental forms `моїм`, `твоїм`, `своїм`, `нашим`, `вашим`, `моєю`, `твоєю` etc. are extremely common in everyday speech.
-    *   **The indeclinable `його`, `її`, `їх`:** Understanding that these don't change is a massive simplification and a high-value piece of knowledge. It prevents a huge number of potential errors.
+1.  **Must-know (A2):**
+    *   Присвійні займенники однини: `з моїм`, `з твоїм`, `з нашим`, `з вашим`.
+    *   Прикметники твердої групи в однині: `з новим другом`, `з новою подругою`.
+    *   Займенник `цей`: `з цим хлопцем`, `з цією дівчиною`.
+    *   Питальний займенник `яким?`/`якою?` (`З яким другом?`, `Якою мовою?`).
 
-2.  **Medium Priority (Should Recognize and Start Using):**
-    *   **Instrumental for "tool/means":** Using the instrumental case without a preposition to show *how* something is done (e.g., `писати олівцем`, `їхати автобусом`). This expands the learner's descriptive ability.
-    *   **Basic hard- and soft-group adjectives:** Correctly forming `з новим другом` (hard) and `з останнім шансом` (soft).
-    *   **Superlatives:** Forming and using simple superlatives like `найкращий`, `найцікавіший` in the instrumental case.
+2.  **Should-know (A2+):**
+    *   Форми множини: `з моїми друзями`, `з новими студентами`, `з цими проблемами`.
+    *   Прикметники м'якої групи: `з моїм давнім другом`, `останнім часом`. Форма `син**ім**` менш частотна в побуті, ніж `давн**ім**` чи `останн**ім**`.
 
-3.  **Lower Priority (Passive Recognition):**
-    *   **`їхній`:** While correct and used, it's less frequent than the indeclinable `їх`. Learners should recognize it but can rely on `їх` in their own production initially.
-    *   **Complex or rare adjectives:** Full mastery of all adjective declensions can be refined at the B1 level. At A2, focusing on the most common patterns is more effective.
+3.  **Can-wait (B1/B1+):**
+    *   Нюанси відмінювання `весь` (`всім світом` vs. `з усіма проблемами`).
+    *   Форма `їхній` (`з їхнім сином`). Хоча вона граматично правильна і важлива, на початкових етапах її можна замінити конструкцією `з їхнім сином` (`з сином його і її`).
 
 ## Типові помилки L2 (Common L2 Errors)
-English-speaking learners often make predictable errors based on L1 transfer or oversimplification of Ukrainian rules.
 
 | ❌ Помилково | ✅ Правильно | Чому |
 | :--- | :--- | :--- |
-| Я говорю з `йогом` другом. | Я говорю з **його** другом. | This is the most common error. The learner attempts to decline the possessive pronoun `його`, but when it means "his," it is indeclinable (Source: `6-klas-ukrmova-zabolotnyi-2020_s0211`). |
-| Це `самий кращий` фільм. Я говорив з `самим кращим` актором. | Це **найкращий** фільм. Я говорив з **найкращим** актором. | This is a calque from Russian (`самый лучший`). Ukrainian forms simple superlatives with the prefix `най-` only. The word `самий` is not used for this purpose (Source: `11-klas-ukrajinska-mova-glazova-2019_s0025`). |
-| Він був з `мій` сестрою. | Він був з **моєю** сестрою. | The learner fails to decline the possessive pronoun to agree with the noun in case and gender. They use the nominative form instead of the instrumental feminine. |
-| Я пишаюся `синім` небом. | Я пишаюся **синім** небом. | While phonetically similar, the learner uses the hard group ending `-им` for a soft group adjective (`синій`). The correct ending for masculine/neuter instrumental soft group is `-ім` (Source: `6-klas-ukrmova-avramenko-2023_s0141`). |
-| Я люблю гуляти з `мій` собакою. | Я люблю гуляти зі **своїм** собакою. | The reflexive possessive pronoun `свій` is required when the possessor is the subject of the sentence (`Я ... зі своїм`). Using `мій` here is a common L2 error, as English lacks a direct equivalent and defaults to "my". |
-| Він розмовляв з `більш цікавою` людиною. | Він розмовляв з **цікавішою** людиною. | While `більш` can be used to form comparatives (`більш цікавий`), the synthetic form (`цікавіший`) is far more common and natural in spoken Ukrainian. The analytical form is often a sign of L2 speech. The form `*більш цікавішою` is a double comparative and incorrect. |
+| Я розмовляю з **мій** друг. | Я розмовляю з **моїм** другом. | Англомовні студенти часто забувають відмінювати займенники та прикметники разом з іменником. В українській мові всі узгоджені частини словосполучення повинні стояти в одному відмінку. |
+| Я п'ю каву з **гарячим молоком**. | Я п'ю каву з **гарячим молоком**. | Помилка з твердістю/м'якістю. `Гарячий` має основу на шиплячий, що історично поводиться як тверда група в цьому контексті, вимагаючи закінчення `-им`. |
+| Ми говорили з **її** братом. | Ми говорили з **її** братом. (Правильно) | Це не помилка, але може викликати плутанину. Студенти можуть намагатися відмінювати `її` як `їїм`, за аналогією до `моїм`. Важливо наголосити, що присвійні займенники `його` та `її` **незмінні** (Джерело: `6-klas-ukrmova-zabolotnyi-2020_s0211`). |
+| Я цікавлюся **синий** машиною. | Я цікавлюся **синьою** машиною. | Пропуск відмінювання та неправильне закінчення. Іменник `машина` жіночого роду, тому прикметник має мати закінчення `-ою`. Прикметник `синій` м'якої групи, тому `синь**ою**`. |
+| Вони приїхали з **їх** дітьми. | Вони приїхали з **їхніми** дітьми. | Калька з російської. В українській мові для позначення присвійності "their" використовується займенник `їхній`, який відмінюється. `Їх` - це форма особового займенника "вони" в родовому/знахідному відмінку (Джерело: `6-klas-ukrmova-golub-2023_s0178`). |
+| Ми задоволені **наший** роботою. | Ми задоволені **нашою** роботою. | Неправильне закінчення жіночого роду. Займенники `наш` і `ваш` відмінюються як прикметники твердої групи, тому закінчення орудного відмінка жіночого роду — `-ою`. |
 
 ## Деколонізаційні застереження (Decolonization Notes)
-It is crucial to teach Ukrainian grammar on its own terms, without Russian as a default or reference point.
 
-1.  **`їхній` is Not a "Mistake"**: In modern Russian, "ихний" is considered non-standard and colloquial. Learners coming from a Russian background might mistakenly apply this rule to Ukrainian. It's essential to state clearly that **`їхній` is a standard, literary, and correct** possessive pronoun in Ukrainian that declines fully. It coexists with the indeclinable possessive `їх`. The choice between them can be stylistic or regional, but both are valid parts of the Ukrainian language system (Source: `6-klas-ukrmova-litvinova-2023_s0266`, `6-klas-ukrmova-golub-2023_s0178`).
-2.  **`Свій` is Not an Optional "Also"**: While Russian also has `свой`, its use in Ukrainian is often more rigid and obligatory. Teaching `свій` as a core reflexive possessive, and not just an alternative to `мій`/`твій`, is key to developing natural-sounding Ukrainian. Presenting it as "when the subject possesses something..." is the correct Ukrainian-centric approach.
-3.  **No "Pleonastic" Superlatives**: The Russian construction `самый лучший` has no place in Ukrainian. Emphasize that the only standard way to form a simple superlative is with `най-` (`найкращий`). The analytical form `найбільш/найменш` + adjective (`найбільш цікавий`) exists but is more bookish. Forms like `*самий кращий` or `*більш найкращий` are blatant Russianisms or errors (Source: `11-klas-ukrajinska-mova-glazova-2019_s0025`).
-4.  **Distinct Endings**: Do not gloss over the small differences in endings. The feminine instrumental `-ою` (`новою`, `моєю`) is consistently used in Ukrainian for both hard and soft stems, a point of subtle but consistent difference from Russian.
+Ключові відмінності орудного відмінка прикметників та займенників в українській та російській мовах є маркерами грамотності та мовної чистоти.
+
+1.  **Закінчення `-им` vs. `-ым`:** Українська мова в орудному відмінку однини чоловічого та середнього роду твердої групи використовує виключно закінчення `-им` (`новим`, `добрим`). Російське закінчення `-ым` (`новым`, `добрым`) є грубою помилкою і ознакою суржику.
+2.  **Закінчення `-ою` vs. `-ой`/`-ей`:** В орудному відмінку однини жіночого роду українська мова використовує закінчення `-ою` як для твердої, так і для м'якої групи (`новою`, `синьою`). Російські відповідники `-ой` (`новой`) та `-ей` (`синей`) в українській мові не вживаються.
+3.  **Активне використання `їхній`:** В українській мові присвійний займенник `їхній` є нормою і активно відмінюється (`з їхніми батьками`). Вживання незмінного `їх` у присвійному значенні (`з їх батьками`) є прямим впливом російської мови, де `их` є стандартною присвійною формою. Підручники чітко розмежовують особовий займенник `їх` (кого?) і присвійний `їхній` (чий?) (Джерело: `6-klas-ukrmova-golub-2023_s0178`).
+4.  **Фонетична різниця:** Українське `і` в закінченнях м'якої групи (`синім`, `їхнім`) є чітким, йотованим звуком, на відміну від редукованого російського `и` в аналогічних позиціях.
+
+Навчаючи української, важливо представляти ці форми не як "відмінності від російської", а як **питомі норми української мови**. Російські форми слід згадувати лише в контексті поширених помилок, яких треба уникати.
 
 ## Природні приклади (Natural Examples)
 
-Examples should be drawn from daily life and demonstrate correct, natural usage.
+**Група 1: Присвійні займенники з прийменником `з`**
+*   Ми жили там разом **з моїм молодшим братом** Миколою. (Джерело: `ext-ulp_youtube-258`)
+*   Це природно, адже емоції допомагають (ми) краще зрозуміти одне одного, а також висловити власне ставлення до ситуації. Та інколи **своєю реакцією** (ми) можемо зробити боляче й неприємно людям навколо... (Джерело: `6-klas-ukrmova-litvinova-2023_s0267`)
+*   Ми **з моїм хлопцем** знімали будиночок, який ще називається таунхаус. (Джерело: `ext-ulp_youtube-139`)
 
-**Group 1: Basic Accompaniment with `з`**
-*   Прощавай, мій зошит! Спасибі тобі, друже, що ти думок **моїх** не відцуравсь. (Source: `9-klas-ukrmova-zabolotnyi-2017_s0020`) (Genitive, but shows pronoun usage)
-*   Я хочу поїхати у відпустку зі **своєю** сім'єю.
-*   Він прийшов на вечірку з **дуже гарною** дівчиною.
-*   Ми довго розмовляли з **нашим** новим сусідом.
+**Група 2: Прикметники множини в орудному відмінку**
+*   Сорочку мати вишила мені **червоними і чорними нитками**. (Джерело: `ext-ulp_youtube-12`)
+*   Моїм батькам дуже цікаво познайомитися **з іноземцями**. (Джерело: `ext-ulp_youtube-258`)
+*   На цих двох заповідях утверджується весь закон і пророки. (Джерело: `8-klas-ukrlit-avramenko-2025_s0083`) (Тут `двох` - родовий, але ілюструє узгодження). Кращий приклад: Він повернувся **іншими шляхами**. <!-- VERIFY -->
 
-**Group 2: Indeclinable `його`, `її`, `їх`**
-*   Я пишаюся **його** досягненнями.
-*   Чи можна скористатися **її** телефоном?
-*   Діти гралися з **їх** собакою у парку.
+**Група 3: Вказівні займенники в орудному відмінку**
+*   Ходи по **тій землі**, що Каменяр ходив, і пий із тих джерел, які його поїли. (Джерело: `6-klas-ukrmova-zabolotnyi-2020_s0211`) (тут місцевий відмінок, але показує `тій`).
+*   Складіть речення **з тими віршами**. (Джерело: `6-klas-ukrmova-betsa-2023_s0181`)
+*   Я не хочу розмовляти **з таким хлопцем**. <!-- VERIFY -->
 
-**Group 3: Instrumental as a "Tool" or "Means"**
-*   Цей суп їдять **великою** ложкою.
-*   Вона написала лист **синьою** ручкою.
-*   Ми добиралися до вокзалу **старим** трамваєм.
+**Група 4: Прикметники та дієприкметники як означення**
+*   Ліс стояв, неначе молода під весільним вінцем. На дорогому зимовому уборі мигтіли й зникали блискітки. І все те диво світилось у **раннім сонячнім промінні**. (Джерело: `4-klas-ukrmova-zaharijchuk_s0092`, паралельні форми місцевого відмінка, що збігаються з орудним для м'якої групи).
+*   Він **є відомим** у ремеслах. (Джерело: `ext-istoria_movy-19`, адаптовано)
+*   Я пишаюся **своїм новим комп'ютером**. (Джерело: `6-klas-ukrmova-litvinova-2023_s0267`, адаптовано)
 
-**Group 4: Instrumental of State (with verbs like *бути*, *стати*)**
-*   Мій брат став **відомим** лікарем.
-*   Вона завжди була **хорошою** людиною.
-*   Цей день був для мене **справжнім** святом.
-
-**Group 5: Superlatives**
-*   Він розмовляв зі **своїм найкращим** другом.
-*   Ця книга була написана **найвідомішим** українським автором.
-*   Ми милувалися **найвищою** горою в Карпатах.
+**Група 5: Займенник `свій`**
+*   Краще черствий хліб у **своєму домі**, ніж різноманітність страв за чужим столом. (Джерело: `6-klas-ukrmova-zabolotnyi-2020_s0211`) (тут місцевий, але ілюструє вживання `свій`).
+*   Тому варто контролювати **свою поведінку** й емоції. (Джерело: `6-klas-ukrmova-litvinova-2023_s0267`) (тут знахідний).
+*   Він усюди ходить зі **своєю собакою**. (Джерело: `6-klas-ukrmova-litvinova-2023_s0267`, адаптовано).
 
 ## Рекомендації для вправ (Activity Concepts)
 
-The learning process should be scaffolded from recognition to production.
+**Phase 1: Controlled Practice (A2)**
+*   **Drill 1: Declension Tables.** Заповнити таблицю відмінювання для словосполучень: `мій новий друг` (тверда група), `твій останній шанс` (м'яка група).
+*   **Drill 2: Fill-in-the-blanks.** Дати речення з пропущеними закінченнями.
+    *   `Я розмовляю з наш___ нов___ вчителем.` -> `нашим новим вчителем`
+    *   `Мама пишається сво___ донькою.` -> `своєю донькою`
+*   **Drill 3: Transformation.** Перетворити називний відмінок на орудний з прийменником `з`.
+    *   `Це мій брат.` -> `Я гуляю з моїм братом.`
+    *   `Це наша нова машина.` -> `Ми їдемо нашою новою машиною.`
 
-*   **Phase 1: Recognition & Matching**
-    *   **Drill 1 (Matching):** Match the nominative phrase (e.g., `мій друг`) with its correct instrumental form (`з моїм другом`).
-    *   **Drill 2 (Error Spotting):** Present sentences with common errors (e.g., `*з йогом другом`, `*з самий кращим другом`) and ask the learner to identify and correct them.
+**Phase 2: Semi-controlled Practice (A2+)**
+*   **Drill 4: Question & Answer.** Студенти ставлять один одному запитання, що вимагають відповіді в орудному відмінку.
+    *   `З ким ти вчора розмовляв?` -> `Я розмовляв з моїм старим другом.`
+    *   `Чим ти пишеш?` -> `Я пишу своєю новою ручкою.`
+*   **Drill 5: Sentence Building.** Дати набір слів, з яких треба скласти речення.
+    *   `я / пишатися / мій / молодший / брат` -> `Я пишаюся моїм молодшим братом.`
 
-*   **Phase 2: Controlled Practice**
-    *   **Drill 3 (Fill-in-the-blanks):** Provide a sentence with a blank and the base form of the adjective/pronoun in parentheses.
-        *   `Я п'ю каву з __________ (стара подруга).` -> `старою подругою`
-        *   `Він пише __________ (новий олівець).` -> `новим олівцем`
-    *   **Drill 4 (Transformation):** Give two simple sentences and ask the learner to combine them using the instrumental case.
-        *   `Це мій брат. Я йду в кіно.` -> `Я йду в кіно з моїм братом.`
-
-*   **Phase 3: Production**
-    *   **Drill 5 (Question & Answer):** Ask questions that elicit an instrumental case response.
-        *   `З ким ти розмовляв?` -> `Я розмовляв зі своїм учителем.`
-        *   `Чим ти пишеш?` -> `Я пишу синьою ручкою.`
-    *   **Drill 6 (Creative Writing):** Give a prompt like "Опиши свій ідеальний день, використовуючи фрази з орудним відмінком" (Describe your perfect day using phrases with the instrumental case).
+**Phase 3: Free Practice (B1)**
+*   **Drill 6: Description.** Описати свою сім'ю або друзів, використовуючи конструкції `Я дружу з...`, `Я пишаюся...`, `Я люблю проводити час з...`.
+*   **Drill 7: Role-play.** Ситуація: "Знайомство на вечірці". Студенти мають розповісти, з ким вони прийшли, чим займаються їхні друзі тощо.
 
 ## Зв'язки з іншими темами (Connections)
 
-*   **Prerequisites:**
-    *   **Noun Declension:** A solid understanding of noun genders and the instrumental case for nouns is essential. The learner cannot correctly form `з новим другом` without knowing the instrumental of `друг`.
-    *   **Adjective Basics:** The learner should already know that adjectives agree with nouns in gender and number.
+*   **Попередні теми (Prerequisites):**
+    *   **Орудний відмінок іменників:** Студент повинен знати, як утворюється орудний відмінок іменників (`другом`, `сестрою`, `друзями`), оскільки прикметники та займенники узгоджуються з ними.
+    *   **Присвійні займенники (називний відмінок):** Потрібно знати базові форми `мій`, `твій`, `наш` і розрізняти `її` (her) та `їхній` (their).
+    *   **Прикметники (Тверда/М'яка група):** Розуміння поділу прикметників на групи є основою для вибору правильного закінчення.
 
-*   **What this topic enables:**
-    *   **Describing Relationships:** It unlocks the ability to talk about actions done *with* people (`з другом`, `з сім'єю`).
-    *   **Describing Means/Tools:** It allows for more complex sentences describing how an action is performed (`писати ручкою`, `їхати потягом`).
-    *   **Foundation for B1 Grammar:** It is a prerequisite for understanding the instrumental case used to denote a profession or state after verbs like `бути`, `стати`, `працювати` (e.g., `Він працює вчителем`).
+*   **Наступні теми (What this enables):**
+    *   **Пасивний стан з дієсловами на `-ся`:** Конструкції типу `текст, написаний моїм другом`.
+    *   **Складніші конструкції з прийменниками:** `перед нашим будинком`, `між двома високими деревами`.
+    *   **Роль орудного відмінка як предикатива:** `Він став добрим лікарем`.
 
 ## Пов'язані статті (Related Articles)
-*   `grammar/a1/noun-cases-overview`
-*   `grammar/a2/noun-instrumental-case`
-*   `grammar/a2/adjective-noun-agreement`
-*   `grammar/b1/pronoun-sviy-reflexive-possessive`
-*   `grammar/b1/comparative-superlative-adjectives`
+
+*   `grammar/a1/instrumental-nouns`
+*   `grammar/a1/prepositions-overview`
+*   `grammar/a2/personal-pronouns-declension`
+*   `grammar/b1/verbs-of-state-and-becoming`

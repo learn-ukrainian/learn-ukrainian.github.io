@@ -4,163 +4,166 @@
 slug: indefinite-negative-pronouns
 domain: grammar/a2
 tracks: [a2, b1]
-sources: [7-klas-ukrmova-avramenko-2024_s0025, 10-klas-ukrmova-karaman-2018_s0290, 6-klas-ukrmova-golub-2023_s0185, 6-klas-ukrmova-betsa-2023_s0176, 6-klas-ukrmova-golub-2023_s0178, 6-klas-ukrmova-golub-2023_s0182, 10-klas-ukrmova-karaman-2018_s0372, 6-klas-ukrmova-betsa-2023_s0173, 6-klas-ukrmova-litvinova-2023_s0277, 6-klas-ukrmova-zabolotnyi-2020_s0196, 7-klas-ukrmova-avramenko-2024_s0026, 10-klas-ukrmova-karaman-2018_s0291, 6-klas-ukrmova-avramenko-2023_s0184, 6-klas-ukrmova-zabolotnyi-2020_s0206, 7-klas-ukrmova-avramenko-2024_s0200, 7-klas-ukrmova-zabolotnyi-2024_s0212, 6-klas-ukrmova-avramenko-2023_s0194, 6-klas-ukrmova-avramenko-2023_s0203, 6-klas-ukrmova-betsa-2023_s0187, 6-klas-ukrmova-zabolotnyi-2020_s0207, 6-klas-ukrmova-zabolotnyi-2020_s0208, 6-klas-ukrmova-zabolotnyi-2020_s0209, 9-klas-ukrajinska-mova-voron-2017_s0261, 9-klas-ukrajinska-mova-zabolotnij-2017_s0378, 9-klas-ukrajinska-mova-zabolotnyi-2017_s0378, 10-klas-ukrajinska-mova-avramenko-2018_s0224, 10-klas-ukrajinska-mova-avramenko-2018_s0299, 10-klas-ukrmova-glazova-2018_s0224, 11-klas-ukrajinska-mova-glazova-2019_s0322, 11-klas-ukrajinska-mova-voron-2019_s0399, 2-klas-ukrmova-kravcova-2019-2_s0076, 7-klas-ukrmova-litvinova-2024_s0228, 7-klas-ukrmova-litvinova-2024_s0235, 7-klas-ukrmova-litvinova-2024_s0237, 7-klas-ukrmova-zabolotnyi-2024_s0176, 7-klas-ukrmova-zabolotnyi-2024_s0215, ext-article-0, ext-article-1]
-compiled: 2026-04-06
+sources: [ext-realna_istoria-61, ext-realna_istoria-109, ext-komik_istoryk-94, ext-realna_istoria-83, ext-komik_istoryk-30, ext-ulp_youtube-197, ext-ulp_youtube-201, ext-komik_istoryk-3, ext-ulp_youtube-39, 8-klas-ukrlit-zabolotnyi-2025_s0367, ext-ulp_youtube-121, 8-klas-ukrlit-zabolotnyi-2025_s0117, 10-klas-ukrmova-glazova-2018_s0224, 9-klas-ukrajinska-literatura-avramenko-2017_s0253, 6-klas-ukrmova-golub-2023_s0185, 6-klas-ukrmova-avramenko-2023_s0184, 6-klas-ukrmova-zabolotnyi-2020_s0207, 6-klas-ukrmova-litvinova-2023_s0276, 11-klas-ukrajinska-mova-voron-2019_s0399, 11-klas-ukrajinska-mova-glazova-2019_s0322, 6-klas-ukrmova-betsa-2023_s0176, 6-klas-ukrmova-litvinova-2023_s0277, 10-klas-ukrmova-karaman-2018_s0291, 7-klas-ukrmova-zabolotnyi-2024_s0212, 9-klas-ukrajinska-mova-voron-2017_s0261, 4-klas-ukrayinska-mova-varzatska-2021-1_s0101]
+compiled: 2026-04-07
 -->
 
 ## Як це пояснюють у школі (How Schools Teach This)
-Ukrainian school grammar introduces indefinite (`неозначені`) and negative (`заперечні`) pronouns in the 6th grade (Source 10, 14). The core concept taught is that these pronouns are not a fundamentally new category, but rather derivatives of interrogative (`питальні`) pronouns like `хто?`, `що?`, `який?` (Source 14).
+В українських школах неозначені (indefinite) та заперечні (negative) займенники вводяться приблизно в 6-му класі, після вивчення питальних та відносних займенників, оскільки вони є твірною базою (Source 16, 22).
 
-The formation process is systematic and based on adding specific particles, which function as prefixes or suffixes (Source 14, 21):
+Основний принцип, який пояснюється учням, — це словотвір. Займенники цих двох розрядів утворюються від питальних (`хто?`, `що?`, `який?`, `чий?`, `котрий?`, `скільки?`) за допомогою додавання спеціальних часток (Source 22, 23).
 
-1.  **Заперечні займенники (Negative Pronouns)** are formed by adding the prefix **`ні-`** to an interrogative pronoun. They express the absence of a person, object, or quality (Source 4, 14). Examples: `ніхто`, `ніщо`, `ніякий` (Source 2).
+1.  **Заперечні займенники** утворюються додаванням префікса `ні-` до питальних займенників: `ніхто`, `ніщо`, `ніякий`, `нічий`, `нікотрий`, `ніскільки` (Source 16, 24). Шкільна програма відразу наголошує на правилі подвійного заперечення в українській мові: заперечний займенник майже завжди вимагає заперечної частки `не` при дієслові (`Ніхто **не** прийшов`).
 
-2.  **Неозначені займенники (Indefinite Pronouns)** are formed by adding a variety of particles to interrogative pronouns to indicate an unspecified or unknown person, object, or quality (Source 4, 9, 14). The choice of particle determines the orthography:
-    *   **Пишемо разом (Written together):** with particles **`аби-`**, **`де-`**, and **`-сь`**. Textbooks often provide mnemonics like "Аби десь, але разом" (To remember to write `аби`, `де`, `-сь` together) (Source 9). Examples: `абихто`, `дехто`, `хтось` (Source 3, 22).
-    *   **Пишемо з дефісом (Written with a hyphen):** with particles **`будь-`**, **`казна-`**, **`хтозна-`**, **`-небудь`**, and **`бозна-`** (Source 9, 22, 23). Examples: `будь-хто`, `казна-що`, `хто-небудь` (Source 3).
+2.  **Неозначені займенники** вказують на невизначену особу, предмет, ознаку чи кількість. Вони утворюються від питальних займенників за допомогою:
+    *   Префіксів `аби-`, `де-`: `абихто`, `деякий` (Source 22, 25).
+    *   Суфікса `-сь`: `хтось`, `щось`, `якийсь` (Source 22, 25).
+    *   Часток, що пишуться через дефіс: `будь-`, `-небудь`, `казна-`, `хтозна-`: `будь-хто`, `хто-небудь`, `казна-що`, `хтозна-який` (Source 15, 23).
 
-A crucial and consistently emphasized rule is the **role of prepositions**. When a preposition is inserted between the particle and the pronoun, the three words are written separately (Source 3, 4, 18, 20). For example, `ніхто` becomes `ні з ким`, and `будь-хто` becomes `будь у кого`. This rule applies to both negative and indefinite pronouns.
+Правопис цих займенників є ключовою темою. У підручниках (Source 17, 26, 31) правила групуються так:
+*   **Разом**: з `аби-`, `де-`, `-сь`.
+*   **Через дефіс**: з `будь-`, `-небудь`, `казна-`, `хтозна-`.
+*   **Окремо**: коли між часткою і займенником з'являється прийменник (`ні до кого`, `будь у кого`, `аби з ким`) (Source 17, 22).
 
-Declension is taught as a straightforward process: the base interrogative pronoun declines as usual, while the particles (`ні-`, `-сь`, `будь-`, etc.) remain unchanged (Source 6, 17, 20).
+Відмінювання цих займенників відбувається так само, як і відповідних питальних займенників (Source 27). Наприклад, `ніхто` відмінюється як `хто`, а `якийсь` — як `який`.
 
 ## Повна парадигма (Full Paradigm)
+Неозначені та заперечні займенники відмінюються за тією ж моделлю, що і питальні займенники, від яких вони утворені. Частки (`-сь`, `будь-`, `-небудь` тощо) при відмінюванні не змінюються.
 
-The formation is based on interrogative pronouns.
+#### Заперечні займенники: `ніхто`, `ніщо`
 
-**Formation of Indefinite and Negative Pronouns**
-| Питальний (Interrogative) | Заперечний (Negative) | Неозначені (Indefinite) |
+Якщо між `ні-` та займенником стоїть прийменник, усі три слова пишуться окремо.
+
+| Відмінок | ніхто | ніщо |
 | :--- | :--- | :--- |
-| **хто?** (who?) | **ніхто** (nobody) | **хтось**, **дехто** (somebody), **абихто** (just anybody), **будь-хто** (anybody), **хто-небудь** (anybody), **казна-хто** (goodness knows who) |
-| **що?** (what?) | **ніщо** (nothing) | **щось**, **дещо** (something), **абищо** (just anything), **будь-що** (anything), **що-небудь** (anything), **казна-що** (goodness knows what) |
-| **який?** (which/what kind?) | **ніякий** (no/none) | **якийсь**, **деякий** (some), **абиякий** (any old kind), **будь-який** (any), **який-небудь** (any kind), **казна-який** (goodness knows what kind) |
-| **чий?** (whose?) | **нічий** (nobody's) | **чийсь**, **абичий**, **будь-чий**, **чий-небудь**, **казна-чий** |
-| **скільки?** (how many?) | **ніскільки** (none/not any) | **скількись**, **декілька** (a few), **абискільки**, **будь-скільки**, **скільки-небудь**, **казна-скільки** |
-| **котрий?** (which one?) | **нікотрий** (neither) | **котрийсь**, **декотрий** (some), **абикотрий**, **будь-котрий**, **котрий-небудь**, **казна-котрий** |
+| **Н.** | ніхто | ніщо |
+| **Р.** | ніко́го / *ні в ко́го* | нічо́го / *ні до чо́го* |
+| **Д.** | ніко́му / *ні для ко́го* | нічо́му / *ні для чо́го* |
+| **Зн.** | ніко́го | ніщо |
+| **Ор.** | ніки́м / *ні з ким* | нічи́м / *ні з чим* |
+| **М.** | (на) ніко́му / *ні на ко́му* | (на) нічо́му / *ні на чо́му* |
 
-(Sources: 1, 10, 13, 14)
+**Примітка до наголосу:** Існує різниця у значенні залежно від наголосу в непрямих відмінках (Source 18).
+*   Наголос на префіксі `ні-` означає неможливість дії: `**ні́**кого спитати` (there's no one to ask).
+*   Наголос на корені означає відсутність: `**ніко́го** немає` (there is no one here).
 
----
+#### Неозначені займенники: `хтось`, `що-небудь`, `будь-хто`
 
-**Declension Paradigm**
+Частки `аби-`, `де-`, `-сь` пишуться разом. `будь-`, `-небудь`, `казна-`, `хтозна-` пишуться через дефіс.
 
-The particles remain unchanged; only the core pronoun declines. The key challenge is the insertion of prepositions, which splits the word.
-
-**Declension of `ніхто`, `щось`, `будь-який`**
-| Відмінок (Case) | ніхто (nobody) | щось (something) | будь-який (any kind of) (m.) |
+| Відмінок | хтось | що-небудь | будь-хто |
 | :--- | :--- | :--- | :--- |
-| **Н.** (Nom) | ніхто | щось | будь-який |
-| **Р.** (Gen) | нік**о**го | ч**о**гось | будь-якого |
-| **Д.** (Dat) | нік**о**му | ч**о**мусь | будь-якому |
-| **Зн.** (Acc) | нік**о**го | щось | будь-який / будь-якого |
-| **Ор.** (Inst) | нік**и**м | ч**и**мсь / ч**имо**сь | будь-яким |
-| **М.** (Loc) | *немає* | (на/у) ч**о**мусь / ч**і**мсь | (на/у) будь-якому / -якім |
-| **З прийм.** (w/ Prep) | **ні** `в` **кого**, **ні** `з` **ким** | `з` ч**и**мсь, `про` щ**о**сь | `в` **будь-якому**, **будь** `з` **яким** |
+| **Н.** | хтось | що-небудь | будь-хто |
+| **Р.** | ко́гось | чо́го-небудь | будь-ко́го |
+| **Д.** | ко́мусь | чо́му-небудь | будь-ко́му |
+| **Зн.** | ко́гось | що-небудь | будь-ко́го |
+| **Ор.** | ки́мсь | чим-небудь | будь-ки́м |
+| **М.** | (на) ко́мусь, кі́мсь | (на) чо́му-небудь, чі́м-небудь | (на) будь-ко́му |
 
-(Source 6, 17, 20)
-Note the two stress patterns for `ніхто`/`ніщо` in oblique cases, which carry different meanings (Source 34):
-*   `**ніко́го** немає` (there is **nobody**) – indicates absence.
-*   `це **ні́кому** не потрібно` (this is not needed **by anyone**) – indicates impossibility or lack of utility.
+Якщо є прийменник, він ставиться між часткою та займенником, і всі слова пишуться окремо (Source 23): `будь у кого`, `казна з ким`, `хтозна про що`, `аби до кого`.
 
 ## Частотність і пріоритети
 
-For A2 learners, not all forms are equally important. The focus should be on comprehension and production of the most common pronouns.
+Для рівня A2/B1 пріоритетними є найуживаніші займенники, які покривають більшість щоденних комунікативних ситуацій.
 
-*   **Tier 1 (Must-Know):** The most frequent and essential pronouns.
-    *   **`хтось`, `щось`**: Used constantly for "someone" and "something".
-    *   **`ніхто`, `ніщо`**: Essential for negation. Mastering the double negative structure (`Ніхто нічого не знає`) is a core A2 skill (Source 41).
-    *   **`якийсь`**: "some kind of", very frequent.
-    *   **`дехто`, `дещо`, `деякі`**: "some people", "something", "some". Very common in formal and informal language.
+**Високий пріоритет (must-know):**
+1.  **`хтось` / `щось`**: "someone / something". Це найпоширеніші неозначені займенники. Вживаються в стверджувальних реченнях.
+    *   *Приклад:* `Здається, хтось прийшов.`
+2.  **`ніхто` / `ніщо` / `ніякий` / `ніколи` / `ніде`**: "nobody / nothing / no (which) / never / nowhere". Основа для побудови заперечних речень з подвійним запереченням.
+    *   *Приклад:* `Я **ніхто** не бачив і **нічого** не чув.`
+3.  **`хто-небудь` / `що-небудь`**: "anybody / anything". Вживаються переважно в питаннях або для позначення одного довільного об'єкта з багатьох.
+    *   *Приклад:* `Ти бачив **кого-небудь**?` `Дай мені **що-небудь** почитати.` (Source 27)
 
-*   **Tier 2 (Important):** These forms introduce important nuances for "any".
-    *   **`хто-небудь`, `що-небудь`**: "anyone", "anything" in questions and general statements (`Дай мені що-небудь почитати` - Give me anything to read).
-    *   **`будь-який`**: "any", a very common and useful adjective pronoun. (`Візьми будь-яку книгу` - Take any book).
+**Середній пріоритет (good-to-know):**
+1.  **`будь-хто` / `будь-який`**: "anyone / any". Означає "будь-який без винятку", "неважливо хто/який".
+    *   *Приклад:* `**Будь-хто** може це зробити.` `Вас записати до **будь-якого** лікаря?` (Source 7)
+2.  **`деякі` / `дехто` / `дещо`**: "some (of them) / someone / something". Вказує на невизначену, але обмежену кількість. Часто вживається в більш формальному мовленні.
+    *   *Приклад:* `**Дехто** з істориків стверджує, що...` (Source 4)
 
-*   **Tier 3 (Advanced/Colloquial):** These can be taught for receptive understanding at A2, but productive use can wait for B1.
-    *   **`казна-` / `хтозна-` / `бозна-`**: Add a colloquial flavor of "goodness knows..." (`Він пішов казна-куди` - He went goodness knows where). While listed in textbooks (Source 3, 9), they are less critical for basic communication.
-    *   **`аби-`**: Implies randomness or indifference (`абихто` - just anyone, `абищо` - just anything).
+**Низький пріоритет (passive vocabulary):**
+1.  **`казна-хто` / `хтозна-що`**: "God knows who / what". Виражають повну невизначеність, часто з емоційним забарвленням.
+    *   *Приклад:* `Набитого **казна-якими** капостями` (Source 33).
+2.  **`абихто` / `абищо`**: "just anyone / just anything". Має зневажливий відтінок, "перший-ліпший".
+    *   *Приклад:* `Я не буду розмовляти з **абиким**.`
 
 ## Типові помилки L2 (Common L2 Errors)
 
-English-speaking learners often make predictable errors by transferring L1 structures.
-
-| ❌ Помилково (Incorrect) | ✅ Правильно (Correct) | Чому (Why) |
+| ❌ Помилково | ✅ Правильно | Чому |
 | :--- | :--- | :--- |
-| `Я бачив нікого.` | `Я **не** бачив нікого.` | **Missing Double Negation.** Ukrainian requires a negative verb (`не бачив`) along with a negative pronoun (`нікого`). This is the most common and critical error for English speakers to overcome. (Source 41) |
-| `Ніхто прийшов.` | `Ніхто **не** прийшов.` | **Missing Double Negation (Subject).** The rule applies even when the negative pronoun is the subject. A negative verb is still required. (Source 41) |
-| `Він живе **в ніде**.` | `Він **ніде не** живе.` | **Incorrect Preposition Placement.** Prepositions move *inside* negative pronouns and adverbs, splitting the word into three parts written separately: `ні в кого`, `ні до чого`, `ні з ким`. The form `*в ніде` does not exist. (Source 7, 18, 20) |
-| `Дай мені **щось** попити.` | `Дай мені **що-небудь** попити.` | **Subtle Particle Choice.** `Щось` often implies a specific but unknown thing ("something"). In a general request for "anything," `що-небудь` is often more natural. This is a fine point, but a common area of non-native phrasing. |
-| `Це **будьякий** олівець.` | `Це **будь-який** олівець.` | **Orthography (Spelling).** Learners often forget the hyphen in particles like `будь-`, `-небудь`, `казна-`, writing them together. Conversely, they may add a hyphen to `-сь` (`*хто-сь` instead of `хтось`). (Source 3, 9, 22) |
-| `Вона не знає **нічого** про **ніякі** проблеми.` | `Вона не знає нічого про **жодні** проблеми.` | **Overuse of `ніякий`.** While grammatically possible, using `жодний` (another negative pronoun meaning "not a single one") often sounds more natural than repeating `ні-` forms, especially for emphasis. (Source 1, 8, 10, 13) |
+| I saw nobody. <br> *Я бачив нікого.* | I saw nobody. <br> `Я ніко́го **не** бачив.` | Українська мова, на відміну від англійської, вимагає **подвійного заперечення**. Заперечний займенник (`ніхто`, `ніщо`) майже завжди супроводжується заперечною часткою `не` при дієслові. (Source 13) |
+| There is nobody here. <br> *Ніхто тут є.* | There is nobody here. <br> `Тут **ніко́го немає**.` | Для вираження відсутності когось/чогось використовується конструкція з родовим відмінком займенника + заперечна форма `немає` (або `не було` / `не буде`). |
+| Ask somebody. <br> *Запитай будь-кого.* | Ask somebody. <br> `Запитай **когось**.` (If you have a specific group in mind) <br> `Запитай **кого-небудь**.` (If you just need to ask one random person) | `Будь-хто` означає "anyone at all, it doesn't matter who". `Хтось` — "someone" (a specific but unnamed person). `Хто-небудь` — "anyone" (one random person from a set). Вибір залежить від контексту. (Source 7, 21) |
+| I don't have nothing. <br> *Я не маю ніщо.* | I have nothing. <br> `Я **нічо́го** не маю.` | У конструкціях з дієсловом `мати` або в реченнях про відсутність (`немає`) заперечний займенник `ніщо` ставиться у родовий відмінок `нічого`. |
+| He didn't speak with anybody. <br> *Він не говорив з ніким.* | He didn't speak with anybody. <br> `Він **ні з ким** не говорив.` | При вживанні заперечних займенників з прийменниками, прийменник ставиться **між** часткою `ні` та займенником, і всі три слова пишуться окремо. (Source 17, 28) |
 
 ## Деколонізаційні застереження (Decolonization Notes)
 
-While Ukrainian and Russian share the concept of indefinite/negative pronouns formed from interrogatives, the specific particles, their usage, and orthography differ significantly. It is a pedagogical error to teach Ukrainian grammar "through" Russian or assume rules are identical.
+1.  **Подвійне заперечення — норма:** Українська система заперечення з `ні-` + `не` є самостійною і логічною. Це не "надлишкове" заперечення. Не варто порівнювати її з англійською, де подвійне заперечення вважається помилкою, або намагатися "спростити" до одного заперечення.
 
-1.  **Distinct Particles:** The set of particles is not the same. Ukrainian extensively uses `будь-`, `казна-`, `хтозна-` which have different or less common equivalents in Russian. The common Russian particle `-либо` does not exist in Ukrainian. Presenting the Ukrainian system on its own terms is essential.
+2.  **`Будь-який` vs. Російське `любой`:** В українській мові слово `любий` в першу чергу означає "beloved, dear". Хоча в розмовному мовленні під впливом російської воно іноді вживається у значенні "any", нормативним і стилістично правильним для значення "any" є займенник `будь-який`. Активне використання `будь-який` замість `любий` є важливою ознакою чистого мовлення.
+    *   ✅ `Візьми **будь-яку** книгу.`
+    *   ❌ `Візьми любу книгу.` (Суржик)
 
-2.  **Orthography is Different:** Ukrainian writes `будь-хто` (with a hyphen), whereas the Russian equivalent `кто-либо` is also hyphenated, but the particle itself is different. More importantly, Ukrainian writes `хтось` (together), while Russian may use `кое-кто` (hyphenated). These are separate orthographic systems.
+3.  **Уникайте російських часток:** В українській мові немає неозначених займенників, утворених за допомогою часток `-то` (`кто-то`, `что-то`) або `-либо` (`кто-либо`). Використовуйте українські відповідники: `хтось`, `щось`, `хто-небудь`.
+    *   ✅ `**Хтось** стукає у двері.`
+    *   ❌ `Хто-то стукає у двері.`
 
-3.  **`Що` vs. `Что`:** The base pronoun `що` [ʂt͡ʂo] is phonetically and orthographically distinct from the Russian `что` [ʂto]. This fundamental difference should be reinforced from day one. All pronouns derived from it (`щось`, `ніщо`, `будь-що`) carry this distinction.
-
-4.  **`Жодний`:** The pronoun `жодний` (not a single one, no) is a common and important negative determiner in Ukrainian (Source 1, 10). It is often a more idiomatic choice than `ніякий` in certain contexts. Its Russian equivalent, `ни один`, is structured differently. Highlighting and teaching the use of `жодний` is key to natural-sounding Ukrainian.
-
-The curriculum writer must rely exclusively on authentic Ukrainian examples and avoid drawing parallels to Russian, which can create confusion and introduce Russianisms.
+4.  **`Жодний` як синонім `ніякий`:** В українській мові означальний займенник `жодний` (`жоден`) часто використовується як синонім до заперечного `ніякий` для підсилення заперечення.
+    *   `У мене немає **жодних** планів.` (Source 6)
+    *   `Я не знаю **жодних** конкретних лікарів.` (Source 7)
+    *   Це абсолютно нормативна і поширена конструкція, що відрізняє український синтаксис.
 
 ## Природні приклади (Natural Examples)
 
-Examples are grouped by pattern and sourced from the provided materials.
+**Група 1: Невизначені особи/предмети (`хтось`, `щось`, `якийсь`)**
+*   Від усієї картини віє **чимось** пісенним. (Source 28)
+*   І якось помітила я в цих краях Тумана, ошивався біля маєтку, наче хотів **щось** знайти. (Source 10)
+*   Здається, я про це розказувала **колись** на подкасті. (Source 11)
 
-**1. Indefinite Pronoun as Subject/Object**
-*   `Прийшов **хтось**, узяв **щось**, пішов би за ним — та не знаю за ким.` (Загадка) (Source 30) - "Someone came, took something, I would go after him - but I don't know after whom."
-*   `**Хтось** залишив свій телефон на столі.` (Source 41) - "Someone left their phone on the table."
-*   `Від усієї картини віє **чимось** пісенним.` (О. Довженко, Source 33) - "The whole picture gives off something song-like."
+**Група 2: Заперечення існування/наявності (`ніхто`, `ніщо`, `ніякий`)**
+*   **Ніхто** не вимовив **ні** слова. (Source 13)
+*   Балакун, мов дірява бочка, **нічого** в собі не задержить. (Source 32)
+*   Той, хто любить Батьківщину з усякого погляду, є справжньою людиною. Без **будь-кого** з нас Батьківщина може обійтися, але **будь-хто** з нас без Батьківщини — **ніщо**. (Source 19)
 
-**2. The Double Negative Structure**
-*   `**Ніхто не** знає відповіді на це питання.` (Source 41) - "Nobody knows the answer to this question."
-*   `Балакун, мов дірява бочка, **нічого** в собі **не** задержить.` (Нар. тв., Source 31) - "A chatterbox, like a leaky barrel, holds nothing inside."
-*   `Дуже погана людина, яка **ніщо не** знає і **не** намагається **що-небудь** узнати.` (Платон, Source 33) - "A very bad person is one who knows nothing and doesn't try to learn anything."
+**Група 3: Заперечення з прийменниками (`ні з ким`, `ні до чого`)**
+*   За жодних обставин не сідайте в машину **ні з ким** незнайомим. (Source 18)
+*   Тільки той не помиляється, хто **ні до чого** не торкається. (Source 28)
+*   **Ні в кого** права не питаю. (Source 28)
 
-**3. Pronouns with Prepositions (Separated Spelling)**
-*   `Тільки той **не** помиляється, хто **ні до чого не** торкається.` (Нар. творчість, Source 33) - "Only he who touches nothing makes no mistakes."
-*   `Без **будь-кого** з нас Батьківщина може обійтися, але **будь-хто** без Батьківщини – **ніщо**.` (В. Сухомлинський, Source 20) - "The Fatherland can do without any of us, but any of us is nothing without the Fatherland."
-*   `Своїх багато, а як прийдеться топиться, то **ні за кого** ухопиться.` (Нар. тв., Source 31) - "You have many of your own, but when it comes time to drown, there's no one to grab onto."
+**Група 4: Вибір одного з можливих (`хто-небудь`, `що-небудь`, `будь-який`)**
+*   Йому хочеться **чим-небудь** втішити її, але не знаходить слів... (Source 33)
+*   Христино, ви **коли-небудь** вже були в нашій лікарні? (Source 7)
+*   Вас записати до **будь-якого** лікаря? (Source 7)
 
-**4. "Any" vs. "Some" (`-небудь` vs. `-сь`/`де-`)**
-*   `Ми ж **не** боягузи **які-небудь**!` (Л. Письменна, Source 32) - "We aren't just any cowards!" (Use of `-небудь` for general "any kind of").
-*   `Йому хочеться **чим-небудь** втішити її, але **не** знаходить слів...` (Д. Ткач, Source 32) - "He wants to console her with something (anything), but cannot find the words..."
-*   `У нас склалася особлива дружба, яка **не** допускала **будь-яких** секретів один від одного.` (Ю. Збанацький, Source 33) - "We had a special friendship that didn't allow any secrets from each other."
+**Група 5: Емоційно забарвлена невизначеність (`казна-хто`, `бозна-з-ким`)**
+*   Обра́зи так і сипалися з неї, мов із дірявого мішка, набитого **казна-якими** капостями. (Source 33)
+*   Не слухаєте, лепечете, знаєтесь **бозна-з-ким**, а тоді «дядечку любезний»… (Source 33)
 
 ## Рекомендації для вправ (Activity Concepts)
 
-*   **Phase 1: Recognition & Formation**
-    *   **Drill 1 (Matching):** Provide a list of pronouns (`ніхто, щось, будь-який, казна-хто`) and a list of categories (`заперечний, неозначений (разом), неозначений (з дефісом)`). Students match them.
-    *   **Drill 2 (Formation):** Give the interrogative `хто?`. Have students generate all derivative forms: `ніхто, хтось, дехто, абихто, будь-хто, хто-небудь`. Repeat for `що?` and `який?`. (Based on Source 31, 33).
-    *   **Drill 3 (Orthography):** Provide pronouns with slashes (`будь / хто`, `хто / сь`, `ні / в / кого`) and have students write them correctly. (Based on Source 18, 32).
+**Phase 1: Ідентифікація та словотвір**
+*   **Вправа 1 (Ідентифікація):** Дати учням короткий текст (напр., діалог з ULP, Source 6 або 7) і попросити знайти всі неозначені та заперечні займенники, пояснити їх значення.
+*   **Вправа 2 (Словотвір):** Дати таблицю з питальними займенниками (`хто`, `що`, `який`...) і попросити утворити від них неозначені та заперечні займенники з різними частками (`-сь`, `ні-`, `будь-`, `-небудь`).
 
-*   **Phase 2: Application in Sentences**
-    *   **Drill 4 (Transformation):** Convert affirmative sentences to negative ones. `Хтось дзвонив.` → `Ніхто не дзвонив.` `Я щось бачу.` → `Я нічого не бачу.`
-    *   **Drill 5 (Fill-in-the-blanks):** Provide sentences with a blank and choices. `Я не хочу говорити з ______ (будь-ким / кимось).` → `будь-ким`.
-    *   **Drill 6 (Sentence Completion):** Provide a starting clause and have students complete it using a negative pronoun with a preposition. `Він нічого не боїться, але...` → `...ні перед чим не зупиниться.`
+**Phase 2: Правопис та відмінювання**
+*   **Вправа 3 (Розкрий дужки):** Запропонувати речення, де займенники написані окремо з частками, і попросити написати їх правильно (разом, окремо чи через дефіс). *Приклад:* `(Ні)хто (не)знав, (де)хто живе.`
+*   **Вправа 4 (Прийменники):** Дати речення, де потрібно вставити займенник з прийменником. *Приклад:* `Він не розмовляв ______ (ніхто). -> Він не розмовляв **ні з ким**.`
 
-*   **Phase 3: Communicative Practice**
-    *   **Activity 1 (Q&A):** Ask questions that elicit negative pronoun answers. `Що ти робив учора?` → `Я нічого не робив.` `З ким ти розмовляв?` → `Я ні з ким не розмовляв.`
-    *   **Activity 2 (Alibi):** A role-playing game. A "crime" was committed. One student is the detective, others are suspects. The suspects must answer questions using negative pronouns to build their alibi: `Де ви були?` → `Я ніде не був.` `Що ви бачили?` → `Я нічого не бачив.`
+**Phase 3: Практичне застосування**
+*   **Вправа 5 (Подвійне заперечення):** Трансформація стверджувальних речень у заперечні. *Приклад:* `Хтось є в кімнаті.` -> `В кімнаті нікого немає.`
+*   **Вправа 6 (Вибір займенника):** Дати речення з пропуском, де треба вибрати правильний займенник з кількох варіантів (`хтось` / `хто-небудь` / `будь-хто`). *Приклад:* `Дай мені, будь ласка, ______ почитати.`
+*   **Вправа 7 (Питання-відповідь):** Учні ставлять один одному питання з неозначеними займенниками і відповідають, використовуючи заперечні. *Приклад:* `— Ти сьогодні бачив **кого-небудь**? — Ні, я сьогодні **нікого** не бачив.`
 
-## Зв'язки з іншими темами (Connections)
+## Зв'язки з іншими темами
 
-*   **Prerequisites:**
-    *   **[[grammar/a1/interrogative-pronouns|Питальні займенники]]**: These are the building blocks. This topic is impossible without prior mastery of `хто, що, який, чий, скільки`.
-    *   **[[grammar/a1/cases|Відмінки (Cases)]]**: Declension of these pronouns follows standard case patterns for pronouns and adjectives.
-    *   **[[grammar/a1/verb-negation-ne|Заперечення дієслів часткою 'не']]**: The concept of verbal negation is a prerequisite for the double negative structure.
+*   **Питальні займенники:** Є основою для творення неозначених і заперечних. Учень має впевнено знати `хто, що, який, чий, котрий, скільки`.
+*   **Відмінки (Cases):** Особливо важливий Родовий відмінок (Genitive case) для конструкцій заперечення (`немає нікого/нічого`).
+*   **Прийменники (Prepositions):** Впливають на правопис (пишуться окремо, вставляються всередину займенника: `ні в кого`).
+*   **Прислівники (Adverbs):** Багато заперечних та неозначених прислівників утворюються за тією ж моделлю: `де` -> `десь`, `ніде`; `коли` -> `колись`, `ніколи`; `як` -> `якось`, `ніяк`. (Source 25)
 
-*   **Enables:**
-    *   **[[grammar/a2/genitive-case-negation|Родовий відмінок у запереченні]]**: The use of `нікого`, `нічого` reinforces the genitive of negation rule (e.g., `немає нікого`).
-    *   **Complex Clauses:** Relative pronouns (`хто`, `що`) are the same words as interrogative pronouns, providing a link to building complex sentences.
-    *   **Expressing Nuance:** Allows learners to move beyond simple statements and express uncertainty, generality, and absence, which is critical for fluency.
+## Пов'язані статті
 
-## Пов'язані статті (Related Articles)
-*   [[grammar/a1/interrogative-pronouns]]
-*   [[grammar/a1/cases]]
-*   [[grammar/a1/verb-negation-ne]]
-*   [[grammar/a2/genitive-case-negation]]
-*   [[grammar/b1/relative-pronouns]]
+*   `grammar/a1/question-words`
+*   `grammar/a2/genitive-case-negation`
+*   `grammar/b1/adverbs-indefinite-negative`
+*   `grammar/b1/pronoun-all-every-each`

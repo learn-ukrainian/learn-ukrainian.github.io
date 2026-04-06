@@ -4,146 +4,141 @@
 slug: aspect-in-past
 domain: grammar/a2
 tracks: [a2, b1]
-sources: [10-klas-ukrmova-karaman-2018_s0322, 7-klas-ukrmova-avramenko-2024_s0064, 6-klas-ukrmova-betsa-2023_s0200, 6-klas-ukrmova-betsa-2023_s0201, 7-klas-ukrmova-litvinova-2024_s0037, 7-klas-ukrmova-zabolotnyi-2024_s0057, 11-klas-ukrmova-zabolotnyi-2019_s0061, 5-klas-ukrmova-golub-2022_s0170, 6-klas-ukrmova-betsa-2023_s0195, 6-klas-ukrmova-golub-2023_s0210, 7-klas-ukrmova-zabolotnyi-2024_s0002, 7-klas-ukrmova-zabolotnyi-2024_s0056, 7-klas-ukrmova-zabolotnyi-2024_s0180, 8-klas-ukrmova-zabolotnyi-2025_s0327, 10-klas-ukrajinska-mova-zabolotnij-2018_s0136, 10-klas-ukrmova-glazova-2018_s0089, 10-klas-ukrmova-zabolotnyi-2018_s0136, 11-klas-ukrajinska-mova-avramenko-2019_s0061, 11-klas-ukrajinska-mova-glazova-2019_s0050, 11-klas-ukrmova-zabolotnyi-2019_s0354, ext-article-0, ext-article-1, ext-article-2, ext-article-3]
-compiled: 2026-04-06
+sources: [ext-ulp_youtube-166, ext-ulp_youtube-90, ext-ulp_youtube-163, ext-ulp_youtube-212, ext-ulp_youtube-87, ext-ulp_youtube-124, ext-istoria_movy-31, ext-other_blogs-50, ext-other_blogs-23, 7-klas-ukrmova-litvinova-2024_s0116, 4-klas-ukrayinska-mova-ponomarova-2021-1_s0097, 10-klas-ukrmova-karaman-2018_s0322, 7-klas-ukrmova-avramenko-2024_s0064, 6-klas-ukrmova-betsa-2023_s0200, 6-klas-ukrmova-betsa-2023_s0224, 6-klas-ukrmova-betsa-2023_s0201, 7-klas-ukrmova-avramenko-2024_s0104, ext-other_blogs-49, 7-klas-ukrmova-litvinova-2024_s0037, 11-klas-ukrajinska-mova-avramenko-2019_s0061, 11-klas-ukrmova-zabolotnyi-2019_s0061, 7-klas-ukrmova-zabolotnyi-2024_s0088, 9-klas-ukrajinska-mova-voron-2017_s0289, 11-klas-ukrmova-zabolotnyi-2019_s0065, 7-klas-ukrmova-litvinova-2024_s0031, 10-klas-ukrmova-karaman-2018_s0325, 3-klas-ukrainska-mova-vashulenko-2020-1_s0150, 4-klas-ukrayinska-mova-varzatska-2021-1_s0121, 2-klas-ukrmova-bolshakova-2019-2_s0051, 2-klas-ukrmova-vashulenko-2019-1_s0076, 10-klas-ukrmova-karaman-2018_s0344, 7-klas-ukrmova-litvinova-2024_s0125, 7-klas-ukrmova-avramenko-2024_s0133, 7-klas-ukrmova-zabolotnyi-2024_s0134]
+compiled: 2026-04-07
 -->
 
 ## Як це пояснюють у школі (How Schools Teach This)
 
-The concept of verb aspect (вид дієслова) is a cornerstone of Ukrainian grammar, typically introduced in middle school. Textbooks for grades 6-7, such as those by Бетса (Source 3) and Авраменко (Source 2), establish the fundamental division. The core of the explanation revolves around the interrogative pronouns **що робити?** for the imperfective aspect and **що зробити?** for the perfective aspect.
+Українські підручники вводять категорію виду дієслова (verbal aspect), протиставляючи дві фундаментальні перспективи дії: процес і результат.
 
-1.  **Недоконаний вид (Imperfective Aspect):** This aspect answers the question **що робити?**. It describes an action that is ongoing, repeated, or presented as a general fact without emphasis on its completion or result. School textbooks define it as a "тривалу дію або стан, незавершеність" (a continuous action or state, incompleteness) (Source 1) or a "незавершена дія без указівки на її результат" (an unfinished action without indication of its result) (Source 2). A key rule for learners is that all verbs in the present tense are *always* imperfective (Source 2).
-    *   *Приклад:* `Мамо, я прибирав у своїй кімнаті.` (Mom, I was cleaning my room.) - Focus on the process of cleaning, not the final clean state (Source 2).
+1.  **Основне питання (The Core Question):** Головний спосіб розрізнення видів — це питання, на яке відповідає дієслово.
+    *   **Недоконаний вид (Imperfective):** відповідає на питання **що робити?** (`to be doing`). Це дія, що описується як тривала, повторювана або незавершена (Джерело: `10-klas-ukrmova-karaman-2018_s0322`).
+    *   **Доконаний вид (Perfective):** відповідає на питання **що зробити?** (`to have done`). Це дія, що мислиться як завершена, результативна, обмежена в часі або одноразова (Джерело: `7-klas-ukrmova-litvinova-2024_s0037`).
 
-2.  **Доконаний вид (Perfective Aspect):** This aspect answers the question **що зробити?**. It describes an action that is completed, has a specific result, or is viewed as a single, whole event. The name itself comes from the verb `доконати`, meaning "to accomplish, to finish" (Source 5). Schoolbooks explain it as a "завершену, результативну дію або стан" (a completed, result-oriented action or state) (Source 1). Perfective verbs do not have a present tense form; they exist only in the past and future (Source 1, 5).
-    *   *Приклад:* `Я розв’язав задачу!` (I solved the problem!) - Focus on the successful result (Source 5).
+2.  **Концептуальна різниця (Conceptual Difference):**
+    *   **Недоконаний вид** фокусується на **процесі** або **факті** дії, безвідносно до її завершення. Це може бути повторювана дія (`завжди ходив`), тривала дія (`довго чекав`) або спроба, що могла не увінчатися успіхом (`я робив, але не вийшло`).
+    *   **Доконаний вид** фокусується на **результаті** або **завершеності** дії. Дія розглядається як цілісна, одноразова подія, що досягла свого кінцевого пункту (`нарешті зробив`).
 
-Pedagogically, the distinction is often introduced through contrasting pairs and dialogues that highlight the difference in meaning, such as `прибирати` (to be cleaning) vs. `прибрати` (to have cleaned) (Source 2) or `розв’язував` (was solving) vs. `розв’язав` (solved) (Source 5).
+Простий приклад з підручника ілюструє цю різницю (Джерело: `7-klas-ukrmova-avramenko-2024_s0064`):
+*   Мама каже сину: «Я ж тебе просила **навести** (pf.) лад…» (I asked you *to tidy up* - focus on result).
+*   Син відповідає: «Мамо, я **прибирав** (impf.) у своїй кімнаті.» (Mom, I *was tidying up* my room - focus on process, результат не гарантовано).
+*   Мама підсумовує: «**Прибирати** (impf.) й **прибрати** (pf.) — різні дії».
 
-## Повна парадигма (Full Paradigm of Formation)
+Важливо, що дієслова доконаного виду не мають форм теперішнього часу, оскільки теперішній час за своєю суттю є процесом, що триває (Джерело: `7-klas-ukrmova-avramenko-2024_s0064`, `10-klas-ukrmova-karaman-2018_s0322`). Дія, що відбувається *зараз*, не може бути *вже завершеною*.
 
-Verbal aspect in Ukrainian isn't a declension or conjugation paradigm with endings. Instead, it involves forming **видові пари** (aspectual pairs), where one verb is imperfective and the other is perfective. While many verbs form predictable pairs, the methods of formation are diverse. The writer must present these as vocabulary to be learned, not as a purely grammatical rule.
+## Повна парадигма (Full Paradigm)
 
-The following table, based on the framework from Karaman (Source 1) and Betsa (Source 3), outlines the primary ways perfective verbs are formed from their imperfective counterparts.
+Більшість дієслів в українській мові існують у **видових парах** (aspectual pairs). Доконаний вид найчастіше утворюється від недоконаного. Ось основні способи творення цих пар (Джерела: `10-klas-ukrmova-karaman-2018_s0322`, `6-klas-ukrmova-betsa-2023_s0200`, `ext-other_blogs-23`):
 
-| Засіб творення (Means of Formation) | Недоконаний вид (Imperfective) | Доконаний вид (Perfective) | Приклади (Examples) |
-| :--- | :--- | :--- | :--- |
-| **Префіксація (Prefixation)** | `робити` (to do/make) | `**з**робити` (to have done/made) | `читати → **про**читати`, `писати → **на**писати`, `мити → **по**мити` (Source 1, 2) |
-| **Суфіксація (Suffixation)** | `стукати` (to knock) | `стук**ну**ти` (to knock once) | `відчиняти → відчин**и**ти`, `гримати → грим**ну**ти` (Source 1, 2) |
-| **Чергування звуків (Alternation)** | `видирати` (to be tearing out) | `вид**ер**ти` (to have torn out) | `перевозити → перевезти`, `допомагати → допомогти` (Source 1, 3) |
-| **Зміна наголосу (Stress Shift)** | `винос**и**ти` (to be carrying out) | `в**и**нести` (to have carried out) | `скликати → скликати` (different stress), `вирізати → вирізати` (Source 1, 2) |
-| **Суплетивізм (Suppletion)** | `брати` (to take) | `**взяти**` (to have taken) | `ловити → **піймати**`, `шукати → **знайти**`, `говорити → **сказати**` (Source 1, 3) |
+| Спосіб творення (Formation Method) | Недоконаний вид (що робити?) | Доконаний вид (що зробити?) | Приклади (Past Tense) |
+| :--- | :--- | :--- |:--- |
+| **1. Префіксація (Prefixation)** | | | *Найпоширеніший спосіб* |
+| `по-` | снідати, думати, дякувати | **по**снідати, **по**думати, **по**дякувати | Він **снідав** о 8-й. / Він **поснідав** і пішов. |
+| `про-` | читати, жити | **про**читати, **про**жити | Вона **читала** книгу. / Вона **прочитала** книгу. |
+| `на-` | писати, малювати | **на**писати, **на**малювати | Я **писав** листа. / Я **написав** листа. |
+| `з-/с-` | робити, фотографувати | **з**робити, **с**фотографувати | Вони **робили** ремонт. / Вони **зробили** ремонт. |
+| `ви-` | пити, вчити | **ви**пити, **ви**вчити | Ти **пив** чай? / Ти **випив** чай? |
+| `за-` | платити, телефонувати | **за**платити, **за**телефонувати | Він **платив** за обід. / Він **заплатив** за обід. |
+| **2. Суфіксація (Suffixation)** | | | *Часто для утворення недоконаного від доконаного* |
+| `-ува-` / `-а-` | відчин**я**ти | відчин**и**ти | Він **відчиняв** вікно. / Він **відчинив** вікно. |
+| `-а-` / (Ø) | витир**а**ти | витер**ти** | Я **витирав** стіл. / Я **витер** стіл. |
+| (Ø) / `-ну-` | стукати | стук**ну**ти | Хтось **стукав** у двері. / Хтось **стукнув** у двері. |
+| **3. Чергування звуків (Alternation)** | вид**и**рати, перем**а**гати | в**и**дерти, перем**о**гти | Він **видирав** сторінку. / Він **видер** сторінку. |
+| **4. Зміна наголосу (Stress Shift)** | склик**а́**ти | скл**и́**кати | Він **склика́в** гостей. / Він **скли́кав** гостей. |
+| **5. Суплетивні пари (Suppletive)** | | | *Різні корені, треба запам'ятовувати* |
+| брати | **взяти** | Вона **брала** участь. / Вона **взяла** участь. |
+| говорити | **сказати** | Ми **говорили** довго. / Ми **сказали** правду. |
+| ловити | **піймати** / **зловити** | Він **ловив** рибу. / Він **піймав** рибу. |
+| шукати | **знайти** | Я **шукав** ключі. / Я **знайшов** ключі. |
 
-Additionally, some verbs don't form pairs:
-*   **Одновидові (Uniaspectual):** Verbs that are only imperfective (`існувати`, `чекати`, `мріяти`) or only perfective (`розпитатися`, `завітати`, `насидітися`) (Source 1, 3).
-*   **Двовидові (Biaspectual):** A small group where one form can be either aspect depending on context, often verbs of foreign origin (`атакувати`, `телефонувати`, `організувати`) (Source 1).
+**Одновидові дієслова:** Деякі дієслова не мають видової пари (Джерело: `10-klas-ukrmova-karaman-2018_s0322`).
+*   **Тільки недоконаний:** `існувати`, `коштувати`, `сподіватися`, `намагатися`, `мріяти`.
+*   **Тільки доконаний:** `розговоритися`, `насидітися`, `завітати`.
 
 ## Частотність і пріоритети (Frequency & Priorities)
 
-For A2/B1 learners, mastering aspect is not about memorizing every pair. The priority is to internalize the core functional distinctions, which are extremely frequent. The pedagogical approach from "Dobra Forma" (Source 44) provides an excellent roadmap for L2 learners.
+Для учнів рівня А2-В1 пріоритети такі:
 
-1.  **Process vs. Result:** This is the most critical distinction. Learners must first feel the difference between an action in progress and a completed action with a result.
-    *   **Imperfective (Process):** Often accompanied by adverbs of duration like `довго`, `цілий день`, `дві години`. `Ми цілий день готували вареники...` (Source 44).
-    *   **Perfective (Result):** Often accompanied by words indicating completion like `нарешті`, `вже`. `...і нарешті приготували!` (Source 44).
+1.  **Опанувати концепцію "процес vs. результат"**. Це ключ до 90% випадків.
+2.  **Запам'ятати найчастотніші префікси**, особливо `по-`. Він є найбільш продуктивним для утворення доконаного виду (Джерело: `ext-other_blogs-23`). Наприклад: `побачити`, `почути`, `поснідати`, `пообідати`, `повечеряти`, `подумати`.
+3.  **Вивчити напам'ять суплетивні пари**: `брати/взяти`, `говорити/сказати`, `ловити/піймати`, `шукати/знайти`. Вони є високочастотними і не піддаються правилам.
+4.  **Зрозуміти контекстні маркери**. Слова як `завжди`, `часто`, `кожного дня`, `довго` вказують на процес/повторення і вимагають **недоконаного** виду. Слова як `нарешті`, `вже`, `раптом`, `за (годину)` вказують на результат/одноразовість і вимагають **доконаного** виду.
+5.  **Наративна послідовність**. У розповідях про минулі події ланцюжок завершених дій передається дієсловами **доконаного** виду: "Я **прокинувся**, **вмився**, **поснідав** і **пішов** на роботу."
 
-2.  **General Fact vs. Specific, One-Time Event:** This distinction governs simple past tense statements.
-    *   **Imperfective (General Fact):** Used to answer general questions about past activities. `– Що ти робив учора? – Я читав книгу і слухав музику.` (Source 44). This describes the activities that filled the time.
-    *   **Perfective (Specific Event):** Used to report on the completion of a specific, singular task. `– Ти прочитав ту книгу, що я тобі дав? – Так, прочитав учора ввечері.` Here, the focus is on the single, completed act of finishing the book.
-
-3.  **Simultaneous vs. Sequential Actions:**
-    *   **Imperfective (Simultaneous):** Two imperfective verbs describe actions happening at the same time. `Я пила каву і читала газету.` (I was drinking coffee and reading the newspaper at the same time.) (Source 44).
-    *   **Perfective (Sequential):** Two perfective verbs describe actions happening one after the other. `Я випила каву і прочитала газету.` (First I finished my coffee, then I read the newspaper.) (Source 44).
+Навіть сучасний інтернет-сленг підкоряється цим правилам, що доводить живучість системи. Наприклад, `лайкати` (impf.) проти `лайкнути` (pf.) (Джерело: `ext-ulp_youtube-124`).
 
 ## Типові помилки L2 (Common L2 Errors)
 
-English does not have grammatical verbal aspect, making this a major hurdle. Errors typically stem from translating English tense concepts directly onto Ukrainian verbs.
+Англомовні студенти часто роблять помилки, оскільки в англійській мові категорія виду відсутня і передається через часові форми (Simple vs. Continuous) або лексично.
 
-| ❌ Помилково (Incorrect) | ✅ Правильно (Correct) | Чому (Why) |
+| ❌ Помилково | ✅ Правильно | Чому |
 | :--- | :--- | :--- |
-| *Коли я прийшов додому, я **зробив** вечерю.* | *Коли я прийшов додому, я **робив** вечерю.* | The English "I was making dinner" describes a process. Using the perfective `зробив` implies an instant, completed action, which sounds unnatural for making dinner. Imperfective is needed for the process. (Based on Source 44) |
-| *Вона **пила** книгу цілий вечір і нарешті **закінчувала** її.* | *Вона **читала** книгу цілий вечір і нарешті **прочитала** її.* | The context `цілий вечір` implies a process (`читала`), and `нарешті` signals a final result (`прочитала`). The student used the wrong verb and an imperfective for the result. (Based on Source 4, 44) |
-| *Вчора я **написав** листи, **подивився** телевізор і **поговорив** з другом.* | *Вчора я **писав** листи, **дивився** телевізор і **говорив** з другом.* | For a general statement about how one spent their time (a list of activities), imperfective is the default. Using perfective verbs here sounds like a hurried, sequential checklist of completed tasks, which is less natural for a general description. (Source 44) |
-| *Я **побачив** її, коли я **перейшов** вулицю.* | *Я **побачив** її, коли я **переходив** вулицю.* | The action of seeing her (`побачив` - perfective) is a single event that happened *during* the background process of crossing the street (`переходив` - imperfective). Using two perfectives implies two sequential actions: first I finished crossing, then I saw her. (Source 44) |
-| *Він **не прочитав** книгу, тому що вона була нудна.* | *Він **не читав** книгу, тому що вона була нудна.* | This is a subtle but common error. `Не прочитав` means "He didn't finish reading it" (he started but didn't complete). `Не читав` means "He didn't read it at all." The student often intends the second meaning but uses the structure of the first. <!-- VERIFY --> |
+| `Я вчора читав цю книгу до кінця.` | `Я вчора **прочитав** цю книгу до кінця.` | Фраза "до кінця" вказує на завершений результат, що вимагає доконаного виду. `читав` означає "was reading" і не гарантує завершення. |
+| `У дитинстві я завжди **з'їв** морозиво влітку.` | `У дитинстві я завжди **їв** морозиво влітку.` | Слово `завжди` вказує на повторювану, звичну дію в минулому, що вимагає недоконаного виду. `з'їв` означає одноразову завершену дію. |
+| `Він довго **сказав** мені про свою проблему.` | `Він довго **говорив** мені про свою проблему.` | Слово `довго` вказує на тривалий процес. `Сказати` — це миттєва, одноразова дія ("to say/tell"), тоді як `говорити` — це процес ("to speak/talk"). (Джерело: `ext-other_blogs-23` для пари) |
+| `Я **зробив** домашнє завдання дві години, але не закінчив.` | `Я **робив** домашнє завдання дві години, але не закінчив.` | Якщо результат не був досягнутий, фокус зміщується на сам процес. `Робив` означає "I was doing", що відповідає контексту незавершеності. |
+| `Що ти **зробив** учора ввечері? — Я **дивився** телевізор.` | `Що ти **робив** учора ввечері? — Я **дивився** телевізор.` | Питання про діяльність протягом певного проміжку часу (`учора ввечері`) зазвичай вимагає недоконаного виду (`що робив?`), якщо не питається про конкретний результат. |
 
 ## Деколонізаційні застереження (Decolonization Notes)
 
-**This is a mandatory section for the curriculum writer.**
+Хоча граматичний вид є спільною рисою слов'янських мов, важливо вивчати українську систему на її власних умовах, а не як варіацію російської.
 
-1.  **Ukrainian Aspect is an Internal Slavic Feature:** Verbal aspect is not a loan from Russian; it is a fundamental category in most Slavic languages, including Ukrainian. Its development is internal to the language's own history. Do not present Ukrainian grammar as a derivative of Russian.
-
-2.  **Avoid Russian-Language Materials:** Do not use Russian textbooks, websites, or examples to teach or explain Ukrainian aspect. While the core concepts are similar, the specific prefixes used, the set of suppletive pairs, and the nuances of usage can differ. Using Russian sources risks introducing subtle Russianisms and reinforces a colonial linguistic hierarchy. Ukrainian is the default and only standard.
-
-3.  **Suppletive Pairs are Language-Specific:** Pairs like `брати – взяти` and `говорити – сказати` exist in both languages, but their frequency and idiomatic usage should be learned from Ukrainian sources. There are pairs that differ, and focusing only on similarities is a pedagogical trap.
-
-4.  **Prefix Nuances:** A prefix like `по-` can have different semantic weights or typical meanings in Ukrainian versus Russian. For example, `по-` in Ukrainian often denotes an action of short duration (`почитати` - to read for a bit). While similar in Russian, the exact connotations and contexts of use are best learned from native Ukrainian material.
-
-5.  **Unique Verbs:** Ukrainian has its own set of uniaspectual (`одновидові`) and biaspectual (`двовидові`) verbs (Source 1). These lists are not identical to Russian and must be learned from Ukrainian dictionaries and grammar guides. For example, `наслідувати` (to imitate/follow) is listed as biaspectual in Ukrainian sources (Source 1).
+1.  **Самостійні пари:** Видові пари в українській мові слід вивчати як унікальні українські одиниці. Хоча багато пар є когнатами з російськими (`робити/зробити` — `делать/сделать`), деякі можуть відрізнятися у вжитку, префіксах або навіть існуванні. Наприклад, `діставати/дістати` (to get, obtain) в українській мові є високочастотною парою, семантика якої не повністю збігається з російським `доставать/достать`.
+2.  **Фонетика і правопис префіксів:** Правила асиміляції префіксів є унікальними для української мови. Наприклад, український префікс `з-` перед глухими приголосними `к`, `п`, `т`, `ф`, `х` переходить у `с-` (`спитати`, `сфотографувати`). В інших випадках залишається `з-` (`зшити`, `зцідити`). Російські правила асиміляції інші, і їх застосування до українських дієслів призведе до помилок.
+3.  **Відсутність калькування:** Не слід калькувати вибір виду з російської мови. Хоча у більшості випадків вибір збігається, існують ідіоматичні розбіжності. Єдиний надійний спосіб — орієнтуватися на приклади з автентичних українських джерел.
+4.  **Термінологія:** Використовуйте виключно українську термінологію: `доконаний вид` та `недоконаний вид`.
 
 ## Природні приклади (Natural Examples)
 
-These examples are drawn from the provided sources to illustrate natural usage.
+Приклади згруповані за функцією виду.
 
-**1. Process (Imperfective)**
-*   `Учні цілий урок **розв’язували** завдання, але не могли розв’язати правильно.` (The students were solving the task the whole lesson, but couldn't solve it correctly.) (Source 4)
-*   `Мамо, я **прибирав** у своїй кімнаті.` (Mom, I was cleaning my room.) (Source 2)
-*   `Я **вважала** поставлення цілі марнуванням часу, аж поки не навчилася робити це правильно.` (I considered goal-setting a waste of time, until I learned to do it correctly.) (Source 8)
+**Група 1: Процес або повторювана дія (недоконаний вид)**
+*   `Він часто **виходив** на вулицю погратися з дітьми.` (Джерело: `ext-ulp_youtube-163`)
+*   `Мого діда **переселили**... мої родини ніколи не **говорили** українською мовою.` (Джерело: `ext-ulp_youtube-163`)
+*   `Я **слухала** твій подкаст... і **переслуховувала** багато разів.` (Джерело: `ext-ulp_youtube-87`)
+*   `Крокодили... **полюють** вони раз у місяць.` (у минулому часі: `**полювали** раз у місяць`) (Джерело: `7-klas-ukrmova-zabolotnyi-2024_s0057`)
 
-**2. Completed Action / Result (Perfective)**
-*   `Чому Марта не рахує гроші? — Тому що вона вже **порахувала**.` (Why isn't Marta counting the money? — Because she already counted it.) (Source 4)
-*   `Я правильно **розв’язав** усі приклади!` (I solved all the examples correctly!) (Source 23)
-*   `Якось Хвостик **шукав** маму цілі три години. Він дуже **злякався**... Коли мама **знайшлася**, вона була дуже схвильована.` (One time, Khvostyk was looking for his mom for three whole hours. He got very scared... When mom was found, she was very worried.) (Source 21) - Note the switch from process `шукав` to result `знайшлася`.
+**Група 2: Завершений результат або одноразова дія (доконаний вид)**
+*   `Я сам **вирішив** її вчити.` (Джерело: `ext-ulp_youtube-163`)
+*   `Микола **вивчився**, **став** священником... усе своє майно **роздав** бідним людям.` (Джерело: `ext-ulp_youtube-163`)
+*   `Чому ти не **лайкнув** мій пост?` (Джерело: `ext-ulp_youtube-124`)
+*   `Учора я **побував** у гостях у бабусі. Вона була дуже щаслива, коли я **пішов**.` (Джерело: `6-klas-ukrmova-betsa-2023_s0201`)
 
-**3. Sequence of Actions (Perfective)**
-*   `Я **випила** каву і **прочитала** газету.` (I drank my coffee and then read the newspaper.) (Source 44, pedagogical example)
-*   `Тато **розбудив** мене вранці, ми **зібрали** рибальські снасті й **пішли** до річки.` (Dad woke me up in the morning, we gathered the fishing tackle and went to the river.) (Source 22)
+**Група 3: Послідовність завершених дій (доконаний вид)**
+*   `Спочатку Христина **купила** овочі на ярмарку, а тоді **надіслала** листівку.` (Джерело: `ext-ulp_youtube-212`)
+*   `Микола тихо... **підкрався** до комори, **набрав** у торбину борошна, **налив** пляшечку олії...` (Джерело: `ext-ulp_youtube-163`)
 
-**4. Background Action (Imperfective) + Interrupting Event (Perfective)**
-*   `Ми **сиділи** в парку і тут **побачили** Марину на велосипеді.` (We were sitting in the park and suddenly saw Maryna on a bicycle.) (Source 44, pedagogical example)
-*   `Коли на уроці ми **розв’язували** такі приклади, я трохи нервував.` (When we were solving such examples in class, I was a little nervous.) (Source 23)
-*   `Учора я **побував** у гостях у бабусі. Вона була дуже щаслива, коли я **пішов**.` (Yesterday I visited my grandma. She was very happy when I left.) (Source 4)
+**Група 4: Контраст у діалозі**
+*   `— Чому не **робиш** завдання? — Тому що я вже **розв’язав**.` (Адаптовано з Джерела: `6-klas-ukrmova-betsa-2023_s0201`)
+*   `— Зазвичай тато **готує** обід, але сьогодні **приготувала** мама.` (Адаптовано з Джерела: `6-klas-ukrmova-betsa-2023_s0201`)
 
 ## Рекомендації для вправ (Activity Concepts)
 
-The writer should build a sequence of activities that moves from recognition to controlled production.
+Для ефективного засвоєння теми рекомендується трифазний підхід.
 
-*   **Phase 1: Identification & Core Meaning**
-    *   **Activity:** Provide a short text (like the story of Khvostyk, Source 21). Ask students to highlight all past tense verbs and sort them into two columns: "Process" (недоконаний) and "Result" (доконаний).
-    *   **Activity:** Present contrasting sentence pairs (`Я читав книгу` vs. `Я прочитав книгу`) and ask students to explain the difference in meaning or draw a picture representing each.
+*   **Фаза 1: Ідентифікація та розрізнення.**
+    *   **Вправа "Дві колонки":** Студенти читають текст і розподіляють усі дієслова минулого часу у дві колонки: `що робив?` (недоконаний) та `що зробив?` (доконаний) (Джерело: `7-klas-ukrmova-zabolotnyi-2024_s0057`).
+    *   **Вправа "Сигнальні слова":** Студенти знаходять у реченнях слова-маркери (`завжди`, `довго`, `нарешті`, `вчора о 5-й`) і на їх основі вибирають правильний вид дієслова з пари.
 
-*   **Phase 2: Controlled Choice**
-    *   **Activity:** Fill-in-the-blanks with the correct aspect from a given pair. The sentences must contain strong context clues.
-        *   `Сьогодні мій сусід довго ______ траву. Коли він її ______, почав падати дощ.` (`косити` / `скосити`) (Based on Source 4)
-        *   `Ми ______ вареники три години і нарешті ______ їх.` (`готувати` / `приготувати`) (Based on Source 44)
+*   **Фаза 2: Творення пар.**
+    *   **Вправа "Утвори пару":** Студентам дається дієслово недоконаного виду, і вони мають утворити доконаний за допомогою правильного префікса (`писати` → `написати`). Почати з найчастотнішого `по-`.
+    *   **Вправа "Знайди відповідник":** Вправа на запам'ятовування суплетивних пар: з'єднати `брати` з `взяти`, `говорити` з `сказати` і т.д.
 
-*   **Phase 3: Transformation**
-    *   **Activity:** Give a sentence in the imperfective and ask students to change it to perfective, explaining how the meaning changes.
-        *   *Start:* `Зазвичай тато готує обід.`
-        *   *Task:* `Але сьогодні обід ______ мама.` (Answer: `приготувала`) (Based on Source 4)
+*   **Фаза 3: Контекстне застосування.**
+    *   **Вправа "Заповни пропуски":** Речення з пропущеним дієсловом, для якого в дужках подано інфінітивну пару (`читати/прочитати`). Студент має вибрати правильний вид і поставити його у форму минулого часу. (Приклад: `Він ... цю книгу весь вечір, але так і не ... (читати/прочитати)` → `читав, прочитав`). (Джерело: `6-klas-ukrmova-betsa-2023_s0201`)
+    *   **Вправа "Що сталося потім?":** Студентам дається ситуація, описана недоконаним видом (`Я довго писав листа другові.`), і вони мають описати результат, використовуючи доконаний вид (`Нарешті я його написав і відправив.`).
+    *   **Вправа "Розкажи історію":** На основі серії малюнків скласти коротку розповідь, використовуючи ланцюжок дієслів доконаного виду для послідовності дій.
 
-*   **Phase 4: Guided Production**
-    *   **Activity:** Question and Answer drills.
-        *   `Що ти робив учора о 5-й вечора?` (expects imperfective: `Я читав / гуляв...`)
-        *   `Ти вже зробив домашнє завдання?` (expects perfective: `Так, зробив` or `Ні, ще не зробив`).
-        *   `Скільки часу ти вчора робив домашнє завдання?` (expects imperfective: `Я робив його дві години.`)
-        *   `Ти зробив учора домашнє завдання?` (expects perfective: `Так, зробив.`)
+## Зв'язки з іншими темами
 
-## Зв'язки з іншими темами (Connections)
+*   **Передумови:** Базове розуміння системи відмінювання дієслів у минулому часі (узгодження за родом та числом).
+*   **Наступні теми:**
+    *   **Майбутній час:** Вид визначає форму майбутнього часу. Недоконаний вид утворює складену (`буду читати`) та синтетичну (`читатиму`) форми, тоді як доконаний утворює просту форму, що схожа на теперішній час (`прочитаю`).
+    *   **Дієслова руху:** Ця тема є розширенням теми виду, оскільки кожне дієслово руху має недоконаний (різноспрямований, `ходити`) та доконаний (односпрямований, `іти`) відповідники.
+    *   **Дієприкметники та дієприслівники:** Ці форми дієслова також зберігають категорію виду (`читаючи` (impf) vs `прочитавши` (pf); `писаний` (impf) vs `написаний` (pf)) (Джерела: `7-klas-ukrmova-litvinova-2024_s0103`, `7-klas-ukrmova-litvinova-2024_s0125`).
 
-Mastery of aspect is not an isolated skill. It is a prerequisite for correctly forming other fundamental verb structures.
-
-*   **Минулий час (Past Tense):** This is the immediate context. Aspect determines the *meaning* of the past tense (process vs. result).
-*   **Майбутній час (Future Tense):** Aspect determines the *form* of the future tense.
-    *   Imperfective Future: `буду робити` / `робитиму` (I will be doing)
-    *   Perfective Future: `зроблю` (I will do / will have done)
-*   **Наказовий спосіб (Imperative Mood):** Aspect also creates a crucial distinction in commands.
-    *   Imperfective Imperative: `Роби!` (Do it! - general instruction or ongoing action)
-    *   Perfective Imperative: `Зроби!` (Do it! - instruction to complete a specific task)
-*   **Дієприслівники (Verbal Adverbs):** The forms `що роблячи?` (imperfective) and `що зробивши?` (perfective) are directly tied to the aspect of the base verb (Source 11).
-
-## Пов'язані статті (Related Articles)
-
-*   [[grammar/a1/past-tense-formation]]
-*   [[grammar/a2/future-tense-forms]]
-*   [[grammar/b1/imperative-mood]]
-*   [[grammar/b2/verbal-adverbs-dijepryslivnyky]]
+## Пов'язані статті
+*   `[[grammar/a1/past-tense|Минулий час: Я читав, вона читала]]`
+*   `[[grammar/b1/future-tense|Майбутній час: буду робити чи робитиму?]]`
+*   `[[grammar/b1/verbs-of-motion|Дієслова руху: іти чи ходити?]]`

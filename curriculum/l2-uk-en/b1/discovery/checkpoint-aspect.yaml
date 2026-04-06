@@ -1,0 +1,43 @@
+discovered_at: '2026-04-06T15:14:46.957018+00:00'
+error: null
+query_keywords:
+- 'Контрольна робота: вид дієслова'
+- 'Вид у минулому: тло і послідовність'
+- Вид у майбутньому та наказовому
+- Вид і заперечення
+- Вид в умовному способі та підсумок
+- Learner can correctly choose between доконаний and недоконаний вид in past tense
+  narratives, distinguishing тло (background) from послідовність подій (event chain)
+- 'Learner can choose appropriate aspect in future tense contexts: планована одноразова
+  дія (pf — напишу) vs регулярна/тривала дія (impf — писатиму)'
+- 'Learner can use correct aspect in наказовий спосіб: general instruction (impf —
+  читайте!) vs specific single command (pf — прочитайте цю статтю!)'
+- 'Learner can apply aspect rules in заперечення: не читав (impf — general negation)
+  vs не прочитав (pf — expected result not achieved)'
+- 'Learner can choose aspect in умовний спосіб and conditional sentences: Якби я знав
+  (impf)... Якби я дізнався (pf)...'
+- доконаний вид
+- недоконаний вид
+- видова пара
+- тло розповіді
+- послідовність подій
+- наказовий спосіб
+- заперечення
+- умовний спосіб
+- результативність
+- тривалість
+- діагностика
+- повторення
+- контрольна робота
+- минулий час
+- майбутній час
+- подієвий ланцюг
+- загальне заперечення
+- нереалізований результат
+- заборона
+- попередження
+- синтетичний майбутній
+- аналітичний майбутній
+rag_chunks: []
+rag_literary: []
+warning: Auto-generated from plan

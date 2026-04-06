@@ -1,0 +1,44 @@
+discovered_at: '2026-04-06T15:14:46.957018+00:00'
+error: null
+query_keywords:
+- Подвійне заперечення
+- 'Заперечення в українській мові: принцип подвійності'
+- Заперечні займенники
+- Заперечні прислівники
+- 'Написання не і ні: правила та винятки'
+- Заперечення в діалогах та текстах
+- 'Підсумок: заперечення — це сила'
+- Learner can explain why Ukrainian requires подвійне (and потрійне) заперечення where
+  English uses single negation, understanding it as a structural feature of Ukrainian
+  grammar, not an error
+- Learner can correctly use заперечні займенники (ніхто, ніщо, ніякий, нічий) and
+  заперечні прислівники (ніде, ніколи, ніяк, нітрохи) in sentences with не
+- 'Learner can distinguish between написання ні разом and окремо: ніхто vs ні в кого,
+  нічий vs ні з чиїм (separation by прийменники in oblique cases)'
+- 'Learner can use заперечні конструкції with different наголос patterns: нікого немає
+  (absence) vs нікого й спитати (impossibility)'
+- Learner can produce natural Ukrainian negative sentences avoiding the English-influenced
+  single-negation error (*ніхто знає instead of ніхто не знає)
+- заперечення
+- подвійне заперечення
+- заперечний займенник
+- заперечний прислівник
+- ніхто
+- ніщо
+- ніколи
+- ніде
+- ніякий
+- нічий
+- жодний
+- ані
+- нікуди
+- нізвідки
+- ніяк
+- нітрохи
+- ніскільки
+- аж ніяк
+- ні за що
+- неозначений
+rag_chunks: []
+rag_literary: []
+warning: Auto-generated from plan

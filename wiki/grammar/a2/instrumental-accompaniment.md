@@ -1,187 +1,190 @@
-# Граматика A2: З другом (Орудний відмінок)
+# Граматика A2: З другом
 
 <!-- wiki-meta
 slug: instrumental-accompaniment
 domain: grammar/a2
 tracks: [a2, b1]
-sources: [6-klas-ukrmova-avramenko-2023_s0095, 6-klas-ukrmova-betsa-2023_s0096, 6-klas-ukrmova-zabolotnyi-2020_s0112, 10-klas-ukrmova-glazova-2018_s0260, 4-klas-ukrmova-zaharijchuk_s0067, 5-klas-ukrmova-litvinova-2022_s0219, 5-klas-ukrmova-uhor-2022-1_s0022, 6-klas-ukrmova-avramenko-2023_s0102, 6-klas-ukrmova-avramenko-2023_s0113, 6-klas-ukrmova-avramenko-2023_s0209, 6-klas-ukrmova-golub-2023_s0082, 6-klas-ukrmova-litvinova-2023_s0157, 6-klas-ukrmova-zabolotnyi-2020_s0146, 10-klas-ukrajinska-mova-zabolotnij-2018_s0207, 10-klas-ukrajinska-mova-zabolotnij-2018_s0210, 10-klas-ukrmova-karaman-2018_s0263, 10-klas-ukrmova-zabolotnyi-2018_s0207, 10-klas-ukrmova-zabolotnyi-2018_s0210, 11-klas-ukrajinska-mova-glazova-2019_s0015, 11-klas-ukrajinska-mova-voron-2019_s0393, 4-klas-ukrmova-zaharijchuk_s0054, 4-klas-ukrmova-zaharijchuk_s0057, 4-klas-ukrmova-zaharijchuk_s0063, 4-klas-ukrmova-zaharijchuk_s0068, 5-klas-ukrmova-uhor-2022-1_s0193, 5-klas-ukrmova-uhor-2022-1_s0200, 6-klas-ukrmova-avramenko-2023_s0057, 6-klas-ukrmova-avramenko-2023_s0091, 6-klas-ukrmova-avramenko-2023_s0101, 6-klas-ukrmova-betsa-2023_s0094, 6-klas-ukrmova-betsa-2023_s0127, 6-klas-ukrmova-betsa-2023_s0137, 6-klas-ukrmova-golub-2023_s0073, 6-klas-ukrmova-golub-2023_s0084, 6-klas-ukrmova-litvinova-2023_s0170, 6-klas-ukrmova-litvinova-2023_s0173, 6-klas-ukrmova-litvinova-2023_s0208, 6-klas-ukrmova-litvinova-2023_s0230]
-compiled: 2026-04-06
+sources: [ext-ulp_youtube-186, ext-ulp_youtube-78, 10-klas-ukrmova-glazova-2018_s0260, 6-klas-ukrmova-zabolotnyi-2020_s0146, 6-klas-ukrmova-zabolotnyi-2020_s0101, 6-klas-ukrmova-avramenko-2023_s0101, 10-klas-ukrajinska-mova-avramenko-2018_s0261, 6-klas-ukrmova-zabolotnyi-2020_s0111, ext-ulp_youtube-67, ext-ulp_youtube-237, ext-ulp_youtube-96, 6-klas-ukrmova-avramenko-2023_s0095, 6-klas-ukrmova-litvinova-2023_s0170, 6-klas-ukrmova-zabolotnyi-2020_s0129, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0054, 6-klas-ukrmova-litvinova-2023_s0157, 6-klas-ukrmova-zabolotnyi-2020_s0105, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0057, 10-klas-ukrajinska-mova-avramenko-2018_s0248, 4-klas-ukrayinska-mova-varzatska-2021-1_s0057, 6-klas-ukrmova-zaharijchuk-2021-1_s0062, ext-other_blogs-67, 10-klas-ukrmova-glazova-2018_s0283, 6-klas-ukrmova-zabolotnyi-2020_s0112, 6-klas-ukrmova-golub-2023_s0084, 4-klas-ukrayinska-mova-ponomarova-2021-1_s0036, 6-klas-ukrmova-betsa-2023_s0096, 4-klas-ukrmova-zaharijchuk-2021-1_s0042, 6-klas-ukrmova-avramenko-2023_s0057, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0057, 5-klas-ukrmova-zabolotnyi-2023_s0126, ext-ulp_youtube-257, ext-ulp_youtube-242, 10-klas-ukrajinska-mova-avramenko-2018_s0257, 10-klas-ukrmova-zabolotnyi-2018_s0206]
+compiled: 2026-04-07
 -->
 
 ## Як це пояснюють у школі (How Schools Teach This)
+The Instrumental case (**Орудний відмінок**) is introduced in Ukrainian schools as early as Grade 4. It answers the questions **ким?** (by whom?) and **чим?** (with what?) (Source 40). The name of the case itself comes from the verb *орудувати* (to handle, to wield a tool), so its primary meaning is that of an instrument. For example, `пишу ручкою` (I write with a pen) (Source 153).
 
-Орудний відмінок (Instrumental Case) є одним із семи відмінків української мови. Він відповідає на питання **ким? чим?** (by whom? with what?) (Джерело: `6-klas-ukrmova-avramenko-2023_s0095`). У шкільній програмі його вводять разом з іншими непрямими відмінками, підкреслюючи, що вони необхідні для поєднання слів у реченні (Джерело: `6-klas-ukrmova-avramenko-2023_s0095`).
+The second key meaning, and the focus of this brief, is **accompaniment**. This is almost always taught using the preposition **з** (with). A core example provided in Grade 6 textbooks is `іду (з ким?) з другом` (I am going with a friend) (Source 12). This distinguishes the "accompaniment" use (with a preposition) from the "instrument" use (without a preposition).
 
-Для рівня A2 ключовими є два основні значення:
+Pedagogical materials for L2 learners, like the *Ukrainian Lessons Podcast*, explicitly connect the preposition `з` with the Instrumental case for expressing "with." In an episode about Christmas dinner, the host explains that `з` is used to list ingredients: `кутя з маком, медом, і горіхами` (kutia with poppy seeds, honey, and nuts) (Source 24). This context is highly effective for A2 learners as it's concrete and relatable.
 
-1.  **Супровід (Accompaniment):** Вживається з прийменником `з` (або `із`, `зі`) для позначення особи, предмета чи явища, разом з яким відбувається дія. Це найважливіше значення для початківців. Підручники часто вводять цю конструкцію через прості фрази: `іду (з ким?) з другом`, `я з (тато) прибираємо` (Джерело: `6-klas-ukrmova-avramenko-2023_s0095`, `6-klas-ukrmova-avramenko-2023_s0091`).
+Ukrainian schools systematically teach the endings for each declension:
+1.  **Grade 4:** Introduction to the case and basic endings for masculine (`-ом`/`-ем`) and feminine (`-ою`/`-ею`) nouns (Sources 15, 44).
+2.  **Grade 6:** A deep dive into all declensions, including the complex spelling rules for the 3rd declension (`ніччю`) and the various ending patterns for 1st (`-ою, -ею, -єю`) and 2nd declensions (`-ом, -ем, -єм`) (Sources 5, 8, 15).
+3.  **Grade 10:** Review and focus on complex cases, exceptions, and parallel forms like the plural `-ми` ending (`грішми`, `кіньми`) (Source 19).
 
-2.  **Інструмент (Instrument):** Вживається без прийменника для позначення знаряддя, засобу чи способу дії. Наприклад: `посипаю (чим?) землею`, `пишаюся (ким?) другом` (Джерело: `6-klas-ukrmova-avramenko-2023_s0095`).
-
-Навчання відбувається поступово. Елементарні форми, як `яблуком`, можуть з'являтися вже в 4-му класі (Джерело: `4-klas-ukrmova-zaharijchuk_s0054`). Систематичне вивчення правил відмінювання для різних відмін (Declensions) відбувається в 5-6 класах. Підручники використовують вправи на трансформацію, де учні мають поставити іменники з дужок у правильну відмінкову форму, що є ефективним методом для засвоєння (Джерело: `6-klas-ukrmova-zabolotnyi-2020_s0112`).
+The variants of the preposition `з` (`із`, `зі`, `зо`) are taught as a matter of euphony (милозвучність). The rules are based on the sounds of the following word, for example, `зі мною` (with me) or `зі Львова` (from Lviv) to avoid difficult consonant clusters (Source 43).
 
 ## Повна парадигма (Full Paradigm)
 
-Парадигма орудного відмінка залежить від відміни, роду та групи іменника.
+The Instrumental case endings are determined by the noun's declension, gender, and the final consonant of its stem.
 
-### Іменники (Nouns)
+### І Відміна (1st Declension)
+*(Feminine, Masculine, and Common gender nouns ending in -а/-я)*
 
-#### І Відміна (жін., чол., спільн. рід на -а, -я)
+| Група (Group) | Основа на... (Stem ends in...) | Закінчення (Ending) | Приклад (Example) | Форма (Form) | Джерело (Source) |
+| --- | --- | --- | --- | --- | --- |
+| **Тверда** (Hard) | Твердий приголосний (Hard consonant) | **-ою** | жінка, Микола | жінкою, Миколою | `6-klas-ukrmova-zabolotnyi-2020_s0101` |
+| **М'яка** (Soft) | М'який приголосний (Soft consonant) | **-ею** | земля, пісня | землею, піснею | `6-klas-ukrmova-zabolotnyi-2020_s0101` |
+| **Мішана** (Mixed) | Шиплячий (Shibilant: ж, ч, ш) | **-ею** | тиша, задача | тишею, задачею | `4-klas-ukrayinska-mova-ponomarova-2021-1_s0051` |
+| **М'яка** (Soft) | Голосний або апостроф | **-єю** | мрія, сім'я | мрією, сім'єю | `6-klas-ukrmova-zabolotnyi-2020_s0101` |
 
-| Група | Правило | Приклад (Н.в.) | Орудний відмінок (-ою, -ею, -єю) | Джерело |
-| :--- | :--- | :--- | :--- | :--- |
-| Тверда | Основа на твердий приголосний | `школа`, `мама` | `школою`, `мамою` | `10-klas-ukrmova-glazova-2018_s0260` |
-| М'яка | Основа на м'який приголосний | `земля`, `пісня` | `землею`, `піснею` | `10-klas-ukrmova-glazova-2018_s0260` |
-| Мішана | Основа на шиплячий | `круча`, `душа` | `кручею`, `душею` | `6-klas-ukrmova-avramenko-2023_s0101` |
-| Особлива | Основа на голосний / апостроф | `мрія`, `сім'я` | `мрією`, `сім'єю` | `10-klas-ukrmova-glazova-2018_s0260` |
+### ІІ Відміна (2nd Declension)
+*(Masculine nouns with a zero ending or -о; Neuter nouns with -о, -е, -я)*
 
-#### ІІ Відміна (чол. рід на приголосний та -о; середн. рід на -о, -е, -я)
+| Рід (Gender) | Основа на... (Stem ends in...) | Закінчення (Ending) | Приклад (Example) | Форма (Form) | Джерело (Source) |
+| --- | --- | --- | --- | --- | --- |
+| **Чоловічий** (Masc) | Твердий приголосний | **-ом** | друг, стіл | другом, столом | `4-klas-ukrayinska-mova-kravtsova-2021-1_s0054` |
+| **Чоловічий** (Masc) | М'який або шиплячий | **-ем** | учитель, слухач | учителем, слухачем | `4-klas-ukrayinska-mova-kravtsova-2021-1_s0054` |
+| **Чоловічий** (Masc) | **-й** | герой, чай | героєм, чаєм | `4-klas-ukrayinska-mova-kravtsova-2021-1_s0054` |
+| **Середній** (Neut) | *-о* | **-ом** | вікно, село | вікном, селом | `4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0042` |
+| **Середній** (Neut) | *-е* | **-ем** | море, сонце | морем, сонцем | `6-klas-ukrmova-betsa-2023_s0096` |
+| **Середній** (Neut) | *-я* | **-ям (-ам)** | життя, знання | життям, знанням | <!-- VERIFY --> |
 
-| Рід | Група | Приклад (Н.в.) | Орудний відмінок (-ом, -ем, -єм) | Джерело |
-| :--- | :--- | :--- | :--- | :--- |
-| Чоловічий | Тверда | `друг`, `тато`, `стіл` | `другом`, `татом`, `столом` | `6-klas-ukrmova-avramenko-2023_s0095` |
-| Чоловічий | М'яка | `учитель`, `кінь` | `учителем`, `конем` | `4-klas-ukrmova-zaharijchuk_s0063` |
-| Чоловічий | Мішана | `слухач`, `календар` | `слухачем`, `календарем` | `4-klas-ukrmova-zaharijchuk_s0063` |
-| Середній | Тверда | `вікно`, `слово` | `вікном`, `словом` | `4-klas-ukrmova-zaharijchuk_s0054` |
-| Середній | М'яка | `море`, `поле`, `серце` | `морем`, `полем`, `серцем` | `6-klas-ukrmova-betsa-2023_s0096` |
-| Середній | Особлива (на -я) | `знання`, `життя` | `знанням`, `життям` | <!-- VERIFY --> |
+### ІІІ Відміна (3rd Declension)
+*(Feminine nouns with a zero ending, plus `матір`)*. The base ending is **-ю**. Spelling changes occur at the stem-ending junction.
 
-#### ІІІ Відміна (жін. рід на приголосний)
+| Основа на... (Stem ends in...) | Правило (Rule) | Приклад (Example) | Форма (Form) | Джерело (Source) |
+| --- | --- | --- | --- | --- |
+| Один м'який або шиплячий приголосний | **Подовження** (Doubling) | ніч, сіль, подорож | ні**ччю**, сі**ллю**, подоро**жжю** | `6-klas-ukrmova-zabolotnyi-2020_s0111` |
+| Збіг приголосних | Без подовження (No doubling) | радість, молодість | радістю, молодістю | `6-klas-ukrmova-zabolotnyi-2020_s0111` |
+| Губний (`б, п, в, м, ф`) або `р` | Апостроф, без подовження | любов, кров, матір | любо**в'ю**, кро**в'ю**, маті**р'ю** | `6-klas-ukrmova-zabolotnyi-2020_s0111` |
 
-Це складна, але важлива відміна. Основне закінчення — **-ю**.
+### IV Відміна (4th Declension)
+*(Neuter nouns in -а/-я that gain suffixes -ат-/-ят- or -ен- when declined)*
 
-| Правило | Приклад (Н.в.) | Орудний відмінок | Джерело |
-| :--- | :--- | :--- | :--- |
-| **Подовження:** основа на 1 м'який/шиплячий | `сіль`, `ніч`, `розкіш` | `сіллю`, `ніччю`, `розкішшю` | `4-klas-ukrmova-zaharijchuk_s0068`, `6-klas-ukrmova-golub-2023_s0084` |
-| **Без подовження:** основа на збіг приголосних | `радість`, `молодість` | `радістю`, `молодістю` | `4-klas-ukrmova-zaharijchuk_s0068`, `6-klas-ukrmova-golub-2023_s0084` |
-| **Апостроф:** основа на губний (`б, п, в, м, ф`) або `р` | `любов`, `кров`, `матір` | `любов'ю`, `кров'ю`, `матір'ю` | `6-klas-ukrmova-golub-2023_s0084`, `6-klas-ukrmova-litvinova-2023_s0170` |
+| Тип (Type) | Приклад (Example) | Форма (Form) | Примітка (Note) | Джерело (Source) |
+| --- | --- | --- | --- | --- |
+| з *-ят-* | лоша, кошеня | лоша**м**, кошеня**м** | | `6-klas-ukrmova-zabolotnyi-2020_s0112` |
+| з *-ен-* | ім'я, плем'я | **іменем** / **ім'ям** | Паралельні форми (Parallel forms) | `6-klas-ukrmova-zabolotnyi-2020_s0112` |
 
-#### IV Відміна (середн. рід на -а, -я (малята))
+### Множина (Plural)
 
-| Приклад (Н.в.) | Орудний відмінок | Примітки | Джерело |
-| :--- | :--- | :--- | :--- |
-| `лоша`, `кошеня` | `лошам`, `кошеням` | Більшість | `6-klas-ukrmova-zabolotnyi-2020_s0112` |
-| `ім'я`, `плем'я` | **`іменем` / `ім'ям`**, **`племенем` / `плем'ям`** | Паралельні форми | `6-klas-ukrmova-zabolotnyi-2020_s0112`, `6-klas-ukrmova-litvinova-2023_s0173` |
+| Група (Group) | Закінчення (Ending) | Приклад (Example) | Форма (Form) |
+| --- | --- | --- | --- |
+| **Тверда** (Hard) | **-ами** | столи, жінки | столами, жінками |
+| **М'яка/Мішана** (Soft/Mixed) | **-ями** | коні, землі | конями, землями |
+| **Паралельна** (Parallel) | **-ми** | гості, гроші, коні, крила | гістьми, грішми, кіньми, крильми |
 
-### Прикметники та Займенники (Adjectives & Pronouns)
+*Note on parallel plural forms:* The `-ми` ending is a feature of Standard Ukrainian, often existing alongside the more common `-ами`/`-ями` forms (e.g., `конями` and `кіньми` are both correct) (Source `10-klas-ukrajinska-mova-avramenko-2018_s0248`).
 
-В орудному відмінку прикметники та займенники узгоджуються з іменником у роді, числі та відмінку.
+## Частотність і пріоритети (Frequency & Priorities)
 
-| Рід / Число | Прикметник (тверда/м'яка) | Займенник (особовий/присвійний) | Приклад | Джерело |
-| :--- | :--- | :--- | :--- | :--- |
-| Чол./Середн. однина | `-им` / `-ім` | `ним` / `моїм`, `цим` | `з новим другом`, `з моїм братом` | `6-klas-ukrmova-litvinova-2023_s0208` |
-| Жін. однина | `-ою` / `-ею` | `нею` / `моєю`, `цією` | `з новою подругою`, `з моєю сестрою` | `6-klas-ukrmova-litvinova-2023_s0208` |
-| Множина | `-ими` / `-іми` | `ними` / `моїми`, `цими` | `з новими друзями`, `з моїми батьками` | `6-klas-ukrmova-litvinova-2023_s0208` |
+**A2 Level Priority:**
+The most crucial function of the Instrumental case at the A2 level is expressing **accompaniment** and **composition** with the preposition **`з`**. Learners should master this pattern first, as it unlocks a vast range of descriptive sentences.
 
-Особові займенники: `мною`, `тобою`, `ним`, `нею`, `нами`, `вами`, `ними`.
+1.  **Accompaniment (People):** `з другом`, `з подругою`, `з батьками`. This is fundamental for social communication.
+2.  **Composition (Food & Things):** `кава з молоком`, `бутерброд з сиром`, `книга з картинками`. This is highly frequent in daily life. (Source `ext-ulp_youtube-242`)
+3.  **Basic Instrument (No Preposition):** `писати ручкою`, `їсти ложкою`. This core meaning should also be introduced.
 
-## Частотність і пріоритети
+**Form Priorities for A2:**
+*   **Singular nouns of 1st and 2nd declensions:** These are the most common. Master the `-ою`/`-ею` and `-ом`/`-ем` endings.
+*   **Plural nouns with `-ами`/`-ями`:** Essential for talking about groups (`з друзями`, `з батьками`).
+*   **Personal pronouns:** `зі мною`, `з тобою`, `з ним`, `з нею`, `з нами`, `з вами`, `з ними`. These are non-negotiable for conversation. (Source `ext-article-1`)
 
-Для рівня A2/B1 пріоритети наступні:
-
-1.  **Найвища пріоритетність:** Конструкція `з + Орудний відмінок` для вираження супроводу.
-    *   Іменники I та II відмін: `з другом`, `з подругою`, `з татом`, `з мамою`. Це 90% повсякденного вжитку.
-    *   Особові займенники: `зі мною`, `з тобою`, `з нами`.
-
-2.  **Середня пріоритетність:** Використання для позначення інструменту з поширеними об'єктами.
-    *   `їсти ложкою`, `писати ручкою`, `говорити телефоном`, `їхати автобусом`.
-
-3.  **Нижча пріоритетність (для B1):**
-    *   Правила для III відміни (подовження, апостроф). Форми на `-істю` (`з радістю`) варто вивчити як готові блоки.
-    *   Паралельні форми IV відміни (`іменем`/`ім'ям`).
-    *   Інші значення орудного відмінка (вираження часу, місця, професії: `працювати лікарем`).
+**B1 Level and Beyond:**
+*   **3rd Declension Spelling:** The consonant doubling (`подорожжю`) and apostrophe (`любов'ю`) are key spelling rules to master at the B1 level.
+*   **Predicate Instrumental:** Using the Instrumental case for professions or temporary states after verbs like `бути` (e.g., `Він став лікарем` - He became a doctor).
+*   **Parallel Plural Forms:** Recognizing and using forms like `гістьми`, `грішми` becomes relevant for a richer vocabulary.
 
 ## Типові помилки L2 (Common L2 Errors)
+English speakers often make predictable errors with the Instrumental case, mostly due to direct translation or oversimplification of rules.
 
-| ❌ Помилково | ✅ Правильно | Чому |
+| ❌ Помилково (Incorrect) | ✅ Правильно (Correct) | Чому (Why) |
 | :--- | :--- | :--- |
-| Я гуляю з `мій друг`. | Я гуляю з `моїм другом`. | Помилка полягає у невикористанні орудного відмінка після прийменника `з`. Англомовні студенти часто переносять структуру "with my friend", де відмінків немає. Необхідно змінювати і займенник, і іменник. |
-| Я п'ю каву з `цукром і молоко`. | Я п'ю каву з `цукром і молоком`. | "Молоко" (II відміна, середній рід) має закінчення `-ом` в орудному відмінку. Помилка виникає через невідмінювання другого елемента в однорідному ряду. |
-| Вона говорить з `вчителью`. | Вона говорить з `учителем`. | Неправильне застосування закінчення жіночого роду `-ею` до іменника чоловічого роду. Іменник `учитель` (II відміна) має закінчення `-ем`. |
-| Ми пишаємося нашою `перемогаю`. | Ми пишаємося нашою `перемогою`. | Помилка гіперкорекції або неправильного аналізу основи. `Перемога` - іменник І відміни, твердої групи, тому закінчення `-ою`. |
-| `З мною` є квиток. | `У мене` є квиток. | Це фундаментальна помилка, часто пов'язана з інтерференцією російської мови або неправильним розумінням значення `з`. Конструкція `з + кимсь` означає супровід ("the ticket is accompanying me"), а не володіння. Для володіння використовується `у + Родовий відмінок`. |
-| Я написав листа з `радісттю`. | Я написав листа з `радістю`. | Помилка в застосуванні правила подовження для ІІІ відміни. Оскільки основа `радіст-` закінчується на збіг приголосних (`-ст-`), подовження не відбувається (Джерело: `4-klas-ukrmova-zaharijchuk_s0068`). |
+| Я розмовляю **з друг**. | Я розмовляю **з другом**. | The preposition `з` (with) requires the Instrumental case. The nominative form `друг` is incorrect. (Source `6-klas-ukrmova-avramenko-2023_s0095`) |
+| Я пишу **з ручкою**. | Я пишу **ручкою**. | This is a classic "instrument" vs. "accompaniment" error. `З ручкою` implies the pen is a co-author. For tools, no preposition is used. (Source `6-klas-ukrmova-avramenko-2023_s0095`) |
+| Вона п'є чай **з цукрою**. | Вона п'є чай **з цукром**. | The noun `цукор` is masculine (2nd declension) and takes the `-ом` ending. The `-ою` ending is for feminine nouns (1st declension). |
+| Вона поділилася **радістю**. | Вона поділилася **радістю**. | The noun `радість` (3rd declension) has a stem ending in a consonant cluster `-ст-`. Therefore, the consonant `т` is not doubled. Doubling occurs only after single consonants. (Source `6-klas-ukrmova-zabolotnyi-2020_s0111`) |
+| Він подорожував **нічю**. | Він подорожував **ніччю**. | The noun `ніч` (3rd declension) has a stem ending in a single soft consonant (`ч`). Therefore, the consonant must be doubled before the `-ю` ending. (Source `6-klas-ukrmova-golub-2023_s0084`) |
+| Я зустрівся **з його мати**. | Я зустрівся **з його матір'ю**. | The noun `матір` (3rd declension) is an exception. Its stem ends in `р`, so it takes an apostrophe before the `-ю` ending, and there is no doubling. (Source `6-klas-ukrmova-litvinova-2023_s0170`) |
 
 ## Деколонізаційні застереження (Decolonization Notes)
+It is critical to teach Ukrainian grammar on its own terms, not as a variant of Russian. The Instrumental case provides several clear points of divergence.
 
-Критично важливо представляти українську граматику як самодостатню систему, а не як діалект чи варіацію російської.
+1.  **Feminine Endings (`-ою`/`-ею`):** Ukrainian preserves the full vowel endings `-ою` and `-ею` for 1st declension nouns. This is a distinct feature.
+    *   **Ukrainian:** `водою`, `землею`, `піснею`.
+    *   **Russian:** `водой`, `землёй`, `песней`.
+    The `й` sound in the Russian endings is absent in Ukrainian, which uses a full vowel. Presenting this as a core feature of Ukrainian phonetics is essential.
 
-1.  **Володіння: `У мене є` проти `У меня есть`**. Це ключова відмінність. Українська конструкція `у + Родовий відмінок` (`у мене`, `у тебе`) для вираження володіння є єдиною стандартною. Російська `У меня есть` має той самий вигляд, але російська мова також допускає конструкції типу `с собой`, які не переносяться в українську для вираження володіння. Навчаючи `з другом`, необхідно чітко розмежувати його значення (супровід) і не допускати калькування конструкцій володіння.
+2.  **Consonant Doubling in 3rd Declension:** The doubling of soft and sibilant consonants in the 3rd declension (`сіллю`, `ніччю`, `подорожжю`) is a hallmark of Ukrainian orthography and pronunciation.
+    *   **Ukrainian:** `ніччю` [ˈn⁽ʲ⁾it͡ʃːu]
+    *   **Russian:** `ночью` [ˈnot͡ɕju]
+    This feature is absent in Russian and should be taught as a fundamental rule of Ukrainian morphology, not an exception.
 
-2.  **Закінчення множини:** В орудному відмінку множини українська мова використовує закінчення `-ами`, `-ями` (`друзями`, `конями`), що відрізняється від деяких російських форм, де існує паралельне закінчення `-ьми` (`детьми`, `лошадьми`). Українські іменники IV відміни мають форму `лошатами`, не `лошадьми`.
+3.  **Plural Parallel Forms (`-ми`):** The existence of parallel forms like `гістьми`/`гостями` and `кіньми`/`конями` is a characteristic feature of the Ukrainian language. While Russian has `людьми`, `детьми`, the pattern is more restricted. In Ukrainian, these forms are part of the standard language for a wider set of nouns and represent an older grammatical layer preserved in Ukrainian (Source `10-klas-ukrajinska-mova-avramenko-2018_s0248`).
 
-3.  **Фонетична основа:** Українська фонетика (зокрема, `і` на місці етимологічного `о` в закритих складах, як у слові `сіль` (`сіллю`), на відміну від російського `соль` (`солью`)) є причиною багатьох відмінностей у відмінюванні. Пояснення правил через внутрішню логіку української мови, а не через порівняння з російською, є єдиним правильним підходом.
-
-4.  **Прийменник `з`:** В українській мові прийменник `з` (і його варіанти `із`, `зі`) є самостійним і не є просто відповідником російського `с`. Його вживання регулюється виключно українськими фонетичними та граматичними нормами.
+4.  **Vocabulary:** Always use authentic Ukrainian vocabulary in examples. Avoid using Russianisms like `сахар` (sugar) or `коньки` (skates). The correct Ukrainian words are `цукор` and `ковзани`. Using Ukrainian words reinforces the distinct lexical system.
 
 ## Природні приклади (Natural Examples)
+These examples are taken from textbook dialogues and real-world conversations to show natural usage.
 
-**Група 1: Супровід (з ким?)**
+**1. Accompaniment with People**
+*   `Я запрошу Максима, якого ти бачила на концерті, і Євгена, **що працює зі мною** в офісі.` (I'll invite Maksym, whom you saw at the concert, and Yevhen, who works **with me** at the office.) (Source: `ext-ulp_youtube-186`)
+*   `Спільно **з (рідня)** ми вирішуємо такі питання...` -> `Спільно **з ріднею** ми вирішуємо...` (Together **with family** we decide such questions...) (Source: `10-klas-ukrmova-glazova-2018_s0260`)
+*   `Дружити **з Марією**.` (To be friends **with Maria**.) (Source: `4-klas-ukrayinska-mova-varzatska-2021-1_s0057`)
 
-*   `Я з татом прибираємо у квартирі.` (Джерело: `6-klas-ukrmova-avramenko-2023_s0091`, приклад адаптовано)
-*   `Україна з Польщею мають дружні відносини.` (Джерело: `6-klas-ukrmova-avramenko-2023_s0102`)
-*   `З матусею я зазвичай обговорюю шкільні новини.` (Джерело: `10-klas-ukrmova-glazova-2018_s0260`, приклад адаптовано)
-*   `З ким поведешся — від того й наберешся.` (Народна творчість, цитується в `6-klas-ukrmova-avramenko-2023_s0209`)
+**2. Composition of Food and Drinks**
+*   `Кутя — це відварена пшениця **з маком, медом, горіхами і родзинками**.` (Kutia is boiled wheat **with poppy seeds, honey, nuts, and raisins**.) (Source: `ext-ulp_youtube-242`)
+*   `Я готую вареники **з капустою і картоплею**.` (I make varenyky **with cabbage and potatoes**.) (Source: `ext-ulp_youtube-242`)
+*   `На десерт — пиріжки **з маком і вишнями**.` (For dessert — small pies **with poppy seeds and cherries**.) (Source: `ext-ulp_youtube-242`)
 
-**Група 2: Інструмент (чим?)**
+**3. Describing things with `з`**
+*   `Попередньо його маринують **з різними спеціями** й **цибулею**.` (Beforehand, they marinate it **with various spices** and **onion**.) (Source: `ext-ulp_youtube-186`)
+*   `Це салат **з буряка і хрону**.` (This is a salad **of beet and horseradish**.) (Source: `ext-ulp_youtube-78`)
 
-*   `Своєю радістю й печаллю, як хлібом-сіллю, поділись.` (Джерело: `6-klas-ukrmova-zabolotnyi-2020_s0112`)
-*   `Не лізь із сокирою, де пила не була.` (Народна творчість, цитується в `10-klas-ukrmova-glazova-2018_s0260`)
-*   `Добрий мисливець і листок кулею зітне.` (Народна творчість, цитується в `10-klas-ukrmova-glazova-2018_s0260`)
+**4. Using an Instrument (No Preposition)**
+*   `Земля ціниться **колосом**, а людина — **працею**.` (Land is valued **by its ear of grain**, and a person — **by their labor**.) (Source: `10-klas-ukrmova-glazova-2018_s0260`)
+*   `Я пишу **олівцем**, а не **ручкою**.` (I am writing **with a pencil**, not **with a pen**.) (Source: `4-klas-ukrayinska-mova-kravtsova-2021-1_s0054`)
 
-**Група 3: Комбіновані приклади (супровід + інструмент)**
-
-*   `Різні тортики я завжди готую з бажанням і душею.` (Джерело: `6-klas-ukrmova-avramenko-2023_s0102`)
-*   `Я люблю їсти на сніданок бутерброд з копченим м'ясом і маслом.` (Джерело: `6-klas-ukrmova-betsa-2023_s0127`)
-
-**Група 4: Абстрактні поняття та почуття**
-
-*   `Пишаюся (ким?) другом.` (Джерело: `6-klas-ukrmova-avramenko-2023_s0095`)
-*   `Сестра захоплюється (чим?) танцями, а я — футболом.` (Джерело: `6-klas-ukrmova-avramenko-2023_s0091`, приклад адаптовано)
-*   `Акації стояли... заквітчані безліччю білих китиць.` (Джерело: `6-klas-ukrmova-zabolotnyi-2020_s0112`)
+**5. 3rd Declension Spelling**
+*   `Людина прекрасна своєю **людяністю**, **незламністю** духу...` (A person is beautiful for their **humanity**, **unbreakability** of spirit...) (Source: `10-klas-ukrmova-glazova-2018_s0283`)
+*   `Своєю **радістю** й **печаллю**, як **хліб-сіль**, поділись.` (Share your **joy** and **sorrow** like **bread and salt**.) (Source: `6-klas-ukrmova-zabolotnyi-2020_s0112`)
 
 ## Рекомендації для вправ (Activity Concepts)
 
-**Phase 1: Розпізнавання та базове відмінювання**
+**Phase 1: Recognition and Form Association**
+*   **Drill 1 (Matching):** Provide two columns. Left column: nominative forms (`друг`, `кава`, `сестра`, `море`). Right column: instrumental forms (`сестрою`, `з другом`, `морем`, `з кавою`). Students draw lines to match them.
+*   **Drill 2 (Identification):** Give students a short dialogue (like from Source 1) and have them highlight all nouns in the Instrumental case.
 
-*   **Вправа "Впізнай відмінок":** Дати короткі речення і попросити знайти іменники в орудному відмінку та назвати їхнє питання (`ким?` чи `чим?`).
-*   **Вправа "З'єднай пару":** Дві колонки: називний та орудний відмінки. `друг` -> `другом`, `подруга` -> `подругою`.
-*   **Вправа "Трансформація І/ІІ відміни":** Дати словосполучення в називному і попросити поставити в орудний. `(мій друг)` -> `з моїм другом`. `(смачна кава)` -> `зі смачною кавою`.
+**Phase 2: Controlled Practice**
+*   **Drill 1 (Fill-in-the-blanks):** Focus on preposition `з` + noun.
+    *   `Я п'ю чай з ___________ (лимон).` -> `лимоном`
+    *   `Вона говорить з ___________ (учителька).` -> `учителькою`
+    *   `Ми їмо борщ з ___________ (сметана).` -> `сметаною`
+*   **Drill 2 (Transformation):** Give a base sentence and a noun. The student must integrate it.
+    *   `Це кава. (молоко)` -> `Це кава з молоком.`
+    *   `Я йду в парк. (друзі)` -> `Я йду в парк з друзями.`
 
-**Phase 2: Контрольоване відтворення**
+**Phase 3: Production and Spelling**
+*   **Drill 1 (Question & Answer):**
+    *   `З ким ти живеш?` (Who do you live with?) -> `Я живу з...`
+    *   `З чим ти любиш їсти вареники?` (What do you like to eat varenyky with?) -> `Я люблю вареники з...`
+*   **Drill 2 (Spelling Focus - 3rd Declension):** Provide 3rd declension nouns and have students write them in the Instrumental case.
+    *   `ніч` -> `ніччю`
+    *   `любов` -> `любов'ю`
+    *   `радість` -> `радістю`
+    *   `подорож` -> `подорожжю`
 
-*   **Вправа "Заповни пропуски":** Використовувати модель з підручників. `Спишіть, ставлячи подані в дужках іменники у формі орудного відмінка.` (модель з Джерела `6-klas-ukrmova-zabolotnyi-2020_s0112`).
-    *   `Я розмовляю з ________ (брат).`
-    *   `Ми їдемо на море з ________ (наші друзі).`
-    *   `Вона пише лист ________ (синя ручка).`
-*   **Вправа "Склади речення":** Дати розрізнені слова для складання речення, що вимагає орудного відмінка. `я / гуляти / з / моя / сестра` -> `Я гуляю з моєю сестрою`.
+## Зв'язки з іншими темами (Connections)
 
-**Phase 3: Вільне мовлення**
+*   **Prerequisites:** A solid understanding of **noun gender** and the basic concept of **grammatical cases** is essential. The learner should be comfortable identifying the nominative form of a noun.
+*   **Corequisites:** The Instrumental case of **personal pronouns** (`зі мною, з тобою, з ним`) should be taught alongside or immediately after this topic, as they are inseparable in conversation (Source `ext-article-1`).
+*   **Next Steps:** Mastering the Instrumental of accompaniment is the gateway to understanding its other uses, which are typically B1-level topics:
+    *   **Predicate Instrumental:** `Він хоче стати лікарем.` (He wants to become a doctor).
+    *   **Instrumental of Agent (Passive Voice):** `Лист написаний мною.` (The letter was written by me).
+    *   **Time Expressions:** `працювати днями і ночами` (to work days and nights).
 
-*   **Вправа "Запитання-відповідь":** Поставити низку запитань, які природно викликають відповідь в орудному відмінку.
-    *   `З ким ти живеш?`
-    *   `З ким ти сьогодні снідав/обідав/вечеряв?`
-    *   `Чим ти любиш малювати?`
-    *   `З чим ти п'єш чай? (з лимоном, з цукром, з молоком)`
-
-## Зв'язки з іншими темами
-
-*   **Попередні теми (Prerequisites):**
-    *   Поняття відмінків та їхня роль у реченні (A1).
-    *   Розподіл іменників за родами (чоловічий, жіночий, середній).
-    *   Базове розуміння відмін (declensions), принаймні I та II.
-*   **Супутні теми (Co-requisites):**
-    *   **Відмінювання прикметників:** Орудний відмінок є ідеальною темою для тренування узгодження прикметників (`з хорошим другом`, `з хорошою подругою`).
-    *   **Відмінювання займенників:** Особові (`зі мною`) та присвійні (`з моїм`) займенники мають вивчатися разом з іменниками.
-*   **Наступні теми (Enables):**
-    *   Вираження професії або стану: `Він працює лікарем`.
-    *   Пасивні конструкції (B2/C1): `Лист написаний мною`.
-    *   Вираження часу та шляху: `їхати полем`, `йти вулицею`.
-    *   Складні дієслова, що вимагають орудного відмінка: `цікавитися (спортом)`, `захоплюватися (музикою)`, `користуватися (телефоном)`.
-
-## Пов'язані статті
-
-*   `grammar/a1/noun-genders`
-*   `grammar/a2/adjective-agreement`
-*   `grammar/b1/dative-case`
-*   `grammar/b1/verbs-of-motion`
+## Пов'язані статті (Related Articles)
+*   [grammar/a1/noun-genders](./grammar/a1/noun-genders.md)
+*   [grammar/a2/preposition-z-iz-zi](./grammar/a2/preposition-z-iz-zi.md)
+*   [grammar/b1/instrumental-pronouns](./grammar/b1/instrumental-pronouns.md)
+*   [grammar/b1/instrumental-predicate](./grammar/b1/instrumental-predicate.md)
+*   [grammar/b1/instrumental-no-preposition](./grammar/b1/instrumental-no-preposition.md)

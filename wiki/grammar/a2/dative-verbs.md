@@ -1,179 +1,161 @@
 # Граматика A2: Допомагати, дякувати, дзвонити
 
 <!-- wiki-meta
-slug: dative-verbs
+slug: a2-dative-verbs-help-thank-call
 domain: grammar/a2
 tracks: [a2, b1]
-sources: [6-klas-ukrmova-betsa-2023_s0126, 5-klas-ukrmova-golub-2022_s0232, 5-klas-ukrmova-litvinova-2022_s0219, 6-klas-ukrmova-betsa-2023_s0127, 6-klas-ukrmova-betsa-2023_s0230, 2-klas-ukrmova-vashulenko-2019-2_s0011, 4-klas-ukrmova-zaharijchuk_s0126, 4-klas-ukrmova-zaharijchuk_s0182, 5-klas-ukrmova-uhor-2022-1_s0056, 5-klas-ukrmova-zabolotnyi-2023_s0158, 5-klas-ukrmova-zabolotnyi-2023_s0214, 6-klas-ukrmova-betsa-2023_s0092, 6-klas-ukrmova-golub-2023_s0156, 6-klas-ukrmova-litvinova-2023_s0239, 6-klas-ukrmova-litvinova-2023_s0290, 6-klas-ukrmova-zabolotnyi-2020_s0094, 9-klas-ukrajinska-mova-voron-2017_s0088, 9-klas-ukrajinska-mova-voron-2017_s0247, 10-klas-ukrajinska-mova-avramenko-2018_s0230, 10-klas-ukrajinska-mova-zabolotnij-2018_s0212, 10-klas-ukrmova-zabolotnij-2018_s0253, 10-klas-ukrmova-glazova-2018_s0161, 5-klas-ukrmova-zabolotnyi-2023_s0012, 5-klas-ukrmova-zabolotnyi-2023_s0218, 2-klas-ukrmova-kravcova-2019-2_s0006, 4-klas-ukrmova-zaharijchuk_s0113, 4-klas-ukrmova-zaharijchuk_s0119, 5-klas-ukrmova-golub-2022_s0110, 5-klas-ukrmova-golub-2022_s0177, 5-klas-ukrmova-golub-2022_s0250, 5-klas-ukrmova-litvinova-2022_s0060, 5-klas-ukrmova-litvinova-2022_s0251, 6-klas-ukrmova-avramenko-2023_s0017, 6-klas-ukrmova-avramenko-2023_s0163, 6-klas-ukrmova-avramenko-2023_s0241, 6-klas-ukrmova-betsa-2023_s0024, 6-klas-ukrmova-betsa-2023_s0096, 6-klas-ukrmova-betsa-2023_s0143, ext-article-0]
-compiled: 2026-04-06
+sources: [ext-istoria_movy-27, ext-ulp_youtube-249, ext-istoria_movy-20, ext-ulp_youtube-165, ext-istoria_movy-30, ext-istoria_movy-23, ext-ulp_youtube-252, 6-klas-ukrmova-betsa-2023_s0126, 6-klas-ukrmova-betsa-2023_s0230, 4-klas-ukrayinska-mova-varzatska-2021-1_s0109, 5-klas-ukrmova-golub-2022_s0232, 5-klas-ukrmova-litvinova-2022_s0219, 4-klas-ukrayinska-mova-ponomarova-2021-1_s0045, 6-klas-ukrmova-litvinova-2023_s0239, 6-klas-ukrmova-litvinova-2023_s0290, 9-klas-ukrajinska-mova-voron-2017_s0287, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0046, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0037, 9-klas-ukrajinska-mova-voron-2017_s0290, ext-other_blogs-46, ext-other_blogs-10, 4-klas-ukrayinska-mova-ponomarova-2021-1_s0035, 8-klas-ukrmova-zabolotnyi-2025_s0050, 11-klas-ukrajinska-mova-avramenko-2019_s0087]
+compiled: 2026-04-07
 -->
 
 ## Як це пояснюють у школі (How Schools Teach This)
 
-The concept of verbs requiring the Dative case (`Давальний відмінок`) is introduced in Ukrainian schools around the 5th and 6th grades, not as an abstract rule, but through a concrete set of high-frequency verbs. The core question for the Dative case is **кому? чому?** (to whom? to what?).
+В українській шкільній програмі дієслова **допомагати, дякувати, дзвонити** є ключовими прикладами синтаксичного керування, де дієслово вимагає від залежного іменника чи займенника форми **Давального відмінка (кому? чому?)**. Це правило активно вивчається та закріплюється, починаючи з молодших класів.
 
-1.  **Introduction via Concrete Verbs (Grade 5):** The approach is verb-centric. Заболотний (Source 10) explicitly teaches `дякувати (кому?)` and `вибачати (кому?)`. Students learn that these actions are directed *to someone*.
-    *   Example exercise: "Назар подякував (учителька) за допомогу" → "Назар подякував **учительці** за допомогу" (Source 10).
+- **Основне правило:** На відміну від англійської, де дія спрямована на прямий додаток (to help *someone*, to thank *someone*), в українській мові ці дієслова позначають дію, спрямовану *до* отримувача. Отримувач дії ставиться в Давальний відмінок.
+- **Введення теми:** У підручниках для 4-6 класів ця тема вводиться через практичні вправи. Наприклад, у підручнику для 6-го класу пропонується відновити речення, поставивши слова у Давальному відмінку: `Старший брат допомагає ... не тільки мені, а й (молодша сестра)` (Source 8: `6-klas-ukrmova-betsa-2023_s0126`). Це одразу тренує правильне керування і з займенником, і з іменником. Аналогічно, вправа `телефоную (кому?) друг Юрко` з підручника для 4 класу тренує використання дієслова `дзвонити` (Source 13: `4-klas-ukrayinska-mova-ponomarova-2021-1_s0045`).
+- **Закріплення у старших класах:** У старших класах (8-11 клас) увага акцентується на складних випадках керування та виправленні поширених помилок. Підручник для 8-го класу прямо зазначає: "Слова **дякувати**, вибачати, дорікати вимагають після себе давального відмінка (к о м у ? ч о м у ?)" і наводить таблицю з правильними та неправильними формами: `дякувати директорові` (правильно) vs. `дякувати директора` (неправильно) (Source 35: `8-klas-ukrmova-zabolotnyi-2025_s0050`). Аналогічну таблицю містить підручник для 11 класу: `дякувати (кому?) ... лікарю (не лікаря)` (Source 24: `11-klas-ukrajinska-mova-avramenko-2019_s0087`).
 
-2.  **Expansion and Grouping (Grade 6):** The list of verbs expands. Бетса (Source 5) provides exercises grouping verbs by the case they govern. For the Dative case (`Д. в.`), verbs like `вибачати`, `дякувати`, `віддячити`, and `допомогти` are listed together, reinforcing the pattern.
-    *   Example exercise: "Старший брат допомагає... не тільки мені, а й (молодша сестра)" → "Старший брат допомагає... не тільки мені, а й **молодшій сестрі**" (Source 1).
-
-3.  **Dative for "Liking" and Age (Grades 5-6):** The impersonal construction `(комусь) подобається (щось)` is introduced early and consistently. This teaches that the experience of "liking" happens *to someone* (Dative).
-    *   Example: "Мені подобається кімната моєї старшої сестри" (Source 1).
-    *   Similarly, age is expressed as something that *is to someone*: "Моєму старшому братові 15 років" (Source 4), "Скільки тобі років?" (Source 11).
-
-The core pedagogical method is pattern recognition through exercises that require students to put nouns and pronouns into the correct Dative form after specific, commonly used verbs. The term "indirect object" is not always explicitly used at this level; instead, the focus is on the question `кому?`.
+Отже, шкільний підхід є послідовним: від простого запам'ятовування та практики в молодших класах до свідомого аналізу та виправлення помилок у старших.
 
 ## Повна парадигма (Full Paradigm)
 
-The Dative case (`Давальний відмінок`) is used for the indirect object—the recipient or beneficiary of an action.
+Ключем до правильного вживання цих дієслів є опанування форм Давального відмінка для займенників та іменників, що виступають у ролі адресата дії.
 
-### Personal Pronouns (Особові займенники)
+### 1. Особові займенники (Personal Pronouns)
+Особові займенники у Давальному відмінку є найбільш частотними з цими дієсловами.
 
-This is the most frequent use-case and should be memorized.
+| Називний (Хто?) | Давальний (Кому?) | Приклад |
+| :--- | :--- | :--- |
+| я | **мені** | Дякую **мені**? Ні, дякую **тобі**! |
+| ти | **тобі** | Я **тобі** подзвоню. |
+| він, воно | **йому** | Треба **йому** допомогти. |
+| вона | **їй** | Подзвони **їй** завтра. |
+| ми | **нам** | Хто **нам** допоможе? |
+| ви | **вам** | Дуже **вам** дякую! |
+| вони | **їм** | Я **їм** не вірю. |
+(Source 7: `ext-ulp_youtube-252`; Source 32: `ext-other_blogs-10`)
 
-| Nominative (Хто?) | Dative (Кому?) |
-| :--- | :--- |
-| я | **мені** |
-| ти | **тобі** |
-| він, воно | **йому** |
-| вона | **їй** |
-| ми | **нам** |
-| ви | **вам** |
-| вони | **їм** |
+### 2. Іменники (Nouns)
+Іменники в Давальному відмінку вказують на особу чи предмет, до якого спрямована дія. Закінчення залежать від роду та відміни.
 
-### Nouns (Іменники)
+**Чоловічий рід (ІІ відміна)**
+| Група | Закінчення | Приклад (Н.в.) | Приклад (Д.в.) |
+| :--- | :--- | :--- | :--- |
+| Тверда | **-ові**, **-у** | брат, директор | Я допомагаю **братові** / **брату**. |
+| М'яка | **-еві**, **-ю** | вчитель, Андрій | Дякую **вчителеві** / **вчиталю**. Подзвони **Андрієві** / **Андрію**. |
+| Мішана | **-еві**, **-ю** | товариш | Він допоміг **товаришеві** / **товаришу**. |
+*Примітка: Форми на `-ові`, `-еві` є кращими для назв істот, щоб уникнути неоднозначності, але обидві форми є граматично правильними (Source 36: `4-klas-ukrayinska-mova-ponomarova-2021-1_s0043`).*
 
-**Feminine Nouns (Іменники жін. роду)**
-
-For feminine nouns, the Dative endings are identical to the Locative endings. This includes the consonant mutations **г → з**, **к → ц**, **х → с** in the stem before the ending. (Source 12, Source 41).
-
-| Declension | Stem Ends In | Nominative (Хто? Що?) | Dative (Кому? Чому?) | Example |
+**Жіночий рід (І відміна)**
+| Група | Чергування | Закінчення | Приклад (Н.в.) | Приклад (Д.в.) |
 | :--- | :--- | :--- | :--- | :--- |
-| I (Feminine) | Hard Consonant | мам**а**, сестр**а** | мам**і**, сестр**і** | Я дзвоню **мамі**. |
-| I (Feminine) | Soft Consonant / -я | земл**я**, мрі**я** | земл**і**, мрі**ї** | Він служить **Україні**. |
-| I (Feminine) | **г, к, х** | кни**г**а, подру**г**а | кни**з**і, подру**з**і | Я написав листа **подрузі**. |
-| I (Feminine) | **г, к, х** | ру**к**а, донь**к**а | ру**ц**і, донь**ц**і | Батьки подарували **доньці** собаку. |
-| III (Feminine) | Consonant | ніч, любов | ноч**і**, любв**і** | Радію ночі. |
+| Тверда | г→з, к→ц, х→с | **-і** | подру**г**а, ма**м**а | Дякую подру**зі**. Дзвоню ма**мі**. |
+| М'яка | | **-і** | сестр**я**, Марі**я** | Допомагаю сестр**і**. Телефоную Марі**ї**. |
+| Мішана | | **-і** | пло**щ**а | <!-- VERIFY --> |
+(Source 34: `4-klas-ukrayinska-mova-ponomarova-2021-1_s0046`; Source 22: `6-klas-ukrmova-betsa-2023_s0092`)
 
-**Masculine Nouns (Іменники чол. роду)**
+## Частотність і пріоритети
 
-Masculine nouns have parallel endings `-ові, -еві` and `-у, -ю`. The `-ові, -еві` endings are preferred to avoid ambiguity and are common in formal and written language (Source 20).
+Для рівня А2 пріоритетним є засвоєння найуживаніших конструкцій.
 
-| Declension | Stem Ends In | Nominative (Хто? Що?) | Dative (Кому? Чому?) | Example |
-| :--- | :--- | :--- | :--- | :--- |
-| II (Masculine) | Hard Consonant | брат, директор | брат**ові** / брат**у** | Я допомагаю **братові**. |
-| II (Masculine) | Soft Consonant | учитель | учител**еві** / учител**ю** | Подякуйте **учителеві**. |
-| II (Masculine) | -й | герой, водій | геро**єві** / геро**ю** | Слава **героям**! |
-
-## Частотність і пріоритети (Frequency & Priorities)
-
-The learner should prioritize mastering the Dative case for personal pronouns (`мені, тобі, йому`...) as they are extremely common.
-
-The three key verbs from the topic title are the immediate priority:
-1.  **допомагати (кому?)** - to help (someone)
-2.  **дякувати (кому?)** - to thank (someone)
-3.  **дзвонити / телефонувати (кому?)** - to call (someone)
-
-Following these, the next most crucial structures are:
-*   **подобатися (кому?)** - to be pleasing (to someone), i.e., to like.
-    *   *Мені подобається ця музика.*
-*   **Telling Age:** The construction for age is fundamental.
-    *   *Скільки тобі років? — Мені двадцять років.*
-*   **Verbs of Giving/Telling:** Any verb involving a recipient.
-    *   *давати (кому?)* - to give
-    *   *казати / говорити (кому?)* - to say / to tell
-    *   *писати (кому?)* - to write
-    *   *відповідати (кому?)* - to answer (Source 41)
+1.  **Найвищий пріоритет:** Займенникові форми `дякую тобі` та `дякую вам`. Це основа ввічливого спілкування. Також сюди належать прохання `допоможи мені` та питання `тобі допомогти?`.
+2.  **Високий пріоритет:** Усі інші особові займенники в Давальному відмінку (`йому, їй, нам, їм`). Наприклад, `подзвони йому`, `скажи їй`, `нам треба`.
+3.  **Середній пріоритет:** Іменники, що позначають членів родини та друзів: `мамі, татові, сестрі, братові, другу`. Наприклад: `Я допомагаю мамі`, `Я дзвоню другові`.
+4.  **Низький пріоритет:** Менш уживані іменники та складніші конструкції. Для рівня А2 достатньо впевнено володіти займенниками та базовими іменниками.
 
 ## Типові помилки L2 (Common L2 Errors)
 
-English speakers often make the mistake of applying the direct object structure (Subject-Verb-Object) to Ukrainian verbs that require an indirect object in the Dative case.
+Основна помилка англомовних учнів — це калька з англійської граматичної структури, де дієслова "thank", "help", "call" керують прямим додатком (Accusative case). В українській мові ці дієслова вимагають непрямого додатка в Давальному відмінку.
 
-| ❌ Помилково | ✅ Правильно | Чому |
+| ❌ Помилково (Accusative) | ✅ Правильно (Dative) | Чому |
 | :--- | :--- | :--- |
-| Я допомагаю **його**. (Accusative) | Я допомагаю **йому**. (Dative) | In English, "help" takes a direct object ("help him"). In Ukrainian, `допомагати` governs the Dative case—you give help *to someone*. (Source 41) |
-| Я дякую **тебе**. (Accusative) | Я дякую **тобі**. (Dative) | This is a direct calque of English "I thank you" and often reinforced by the Russian `благодарю тебя`. Ukrainian `дякувати` requires the Dative case. (Source 10) |
-| Він дзвонить **її**. (Accusative) | Він дзвонить **їй**. (Dative) | Like `допомагати`, the verb `дзвонити` (to call) takes an indirect object in Ukrainian. You give a call *to someone*. (Source 41) |
-| Я пишу лист **подруги**. (Genitive) | Я пишу лист **подрузі**. (Dative) | Learners confuse the recipient (Dative) with possession (Genitive). You write a letter *to a friend*, not *of a friend*. |
-| Вона розповіла історію **дочкі**. | Вона розповіла історію **доньці**. | Failure to apply the consonant mutation **к → ц** in feminine nouns before the `-і` ending. (Source 12, Source 41) |
-| Дай **директор** цей документ. (Nominative) | Дай **директору** / **директорові** цей документ. (Dative) | Forgetting to decline the noun recipient at all, leaving it in the dictionary (Nominative) form. |
+| Я дякую **тебе**. | Я дякую **тобі**. | В українській мові `дякувати` вимагає Давального відмінка (`кому?`), на відміну від англійського "thank *you*" (прямий додаток). (Source 35: `8-klas-ukrmova-zabolotnyi-2025_s0050`) |
+| Ми дякували **директора**. | Ми дякували **директорові** (або **директору**). | Те саме правило стосується й іменників. Помилка виникає через спробу перекласти "we thanked the director" буквально. (Source 24: `11-klas-ukrajinska-mova-avramenko-2019_s0087`) |
+| Я хочу допомогти **її**. | Я хочу допомогти **їй**. | Дієслово `допомагати` також керує Давальним відмінком (`кому?`), а не Знахідним (`кого?`). |
+| Ти можеш подзвонити **його**? | Ти можеш подзвонити **йому**? | `Дзвонити` в значенні "робити телефонний дзвінок" вимагає Давального відмінка адресата. |
+| Вибачте **мене**! | Вибачте **мені**! | Як і `дякувати`, дієслово `вибачати` в значенні "прощати комусь" керує Давальним відмінком. `Вибачте мене` є калькою з російської. (Source 24: `11-klas-ukrajinska-mova-avramenko-2019_s0087`) |
+| Він сміявся **наді мною**. | Він сміявся **з мене**. | Хоча це не дієслово з давальним відмінком, це поширена помилка керування. Українська мова вимагає `сміятися з (кого?)`. (Source 24: `11-klas-ukrajinska-mova-avramenko-2019_s0087`) |
 
 ## Деколонізаційні застереження (Decolonization Notes)
 
-It is crucial to teach Ukrainian grammar on its own terms, not as a variant of Russian. The Dative case provides clear points of distinction.
+**Ключова відмінність між українською та російською мовами полягає у керуванні дієслова `дякувати`.** Це важливий маркер граматичної грамотності та поширене джерело помилок при інтерференції з російською.
 
-1.  **The `дякую тебе` Error:** The incorrect phrase `дякую тебе` is a direct calque from Russian `благодарю тебя`. The correct Ukrainian form is **`дякую тобі`**. This is a non-negotiable rule and a clear marker of authentic Ukrainian speech versus Surzhyk (mixed language).
+1.  **`Дякувати` (укр.) vs. `Благодарить` (рос.)**:
+    - **Українською:** `дякувати` **КОМУ?** (Давальний відмінок).
+      - `Я дякую **другові**`.
+      - `Вона дякує **вчительці**`.
+    - **Російською:** `благодарить` **КОГО?** (Знахідний відмінок).
+      - `Я благодарю **друга**`.
+      - `Она благодарит **учительницу**`.
 
-2.  **Parallel Endings in Masculine Dative:** Ukrainian has productive parallel endings **`-ові`, `-еві`** and **`-у`, `-ю`** for masculine nouns in the Dative singular (e.g., `братові` / `брату`). Russian only has `-у` / `-ю` (`брату`). Using the `-ові` ending is a distinct feature of Ukrainian grammar and is often preferred in writing to avoid ambiguity (Source 20, Source 23). The writer should use and teach both forms, presenting `-ові/-еві` as a fully valid and often preferred option.
-    *   Ukrainian: `Я написав листа **директорові**.`
-    *   Russian: `Я написал письмо директору.`
+    Конструкція `дякую вас` або `дякую його` в українській мові є грубою граматичною помилкою і, як правило, результатом прямого калькування російської моделі керування (Source 35: `8-klas-ukrmova-zabolotnyi-2025_s0050`). Слід завжди наголошувати, що українська мова тут має власну, відмінну від російської, синтаксичну норму.
 
-3.  **Verb choice:** While `дзвонити` is used for "to call", the verb `телефонувати` is also extremely common and unambiguously means "to call on the phone". Encouraging its use reinforces purely Ukrainian lexicon. Both govern the Dative case: `телефонувати (кому?)` (Source 41).
+2.  **`Дзвонити` та `Допомагати`**:
+    - У випадку дієслів `дзвонити` (`звонить`) та `допомагати` (`помогать`), обидві мови використовують Давальний відмінок:
+      - `дзвонити **мамі**` — `звонить **маме**`
+      - `допомагати **братові**` — `помогать **брату**`
+    - Незважаючи на цю схожість, **ніколи не слід** подавати українську норму як похідну від російської. Українська граматика має власну логіку та історичний розвиток. Акцент завжди має бути на внутрішніх правилах української мови.
 
-4.  **Imperatives:** While not a dative rule, it's related to politeness formulas. Avoid the Russian-influenced `Давайте + Verb` (e.g., `Давайте подякуємо`). The correct Ukrainian imperative is formed with `-імо` or `-мо` (e.g., `подякуймо`). This avoids a common Russian calque noted in Source 19.
+3.  **Слово `спасибі`**:
+    - Слово `спасибі` є синонімом до `дякую` і походить від давнього "Спаси, Боже". Воно не вимагає після себе додатка, хоча може вживатися в конструкціях `спасибі тобі/вам`. Дієслово `дякую` походить від європейських мов (пор. нім. `Danke`, пол. `Dziękuję`) і є стилістично нейтральним та найуживанішим варіантом (Source 2: `ext-ulp_youtube-249`).
 
 ## Природні приклади (Natural Examples)
 
-These examples are drawn from the provided textbook sources and demonstrate natural usage.
+**Група 1: `Дякувати` + займенники та іменники**
+- `Дякую тобі за то, що ти завжди зі мною.` (Source 2: `ext-ulp_youtube-249`)
+- `Дуже дякуємо вам.` (Source 2: `ext-ulp_youtube-249`)
+- `Щиро дякую всім учасникам!` (Source 35: `8-klas-ukrmova-zabolotnyi-2025_s0050`)
+- `Треба подякувати батьків за підтримку.` -> Правильно: `Треба подякувати **батькам** за підтримку.` (Source 35, виправлена помилка)
+- `Дякувати (кому?) лікарю.` (Source 24: `11-klas-ukrajinska-mova-avramenko-2019_s0087`)
 
-**Group 1: Допомагати (to help)**
-*   Старший брат допомагає перекладати тексти... не тільки **мені**, а й **молодшій сестрі**. (Source 1)
-*   Вчителька це помітила і запропонувала **мені** допомогу. (Source 6)
-*   Медсестри допомагають **пацієнтам**. (Based on Source 41)
+**Група 2: `Допомагати` + займенники та іменники**
+- `Старший брат допомагає перекладати тексти... не тільки мені, а й молодшій сестрі.` (Source 8: `6-klas-ukrmova-betsa-2023_s0126`)
+- `Якщо живеш у складних умовах, держава має докладати ще більше зусиль, аби допомогти тобі розвиватися.` (Source 9: `6-klas-ukrmova-betsa-2023_s0230`)
+- `Вони завжди готові прийти (кому?) ... на допомогу.` -> `Вони завжди готові прийти **тобі** на допомогу.` (Source 10: `4-klas-ukrayinska-mova-varzatska-2021-1_s0109`)
 
-**Group 2: Дякувати (to thank)**
-*   Назар подякував **учительці** за допомогу. (Source 10)
-*   Завжди дякуйте **батькам**. (Source 10)
-*   Місис Бінкі вчила її завжди дякувати **тим**, хто зробив тобі щось добре. (Source 32)
-*   Я дякую **тобі**! (Based on Source 10)
+**Група 3: `Дзвонити` (`телефонувати`) + іменники**
+- `Я телефоную другу Юркові.` (Source 13: `4-klas-ukrayinska-mova-ponomarova-2021-1_s0045`, приклад утворено з вправи)
+- `Вам треба зателефонувати, це дуже важливо.` (Source 2: `ext-ulp_youtube-249`, приклад показує дію, спрямовану на адресата, хоч він і не названий прямо)
 
-**Group 3: Дзвонити / Телефонувати (to call)**
-*   Я дзвоню **мамі**. (Source 41)
-*   Директор телефонує **колезі**. (Source 41)
-*   Він дзвонить **своїй дівчині**. (Based on Source 41)
-
-**Group 4: Подобатися (to like)**
-*   **Мені** подобається кімната моєї старшої сестри. (Source 1)
-*   Що **тобі** не подобається в лісі? (Source 7)
-*   Класична музика подобається не тільки **татові**, а й **мамі**. (Source 1)
-
-**Group 5: Telling Age**
-*   **Цій маленькій дівчинці** 5 років. (Source 4)
-*   **Моєму старшому братові** 15 років. (Source 4)
-*   Скільки **тобі** років? (Source 11)
+**Група 4: Інші конструкції з Давальним відмінком**
+- `Мені подобається лінво.` (Source 7: `ext-ulp_youtube-252`)
+- `Мені здається, що планшет — це просто великий смартфон.` (Source 7: `ext-ulp_youtube-252`)
+- `Тобі варто встановити додаток на телефон.` (Source 7: `ext-ulp_youtube-252`)
+- `Мені треба купити новий ноутбук.` (Source 7: `ext-ulp_youtube-252`)
 
 ## Рекомендації для вправ (Activity Concepts)
 
-The learning sequence should move from recognition to controlled production to free production.
+**Phase 1: Розпізнавання та проста заміна (Pronouns)**
+1.  **Fill-in-the-blanks:** Дати речення з пропущеним займенником. Учень має вибрати правильну форму (мені/тобі/йому/їй/нам/вам/їм).
+    *   `Я дзвоню ____ (ти) кожного дня.` → `тобі`
+    *   `Вона допомагає ____ (ми) з проектом.` → `нам`
+2.  **Transformation Drill:** Перетворити речення, замінивши підмет на іншу особу.
+    *   `Я дякую вчителю.` → `Він дякує вчителю.` `Ми дякуємо...`
+    *   `Мені треба подзвонити.` → `Тобі треба...` → `Йому треба...`
 
-*   **Phase 1: Substitution Drills.** Provide a sentence with a blank and a noun in the nominative case. The student must provide the correct dative form. This solidifies endings.
-    *   *Я допомагаю \_\_\_\_\_. (брат)* → Я допомагаю **братові/брату**.
-    *   *Він дзвонить \_\_\_\_\_. (сестра)* → Він дзвонить **сестрі**.
-    *   *Ми дякуємо \_\_\_\_\_. (вчителі, pl.)* → Ми дякуємо **вчителям**.
-    *   (Based on exercises in Source 1, 10, 15)
+**Phase 2: Керування з іменниками (Nouns)**
+1.  **Choice Drill:** Дати речення з іменником у двох відмінках (Давальному та Знахідному), учень має обрати правильний.
+    *   `Він допоміг (брата / братові).` → `братові`
+    *   `Ми дякуємо (вчительку / вчительці).` → `вчительці`
+2.  **Sentence Completion:** Дати початок речення, учень має завершити його, поставивши іменник з дужок у Давальний відмінок.
+    *   `Я хочу подякувати... (мій друг).` → `...моєму другові.`
+    *   `Подзвони, будь ласка,... (бабуся).` → `...бабусі.`
 
-*   **Phase 2: Question & Answer.** Practice with questions using `Кому?`. This makes the use of the dative case communicative.
-    *   *Кому ти дзвониш?* → *Я дзвоню **другові**.*
-    *   *Кому допомагає лікар?* → *Лікар допомагає **пацієнту**.*
-    *   *Скільки років твоїй сестрі?* → *Моїй сестрі десять років.*
+**Phase 3: Вільна практика (Production)**
+1.  **Question-Answer:** Поставити відкриті запитання, що спонукають до використання цільових конструкцій.
+    *   `Кому ти дзвониш найчастіше?` → `Я найчастіше дзвоню мамі.`
+    *   `Кому ти допомагаєш із домашнім завданням?` → `Я допомагаю молодшому братові.`
+    *   `Кому ти хочеш подякувати за цей рік?` → `Я хочу подякувати моїм друзям.`
 
-*   **Phase 3: Sentence Completion/Creation.** Provide a verb and a recipient, and have the student create a logical sentence.
-    *   Prompt: `(дякувати, мама)`
-    *   Response: `Я дякую **мамі** за смачну вечерю.`
-    *   Prompt: `(подобатися, я, фільм)`
-    *   Response: `**Мені** дуже подобається цей фільм.`
+## Зв'язки з іншими темами
 
-## Зв'язки з іншими темами (Connections)
+- **Попередня тема:** [Давальний відмінок іменників та займенників (dative-case)](dative-case). Знання відмінкових закінчень є обов'язковою передумовою.
+- **Попередня тема:** [Особові займенники (personal-pronouns)](personal-pronouns).
+- **Наступна тема:** [Дієслова, що вимагають Родового відмінка (verbs-with-genitive)](verbs-with-genitive) (напр., `бажати`, `шукати`, `потребувати`). Це дозволить порівняти різні моделі керування.
+- **Суміжна тема:** [Безособові конструкції на -но, -то та модальні слова (impersonal-constructions)](impersonal-constructions) (напр., `мені треба`, `тобі варто`, `йому можна`).
 
-*   **Prerequisites:** A solid understanding of **Nouns** and **Personal Pronouns** in the Nominative case is essential.
-*   **Accusative Case:** The Dative case should be explicitly contrasted with the **Accusative case** (прямий додаток, direct object). A sentence like `Я даю книгу (Acc.) сестрі (Dat.)` clearly shows the difference: the Accusative is the thing being acted upon, while the Dative is the recipient.
-*   **Locative Case:** For feminine nouns, the identity of Dative and **Locative** endings (`в аптеці` / `допомогти аптеці`) is a useful shortcut and pattern to highlight (Source 41).
-*   **Age and States:** This topic is the gateway to expressing age (`Мені 20 років`) and internal states (`Мені холодно`, `Мені весело`), which are fundamental for personal expression.
-
-## Пов'язані статті (Related Articles)
-*   `grammar/a1/personal-pronouns`
-*   `grammar/a2/accusative-case-direct-object`
-*   `grammar/a2/locative-case-prepositions`
-*   `grammar/a2/telling-age`
-*   `grammar/a1/introduction-to-cases`
+## Пов'язані статті
+- [[dative-case|Давальний відмінок]]
+- [[personal-pronouns|Особові займенники]]
+- [[syntactic-government|Синтаксичне керування]]

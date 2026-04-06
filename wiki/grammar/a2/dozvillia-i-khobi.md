@@ -4,179 +4,190 @@
 slug: dozvillia-i-khobi
 domain: grammar/a2
 tracks: [a2, b1]
-sources: ["5-klas-ukrmova-uhor-2022-1_s0048", "5-klas-ukrmova-zabolotnyi-2023_s0218", "8-klas-ukrmova-zabolotnyi-2025_s0014", "5-klas-ukrmova-avramenko-2022_s0035", "5-klas-ukrmova-litvinova-2022_s0060", "5-klas-ukrmova-uhor-2022-1_s0008", "5-klas-ukrmova-uhor-2022-1_s0077", "5-klas-ukrmova-uhor-2022-1_s0094", "5-klas-ukrmova-zabolotnyi-2023_s0154", "6-klas-ukrmova-golub-2023_s0177", "6-klas-ukrmova-zabolotnyi-2020_s0077", "8-klas-ukrmova-avramenko-2025_s0044", "8-klas-ukrmova-avramenko-2025_s0119", "9-klas-ukrajinska-mova-avramenko-2017_s0063", "10-klas-ukrajinska-mova-avramenko-2018_s0232", "11-klas-ukrmova-zabolotnyi-2019_s0202", "1-klas-bukvar-bolshakova-2018-2_s0034", "2-klas-ukrmova-bolshakova-2019-1_s0057", "2-klas-ukrmova-bolshakova-2019-1_s0061", "2-klas-ukrmova-bolshakova-2019-1_s0068", "2-klas-ukrmova-vashulenko-2019-1_s0134", "5-klas-ukrmova-avramenko-2022_s0151", "5-klas-ukrmova-golub-2022_s0192", "5-klas-ukrmova-golub-2022_s0246", "5-klas-ukrmova-uhor-2022-1_s0071", "5-klas-ukrmova-uhor-2022-1_s0092", "5-klas-ukrmova-uhor-2022-1_s0100", "5-klas-ukrmova-zabolotnyi-2023_s0040", "6-klas-ukrmova-avramenko-2023_s0127", "6-klas-ukrmova-avramenko-2023_s0190", "6-klas-ukrmova-betsa-2023_s0021", "6-klas-ukrmova-betsa-2023_s0024", "6-klas-ukrmova-betsa-2023_s0026", "6-klas-ukrmova-betsa-2023_s0062", "6-klas-ukrmova-betsa-2023_s0123", "6-klas-ukrmova-betsa-2023_s0204", "6-klas-ukrmova-betsa-2023_s0218", "6-klas-ukrmova-betsa-2023_s0229", "6-klas-ukrmova-golub-2023_s0014", "6-klas-ukrmova-golub-2023_s0107"]
-compiled: 2026-04-06
+sources: [ext-ulp_youtube-197, ext-ulp_youtube-199, ext-ulp_youtube-194, ext-ulp_youtube-206, ext-ulp_youtube-136, ext-ulp_youtube-159, ext-ulp_youtube-193, ext-ulp_youtube-107, ext-ulp_youtube-246, 5-klas-ukrmova-litvinova-2022_s0060, 10-klas-ukrajinska-mova-avramenko-2018_s0232, 6-klas-ukrmova-zabolotnyi-2020_s0077, 5-klas-ukrmova-uhor-2022-1_s0048, 6-klas-ukrmova-golub-2023_s0195, 5-klas-ukrmova-uhor-2022-1_s0098, 5-klas-ukrmova-zabolotnyi-2023_s0218, 7-klas-ukrmova-litvinova-2024_s0153, 3-klas-ukrainska-mova-savchuk-2020-2_s0125, ext-ulp_youtube-103, 5-klas-ukrmova-uhor-2022-1_s0121, 6-klas-ukrmova-betsa-2023_s0062, 5-klas-ukrmova-uhor-2022-1_s0071, 6-klas-ukrmova-zabolotnyi-2020_s0010, 6-klas-ukrmova-betsa-2023_s0024, 2-klas-ukrmova-bolshakova-2019-1_s0061, 11-klas-ukrajinska-mova-avramenko-2019_s0201, 6-klas-ukrmova-betsa-2023_s0021, 6-klas-ukrmova-golub-2023_s0014, 6-klas-ukrmova-golub-2023_s0138, 5-klas-ukrmova-uhor-2022-1_s0092, 11-klas-ukrmova-zabolotnyi-2019_s0322, 11-klas-istoriya-ukr-hlibovska-2024_s0308, 5-klas-ukrlit-zabolotnyi-2022_s0120, 6-klas-ukrmova-betsa-2023_s0026, 5-klas-ukrmova-zabolotnyi-2023_s0154, 9-klas-ukrajinska-mova-avramenko-2017_s0188, 5-klas-ukrmova-uhor-2022-1_s0072]
+compiled: 2026-04-07
 -->
 
 ## Як це пояснюють у школі (How Schools Teach This)
-The topic of hobbies and leisure activities is introduced early in Ukrainian schools and builds in complexity. It serves as a practical context for teaching fundamental case usage and verb conjugations.
 
-**In Grades 5-6**, the focus is on building vocabulary for common activities and using simple, high-frequency grammatical structures.
-- **Basic Verbs + Nouns:** Initial exposure comes through simple verb phrases like `любити читати` (to like to read), `дивитися фільми` (to watch movies), `слухати музику` (to listen to music), and `грати у футбол` (to play football). These constructions typically use the Accusative case for the object of the activity (Source: `5-klas-ukrmova-zabolotnyi-2023_s0154`).
-- **Instrumental Case Introduction:** The concept of using the Instrumental case to describe an activity is introduced with the verb `займатися` (to be engaged in). Підручник Betsa (2023) for Grade 6 explicitly provides tables for `займатися + [вид спорту]`, showing the Instrumental endings for masculine (`баскетболом`, `футболом`) and neuter (`плаванням`, `фехтуванням`) nouns (Джерело: `6-klas-ukrmova-betsa-2023_s0021`). The verb `захоплюватися` (to be fascinated by/keen on) + Instrumental is also introduced, e.g., `Моя сестра Наталка захопилася фотографією` (Джерело: `6-klas-ukrmova-betsa-2023_s0021`).
-- **Dative Construction `Мені подобається`:** This impersonal construction is taught as a primary way to express preference. Textbooks provide examples like `Мені подобається картина` (Source: `5-klas-ukrmova-uhor-2022-1_s0048`) and `Степану подобається футбол` (Source: `6-klas-ukrmova-betsa-2023_s0021`), demonstrating that the person is in the Dative case and the liked object is in the Nominative case.
+The topic of hobbies (`хобі`, `захоплення`) and leisure (`дозвілля`) is introduced through a functional, verb-centric approach. Ukrainian school materials and resources for learners focus on a core set of verbs that govern specific grammatical constructions, rather than teaching abstract case rules in isolation.
 
-**In Grades 7-8 and beyond**, this vocabulary is recycled to illustrate more complex grammar. For instance, dialogues about making plans are used to teach the imperative mood (`Зустріньмося біля театру`, Source: `5-klas-ukrmova-uhor-2022-1_s0092`) and one-part sentences (`Люблю мудрість`, Source: `8-klas-ukrmova-avramenko-2025_s0119`).
+The pedagogical progression generally follows this pattern:
+1.  **General Preference Verbs:** The simplest structure introduced is using verbs like `любити` (to love), `подобатися` (to like), and `обожнювати` (to adore) followed by an infinitive verb. This allows learners to express preferences without complex case government. For example, "Я люблю читати книги" (I love to read books) (Source 14).
 
-The pedagogical approach is communicative and contextual. Students learn these structures by discussing their own lives and the lives of others through dialogues, short texts, and situational exercises (Source: `5-klas-ukrmova-zabolotnyi-2023_s0154`).
+2.  **Core "Hobby" Verbs:** A specific set of verbs is explicitly taught to cover the majority of activities (Source 8, Source 20). These are presented as chunks with their required prepositions and cases:
+    *   `займатися` + Instrumental case (for sports, arts, practices): `займатися спортом`, `займатися йогою` (Source 8).
+    *   `грати в/у` + Accusative case (for games and team sports): `грати у футбол` (Source 8).
+    *   `грати на` + Locative case (for musical instruments): `грати на гітарі` (Source 8).
+    *   `ходити в/на` + Accusative case (for regular visits to places): `ходити в кіно`, `ходити на концерти` (Source 8).
+    *   `кататися на` + Locative case (for riding things): `кататися на велосипеді` (Source 8).
+
+3.  **Activity Nouns:** Textbooks introduce nouns derived from verbs, often ending in `-ння` (e.g., `малювання`, `плавання`, `читання`), and use them with verbs like `захоплюватися` (to be interested in) which also requires the Instrumental case (Source 3, Source 30). For example, `Моя сестра Наталка захопилася фотографією` (My sister Natalka got into photography) (Source 30).
+
+4.  **Contextual Application:** This grammar is reinforced through dialogues and texts about free time, weekend plans, and personal interests (Source 1, Source 23, Source 34). Exercises often involve asking and answering questions like "Що ти любиш робити у вільний час?" (What do you like to do in your free time?) (Source 8) or describing a friend's hobbies (Source 30). Textbooks for grades 5-6 are rich with lists of hobbies and simple sentence construction exercises (Source 14, Source 38, Source 39).
+
+The key is that learners acquire these as fixed constructions (`грати в теніс`, `займатися музикою`) before they have necessarily mastered the full declension tables for the Instrumental or Locative cases.
 
 ## Повна парадигма (Full Paradigm)
-Expressing hobbies in Ukrainian involves several key verb patterns, each requiring a different grammatical case. Mastering these patterns is crucial for natural expression.
 
-### Pattern 1: Verbs requiring the **Instrumental Case** (`Орудний відмінок`)
-These verbs describe being engaged in, interested in, or fascinated by an activity. The activity itself is expressed as a noun in the Instrumental case.
+Talking about hobbies in Ukrainian revolves around a set of key verbs, each requiring a specific grammatical structure.
 
-**Key Verbs:** `займатися`, `цікавитися`, `захоплюватися`
+### 1. Verbs of General Preference + Infinitive
 
-**Conjugation (`-атися` / `-ітися` verbs, II Conjugation)**
-| Особа | займ**а**тися | цік**а**витися | захопл**ю**ватися |
+This is the most straightforward construction. The second verb is always in the infinitive.
+
+| Verb | Meaning | Example Sentence | Source |
 | :--- | :--- | :--- | :--- |
-| я | займа**ю**ся | цікавл**ю**ся | захопл**юю**ся |
-| ти | займа**єш**ся | цікав**иш**ся | захопл**юєш**ся |
-| він/вона/воно | займа**є**ться | цікав**и**ться | захопл**ює**ться |
-| ми | займа**ємо**ся | цікав**имо**ся | захопл**юємо**ся |
-| ви | займа**єте**ся | цікав**ите**ся | захопл**юєте**ся |
-| вони | займа**ють**ся | цікавл**ять**ся | захопл**юють**ся |
+| `любити` | to love/like | Я **люблю читати** книги. | Source 14 |
+| `подобатися` | to like (impersonal) | Мені **подобається обирати** собі одяг. | Source 27 |
+| `обожнювати` | to adore | Хтось **обожнює кіно**, а хтось — баскетбол. | Source 31 |
 
-**Instrumental Case Formation (Examples)**
-| Nominative | Stem + Ending | Instrumental | Example Phrase |
+### 2. Core Hobby Verbs & Their Government
+
+This table outlines the primary verbs used for specific types of hobbies and the grammatical case or preposition they require.
+
+| Verb | Construction | Example | Source |
 | :--- | :--- | :--- | :--- |
-| спорт (m) | спорт- | **спортом** | займатися **спортом** |
-| футбол (m) | футбол- | **футболом** | захоплюватися **футболом** |
-| теніс (m) | теніс- | **тенісом** | займатися **тенісом** |
-| музика (f) | музик- | **музикою** | цікавитися **музикою** |
-| фотографія (f) | фотографіj- | **фотографією** | захоплюватися **фотографією** |
-| плавання (n) | плаванн- | **плаванням** | займатися **плаванням** |
-| малювання (n) | малюванн- | **малюванням** | цікавитися **малюванням** |
-| танці (pl) | танц- | **танцями** | займатися **танцями** |
+| **`займатися`** | `займатися` + **Noun (Instrumental)** | Я **займаюся спортом**. | Source 8 |
+| **`захоплюватися`** | `захоплюватися` + **Noun (Instrumental)** | У дитинстві я **захоплювалась малюванням**. | Source 3 |
+| **`цікавитися`** | `цікавитися` + **Noun (Instrumental)** | Він **зацікавився** також іншими речами: **філософією, наукою, політикою**. | Source 3 |
+| **`грати`** (sports/games) | `грати` + **`в/у`** + **Noun (Accusative)** | Степан **грає у футбол** на футбольному полі. | Source 30 |
+| **`грати`** (instruments) | `грати` + **`на`** + **Noun (Locative)** | Я **граю на гітарі**. | Source 8 |
+| **`кататися`** | `кататися` + **`на`** + **Noun (Locative)** | Взимку він любить **кататися на ковзанах**. | Source 16 |
+| **`ходити`** (regularly) | `ходити` + **`в/на`** + **Noun (Accusative)** | Ми з друзями часто **ходимо в бібліотеку**. | Source 14 |
+| **`дивитися`** | `дивитися` + **Noun (Accusative)** | Я **дивлюся серіали**. | Source 8 |
+| **`слухати`** | `слухати` + **Noun (Accusative)** | У четвер ми будемо **слухати українську музику**. | Source 9 |
 
-### Pattern 2: Verbs requiring the **Accusative Case** (`Знахідний відмінок`)
-These verbs express a direct feeling or action toward an object or activity. This is the most direct parallel to the English "I love/hate [something]".
+### 3. Case Formation for Hobbies
 
-**Key Verbs:** `любити`, `обожнювати`, `ненавидіти`, `дивитися`, `читати`, `слухати`
+#### Instrumental Case with `займатися`, `захоплюватися`, `цікавитися`
 
-**Accusative Case Examples**
-| Verb | Example Phrase (Noun) | Example Phrase (Verbal Noun / Infinitive) |
-| :--- | :--- | :--- |
-| любити | Я люблю **книги**. | Я люблю **читати**. (Source: `5-klas-ukrmova-uhor-2022-1_s0048`) |
-| дивитися | Ми дивимося **фільм**. | - |
-| слухати | Вона слухає **музику**. | - |
-| читати | Ти читаєш **детектив**? | - |
-| ненавидіти | Я ненавиджу **спорт**. (Source: `6-klas-ukrmova-golub-2023_s0177`) | - |
+| Gender | Nominative | Instrumental | Example Sentence | Source |
+| :--- | :--- | :--- | :--- | :--- |
+| Masculine | спорт, футбол, бокс | спорт**ом**, футбол**ом**, бокс**ом** | Мої друзі Тетяна і Степан **займаються спортом**. | Source 30 |
+| Feminine | музика, фотографія | музик**ою**, фотографі**єю** | У вільний час він **займався музикою**. | Source 22 |
+| Neuter | плавання, малювання | плаванн**ям**, малюванн**ям** | Моя сестра любить **фехтування**. (Я займаюся **фехтуванням**). | Source 20 |
 
-### Pattern 3: Impersonal Construction with the **Dative Case** (`Давальний відмінок`)
-This structure is used to say that something is pleasing *to* someone. It is extremely common for expressing likes and dislikes.
+#### Locative Case with `грати на`, `кататися на`
 
-**Key Verb:** `подобатися` (to be pleasing to)
-
-**Structure:** [Person in Dative] + `подобається` (singular) / `подобаються` (plural) + [Thing in Nominative]
-
-**Dative Pronouns & Examples**
-| Nominative | Dative | Example Sentence |
-| :--- | :--- | :--- |
-| я | **мені** | **Мені** подобається футбол. |
-| ти | **тобі** | **Тобі** подобається ця музика? |
-| він | **йому** | **Йому** подобається його робота. |
-| вона | **їй** | **Їй** подобається кататися на велосипеді. |
-| ми | **нам** | **Нам** подобається футбол. (Source: `5-klas-ukrmova-uhor-2022-1_s0048`) |
-| ви | **вам** | **Вам** подобається подорожувати? |
-| вони | **їм** | **Їм** подобаються комп'ютерні ігри. |
+| Gender | Nominative | Locative | Example Sentence | Source |
+| :--- | :--- | :--- | :--- | :--- |
+| Feminine | гітара, скрипка | на гітар**і**, на скрипц**і** | У вільний час він... **грав на скрипці**. | Source 22 |
+| Masculine | велосипед, скейтборд | на велосипед**і**, на скейтборд**і** | Він із друзями **катається на велосипеді**. | Source 16 |
+| Masculine | рояль, саксофон | на роял**і**, на саксофон**і** | <!-- VERIFY --> | |
 
 ## Частотність і пріоритети (Frequency & Priorities)
 
-For A2 learners, the priority should be mastering the most frequent and communicatively useful structures first.
+For A2 learners, not all constructions are equally important. The focus should be on mastering the most common patterns first.
 
-1.  **Priority 1 (Must-Know): `любити + інфінітив/Зн.в.` and `(мені) подобається + Н.в.`**
-    *   `Я люблю читати` and `Мені подобається футбол` are the most fundamental and common ways to express likes. They cover the majority of daily situations and are easy to construct. The sources show these being taught from the earliest grades (Source: `5-klas-ukrmova-uhor-2022-1_s0048`).
-2.  **Priority 2 (Should-Know): `займатися + Ор.в.`**
-    *   This is the standard, high-frequency way to say "I do/practice [a sport/activity]". It's essential for talking about sports, music, or any regular practice. The pattern is regular and widely applicable (`займатися спортом, танцями, музикою`). (Source: `6-klas-ukrmova-betsa-2023_s0021`).
-3.  **Priority 3 (Good-to-Know): `захоплюватися / цікавитися + Ор.в.`**
-    *   These verbs add nuance and are a step up in proficiency. `Захоплюватися` implies more passion ("to be keen on", "to be into"), while `цікавитися` is "to be interested in". While less frequent in beginner speech than `любити` or `займатися`, they are common in native-speaker discourse and demonstrate a better command of the language (Source: `6-klas-ukrmova-betsa-2023_s0021`, `6-klas-ukrmova-betsa-2023_s0229`).
+1.  **Highest Priority:** The verb `любити` + infinitive (`люблю читати`, `люблю дивитися фільми`). This is the most versatile and simplest structure for expressing likes.
 
-The verb `грати` has its own priority: `грати **у**` (for games/sports like `футбол, теніс`) vs. `грати **на**` (for musical instruments like `гітарі, скрипці`) must be taught as a distinct pair (Source: `6-klas-ukrmova-betsa-2023_s0026`).
+2.  **Core Four Verbs:** The next priority is the set of verbs covering the most common hobby categories, as outlined in learner resources (Source 8, Source 20):
+    *   `займатися` + Instrumental: For general practices like `спортом`, `йогою`, `танцями`. This is a very high-frequency verb.
+    *   `грати в/у` + Accusative: Essential for all ball games and computer games (`грати в теніс`, `грати в комп'ютерні ігри`).
+    *   `ходити в/на` + Accusative: Crucial for talking about regularly visiting places (`ходити в кіно`, `ходити в спортзал`, `ходити на концерти`).
+    *   `кататися на` + Locative: For all activities involving riding (`кататися на велосипеді/лижах/ковзанах`).
+
+3.  **Secondary Priority:**
+    *   `грати на` + Locative: Important, but less frequent than the "Core Four" unless a learner is specifically a musician.
+    *   `захоплюватися` + Instrumental: A slightly more formal or intense version of "to be into something." It's good for learners to recognize but `займатися` is often more practical for active hobbies.
+    *   Nouns like `плавання`, `малювання`: These are important for comprehension, and using them with `любити` (`Я люблю плавання`) is simple and effective.
+
+Learners should master the "Core Four" constructions with 5-10 common hobbies before moving on to less frequent verbs or more complex noun declensions.
 
 ## Типові помилки L2 (Common L2 Errors)
-English-speaking learners often make predictable errors based on interference from English grammar.
+
+English-speaking learners often make predictable errors when discussing hobbies due to interference from English structures and the complexity of Ukrainian cases.
 
 | ❌ Помилково (Incorrect) | ✅ Правильно (Correct) | Чому (Why) |
 | :--- | :--- | :--- |
-| `*Я подобаюся футбол.` | `Мені подобається футбол.` | The verb `подобатися` requires the experiencer to be in the Dative case (`мені` - to me), and the liked object to be the subject (in Nominative). English "I like football" structure causes this error. |
-| `*Я займаюся в спорт.` | `Я займаюся спортом.` | The verb `займатися` (to be engaged in) requires the activity to be in the Instrumental case (`чим?`). The English preposition "in" leads to an incorrect attempt to use a preposition in Ukrainian. |
-| `*Я цікавлюся фотографія.` | `Я цікавлюся фотографією.` | Similar to `займатися`, the verb `цікавитися` (to be interested in) governs the Instrumental case. Learners often forget to decline the noun. |
-| `*Я граю футбол.` / `*Я граю на футбол.` | `Я граю у футбол.` | In Ukrainian, team sports and games use the preposition `у` + Accusative. This is a fixed phrase that must be memorized. |
-| `*Я граю у гітарі.` | `Я граю на гітарі.` | Musical instruments use the preposition `на` + Locative case (`на гітарі, на піаніно`). English uses "play" for both sports and instruments, causing confusion. |
-| `*Я беру участь у змаганнях.` | `Я беру участь у змаганнях.` | The phrase `приймати участь` is a direct calque (loan translation) from Russian "принимать участие". The correct Ukrainian idiom is `брати участь`. Source `5-klas-ukrmova-zabolotnyi-2023_s0040` lists this as a common error to correct. |
-| `*Я хочу бути більше сильним.` | `Я хочу бути сильнішим.` | When forming the comparative degree of adjectives, Ukrainian uses the suffix `-іш-` or `-ш-`. The analytic form `більш` is used with long adjectives in formal styles, but the synthetic form is far more common in speech. (Source `10-klas-ukrajinska-mova-avramenko-2018_s0232` implies this by correcting `більш красивіше`). |
+| Я граю **на** футбол. | Я граю **у** футбол. | **Preposition error with `грати`**. English "play" doesn't distinguish. Ukrainian requires `в/у` for sports/games and `на` for musical instruments. (Source 8) |
+| Я граю **в** гітарі. | Я граю **на** гітарі. | **Preposition error with `грати`**. Same as above. The preposition `на` must be used for musical instruments, followed by the Locative case. (Source 8) |
+| Я займаюся **спорт**. | Я займаюся **спортом**. | **Case error with `займатися`**. The verb `займатися` (to be engaged in) mandatorily governs the Instrumental case. The Accusative case is incorrect. (Source 20, Source 30) |
+| Я **подобаюся** музику. | **Мені подобається** музика. | **Impersonal verb error**. `Подобатися` is an impersonal verb. The person experiencing the feeling is in the Dative case (`мені`), and the thing being liked is the subject (Nominative case, `музика`). It literally means "Music is pleasing to me." |
+| Ми ходимо **в** стадіоні. | Ми ходимо **на** стадіон. | **Preposition/Case error with `ходити`**. The verb `ходити` with a destination requires the Accusative case (`стадіон`, not Locative `стадіоні`). Additionally, `на стадіон` is the standard collocation for open spaces, while `в` is for enclosed ones (`в театр`). (Source 14) |
+| Я захоплююся **малювати**. | Я захоплююся **малюванням**. | **Part of speech error**. The verb `захоплюватися` requires a noun in the Instrumental case, not an infinitive verb. The verbal noun `малювання` (painting/drawing) must be used. (Source 3) |
 
 ## Деколонізаційні застереження (Decolonization Notes)
-It is imperative to teach Ukrainian on its own terms, not as a variant of Russian. Hobbies and daily activities are a prime area where subtle but important distinctions manifest.
 
-1.  **Avoid Calques (Loan Translations):** A critical point is the avoidance of Russian calques. The phrase `**брати участь**` (to take part) is the correct Ukrainian form. The phrase `*приймати участь*` is a direct translation from Russian (`принимать участие`) and is considered a common but incorrect calque. Textbooks for native speakers frequently drill this correction (Джерело: `5-klas-ukrmova-zabolotnyi-2023_s0040`). This must be taught as the only correct form from the beginning.
+When teaching Ukrainian grammar, it is critical to present it as a complete and independent system, not as a variant of Russian.
 
-2.  **Vocabulary Purity:** While many words are shared across Slavic languages, it's important to use authentically Ukrainian vocabulary. For example, instead of the internationalism/Russianism `хобі`, Ukrainian textbooks prefer native phrases like `**улюблене заняття**` (favorite occupation), `**захоплення**` (enthusiasm/hobby), or simply describe the activity (`**що ти робиш у вільний час?**`) (Джерела: `5-klas-ukrmova-uhor-2022-1_s0048`, `5-klas-ukrmova-uhor-2022-1_s0092`, `9-klas-ukrajinska-mova-avramenko-2017_s0063`).
+1.  **Vocabulary Primacy:** Emphasize authentic Ukrainian terms for leisure and hobbies. Words like `дозвілля` (leisure), `захоплення` (hobby/interest), `вподобання` (preferences) (Source 7) are central to the Ukrainian lexicon on this topic. Avoid simply translating from Russian or English. The word `хобі` is a common internationalism, but `захоплення` is a native and widely used equivalent (Source 24).
 
-3.  **Orthography and Pronunciation:** Do not assume Russian pronunciation rules. For example, the pronunciation of the letter 'г' is different. Emphasize correct Ukrainian phonetics for all vocabulary. Similarly, rules for the apostrophe and soft sign are unique to Ukrainian and should not be analogized from Russian.
+2.  **`Подобатися` vs. `Нравиться`:** The impersonal construction with `подобатися` (`Мені подобається`) is extremely common and natural in Ukrainian for expressing likes (Source 10, Source 27). While Russian uses `Мне нравится` similarly, instructors should source all examples from authentic Ukrainian texts and speech to capture the specific nuances and frequency of `подобатися`, rather than assuming a one-to-one mapping.
 
-4.  **Grammar is not "Russian with exceptions":** Present Ukrainian grammar, such as the Instrumental case endings or verb conjugations, as its own complete system. For instance, the use of `у`/`в` for locations and activities (`грати у футбол`, `ходити в кіно`) has its own internal logic within Ukrainian and should be explained as such, not as a deviation from another language.
+3.  **Verb Collocations:** Pay close attention to uniquely Ukrainian verb-noun pairings. While structures like `грати у футбол` are shared across Slavic languages, the frequency and choice of other verbs like `захоплюватися` or specific prepositions (`ходити на виставку`) should be drawn from Ukrainian sources (like Source 14, Source 3), not from parallel Russian constructions.
+
+4.  **Avoid False Cognates:** Be mindful of words that look similar but have different usage or connotations in Ukrainian and Russian. Always verify the meaning and use of a word in a Ukrainian dictionary (like СУМ-11) or through corpus analysis, rather than relying on translation from Russian. For this topic, most core vocabulary is distinct enough or international, but the principle remains crucial. The goal is to teach thinking *in* Ukrainian, using its native patterns.
 
 ## Природні приклади (Natural Examples)
-These examples are taken from or adapted from the provided Ukrainian school textbooks, ensuring they are natural and contextually appropriate.
 
-**Group 1: Expressing "like" with `любити` and `подобатися`**
-- `Я люблю читати книги.` (Джерело: `5-klas-ukrmova-uhor-2022-1_s0048`)
-- `Мені подобається таке життя.` (Джерело: `5-klas-ukrmova-litvinova-2022_s0060`)
-- `Нам із сестрою подобається футбол.` (Джерело: `5-klas-ukrmova-uhor-2022-1_s0048`)
+These examples are taken from the provided sources and demonstrate natural, contextual usage of the grammar.
 
-**Group 2: Using `займатися` and `захоплюватися` with the Instrumental Case**
-- `Мої друзі Тетяна і Степан займаються спортом.` (Джерело: `6-klas-ukrmova-betsa-2023_s0021`)
-- `Моя сестра Наталка захопилася фотографією.` (Джерело: `6-klas-ukrmova-betsa-2023_s0021`)
-- `У вільний час він займався музикою — грав на скрипці.` (Джерело: `6-klas-ukrmova-betsa-2023_s0062`)
+#### Group 1: `займатися / захоплюватися` + Noun (Instrumental)
+This pattern is used for practices, sports, and fields of interest.
+1.  У вільний час він **займався музикою** — грав на скрипці. (Source 22)
+2.  Давид любить **займатися спортом** навесні, влітку та восени. (Source 16)
+3.  У дитинстві я **захоплювалась малюванням**, часто брала участь у виставках. (Source 3)
 
-**Group 3: Describing activities with various verbs**
-- `Мій друг Золтан любить малювати.` (Джерело: `6-klas-ukrmova-betsa-2023_s0021`)
-- `Ми з друзями часто ходимо в бібліотеку.` (Джерело: `5-klas-ukrmova-uhor-2022-1_s0048`)
-- `Хтось любить грати на барабанах, хтось — роздивлятися нічне небо.` (Джерело: `6-klas-ukrmova-golub-2023_s0014`)
+#### Group 2: `грати` + Preposition (`в/у` or `на`)
+This verb distinguishes between games/sports and musical instruments.
+4.  Ми з Наталкою часто ходимо на стадіон. Ми там **граємо у футбол**. (Source 14)
+5.  Мій тато — майстер спорту з шахів, він часто їздить на змагання. (Note: "майстер спорту **з** шахів" is an alternative to saying "грає в шахи") (Source 22)
+6.  Хтось любить **грати на барабанах**, хтось — роздивлятися нічне небо. (Source 31)
 
-**Group 4: Asking about and planning activities**
-- `Що ти робиш у вільний час?` (Джерело: `5-klas-ukrmova-uhor-2022-1_s0092`)
-- `Ходімо на спортивний майданчик!` (Джерело: `5-klas-ukrmova-uhor-2022-1_s0092`)
-- `Пропоную сходити в басейн.` (Джерело: `8-klas-ukrmova-avramenko-2025_s0119`)
+#### Group 3: `ходити` + Destination (Accusative)
+This pattern is used for activities that involve regularly going to a specific type of place.
+7.  Мені подобається таке життя. Я хочу стати акторкою, тому **ходжу на танці** й вокал. (Source 10)
+8.  Коли в нього є час, він **ходить у басейн плавати**. (Source 16)
+9.  Ми з друзями любимо концерти... іноді ми з друзями **ходимо в театр**. (Source 1)
+
+#### Group 4: `кататися на` + Vehicle/Object (Locative)
+This is for all "riding" activities.
+10. Взимку він любить **кататися на ковзанах** із друзями. (Source 16)
+11. На першому побаченні ми... поїхали на трамваї в Пущу-Водицю... Там ми **каталися на човні**. (Source 7)
+12. ...навесні, влітку та восени він із друзями **катається на велосипеді**. (Source 16)
 
 ## Рекомендації для вправ (Activity Concepts)
 
-**Phase 1: Recognition and Comprehension**
-- **Matching:** Provide images of hobbies (playing guitar, painting, playing football, reading) and a list of Ukrainian phrases (`грати на гітарі`, `малювати`, `грати у футбол`, `читати`). Students match the phrase to the image.
-- **Categorization:** Give students a list of nouns (e.g., `футбол`, `гітара`, `книга`, `танці`, `музика`, `спорт`). They must sort them into two columns: `грати у...` and `грати на...` or `займатися...` and `любити...`.
-- **Dialogue Comprehension:** Use a simple dialogue like the one in Source `5-klas-ukrmova-uhor-2022-1_s0071` and ask true/false questions (e.g., "Давид ходить на бальні танці." - True/False).
+A writer creating a module on this topic should structure activities to build skills progressively.
 
-**Phase 2: Controlled Practice**
-- **Fill-in-the-blanks (Case endings):** `Я захоплююся ________ (музика).` -> `музикою`. `Ми займаємося ________ (спорт).` -> `спортом`.
-- **Transformation Drill:** Give a sentence with `люблю` and have students rewrite it using `мені подобається` and `я захоплююся`.
-    - Input: `Я люблю футбол.`
-    - Output 1: `Мені подобається футбол.`
-    - Output 2: `Я захоплююся футболом.`
-- **Sentence Scramble:** Give scrambled words for students to form a correct sentence. E.g., `подобається / мені / дуже / плавання`. -> `Мені дуже подобається плавання.`
+*   **Phase 1: Recognition & Matching**
+    *   **Matching Drill:** Provide two columns, one with verbs (`грати`, `займатися`, `кататися`, `дивитися`) and one with nouns (`фільми`, `на велосипеді`, `спортом`, `в теніс`). Learners draw lines to connect them.
+    *   **Categorization:** Give learners a list of hobby nouns (`футбол, музика, кіно, йога, плавання, гітара`) and have them sort them under the correct verb (`грати в...`, `грати на...`, `займатися...`, `ходити в...`).
 
-**Phase 3: Production**
-- **Guided Questions:** Students answer questions about themselves. `Що ти любиш робити?` `Чим ти займаєшся у вільний час?` `Тобі подобається слухати музику?`
-- **Role-Play:** In pairs, students use dialogue prompts to make plans for the weekend, using phrases like `Ходімо в...`, `Зустріньмося о...`, `Тобі подобається...?` (based on Source `5-klas-ukrmova-uhor-2022-1_s0092`).
-- **Short Composition:** Students write a 4-5 sentence paragraph about their friend's hobbies, modeled on the texts in Source `6-klas-ukrmova-betsa-2023_s0021`. For example: "Мій друг Степан. Він любить спорт. Він займається футболом..."
+*   **Phase 2: Controlled Practice (Form Focus)**
+    *   **Preposition Choice:** "Я граю (в / на) теніс. Я граю (в / на) піаніно."
+    *   **Case Fill-in-the-Blank:** "Мій друг займається \_\_\_\_\_\_\_\_\_ (спорт)." -> `спортом`. "Вона захоплюється \_\_\_\_\_\_\_\_\_ (фотографія)." -> `фотографією`.
+    *   **Sentence Transformation:** Provide a prompt like `(Я / футбол)`. The learner must produce a full sentence: `Я граю у футбол`. Prompt: `(Вона / танці)`. -> `Вона займається танцями` or `Вона ходить на танці`.
+
+*   **Phase 3: Production & Communication**
+    *   **Open Questions:** The learner answers questions about themselves:
+        *   `Що ти любиш робити у вільний час?` (Source 34)
+        *   `Яким спортом ти займаєшся?`
+        *   `Ти граєш на якомусь музичному інструменті?`
+    *   **Dialogue Creation:** Provide a scenario: "Запроси друга / подругу піти в кіно на вихідних. (Invite a friend to go to the movies on the weekend.)". The learner writes a short dialogue using phrases like `Ходімо в кіно!`, `Ти маєш вільний час у суботу?`, `Давай зустрінемося біля кінотеатру`. (Sources 18, 34)
+    *   **Monologue:** "Розкажіть про ваші хобі." (Tell us about your hobbies). The learner prepares a 30-60 second speech about their interests, combining several of the target structures.
 
 ## Зв'язки з іншими темами (Connections)
 
-This grammar topic is not isolated; it is a central hub that connects to and reinforces several other core grammatical areas.
+This grammar topic is a hub that connects to several other key areas of Ukrainian grammar.
 
-- **Grammar/Common/Instrumental-Case:** Provides a highly practical and memorable context for practicing Instrumental case endings. Students learn the *function* of the case (to describe the instrument/means of an activity) rather than just memorizing forms.
-- **Grammar/Common/Dative-Case:** The `мені подобається` structure is one of the most common uses of the Dative case in everyday speech and is a key prerequisite for understanding other impersonal constructions.
-- **Grammar/A1/Present-Tense-Conjugation:** All the key verbs (`любити`, `займатися`, `цікавитися`) are excellent practice for standard present tense conjugation patterns.
-- **Grammar/A2/Verbs-of-Motion:** Talking about hobbies often involves going places: `ходити в кіно`, `їздити на змагання` (Source: `5-klas-ukrmova-uhor-2022-1_s0071`), `піти на виставку` (Source: `5-klas-ukrmova-uhor-2022-1_s0094`).
-- **Grammar/B1/Imperative-Mood:** Making suggestions and plans related to hobbies is the primary communicative function of the imperative mood for A2/B1 learners (`Ходімо!`, `Завари чаю!`, `Купи плитку шоколаду.`). (Source: `8-klas-ukrmova-avramenko-2025_s0119`).
+*   **Prerequisites (What came before):**
+    *   **Verb Conjugation (Present Tense):** Learners must be comfortable conjugating regular first and second-conjugation verbs to use `люблю`, `граю`, `ходжу`, `дивлюся`.
+    *   **Introduction to Cases:** A basic understanding of the Instrumental, Accusative, and Locative cases is necessary to understand *why* the endings are changing, even if they are learned as chunks initially.
+    *   **Verbs of Motion (Basics):** The concept of `ходити` (multidirectional/habitual) vs. `іти` (unidirectional) is a prerequisite for correctly saying "I go to the gym (regularly)".
+
+*   **Follow-up Topics (What comes after):**
+    *   **Past Tense:** This topic provides a natural bridge to talking about past hobbies: "Коли я був дитиною, я **грав** у футбол" or "Раніше я **займалася** танцями." (Source 5)
+    *   **Future Tense:** Learners can progress to talking about future leisure plans: "На вихідних я **буду читати** книгу" or "Ми **підемо** в театр." (Source 9)
+    *   **Adverbs of Frequency:** This topic pairs perfectly with teaching adverbs like `завжди`, `часто`, `іноді`, `рідко`, `ніколи`. ("Я **іноді** ходжу в кіно.")
+    *   **Expressing Opinions:** It serves as a foundation for more complex opinion-giving, moving from "Я люблю..." to "Я думаю, що це цікаво, тому що..."
 
 ## Пов'язані статті (Related Articles)
-- `grammar/common/instrumental-case`
-- `grammar/common/dative-case`
-- `grammar/common/verbs-of-liking`
-- `grammar/a1/present-tense-conjugation`
-- `grammar/a2/verbs-of-motion-prefixed`
-- `grammar/b1/aspect-perfective-imperfective`
-- `vocabulary/a2/hobbies-and-leisure`
+
+*   `grammar/a2/instrumental-case`
+*   `grammar/a2/accusative-case-motion`
+*   `grammar/b1/locative-case`
+*   `grammar/a2/verbs-of-motion-i`
+*   `grammar/b1/impersonal-constructions`

@@ -47,6 +47,25 @@ Polls the SQLite message broker for unread Gemini messages. Surfaces inter-agent
 
 ---
 
+## Token Usage Analytics
+
+Analyze Claude Code token consumption across learn-ukrainian and kubedojo projects.
+
+```bash
+# All time
+.venv/bin/python scripts/token_usage.py
+
+# Last 7 days
+SINCE_DAYS=7 .venv/bin/python scripts/token_usage.py
+
+# Since specific date
+SINCE_DATE=2026-04-03 .venv/bin/python scripts/token_usage.py
+```
+
+Parses `~/.claude/projects/` JSONL session files. Outputs report to `docs/token-usage/token_report.md` with: per-project totals, daily breakdown, costliest sessions (with model + first prompt), subagent analysis. Adapted from [kieranklaassen's gist](https://gist.github.com/kieranklaassen/7b2ebb39cbbb78cc2831497605d76cc6).
+
+---
+
 ## Module Creation Pipeline
 
 The complete module creation and validation pipeline:

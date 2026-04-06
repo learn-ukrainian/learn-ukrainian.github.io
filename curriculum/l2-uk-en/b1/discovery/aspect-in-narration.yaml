@@ -1,0 +1,35 @@
+discovered_at: '2026-04-06T15:14:46.957018+00:00'
+error: null
+query_keywords:
+- Вид у розповіді
+- 'Тест: тло чи подія?'
+- 'Тло: недоконаний вид у наративі'
+- 'Передній план: доконаний вид у наративі'
+- 'Підсумок: аспект як наративний інструмент'
+- Learner can identify background (тло — imperfective) and foreground events (передній
+  план — perfective) in a Ukrainian narrative text and explain the aspect logic using
+  Ukrainian metalanguage
+- Learner can use temporal connectors (спочатку, потім, тим часом, раптом, нарешті)
+  correctly with the appropriate aspect
+- тло
+- передній план
+- розповідь
+- оповідання
+- оповідач
+- подія
+- опис
+- спочатку
+- потім
+- раптом
+- нарешті
+- тим часом
+- одночасно
+- послідовно
+- послідовність
+- спогад
+- поки
+- після цього
+- тоді
+rag_chunks: []
+rag_literary: []
+warning: Auto-generated from plan

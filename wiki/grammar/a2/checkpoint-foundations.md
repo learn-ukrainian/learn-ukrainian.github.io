@@ -4,150 +4,159 @@
 slug: checkpoint-foundations
 domain: grammar/a2
 tracks: [a2, b1]
-sources: [8-klas-ukrmova-zabolotnyi-2025_s0165, 5-klas-ukrmova-litvinova-2022_s0244, 5-klas-ukrmova-litvinova-2022_s0236, 6-klas-ukrmova-litvinova-2023_s0119, 7-klas-ukrmova-litvinova-2024_s0038, 7-klas-ukrmova-zabolotnyi-2024_s0087, 9-klas-ukrajinska-mova-zabolotnij-2017_s0225, 9-klas-ukrmova-zabolotnyi-2017_s0225, 5-klas-ukrmova-avramenko-2022_s0163, 5-klas-ukrmova-avramenko-2022_s0188, 5-klas-ukrmova-golub-2022_s0054, 5-klas-ukrmova-golub-2022_s0104, 5-klas-ukrmova-litvinova-2022_s0040, 5-klas-ukrmova-litvinova-2022_s0088, 5-klas-ukrmova-litvinova-2022_s0245, 5-klas-ukrmova-litvinova-2022_s0267, 5-klas-ukrmova-litvinova-2022_s0273, 6-klas-ukrmova-avramenko-2023_s0043, 6-klas-ukrmova-avramenko-2023_s0078, 6-klas-ukrmova-avramenko-2023_s0122, 6-klas-ukrmova-litvinova-2023_s0129, 6-klas-ukrmova-litvinova-2023_s0135, 6-klas-ukrmova-litvinova-2023_s0168, 6-klas-ukrmova-avramenko-2023_s0145, 6-klas-ukrmova-avramenko-2023_s0147, 6-klas-ukrmova-litvinova-2023_s0207, 6-klas-ukrmova-avramenko-2023_s0167, 6-klas-ukrmova-avramenko-2023_s0183, 6-klas-ukrmova-avramenko-2023_s0201, 6-klas-ukrmova-litvinova-2023_s0077, 7-klas-ukrmova-avramenko-2024_s0054, 7-klas-ukrmova-avramenko-2024_s0084, 7-klas-ukrmova-avramenko-2024_s0109, 7-klas-ukrmova-avramenko-2024_s0152, 7-klas-ukrmova-avramenko-2024_s0165, 7-klas-ukrmova-avramenko-2024_s0195, 7-klas-ukrmova-avramenko-2024_s0199, 8-klas-ukrmova-avramenko-2025_s0046, 8-klas-ukrmova-avramenko-2025_s0055, 8-klas-ukrmova-zabolotnyi-2025_s0157]
-compiled: 2026-04-06
+sources: [ext-ulp_youtube-29, ext-ulp_youtube-90, ext-ulp_youtube-166, ext-ulp_youtube-182, ext-ulp_youtube-57, ext-komik_istoryk-39, 8-klas-ukrmova-zabolotnyi-2025_s0165, ext-ulp_youtube-69, ext-ulp_youtube-171, 5-klas-ukrmova-litvinova-2022_s0267, 9-klas-ukrajinska-mova-zabolotnij-2017_s0225, 9-klas-ukrmova-zabolotnyi-2017_s0225, 5-klas-ukrlit-zabolotnyi-2022_s0025, 6-klas-ukrmova-avramenko-2023_s0043, 6-klas-ukrmova-avramenko-2023_s0078, 8-klas-ukrmova-avramenko-2025_s0003, ext-ulp_youtube-96, 6-klas-ukrmova-litvinova-2023_s0119, 5-klas-ukrmova-litvinova-2022_s0236, 6-klas-ukrmova-avramenko-2023_s0145, 4-klas-ukrmova-zaharijchuk_s0132, 6-klas-ukrmova-litvinova-2023_s0116, 6-klas-ukrmova-avramenko-2023_s0201, 5-klas-ukrmova-avramenko-2022_s0188, 7-klas-ukrmova-litvinova-2024_s0215, ext-istoria_movy-31, 5-klas-ukrmova-litvinova-2022_s0207, 5-klas-ukrmova-litvinova-2022_s0244, 6-klas-ukrmova-litvinova-2023_s0129, 5-klas-ukrmova-litvinova-2022_s0196, 5-klas-ukrmova-litvinova-2022_s0051, 5-klas-ukrmova-litvinova-2022_s0080, 5-klas-ukrmova-litvinova-2022_s0088, 7-klas-ukrmova-litvinova-2024_s0123, 6-klas-ukrmova-litvinova-2023_s0050]
+compiled: 2026-04-07
 -->
 
 ## Як це пояснюють у школі (How Schools Teach This)
-The A2 level represents a consolidation of fundamental concepts introduced across Grades 5-7 in the Ukrainian school system. There isn't a single "A2 checkpoint" textbook; rather, it's the point where a student is expected to reliably use the building blocks of the language.
 
-The progression is as follows:
-1.  **Grade 5:** Introduction to basic sentence structure (`просте речення`), parts of speech (іменник, прикметник, дієслово), subject and predicate (`підмет` і `присудок`), and simple conjunctions (`і`, `а`) to form basic compound sentences (`складне речення`). (Source 2, 3, 19). Emphasis is on identifying sentence parts and using correct punctuation.
-2.  **Grade 6:** Deeper dive into morphology. Students learn about noun declensions (відмінки), adjective agreement in different cases, and verb conjugation in more detail. Prepositional usage (`в/до`, `завдяки/через`) is explicitly linked to cases (Source 4, 27). The concept of word formation (префікси, суфікси) is solidified (Source 26).
-3.  **Grade 7:** Verb aspect (`вид дієслова`: доконаний і недоконаний) is formally introduced as a core concept (Source 5). Students learn to form aspectual pairs and understand the difference in meaning. More complex sentence structures, including introductory adverbs and participles (дієприкметник), are explored (Source 33, 34).
+На рівні A2 українська шкільна програма закріплює фундаментальні поняття синтаксису та морфології, які учень почав вивчати у 5-6 класах. Основний акцент робиться на переході від аналізу окремих слів до побудови та розуміння речень.
 
-The A2 checkpoint is essentially a test of whether the student can integrate these skills: can they build a grammatically correct sentence that requires noun declension, adjective agreement, and correct verb aspect/tense? The focus is on practical application, moving from identifying parts to constructing meaning.
+1.  **Структура речення:** Учні чітко розрізняють **прості** та **складні** речення (Source 24, Avramenko 5). Складні речення вводяться через базові сполучники (`і`, `а`, `що`, `бо`). Особлива увага приділяється **односкладним реченням** (де є лише підмет або лише присудок) і їх протиставленню **двоскладним**. Наприклад, учнів вчать розрізняти `У двері постукали` (односкладне) та `У двері хтось постукав` (двоскладне) (Source 27, Litvinova 5).
+
+2.  **Пунктуація:** Основний фокус — кома між однорідними членами речення (`Я люблю яблука, груші і сливи`) та кома між частинами складного речення (`Пропоную сходити в боулінг, або ми можемо піти в кіно`) (Source 19, Litvinova 5; Source 28, Litvinova 5).
+
+3.  **Частини мови:** Відбувається закріплення знань про самостійні (іменник, прикметник, дієслово) та службові (прийменник, сполучник) частини мови (Source 15, Avramenko 6). Розглядаються їхні основні граматичні категорії: рід, число, відмінок для іменників; час, вид, особа для дієслів.
+
+4.  **Культура мовлення:** Підручники систематично включають рубрики "Культура слова", де виправляють поширені помилки, зокрема кальки з російської мови та неправильне вживання прийменників. Це є невід'ємною частиною програми (Source 14, Avramenko 6; Source 24, Avramenko 5; Source 30, Litvinova 5).
+
+5.  **Фонетика та наголос:** Наголос (`наголос`) визнається складною темою навіть для носіїв мови, тому вправи на правильне наголошування слів (`донька́` чи `до́нька`) є стандартною частиною уроків (Source 1, ULP; Source 10, Litvinova 5).
+
+Підхід у сучасних підручниках є тематичним: граматичні правила вивчаються на матеріалі з конкретної сфери життя (спорт, їжа, подорожі), щоб зробити навчання цікавішим і ближчим до реального спілкування (Source 16, Avramenko 8).
 
 ## Повна парадигма (Full Paradigm)
-An A2 learner should have functional control over these core systems.
 
-### Noun Declension (I & II Declensions)
-Focus on the most frequent cases.
+На рівні А2 ключовим є впевнене володіння базовими системами, а не вивчення всіх винятків.
 
-| Відмінок (Case) | I Declension (f.) - `сестра` | II Declension (m.) - `брат` | II Declension (n.) - `вікно` |
+### 1. Дієслово `бути` (Verb 'to be')
+Хоча в теперішньому часі форма `є` часто опускається, її знання важливе для утворення деяких конструкцій.
+
+| Час | Однина | Множина |
+| :--- | :--- | :--- |
+| **Теперішній** | я **є**<br>ти **є**<br>він/вона/воно **є** | ми **є**<br>ви **є**<br>вони **є** |
+| **Минулий** | я/ти/він **був**<br>я/ти/вона **була**<br>воно **було** | ми/ви/вони **були** |
+| **Майбутній** | я **буду**<br>ти **будеш**<br>він/вона/воно **буде** | ми **будемо**<br>ви **будете**<br>вони **будуть** |
+
+### 2. Базові сполучники (Basic Conjunctions)
+Сполучники — це "клей" для поєднання ідей у складні речення.
+
+| Тип | Сполучник | Приклад | Джерело |
 | :--- | :--- | :--- | :--- |
-| **Називний (N)** | сестра | брат | вікно |
-| **Родовий (G)** | сестр**и** | брат**а** | вікн**а** |
-| **Давальний (D)** | сестр**і** | брат**ові**/брат**у** | вікн**у** |
-| **Знахідний (A)** | сестр**у** | брат**а** | вікно |
-| **Орудний (I)** | сестр**ою** | брат**ом** | вікн**ом** |
-| **Місцевий (L)** | (на) сестр**і** | (на) брат**ові**/брат**і** | (у) вікн**і** |
-| **Кличний (V)** | сестр**о** | брат**е** | вікно |
+| **Єднальні** (and) | `і`, `й`, `та` | Я візьму той рушник **і** простелю, наче долю. | (Source 19) |
+| **Протиставні** (but) | `а`, `але`, `проте` | Ми потрапили під дощ, **але** все одно було весело. | (Source 25) |
+| **Розділові** (or) | `або`, `чи` | Пропоную сходити в боулінг **або** в кіно. | (Source 25) |
+| **Причинові** (because) | `бо`, `тому що` | Українці будуть дуже здивовані, **бо** ви вживаєте прислів'я. | (Адаптовано з Source 9) |
+| **Пояснювальний** (that) | `що` | Я думаю, **що** зробила правильний вибір. | (Source 4) |
 
-### Verb Conjugation & Aspect
-A typical verb of the 1st conjugation: `писати` (to write, imp.) / `написати` (to write, pf.).
+### 3. Ступені порівняння прикметників (Adjective Comparison)
 
-**Present Tense (Imperfective Only)**
-| Особа | Однина (Singular) | Множина (Plural) |
-| :--- | :--- | :--- |
-| **я** | пиш**у** | пиш**емо** |
-| **ти** | пиш**еш** | пиш**ете** |
-| **він/вона/воно** | пиш**е** | **вони** | пиш**уть** |
+| Ступінь | Форма | Приклад (гарний) | Правило |
+| :--- | :--- | :--- | :--- |
+| **Вищий** | Проста | гарн**іший** | основа + `-іш-` / `-ш-` |
+| (Comparative) | Складена | **більш** гарний | `більш` / `менш` + прикметник |
+| **Найвищий** | Проста | **най**гарн**іший** | `най-` + вищий ступінь |
+| (Superlative) | Складена | **найбільш** гарний | `найбільш` + прикметник |
 
-**Past Tense (by Gender/Number)**
-| Aspect | Singular (m/f/n) | Plural |
-| :--- | :--- | :--- |
-| **Imperfective** | писа**в** / писа**ла** / писа**ло** | писа**ли** |
-| **Perfective** | **на**писа**в** / **на**писа**ла** / **на**писа**ло** | **на**писа**ли** |
-
-**Future Tense**
-| Tense Type | Formation & Example |
-| :--- | :--- |
-| **Imperfective** | `бути` (conjugated) + infinitive: `я **буду писати**` |
-| **Perfective** | Conjugated perfective verb (like present): `я **напишу**` |
+**Важливо:** При порівнянні використовуються конструкції `...ніж...`, `...за...`, `...від...`. Наприклад: `Ця книга цікавіша, **ніж** та` або `Ця книга цікавіша **за** ту`. (Source 29)
 
 ## Частотність і пріоритети (Frequency & Priorities)
-For an A2 learner, not all grammar is created equal.
-1.  **High Priority (Must Master):**
-    *   **Subject-Verb Agreement:** `Я читаю`, `вони читають`. This is the absolute foundation.
-    *   **Present Tense Conjugation:** Essential for describing current actions and states.
-    *   **Past Tense Formation:** Critical for any form of narrative.
-    *   **Adjective-Noun Agreement (Nom. & Acc.):** `гарна книга`, `я читаю гарну книгу`.
-    *   **Genitive Case for Negation (`немає`):** `У мене немає брата`. This is a high-frequency, non-English structure.
-    *   **Locative Case with `в/у`:** `Я живу в Києві`.
 
-2.  **Medium Priority (Functional Control):**
-    *   **Basic Aspect Distinction:** Knowing to use imperfective for process/repetition (`Я вчив слова`) and perfective for a completed result (`Я вивчив слово`). The examples `Ольга вчилася грати` vs. `Ольга навчилася грати` are a perfect illustration (Source 5).
-    *   **Accusative Case:** For direct objects of transitive verbs.
-    *   **Instrumental Case:** For "with" (`з братом`) and tools (`писати ручкою`).
-    *   **Imperative Mood:** For giving commands (`скажи`, `читайте`). (Source 6, 17)
+1.  **"Культура мовлення":** Виправлення поширених лексичних помилок (`брати участь`, `складати іспит`) має найвищий пріоритет. Це миттєво підвищує якість мовлення і є ознакою освіченої людини навіть серед носіїв.
 
-3.  **Lower Priority (Recognition is sufficient):**
-    *   **Dative Case:** While important, many functions can be paraphrased at A2. Key uses like `дякую вам` should be learned as chunks.
-    *   **Complex/Compound Future Tense:** The simple perfective future (`я напишу`) is more common and easier for learners than the compound imperfective (`я буду писати`).
-    *   **All pronoun types and their declensions:** Focus on personal and possessive pronouns first. (Source 24)
+2.  **Базові сполучники:** Впевнене використання `і, а, але, бо, що` є критично важливим для переходу від коротких, уривчастих фраз до зв'язного мовлення.
+
+3.  **Минулий час дієслів:** Правильне утворення форм минулого часу (`-в`, `-ла`, `-ло`, `-ли`) є основою для будь-якої розповіді. Вступне розрізнення доконаного/недоконаного виду (аспекту) починається тут (напр. `я читав` (процес) vs. `я прочитав` (результат)).
+
+4.  **Формальне/неформальне звертання (`ти` vs. `Ви`):** Правильне використання `Ви` з великої літери на письмі та узгодження дієслів з `ви` у множині (`Ви казали`, а не `Ви казав`) є ключовим соціальним маркером (Source 23).
+
+5.  **Наголос:** Хоча вивчення всіх наголосів нереалістичне (Source 1), засвоєння правильного наголосу у 50-100 найуживаніших словах (особливо тих, де наголос відрізняється від російського або змінює значення слова) значно покращує вимову та розуміння.
 
 ## Типові помилки L2 (Common L2 Errors)
-English speakers often make predictable errors by transferring L1 structure or misapplying new rules.
+
+Це найважливіший розділ для учня рівня А2. Виправлення цих помилок є прямим шляхом до більш природного мовлення.
 
 | ❌ Помилково | ✅ Правильно | Чому |
 | :--- | :--- | :--- |
-| Ми будемо **відпочивати** в Карпатах. | Ми **відпочивали** в Карпатах. | **Tense confusion**: Learners mix up future (`будемо`) and past (`-ли`) forms, especially when narrating past events. |
-| Я **прийняв участь** у конкурсі. | Я **взяв участь** у конкурсі. | **Calque from Russian**: `Приймати участь` is a direct translation from Russian `принимать участие`. The correct Ukrainian idiom is `брати участь`. (Source 11, 14) |
-| Це контрольна **по математиці**. | Це контрольна **з математики**. | **Preposition error**: English "in/on" or Russian "по" does not map directly. For subjects, Ukrainian uses `з` + Genitive. (Source 4, 12) |
-| **Дякую вас** за допомогу. | **Дякую вам** за допомогу. | **Case error**: The verb `дякувати` governs the Dative case (`кому?`), not the Accusative case (`кого?`). (Source 12) |
-| **Слідуюча зупинка** — «Університет». | **Наступна зупинка** — «Університет». | **Russianism**: `Слідуючий` is a calque of a Russian active participle. The correct Ukrainian word is `наступний`. (Source 9, 20) |
-| У мене немає **брат**. | У мене немає **брата**. | **Genitive of Negation**: The structure `немає` requires the object to be in the Genitive case, a concept absent in English. |
-| Він **самий високий** у класі. | Він **найвищий** у класі. | **Superlative formation**: Using `самий` is a common error, often influenced by Russian. Ukrainian forms superlatives with the prefix `най-`. (Source 30) |
+| приймати участь | **брати** участь | Калька з російської `принимать участие`. Українською участь "беруть". (Source 36) |
+| здавати іспит | **складати** іспит | `Здавати` означає "to hand in/surrender". Іспит "складають". (Source 15) |
+| ви праві | ви **маєте рацію** / ваша правда | `Ви праві` є поширеною, але стилістично нерекомендованою калькою. `Мати рацію` — ідіоматичний український вислів. (Source 24) |
+| дякуючи вам | **завдяки** вам | `Дякуючи` — це активний дієприслівник ("thanking"). Для причини використовується прийменник `завдяки`. (Source 14) |
+| пробачте **мене** | пробачте **мені** | Дієслово `пробачати` вимагає давального відмінка (`кому?`), а не знахідного. (Source 30, 21) |
+| говорити **на** українській мові | говорити **українською мовою** | Назви мов у цій конструкції вживаються в орудному відмінку (`чим?`). (Source 30) |
+| самий кращий | **найкращий** | Конструкція з `самий` є калькою з російської. В українській мові найвищий ступінь утворюється префіксом `най-`. (Source 29) |
+| більш розумн**іший** | **більш** розумн**ий** / розумн**іший** | Не можна одночасно використовувати складену (`більш`) і просту (`-іший`) форми вищого ступеня. (Source 29) |
+| не звертати **увагу** | не звертати **уваги** | Фразеологізм вимагає родового відмінка (`чого?`). (Source 24) |
+| вірна відповідь | **правильна** відповідь | `Вірний` в українській мові означає "loyal, faithful" (вірний друг). Для логічної правильності вживають `правильний`. (Source 20) |
 
 ## Деколонізаційні застереження (Decolonization Notes)
-Ukrainian grammar must be taught on its own terms, not as a variant of Russian. For an A2 learner, establishing correct, native patterns from the start is critical to prevent fossilized errors.
 
-1.  **Lexical Purity**: Insist on uniquely Ukrainian vocabulary and constructions. The distinction between `наступний` (next) and the Russianism `слідуючий` (following) is a classic A2-level check of authentic language use (Source 9, 20). Similarly, expressions like `брати участь` instead of `приймати участь` must be enforced (Source 11).
+1.  **Наголос — не російський:** Український наголос є незалежною системою. Багато слів, що схожі з російськими, мають інший наголос. Навчання за принципом "як у російській, але..." є хибним. Український наголос є нормою, а не винятком.
+    *   Укр: `нена́видіти`, `фарту́х`, `оле́нь`. (Source 1)
+    *   Рос: `ненави́деть`, `фа́ртук`, `оле́нь`.
 
-2.  **Active Participles (`-учий`, `-ючий`):** This is a major point of divergence. While common in Russian, active present participles are highly restricted and often sound unnatural in modern standard Ukrainian. Source 33 warns against this explicitly. Instead of encouraging learners to form `*думаюча людина` (a thinking person), guide them towards relative clauses: `людина, яка думає`. This is a fundamental structural difference.
+2.  **Лексика — `брати`, а не `приймати`:** Особливу увагу слід приділяти дієслівним конструкціям. Конструкція `брати участь` є питомо українською, на відміну від кальки `приймати участь` з російського `принимать участие`. Подібних відмінностей багато (`складати іспит` vs. `сдавать экзамен`).
 
-3.  **Verb `бути`**: Unlike Russian, where the present tense of "to be" is almost always omitted, Ukrainian frequently uses `є`. `Це є моя книга` is a perfectly natural (if slightly emphatic) sentence. The archaic forms `єси` (2nd person sg.) are also uniquely Ukrainian and appear in culturally significant texts like prayers, which students may encounter (Source 32). This is a point of national identity in the language.
+3.  **Прийменники — самостійність:** Вживання прийменників в українській мові має свою логіку, яка не завжди збігається з російською. Наприклад, `говорити українською` (орудний відмінок) vs. `говорить по-русски` (прислівник) або `на русском` (прийменникова конструкція).
 
-4.  **Prepositional Governance**: The choice of prepositions and the cases they govern often differs. The Russian `по` is overused by learners. Correct Ukrainian usage like `контрольна з математики` (test *from* mathematics) instead of `*по математиці` (Source 4) should be highlighted as the native Ukrainian standard.
+4.  **Дієслово `бути`:** На відміну від сучасної російської мови, де дієслово-зв'язка "быть" у теперішньому часі завжди опускається, в українській мові форма `є` збереглася і активно вживається, хоч і може опускатися в розмовному стилі (`Я є студент` або `Я — студент`). Це важлива граматична відмінність. (Inspired by Source 26).
 
 ## Природні приклади (Natural Examples)
 
-### Group 1: Basic Sentence Structure & Agreement
-1.  Ми любимо свою Україну й пишаємося здобутками співвітчизників. (Source 1) - *Demonstrates S-V-O and use of conjunction `й`.*
-2.  Сучасне завжди на дорозі з минулого в майбутнє. (Source 1) - *Shows a nominal predicate and use of prepositions.*
-3.  Полтава славиться галушками. (Source 2) - *Simple S-V-I structure.*
+### Група 1: Прості речення з однорідними членами
+*   Працюймо разом, **бо** так усе зробимо швидше. (Source 25)
+*   Сучасні молоді люди досить рідко вживають прислів'я **та** приказки. (Source 9)
+*   Я хочу вивчати шведську мову, **але** я собі запланувала, що буду займатися після роботи. (Адаптовано з Source 3)
 
-### Group 2: Aspect (Imperfective vs. Perfective)
-4.  Ольга **вчилася** грати на гітарі. (She **was learning** to play the guitar - process). (Source 5)
-5.  Ольга **навчилася** грати на гітарі. (She **learned** to play the guitar - result). (Source 5)
-6.  Дмитро **мив** посуд. (Dmytro **was washing** the dishes - process). (Source 5)
-7.  Дмитро **помив** посуд. (Dmytro **washed** the dishes - result). (Source 5)
+### Група 2: Складні речення зі сполучником `що`
+*   Мені здається, **що** хороші оцінки — це не тільки позитивно. (Source 4)
+*   Я знаю, **що** тоді в мене буде більше вільного часу. (Source 3)
+*   Деякі люди вважають, **що** менталітет українців — це бути скраю. (Source 9)
 
-### Group 3: Cases with Prepositions
-8.  Нахилюся вербою **над річкою** і нап’юся води холодної. (Source 1) - *Instrumental case with `над`.*
-9.  Вступити **в калюжу**, але вступити **до академії**. (Source 4) - *Shows how preposition `в/до` changes with context (physical vs. institutional).*
-10. Багато цікавих винаходів з’являється **щодня**. (Source 4) - *Adverbial use.*
+### Група 3: Односкладні речення (без підмета або без присудка)
+*   **Треба** вміти жаліти людину. (Source 7)
+*   Над білим світом – білий сніг. (Source 7)
+*   У двері **постукали**. (Source 27)
 
-### Group 4: Complex Sentences & Commands
-11. Він спав, **а** снилися йому гори бутербродів і ріки молока. (Source 15) - *Compound sentence with `а`.*
-12. Треба нахилитися, **щоб** із криниці води напитися. (Source 36) - *Complex sentence with a clause of purpose.*
-13. **Скажи** мені що-небудь, **щоб** я тебе побачив. (Source 17) - *Imperative mood followed by a subordinate clause.*
+### Група 4: Вживання минулого часу (аспект)
+*   Автобус щойно **поїхав** і вже майже **зник** з очей. (Результат, доконаний вид) (Source 8)
+*   Я **закінчила** національний університет києво-могилянська академія. (Результат, доконаний вид) (Source 5)
+*   Коли я **проводила** опитування, багато хто з вас **сказав**, що вже непогано **говорить** українською. (Процес vs. Результат) (Source 4)
+
+### Група 5: Формальне звертання `Ви`
+*   Шановний пане Юрію, висловлюємо **Вам** подяку за сумлінну працю. (Source 23)
+*   Скажіть, **Улю**, паляниця! (Неформальне `ти` до знайомої людини) (Source 20)
 
 ## Рекомендації для вправ (Activity Concepts)
 
--   **Phase 1 (Recognition & Form Drills):**
-    *   **Fill-in-the-blanks:** Provide sentences with a missing noun/adjective ending or verb conjugation. `Я живу в Києв__`. `Вчора ми читал__ цікаву книгу`.
-    *   **Multiple Choice:** Ask students to choose the correct form. `Я п'ю каву (з молоком / з молока)`. `У мене немає (сестра / сестри)`.
-    *   **Transformation:** Convert sentences from present to past tense. `Я читаю` -> `Я читав`. Convert affirmative to negative with `немає`. `У мене є час` -> `У мене немає часу`.
+*   **Phase 1 (Recognition & Identification):**
+    *   **Вправа "Світлофор":** Дати список речень з помилками з розділу "Типові помилки L2". Учні мають позначити "зеленим" правильні речення, "червоним" — неправильні.
+    *   **Вправа "Знайди сполучник":** У короткому тексті (2-3 абзаци) учень має підкреслити всі сполучники і визначити їхню функцію (єднальний, протиставний і т.д.).
+    *   **Вправа "Наголос":** Тести з вибором правильного наголосу для слів з високою частотністю (`випадок`, `разом`, `читання`, `завдання`). (Source 10).
 
--   **Phase 2 (Constrained Production):**
-    *   **Sentence Combining:** Give two simple sentences and a conjunction. `Я люблю чай. Мій брат любить каву.` (`а`) -> `Я люблю чай, а мій брат любить каву`.
-    *   **Question & Answer:** Provide questions that elicit specific grammatical forms. `Де ти живеш?` (Locative). `Що ти робив учора?` (Past Tense). `Що ти купив у магазині?` (Perfective aspect, Accusative case).
-    *   **Rewrite sentences:** Ask students to replace highlighted words with pronouns, forcing them to use the correct case. `Я дав **моєму другові** книгу` -> `Я дав **йому** книгу.`
+*   **Phase 2 (Controlled Production):**
+    *   **Вправа "Конструктор речень":** Дати пари простих речень і набір сполучників (`і, а, але, тому що, або`). Завдання — об'єднати їх у складні речення.
+    *   **Вправа "Трансформація":** Перетворити речення з прямою мовою на складне речення зі сполучником `що`. Наприклад: `Мама сказала: "Я втомилася"` -> `Мама сказала, що вона втомилася`.
+    *   **Вправа "Виправ помилку":** Дати речення з помилками у ступенях порівняння прикметників (`більш тепліший`, `самий холодний`) для корекції. (Source 29).
 
--   **Phase 3 (Communicative Production):**
-    *   **Guided Composition:** Use prompts from the sourcebooks. "Напишіть невелику пам’ятку... використавши щонайменше два односкладні речення" (Source 1). "Опишіть ваші улюблені страви складними реченнями" (Source 2).
-    *   **Role-Playing:** Simulate a situation like ordering food in a cafe (elicits Accusative, Instrumental) or asking for directions (elicits questions, imperatives, and adverbs of place).
+*   **Phase 3 (Free Production):**
+    *   **Вправа "Мій день":** Написати 5-7 речень про свій вчорашній день, обов'язково використовуючи минулий час та щонайменше три різні сполучники.
+    *   **Вправа "Порада другу":** Написати коротку пораду (3-4 речення), використовуючи односкладні речення (напр., `Треба більше читати. Не бійся робити помилки.`). (Inspired by Source 7).
+    *   **Вправа "Аудіоповторення":** Записати для учня коротке автентичне аудіо (напр., з Ukrainian Lessons Podcast). Учень слухає одне речення, ставить на паузу, повторює його вголос, намагаючись імітувати інтонацію і наголос. Потім перевіряє себе за транскриптом. (Source 3).
 
 ## Зв'язки з іншими темами (Connections)
--   **Prerequisites:** A solid grasp of the Cyrillic alphabet, basic phonetics (especially vowel/consonant alternation rules for `у/в`, `і/й`), and a memorized list of noun genders for common words. The concept of grammatical gender is non-negotiable.
--   **Builds Towards:** Mastery of A2 fundamentals is the gateway to B1. Without it, students cannot tackle more nuanced topics like the full conditional mood (`якби`), participles and verbal adverbs (`дієприкметники`, `дієприслівники`), motion verbs, or read authentic texts without constant frustration. This checkpoint confirms readiness to move from "building blocks" to "building".
+
+*   **Передумови:** Цей чекпойнт спирається на знання з рівня А1: базові відмінки іменників, теперішній час дієслів, особові займенники та проста структура речення "підмет-присудок-додаток".
+*   **Наступні кроки (B1):** Впевнене володіння основами А2 дозволяє перейти до складніших тем рівня В1, таких як:
+    *   **Дієслова руху з префіксами** (`йти` -> `прийти`, `вийти`, `перейти`).
+    *   **Дієприкметники та дієприслівники** (пасивні стани, ускладнення речень).
+    *   Поглиблене вивчення **системи відмінків** з усіма винятками.
+    *   Складніші **підрядні речення** (умовні, часові, допустові).
 
 ## Пов'язані статті (Related Articles)
--   [[grammar/a1/noun-gender|Іменник: Рід]]
--   [[grammar/a2/verb-aspect-basics|Дієслово: Основи виду (доконаний/недоконаний)]]
--   [[grammar/a2/cases-overview|Відмінки: Огляд]]
--   [[grammar/b1/cases-genitive|Родовий відмінок: Усі вживання]]
--   [[grammar/b1/cases-locative|Місцевий відмінок: Поглиблено]]
--   [[syntax/a2/simple-vs-compound|Прості та складні речення]]
+
+*   [[grammar/a2/verb-aspect-introduction|Часовиді дієслова: Вступ до аспектів]]
+*   [[grammar/a2/cases-prepositions|Відмінки та прийменники: поширені конструкції]]
+*   [[grammar/a1/present-tense|Теперішній час дієслів]]
+*   [[grammar/b1/verbs-of-motion|Дієслова руху та префікси]]
+*   [[phonetics/stress-patterns|Наголос в українській мові]]
+*   [[syntax/complex-sentences|Складні речення та сполучники]]

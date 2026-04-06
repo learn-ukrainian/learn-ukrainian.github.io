@@ -4,166 +4,198 @@
 slug: genitive-intro
 domain: grammar/a2
 tracks: [a2, b1]
-sources: [6-klas-ukrmova-zabolotnyi-2020_s0102, 6-klas-ukrmova-avramenko-2023_s0101, 6-klas-ukrmova-golub-2023_s0080, 6-klas-ukrmova-golub-2023_s0084, 5-klas-ukrmova-avramenko-2022_s0061, 6-klas-ukrmova-golub-2023_s0094, 6-klas-ukrmova-zabolotnyi-2020_s0111, 6-klas-ukrmova-zabolotnyi-2020_s0112, 7-klas-ukrmova-avramenko-2024_s0115, 10-klas-ukrajinska-mova-avramenko-2018_s0248, 10-klas-ukrmova-glazova-2018_s0264, 10-klas-ukrmova-karaman-2018_s0307, 11-klas-ukrajinska-mova-avramenko-2019_s0047, 11-klas-ukrajinska-mova-avramenko-2019_s0258, 4-klas-ukrmova-zaharijchuk_s0053, 4-klas-ukrmova-zaharijchuk_s0054, 5-klas-ukrmova-litvinova-2022_s0219, 5-klas-ukrmova-zabolotnyi-2023_s0047, 6-klas-ukrmova-avramenko-2023_s0110, 6-klas-ukrmova-avramenko-2023_s0111, 6-klas-ukrmova-avramenko-2023_s0162, 6-klas-ukrmova-avramenko-2023_s0193, 6-klas-ukrmova-avramenko-2023_s0209, 6-klas-ukrmova-avramenko-2023_s0241, 6-klas-ukrmova-betsa-2023_s0094, 6-klas-ukrmova-betsa-2023_s0104, 6-klas-ukrmova-golub-2023_s0071, 6-klas-ukrmova-golub-2023_s0086, 6-klas-ukrmova-golub-2023_s0213, 6-klas-ukrmova-litvinova-2023_s0163, 6-klas-ukrmova-litvinova-2023_s0172, 6-klas-ukrmova-zabolotnyi-2020_s0099, 6-klas-ukrmova-zabolotnyi-2020_s0106, 6-klas-ukrmova-zabolotnyi-2020_s0110, 6-klas-ukrmova-zabolotnyi-2020_s0114, 6-klas-ukrmova-zabolotnyi-2020_s0175, 6-klas-ukrmova-zabolotnyi-2020_s0200, 7-klas-ukrmova-zabolotnyi-2024_s0100, 8-klas-ukrmova-avramenko-2025_s0065, 8-klas-ukrmova-zabolotnyi-2025_s0146]
-compiled: 2026-04-06
+sources: [ext-istoria_movy-20, ext-ulp_youtube-169, ext-ulp_youtube-165, ext-istoria_movy-66, ext-ulp_youtube-256, ext-istoria_movy-28, 6-klas-ukrmova-avramenko-2023_s0101, 6-klas-ukrmova-zabolotnyi-2020_s0102, ext-other_blogs-67, 10-klas-ukrajinska-mova-avramenko-2018_s0248, 6-klas-ukrmova-zabolotnyi-2020_s0110, 10-klas-ukrajinska-mova-avramenko-2018_s0258, 10-klas-ukrajinska-mova-avramenko-2018_s0247, 10-klas-ukrmova-glazova-2018_s0263, 6-klas-ukrmova-avramenko-2023_s0097, 10-klas-ukrmova-glazova-2018_s0267, ext-other_blogs-46, 10-klas-ukrajinska-mova-avramenko-2018_s0257, 6-klas-ukrmova-betsa-2023_s0094, 6-klas-ukrmova-betsa-2023_s0096, 6-klas-ukrmova-zabolotnyi-2020_s0109, 6-klas-ukrmova-avramenko-2023_s0107, 6-klas-ukrmova-avramenko-2023_s0106, 6-klas-ukrmova-zabolotnyi-2020_s0107, 6-klas-ukrmova-zabolotnyi-2020_s0114, 6-klas-ukrmova-golub-2023_s0094, 10-klas-ukrajinska-mova-zabolotnij-2018_s0209, 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0041, 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0065, 6-klas-ukrmova-avramenko-2023_s0103, 11-klas-ukrajinska-mova-avramenko-2019_s0185, 10-klas-ukrajinska-mova-avramenko-2018_s0311, 10-klas-ukrmova-karaman-2018_s0264, 6-klas-ukrmova-avramenko-2023_s0235, 4-klas-ukrayinska-mova-ponomarova-2021-1_s0041]
+compiled: 2026-04-07
 -->
 
 ## Як це пояснюють у школі (How Schools Teach This)
+The concept of using the Genitive case (Родовий відмінок) for negation is a fundamental aspect of Ukrainian grammar, introduced relatively early. It's typically presented as a direct contrast to the structure for possession.
 
-The concept of expressing absence using the Genitive case (Родовий відмінок) is foundational in Ukrainian grammar. The core construction is `(У мене / У тебе / ...) немає + [Іменник у Родовому відмінку]`. This is often one of the first introductions to case declension beyond the nominative.
+1.  **Foundation in Possession:** First, students learn the possessive construction `У (мене/тебе/нього...) є + [Іменник у називному відмінку]`. Example: `У мене є сестра.`
+2.  **Introduction of Negation:** The negative form is introduced using the word `немає` (or the colloquial `нема`). This is where the case changes. The rule is simple and absolute: **`немає` always requires the noun that follows to be in the Genitive case** (Source 5: `ext-ulp_youtube-256`).
+3.  **Grade Level:** The mechanics of cases are introduced around 4th-5th grade (Source 36, 42). The specific use of the Genitive for negation with `немає` is consolidated in 5th and 6th grade as students work through the declension patterns of different noun types (Source 41, 15). For example, a 6th-grade exercise might involve changing positive sentences to negative:
+    *   `У саду є яблуня.` → `У саду немає яблуні.` (Source 8, adapted)
+    *   `У сараї є миші.` → `У сараї немає мишей.` (Source 8, adapted)
 
-School textbooks introduce this concept implicitly even in primary grades. For instance, a 4th-grade textbook presents a full declension table where the Genitive case is linked to the question "кого? чого?" (whose? of what?) and is used to show absence, e.g., *сина, берези, поля* (Source 15).
-
-The formal and detailed study begins around the 6th grade. Textbooks from this level, like Заболотний (2020) and Авраменко (2023), systematically break down the genitive endings for each declension.
-
-- **The Core Idea:** The impersonal verb `немає` (there isn't/aren't) or the negated verb `не мати` (to not have) governs the Genitive case. This is presented as a fundamental rule for expressing non-existence or lack of possession (Source 40). A 6th-grade textbook by Litvinova (2023) even uses the song title "У мене немає дому" by "Один в каное" as a direct, culturally relevant example to launch the topic (Source 31).
-- **Pedagogical Sequence:**
-    1.  **Introduction via `немає`:** The lesson starts with the simple, high-frequency construction `У мене немає...`. Students are given fill-in-the-blank exercises like "у саду немає (яблуня)" -> "яблуні" (Source 1).
-    2.  **Systematic Declension:** The curriculum then dedicates separate sections to the Genitive endings for each of the four noun declensions, often with detailed tables and exception lists (Source 2, 3, 7, 8).
-    3.  **The `-а/-я` vs. `-у/-ю` puzzle:** Significant time is spent on the most difficult part of the Genitive for learners: the ending choice for 2nd declension masculine nouns. Textbooks provide extensive tables and lists of categories to help students distinguish between concrete/countable nouns (ending in `-а/-я`) and abstract/mass/collective nouns (ending in `-у/-ю`) (Source 25, 30).
-    4.  **Plural Forms:** Genitive plural endings (`-ів`, `-ей`, or zero-ending) are taught as a separate sub-topic, often with a focus on memorizing exceptions and common patterns (Source 1, 10, 35).
-
-The school approach is methodical, starting with a practical communication tool (`немає`) and then building the underlying grammatical system piece by piece, declension by declension.
+The school approach focuses on memorizing the endings for each declension in the Genitive case, as this is the primary mechanism for applying the rule. The most complex part, which receives significant attention in grades 6 through 10, is mastering the `-а/-я` vs. `-у/-ю` endings for masculine nouns of the II declension (Source 14, 31).
 
 ## Повна парадигма (Full Paradigm)
+The key to using `немає` correctly is knowing the Genitive case endings for all noun declensions.
 
-The Genitive case (Родовий відмінок) is used to express absence after `немає`. The noun's ending depends on its declension, gender, and number.
+### І Відміна (1st Declension)
+Nouns ending in `-а`, `-я` (mostly feminine, some masculine). (Source 17: `ext-other_blogs-46`)
 
-### Родовий відмінок однини (Genitive Singular)
+| Група | Початкова форма | Родовий однини (кого? чого?) | Приклад з `немає` |
+| :--- | :--- | :--- | :--- |
+| Тверда | машин**а**, сестр**а** | машин**и**, сестр**и** | Немає машин**и**. |
+| М'яка | земл**я**, пісн**я** | земл**і**, пісн**і** | Немає пісн**і**. |
+| Мішана | груш**а**, меж**а** | груш**і**, меж**і** | Немає груш**і**. |
 
-| Declension & Gender | Stem Group | Ending | Nominative Singular | Genitive Singular | Example Sentence | Source |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **I відміна** (f., m. on -а/-я) | Тверда (Hard) | `-и` | книг**а** | У мене немає книг**и**. | | 2, 15 |
-| | М'яка (Soft) | `-і` | земл**я** | Немає кращої земл**і**. | | 2, 15 |
-| | Мішана (Mixed) | `-і` | душ**а** | Ні за цапову душ**у**. | (idiom) | 2 |
-| **II відміна** (m., n.) | Чол. рід (Masc.) - **Concrete** | `-а` | стіл | Немає стол**а**. | *Конкретні, чітко окреслені предмети* | 25, 30 |
-| | Чол. рід (Masc.) - **Animate** | `-а` | брат | У нього немає брат**а**. | *Назви істот* | 25 |
-| | Чол. рід (Masc.) - **Abstract** | `-у` | час | У мене немає час**у**. | *Назви абстрактних понять, почуттів* | 30 |
-| | Чол. рід (Masc.) - **Mass Noun**| `-у` | цукор | У чаї немає цукр**у**. | *Іменники на позначення речовини, маси* | 25 |
-| | Сер. рід (Neuter) | `-а`, `-я` | вікн**о**, пол**е** | Немає вікн**а**, пол**я**. | | 3, 15 |
-| **III відміна** (f. on consonant) | | `-і` | радіст**ь**, ніч | Немає ні радост**і**, ні печалі. | | 7, 19 |
-| | (some with `і`~`и` variation) | `-и` | сіл**ь** | У супі немає сол**і** (or *соли*). | (Source 7) | 7 |
-| **IV відміна** (n. with suffix) | -ат-/-ят- | `-и` | лош**я** | Немає лош**яти**. | *суфікс -ат-, -ят- з’являється* | 8, 20 |
-| | -ен- | `-і` / `-я` | ім'**я** | У списку немає твого ім**ені** / ім'**я**. | *Паралельні форми* | 8, 26 |
+**Genitive Plural (кого? чого?):** Often a zero ending (`-ø`), but with vowel changes or insertions. Some have endings `-ей` or `-ів`. (Source 8, 17)
+*   `книжки` → `немає книжок`
+*   `сестри` → `немає сестер`
+*   `пісні` → `немає пісень`
+*   `сім'ї` → `немає сімей`
+*   `статті` → `немає статей`
+*   `миші` → `немає мишей`
 
-### Родовий відмінок множини (Genitive Plural)
+### ІІ Відміна (2nd Declension)
+Masculine nouns (zero ending or `-о`) and neuter nouns (`-о`, `-е`, `-я`).
 
-| Declension & Gender | Common Ending | Nominative Plural | Genitive Plural | Example Sentence | Source |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **I відміна** | **Нульове (Zero)** | пісні, задачі | Немає піс**ень**, зад**ач**. | *Більшість іменників* | 1 |
-| | `-ей` | статт**і** | Немає нових стат**ей**. | *Окремі слова* | 1 |
-| | `-ів` | судд**і** | Немає судд**ів**. | *Окремі слова* | 1 |
-| **II відміна** (m., n.) | **-ів / -їв** | столи, музеї | Немає стол**ів**, музе**їв**. | *Найбільш типове для чол. роду* | 3 |
-| | **Нульове (Zero)** | вікна, місця | Немає вік**он**, міс**ць**. | *Типове для сер. роду* | 3, 15 |
-| | **-ей** | коні, гості | Немає кон**ей**, гост**ей**. | *Винятки* | 10 |
-| **III відміна** | **-ей** | ночі, печі | Немає тихих ноч**ей**. | | 7 |
-| **IV відміна** | **Нульове (Zero)** | курчата, імена | Немає курч**ат**, ім**ен**. | | 8, 20 |
-| **Pluralia Tantum** | -ів, -ей, нульове | окуляри, гроші, ворота | Немає окуляр**ів**, грош**ей**, вор**іт**. | *Залежить від слова* | 35 |
+**Чоловічий рід, однина (Masculine Singular):** This is the most complex area. The choice between **-а (-я)** and **-у (-ю)** depends on the noun's meaning. (Sources 14, 19, 31).
 
-## Частотність і пріоритети (Frequency & Priorities)
+| Закінчення | Категорія значення | Приклади |
+| :--- | :--- | :--- |
+| **-а / -я** | **Конкретні, чітко окреслені об'єкти:** | |
+| | Назви істот (людей, тварин) | немає брат**а**, лікар**я**, волк**а** |
+| | Конкретні предмети | немає стол**а**, автобус**а**, ключ**а** |
+| | Населені пункти | немає Києв**а**, Лондон**а**, Париж**а** |
+| | Міри довжини, ваги, часу | немає метр**а**, кілограм**а**, вівторк**а** |
+| | Наукові терміни (чітко окреслені) | немає атом**а**, квадрат**а**, відмінк**а** |
+| **-у / -ю** | **Абстрактні, збірні, нечітко окреслені:** | |
+| | Речовини, матеріали | немає цукр**у**, піск**у**, бензин**у** (але: хліб**а**) |
+| | Збірні поняття | немає народ**у**, ансамбл**ю**, ліс**у** |
+| | Явища природи | немає вітр**у**, дощ**у**, гром**у**, туман**у** |
+| | Почуття, стани, процеси | немає бол**ю**, смутк**у**, страх**у**, прогрес**у** |
+| | Ігри, танці | немає футбол**у**, вальс**у** (але: гопак**а**) |
+| | Географічні назви (країни, річки, гори) | немає Іран**у**, Єгипт**у**, Кавказ**у**, Крим**у** |
+| | Установи, будівлі | немає університет**у**, завод**у**, магазин**у** |
 
-For an A2 learner, mastering the entire paradigm is overwhelming. The teaching sequence should prioritize high-frequency forms.
+**Середній рід, однина (Neuter Singular):** Straightforward `-а`, `-я`.
+*   `вікно` → `немає вікн**а**`
+*   `море` → `немає мор**я**`
+*   `життя` → `немає житт**я**`
 
-1.  **The Core Construction (Must Know):** The absolute priority is understanding that `немає` requires a change in the noun. The learner must internalize the structure: `У мене немає + [something]`.
-2.  **High-Frequency Singulars (Master First):**
-    *   **I Declension Feminine `-и/-і`:** Extremely common for everyday objects and people. `Немає води, кави, солі, сестри, подруги, машини, роботи, школи`.
-    *   **II Declension Masculine (Key Chunks):** The `-а/-у` rule is complex. Learners should first memorize the genitive form of the 20-30 most common masculine nouns as chunks.
-        *   **`-у` group:** *часу, снігу, дощу, настрою, інтернету, цукру*.
-        *   **`-а` group:** *брата, друга, сина, телефона, комп'ютера, квитка*.
-3.  **High-Frequency Plurals (Master Next):**
-    *   **Zero Ending:** The concept of a zero ending is common and useful. `Немає проблем, питань, грошей (as a chunk), слів`.
-    *   **`-ів` Ending:** The most productive plural ending, especially for masculine nouns. `Немає друзів, студентів, котів, олівців`.
-4.  **Lower Priority for A2 (Recognition, not Production):**
-    *   Genitive of 3rd and 4th declension nouns (`ночі`, `імені`).
-    *   Complex plural exceptions (`очей`, `плечей`).
-    *   The finer points of the `-а/-у` rule for less common nouns. These can be acquired later. The goal at A2 is effective communication, not perfect grammatical accuracy on obscure words.
+**Genitive Plural:** Endings `-ів (-їв)` or zero ending `-ø`. (Source 13, 38)
+*   `столи` → `немає стол**ів**`
+*   `брати` → `немає брат**ів**`
+*   `озера` → `немає озер`
+*   `питання` → `немає питань`
+*   `моря` → `немає мор**ів**`
+
+### ІІІ Відміна (3rd Declension)
+Feminine nouns ending in a consonant, plus `мати`.
+
+| Початкова форма | Родовий однини (кого? чого?) | Приклад з `немає` |
+| :--- | :--- | :--- |
+| ніч | ноч**і** | Немає ноч**і**. |
+| сіль | сол**і** | Немає сол**і**. |
+| любов | любов**і** | Немає любов**і**. |
+| мати | матер**і** | Немає матер**і**. |
+
+**Genitive Plural:** The ending is `-ей`. (Source 21)
+*   `ночі` → `немає ноч**ей**`
+*   `матері` → `немає матер**ів**` (exception, moves to II decl. pattern in plural)
+
+### IV Відміна (4th Declension)
+Neuter nouns ending in `-а`, `-я` that gain suffixes `-ат-`, `-ят-`, `-ен-` when declined. (Source 15)
+
+| Початкова форма | Родовий однини (кого? чого?) | Приклад з `немає` |
+| :--- | :--- | :--- |
+| кошен**я** | кошен**яти** | Немає кошен**яти**. |
+| ім'**я** | ім**ені** | Немає ім**ені**. |
+
+**Genitive Plural:** The ending is a zero ending `-ø`.
+*   `кошенята` → `немає кошен**ят**`
+*   `імена` → `немає ім**ен**`
+
+## Частотність і пріоритети
+For an A2 learner, mastering the *concept* (`немає` + Genitive) is the highest priority. Perfect application of every ending, especially the masculine `-а/-у`, is a B1/B2 goal.
+
+**A2 Priority:**
+1.  **The Rule Itself:** Understand that `немає` is fundamentally different from `не є` and always changes the case of the object.
+2.  **High-Frequency Nouns:** Focus on common, everyday nouns where the endings are predictable.
+    *   **Feminine:** `немає сестри`, `немає води`, `немає книжки`, `немає роботи`.
+    *   **Masculine (Animate):** `немає брата`, `немає друга`.
+    *   **Neuter:** `немає вікна`, `немає моря`.
+    *   **Plural (common):** `немає грошей`, `немає проблем`, `немає питань`, `немає друзів`.
+3.  **Key Abstract Concepts:** Master core abstract phrases.
+    *   `немає часу` (time) - ending `-у`
+    *   `немає настрою` (mood) - ending `-ю`
+    *   `немає сенсу` (sense/meaning) - ending `-у`
+
+**B1/B2 Priority:**
+1.  **Masculine `-а/-у` Distinction:** Systematically work through the categories (concrete vs. abstract, materials, places etc.). This is a long-term effort. (Source 14).
+2.  **Genitive Plural:** Master the formation with zero endings and vowel changes (`книжок`, `пісень`).
+3.  **Subtle Pairs:** Understand pairs where the ending changes the meaning, e.g., `немає каменя` (a specific stone) vs. `немає каменю` (stone as a material). (Source 24).
 
 ## Типові помилки L2 (Common L2 Errors)
-
-English-speaking learners often make predictable errors when learning the genitive of negation, mostly due to L1 interference and overgeneralization.
+English speakers often struggle with this concept because English negation doesn't affect noun case.
 
 | ❌ Помилково | ✅ Правильно | Чому |
 | :--- | :--- | :--- |
-| `У мене немає **книга**.` | `У мене немає **книги**.` | **L1 Transfer / Case Avoidance:** English uses word order, not case, for negation ("I have no book"). Learners initially use the Nominative (dictionary form) of the noun, failing to apply the Genitive case required by `немає`. |
-| `Я не бачу **брата**.` <br> `У мене немає **брату**.` | `Я не бачу **брата**.` <br> `У мене немає **брата**.` | **Case Confusion (Genitive vs. Dative):** The learner correctly applies a case ending but chooses the wrong one, often confusing Genitive with Dative (`-у` ending). This is common for 2nd declension masculine nouns where Dative ends in `-ові/-у` (Source 3). |
-| `*У мене немає **часа**.` | `У мене немає **часу**.` | **Incorrect Genitive Masculine Ending:** The `-а/-я` vs. `-у/-ю` rule is the hardest part. Learners often default to the more "concrete-looking" `-а` ending, even for abstract nouns like `час`, which require `-у` (Source 30). |
-| `*У мене немає **проблемів**.` | `У мене немає **проблем**.` | **Overgeneralization of `-ів`:** The Genitive Plural ending `-ів` is very common for masculine nouns. Learners often overgeneralize it to feminine nouns or other nouns that should have a zero ending (like `проблема` -> `проблем`) (Source 1). |
-| `*У неї немає **п'ять гривнів**.` | `У неї немає **п'яти гривень**.` | **Negation with Numerals:** Negating a whole phrase with a number is complex. The construction `немає + [кількість] + [іменник]` requires both the numeral and the noun to be in the Genitive plural. Learners often leave the numeral in Nominative. |
+| У мене немає **машина**. | У мене немає **машини**. | Прямий перенос з англійської ("I don't have a car"), де іменник не змінюється. Учень забуває застосувати правило родового відмінка після `немає`. |
+| У мене немає **брат**. | У мене немає **брата**. | Та сама помилка, що й вище. Негативна конструкція вимагає родового відмінка, а не називного. |
+| Тут немає **автобусу**. | Тут немає **автобуса**. | Неправильний вибір закінчення `-у` замість `-а` для іменника чоловічого роду. `Автобус` — це конкретний, чітко окреслений предмет, тому він вимагає закінчення `-а`. (Source 31). |
+| У них немає **грошів**. | У них немає **грошей**. | Неправильне утворення родового відмінка множини. Для слова `гроші` правильною є форма `грошей`, а не `грошів`. (Source 32). |
+| Я не маю **машини**. | У мене немає **машини**. | Калька конструкції з деяких інших мов. Хоча "я не маю" граматично можливе (і означає "I do not possess"), стандартний і природний спосіб виразити відсутність — це конструкція `у мене немає`. (Source 5, implicitly). |
+| У місті немає **метру**. | У місті немає **метра**. | Неправильне закінчення для назви одиниці виміру. Назви мір, як правило, мають закінчення `-а`. (Source 14). |
 
 ## Деколонізаційні застереження (Decolonization Notes)
-
-Presenting Ukrainian grammar on its own terms is a crucial act of decolonization. It's essential to avoid explaining Ukrainian as a variant of or exception to Russian.
-
-1.  **The `-у/-ю` Ending is Sovereign:** The distribution of `-а(-я)` and `-у(-ю)` endings in the masculine genitive singular is a distinct feature of the Ukrainian language. While Russian has a similar distinction, the specific nouns falling into each category differ significantly. For example:
-    *   Ukr: `немає цукр**у**` (mass noun) vs. Rus: `нет са́хар**а**`.
-    - Ukr: `немає піск**у**` (mass noun) vs. Rus: `нет песк**а**`.
-    *   Ukr: `немає лист**а**` (document) vs. Rus: `нет письм**а**`.
-    *   The `-у` ending is highly productive in Ukrainian for abstract, collective, and mass nouns. This should be presented as a core feature of Ukrainian, not an anomaly.
-
-2.  **Genitive Plural Endings:** Ukrainian has a rich and varied set of Genitive Plural endings that don't always align with Russian.
-    *   The ending **`-ей`** appears in different word sets. Ukr. `статей, сімей, мишей` (Source 1), `грошей` (Source 10).
-    *   The zero-ending is common to both but applies to different lexemes. Ukr `немає чобіт` (Source 35) vs Rus. `нет сапог`.
-
-3.  **Avoid "False Friends" in Examples:** Do not use examples that have direct cognates with different meanings or grammatical behavior in Russian, as this can reinforce the idea of Russian as the default. Use uniquely Ukrainian vocabulary or examples where the contrast highlights Ukrainian's autonomy.
-
-4.  **Emphasize Ukrainian Sources:** All examples and rules should be grounded in Ukrainian textbooks (like Заболотний, Авраменко), literature, and modern usage (Source 1, 2, 3, etc.). This reinforces the standard as being internally derived. The very act of citing `(Заболотний, 6 клас)` instead of a generic rule asserts the existence of a complete and independent Ukrainian pedagogical tradition.
+1.  **`Немає` vs. `Нет`**: The standard Ukrainian word `немає` (and colloquial `нема`) is a distinct grammatical feature. It is not a variant of the Russian `нет`. It evolved from the Old East Slavic `не мать` ("not to have"). Presenting `немає` as a core, standalone concept is crucial.
+2.  **Masculine Genitive Endings**: While both Ukrainian and Russian have the `-а/-я` vs. `-у/-ю` distinction in the masculine genitive, the distribution is different and follows its own internal logic. For instance, many abstract nouns of feeling or state take `-у` in Ukrainian where Russian might use `-а` (e.g., `страху` vs. `страха`). Learners should be taught the Ukrainian system on its own terms, not as a set of exceptions to Russian rules.
+3.  **Historical Development**: The genitive case's role in negation is an ancient feature of Slavic languages, inherited from Proto-Slavic. For example, words for numbers like `п'ять` were originally nouns that required the genitive plural (`п'ять братів` - literally "a five of brothers"). (Source 9). This historical depth shows that these rules are integral to the language's structure, not arbitrary.
+4.  **Plural Forms**: Ukrainian preserves some archaic plural endings in the genitive, like `-ей` (`статей`, `мишей`), which differ from their Russian counterparts. These should be presented as standard Ukrainian forms. (Source 17).
 
 ## Природні приклади (Natural Examples)
+Here are sentences demonstrating the use of the genitive case with `немає`.
 
-These examples are sourced from textbooks or represent common, natural-sounding Ukrainian phrases.
+**Group 1: Basic Feminine & Neuter Nouns**
+*   У природи **нема** поганої **погоди**. (Source 3, adapted) - *Nature has no bad weather.*
+*   Він не боїться **змії**, але в нього вдома **немає** жодної **змії**. (Source 8, adapted) - *He is not afraid of snakes, but he doesn't have a single snake at home.*
+*   Для людської думки **немає відстані**. (Source 26, adapted) - *For human thought, there is no distance.*
 
-**Group 1: Basic Absence (I & II Declension Singular)**
-- `У мене немає **часу**.` (A very common phrase, Source 40)
-- `У саду немає **яблуні**.` (Source 1, `6-klas-ukrmova-zabolotnyi-2020_s0102`)
-- `У нього немає **брата**.` (Common conversational phrase)
-- `Я згадаю, з якого я **племені**... У мене просто нема де сісти.` (From a song, showing `нема` as a short form of `немає`, Source 31)
+**Group 2: Masculine Nouns (Animate & Concrete -а/-я)**
+*   У мене **немає брата**, але є сестра. <!-- VERIFY --> - *I don't have a brother, but I have a sister.*
+*   Шкода, що в нашому районі **немає** нового **стадіону**. <!-- VERIFY --> - *It's a pity that our district doesn't have a new stadium.*
+*   Без **кожуха** **нема** **духа**. (Нар. творч.) (Source 16) - *Without a sheepskin coat, there is no spirit.*
 
-**Group 2: The `-а` vs. `-у` distinction (II Declension Masculine)**
-- `Тече вода з-під **явора** яром на долину.` (Poetic, `явір` is concrete, Source 34)
-- `Для доброго бджоляра немає поганого **року**.` (Idiomatic, `рік` takes `-у`, Source 34)
-- `Клени обсипаються від найменшого подиху **вітерця**.` (`вітерець` is a specific, countable instance, takes `-я`, Source 34)
+**Group 3: Masculine Nouns (Abstract & Material -у/-ю)**
+*   У мене **немає часу** на це. <!-- VERIFY --> - *I don't have time for this.*
+*   Для доброго бджоляра **немає** поганого **року**. (Нар. творчість) (Source 11) - *For a good beekeeper, there is no bad year.*
+*   У каві **немає цукру**, додайте, будь ласка. <!-- VERIFY --> - *There is no sugar in the coffee, please add some.*
 
-**Group 3: Genitive Plural**
-- `Написав кілька **статей**.` (Shows the `-ей` plural ending, Source 1)
-- `У мене немає **проблем**.` (Common conversational phrase, zero ending)
-- `У формі давального відмінка однини іменники ... мають паралельні закінчення: **синові** — **сину**...` (This example shows the Genitive `однини` and `іменники` being used naturally in a grammar explanation itself.) (Source 10)
-
-**Group 4: Impersonal Constructions & Negation**
-- `Нема на світі **України**, немає другого **Дніпра**.` (Patriotic, literary, Source 40)
-- `А слова дружнього за гроші не купити.` (Here, `слова` is in the genitive, governed by the negated action, Source 40)
+**Group 4: Plural Nouns**
+*   У мене зараз **немає грошей**. (Source 32, 33) - *I don't have any money right now.*
+*   Написав кілька (статей), але в журналі **немає** моїх **статей**. (Source 8, adapted) - *I wrote several articles, but my articles are not in the journal.*
+*   У сараї **немає мишей**. (Source 8) - *There are no mice in the barn.*
 
 ## Рекомендації для вправ (Activity Concepts)
+**Phase 1: Recognition & Simple Transformation (A2.1)**
+*   **Drill 1 (Multiple Choice):** Provide sentences where the learner must choose the correct genitive form.
+    *   `У мене немає (сестра / сестри / сестрою).`
+    *   `У нього немає (час / часу / часом).`
+*   **Drill 2 (Sentence Flip):** Convert positive possessive sentences to negative.
+    *   Input: `У мене є собака.` → Output: `У мене немає собаки.`
+    *   Input: `У них є діти.` → Output: `У них немає дітей.`
 
-The writer should build exercises that guide learners from recognition to production.
+**Phase 2: Controlled Production (A2.2)**
+*   **Drill 3 (Question & Answer):** Ask questions that elicit a negative response using `немає`.
+    *   Q: `У тебе є машина?` → A: `Ні, у мене немає машини.`
+    *   Q: `У кав'ярні є чай?` → A: `Ні, чаю немає.`
+*   **Drill 4 (Masculine Endings - The Basics):** Focus on high-frequency pairs of `-а` and `-у` nouns.
+    *   `немає брата` vs. `немає часу`
+    *   `немає стола` vs. `немає цукру`
 
--   **Phase 1: Recognition & High-Frequency Chunks (A2.1)**
-    *   **Matching:** Give two columns: `немає...` and a list of nouns in the Genitive. Students match them.
-    *   **Multiple Choice:** `У мене немає _______. (брат / брата / брату)`.
-    *   **Chunk Memorization:** Drill cards with `немає часу`, `немає грошей`, `немає проблем`, `немає питань`.
-
--   **Phase 2: Controlled Production (A2.2)**
-    *   **Transformation Drills:** Convert positive to negative. `У мене є сестра.` -> `У мене немає сестри.`. `Тут є кава.` -> `Тут немає кави.`.
-    *   **Fill-in-the-blanks (I Declension):** Provide sentences with gaps for I declension nouns. `У кімнаті немає (лампа) ________.`
-    *   **Categorization:** Give learners a list of 2nd declension masculine nouns and have them sort them into "Probably ends in -а" (people, animals, concrete objects) and "Probably ends in -у" (abstract, feelings, substances).
-
--   **Phase 3: Broader Production & Plurals (A2.3 / B1.1)**
-    *   **Sentence Building:** Give prompts like `(ти / гроші?)` -> `У тебе є гроші?` -> `Ні, у мене немає грошей.`.
-    *   **Plural Drills:** Focus on the `-ів` vs. zero-ending distinction. `У місті немає (музеї) ________.` vs. `У мене немає (питання) ________.`.
-    *   **Open-ended Questions:** `Чого у вас немає в холодильнику?` Learners must produce a list of items in the Genitive. `У мене немає молока, сиру, яєць...`
+**Phase 3: Consolidation & Expansion (B1)**
+*   **Drill 5 (Plural Genitive Formation):** Practice forming the genitive plural, especially those with zero endings and vowel insertions.
+    *   `книжки` → `немає книжок`
+    *   `вікна` → `немає вікон`
+    *   `друзі` → `немає друзів`
+*   **Drill 6 (Contextual Sentences):** Give a context and have the learner form a sentence with `немає`.
+    *   Context: "You want to make tea, but you look in the cabinet." → Learner writes: `У мене немає чаю.`
 
 ## Зв'язки з іншими темами (Connections)
-
--   **Prerequisites:** A solid understanding of the **Nominative case**, noun **gender**, and the concept of **declensions** is essential before tackling the Genitive.
--   **Gateway to Cases:** The genitive of negation is often the first deep-dive into the Ukrainian case system. Mastering it opens the door to understanding other cases and their functions.
--   **Numbers (`Кількісні числівники`):** The Genitive case is inextricably linked to numbers.
-    -   `два, три, чотири` are followed by the Nominative Plural or Genitive Singular (for specific noun types).
-    -   `п'ять` and higher, and words like `багато`, `кілька`, are followed by the **Genitive Plural** (Source 13). `У мене є п'ять **друзів**.` `Тут багато **людей**.` This connection should be explicitly taught after the basics of the Genitive are established.
--   **Possession:** This structure is the primary way to negate possession, contrasting with `У мене є...`.
+*   **Prerequisites:**
+    *   **Possession `(У мене є...)`**: This concept is the logical opposite and provides the base structure.
+    *   **Introduction to Cases**: The learner must know what a "case" is and that Ukrainian nouns change their endings.
+*   **Enabled Topics:**
+    *   **Genitive with `без` (`without`):** The preposition `без` also requires the genitive case (e.g., `кава без цукру`). Mastering the endings for `немає` directly transfers to this skill. (Source 6).
+    *   **Genitive with Numbers:** Numbers 2, 3, 4 require the genitive singular (`два столи`), while numbers 5+ require the genitive plural (`п'ять столів`). The endings learned for negation are the same. (Source 9).
+    *   **Genitive for "from" (`з`/`із`):** The genitive is used to express origin: `Я з України`. (Source 5).
 
 ## Пов'язані статті (Related Articles)
-
--   `grammar/a1/noun-gender`
--   `grammar/a1/noun-declensions-intro`
--   `grammar/a2/declension-ii-masculine`
--   `grammar/b1/numbers-and-agreement`
--   `grammar/b1/genitive-case-full`
+*   [Граматика A1: У мене є... (Володіння)](slug:possession-intro)
+*   [Родовий відмінок: Закінчення іменників чоловічого роду](slug:genitive-masculine-endings)
+*   [Родовий відмінок: Форми множини](slug:genitive-plural-forms)
+*   [Відміни іменників](slug:noun-declensions)

@@ -1,0 +1,50 @@
+discovered_at: '2026-04-06T15:14:46.957018+00:00'
+error: null
+query_keywords:
+- Здоров'я і медицина
+- Здоров'я і самопочуття
+- 'У лікаря: діалог'
+- Спеціалісти та обстеження
+- В аптеці
+- Хвороби та симптоми
+- 'Підсумок: здоров''я українською'
+- Learner can describe symptoms and health complaints in Ukrainian using appropriate
+  medical vocabulary (біль, кашель, нежить, температура)
+- 'Learner can navigate a pharmacy interaction: asking for ліки, understanding рецепт
+  and дозування, describing алергія'
+- 'Learner can apply morphophonemic knowledge from M08-M15 to medical vocabulary:
+  біль-безболісний (чергування), ліки (pluralia tantum), здоров''я-здоровий (word
+  formation)'
+- 'Learner can use correct case government with medical verbs: скаржитися на (+ Зн.),
+  хворіти на (+ Зн.), лікуватися від (+ Р.)'
+- здоров'я
+- лікар
+- хвороба
+- біль
+- температура
+- кашель
+- нежить
+- ліки
+- рецепт
+- аптека
+- діагноз
+- симптом
+- скаржитися
+- лікувати
+- одужати
+- призначити
+- пацієнт
+- лікарня
+- поліклініка
+- терапевт
+- хірург
+- стоматолог
+- застуда
+- грип
+- алергія
+- щеплення
+- обстеження
+- таблетка
+rag_chunks: []
+rag_literary: []
+warning: Auto-generated from plan

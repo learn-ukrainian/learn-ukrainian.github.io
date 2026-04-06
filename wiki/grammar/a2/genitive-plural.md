@@ -4,161 +4,157 @@
 slug: genitive-plural
 domain: grammar/a2
 tracks: [a2, b1]
-sources: ["7-klas-ukrmova-zabolotnyi-2024_s0100", "4-klas-ukrmova-zaharijchuk_s0082", "5-klas-ukrmova-uhor-2022-1_s0030", "5-klas-ukrmova-uhor-2022-1_s0033", "6-klas-ukrmova-avramenko-2023_s0097", "6-klas-ukrmova-avramenko-2023_s0140", "6-klas-ukrmova-betsa-2023_s0124", "6-klas-ukrmova-betsa-2023_s0179", "6-klas-ukrmova-betsa-2023_s0205", "6-klas-ukrmova-golub-2023_s0162", "6-klas-ukrmova-zabolotnyi-2020_s0097", "6-klas-ukrmova-zabolotnyi-2020_s0145", "7-klas-ukrmova-avramenko-2024_s0115", "7-klas-ukrmova-zabolotnyi-2024_s0019", "10-klas-ukrmova-karaman-2018_s0102", "10-klas-ukrmova-karaman-2018_s0347", "11-klas-ukrajinska-mova-avramenko-2019_s0036", "5-klas-ukrmova-avramenko-2022_s0061", "5-klas-ukrmova-golub-2022_s0186", "5-klas-ukrmova-uhor-2022-1_s0039", "6-klas-ukrmova-zabolotnyi-2020_s0102", "6-klas-ukrmova-zabolotnyi-2020_s0174"]
-compiled: 2026-04-06
+sources: [ext-istoria_movy-20, ext-ulp_youtube-57, ext-ulp_youtube-27, ext-ulp_youtube-4, ext-ulp_youtube-34, 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0064, 4-klas-ukrmova-zaharijchuk_s0082, ext-ulp_youtube-256, 5-klas-ukrmova-zabolotnyi-2023_s0047, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0032, ext-ulp_youtube-242, 4-klas-ukrayinska-mova-ponomarova-2021-1_s0064, 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0067, ext-other_blogs-46, 6-klas-ukrmova-avramenko-2023_s0097, 6-klas-ukrmova-zabolotnyi-2020_s0174, 5-klas-ukrmova-uhor-2022-1_s0033, 6-klas-ukrmova-golub-2023_s0137, 7-klas-ukrmova-zabolotnyi-2024_s0100, 6-klas-ukrmova-golub-2023_s0162, ext-other_blogs-46, ext-ulp_youtube-256, ext-ulp_youtube-242, ext-ulp_youtube-57, ext-ulp_youtube-34, ext-ulp_youtube-27, ext-ulp_youtube-4, ext-istoria_movy-20, 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0064, 4-klas-ukrmova-zaharijchuk_s0082, 5-klas-ukrmova-zabolotnyi-2023_s0047, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0032, 4-klas-ukrayinska-mova-ponomarova-2021-1_s0064, 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0067, 6-klas-ukrmova-avramenko-2023_s0097, 6-klas-ukrmova-zabolotnyi-2020_s0174, 5-klas-ukrmova-uhor-2022-1_s0033, 6-klas-ukrmova-golub-2023_s0137, 7-klas-ukrmova-zabolotnyi-2024_s0100, 6-klas-ukrmova-golub-2023_s0162, 6-klas-ukrmova-betsa-2023_s0112, 6-klas-ukrmova-betsa-2023_s0075, 6-klas-ukrmova-betsa-2023_s0180, 6-klas-ukrmova-betsa-2023_s0124, 10-klas-ukrmova-karaman-2018_s0260, 10-klas-ukrmova-karaman-2018_s0288, 3-klas-ukrainska-mova-vashulenko-2020-1_s0110, 3-klas-ukrainska-mova-vashulenko-2020-1_s0158, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0046, 3-klas-ukrainska-mova-kravtsova-2020-1_s0062, 7-klas-ukrmova-litvinova-2024_s0048, 6-klas-ukrmova-litvinova-2023_s0136, 6-klas-ukrmova-litvinova-2023_s0167, ext-other_blogs-67, ext-other_blogs-52]
+compiled: 2026-04-07
 -->
 
 ## Як це пояснюють у школі (How Schools Teach This)
 
-The concept of the Genitive Plural (родовий відмінок множини) is introduced systematically in Ukrainian schools, typically around the 6th grade, after students have a firm grasp of noun declensions (`відміни`). The approach is structural and rule-based.
+В українській шкільній програмі тема узгодження числівників з іменниками вводиться поступово. Базові концепції роду та числа закладаються в початкових класах (Source 27, 33, 37). У 3-4 класах учні вчаться змінювати іменники за числами та відмінками, а прикметники узгоджувати з ними (Source 6, 7, 36).
 
-1.  **Foundation in Declensions:** First, students learn to categorize all nouns into one of four declensions (`відміни`) based on their gender and ending in the Nominative Singular (Джерело: `6-klas-ukrmova-avramenko-2023_s0097`). This classification is critical because Genitive Plural endings are determined by the noun's declension.
+Ключове правило, що стосується родового відмінка множини, вивчається в 6 класі разом із відмінюванням кількісних числівників. У підручниках чітко розмежовується вживання іменників з числівниками `один`, `два, три, чотири` та `п'ять` і більше.
 
-2.  **Introduction to Genitive Plural:** The specific rules for forming the Genitive Plural are then taught for each declension. For example, Заболотний (2020) explains that for 1st Declension nouns, the Genitive Plural most often has a **null ending** (`-`), but some words take `-ів` or `-ей` (Джерело: `6-klas-ukrmova-zabolotnyi-2020_s0102`). Textbooks provide clear examples like `багато (пісня) -> багато пісень` and `немає (миша) -> немає мишей`.
+1.  **Числівник `один (одна, одне)`**: Узгоджується з іменником у роді, числі та відмінку, як прикметник. Наприклад, `один стіл`, `одна книга`, `одне вікно` (Source 16, 20).
+2.  **Числівники `два (дві), три, чотири`**: Вимагають після себе іменника у формі **називного відмінка множини**: `два студенти`, `три кімнати`, `чотири яблука` (Source 16, 20).
+3.  **Числівники від `п'яти` до `двадцяти`, а також `тридцять` тощо**: Вимагають після себе іменника у формі **родового відмінка множини**. Наприклад, `п'ять студентів`, `шість кімнат`, `десять яблук`. Це центральне правило для даної теми.
+4.  **Складені числівники (21, 22, 105 тощо)**: Форма іменника залежить від **останнього** слова в числівнику. Наприклад:
+    *   `двадцять **один** студент` (як з `один`)
+    *   `тридцять **два** студенти` (як з `два`)
+    *   `сто **п'ять** студентів` (як з `п'ять`)
 
-3.  **Context of Numerals:** A key context for teaching this case is its use with cardinal numbers and words of quantity. School materials explicitly differentiate the rules:
-    *   **2, 3, 4 + Nominative Plural:** The numbers `два`, `три`, `чотири` require the noun to be in the Nominative Plural (Джерело: `6-klas-ukrmova-zabolotnyi-2020_s0174`). For example, `два спортсмени`, `три кімнати`, `чотири яблука` (Джерело: `6-klas-ukrmova-golub-2023_s0162`).
-    *   **5+ and Quantity Words + Genitive Plural:** Cardinal numbers from `п'ять` onwards, as well as indefinite numerals like `багато`, `мало`, `кілька`, `декілька`, `кільканадцять`, require the noun to be in the Genitive Plural (Джерела: `6-klas-ukrmova-avramenko-2023_s0162`, `6-klas-ukrmova-betsa-2023_s0146`). Examples like `під одним ковпаком сімсот козаків` (Джерело: `6-klas-ukrmova-betsa-2023_s0144`) are used to illustrate this rule.
-
-The teaching methodology relies on tables, rule memorization, and pattern-based exercises like transforming sentences and filling in the correct noun forms (Джерело: `6-klas-ukrmova-zabolotnyi-2020_s0102`).
+Ця логіка є послідовною і подається як фундаментальне правило синтаксичної сполучуваності (Source 16). Крім числівників, родовий відмінок множини використовується зі словами, що позначають невизначену кількість: `багато`, `мало`, `кілька`, `декілька`, `багато`, а також у конструкціях із запереченням (`немає`).
 
 ## Повна парадигма (Full Paradigm)
 
-The ending of the Genitive Plural depends on the noun's declension, gender, and stem.
+Родовий відмінок множини (Genitive Plural) — один із найскладніших для іноземців через варіативність закінчень, що залежать від відміни, роду та кінцевого приголосного основи.
 
-### І Відміна (1st Declension)
-*(Feminine, Masculine, and Common nouns ending in -а, -я)*
-The most common ending is **null** (`-ø-`), often with a fleeting vowel (`-о-` or `-е-`) inserted into the stem for pronunciation. A smaller group of nouns takes `-ей` or `-ів`.
+### І відміна (жін., чол., спільний рід на `-а, -я`)
 
-| Тип Основи (Stem Type) | Правило (Rule) | Однина (Singular) | Родовий Множини (Gen. Pl.) | Джерело (Source) |
-| :--- | :--- | :--- | :--- | :--- |
-| **Більшість (Majority)** | Нульове закінчення (`-ø`) | `книга`, `пісня`, `вишня`, `тополя` | `книг`, `піс**е**нь`, `виш**е**нь`, `тополь` | `6-klas-ukrmova-zabolotnyi-2020_s0102` |
-| **Окремі слова (Some words)** | Закінчення `-ей` | `миша`, `стаття`, `сім'я` | `миш**ей**`, `стат**ей**`, `сім**ей**` | `6-klas-ukrmova-zabolotnyi-2020_s0102` |
-| **Окремі слова (Some words)** | Закінчення `-ів` | `суддя` | `судд**ів**` | `6-klas-ukrmova-zabolotnyi-2020_s0102` |
+| Група | Основа на... | Закінчення | Приклад (Н.в. одн.) | Родовий відмінок множини | Примітки |
+| :---- | :--- | :--- | :--- | :--- | :--- |
+| Тверда | Твердий приголосний | **Нульове** | `книга`, `сестра`, `фабрика` | `книг`, `сестер`, `фабрик` | Часто з'являється вставний голосний **-о-**, **-е-**: `сестра -> сестер`, `думка -> думок`. |
+| М'яка | М'який приголосний | **-ь**, **-ей** | `земля`, `пісня`, `стаття`, `сім'я` | `земель`, `пісень`, `статей`, `сімей` | Вставний **-е-** у закритому складі: `вишня -> вишень`. Слова на `-я` після голосного мають **-й-**: `мрія -> мрій`. |
+| Мішана | Шиплячий (`ж, ч, ш`) | **Нульове** | `вежа`, `круча`, `тиша` | `веж`, `круч`, `тиш` | Аналогічно до твердої групи. Може бути вставний голосний: `круча -> круч`. |
+| **Винятки** | - | **-ей, -ів** | `миша`, `свиня`, `суддя`, `староста` | `мишей`, `свиней`, `суддів`, `старостів` | Деякі іменники чол. роду на `-а/-я` мають закінчення `-ів`: `суддя -> суддів`, `тесля -> теслів`. (Source 14) |
 
-### ІІ Відміна (2nd Declension)
-*(Masculine nouns with null ending or -о; Neuter nouns with -о, -е, -я)*
+### ІІ відміна (чол. рід з нульовим закінченням або на `-о`; сер. рід на `-о, -е, -я`)
 
-| Рід (Gender) | Правило (Rule) | Однина (Singular) | Родовий Множини (Gen. Pl.) | Джерело (Source) |
-| :--- | :--- | :--- | :--- | :--- |
-| **Чоловічий (Masculine)** | Закінчення `-ів` (найчастіше) | `студент`, `стіл`, `кінь`, `козак` | `студент**ів**`, `стол**ів**`, `кон**ей**`, `козак**ів**` | `6-klas-ukrmova-betsa-2023_s0021`, `6-klas-ukrmova-avramenko-2023_s0241` |
-| **Середній (Neuter)** | Нульове закінчення (`-ø`) | `вікно`, `село`, `місце` | `вік**о**н`, `сіл`, `місць` | `6-klas-ukrmova-zabolotnyi-2020_s0097` |
-| **Середній (Neuter)** | Закінчення `-ів` | `море`, `поле` | `мор**ів**`, `пол**ів**` | `4-klas-ukrmova-zaharijchuk_s0082` |
+| Рід | Основа на... | Закінчення | Приклад (Н.в. одн.) | Родовий відмінок множини | Примітки |
+| :---- | :--- | :--- | :--- | :--- | :--- |
+| Чол. | Будь-який | **-ів (-їв)** | `стіл`, `завод`, `студент`, `герой`, `трамвай` | `столів`, `заводів`, `студентів`, `героїв`, `трамваїв` | Це найпродуктивніше закінчення для чоловічого роду. |
+| Чол. | (винятки) | **-ей** | `гість`, `кінь` | `гостей`, `коней` | Невелика група слів. |
+| Сер. | `-о` | **Нульове** | `місто`, `село`, `вікно` | `міст`, `сіл`, `вікон` | Вставний голосний **-о-** є типовим: `вікно -> вікон`. |
+| Сер. | `-е` | **-ів (-їв)** | `море`, `поле` | `морів`, `полів` | |
+| Сер. | `-я` | **-ь**, **-ів** | `життя`, `завдання`, `обличчя`, `почуття` | `життів`, `завдань`, `облич`, `почуттів` | Подвоєння приголосних зникає: `знання -> знань`. |
+| **Винятки** | сер. рід | **-ей** | `око`, `плече` | `очей`, `плечей` | Ці слова мають особливі форми. (Source 39) |
 
-### ІІІ Відміна (3rd Declension)
-*(Feminine nouns with a null ending, plus мати)*
-The consistent ending is `-ей`.
+### ІІІ та IV відміни
 
-| Однина (Singular) | Родовий Множини (Gen. Pl.) | Джерело (Source) |
-| :--- | :--- | :--- |
-| `ніч`, `річ`, `любов`, `мати` | `ноч**ей**`, `реч**ей**`, `любов**ей**` <!-- VERIFY -->, `матер**ів**` | `6-klas-ukrmova-betsa-2023_s0078` |
+| Відміна | Рід | Закінчення | Приклад (Н.в. одн.) | Родовий відмінок множини | Примітки |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **III** | Жіночий (нульове) | **-ей** | `ніч`, `річ`, `тінь`, `любов`, `мати` | `ночей`, `речей`, `тіней`, `любовей` (арх.), `матерів` | Подовження основи на `-ер` у слова `мати` -> `матер-`. |
+| **IV** | Середній (`-а/-я` + суфікси `-ат-/-ят-`) | **Нульове** | `теля`, `лоша`, `ім'я`, `плем'я` | `телят`, `лошат`, `імен`, `племен` | Суфікс `-ат-/-ят-` або `-ен-` зберігається. |
 
-**Note:** `мати` is an exception, taking `-ів` and behaving like a 2nd declension noun in the plural.
+## Частотність і пріоритети
 
-### IV Відміна (4th Declension)
-*(Neuter nouns ending in -а, -я with suffixes -ат-, -ят-, -ен- when declining)*
-The consistent ending is `-ат` / `-ят` (from the plural stem) with a null ending.
+Для рівня А2-В1 пріоритетом є засвоєння правила сполучуваності з числівниками та словами кількості.
 
-| Однина (Singular) | Родовий Множини (Gen. Pl.) | Джерело (Source) |
-| :--- | :--- | :--- |
-| `кошеня`, `курча`, `теля` | `кошен**ят**`, `курч**ат**`, `тел**ят**` | `6-klas-ukrmova-avramenko-2023_s0097` |
+1.  **Найвищий пріоритет**: Правило **`5+ + Gen. Pl.`**. Це одна з найчастотніших конструкцій у мові. Сюди ж належать слова `багато`, `мало`, `кілька`, `декілька`, `скільки`.
+    *   *Приклад: "На них приїхали понад **100 жінок**..."* (Source 4)
+    *   *Приклад: "...не менше ніж **50% усіх** виданих упродовж року **книг**"* (Source 5)
 
-## Частотність і пріоритети (Frequency & Priorities)
+2.  **Середній пріоритет**: Найпродуктивніші закінчення родового відмінка множини:
+    *   **`-ів`** для чоловічого роду (`студентів`, `років`, `днів`).
+    *   **Нульове закінчення** для жіночого роду І відміни (`книг`, `сестер`, `країн`) та середнього роду на `-о` (`міст`, `слів`).
+    *   **`-ей`** для жіночого роду III відміни (`ночей`, `речей`).
 
-For A2/B1 learners, not all forms are equally important. The primary goal is to achieve communicative competence in the most common situations.
+3.  **Нижчий пріоритет**: Рідкісні винятки та паралельні форми (`чоловік/чоловіків`, `очей/віч`). Вони важливі для просунутих рівнів, але на А2-В1 можна зосередитись на базових моделях.
 
-1.  **Highest Priority:** The constructions `[число 5+] + Іменник у Р.в. мн.` and `[багато/мало/кілька] + Іменник у Р.в. мн.` are the most frequent and essential use cases. Learners must master this to talk about quantity.
-    *   **Focus on endings:** `-ів` for masculine (студентів, комп'ютерів) and null ending `-` for feminine (книг, машин, сестер).
-
-2.  **Second Priority:** The construction `немає + Іменник у Р.в. мн.` to express the absence of multiple items (e.g., `Тут немає студентів`). This is a very common structure in daily conversation.
-
-3.  **Lower Priority:** Irregular forms and less common endings (`-ей`), while necessary for correctness, can be learned passively at first. The learner should be able to recognize them before actively producing them. The exceptions in the 1st declension (`суддів`, `статей`) are less critical for an A2 learner than the general rule.
+Конструкція заперечення `немає + Gen. Pl.` також є високочастотною і має вивчатися паралельно. Наприклад: `У мене немає братів`.
 
 ## Типові помилки L2 (Common L2 Errors)
 
-English speakers learning Ukrainian often make predictable errors with the Genitive Plural due to structural differences between the languages.
-
-| ❌ Помилково (Incorrect) | ✅ Правильно (Correct) | Чому (Why) |
+| ❌ Помилково | ✅ Правильно | Чому |
 | :--- | :--- | :--- |
-| *У мене є два **книг**.* | У мене є дві **книги**. | **Помилка узгодження з числівником (Numeral Agreement Error).** English uses plural for all numbers greater than one ("two books"). Ukrainian uses Nominative Plural for 2, 3, 4 (`дві книги`), and Genitive Plural for 5+ (`п'ять книг`). The learner incorrectly applies the Genitive Plural rule to the number 2. (Джерело: `6-klas-ukrmova-golub-2023_s0162`). |
-| *Я купив п'ять **книжка**.* | Я купив п'ять **книг** (or **книжок**). | **Використання однини замість множини (Singular for Plural).** The learner correctly identifies the genitive case is needed but fails to use the plural form, applying a genitive singular ending instead. |
-| *Тут немає **студенти**.* | Тут немає **студентів**. | **Використання називного відмінка замість родового (Nominative for Genitive).** The word `немає` (there isn't/aren't) always governs the Genitive case. The learner uses the Nominative plural form (`студенти`) instead of the required Genitive Plural (`студентів`). |
-| *У нас багато **проблемів**.* | У нас багато **проблем**. | **Неправильне закінчення (Incorrect Ending).** The learner over-generalizes the common masculine ending `-ів` and applies it to a 1st declension feminine noun (`проблема`), which should have a null ending in the Genitive Plural. |
-| *Він написав п'ять **піснь**.* | Він написав п'ять **пісень**. | **Пропуск вставного голосного (Omission of Fleeting Vowel).** In feminine and neuter nouns that take a null ending, a "fleeting vowel" (`-e-` or `-о-`) is often inserted into the stem for easier pronunciation. Learners often omit this vowel, creating unpronounceable clusters (e.g., `піснь`, `книжк`). |
-| *Я бачив п'ять **котів**.* (I saw 5 cats) <br> *У мене немає п'ять **котів**.* (I don't have 5 cats) | Я бачив п'ять **котів**. <br> У мене немає п'ять**ох** **котів**. | **Складність відмінювання числівників (Numeral Declension Complexity).** In direct object position (Accusative), the numeral `п'ять` is used. However, after a preposition or in other indirect cases (like Genitive governed by `немає`), the numeral itself must also decline (`п'ятьох`). Learners often use the base form `п'ять` in all situations. (Джерело: `6-klas-ukrmova-zabolotnyi-2020_s0174`). |
+| *Я маю п'ять **книги**.* | Я маю п'ять **книг**. | Прямий переклад з англійської ("I have five books"), де іменник стоїть у множині. В українській мові числівники 5+ керують родовим відмінком множини. |
+| *У класі десять **студентов**.* | У класі десять **студентів**. | Неправильний вибір закінчення. Для більшості іменників чоловічого роду в родовому відмінку множини характерне закінчення **-ів**. Закінчення *-ов* нетипове для української мови в цій функції. |
+| *У моєї бабусі п'ять **дочок**.* | У моєї бабусі п'ять **дочок**. (або `п'ятеро дочок`). | Це складний випадок. Слово `дочка` має форму `дочок`, а не `дочок`. Але частіше вживається збірний числівник `п'ятеро` з назвами істот. З іншого боку, з'являється вставний голосний: `донька` -> `доньок`. Отже, `п'ять доньок` є правильною і поширеною формою. |
+| *Тут багато **люди**.* | Тут багато **людей**. | Слова `люди`, `діти`, `гуси`, `кури` є формами множини, що відмінюються за особливим зразком. Їхня форма родового відмінка — `людей`, `дітей`, `гусей`, `курей`. |
+| *Двісті **гривнів**.* | Двісті **гривень**. | Іменник `гривня` належить до м'якої групи І відміни. Правильна форма родового відмінка множини — `гривень` (з нульовим закінченням та вставним **-е-**), а не `-ів`. |
+| *Двадцять два **років**.* | Двадцять два **роки**. | Форма іменника визначається останнім словом числівника. Тут це «два», що вимагає називного відмінка множини (`роки`), а не родового (`років`). |
 
-## Деколонізаційні застереження (Decolonization Notes)
+## Деколонізаційні застереження
 
-It is crucial to teach Ukrainian grammar on its own terms, not as a derivative of Russian. While Slavic languages share features, presenting Ukrainian as an "exception to Russian rules" is a colonial linguistic practice.
+Українська граматика числівників має глибоке історичне коріння і не є "варіантом" російської. Важливо наголошувати на її самостійному розвитку.
 
-1.  **Закінчення `-ів` проти `-ов` (Ending `-ів` vs. `-ов`):** The standard Genitive Plural ending for many masculine nouns in Ukrainian is `-ів` (`столів`, `братів`, `років`). This is a distinct feature. The Russian equivalent is `-ов` (`столов`). Directly teaching the `-ів` ending as the primary Ukrainian form prevents learners from defaulting to the Russian pattern.
+1.  **Історичний контекст**: У давньоруській мові (спільному предку української та російської) числівники від 5 до 10 були **іменниками жіночого роду** (Source 1, 24). Вони відмінювалися як слово `ніч` і буквально означали "п'ятірка", "шістка". Саме тому вони вимагали після себе іменника в родовому відмінку множини, так само як сучасні слова `група студентів` або `десяток яєць`. Це пояснює, чому `п'ять` керує відмінком, на відміну від `два`, `три`, `чотири`, які історично були прикметниками і узгоджувалися з іменником (Source 24). Цей історичний факт пояснює логіку правила, а не зводить його до механічного запам'ятовування.
 
-2.  **Нульове закінчення та вставні голосні (Null Endings and Fleeting Vowels):** The extensive system of fleeting vowels (`-е-`, `-о-`) that appear in null-ending Genitive Plurals is a core feature of Ukrainian phonology and morphology.
-    *   **Ukrainian:** `пісня -> піс**е**нь`, `вікно -> вік**о**н`, `сестра -> сест**е**р`.
-    *   This system is different and often more regular than in Russian. It should be presented as a fundamental rule of Ukrainian, not a quirky exception.
+2.  **Форма `чотири`**: У давньоруській мові існувала форма чоловічого роду `четыре` (Source 24). Сучасна російська мова зберегла її (`четыре`), тоді як українська мова узагальнила форму жіночого/середнього роду `чотири` (Source 24). Представляти українську форму як відхилення від російської є некоректним; обидві мови розвинули різні риси спільного предка.
 
-3.  **Форма `-ей` (The `-ей` ending):** While Ukrainian uses the `-ей` ending for 3rd declension (`ночей`, `речей`) and some 1st declension nouns (`статей`, `мишей`), its distribution is determined by the Ukrainian declension system, which is not identical to Russian. Avoid comparisons. Teach it as the rule for specific noun groups within the Ukrainian system (Джерело: `6-klas-ukrmova-zabolotnyi-2020_s0102`).
+3.  **Закінчення `-ів` vs. `-ов`**: Продуктивне українське закінчення родового відмінка множини для чоловічого роду **`-ів`** (`столів`, `студентів`) є однією з яскравих відмінностей від російського **`-ов`** (`столов`, `студентов`). Помилкове вживання `-ов` в українському мовленні є ознакою русифікації.
 
-4.  **Числівник `Два` (The Numeral 'Two'):** Ukrainian preserves the distinction for gender in the numeral 'two': `два` (masculine/neuter) and `дві` (feminine). E.g., `два столи`, `дві книги`. This is a feature of Ukrainian that should be emphasized.
+4.  **Паралельні форми та варіативність**: В українській мові існують паралельні форми, як-от `полів` і `піль`, `голів` і `голов` (Source 14). Це свідчить про багатство та внутрішню динаміку мови. Не варто подавати одну з форм як "правильну", а іншу як "неправильну", якщо обидві є літературними.
 
-**Rule for the writer:** Never use Russian as a point of comparison. Explain Ukrainian grammar based on its own internal logic and the four-declension system taught in Ukrainian schools (Джерело: `6-klas-ukrmova-avramenko-2023_s0097`).
+5.  **Наголос**: Наголоси в числівниках та іменниках після них можуть відрізнятися. Наприклад, укр. `чотир**ьо**х` vs. рос. `четыр**ё**х`. Важливо звертати увагу на правильну українську вимову.
 
-## Природні приклади (Natural Examples)
+## Природні приклади
 
-Sentences should be sourced from Ukrainian textbooks or represent natural, common speech patterns.
+#### Кількість з конкретними числами (5+)
+1.  "...в Україні готують **12 страв** на різдвяну вечерю." (Source 11)
+2.  "...опублікували свої твори **17 авторок** з Галичини і наддніпрянської України." (Source 4)
+3.  "У цьому законі чітко прописано ті сфери у яких саме українська мова має домінувати..." (Source 5) (Приклад без числівника, але ілюструє контекст)
+4.  "...було опубліковано близько **50 мільйонів наукових статей**" (Source 25)
 
-**Група 1: Неозначено-кількісні числівники (Indefinite Numerals)**
-*   `Уранці пропололи грядки, зарослі бур’янами.` (Хоча тут немає Р.в.мн., це показує контекст) (Джерело: `7-klas-ukrmova-zabolotnyi-2024_s0100`). Кращий приклад: `На заводі вчасно замінили багато застарілого обладнання.`
-*   `У Карпатах випало багато снігу.` (Джерело: `10-klas-ukrmova-karaman-2018_s0102`) (Note: singular, but shows usage of багато).
-*   `На сцені нас лише шестеро звичайних українців, але за лаштунками — мільйони непереможних.` (Джерело: `6-klas-ukrmova-avramenko-2023_s0162`).
-*   `За своє життя я переконався, що все більше й непомітніше забирають час розмови з друзями; друзі — великі грабіжники часу…` (Джерело: `6-klas-ukrmova-golub-2023_s0115`).
+#### Невизначена кількість (`багато`, `кілька` тощо)
+5.  "Крізь густу (…) ліщину синів Дніпро. **Довгим (…) поглядом** Софія охопила широку (…) річку, піщані (…) острови..." (Source 13)
+6.  "на Закарпатті роблять **так багато вина**" (Source 8)
+7.  "Отже абітурієнт - це людина яка хоче збирається вступати в університет це людина яка подає заявку на вступ вона називається абітурієнт А виш - це вища школа або вищий навчальний заклад ми говоримо виш ВНЗ або просто університет чи інститут Так от повернімось до теми тесту система ЗНО в Україні створена не дуже давно але вона чудово працює це тому Мабуть що так можна найкраще запобігти корупції вступ за результатами тестів максимально об'єктивний натомість у США наскільки мені відомо для вступу треба подавати цілий пакет документів не тільки тести а і есе рекомендації оцінки з школи Також в Америці дивляться на те наскільки активною була учениця чи учень в школі дивляться на спортивні досягнення якщо деться про університети для яких спорт це важливо в Україні ж основне фактично все залежить від балів ЗНО **балів те**" (Source 2)
+8.  "Опублікували свої твори **17 авторок** з Галичини і наддніпрянської України" (Source 4)
+9.  "...переважно це **Кілька десятків тисяч гривень** на рік." (Source 2)
 
-**Група 2: Числівники 5+ (Numerals 5+)**
-*   `Під одним ковпаком сімсот козаків.` (Джерело: `6-klas-ukrmova-betsa-2023_s0144`).
-*   `Читати й писати людство навчилося якихось 5000 років тому.` (Джерело: `5-klas-ukrmova-golub-2022_s0186`).
-*   `У нього сім п’ятниць на тиждень.` (Джерело: `6-klas-ukrmova-betsa-2023_s0181`).
+#### Конструкції з `з`/`із` + Родовий відмінок
+10. "узвар - це напій **із сухофруктів**." (Source 11)
+11. "я саме повернувся **з Ужгорода**." (Source 8)
 
-**Група 3: Вираження відсутності з `немає` (Expressing Absence with `немає`)**
-*   `Написав кілька статей, але в сараї немає мишей.` (Комбіновано з Джерела: `6-klas-ukrmova-zabolotnyi-2020_s0102`).
-*   `У мене немає зайвих грошей.` <!-- VERIFY -->
-*   `Слів природній та зворотній в українських словниках немає.` (Джерело: `11-klas-ukrajinska-mova-avramenko-2019_s0036`).
+#### Історичні та розмовні приклади
+12. "...суть ту **десяти людї**" (давньоруська, означає "близько десяти людей") (Source 1)
+13. "І реча друго година сваримо, іноді сваримося та увекося ладімо, та завжди миримося." (Source 1)
 
-**Група 4: Після прийменників `до, з, для, без` (After prepositions)**
-*   `До нас приїхало багато гостей з інших міст.` <!-- VERIFY -->
-*   `Цей салат готують з п'яти інгредієнтів.` <!-- VERIFY -->
-*   `Успіхи в економіці залежать від багатьох факторів.` (Адаптовано з Джерела: `10-klas-ukrmova-karaman-2018_s0102`).
+## Рекомендації для вправ
 
-## Рекомендації для вправ (Activity Concepts)
+-   **Phase 1 (Розпізнавання та вибір)**: Вправи на вибір правильної форми.
+    *   *Формат*: `П'ять (студент / студенти / студентів)`.
+    *   *Мета*: Засвоїти базове правило `5 + Gen. Pl.` vs. `2/3/4 + Nom. Pl.`.
+    *   *Приклад*: `Три (гривня / гривні / гривень) лежать на столі.`
 
-**Phase 1: Recognition & Basic Matching**
-*   **Drill 1 (Choice):** Present a sentence with a choice: `У мене є п'ять (книга / книг / книги)`. The learner chooses the correct form.
-*   **Drill 2 (Matching):** A two-column matching exercise. Column A has numbers (`2`, `3`, `4`, `5`, `10`, `багато`). Column B has noun phrases (`студентів`, `студенти`). The learner draws lines to match them.
+-   **Phase 2 (Трансформація)**: Вправи на утворення правильної форми з називного відмінка однини.
+    *   *Формат*: `багато + (друг) -> багато друзів`.
+    *   *Мета*: Практика утворення закінчень `-ів`, `-ей` та нульового закінчення, включно зі вставними голосними.
+    *   *Приклад*: `десять + (сестра) -> ...`; `сім + (день) -> ...`; `багато + (місто) -> ...`.
 
-**Phase 2: Controlled Production**
-*   **Drill 3 (Fill-in-the-blank):** Provide the base form of the noun and the quantity. The learner must write the correct phrase.
-    *   `У класі є (10, студент). -> У класі є десять студентів.`
-    *   `Я прочитала (3, стаття). -> Я прочитала три статті.`
-    *   `Тут немає (люди). -> Тут немає людей.`
+-   **Phase 3 (Контрольована продукція)**: Вправи на заповнення пропусків у реченнях.
+    *   *Формат*: `У моєму місті є __________ (7, театр).` -> `У моєму місті є сім театрів.`
+    *   *Мета*: Інтеграція правила в синтаксичний контекст.
 
-*   **Drill 4 (Transformation):** Provide a sentence with a singular object. The learner transforms it to plural with a given number.
-    *   `Я бачу машину. (5) -> Я бачу п'ять машин.`
-    *   `Він має брата. (2) -> Він має двох братів.`
+-   **Phase 4 (Вільна продукція)**: Відповіді на запитання, що вимагають використання числівників.
+    *   *Формат*: `Скільки днів у тижні?`, `Скільки у вас братів і сестер?`, `Скільки років вашому місту?`
+    *   *Мета*: Автоматизація навички в спонтанному мовленні.
 
-**Phase 3: Communicative Production**
-*   **Drill 5 (Question & Answer):** Use questions that elicit a quantitative answer.
-    *   `Скільки днів у тижні? -> У тижні сім днів.`
-    *   `Скільки студентів у вашій групі? -> У моїй групі дванадцять студентів.`
-*   **Drill 6 (Description):** Show a picture with multiple objects (e.g., a market stall with fruits) and ask the learner to describe what they see and in what quantity. `На столі лежить десять яблук, багато бананів і кілька апельсинів.`
+## Зв'язки з іншими темами
 
-## Зв'язки з іншими темами (Connections)
+-   **Попередні теми (Prerequisites)**:
+    *   **Відміни іменників (`noun-declensions`)**: Розуміння відміни та групи іменника є необхідним для правильного утворення форми родового відмінка множини.
+    *   **Називний відмінок множини (`nominative-plural`)**: Необхідний для правильного вживання з числівниками 2, 3, 4.
+    *   **Роди іменників (`noun-genders`)**: Важливий для узгодження з числівником `один/одна/одне` та `два/дві`.
 
-*   **Prerequisites:** A solid understanding of `[[grammar/a1/noun-genders|Іменники: Рід]]` and the general concept of the case system is essential. The learner must also be familiar with the `[[grammar/a2/declensions|Чотири відміни іменників]]`, as this is the basis for determining the correct endings.
-*   **Corequisites:** This topic should be taught alongside `[[grammar/a2/numerals|Числівники]]`, as the choice between Nominative Plural and Genitive Plural is governed by the numeral. It also reinforces `[[grammar/a2/adjective-agreement|Узгодження прикметників]]`, as adjectives modifying these nouns will also be in the Genitive Plural (e.g., `п'ять **нових** студентів`).
-*   **Enables:** This grammatical point unlocks the ability to speak about the world in quantities, a fundamental communicative function. It is a prerequisite for more advanced topics at the B1 level, such as declining compound numerals and more complex quantitative expressions.
+-   **Наступні теми (Enables)**:
+    *   **Дати та час (`dates-and-time`)**: Конструкції на кшталт `п'ять хвилин`, `десять років`.
+    *   **Розповіді про статистику та кількість (`talking-about-quantity`)**: Використання слів `відсоток`, `більшість`, `частина` з родовим відмінком множини (`80 відсотків людей`).
+    *   **Покупки та ціни (`shopping-and-prices`)**: `Це коштує сто гривень`.
 
-## Пов'язані статті (Related Articles)
-*   `[[grammar/a1/noun-genders|Іменники: Рід]]`
-*   `[[grammar/a2/declensions|Чотири відміни іменників]]`
-*   `[[grammar/a2/numerals|Числівники: Узгодження з іменниками]]`
-*   `[[grammar/a2/genitive-singular|Родовий відмінок: Однина]]`
-*   `[[grammar/a2/adjective-agreement|Узгодження прикметників у непрямих відмінках]]`
+## Пов'язані статті
+
+-   [[grammar/a1/nominative-plural|Називний відмінок множини]]
+-   [[grammar/a2/noun-declensions|Відміни іменників]]
+-   [[grammar/a2/numerals-1-100|Числівники: основи]]
+-   [[grammar/b1/cases-overview|Огляд відмінків]]

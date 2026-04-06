@@ -1,0 +1,31 @@
+discovered_at: '2026-04-06T15:14:46.957018+00:00'
+error: null
+query_keywords:
+- Речення причини
+- Підрядні обставинні причини
+- Сполучники причини
+- Причина vs умова
+- Пунктуація причинних речень
+- Причинні речення у мовленні
+- Підсумок та перехід до M71
+- Learner can construct підрядні обставинні причини explaining why the main action
+  happens, using бо, тому що, через те що, оскільки, у зв'язку з тим що
+- 'Learner can distinguish causal conjunctions by register: бо (neutral/colloquial),
+  тому що (neutral), оскільки (formal), через те що (emphasizing cause)'
+- 'Learner can correctly place commas: before бо, before що in тому що/через те що,
+  and handle the split construction тому..., що'
+- Learner can combine причинні речення with other clause types for complex multi-clause
+  sentences
+- підрядне обставинне причини
+- бо
+- тому що
+- оскільки
+- через те що
+- причина
+- у зв'язку з тим що
+- завдяки тому що
+- з тієї причини що
+- кореляція
+rag_chunks: []
+rag_literary: []
+warning: Auto-generated from plan

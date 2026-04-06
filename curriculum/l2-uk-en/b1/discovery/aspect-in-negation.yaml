@@ -1,0 +1,38 @@
+discovered_at: '2026-04-06T15:14:46.957018+00:00'
+error: null
+query_keywords:
+- Вид і заперечення
+- 'Тест: що ви заперечуєте?'
+- 'Не + недоконаний: загальне заперечення'
+- 'Ще не + доконаний: очікуване завершення'
+- 'Підсумок: заперечення як прагматичний вибір'
+- Learner can distinguish не + недоконаний вид (general negation — the action didn't
+  happen at all) from ще не + доконаний вид (expected completion — hasn't happened
+  YET) and produce both forms naturally
+- Learner can explain how aspect choice in negation changes the pragmatic meaning
+  of a sentence using Ukrainian metalanguage (загальне заперечення vs незавершене
+  очікування)
+- Learner can apply the negation-aspect pattern across all three tenses (past, present,
+  future) and in questions (Ти не читав? vs Ти ще не прочитав?)
+- заперечення
+- загальне заперечення
+- очікуване завершення
+- ще
+- факт
+- очікування
+- прагматика
+- обговорювати
+- обговорити
+- вирішувати
+- вирішити
+- відповідати
+- відповісти
+- домити
+- дочитати
+- доробити
+- нейтральний
+- незавершений
+- намір
+rag_chunks: []
+rag_literary: []
+warning: Auto-generated from plan

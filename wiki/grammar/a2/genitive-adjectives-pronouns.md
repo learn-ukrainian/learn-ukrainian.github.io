@@ -4,174 +4,200 @@
 slug: genitive-adjectives-pronouns
 domain: grammar/a2
 tracks: [a2, b1]
-sources: [6-klas-ukrmova-betsa-2023_s0181, 6-klas-ukrmova-betsa-2023_s0180, 6-klas-ukrmova-avramenko-2023_s0195, 10-klas-ukrmova-karaman-2018_s0290, 5-klas-ukrmova-uhor-2022-1_s0233, 6-klas-ukrmova-avramenko-2023_s0194, 6-klas-ukrmova-betsa-2023_s0179, 6-klas-ukrmova-betsa-2023_s0182, 6-klas-ukrmova-golub-2023_s0127, 7-klas-ukrmova-avramenko-2024_s0025, 5-klas-ukrmova-zabolotnyi-2023_s0012, 6-klas-ukrmova-betsa-2023_s0125, 6-klas-ukrmova-betsa-2023_s0126, 6-klas-ukrmova-golub-2023_s0178, 6-klas-ukrmova-golub-2023_s0187, 6-klas-ukrmova-zabolotnyi-2020_s0202, 6-klas-ukrmova-zabolotnyi-2020_s0213, 8-klas-ukrmova-zabolotnyi-2025_s0032, 9-klas-ukrajinska-mova-voron-2017_s0280, 9-klas-ukrajinska-mova-zabolotnij-2017_s0166, 9-klas-ukrmova-zabolotnyi-2017_s0166, 10-klas-ukrmova-karaman-2018_s0273, 11-klas-ukrajinska-mova-glazova-2019_s0015, 11-klas-ukrajinska-mova-voron-2019_s0275, 11-klas-ukrajinska-mova-voron-2019_s0384, 5-klas-ukrmova-golub-2022_s0227, 5-klas-ukrmova-litvinova-2022_s0251, 6-klas-ukrmova-avramenko-2023_s0139, 6-klas-ukrmova-avramenko-2023_s0140, 6-klas-ukrmova-avramenko-2023_s0141, 6-klas-ukrmova-avramenko-2023_s0182, 6-klas-ukrmova-avramenko-2023_s0198, 6-klas-ukrmova-betsa-2023_s0113, 6-klas-ukrmova-betsa-2023_s0174, 6-klas-ukrmova-golub-2023_s0140, 6-klas-ukrmova-golub-2023_s0173, 6-klas-ukrmova-golub-2023_s0182, 6-klas-ukrmova-litvinova-2023_s0193, 5-klas-ukrmova-zabolotnyi-2023_s0010]
-compiled: 2026-04-06
+sources: [ext-istoria_movy-23, ext-istoria_movy-19, ext-ulp_youtube-90, ext-komik_istoryk-72, ext-istoria_movy-12, ext-istoria_movy-66, ext-ulp_youtube-164, 6-klas-ukrmova-betsa-2023_s0181, 6-klas-ukrmova-zabolotnyi-2020_s0261, 10-klas-ukrmova-karaman-2018_s0290, 6-klas-ukrmova-zabolotnyi-2020_s0212, 5-klas-ukrmova-uhor-2022-1_s0233, 11-klas-ukrajinska-mova-avramenko-2019_s0039, 6-klas-ukrmova-avramenko-2023_s0195, 6-klas-ukrmova-avramenko-2023_s0198, 6-klas-ukrmova-avramenko-2023_s0186, 6-klas-ukrmova-betsa-2023_s0182, 6-klas-ukrmova-betsa-2023_s0189, 6-klas-ukrmova-zabolotnyi-2020_s0148, ext-istoria_movy-27, 6-klas-ukrmova-litvinova-2023_s0269, 6-klas-ukrmova-litvinova-2023_s0267, 6-klas-ukrmova-litvinova-2023_s0280, 6-klas-ukrmova-litvinova-2023_s0012, 7-klas-ukrmova-avramenko-2024_s0025, 6-klas-ukrmova-golub-2023_s0178, 6-klas-ukrmova-golub-2023_s0176, 6-klas-ukrmova-betsa-2023_s0118, 6-klas-ukrmova-litvinova-2023_s0197, 6-klas-ukrmova-litvinova-2023_s0205, 6-klas-ukrmova-avramenko-2023_s0139, 6-klas-ukrmova-avramenko-2023_s0130, 6-klas-ukrmova-zabolotnyi-2020_s0137, 6-klas-ukrmova-zabolotnyi-2020_s0136, 6-klas-ukrmova-betsa-2023_s0125]
+compiled: 2026-04-07
 -->
 
 ## Як це пояснюють у школі (How Schools Teach This)
-The declension of possessive and demonstrative pronouns is introduced in Grade 6, building directly on the concept of adjective declension. The core principle presented to students is that these pronouns function as "adjective-like" words: they must agree with the noun they modify in gender, number, and case (Джерело: `6-klas-ukrmova-litvinova-2023_s0193`).
+В українській шкільній програмі відмінювання присвійних та вказівних займенників розглядається в 6 класі, одразу після вивчення груп прикметників (якісні, відносні, присвійні) та їх відмінювання. Це логічно, оскільки більшість цих займенників відмінюються за зразком прикметників (Source 14, 21).
 
-The teaching methodology relies on pattern recognition, not just rote memorization:
-1.  **Adjective as a Model:** Students first learn to decline adjectives, categorizing them into hard (`тверда група`) and soft (`м'яка група`) declension groups (Джерело: `6-klas-ukrmova-avramenko-2023_s0140`).
-2.  **Pronoun Categorization:** Pronouns are then mapped to these adjective declension patterns. For instance, `наш` and `ваш` are explicitly taught as following the hard group, while `їхній` follows the soft group (Джерело: `6-klas-ukrmova-betsa-2023_s0180`).
-3.  **Paradigm Tables:** Textbooks present full declension tables for key pronouns like `мій` and `той` (Джерело: `6-klas-ukrmova-betsa-2023_s0180`, `6-klas-ukrmova-avramenko-2023_s0195`).
-4.  **Application through Practice:** Students are immediately tasked with applying these patterns in exercises like "Decline the possessive pronouns with nouns" (`Провідміняйте присвійні займенники з іменниками`) (Джерело: `6-klas-ukrmova-betsa-2023_s0181`). This reinforces the concept of agreement in context, e.g., turning `(Ваша школа)` into its various case forms.
+Підручники (напр. Заболотний, Авраменко) вводять цю тему, пов'язуючи займенники з уже знайомими учням прикметниками:
+1.  **Присвійні займенники** (*мій, твій, наш, ваш, свій, їхній*) та **вказівні** (*цей, той, такий*) змінюються за родами, числами та відмінками, подібно до прикметників (Source 22, 32).
+2.  Займенники *наш, ваш* та *такий* відмінюються як прикметники **твердої групи** (напр., *нашого*, як *зеленого*) (Source 14, 21).
+3.  Займенник *їхній* та *цей* (в однині) відмінюється як прикметник **м'якої групи** (напр., *їхнього*, *цього*, як *синього*) (Source 14, 26).
+4.  Займенники *мій, твій, свій* мають особливий тип відмінювання, який вивчається окремо (Source 22, 45).
+5.  Особлива увага приділяється розрізненню присвійних займенників *його, її, їх* (незмінні форми) та особових займенників у родовому відмінку (Source 16). Також наголошується на правильному вживанні *їхній* (присвійний) замість *їх* (особовий) для позначення належності (Source 15, 35).
 
-The indeclinable possessives `його` (his), `її` (her), and `їх` (their) are introduced as a special, separate category that does not change form, regardless of the noun's case (Джерело: `6-klas-ukrmova-betsa-2023_s0180`). This distinction is a key learning objective.
+Вправи в підручниках фокусуються на постановці займенників у правильну відмінкову форму в словосполученнях та реченнях, наприклад: *скласти речення зі словами "цієї книги, цього уроку"* (Source 8) або *"поставити займенники в дужках у потрібному відмінку"* (Source 14).
 
 ## Повна парадигма (Full Paradigm)
-The declension of these pronouns follows the patterns of adjectives. The Genitive case endings, central to this brief, are highlighted.
+Відмінювання присвійних та вказівних займенників у родовому відмінку підпорядковується тим самим правилам, що й відмінювання прикметників.
 
-### Присвійні займенники (Possessive Pronouns)
+### Родовий відмінок прикметників (для порівняння)
 
-**1. `мій`, `твій`, `свій` (Mixed Declension)**
-These follow a similar pattern with a vowel alternation (`і` -> `о`, `е`) in most declined forms. (Джерело: `6-klas-ukrmova-avramenko-2023_s0194`).
+| Група | Чоловічий рід (кого? чого?) | Середній рід (кого? чого?) | Жіночий рід (кого? чого?) | Множина (кого? чого?) |
+| :---- | :--- | :--- | :--- | :--- |
+| **Тверда** | нов**ого** | нов**ого** | нов**ої** | нов**их** |
+| **М'яка** | син**ього** | син**ього** | син**ьої** | син**іх** |
 
-| Відмінок | Чоловічий рід | Середній рід | Жіночий рід | Множина |
+(На основі таблиць з Source 26)
+
+### 1. Вказівні займенники (Demonstrative Pronouns)
+
+Займенники *той* і *такий* відмінюються за зразком прикметників **твердої групи**. Займенник *цей* — за зразком прикметників **м'якої групи** в однині.
+
+**Відмінювання займенника *той*** (Source 32)
+| Відмінок | Чоловічий | Середній | Жіночий | Множина |
 | :--- | :--- | :--- | :--- | :--- |
-| **Н.** | мій | моє | моя | мої |
-| **Р.** | **мого** | **мого** | **моєї** | **моїх** |
-| **Д.** | моєму | моєму | моїй | моїм |
-| **З.** | Н. або Р. | моє | мою | Н. або Р. |
-| **О.** | моїм | моїм | моєю | моїми |
-| **М.** | (на) моєму/моїм | (на) моєму/моїм | (на) моїй | (на) моїх |
+| Н. | той | те | та | ті |
+| **Р.** | **то́го** | **то́го** | **тієї (то́ї)** | **тих** |
+| Д. | тому́ | тому́ | тій | тим |
+| З. | той/то́го | те | ту | ті/тих |
+| О. | тим | тим | тією (то́ю) | ти́ми |
+| М. | на то́му/тім | на то́му/тім | на тій | на тих |
 
-**2. `наш`, `ваш` (Hard Group Declension)**
-These decline exactly like hard-stem adjectives such as `гарний`.
-
-| Відмінок | Чоловічий рід | Середній рід | Жіночий рід | Множина |
+**Відмінювання займенника *цей*** (за зразком м'якої групи)
+| Відмінок | Чоловічий | Середній | Жіночий | Множина |
 | :--- | :--- | :--- | :--- | :--- |
-| **Н.** | наш | наше | наша | наші |
-| **Р.** | **нашого** | **нашого** | **нашої** | **наших** |
-| **Д.** | нашому | нашому | нашій | нашим |
+| Н. | цей | це | ця | ці |
+| **Р.** | **цьо́го** | **цьо́го** | **цієї** | **цих** |
+| Д. | цьо́му | цьо́му | цій | цим |
+| З. | цей/цьо́го | це | цю | ці/цих |
+| О. | цим | цим | цією | ци́ми |
+| М. | на цьо́му/цім | на цьо́му/цім | на цій | на цих |
 
-**3. `їхній` (Soft Group Declension)**
-This declines exactly like a soft-stem adjective such as `синій`.
+### 2. Присвійні займенники (Possessive Pronouns)
 
-| Відмінок | Чоловічий рід | Середній рід | Жіночий рід | Множина |
+**Відмінювання займенника *мій*** (так само *твій*, *свій*) (Source 22, 45)
+| Відмінок | Чоловічий | Середній | Жіночий | Множина |
 | :--- | :--- | :--- | :--- | :--- |
-| **Н.** | їхній | їхнє | їхня | їхні |
-| **Р.** | **їхнього** | **їхнього** | **їхньої** | **їхніх** |
-| **Д.** | їхньому | їхньому | їхній | їхнім |
+| Н. | мій | моє́ | моя́ | мої́ |
+| **Р.** | **мого́** | **мого́** | **моє́ї** | **мої́х** |
+| Д. | моє́му | моє́му | мої́й | мої́м |
+| З. | мій/мого́ | моє́ | мою́ | мої́/мої́х |
+| О. | мої́м | мої́м | моє́ю | мої́ми |
+| М. | на моє́му/мої́м | на моє́му/мої́м | на мої́й | на мої́х |
 
-**4. `його`, `її`, `їх` (Indeclinable)**
-These are the genitive forms of `він`, `вона`, `вони` that have acquired a possessive function. They **never change** form. (Джерело: `6-klas-ukrmova-betsa-2023_s0180`).
-*   `портфель (кого?) його` -> his portfolio
-*   `ручка (кого?) її` -> her pen
-*   `серце (кого?) їх` -> their heart
-
-### Вказівні займенники (Demonstrative Pronouns)
-
-**1. `той`, `такий` (Hard Group Declension)**
-(Джерело: `6-klas-ukrmova-zabolotnyi-2020_s0213`)
-
-| Відмінок | Чоловічий рід | Середній рід | Жіночий рід | Множина |
+**Відмінювання займенників *наш*, *ваш*** (тверда група прикметників)
+| Відмінок | Чоловічий | Середній | Жіночий | Множина |
 | :--- | :--- | :--- | :--- | :--- |
-| **Н.** | той | те | та | ті |
-| **Р.** | **того** | **того** | **тієї (тої)** | **тих** |
-| **Д.** | тому | тому | тій | тим |
-| **З.** | Н. або Р. | те | ту | Н. або Р. |
-| **О.** | тим | тим | тією (тою) | тими |
-| **М.** | (на) тому/тім | (на) тому/тім | (на) тій | (на) тих |
+| Н. | наш | нáше | нáша | нáші |
+| **Р.** | **нáшого** | **нáшого** | **нáшої** | **нáших** |
+| Д. | нáшому | нáшому | нáшій | нáшим |
 
-**2. `цей` (Soft-like Declension)**
-This pronoun follows the soft-adjective pattern in the singular and the hard-adjective pattern in the plural. (Джерело: `6-klas-ukrmova-betsa-2023_s0180`).
-
-| Відмінок | Чоловічий рід | Середній рід | Жіночий рід | Множина |
+**Відмінювання займенника *їхній*** (м'яка група прикметників)
+| Відмінок | Чоловічий | Середній | Жіночий | Множина |
 | :--- | :--- | :--- | :--- | :--- |
-| **Н.** | цей | це | ця | ці |
-| **Р.** | **цього** | **цього** | **цієї** | **цих** |
-| **Д.** | цьому | цьому | цій | цим |
-| **З.** | Н. або Р. | це | цю | Н. або Р. |
-| **О.** | цим | цим | цією | цими |
-| **М.** | (на) цьому | (на) цьому | (на) цій | (на) цих |
+| Н. | їхній | íхнє | íхня | íхні |
+| **Р.** | **íхнього** | **íхнього** | **íхньої** | **íхніх** |
+| Д. | íхньому | íхньому | íхній | íхнім |
 
-## Частотність і пріоритети
-For an A2 learner, mastery of the genitive case for these pronouns is a top priority, as it unlocks several fundamental structures:
-1.  **Expressing Possession with Nouns**: The most common use. `Телефон мого друга`. `Колір цієї сукні`.
-2.  **The "Absence" Construction with `немає`**: This structure *requires* the genitive. `У мене немає мого телефону`. `Сьогодні немає цього уроку`.
-3.  **Specifying "of the..."**: Used after nouns of quantity or as a partitive. `Кінець цього фільму`. `Частина нашої роботи`.
-4.  **After Prepositions Requiring Genitive**: Prepositions like `без` (without), `для` (for), `до` (to), `біля` (near). `Я прийшов без свого підручника`. `Це подарунок для моєї сестри`.
+**Незмінювані присвійні займенники *його, її, їх***
+Ці форми є родовим відмінком особових займенників, що набули присвійного значення. Вони **не змінюються** за родами, числами чи відмінками. (Source 16, 21).
+*   Це зошит (чий?) **його**. Немає (чийого?) **його** зошита.
+*   Це ручка (чия?) **її**. Немає (чиєї?) **її** ручки.
+*   Це завдання (чиє?) **їх**. Немає (чийого?) **їх** завдання.
 
-**Priority Forms for A2:**
-*   **High Priority:** The complete singular genitive set (`мого`, `моєї`, `цього`, `цієї`, `того`, `тієї`, `нашого`, `нашої`) and the plural (`моїх`, `цих`, `тих`, `наших`). These cover the vast majority of everyday situations.
-*   **Medium Priority:** Understanding and recognizing the other cases (Dative, Instrumental, Locative), but active production can be developed later in B1.
-*   **Crucial Distinction:** Immediate and absolute mastery of the difference between the indeclinable `його`/`її`/`їх` and the declinable `їхній`.
+## Частотність і пріоритети (Frequency & Priorities)
+Для рівня А2/В1 пріоритети у вивченні родового відмінка займенників та прикметників наступні:
+
+1.  **Найвища частотність:** Форми, що позначають володіння та відсутність.
+    *   **Присвійні:** *мого, твого, його, її, нашого, вашого*. Конструкція "у мене немає..." вимагає родового відмінка.
+    *   **Вказівні:** *цього, цієї, того, тієї*. Використовуються для ідентифікації конкретного об'єкта. "Я не хочу *цієї* кави". "Ціна *цього* квитка занадто висока".
+
+2.  **Середня частотність:** Форми множини та після прийменників.
+    *   **Множина:** *моїх, твоїх, наших, ваших, цих, тих*. "Я не знаю *цих* людей". "У мене немає *своїх* олівців".
+    *   **Прийменники:** *без, для, біля, від, до*. "Подарунок для *мого* друга". "Я живу біля *цього* парку".
+
+3.  **Нижча частотність (для B1 і вище):** Узагальнюючі та інші займенники.
+    *   **Означальні:** *кожного, всього/усього, іншого*. "Думка *кожного* важлива". "Я не зрозумів *всього* тексту".
+    *   **Рідкісні форми:** нестягнені форми (*тії, тої*) зустрічаються в поезії та фольклорі, але не є пріоритетом для активного вжитку (Source 32, 33). Форма *тої* є стилістичним варіантом до *тієї* і вживається частіше.
 
 ## Типові помилки L2 (Common L2 Errors)
+Англомовні студенти часто припускаються помилок через відсутність відмінків прикметників та займенників в англійській мові.
 
 | ❌ Помилково | ✅ Правильно | Чому |
 | :--- | :--- | :--- |
-| У **їх** будинку тепло. | У **їхньому** будинку тепло. | A classic case of interference from Russian, where `их` is the standard possessive. Ukrainian requires the declinable adjective `їхній`. The form `їх` is only used as the genitive/accusative of `вони` (e.g., `Я їх бачу` - I see them) or as an *indeclinable* possessive (e.g., `їх робота` - their work). Textbooks strongly recommend `їхній` in adjective positions (Джерело: `6-klas-ukrmova-golub-2023_s0178`, `6-klas-ukrmova-avramenko-2023_s0198`). |
-| Я не бачу **мій** друг. | Я не бачу **мого** друга. | Failure to apply case agreement to the entire noun phrase. The preposition/verb that governs the noun's case (`не бачу` -> Genitive) applies to both the pronoun and the noun. |
-| Я не знаю її**ну** сестру. | Я не знаю **її** сестру. | Overgeneralization of declension rules. The learner incorrectly tries to decline the indeclinable possessive `її`. `його`, `її`, `їх` as possessives are immutable (Джерело: `6-klas-ukrmova-betsa-2023_s0180`). |
-| У мене немає **ця** книга. | У мене немає **цієї** книги. | Forgetting the `немає` + Genitive rule. The learner correctly identifies the noun's gender but leaves it in the nominative case instead of declining the whole phrase. |
-| Це телефон **свого** друга. | Це телефон **мого** друга. | Incorrect use of the reflexive pronoun `свій`. `Свій` refers back to the subject of the sentence. Since the subject is `Це` (This is), `свого` is incorrect. It would be correct in a sentence like `Я загубив **свій** телефон`. |
+| Це книга *мій* брат. | Це книга **мого** брат**а**. | В англійській мові прикметник/займенник не змінюється (`my brother's book`). В українській мові і присвійний займенник (*мого*), і іменник (*брата*) мають стояти в родовому відмінку для позначення належності. |
+| Я не знаю *їх* імена. | Я не знаю **їхніх** імен. | Це пряме перенесення з російської, де `их` є присвійною формою. В українській стандартній мові для позначення належності 3-й особі множини вживається займенник **їхній**, який відмінюється як прикметник (Source 15). *Їх* - це особовий займенник у Р.в./Зн.в. ("Я *їх* не знаю"). |
+| Я бачу *його* книгу. (Неправильне розуміння) | Я бачу **його** книгу. (Possessive) <br> Я бачу **його**. (Personal) | Англійською 'I see his book' та 'I see him' чітко розрізняються. В українській формі *його* може бути і присвійним (чий?), і особовим (кого?). Контекст є ключовим, що може плутати початківців (Source 16). |
+| Це частина *цей* план. | Це частина **цього** план**у**. | Помилка в узгодженні. Вказівний займенник *цей* повинен узгоджуватися з іменником у роді, числі та відмінку. Оскільки *плану* — це чоловічий рід, родовий відмінок, то і займенник має бути *цього*. |
+| Я купив подарунок для *твоя* сестра. | Я купив подарунок для **твоєї** сестр**и**. | Прийменник *для* вимагає родового відмінка. Студенти часто забувають змінити і займенник, і іменник, залишаючи їх у називному відмінку. *Сестри* - жіночий рід, родовий відмінок, отже і займенник має бути *твоєї*. |
+| У мене немає *багато мої* друзі. | У мене немає багатьох **моїх** друзів. | Після слів, що позначають кількість (багато, кілька), іменник та узгоджений з ним займенник стоять у родовому відмінку множини. |
 
 ## Деколонізаційні застереження (Decolonization Notes)
-Presenting Ukrainian grammar on its own terms is essential. Avoid comparing it to Russian as if Russian were the default.
+При викладанні української граматики для носіїв мов, де російська може бути проміжною або референтною, критично важливо підкреслювати унікальні риси української мови, а не подавати її як "варіант" російської.
 
-1.  **The `їхній` vs. `їх` Distinction is a Ukrainian Norm**: The declinable adjective `їхній`, `їхня`, `їхнє` is a standard, productive, and often preferred form in literary and spoken Ukrainian. Using the indeclinable `їх` (e.g., `їх хата`) is also correct, but presenting `їхній` as "just an alternative" or ignoring it is a common pitfall influenced by Russian-centric teaching materials. In Russian, only the indeclinable `их` exists for this purpose. The correct Ukrainian pedagogical approach is to teach `їхній` as the primary adjectival form (Джерело: `6-klas-ukrmova-golub-2023_s0178`, `6-klas-ukrmova-avramenko-2023_s0198`).
+1.  **Їх vs. Їхній**: Це найяскравіший маркер. В українській мові присвійний займенник 3-ї особи множини — **їхній, їхня, їхнє, їхні**, і він відмінюється. В російській мові для цього використовується незмінна форма особового займенника `их`. Вживання `їх` як присвійного в українській мові є поширеним русизмом і помилкою, на якій наголошують усі сучасні підручники (Source 15, 35).
+    *   ✅ **Їхні** проблеми.
+    *   ❌ *Їх* проблеми. (Русизм)
 
-2.  **Embrace Poetic/Folk Forms**: Ukrainian grammar includes non-standard (нестягнені) forms like `тая`, `теє`, `тії`, `цяя`, which are prevalent in folklore, poetry, and historical texts (Джерело: `6-klas-ukrmova-zabolotnyi-2020_s0213`). While not for active A2 production, acknowledging these forms showcases the distinct stylistic richness of the Ukrainian language, separate from its neighbors.
+2.  **Фонетика закінчення -ого**: В українській мові закінчення родового відмінка чоловічого/середнього роду **-ого** вимовляється як **[-оhо]**, зі звуком `[h]` (гортанним фрикативним), який є характерною рисою української фонетики. В російській мові аналогічне закінчення `-ого` вимовляється як `[-ово]`. Це фундаментальна фонетична відмінність.
+    *   🇺🇦 *цьо**г**о* `[ts'oɦo]`
+    *   🇷🇺 *это**г**о* `[etəvə]`
 
-3.  **The Scope of `свій`**: While both languages use a reflexive-possessive pronoun, the preference and idiomatic requirement for `свій` (over `мій`, `твій`, etc.) when the subject is the possessor is arguably stronger and more consistently applied in Ukrainian. Teaching `Я люблю свою маму` as the most natural phrasing from the start establishes a core Ukrainian grammatical pattern.
+3.  **Закінчення -ої / -еї**: В родовому відмінку однини жіночого роду українська мова використовує закінчення **-ої** (тверда група) та **-еї** (м'яка група): *моєї, твоєї, цієї, нової, синьої*. Російська мова використовує `-ой / -ей` (`моей, синей`). Хоч і схожі, це різні морфеми з різною вимовою.
 
-4.  **Internal Logic**: Explain vowel alternations (`мій` -> `мого`) as an internal feature of Ukrainian phonology and morphology (`і` often becomes `о` or `е` in open syllables), not as a random exception.
+4.  **Варіативність *тієї / тої***: В українській мові існують паралельні форми *тієї* (повна) і *тої* (стягнена) (Source 30, 32). Обидві є нормативними, хоча *тої* має більш розмовний відтінок. Це внутрішня риса української мови, яка не має прямого аналога в російській.
+
+5.  **Історична тяглість**: Давньоруські форми, як *сего* (цього) та *тої* (тієї), що збереглися частково в діалектах або трансформувалися в сучасні українські форми, показують самостійний шлях розвитку української мови, окремий від московської говірки (Source 1). Навчання має підкреслювати цю тяглість, а не шукати паралелі з російською.
 
 ## Природні приклади (Natural Examples)
-These examples are sourced from the provided textbook excerpts and demonstrate natural usage.
+Приклади згруповані за типом займенника/прикметника.
 
-**Pattern 1: Genitive for Possession**
-*   `Зараз урок української мови. Учні шостого класу готуються до уроку української мови.` (Джерело: `6-klas-ukrmova-betsa-2023_s0126`)
-*   `Мені подобається кімната моєї старшої сестри.` (Джерело: `6-klas-ukrmova-betsa-2023_s0126`)
-*   `Вуличка мого дитинства.` (Джерело: `6-klas-ukrmova-avramenko-2023_s0195`)
+**Група 1: Присвійні займенники (мій, твій, свій)**
+*   Не співайте мені сеї пісні, не вражайте серденька **мого** (Леся Українка, Source 22). (Р.в., сер. рід)
+*   Вуличка **мого** дитинства (І. Жиленко, Source 14). (Р.в., чол. рід)
+*   Пильнуй **свого** носа, а не чужого проса (Нар. творчість, Source 11). (Р.в., чол. рід)
+*   Дай нам Сина **твого**, а Святослава брата **твого** не хочемо (Київський літопис, Source 6). (Р.в., чол. рід)
 
-**Pattern 2: Genitive for Absence or "of" a thing**
-*   `Складіть речення з поданими словами...: Цієї книги, цього уроку...` (Джерело: `6-klas-ukrmova-betsa-2023_s0181`)
-*   `І саме цієї миті сонце починає сріблити море своїм сяйвом.` (Джерело: `7-klas-ukrmova-avramenko-2024_s0025`)
-*   `Пливи, пливи, мій віночку, до самого моря.` (Джерело: `6-klas-ukrmova-betsa-2023_s0182`)
+**Група 2: Вказівні займенники (цей, той)**
+*   Із **цього** листя та складали осінній букет (адаптовано з Source 15). (Р.в., сер. рід)
+*   Стріну ж я калину, небо **того** безкрає… (А. Малишко, Source 32). (Р.в., сер. рід)
+*   Немає нікого з **цієї** родини. <!-- VERIFY -->
+*   Від **тієї** ночі брат не був щасливий (приклад з підручника, Source 18). (Р.в., жін. рід)
 
-**Pattern 3: Genitive in Idiomatic Expressions**
-*   `Щоб твоєї ноги тут не було!` (Джерело: `6-klas-ukrmova-betsa-2023_s0181`)
-*   `Знати як свої п’ять пальців.` (Джерело: `6-klas-ukrmova-betsa-2023_s0181`)
-*   `Нашого полку прибуло.` (Джерело: `6-klas-ukrmova-betsa-2023_s0181`)
+**Група 3: Присвійні займенники 3-ї особи (його, її, їхній)**
+*   Дід... порадою **його** в цій галузі не можна нехтувати (О. Донченко, Source 14). (Присвійний, незмінний)
+*   Перші рецепти **її** містили кофеїн... (Із книги «Як виготовляють звичайні речі», Source 17). (Присвійний, незмінний)
+*   Орільчани знають, що **їхніх** дівчат не переспівати (приклад з підручника, Source 14). (Р.в., множина)
+*   Зачепити **їхні** почуття (приклад з підручника, Source 29). (Зн.в. = Н.в. для неістот; приклад ілюструє форму)
 
-**Pattern 4: Using Indeclinable `його`, `її`**
-*   `Я знаю її вже багато років.` (Джерело: `5-klas-ukrmova-uhor-2022-1_s0233`)
-*   `Дід хоч і не рибалка, але його порадою в цій галузі не можна нехтувати.` (Джерело: `6-klas-ukrmova-avramenko-2023_s0195`)
-*   `Послав князь свою дочку в дань змієві. А дочка була така хороша. То змій її й полюбив.` (Джерело: `6-klas-ukrmova-betsa-2023_s0174`)
+**Група 4: Означальні займенники (кожен, весь)**
+*   Думка **кожного** з вас важлива. <!-- VERIFY -->
+*   Він згадав, як в **сій самій** хатині з ним була його ненька рідненька (Леся Українка, Source 8). (М.в., але показує відмінювання)
 
 ## Рекомендації для вправ (Activity Concepts)
 
-*   **Phase 1: Recognition & Agreement**
-    *   **Matching Drill:** Give nouns in the genitive case (e.g., `друга`, `книги`, `моря`, `друзів`). Have students match them with the correct pronoun form (`мого`, `цієї`, `того`, `наших`).
-    *   **Multiple Choice:** `У мене немає ... брата.` (a) `мій` (b) `мого` (c) `моїм`).
+**Phase 1: Розпізнавання та базове відтворення**
+*   **Вправа "Вибери правильну форму"**: Дати речення з варіантами в дужках.
+    *   *Це машина (мій/мого/моїм) тата.*
+    *   *Я не бачу (ця/цю/цієї) вулиці на карті.*
+*   **Вправа "З'єднай"**: З'єднати іменники в родовому відмінку з правильною формою займенника.
+    *   *брата* -> *мого, цього*
+    *   *сестри* -> *моєї, цієї*
+    *   *друзів* -> *моїх, цих*
 
-*   **Phase 2: Controlled Production**
-    *   **Transformation Drill:** Provide a nominative phrase and ask for the genitive.
-        *   `Це мій друг.` -> `Я йду до _______.` (`мого друга`)
-        *   `Це наша школа.` -> `Це фото _______.` (`нашої школи`)
-    *   **Fill-in-the-Blanks:** Use sentences from textbooks, removing the pronouns. `Чи ти ж, коню, будеш пити з ______ криниці? (наш)` -> `нашої` (Джерело: `6-klas-ukrmova-avramenko-2023_s0195`).
+**Phase 2: Контрольоване відтворення**
+*   **Вправа "Заповни пропуск"**: Написати займенник з дужок у правильній формі. Ідея взята з досвіду вивчення шведської (Source 3).
+    *   *У мене немає ___________ (твій) номера телефону.*
+    *   *Ми живемо недалеко від ___________ (цей) магазину.*
+    *   *Це іграшки ___________ (наші) дітей.*
+*   **Трансформаційна вправа**: Перетворити стверджувальне речення на заперечне з конструкцією "немає".
+    *   *У мене є **мій** зошит. -> У мене немає **мого** зошита.*
+    *   *Це **наша** машина. -> Це ключ від **нашої** машини.*
 
-*   **Phase 3: Communicative Production**
-    *   **Question & Answer:**
-        *   `Чий це телефон?` -> `Це телефон мого друга.`
-        *   `У кого є машина?` -> `У мого батька є машина.`
-    *   **Personalization:** Ask students to describe their family or possessions using "absence" prompts. `Розкажи, чого в тебе немає в рюкзаку.` -> `У мене немає моєї книги, мого зошита...`
+**Phase 3: Вільне відтворення**
+*   **Вправа "Запитання-відповідь"**: Студенти ставлять один одному запитання, що вимагають родового відмінка.
+    *   *– Якого кольору дах твого будинку?*
+    *   *– Дах мого будинку червоний.*
+*   **Вправа "Опис"**: Описати кімнату/сумку/родину друга, використовуючи присвійні та вказівні займенники у родовому відмінку.
+    *   *"Стіл мого брата стоїть біля вікна. На столі немає нічого, крім його комп'ютера."*
 
-## Зв'язки з іншими темами (Connections)
+## Зв'язки з іншими темами
+*   **Попередні теми:**
+    *   **Роди іменників:** Узгодження займенника (*цього* vs *цієї*) неможливе без знання роду іменника.
+    *   **Родовий відмінок іменників:** Займенник лише узгоджується з іменником. Студент вже має знати, як утворити *брата* від *брат*.
+    *   **Прикметники (тверда/м'яка група):** Тема є прямим продовженням відмінювання прикметників, оскільки більшість займенників відмінюються за їх зразком (Source 14, 21).
 
-*   **Prerequisites:**
-    *   **Noun Declension (Genitive):** This is non-negotiable. A student cannot correctly form `мого друга` without knowing the genitive of `друг` is `друга`.
-    *   **Adjective-Noun Agreement:** The entire concept hinges on pronouns behaving like adjectives. The student must already understand that modifiers change to match the noun's gender, number, and case. (Джерело: `6-klas-ukrmova-litvinova-2023_s0193`).
-*   **Enables:**
-    *   **Expressing Possession:** Moves beyond `У мене є...` to describe relationships between objects (`дах мого будинку`).
-    *   **Complex Sentences:** Forms the basis for relative clauses. `Я знаю дівчину, брат якої вчиться з нами.`
-    *   **Prepositional Phrases:** Unlocks a wide range of prepositions that govern the genitive (`до`, `від`, `для`, `без`, `крім`, `біля`).
+*   **Наступні теми:**
+    *   **Інші відмінки займенників:** Ця тема є частиною великого блоку "Відмінювання займенників" (Source 9, 36, 44).
+    *   **Складні речення:** Відносні займенники (*який, чий, котрий*) в родовому відмінку (*якого, якої*) є ключовими для побудови підрядних речень.
+    *   **Кількісні числівники:** Конструкції з числівниками (два, три, чотири + Р.в. одн.; п'ять і більше + Р.в. мн.) часто поєднуються з присвійними займенниками ("двох моїх друзів").
 
-## Пов'язані статті (Related Articles)
-*   `grammar/a2/genitive-case-nouns`
-*   `grammar/a2/adjective-noun-agreement`
-*   `grammar/b1/reflexive-possessive-sviy`
-*   `grammar/a1/personal-pronouns`
+## Пов'язані статті
+*   `genitive-case-nouns`
+*   `adjective-declension`
+*   `adjective-noun-agreement`
+*   `personal-pronouns`
+*   `distinguishing-ih-vs-ihnij`

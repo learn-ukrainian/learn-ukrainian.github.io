@@ -1,183 +1,168 @@
 # Граматика A2: Звідки ти? З чого це зроблено?
 
 <!-- wiki-meta
-slug: genitive-prepositions-source-material
+slug: genitive-prepositions-source
 domain: grammar/a2
 tracks: [a2, b1]
-sources: [10-klas-ukrmova-karaman-2018_s0372, 5-klas-ukrmova-uhor-2022-1_s0125, 9-klas-ukrajinska-мова-zabolotnij-2017_s0357, 9-klas-ukrmova-zabolotnyi-2017_s0357, 10-klas-ukrajinska-mova-avramenko-2018_s0004, 10-klas-ukrajinska-mova-avramenko-2018_s0213, 2-klas-ukrmova-bolshakova-2019-2_s0052, 2-klas-ukrmova-bolshakova-2019-2_s0060, 4-klas-ukrmova-zaharijchuk_s0169, 5-klas-ukrmova-golub-2022_s0031, 5-klas-ukrmova-uhor-2022-1_s0178, 6-klas-ukrmova-avramenko-2023_s0202, 6-klas-ukrmova-golub-2023_s0122, 6-klas-ukrmova-zabolotnyi-2020_s0045, 7-klas-ukrmova-avramenko-2024_s0001, 7-klas-ukrmova-avramenko-2024_s0094, 7-klas-ukrmova-avramenko-2024_s0181, 7-klas-ukrmova-avramenko-2024_s0220, 7-klas-ukrmova-zabolotnyi-2024_s0067, 7-klas-ukrmova-zabolotnyi-2024_s0209, 8-klas-ukrmova-avramenko-2025_s0006, 8-klas-ukrmova-avramenko-2025_s0055, 8-klas-ukrmova-avramenko-2025_s0076, 8-klas-ukrmova-avramenko-2025_s0174, 8-klas-ukrmova-avramenko-2025_s0256, 8-klas-ukrmova-zabolotnyi-2025_s0026, 8-klas-ukrmova-zabolotnyi-2025_s0124, 8-klas-ukrmova-zabolotnyi-2025_s0220, 9-klas-ukrajinska-mova-avramenko-2017_s0104, 9-klas-ukrajinska-mova-avramenko-2017_s0197, 9-klas-ukrajinska-mova-voron-2017_s0265, 9-klas-ukrajinska-mova-zabolotnij-2017_s0011, 9-klas-ukrajinska-mova-zabolotnij-2017_s0129, 9-klas-ukrajinska-mova-zabolotnij-2017_s0307, 9-klas-ukrmova-zabolotnyi-2017_s0011, 9-klas-ukrmova-zabolotnyi-2017_s0129, 9-klas-ukrmova-zabolotnyi-2017_s0307, 10-klas-ukrajinska-mova-avramenko-2018_s0180, 10-klas-ukrajinska-mova-zabolotnij-2018_s0089, 10-klas-ukrajinska-mova-zabolotnij-2018_s0189]
-compiled: 2026-04-06
+sources: [ext-komik_istoryk-68, ext-ulp_youtube-253, ext-ulp_youtube-133, ext-istoria_movy-46, 2-klas-ukrmova-bolshakova-2019-2_s0052, ext-istoria_movy-23, ext-istoria_movy-66, 6-klas-istoriya-gisem-2023_s0191, 2-klas-ukrmova-bolshakova-2019-2_s0068, ext-ulp_youtube-255, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0037, 7-klas-ukrmova-zabolotnyi-2024_s0027, 7-klas-ukrmova-litvinova-2024_s0170, 10-klas-ukrmova-karaman-2018_s0372, 4-klas-ukrayinska-mova-savchenko-2021-2_s0090, 9-klas-ukrajinska-mova-avramenko-2017_s0095, 11-klas-ukrajinska-mova-avramenko-2019_s0134, 6-klas-ukrmova-litvinova-2023_s0139, ext-other_blogs-56, 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0041, 6-klas-ukrmova-avramenko-2023_s0169, 8-klas-ukrmova-zabolotnyi-2025_s0026, 7-klas-ukrmova-zabolotnyi-2024_s0193, 7-klas-ukrmova-litvinova-2024_s0063, 7-klas-ukrmova-zabolotnyi-2024_s0187, 7-klas-ukrmova-avramenko-2024_s0220, 7-klas-ukrmova-litvinova-2024_s0235, 10-klas-ukrajinska-mova-avramenko-2018_s0145, 5-klas-ukrmova-litvinova-2022_s0266, ext-other_blogs-46, ext-ulp_youtube-291, 5-klas-ukrmova-avramenko-2022_s0087, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0038, 7-klas-ukrmova-zabolotnyi-2024_s0185, 5-klas-ukrmova-avramenko-2022_s0041, 4-klas-ukrayinska-mova-ponomarova-2021-1_s0041, 5-klas-ukrmova-uhor-2022-1_s0171, 5-klas-ukrmova-avramenko-2022_s0158, 7-klas-ukrmova-litvinova-2024_s0253, 7-klas-ukrmova-litvinova-2024_s0239]
+compiled: 2026-04-07
 -->
 
 ## Як це пояснюють у школі (How Schools Teach This)
 
-Українські шкільні підручники вводять поняття походження та матеріалу через прийменники та Родовий відмінок (Genitive case) поступово. Це не викладається як єдине правило "для походження", а скоріше як природна функція прийменника `з` (`із`, `зі`).
+The concept of expressing origin and material is tied directly to the **Родовий відмінок (Genitive Case)** combined with prepositions. School curricula introduce this progressively.
 
-1.  **Початкові класи (2-5 клас):** Учні стикаються з конструкціями `з [міста]`, `з [матеріалу]` в текстах, але граматичний аналіз мінімальний. Основна увага приділяється розумінню тексту. Наприклад, у 5 класі учні працюють з прикладами, де потрібно правильно обрати форму прийменника: `подарунок (з/із/зі) Сумщи­ни`, `дорога (з/із/зі) Житомира` (Source 26). Це показує, що акцент робиться на правильному фонетичному варіанті прийменника, а відмінок засвоюється через практику.
+1.  **Foundation (Grades 2-4):** Learners first encounter prepositions as "servant words" (`службові слова`) that connect other words (Source 9, 13). They learn the seven cases and their basic questions; for the Genitive case, these are **кого?** (whom?) and **чого?** (what?) (Source 11, 20). Drills focus on simple noun ending changes, like `книжка -> книжки` (Source 36).
 
-2.  **Середні класи (6-7 клас):** При вивченні прийменника як частини мови, підручники дають чіткіше визначення. Авраменко (7 клас) зазначає, що "прийменники разом з іншими частинами мови можуть указувати на місце", напрямок, причину тощо (Source 17). Тут же наводяться приклади, що вимагають вживання родового відмінка, як-от `мешкала ... біля дрімучого лісу` (Source 17). Тема походження (`звідки?`) є однією з багатьох функцій прийменників.
+2.  **Developing the Concept (Grades 5-7):** The connection between prepositions and specific cases is solidified. Textbooks explicitly state that the preposition `з` is used with the Genitive case to indicate a starting point or source. For example, the Ukrainian Lessons Podcast, a popular supplementary resource, explicitly teaches `з` for place: `з Києва до Львова` (from Kyiv to Lviv) (Source 10). The question `звідки?` (from where?) is directly linked to this construction (Source 18, 35).
 
-3.  **Практичний підхід:** Шкільна програма часто використовує тексти про ремесла, історію чи географію для ілюстрації граматичних тем. Наприклад, текст про килимарство містить численні приклади використання родового відмінка з прийменником `з` для позначення матеріалу: `обстригали з них вовну`, `виробів із заліза й сталі`, `кошиках з лози` (Source 3, 4). Це контекстне навчання допомагає учням засвоювати граматику через реальні приклади, а не абстрактні правила.
+3.  **Mastering Euphony (Grade 7):** A crucial step in Ukrainian pedagogy is teaching the euphonic variants of `з` — `зі`, `із`, `зо` (`милозвучність`). Заболотний's 7th-grade textbook provides clear rules for when to use each variant, such as using `зі` before a consonant cluster (`приїхав зі Львова`) and `із` between two consonants (`приїхав із Харкова`) (Source 23). This is treated not as an exception, but as a fundamental rule of natural-sounding Ukrainian.
 
-Загалом, шкільний підхід є більше практичним, ніж теоретичним. Правила відмінювання іменників у Родовому відмінку вивчаються окремо, а потім застосовуються в конструкціях з різними прийменниками, включно з `з`, `від`, `до`, `без`, `біля`. Питання `Звідки?` та `З чого?` є лише частиною ширшої теми "Прийменник + Родовий відмінок".
+4.  **Distinguishing Meanings (Grades 5-7):** Teachers emphasize the different meanings `з` can convey depending on the case it governs.
+    *   **`з` + Genitive:** Indicates origin, source, or material. `подарунок з Сумщини` (gift from Sumshchyna region) (Source 22), `пиріжки з калиною` (buns with viburnum filling) (Source 26).
+    *   **`з` + Instrumental:** Indicates accompaniment or inclusion ("with"). `Вероніка писала паличкою` (Instrumental without `з`), but in other contexts `разом з друзями` (together with friends) is common (Source 24). This distinction is a key learning objective.
+
+The concept of "made of" is often introduced through concrete examples, such as `пергамент... виготовляли з телячої шкіри` (parchment was made from calfskin) found in a 6th-grade history textbook (Source 8).
 
 ## Повна парадигма (Full Paradigm)
 
-Питання `Звідки?` (from where?) та `З чого?` (from what?) в українській мові вимагають використання прийменника **з / із / зі** та **Родового відмінка** (Genitive case) іменника.
+The prepositions `з`, `із`, `зі` require the noun that follows to be in the Genitive case (Родовий відмінок). The noun's ending depends on its gender, declension, and stem.
 
-### 1. Варіанти прийменника: `з`, `із`, `зі`
+### Genitive Singular Endings
 
-Вибір варіанта залежить від звуків, з яких починається наступне слово, для милозвучності.
-*   **`з`** — перед голосними та більшістю приголосних: `з Одеси`, `з калини`, `з Харкова`.
-*   **`із`** — перед скупченням приголосних, особливо якщо слово починається на `з, с, ш, ц, ч`: `із Сумщини`, `із Житомира` (Source 26), `із заліза` (Source 3).
-*   **`зі`** — перед скупченням кількох приголосних, часто перед `Львів`, або для уникнення важкої вимови: `зі Львова`, `зі школи`.
+| Gender | Stem & Rule | Ending | Nominative | Genitive Example |
+| :--- | :--- | :--- | :--- | :--- |
+| **Masculine** | Most nouns (cities, concrete objects, people) | `-а` / `-я` | Київ | Я **з** Києв**а** |
+| | | | Львів | Він **зі** Львов**а** (Source 23) |
+| | Mass nouns, abstract concepts, places (inside of) | `-у` / `-ю` | цукор | чай без цукр**у** (Source 10) |
+| | | | сад | вийти з сад**у** |
+| **Feminine** | Hard stem (not ж, ч, ш) | `-и` | Україна | Вона **з** Україн**и** |
+| | | | робота | іти з робот**и** (Source 10) |
+| | Soft or sibilant stem (ж, ч, ш, щ) | `-і` | земля | сік із земл**і** |
+| | | | тиша | вийти з тиш**і** (Source 36) |
+| **Neuter** | All stems | `-а` / `-я` | дерево | стіл **з** дерев**а** |
+| | | | поле | повернутися з пол**я** |
 
-### 2. Парадигма Родового Відмінка (Genitive Case Endings)
+### The Rule of Euphony (`Милозвучність`): `з` vs. `із` vs. `зі`
 
-#### Іменники чоловічого роду (Masculine)
+Using the correct form of `з` is essential for natural speech. The choice depends on the first sound of the following word (Source 23, 29).
 
-| Тип | Nominative | Genitive (`з/із/зі ...`) | Приклади |
-| --- | --- | --- | --- |
-| **Міста (закінчення -а)** | Київ, Харків | **-а** | з Києв**а**, з Харков**а** |
-| **Міста (закінчення -я)** | Тернопіль | **-я** | з Тернопол**я** (Source 26) |
-| **Міста (особливий випадок)** | Львів | **-а** | зі Львов**а** |
-| **Країни (закінчення -у)** | Пакистан, Єгипет | **-у** | з Пакистан**у** (Source 7), з Єгипт**у** |
-| **Регіони (закінчення -у)** | Донбас | **-у** | з Донбас**у** (Source 3) |
-| **Матеріали (закінчення -у)** | метал, віск | **-у** | з метал**у**, з воск**у** (Source 6) |
-| **Матеріали (закінчення -а)** | хліб | **-а** | з хліб**а** |
-| **Рослини, предмети (закінчення -а/-я)** | дуб, ясен | **-а/-я** | з дуб**а**, з ясен**я** |
-| **Абстрактні поняття** | страх, біль | **-у** | зі страх**у**, з бол**ю** |
+| Form | Usage Rule | Example |
+| :--- | :--- | :--- |
+| **З** | Before a **vowel** or most **voiced consonants**. | `з О`деси, `з У`країни, `з р`оботи |
+| **ІЗ** | Between two **consonants** or before `з, с, ц, ш, ч, ж`. | `виготовлено і`з `з`олота (Source 23), `приїхав і`з `Х`аркова (Source 23) |
+| **ЗІ** | Before a **consonant cluster**, especially one starting with `з, с, ш, щ, в, ф, л, м`. | `приїхав з`і `Льв`ова (Source 23), `повертаючись з`і `шк`оли (Source 26) |
+| **ЗО** | Used with numerals `два`, `три`. | `зо` дві години (Source 23) |
 
-***Примітка:*** *Правило `-а/-я` vs. `-у/-ю` для іменників ІІ відміни є одним з найскладніших в українській граматиці. На рівні А2 важливо запам'ятовувати найуживаніші форми (особливо назви міст та країн).*
+### Compound Preposition: `з-під` (from under)
 
-#### Іменники жіночого роду (Feminine)
-
-| Тип | Nominative | Genitive (`з/із/зі ...`) | Приклади |
-| --- | --- | --- | --- |
-| **Тверда група (-а)** | Україна, Полтава | **-и** | з Україн**и**, з Полтав**и** (Source 26) |
-| **М'яка група (-я)** | земля, Волинь | **-і** | із земл**і**, з Волин**і** (Source 23) |
-| **Іменники на -ість** | радість | **-ості** | з рад**ості** |
-| **III відміна (приголосний)** | ніч, сіль | **-очі, -олі** | з н**очі**, з с**олі** |
-
-#### Іменники середнього роду (Neuter)
-
-| Тип | Nominative | Genitive (`з/із/зі ...`) | Приклади |
-| --- | --- | --- | --- |
-| **Закінчення -о** | дерево, село | **-а** | з дерев**а**, з сел**а** (Source 22) |
-| **Закінчення -е** | море | **-я** | з мор**я** |
-| **Закінчення -я** | життя | **-я** | з житт**я** |
-
-#### Множина (Plural)
-
-| Тип | Nominative | Genitive (`з/із/зі ...`) | Приклади |
-| --- | --- | --- | --- |
-| **Географічні назви** | Карпати, Суми | **-ø, -ів** | з Карп**ат**, із Сум |
-| **Предмети** | кошики, ножиці | **-ів** | з кошик**ів** (Source 3) |
-| **Істоти** | ворони | **-ø** | з вор**он** |
+This складений (compound) preposition also governs the Genitive case and indicates origin from a lower position.
+*   `дістати з-під стола` (to get from under the table)
+*   `пакет з-під молока` (a carton from under [the category of] milk) (Source 34)
 
 ## Частотність і пріоритети (Frequency & Priorities)
 
-Для рівня А2/B1 пріоритети наступні:
+For an A2 learner, mastering the uses of `з` + Genitive should follow a clear priority based on communicative need.
 
-1.  **Найвища частотність: `Звідки ти?`**
-    *   Конструкція `Я з [країна/місто]`. Це базовий елемент для знайомства.
-    *   **Must-know forms:** `з України`, `з Польщі`, `з Німеччини`, `з Києва`, `зі Львова`, `з Харкова`, `з Одеси`.
-    *   Також важливі форми: `з роботи`, `зі школи`, `з дому`.
+1.  **Priority 1: Geographic Origin (`Звідки ти?`)**
+    This is the most frequent and fundamental use. Learners must be able to state their city and country of origin.
+    *   **Core phrases:** `Я з України.`, `Він з Лондона.`, `Вони зі Львова.`
 
-2.  **Висока частотність: `З чого це?`**
-    *   Опис предметів за матеріалом.
-    *   **Must-know forms:** `з дерева`, `з металу`, `зі скла`, `з пластику`, `з тканини`, `з паперу`.
-    *   Приклади з текстів: `вироби із заліза й сталі` (Source 3), `з жовтого воску зліплений` (Source 6), `пиріжки з калиною` (Source 18).
+2.  **Priority 2: Material / Composition (`З чого це?`)**
+    This is crucial for describing objects and food.
+    *   **Core phrases:** `Стіл з дерева.`, `Пляшка зі скла.`, `Пиріжки з м'ясом` (careful with case!), `салат з овочів.` For fillings, Instrumental is often used (`пиріжки з сиром`), but Genitive for ingredients is also possible. `Пиріжки з сиру` (made of cheese) is less common for filling than `з сиром` (with cheese). The example `пиріжки з калиною` (Source 26) uses the genitive of the filling.
+    *   **Key structures:** `виготовлено з...` (made of), `зроблено з...` (made of)
 
-3.  **Середня частотність: Походження в ширшому сенсі**
-    *   Абстрактне походження або причина.
-    *   Приклади: `з досвіду`, `з переляку`, `з радості`, `з цього ремесла` (Source 3).
+3.  **Priority 3: Source of Movement / Information**
+    This expands the concept of "origin" beyond geography.
+    *   **Movement:** `іти з роботи`, `повернутися зі школи`.
+    *   **Information:** `новини з інтернету`, `інформація з книжки`, `цитата з телешоу` (Source 12).
 
-4.  **Низька пріоритетність для А2:**
-    *   Складні правила вибору закінчення `-а/-я` чи `-у/-ю` для чоловічого роду. На цьому етапі краще вчити конкретні слова як лексичні одиниці.
-    *   Рідкісні форми родового відмінка множини.
+4.  **Priority 4: Compound Prepositions**
+    Forms like `з-під` can be introduced once the core uses of `з` are solid. `пакет з-під соку`.
 
 ## Типові помилки L2 (Common L2 Errors)
 
+English speakers often make predictable errors when learning to use `з` + Genitive.
+
 | ❌ Помилково | ✅ Правильно | Чому |
 | :--- | :--- | :--- |
-| Я приїхав **з** **Львів**. | Я приїхав **зі Львова**. | Англомовні студенти часто забувають змінити іменник на Родовий відмінок після прийменника `з`. Також роблять помилку у виборі варіанта `з/із/зі`. |
-| Цей стіл **від** дерева. | Цей стіл **з** дерева. | Плутанина між `з` (матеріал) і `від` (source/from a person). В англійській "from" може покривати обидва значення, але в українській є різниця. `Від` частіше вказує на джерело дії або відправну точку (`подарунок від мами`). |
-| Ми **із** **Україна**. | Ми **з** **України**. | Помилка у двох місцях: не використано Родовий відмінок (`України`) і неправильно обрано варіант прийменника (`з` достатньо, бо `Україна` починається з голосної). |
-| Суп **з** **м'ясо**. | Суп **з** **м'яса**. | Неправильне відмінювання іменника середнього роду. Називний відмінок (`м'ясо`) використано замість Родового (`м'яса`). |
-| Він **на** Україні. | Він **в** Україні. | Хоча це стосується Місцевого відмінка, помилка критично важлива і пов'язана з темою походження. Питання `Звідки?` (`з України`) передбачає, що спочатку хтось був `в Україні`. Використання `на` є калькою з російської і сприймається як ознака імперського погляду на Україну як на "окраїну". |
-| Подарунок **з** **його**. | Подарунок **від нього**. | Плутанина з походженням від особи. Для позначення походження від людини використовується прийменник `від` + Родовий відмінок займенника. |
+| `Я з Київ.` | `Я з Києв**а**.` | The preposition `з` requires the Genitive case, not the Nominative. Learners forget to change the noun's ending. |
+| `Я живу з України.` | `Я живу **в** Україні.` / `Я **є** з України.` | This is a direct transfer from "I am from Ukraine." In Ukrainian, `жити` (to live) uses `в`/`у` (in), while `бути` (to be) or `приїхати` (to arrive) uses `з` (from) for origin. |
+| `Салат з помідор.` (Instrumental error) | `Салат з помідор**ів**.` (Gen. Plural) / `Салат **із** помідор**ом**.` (Instr. Singular) | Confusion between `з` (from/of, +Genitive) and `з` (with, +Instrumental). `з помідорів` means 'made of tomatoes', while `з помідором` means 'with a tomato'. Both can be correct depending on meaning, but the case must match. |
+| `Я з Львова.` | `Я **зі** Львова.` | Failure to apply the rules of euphony (`милозвучність`). The consonant cluster `Льв-` at the start of `Львова` requires the `зі` form of the preposition (Source 23). |
+| `Де ти від?` | `**Звідки** ти?` | A literal, word-for-word translation of "Where are you from?". Ukrainian uses the single interrogative adverb `Звідки`. |
+| `Це подарунок з друг.` | `Це подарунок **від** друг**а**.` | While `з` means "from" for places, `від` is typically used for the person who is the source of an object or message. |
 
 ## Деколонізаційні застереження (Decolonization Notes)
 
-**MANDATORY — never omit.**
+When teaching Ukrainian grammar, it's critical to avoid Russification and present Ukrainian as a complete, independent system.
 
-1.  **В Україні vs. На Україні:** Це найважливіше розрізнення. Прийменник `в` (`у`) використовується з країнами та державами, що мають чіткі кордони (`в Польщі`, `в Німеччичині`). Прийменник `на` історично використовувався для територій без чіткого державного статусу, островів або регіонів (`на Кубі`, `на Поділлі`). Російська імперська та радянська традиція нав'язувала форму `на Украине`, щоб підкреслити статус України як "окраїни" (borderland) імперії, а не суверенної держави. **Правильна, сучасна і політично коректна форма — `в Україні`**. Відповідно, коли ми говоримо про походження, ми кажемо `з України`, маючи на увазі "from inside Ukraine".
+1.  **`В Україні`, не `на Україні`:** The primary decolonization point related to this topic is locative, not genitive, but it's intrinsically linked. The correct way to say "in Ukraine" is **`в Україні`**. The form `на Україні` is a calque from Russian (`на Украине`) and implies that Ukraine is a region rather than a sovereign state. Consequently, the expression of origin is **`з України`**, derived from the correct locative.
 
-2.  **З Києва vs. Из Киева:** Українська мова використовує прийменник `з` для позначення походження з міста (`з Києва`, `з Харкова`). Російська мова використовує `из` (`из Киева`, `из Харькова`). Важливо не змішувати ці форми і не намагатися застосовувати російські граматичні правила до української мови.
+2.  **Euphony (`Милозвучність`) is a Core Feature:** The `з`/`із`/`зі` alternation is not an optional flourish; it is a fundamental characteristic of the Ukrainian language. In contrast, Russian uses `с`/`со` with much simpler rules. Teaching and enforcing Ukrainian euphonic rules are essential for developing authentic pronunciation and rhythm, reinforcing the language's distinct identity.
 
-3.  **Власні назви:** Завжди використовуйте українську транслітерацію міст та імен: **Kyiv** (не Kiev), **Lviv** (не Lvov), **Kharkiv** (не Kharkov), **Zelenskyy** (не Zelensky). Це питання поваги до національної ідентичності та мови.
+3.  **Genitive Endings Differ:** Do not present Ukrainian Genitive endings as variants of Russian ones. For example, the masculine `-а`/`-я` vs. `-у`/`-ю` distinction in Ukrainian has its own complex logic that differs from Russian. Emphasize the Ukrainian rules independently. For instance, place names that are cities almost always take `-а`/`-я` in Ukrainian (`з Києва, з Харкова`), which is a more consistent rule than in Russian.
 
-4.  **Спадковість, а не виняток:** Українська граматика має власну логіку та історію розвитку, що сягає корінням у праслов'янську мову. Правила, що відрізняються від російських (напр., кличний відмінок, форми майбутнього часу, закінчення родового відмінка), не є "винятками" чи "діалектизмами". Вони є нормою української мови, яку слід вивчати як самостійну систему.
+4.  **Avoid Russian Examples:** Never use Russian words, sentences, or cognates to "explain" a Ukrainian concept. All examples must be authentically Ukrainian. Using a Russian word, even if it looks similar, can introduce incorrect pronunciation, stress, or grammatical gender.
 
 ## Природні приклади (Natural Examples)
 
-**Група 1: Походження з місця (Звідки?)**
+These examples are drawn from the provided sources and demonstrate natural usage.
 
-*   `Я виріс у селі...` (Source 22) -> Імпліцитно: `Я з села`.
-*   `Нарешті йому вдалося купити ділянку. Гарне місце, біля річки.` (Source 38) -> Ділянка `з` гарного місця.
-*   `Дівчинка при­їжджала з великого міста, а восени поверталася додому.` (Source 9)
-*   `Руду добували з болотних руд, яких було багато в долинах річок...` (Source 3)
-*   `Повертаючись зі школи, ми потрапляємо в теп­лі обійми бабусі.` (Source 18)
+**1. Geographic Origin (Походження з місця)**
+*   `Зі Стокгольма в Київ є регулярні літаки всього дві години.` (From Stockholm to Kyiv, there are regular flights of just two hours.) (Source 3)
+*   `Волонтерка з Тернополя.` (A volunteer from Ternopil.) (Source 22, adapted)
+*   `Він народився в місті Холм.` (He was born in the city of Kholm.) (Source 1)
+*   `Повертаючись зі школи, ми потрапляємо в теплі обійми бабусі.` (Returning from school, we fall into grandma's warm hugs.) (Source 26)
 
-**Група 2: Матеріал або склад (З чого?)**
+**2. Material or Composition (Матеріал або склад)**
+*   `У Пергамі винайшли новий матеріал для письма, який виготовляли з телячої шкіри, — пергамент.` (In Pergamon, they invented a new writing material made from calfskin — parchment.) (Source 8)
+*   `Вранці я випиваю велику склянку води з лимоном.` (In the morning, I drink a large glass of water with lemon.) (Source 2, *Note: `з лимоном` is Instrumental, "with lemon", a common point of confusion*)
+*   `Три великі пиріжки з сиром.` (Three large buns with cheese.) (Source 37, *Note: `з сиром` is Instrumental "with cheese" not Genitive "of cheese"*)
+*   `Я з'їла шматок овочевого пирога` (I ate a piece of vegetable pie) (Source 2, *Note: here genitive shows part of a whole, not material*). A better example of material: `Ця ваза зі скла`. <!-- VERIFY -->
 
-*   `...з жовтого воску зліплений...` (Source 6)
-*   `Це зброя, знаряддя праці, ремісничі інструменти... асортимент виробів із заліза й сталі був надзвичайно широкий.` (Source 3)
-*   `...промивали у воді в кошиках з лози...` (Source 3)
-*   `...пиріжки з калиною.` (Source 18)
-*   `Я б навіть сонцю одягнула вінок із житніх колосків.` (Source 16)
-
-**Група 3: Джерело або причина (Звідки? З чого?)**
-
-*   `...вихопили з мряки невелику галявину...` (Source 5)
-*   `...промені невідомого походження, які назвав X-променями.` (Source 30) - приклад самого слова 'походження'.
-*   `Прикрощі (ні) кого ще (не) зблизили...` (Source 40) - тобто, 'з прикрощів' не буде дружби.
+**3. Source of Information or Action (Джерело інформації або дії)**
+*   `Чи знаєте ви, звідки походять назви українських міст і сіл?` (Do you know where the names of Ukrainian cities and villages come from?) (Source 18)
+*   `Перше, з чого треба було почати, — це аналіз даних.` (The first thing to start with was data analysis.) (Source 17)
+*   `Я беру ідеї для цих ситуацій... зі свого життя в Швеції.` (I take ideas for these situations... from my life in Sweden.) (Source 3)
+*   `Мультфільм «Мавка»... з телешоу «Сніданок з 1+1».` (Information about the cartoon "Mavka"... from the TV show "Breakfast with 1+1".) (Source 12, adapted)
 
 ## Рекомендації для вправ (Activity Concepts)
 
-*   **Phase 1 (Recognition & Matching):**
-    *   **Drill 1 (Matching):** Студентам дається дві колонки: Називний відмінок (Київ, дерево, Україна, скло) і Родовий з прийменником (з дерева, з України, зі скла, з Києва). Вони мають з'єднати пари.
-    *   **Drill 2 (Choice):** `Я (з/від) України.` `Стіл зроблений (з/для) дерева.`
+**Phase 1: Recognition & Euphony**
+*   **Listening Drill:** Play short phrases (`з Одеси`, `зі Львова`, `із Харкова`) and have students write down which form (`з`, `зі`, `із`) they hear.
+*   **Sorting Drill:** Give students a list of nouns (e.g., `школа, Америка, Житомир, Львів, Суми`) and have them sort them into columns for `з`, `зі`, `із`.
 
-*   **Phase 2 (Controlled Production):**
-    *   **Drill 1 (Fill-in-the-blank):** `Він живе у Львові. Отже, він ___ _______.` (зі Львова). `Це чашка. Вона зроблена зі скла. Це чашка ___ _____ .` (зі скла).
-    *   **Drill 2 (Transformation):** `Я живу в Харкові.` -> `Я з Харкова.` `Ця сорочка зроблена з бавовни.` -> `Це сорочка з бавовни.`
+**Phase 2: Form & Case Endings**
+*   **Fill-in-the-blanks:** Provide sentences with the noun in Nominative. The student must supply the correct preposition and Genitive form.
+    *   `Я приїхав з (Лондон).` -> `Я приїхав з Лондона.`
+    *   `Вона йде з (робота).` -> `Вона йде з роботи.`
+    *   `Це сік з (яблуко).` -> `Це сік з яблука.`
 
-*   **Phase 3 (Free Production):**
-    *   **Activity 1 (Personalization):** Учні по черзі відповідають на запитання: `Звідки ти?`, `З якого ти міста?`.
-    *   **Activity 2 (Object Description):** Вчитель показує предмети (дерев'яний олівець, металева ложка, паперова книга), а учні описують їх, використовуючи конструкцію `Це ... з ...`.
-    *   **Activity 3 (Map Game):** Використовуючи карту України, один учень "ховається" в місті (напр., `Я в Полтаві`), а інший вгадує, звідки він, ставлячи питання `Ти з Полтави?`.
+**Phase 3: Production**
+*   **Question & Answer:** Pair students up to ask and answer `Звідки ти?`. They must answer with their real or an assigned city/country.
+*   **Describe the Object:** Show pictures of objects (a wooden table, a glass cup, a cotton shirt) and have students describe them using the structure `Це [об'єкт] з [матеріал].` For example: `Це стіл з дерева.`
+
+**Phase 4: Distinction `з` (Gen) vs. `з` (Instr)**
+*   **Transformation Drill:** Give two simple sentences and have students combine them.
+    *   `Це кава. Вона має молоко.` -> `Це кава з молоком.` (Instrumental)
+    *   `Це стіл. Він зроблений з дерева.` -> `Це стіл з дерева.` (Genitive)
 
 ## Зв'язки з іншими темами (Connections)
 
-*   **Prerequisites:**
-    *   **Іменник (Noun):** Розуміння роду (gender) та відміни (declension).
-    *   **Називний відмінок (Nominative Case):** Уміння назвати предмет або місце.
-    *   **Основи фонетики:** Розуміння, що таке голосні та приголосні звуки (для правила `з/із/зі`).
-
-*   **What this enables:**
-    *   **Особиста інформація (Personal Info):** Можливість розповісти про своє походження.
-    *   **Опис предметів (Object Description):** Можливість описати, з чого зроблений предмет.
-    *   **Розуміння інших відмінків:** Створює базу для порівняння з іншими прийменниковими конструкціями, наприклад:
-        *   `з України` (Genitive - from where?) vs. `в Україні` (Locative - where?).
-        *   `до України` (Genitive - to where?).
-    *   **Складніші конструкції:** Розуміння `з` як "джерела" відкриває шлях до розуміння фраз типу `з досвіду`, `з радості`, `з цього приводу`.
+*   **Prerequisites:** A solid understanding of **Ukrainian noun genders** is essential, as Genitive endings depend on it. Learners must also know the difference between animate and inanimate nouns for some case endings.
+*   **Connects Directly to:**
+    *   **Genitive of Negation/Absence (`немає`):** Reinforces the `кого?/чого?` question and endings. `У мене немає брата.`
+    *   **Genitive of Quantity:** Used after words like `багато`, `кілька`. `багато фруктів` (Source 2).
+    *   **Instrumental Case:** Critically important to distinguish `з`+Genitive ("from") from `з`+Instrumental ("with"). This is a major learning point at the A2/B1 level.
+*   **Enables:**
+    *   Fuller personal introductions (`Я з...`).
+    *   More descriptive language for food and objects (`суп з...`, `стіл з...`).
+    *   Understanding directions and movement (`іти зі школи додому`).
 
 ## Пов'язані статті (Related Articles)
 
-*   `grammar/general/prepositions-overview`
-*   `grammar/a2/genitive-case-overview`
-*   `grammar/b1/genitive-case-masculine-u-vs-a`
-*   `grammar/b1/genitive-plural-nouns`
-*   `grammar/a1/introduction-who-am-i`
-*   `culture/common-questions-in-ukraine`
+*   `grammar/a1/noun-genders`
+*   `grammar/a2/genitive-case-negation-quantity`
+*   `grammar/b1/instrumental-case-prepositions`

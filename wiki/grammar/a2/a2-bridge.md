@@ -4,202 +4,187 @@
 slug: a2-bridge
 domain: grammar/a2
 tracks: [a2, b1]
-sources: [6-klas-ukrmova-betsa-2023_s0092, 6-klas-ukrmova-avramenko-2023_s0096, 6-klas-ukrmova-golub-2023_s0073, 6-klas-ukrmova-golub-2023_s0080, 4-klas-ukrmova-zaharijchuk_s0053, 4-klas-ukrmova-zaharijchuk_s0057, 5-klas-ukrmova-litvinova-2022_s0182, 6-klas-ukrmova-avramenko-2023_s0095, 6-klas-ukrmova-avramenko-2023_s0241, 6-klas-ukrmova-zabolotnyi-2020_s0123, 8-klas-ukrmova-zabolotnyi-2025_s0001, 10-klas-ukrajinska-mova-avramenko-2018_s0115, 10-klas-ukrmova-glazova-2018_s0098, 4-klas-ukrmova-zaharijchuk_s0084, 4-klas-ukrmova-zaharijchuk_s0087, 5-klas-ukrmova-golub-2022_s0088, 5-klas-ukrmova-golub-2022_s0254, 5-klas-ukrmova-litvinova-2022_s0181, 5-klas-ukrmova-litvinova-2022_s0185, 5-klas-ukrmova-litvinova-2022_s0219, 6-klas-ukrmova-avramenko-2023_s0133, 6-klas-ukrmova-betsa-2023_s0124, 6-klas-ukrmova-betsa-2023_s0128, 6-klas-ukrmova-betsa-2023_s0143, 6-klas-ukrmova-golub-2023_s0101, 6-klas-ukrmova-golub-2023_s0142, 6-klas-ukrmova-zabolotnyi-2020_s0094, 7-klas-ukrmova-avramenko-2024_s0006, 7-klas-ukrmova-zabolotnyi-2024_s0001, 8-klas-ukrmova-avramenko-2025_s0105, 9-klas-ukrajinska-mova-voron-2017_s0199, 9-klas-ukrajinska-mova-voron-2017_s0287, 10-klas-ukrajinska-mova-avramenko-2018_s0011, 10-klas-ukrajinska-mova-avramenko-2018_s0031, 10-klas-ukrajinska-mova-avramenko-2018_s0117, 10-klas-ukrmova-glazova-2018_s0110, 10-klas-ukrmova-karaman-2018_s0016, 10-klas-ukrmova-karaman-2018_s0030, ext-kw-14, ext-kw-15, ext-kw-92, ext-kw-93, ext-kw-240, ext-kw-241, ext-kw-46, ext-kw-47, ext-kw-368, ext-kw-369]
+sources: [6-klas-ukrmova-betsa-2023_s0092, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0037, 4-klas-ukrayinska-mova-ponomarova-2021-1_s0035, 6-klas-ukrmova-avramenko-2023_s0241, 6-klas-ukrmova-golub-2023_s0073, 4-klas-ukrmova-zaharijchuk_s0053, 10-klas-ukrajinska-mova-avramenko-2018_s0115, 6-klas-ukrmova-avramenko-2023_s0095, 5-klas-ukrmova-litvinova-2022_s0182, 10-klas-ukrajinska-mova-avramenko-2018_s0116, 4-klas-ukrayinska-mova-varzatska-2021-1_s0036, 5-klas-ukrmova-litvinova-2022_s0219, 6-klas-ukrmova-golub-2023_s0080, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0038, 4-klas-ukrayinska-mova-ponomarova-2021-1_s0036, 6-klas-ukrmova-avramenko-2023_s0096, 5-klas-ukrmova-litvinova-2022_s0277, 6-klas-ukrmova-litvinova-2023_s0145, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0044, 8-klas-ukrmova-zabolotnyi-2025_s0001, 21, 10-klas-ukrmova-glazova-2018_s0098, 10-klas-ukrajinska-mova-avramenko-2018_s0148, 4-klas-ukrayinska-mova-varzatska-2021-1_s0044, 6-klas-ukrmova-betsa-2023_s0124, 6-klas-ukrmova-avramenko-2023_s0067, 7-klas-ukrmova-zabolotnyi-2024_s0001, 6-klas-ukrmova-litvinova-2023_s0140, 9-klas-ukrajinska-mova-voron-2017_s0287, 10-klas-ukrmova-karaman-2018_s0095, 4-klas-ukrayinska-mova-ponomarova-2021-1_s0046, 6-klas-ukrmova-litvinova-2023_s0146, 5-klas-ukrmova-golub-2022_s0088, 5-klas-ukrmova-avramenko-2022_s0117, 6-klas-ukrmova-zabolotnyi-2020_s0095, 5-klas-ukrmova-litvinova-2022_s0007, 4-klas-ukrayinska-mova-varzatska-2021-1_s0050, 4-klas-ukrayinska-mova-kravtsova-2021-1_s0046, 5-klas-ukrmova-litvinova-2022_s0181, 6-klas-ukrmova-litvinova-2023_s0123, ext-ulp_youtube-27, ext-other_blogs-46, ext-other_blogs-67, ext-ulp_youtube-246, ext-istoria_movy-30, ext-other_blogs-0, ext-other_blogs-1, ext-ulp_youtube-237, ext-istoria_movy-49, ext-istoria_movy-28]
 compiled: 2026-04-06
 -->
 
 ## Як це пояснюють у школі (How Schools Teach This)
 
-The transition to A2 consolidates core grammatical concepts introduced earlier, focusing on their systematic application. Ukrainian school methodology, as seen in textbooks from grades 4-7, builds this foundation step-by-step.
+В українських школах тема відмінків іменників є фундаментальною і вводиться поетапно, починаючи з молодших класів (орієнтовно 4-й клас). Основна мета — показати, що іменники змінюють свою форму (закінчення), щоб поєднуватися з іншими словами в реченні (Source 8, 18). Цей процес називається **відмінюванням** (Source 2, 3).
 
-1.  **The Centrality of Cases (Відмінки):** The core of noun and adjective usage is the case system. Textbooks introduce the seven cases early on, emphasizing their role in connecting words within a sentence (Source 1, 8). Each case is tied to specific questions (`хто? що?`, `кого? чого?`, etc.), which learners are expected to memorize (Source 3, 5, 8). The Nominative is defined as the "initial form" (`початкова форма`), while the other six are "indirect" (`непрямі відмінки`) (Source 1, 8, 29).
+Ключові підходи до викладання:
 
-2.  **The Vocative as a Special Feature:** The Vocative case (`Кличний відмінок`) is consistently highlighted as a unique and expressive characteristic of the Ukrainian language (Source 3, 27). Schools teach that it doesn't answer a question but is used for direct address, making speech polite and emotionally resonant (Source 27, 30). This is a point of national pride and a key differentiator taught from early grades.
+1.  **Сім відмінків**: Учням одразу представляють повну систему з семи відмінків: Називний, Родовий, Давальний, Знахідний, Орудний, Місцевий та Кличний (Source 1, 2, 3).
+2.  **Питання до відмінків**: Кожен відмінок (крім Кличного) асоціюється з парою питань (для істот і неістот), які допомагають визначити його роль у реченні (Source 2, 4, 15, 20).
+3.  **Початкова форма**: Наголошується, що **Називний відмінок однини** є початковою, або словниковою формою іменника (Source 1, 8, 11).
+4.  **Прямі і непрямі відмінки**: Називний відмінок називають *прямим*, оскільки він прямо називає предмет і часто виступає підметом. Усі інші відмінки називають *непрямими* (Source 8, 12, 18).
+5.  **Кличний відмінок**: Йому приділяється особлива увага. Підкреслюється, що він не відповідає на питання і використовується при звертанні (Source 1, 2, 3, 5). Джерело `6-klas-ukrmova-golub-2023_s0073` називає його "одною з виразних ознак нашої мови".
+6.  **Мнемонічні фрази**: Для запам'ятовування послідовності відмінків використовуються мнемонічні фрази, наприклад: "**Н**ашого **Р**омчика **Д**ивує **З**ебра — **О**ця **М**аленька **К**расуня" (Source 2, 5) або "**Н**аша **Р**ая **Д**обре **З**нає **О**цю **М**ову **К**алинову" (Source 5).
 
-3.  **Declensions as a System:** Once cases are understood, the concept of declensions (`відміни`) is introduced to systematize ending changes. Learners are taught to identify a noun's declension and group (hard, soft, mixed) based on its gender and Nominative ending to predict its forms in other cases (Source 1, 4, 41).
-
-4.  **Adjective Agreement:** The rule for adjectives is simple and direct: the adjective's case is determined by the case of the noun it modifies (Source 15: "Щоб визначити відмінок прикметника, потрібно з’ясувати відмінок іменника, від якого залежить прикметник"). Adjectives also have hard and soft groups, which affect their endings (Source 24).
-
-5.  **Mylozvuchnist (Euphony):** This is presented not just as a rule, but as a fundamental quality of the Ukrainian language (`одна з характерних рис`) (Source 13, 43). The alternation of prepositions/conjunctions like `у/в` and `і/й`, and prefixes `з-/із-/зі-` is taught as a conscious effort to avoid awkward sound combinations, particularly clusters of consonants or vowels (Source 7, 13, 16). This makes the language more melodic and "pleasant to the ear" (`приємно для слуху`) (Source 43).
+На рівні А2 учень вже знайомий з ідеєю відмінків, але тепер завдання полягає в систематизації знань та впевненому використанні всіх семи відмінків у мовленні.
 
 ## Повна парадигма (Full Paradigm)
 
-At the A2 level, learners must be comfortable with the full declension of the most common noun and adjective types.
+В українській мові 7 відмінків. Зміна іменника за відмінками називається **відмінюванням**.
 
-### The Seven Cases of Ukrainian Nouns
-
-| Відмінок (Case) | Питання (Questions) | Значення (Meaning) |
-| :--- | :--- | :--- |
-| **Називний (N.)** | хто? що? (who? what?) | Subject of the action (Source 29) |
-| **Родовий (R.)** | кого? чого? (of whom? of what?) | Possession, absence, object of negation |
-| **Давальний (D.)** | кому? чому? (to whom? to what?) | Indirect object, recipient of an action (Source 29) |
-| **Знахідний (Z.)** | кого? що? (whom? what?) | Direct object of an action (Source 29) |
-| **Орудний (O.)** | ким? чим? (by whom? with what?) | Instrument or means of an action (Source 29) |
-| **Місцевий (M.)** | (на/у) кому? (на/у) чому? (on/in whom? on/in what?) | Location; always used with a preposition (Source 8) |
-| **Кличний (K.)** | (немає питань) | Direct address (Source 3, 29) |
-
-### Noun Declension: I Відміна (Feminine, Masculine, Common on -а/-я)
-
-(Source 41, 42)
-
-| Відмінок | Тверда група (хата) | М'яка група (земля) | Мішана група (вежа) |
+| Назва відмінка | Скорочення | Питання | Призначення |
 | :--- | :--- | :--- | :--- |
-| **N.** | хат**-а** | земл**-я** | веж**-а** |
-| **R.** | хат**-и** | земл**-і** | веж**-і** |
-| **D.** | хат**-і** | земл**-і** | веж**-і** |
-| **Z.** | хат**-у** | земл**-ю** | веж**-у** |
-| **O.** | хат**-ою** | земл**-ею** | веж**-ею** |
-| **M.** | (у) хат**-і** | (на) земл**-і** | (на) веж**-і** |
-| **K.** | хат**-о** | земл**-е** | веж**-е** |
+| **Називний** | Н. в. | хто? що? | Називає предмет; підмет у реченні. |
+| **Родовий** | Р. в. | кого? чого? | Вказує на відсутність, належність, частину. |
+| **Давальний** | Д. в. | кому? чому? | Вказує на адресата дії. |
+| **Знахідний** | Зн. в. | кого? що? | Вказує на об'єкт, на який спрямована дія. |
+| **Орудний** | Ор. в. | ким? чим? | Вказує на інструмент, засіб або супутника. |
+| **Місцевий** | М. в. | (на/у) кому? (на/у) чому? | Вказує на місце. **Завжди** вживається з прийменником. (Source 8) |
+| **Кличний** | Кл. в. | *немає* | Використовується для звертання. (Source 2, 3, 5) |
 
-### Noun Declension: II Відміна (Masculine on consonant, Neuter on -о, -е, -я)
+*(Базова таблиця на основі джерел 1, 2, 4, 6, 8, 14, 15, 18, 20)*
 
-(Source 4)
+#### Приклади відмінювання
 
-| Відмінок | Чол. р. тверда (стіл) | Сер. р. тверда (село) | Чол. р. м'яка (день) | Сер. р. м'яка (море) |
-| :--- | :--- | :--- | :--- | :--- |
-| **N.** | стіл | сел**-о** | день | мор**-е** |
-| **R.** | стол**-а** | сел**-а** | дн**-я** | мор**-я** |
-| **D.** | стол**-ові**, -у | сел**-у** | дн**-еві**, -ю | мор**-ю** |
-| **Z.** | стіл | сел**-о** | день | мор**-е** |
-| **O.** | стол**-ом** | сел**-ом** | дн**-ем** | мор**-ем** |
-| **M.** | (на) стол**-і** | (у) сел**-і** | (у) дн**-і** | (у) мор**-і** |
-| **K.** | стол**-е** | сел**-о** | дн**-ю** | мор**-е** |
+**Іменники І відміни (жін. рід на -а, -я)**
 
-### Adjective Declension (Singular)
+| Відмінок | Тверда група (книг**а**) | М'яка група (земл**я**) | Мішана група (груш**а**) |
+| :--- | :--- | :--- | :--- |
+| Н. в. | книг**а** | земл**я** | груш**а** |
+| Р. в. | кни́г**и** | землі**і́** | гру́ш**і** |
+| Д. в. | кни́з**і** | землі**і́** | гру́ш**і** |
+| Зн. в. | кни́г**у** | зе́мл**ю** | гру́ш**у** |
+| Ор. в. | кни́г**ою** | земле́**ю** | гру́ш**ею** |
+| М. в. | (у) кни́з**і** | (на) землі**і́** | (на) гру́ш**і** |
+| Кл. в. | кни́г**о** | зе́мл**е** | гру́ш**е** |
 
-(Source 14, 24)
+**Важливо:** У давальному та місцевому відмінках однини в іменниках І відміни відбувається чергування приголосних основи перед закінченням **-і**:
+*   `г` → `з'`: но**г**а → но**з**і, доро**г**а → на доро**з**і (Source 1, 31)
+*   `к` → `ц'`: ру**к**а → ру**ц**і, білоч**к**а → білоч**ц**і (Source 1, 31, 38)
+*   `х` → `с'`: му**х**а → му**с**і, свекру**х**а → свекру**с**і (Source 1, 31, 42)
 
-| Відмінок | Тверда група (чол./сер./жін.) | М'яка група (чол./сер./жін.) |
+**Іменники ІІ відміни (чол. рід на приголосний та -о; сер. рід на -о, -е, -я)**
+
+| Відмінок | Чол. рід (студе́нт) | Сер. рід (вікно́) |
 | :--- | :--- | :--- |
-| **N.** | нов**-ий** / нов**-е** / нов**-а** | літн**-ій** / літн**-є** / літн**-я** |
-| **R.** | нов**-ого** / нов**-ої** | літн**-ього** / літн**-ьої** |
-| **D.** | нов**-ому** / нов**-ій** | літн**-ьому** / літн**-ій** |
-| **Z.** | = N. або R. / нов**-е** / нов**-у** | = N. або R. / літн**-є** / літн**-ю** |
-| **O.** | нов**-им** / нов**-ою** | літн**-ім** / літн**-ьою** |
-| **M.** | (у) нов**-ому** / (у) нов**-ій** | (у) літн**-ьому** (-ім) / (у) літн**-ій** |
+| Н. в. | студе́нт | вікно́ |
+| Р. в. | студе́нт**а** | вікна́ |
+| Д. в. | студе́нт**ові** / студе́нт**у** | вікну́ |
+| Зн. в. | студе́нт**а** (істота) | вікно́ (неістота) |
+| Ор. в. | студе́нт**ом** | вікно́м |
+| М. в. | (на) студе́нт**ові** / студе́нт**і** | (у) вікні**і́** |
+| Кл. в. | студе́нт**е** | вікно́ |
 
-### Euphony (Милозвучність): Core Alternations
+*(Парадигми узагальнено з джерел 4, 6, 11, 13, 14, 15)*
 
-| Rule | Use У / І / З | Use В / Й / ІЗ / ЗІ |
-| :--- | :--- | :--- |
-| Between two consonants | **у** школі, брат **і** сестра | - |
-| Between two vowels | - | була **в** Одесі (Source 43), діти **й** дорослі (Source 18) |
-| Vowel → Consonant | пішла **в** аптеку, моя **й**ого | - |
-| Consonant → Vowel | прийшов **у** клас | - |
-| Before `в, ф, св, хв` etc. | **у** вагоні | - |
-| Before `й, я, ю, є, ї` | - | він **і** Йосип |
-| Before `з, с, ш, щ` + consonant | - | **зі** мною, **зі** школи (Source 7) |
-| Between consonant clusters | - | лист **із** Франції |
+## Частотність і пріоритети (Frequency & Priorities)
 
-## Частотність і пріоритети
+На рівні A2 критично важливо засвоїти функціональне використання відмінків, а не лише їх форми.
 
-For A2 learners, not all cases and forms are equally critical. The curriculum should prioritize based on communicative need.
+1.  **Розрізнення Називний vs. Знахідний (Н.в. vs. Зн.в.)**: Це пріоритет №1, оскільки він визначає базову структуру речення "хто що робить з чим". Учні мають чітко розрізняти підмет (хто/що діє) та додаток (на кого/що спрямована дія). Для неістот чоловічого та середнього роду форми збігаються, тому розрізнення відбувається лише за роллю в реченні (Source 19, 24, 35).
+    *   *Підмет (Н.в.):* `Починається **урок**.`
+    *   *Додаток (Зн.в.):* `Я починаю **урок**.`
 
-1.  **High Priority (Must Master):**
-    *   **Nominative (Називний):** The default form for subjects. Essential.
-    *   **Accusative (Знахідний):** The direct object case. Crucial for forming basic transitive sentences (`Я читаю книжку`).
-    *   **Locative (Місцевий):** The "where" case. Absolutely essential for talking about location (`Я живу в Києві`). Always with a preposition (Source 49).
-    *   **Genitive (Родовий):** The "of" case. High frequency for possession (`книжка брата`) and after the word `немає` (`немає часу`).
-    *   **Euphony (`у/в`, `і/й`):** These are not optional. Using them correctly is a primary marker of fluency and naturalness (Source 43).
+2.  **Місцевий відмінок для позначення місця**: Надзвичайно поширена конструкція. Учень має автоматично використовувати прийменники `у/в` або `на` і правильне закінчення для відповіді на питання `де?`.
+    *   `Я живу **в Україні**` (Source 44).
+    *   `Ми були **в Ужгороді**` (Source 48).
+    *   `Він працює **на заводі**.` <!-- VERIFY -->
 
-2.  **Medium Priority (Build Fluency):**
-    *   **Vocative (Кличний):** While grammatically "extra," it's culturally vital. Essential for any form of address (`Мамо!`, `Пане директоре!`, `Андрію!`). Ignoring it sounds blunt or foreign.
-    *   **Instrumental (Орудний):** The "with/by" case. Needed for talking about tools (`писати ручкою`), transport (`їхати автобусом`), and company (`з другом`).
-    *   **Dative (Давальний):** The "to/for" case. Important for indirect objects (`дати книжку сестрі`) and expressing age (`мені 20 років`).
+3.  **Кличний відмінок у звертанні**: Це маркер природності мовлення. На відміну від інших відмінків, його неправильне використання (заміна Називним) одразу вказує на іноземця. Це високий пріоритет для розмовної практики.
+    *   `**Олю**, привіт!` (Source 16)
+    *   `**Друже**, допоможи мені.` (Source 15)
 
-3.  **Lower Priority (Introduce Gradually):**
-    *   Complex Genitive plural endings (e.g., with vowel insertions like `сестер`, `жінок`) (Source 41).
-    *   Less common parallel forms (e.g., `столові/столу` in Dative) (Source 4).
-    *   Declension of complex non-Slavic surnames (Source 1, 10).
+4.  **Родовий відмінок для позначення відсутності**: Конструкція з `немає` + Родовий відмінок є однією з базових.
+    *   `У нас немає (чого?) **часу**.`
+    *   `Сьогодні немає (кого?) **вчительки**.`
+
+5.  **Орудний відмінок для інструменту**: Відповідає на питання `чим?` і є дуже продуктивним.
+    *   `Я пишу (чим?) **ручкою**.`
+    *   `Він їсть (чим?) **виделкою**.`
 
 ## Типові помилки L2 (Common L2 Errors)
 
 | ❌ Помилково | ✅ Правильно | Чому |
 | :--- | :--- | :--- |
-| `Привіт, Андрій!` | `Привіт, Андрію!` | English speakers often use the Nominative for direct address. Ukrainian requires the Vocative case. (Source 30: "через незнання граматичних норм літературної мови, адже в кличному відмінку чоловічі імена з основою на м’який приголосний мають закінчення -ю"). |
-| `Я була в Вінниці.` | `Я була у Вінниці.` | This is a euphony error (порушення милозвучності). The rule is to avoid repeating the same sound (`в` `в`), so `у` is used instead. (Source 43: "ми не можемо два рази вживати в"). |
-| `Сестра і її брат...` | `Сестра та її брат...` або `Сестра і брат...` | A euphony error creating a vowel cluster (`а-і-ї`). Learners should use `й` between vowels (`Олена й Ігор`) or `та` after a vowel before a consonant for better flow (Source 18). |
-| `Я не маю час.` (Acc.) | `Я не маю часу.` (Gen.) | After negation, particularly with `немає` or verbs of not having, Ukrainian requires the Genitive case for the object, not the Accusative. This is a common point of confusion. |
-| `Я бачу гарний дівчина.` | `Я бачу гарну дівчину.` | Failure to apply adjective agreement. The adjective `гарний` must agree with the noun `дівчина` in gender (feminine), number (singular), and case (Accusative). (Source 15). |
-| `Я навчаюся музиці.` (Dat.) | `Я навчаюся музики.` (Gen.) | This reflects interference from Russian, where `учиться музыке` uses the Dative. The correct Ukrainian construction is `навчатися` + Genitive. (Source 6). |
+| `**Тато**, іди сюди!` | `**Тату**, іди сюди!` | **Ігнорування Кличного відмінка.** Для звертань використовується Кличний, а не Називний відмінок. Це дуже поширена помилка, яка видає іноземця. (Source 11, 15, 35) |
+| `Я даю книжку **подругі**.` | `Я даю книжку **подрузі**.` | **Ігнорування чергування приголосних.** В іменниках жіночого роду в Д.в. та М.в. однини `г`, `к`, `х` переходять у `з'`,`ц'`,`с'` перед закінченням `-і`. (Source 31) |
+| `Я бачу **брат**.` | `Я бачу **брата**.` | **Незмінна форма для істот у Зн.в.** У знахідному відмінку іменники чоловічого роду, що позначають істот, мають форму, схожу на Родовий відмінок. (Source 19) |
+| `Стіл стоїть **кімната**.` | `Стіл стоїть **у кімнаті**.` | **Пропуск прийменника в Місцевому відмінку.** Місцевий відмінок завжди вимагає прийменника (`у/в`, `на`, `по` тощо), оскільки він вказує на місце. (Source 8) |
+| `У школі є **багато учнів**.` (правильно) <br> `Я бачу **багато учнів**.` | `У школі є **багато учнів**.` <br> `Я бачу **багатьох учнів**.` | **Плутанина між Родовим та Знахідним відмінками множини для істот.** Після слів `багато/мало` використовується Родовий відмінок. Але в ролі прямого додатка (Зн. в.) для істот у множині форма збігається з Родовим. Однак, якщо є узгоджений прикметник або займенник, він часто набуває форми Знахідного відмінка множини, що може заплутати. Найпростіше правило для А2: після дієслів, що означають "бачити", "знати", "любити", іменник-істота у множині буде у формі Родового/Знахідного. <!-- VERIFY --> |
+| `Ми говорили про **політику**.` | `Ми говорили про **політику**.` (правильно, але є нюанс) | **Неправильний вибір прийменника.** Англійське `about` може перекладатися як `про` (+Зн.в.) або `про` (+М.в. у старих формах), але часто для розмови *про щось* краще використовувати конструкцію з `про` + Зн.в., а для місця/часу `по` + М.в. або `у/в` + М.в. Помилка полягає у неправильному перенесенні логіки прийменників з англійської. |
 
 ## Деколонізаційні застереження (Decolonization Notes)
 
-**This is a critical section.** Ukrainian grammar must be taught on its own terms, not as a deviation from Russian.
+**MANDATORY — never omit.** Українська граматика — це самостійна система. Порівняння з російською мовою припустиме лише для того, щоб попередити помилки, а не для пояснення правил.
 
-1.  **The Vocative Case is Standard, Not Archaic:** The Vocative (`Кличний відмінок`) is a living, breathing, and mandatory part of standard Ukrainian for all forms of address (Source 3, 27, 40). It is not an "optional" or "poetic" feature. Contrast this with Modern Russian, where it is almost entirely lost, surviving only in a few words like "Боже". Presenting the Ukrainian Vocative as a core grammatical feature reinforces the language's distinct heritage.
+1.  **Кличний відмінок (Vocative Case)**: Це найяскравіший маркер. В сучасній російській мові кличний відмінок практично зник (зберігся в архаїчних формах типу "Боже!", "отче"). В українській мові він **живий, активний і обов'язковий** у будь-якому стилі мовлення при звертанні. Його відсутність — ознака або суржику, або недостатнього володіння мовою. (Source 5: "Кличний відмінок — це одна з виразних ознак нашої мови").
 
-2.  **Euphony (Милозвучність) as a Core System:** The rules of `у/в` and `і/й` alternation are fundamental to Ukrainian phonology and rhythm (Source 13, 16, 43, 44). They are far more systematic and pervasive than in Russian. Frame this not as an aesthetic choice but as a grammatical rule system that defines the sound of the language. It is a key element that makes Ukrainian "солов'їна" (melodious like a nightingale) (Source 43).
+2.  **Паралельні форми Давального відмінка**: В українській мові для іменників чоловічого роду в давальному відмінку однини існують паралельні закінчення **-ові, -еві** та **-у, -ю** (`синові/сину`, `учневі/учню`, `братові/брату`). Закінчення `-ові, -еві` є питомо українськими і дуже поширеними, їх варто активно вживати для природного звучання. Російська мова має лише закінчення `-у, -ю`. (Source 6, 8, 11, 14).
 
-3.  **The Dative `-ові/-еві` Endings are Primary:** For masculine singular nouns (II declension), the Dative endings `-ові, -еві` are fully standard and often preferred, especially for animate nouns (`братові`, `учневі`, `директорові`). The `-у, -ю` ending is a parallel form (Source 4, 8). This contrasts with Russian, which almost exclusively uses `-у, -ю`. Teaching `-ові/-еві` as a primary, vibrant form is essential.
+3.  **Милозвучність (Евфонія)**: Чергування прийменників `у – в`, сполучників `і – й` та прийменників `з – із – зі` є **законом** української мови, а не стилістичною опцією. Ці правила запобігають збігу голосних або приголосних і роблять мову мелодійною. (Source 7, 9, 17, 22, 33, 41). Російська мова не має такої строгої системи евфонічних чергувань. Наприклад, `був у школі` є нормою в українській, тоді як `был в школе` є нормою в російській, попри збіг приголосних.
 
-4.  **Embrace Ukrainian Vocabulary:** Where a common internationalism or Russian borrowing has a perfectly good Ukrainian equivalent, prioritize the native word. This is a form of linguistic hygiene. For instance, encourage `доказ` over `аргумент`, `вада` over `дефект`, `безлад` over `анархія` (Source 36, 43). This reinforces the richness of the native lexicon.
-
-5.  **G-H Distinction (`Ґ` vs `Г`):** While not strictly a case/declension topic, it's a fundamental phonological distinction in Ukrainian that is absent in Russian. This distinction has deep historical roots and is a key marker of Ukrainian identity (Source 40). It must be taught and reinforced consistently.
+4.  **Форми Знахідного відмінка**: Історично українська мова зберегла деякі відмінності у формах знахідного відмінка для назв тварин, де можуть вживатися як форми, однакові з називним, так і з родовим відмінком (`пасти овець` і `пасти вівці`). Це є архаїчною рисою, яка відрізняється від більш уніфікованої російської системи. (Source 42).
 
 ## Природні приклади (Natural Examples)
 
-These examples are drawn from the source texts to ensure authenticity.
+**Називний (хто? що? — підмет)**
+*   `Сьогодні **понеділок**.` (Source 44)
+*   `**Ріка** заснула в берегах.` (Source 16)
+*   `**Кошеня** лягло на килимок.` (Source 19)
 
-#### Group 1: The Locative Case for Location
+**Родовий (кого? чого? — немає, належність)**
+*   `Боятися **вовка** — у ліс не ходити.` (Народна творчість, Source 8)
+*   `Родовий повідомляє нам, **кого**? **чого**? немає.` (Source 2)
+*   `Це свято посідало найпочесніше місце відтоді, як люди почали розуміти циклічність руху **Сонця**.` (Source 32)
 
-1.  `На малому деревці... лузають зиму горобці.` (On the small tree... sparrows are pecking at winter.) (Source 2)
-2.  `У тихому болоті чорти водяться.` (In a quiet swamp, devils live.) (Source 8)
-3.  `Хочеш подивитися фотографії... це я і Максим в Ужгороді.` (Want to see photos... this is me and Maksym in Uzhhorod.) (Source 49, 50)
-4.  `Ріка заснула в берегах.` (The river fell asleep within its banks.) (Source 2)
+**Давальний (кому? чому? — адресат)**
+*   `**Голодній кумі** хліб на умі.` (Народна творчість, Source 8)
+*   `Я телефоную своїй **подрузі**.` (Source 31)
+*   `Ми дали **білочці** горішки.` (Source 38)
 
-#### Group 2: The Genitive Case for Possession & Absence
+**Знахідний (кого? що? — прямий додаток)**
+*   `Несе Галя **воду**.` (Source 12)
+*   `Я люблю **українську мову**.` (Source 44)
+*   `Тато намалював **кошеня**.` (Source 19)
 
-1.  `Не видно (дорога) -> дороги.` (The road is not visible.) (Source 6)
-2.  `Це питання треба узгодити з (ім’я та по батькові директора школи).` (This question needs to be agreed upon with the school director's name and patronymic.) (Source 10)
-3.  `Один із головних атрибутів Різдва...` (One of the main attributes of Christmas...) (Source 3)
+**Орудний (ким? чим? — інструмент, разом з)**
+*   `Богдан милувався **квітами**.` (Source 19)
+*   `Пахне **травою**.` <!-- VERIFY -->
+*   `Я прийшов з **другом**.` (Source 8)
 
-#### Group 3: The Vocative Case for Direct Address
+**Місцевий ((на/у) кому? чому? — місце)**
+*   `У **тихому болоті** чорти водяться.` (Народна творчість, Source 8)
+*   `**На білочці** руда шубка.` (Source 38)
+*   `Ми були **в Ужгороді** минулої весни.` (Source 48)
 
-1.  `Олю, з великим задоволенням запрошую...` (Olia, with great pleasure I invite you...) (Source 2)
-2.  `Дорогий Віталіє, вітаю тебе...` (Incorrect form, should be `Віталію`) (Source 30 - used as an example of error)
-3.  `Сину, березо, поле` (Examples of vocative forms) (Source 5)
-
-#### Group 4: Euphony (`у/в` and `і/й`) in Action
-
-1.  `Зустрінемось у школі.` (Let's meet at school.) (Between two consonants) (Source 13)
-2.  `Сергій і Надія.` (Serhiy and Nadiia.) (Between two consonants) (Source 13)
-3.  `Поїхала в Одесу.` (She went to Odesa.) (Between two vowels) (Source 13)
+**Кличний (звертання)**
+*   `**Чого** ти журишся, **ромашко**?` (О. Донченко, Source 35)
+*   `**Оксанко**, скажи лагідне, добре слово.` (Source 11)
+*   `**Сину**, тако буді.` (Літопис, Source 45)
 
 ## Рекомендації для вправ (Activity Concepts)
 
-The learning process should be scaffolded from recognition to production.
+-   **Phase 1: Розпізнавання та ідентифікація**
+    -   **Вправа "Знайди відмінок":** Дати учням короткі речення з виділеними іменниками. Завдання — визначити відмінок і поставити до нього питання. *Приклад: "Над полем красувалася **веселка**." -> що? -> Н.в.* (на основі Source 19).
+    -   **Вправа "Питання-Відповідь":** Вчитель ставить питання (`Кого ти бачиш?`), учень відповідає, використовуючи правильну форму (`Я бачу **друга**`).
 
-*   **Phase 1: Recognition & Core Concepts**
-    *   **Drill 1 (Case Matching):** Provide a list of questions (`кому?`, `ким?`, `на чому?`) and have the learner match them to the correct case name.
-    *   **Drill 2 (Euphony Choice):** Give sentences with `[у/в]` or `[і/й]` and have the learner circle the correct option based on the surrounding sounds. Example: `Вона живе [у/в] Львові.`, `Мама [і/й] тато.`
-    *   **Drill 3 (Address Recognition):** Show a short dialogue and ask the learner to identify all words used in direct address (Vocative case).
+-   **Phase 2: Контрольована практика**
+    -   **Вправа "Трансформація":** Подати речення, де іменник стоїть у початковій формі в дужках. Учень має розкрити дужки. *Приклад: "Я допомагаю (мама) готувати (вечеря)." -> "...допомагаю **мамі** готувати **вечерю**."* (на основі Source 16).
+    -   **Дриль-таблиця:** Учні заповнюють таблицю відмінювання для 2-3 нових слів, спираючись на зразки. *Приклад: Провідміняйте слова `верба`, `стіл`, `море`.* (Source 6).
 
-*   **Phase 2: Controlled Production**
-    *   **Drill 4 (Fill-in-the-Blank - Cases):** Provide sentences with a noun in parenthesis. The learner must write the noun in the correct case. Example: `Я дав книжку (сестра).` -> `сестрі`.
-    *   **Drill 5 (Adjective Agreement):** Same as above, but with an adjective + noun pair. Example: `Я живу у (новий будинок).` -> `новому будинку`.
-    *   **Drill 6 (Vocative Transformation):** Give a list of names (`Олена`, `Тарас`, `Ігор`). The learner must produce the correct vocative form (`Олено`, `Тарасе`, `Ігорю`).
-
-*   **Phase 3: Communicative Application**
-    *   **Activity 1 (Location Q&A):** Ask a series of questions using `Де...?` (`Де ти працюєш?`, `Де лежить книжка?`). The learner must answer using the Locative case.
-    *   **Activity 2 (Describing a room):** Give the learner a picture of a room. They must describe it using at least 5 sentences, which will naturally require Locative (`на столі`, `у шафі`) and Nominative cases.
-    *   **Activity 3 (Writing an email):** The learner writes a short email to a friend. This requires using the Vocative (`Привіт, [Ім'я]!`) and other cases naturally.
+-   **Phase 3: Вільне мовлення**
+    -   **Вправа "Мій тиждень":** Учні розповідають про свій розклад, використовуючи конструкції з днями тижня у Знахідному відмінку. *Приклад: "**У понеділок** я вчу граматику. **У середу** я пишу листи."* (на основі Source 44).
+    -   **Ситуативні діалоги:** Розіграти сцени: "в магазині" (використання Р.в. для кількості: `дайте **хліба**`), "знайомство" (використання Кл.в.: `**Ірино**, дуже приємно`), "розповідь про кімнату" (використання М.в.: `**на столі** лежить книжка`).
 
 ## Зв'язки з іншими темами
 
--   **Prerequisites:** This entire block relies on a solid understanding of **Gender** (`Рід`) from A1. The learner cannot decline a noun without knowing its gender.
--   **Enables:** Mastering cases is the gateway to almost all subsequent grammar. It is essential for:
-    -   **Verbs of Motion (Дієслова руху):** These verbs are almost always paired with prepositions that govern a specific case (e.g., `іти **в**` + Accusative, `іти **з**` + Genitive).
-    -   **Adjective Comparatives/Superlatives:** Constructions like `кращий за всіх` require the Genitive case.
-    -   **Time Expressions:** Many expressions of time use the Genitive (`п'ятого лютого`) or Accusative (`кожен день`).
-    -   **Complex Sentences:** Understanding cases is necessary to parse the relationships between clauses and phrases.
+-   **Передумови:**
+    -   `grammar/a1/noun-gender`: Розуміння роду іменників є критичним, оскільки відмінювання безпосередньо залежить від нього.
+    -   `syntax/a1/basic-sentence`: Учень має знати, що таке підмет і присудок, щоб розрізнити Називний відмінок від інших.
+
+-   **Наступні кроки:**
+    -   `grammar/a2/adjective-agreement`: Відмінки є основою для узгодження прикметників з іменниками. Прикметники також змінюються за відмінками. (Source 4, 25, 27).
+    -   `grammar/b1/pronoun-declension`: Особові займенники (`я`, `ти`, `він`) також відмінюються, і їхні форми потрібно вивчати в контексті функцій відмінків.
+    -   `grammar/b1/noun-declensions`: На рівні В1 учень поглибить знання про 4 відміни іменників та їх групи (тверда, м'яка, мішана), що є більш формалізованим поглядом на ті ж самі патерни. (Source 28, 42).
 
 ## Пов'язані статті (Related Articles)
 
--   `grammar/a1/noun-gender`
--   `grammar/a2/verb-aspect-intro`
--   `grammar/a2/adjective-comparison`
--   `grammar/b1/verbs-of-motion`
--   `grammar/b1/prepositions-and-cases`
--   `phonetics/mylozvuchnist`
+-   `[Рід іменників](grammar/a1/noun-gender)`
+-   `[Узгодження прикметників](grammar/a2/adjective-agreement)`
+-   `[Чотири відміни іменників](grammar/b1/noun-declensions)`
+-   `[Милозвучність української мови](phonetics/a2/euphony-rules)`
