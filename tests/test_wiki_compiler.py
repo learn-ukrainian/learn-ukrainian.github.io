@@ -891,6 +891,20 @@ class TestCleanRewriteResponse:
         assert result is not None
         assert not result.rstrip().endswith("```")
 
+    def test_preserves_valid_code_block_at_eof(self):
+        """Paired code fences at end of article are preserved."""
+        from wiki.compile import _clean_rewrite_response
+        response = (
+            "# Граматика A2: Тест\n\n"
+            "## Розділ\n\n"
+            "Content with enough text to pass the minimum length check.\n\n"
+            "```bash\necho 'Привіт'\n```"
+        )
+        result = _clean_rewrite_response(response)
+        assert result is not None
+        assert result.rstrip().endswith("```")
+        assert "echo" in result
+
 
 # ── Tests: log_event / read_log ─────────────────────────────────
 

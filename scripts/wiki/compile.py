@@ -53,6 +53,7 @@ Tracks: a1, a2, b1, b2, c1, c2, folk, hist, bio, istorio, lit, lit-essay,
 
 import argparse
 import sys
+from collections import Counter
 from pathlib import Path
 
 # Add scripts/ to path for relative imports
@@ -620,41 +621,52 @@ def _clean_rewrite_response(response: str) -> str | None:
     else:
         return None
 
-    # Duplicate section detection: Gemini sometimes merges old + new article,
-    # producing duplicate H2/H3 headings with overlapping content.
-    h2_headings = re.findall(r"^(##\s+[^\n]+)", response, re.MULTILINE)
-    seen: dict[str, int] = {}
-    for h in h2_headings:
-        normalized = h.strip().lower()
-        seen[normalized] = seen.get(normalized, 0) + 1
-    duplicates = {h: c for h, c in seen.items() if c > 1}
+    # Deduplicate H2 sections: Gemini rewrites sometimes merge old + new article,
+    # producing the same heading twice with overlapping content. We keep the LAST
+    # occurrence because rewrites append improved versions after the originals.
+    all_h2 = list(re.finditer(r"^##\s+[^\n]+", response, re.MULTILINE))
+    h2_counts = Counter(m.group().strip().lower() for m in all_h2)
+    duplicates = {h for h, c in h2_counts.items() if c > 1}
     if duplicates:
-        # Deduplicate: keep the LAST occurrence of each duplicated section.
-        # Collect all ranges to remove, then apply from end to start
-        # (so earlier indices stay valid).
+        # Group match positions by normalized heading text
+        groups: dict[str, list[int]] = {}
+        for m in all_h2:
+            key = m.group().strip().lower()
+            if key in duplicates:
+                groups.setdefault(key, []).append(m.start())
+
+        # For each duplicate group, mark earlier occurrences for removal
+        # (from heading start to next H1/H2 heading)
+        _h_pat = re.compile(r"^#{1,2}\s+", re.MULTILINE)
         ranges_to_remove: list[tuple[int, int]] = []
-        for dup_heading in duplicates:
-            positions = [
-                m.start() for m in re.finditer(
-                    r"^##\s+[^\n]+", response, re.MULTILINE
-                )
-                if response[m.start():m.end()].strip().lower() == dup_heading
-            ]
-            if len(positions) > 1:
-                for pos in positions[:-1]:
-                    # Skip past current heading line before searching for next
-                    eol = response.index("\n", pos) + 1 if "\n" in response[pos:] else len(response)
-                    next_heading = re.search(r"^#{1,2}\s+", response[eol:], re.MULTILINE)
-                    end = eol + next_heading.start() if next_heading else len(response)
-                    ranges_to_remove.append((pos, end))
-        # Remove from end to start so indices remain valid
-        for start, end in sorted(ranges_to_remove, reverse=True):
+        for positions in groups.values():
+            for pos in positions[:-1]:
+                nl = response.find("\n", pos)
+                eol = nl + 1 if nl != -1 else len(response)
+                next_h = _h_pat.search(response, eol)
+                end = next_h.start() if next_h else len(response)
+                ranges_to_remove.append((pos, end))
+
+        # Merge overlapping ranges before removal to prevent double-deletion
+        ranges_to_remove.sort()
+        merged: list[tuple[int, int]] = []
+        for start, end in ranges_to_remove:
+            if merged and start <= merged[-1][1]:
+                merged[-1] = (merged[-1][0], max(merged[-1][1], end))
+            else:
+                merged.append((start, end))
+
+        # Remove from end to start so earlier indices stay valid
+        for start, end in reversed(merged):
             response = response[:start] + response[end:]
-        dup_names = ", ".join(f"{h} (×{c})" for h, c in duplicates.items())
+        dup_names = ", ".join(f"{h} (×{c})" for h, c in h2_counts.items() if c > 1)
         print(f"  🔧  Deduplicated sections: {dup_names}")
 
-    # Strip trailing code fences that aren't part of a code block
-    response = re.sub(r"\n```\s*$", "", response)
+    # Strip stray trailing code fence — but only if it's unpaired (not closing
+    # a legitimate code block). Count fences: odd = unpaired trailing fence.
+    fence_count = len(re.findall(r"^```", response, re.MULTILINE))
+    if fence_count % 2 == 1 and re.search(r"\n```\s*$", response):
+        response = re.sub(r"\n```\s*$", "", response)
 
     # Truncation detection: reject if response ends mid-word or mid-sentence
     # Allow common terminal characters: punctuation, quotes, brackets, pipes
