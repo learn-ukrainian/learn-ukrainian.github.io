@@ -157,7 +157,11 @@ def _load_textbook_chunks(filenames: list[str], ukr_keywords: set[str],
 
     # Global sort by score — best chunks from any grade/textbook
     all_scored.sort(key=lambda x: -x[0])
-    return [chunk for _score, chunk in all_scored[:max_total]]
+    top = all_scored[:max_total]
+    # Carry score for cross-source sorting during capping
+    for score, chunk in top:
+        chunk["_kw_score"] = score
+    return [chunk for _score, chunk in top]
 
 
 def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
@@ -263,12 +267,15 @@ def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
         # articles without hitting Gemini rate limits from oversized prompts.
         total_chars = sum(len(c.get("text", "")) for c in all_chunks)
         if total_chars > 120_000:
+            # Sort by keyword score (highest first) so best content from ANY
+            # source type survives capping — not just whatever was added first.
+            scored = sorted(all_chunks, key=lambda c: c.get("_kw_score", 0), reverse=True)
             capped = []
             char_count = 0
-            for chunk in all_chunks:
+            for chunk in scored:
                 chunk_len = len(chunk.get("text", ""))
                 if char_count + chunk_len > 120_000:
-                    break
+                    continue  # Skip large chunks, keep checking smaller ones
                 capped.append(chunk)
                 char_count += chunk_len
             print(f"  ✂️  Capped from {len(all_chunks)} to {len(capped)} chunks "
@@ -461,6 +468,7 @@ def _search_external_articles(ukr_keywords: set[str],
                 )[:8000],
                 "chunk_id": f"ext-kw-{len(all_scored)}",
                 "source_type": "external_keyword",
+                "_kw_score": score,
             }
             all_scored.append((score, chunk))
 
