@@ -548,7 +548,8 @@ def main() -> None:
         parser.add_argument(f"--yt-{name}", action="store_true", help=desc)
     parser.add_argument("--all-youtube", action="store_true", help="Fetch ALL YouTube channels")
 
-    parser.add_argument("--all", action="store_true", help="Fetch everything (blogs + all YouTube)")
+    parser.add_argument("--all", action="store_true", help="Fetch everything (blogs + all YouTube) + rebuild DB")
+    parser.add_argument("--build-db", action="store_true", help="Rebuild SQLite FTS5 sources database")
     parser.add_argument("--status", action="store_true", help="Show cache status")
     parser.add_argument("--backup", action="store_true",
                         help="Copy data/external_articles/ to Google Drive, delete local")
@@ -560,6 +561,12 @@ def main() -> None:
 
     if args.backup:
         _backup_to_gdrive()
+        return
+
+    # Build DB only (no fetch)
+    if args.build_db:
+        from wiki.build_sources_db import build
+        build()
         return
 
     # Check if any fetch flag is set
@@ -588,6 +595,12 @@ def main() -> None:
             _fetch_channel(name, channel_url, CACHE_DIR / output_file, description)
 
     show_status()
+
+    # Auto-rebuild DB after --all fetch
+    if args.all:
+        print("\n🔨 Rebuilding sources database...")
+        from wiki.build_sources_db import build
+        build()
 
 
 def _backup_to_gdrive() -> None:
