@@ -122,17 +122,48 @@ def _heuristic_score(result: dict, grades: list[int]) -> float:
 
 
 def _search_rag(query: str, grades: list[int], limit: int = 3) -> list[dict]:
-    """Search RAG textbooks for a query with ColBERT reranking + heuristics (#1098).
+    """Search textbooks via FTS5 database with heuristic reranking.
 
-    Pipeline: dense+sparse retrieval → ColBERT reranking → heuristic boosts.
+    Primary: SQLite FTS5 (sources.db) — fast, no server needed.
+    Fallback: RAG/Qdrant if FTS5 DB not available.
     """
+    # Try FTS5 database first
     try:
-        from rag.query import get_text_encoder, search_text
+        from wiki.sources_db import search_textbooks
+
+        keywords = set(query.lower().split())
+        keywords = {w for w in keywords if len(w) >= 3}
+        if keywords:
+            candidates = search_textbooks(keywords, max_total=limit * 3)
+            if candidates:
+                # Normalize fields for compatibility with heuristic scoring
+                for r in candidates:
+                    # grade: "grade-06" → 6
+                    g = r.get("grade", "")
+                    if isinstance(g, str):
+                        if g.startswith("grade-"):
+                            r["grade"] = int(g.split("-")[1])
+                        elif g.isdigit():
+                            r["grade"] = int(g)
+                        else:
+                            r["grade"] = 0
+                for r in candidates:
+                    base_score = r.get("_kw_score", 0)
+                    h_boost = _heuristic_score(r, grades)
+                    r["final_score"] = base_score + h_boost
+                    r["score"] = base_score
+                candidates.sort(key=lambda x: x.get("final_score", 0), reverse=True)
+                return candidates[:limit]
+    except Exception as fts_err:
+        logger.debug("FTS5 search failed, falling back to RAG: %s", fts_err)
+
+    # Fallback: RAG/Qdrant
+    try:
+        from rag.query import search_text
     except ImportError:
-        logger.warning("RAG not available — install rag dependencies")
+        logger.warning("Neither FTS5 DB nor RAG available")
         return []
 
-    # Over-fetch: get 3x candidates for reranking
     fetch_limit = limit * 3
     results = []
     for grade in grades:
@@ -144,7 +175,7 @@ def _search_rag(query: str, grades: list[int], limit: int = 3) -> list[dict]:
             logger.debug("RAG search failed for grade %d: %s", grade, e)
 
     # Deduplicate by chunk_id
-    seen_ids = set()
+    seen_ids: set[str] = set()
     unique = []
     for r in results:
         chunk_id = r.get("chunk_id", r.get("id", ""))
@@ -155,26 +186,14 @@ def _search_rag(query: str, grades: list[int], limit: int = 3) -> list[dict]:
     if not unique:
         return []
 
-    # Stage 1: ColBERT reranking — token-level MaxSim
-    try:
-        encoder = get_text_encoder()
-        # Get more candidates from ColBERT than we need, so heuristics can reorder
-        colbert_limit = min(len(unique), limit * 2)
-        reranked = encoder.colbert_rerank(query, unique, text_key="text", limit=colbert_limit)
-    except Exception as e:
-        logger.warning("ColBERT reranking failed, falling back to score sort: %s", e)
-        unique.sort(key=lambda x: x.get("score", 0), reverse=True)
-        reranked = unique[:limit * 2]
-
-    # Stage 2: Heuristic reranking — author priority, exercise penalty, grade match
-    for r in reranked:
-        base_score = r.get("colbert_score", r.get("score", 0))
+    # Heuristic reranking
+    for r in unique:
+        base_score = r.get("score", 0)
         h_boost = _heuristic_score(r, grades)
         r["final_score"] = base_score + h_boost
-        r["heuristic_boost"] = round(h_boost, 3)
 
-    reranked.sort(key=lambda x: x.get("final_score", 0), reverse=True)
-    return reranked[:limit]
+    unique.sort(key=lambda x: x.get("final_score", 0), reverse=True)
+    return unique[:limit]
 
 
 def _format_result(result: dict) -> str:
