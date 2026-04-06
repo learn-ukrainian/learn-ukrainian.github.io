@@ -249,9 +249,10 @@ def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
                 if line.startswith("URL: "):
                     mapped_urls.add(line[5:].strip())
 
-    # 8. External articles — keyword search (deduped against YAML-mapped URLs)
+    # 8. External articles — FTS5 search (deduped against YAML-mapped URLs)
     if ukr_keywords:
-        ext_kw_chunks = _search_external_articles(
+        from .sources_db import search_articles
+        ext_kw_chunks = search_articles(
             ukr_keywords, max_total=10, exclude_urls=mapped_urls,
         )
         if ext_kw_chunks:
@@ -358,26 +359,8 @@ def _load_relevant_chunks(filenames: list[str], slug: str,
     return all_relevant
 
 
-# Cached external resources (loaded once per process)
+# Cached external_resources.yaml (loaded once per process)
 _EXT_RESOURCES: dict | None = None
-_EXT_ARTICLE_CACHE: dict[str, dict] | None = None  # URL → article content
-
-# Where fetched articles are cached (local or Google Drive)
-_CACHE_DIR_LOCAL = PROJECT_ROOT / "data" / "external_articles"
-_CACHE_DIR_GDRIVE = (
-    Path.home()
-    / "Library/CloudStorage/GoogleDrive-krisztian.koos@gmail.com"
-    / "My Drive/Projects/learn-ukrainian-data/external_articles"
-)
-
-
-def _get_cache_dir() -> Path | None:
-    """Find where cached JSONL files live (local first, then Google Drive)."""
-    if _CACHE_DIR_LOCAL.exists() and list(_CACHE_DIR_LOCAL.glob("*.jsonl")):
-        return _CACHE_DIR_LOCAL
-    if _CACHE_DIR_GDRIVE.exists() and list(_CACHE_DIR_GDRIVE.glob("*.jsonl")):
-        return _CACHE_DIR_GDRIVE
-    return None
 
 
 def _get_external_resources() -> dict:
@@ -391,89 +374,7 @@ def _get_external_resources() -> dict:
             _EXT_RESOURCES = data.get("resources", {}) if data else {}
         else:
             _EXT_RESOURCES = {}
-    return _EXT_RESOURCES
-
-
-def _get_article_cache() -> dict[str, dict]:
-    """Load and cache all fetched articles as URL → content dict."""
-    global _EXT_ARTICLE_CACHE
-    if _EXT_ARTICLE_CACHE is not None:
-        return _EXT_ARTICLE_CACHE
-
-    _EXT_ARTICLE_CACHE = {}
-    cache_dir = _get_cache_dir()
-    if not cache_dir:
-        return _EXT_ARTICLE_CACHE
-
-    for jsonl_name in ["ulp_blogs.jsonl", "other_blogs.jsonl", "ulp_youtube.jsonl"]:
-        jsonl_path = cache_dir / jsonl_name
-        if not jsonl_path.exists():
-            continue
-        with open(jsonl_path, encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if not line:
-                    continue
-                entry = json.loads(line)
-                url = entry.get("url", "")
-                if url:
-                    # Index under both www and non-www variants
-                    _EXT_ARTICLE_CACHE[url] = entry
-                    if "://www." in url:
-                        _EXT_ARTICLE_CACHE[url.replace("://www.", "://")] = entry
-                    else:
-                        _EXT_ARTICLE_CACHE[url.replace("://", "://www.")] = entry
-
-    return _EXT_ARTICLE_CACHE
-
-
-def _search_external_articles(ukr_keywords: set[str],
-                              max_total: int = 10,
-                              exclude_urls: set[str] | None = None) -> list[dict]:
-    """Keyword-search cached external articles using the in-memory article cache.
-
-    Same scoring approach as _load_textbook_chunks: count keyword hits per entry,
-    require minimum 2 hits, return top N globally sorted by score.
-    Uses word boundary matching to avoid substring false positives
-    (e.g., "село" matching inside "весело").
-    """
-    cache = _get_article_cache()
-    if not cache:
-        return []
-
-    skip_urls = exclude_urls or set()
-    all_scored: list[tuple[int, dict]] = []
-    seen_urls: set[str] = set()
-
-    for url, entry in cache.items():
-        if url in seen_urls or url in skip_urls:
-            continue
-        seen_urls.add(url)
-
-        text = entry.get("text", "")
-        title = entry.get("title", "")
-        # Word boundary matching via regex — handles punctuation (село, → село)
-        searchable = f"{title} {text}".lower()
-        score = sum(
-            1 for w in ukr_keywords
-            if re.search(rf"(?<!\w){re.escape(w)}(?!\w)", searchable)
-        )
-        if score >= 2:
-            chunk = {
-                "text": (
-                    f"External article: {title}\n"
-                    f"Source: {entry.get('domain', 'external')}\n"
-                    f"URL: {url}\n\n"
-                    f"{text}"
-                )[:8000],
-                "chunk_id": f"ext-kw-{len(all_scored)}",
-                "source_type": "external_keyword",
-                "_kw_score": score,
-            }
-            all_scored.append((score, chunk))
-
-    all_scored.sort(key=lambda x: -x[0])
-    return [chunk for _score, chunk in all_scored[:max_total]]
+    return _EXT_RESOURCES or {}
 
 
 def _load_external_resources(track: str, slug: str) -> list[dict]:
@@ -501,7 +402,8 @@ def _load_external_resources(track: str, slug: str) -> list[dict]:
     if not entry:
         return []
 
-    article_cache = _get_article_cache()
+    from .sources_db import lookup_by_url
+
     chunks = []
 
     # Articles — inject full cached content when available
@@ -512,7 +414,7 @@ def _load_external_resources(track: str, slug: str) -> list[dict]:
         title = article.get("title", "")
         source = article.get("source", "")
 
-        cached = article_cache.get(url)
+        cached = lookup_by_url(url)
         if cached and cached.get("text"):
             # Full article content available
             text = (
