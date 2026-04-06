@@ -72,6 +72,12 @@ def compile_article(
         print(f"  ❌ Gemini returned empty response for {article_key}")
         return None
 
+    # Strip markdown code fence wrapping (Gemini sometimes wraps: ```markdown\n...\n```)
+    import re
+    fence_match = re.match(r"^```\w*\n(.*?)```\s*$", response.strip(), re.DOTALL)
+    if fence_match:
+        response = fence_match.group(1)
+
     # Validate response
     if not response.strip().startswith("#"):
         print("  ⚠️  Response doesn't start with markdown header, may be malformed")
