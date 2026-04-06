@@ -231,11 +231,18 @@ def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
             print(f"  📖 +{len(sampled)} chunks from {lit_path.name}")
             all_chunks.extend(sampled)
 
-    # 7. External resources (articles, YouTube, ULP) — reference metadata
+    # 7. External resources — explicit YAML mappings (URL-matched)
     ext_chunks = _load_external_resources(track, slug)
     if ext_chunks:
-        print(f"  🌐 +{len(ext_chunks)} external reference sources")
+        print(f"  🌐 +{len(ext_chunks)} external reference sources (mapped)")
         all_chunks.extend(ext_chunks)
+
+    # 8. External articles — keyword search (same as textbooks, for unmapped modules)
+    if ukr_keywords:
+        ext_kw_chunks = _search_external_articles(ukr_keywords, max_total=10)
+        if ext_kw_chunks:
+            print(f"  🌐 +{len(ext_kw_chunks)} external articles (keyword-matched)")
+            all_chunks.extend(ext_kw_chunks)
 
     if not all_chunks:
         print(f"  ⚠️  No source material found for {track}/{slug}")
@@ -400,6 +407,56 @@ def _get_article_cache() -> dict[str, dict]:
                         _EXT_ARTICLE_CACHE[url.replace("://", "://www.")] = entry
 
     return _EXT_ARTICLE_CACHE
+
+
+def _search_external_articles(ukr_keywords: set[str],
+                              max_total: int = 10) -> list[dict]:
+    """Keyword-search cached external JSONL files (ULP blogs, other blogs, YouTube).
+
+    Same scoring approach as _load_textbook_chunks: count keyword hits per entry,
+    require minimum 2 hits, return top N globally sorted by score.
+    """
+    cache_dir = _get_cache_dir()
+    if not cache_dir:
+        return []
+
+    all_scored: list[tuple[int, dict]] = []
+    seen_urls: set[str] = set()
+
+    for jsonl_name in ["ulp_blogs.jsonl", "other_blogs.jsonl", "ulp_youtube.jsonl"]:
+        jsonl_path = cache_dir / jsonl_name
+        if not jsonl_path.exists():
+            continue
+        with open(jsonl_path, encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                entry = json.loads(line)
+                url = entry.get("url", "")
+                if url in seen_urls:
+                    continue
+                seen_urls.add(url)
+
+                text = entry.get("text", "")
+                title = entry.get("title", "")
+                searchable = f"{title} {text}".lower()
+                score = sum(1 for w in ukr_keywords if w in searchable)
+                if score >= 2:
+                    chunk = {
+                        "text": (
+                            f"External article: {title}\n"
+                            f"Source: {entry.get('domain', jsonl_name)}\n"
+                            f"URL: {url}\n\n"
+                            f"{text}"
+                        )[:8000],
+                        "chunk_id": f"ext-kw-{len(all_scored)}",
+                        "source_type": "external_keyword",
+                    }
+                    all_scored.append((score, chunk))
+
+    all_scored.sort(key=lambda x: -x[0])
+    return [chunk for _score, chunk in all_scored[:max_total]]
 
 
 def _load_external_resources(track: str, slug: str) -> list[dict]:
