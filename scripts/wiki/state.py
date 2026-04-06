@@ -65,64 +65,96 @@ def _ensure_state_dir() -> None:
         gitignore.write_text("# Local build state — not committed\n*\n!.gitignore\n")
 
 
-def load_progress() -> dict:
-    """Load compilation progress from state file.
+def _get_progress_db() -> Path:
+    """Get path to SQLite progress database (concurrent-safe)."""
+    return WIKI_STATE_DIR / "progress.db"
 
-    Returns:
-        {
-            "articles": {
-                "folk/genres/bylyny": {
-                    "status": "compiled",
-                    "compiled_at": "2026-04-03T...",
-                    "source_count": 5,
-                    "word_count": 2400,
-                    "model": "gemini-2.5-pro",
-                },
-                ...
-            },
-            "last_updated": "2026-04-03T...",
-        }
-    """
+
+def _ensure_progress_db() -> None:
+    """Create progress DB and table if needed."""
+    import sqlite3
     _ensure_state_dir()
-    path = WIKI_STATE_DIR / "progress.yaml"
-    if not path.exists():
-        return {"articles": {}, "last_updated": None}
-    with open(path, encoding="utf-8") as f:
-        data = yaml.safe_load(f) or {}
-    return {
-        "articles": data.get("articles", {}),
-        "last_updated": data.get("last_updated"),
-    }
+    db = _get_progress_db()
+    conn = sqlite3.connect(str(db))
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS compiled (
+            article_key TEXT PRIMARY KEY,
+            status TEXT NOT NULL DEFAULT 'compiled',
+            compiled_at TEXT NOT NULL,
+            source_count INTEGER DEFAULT 0,
+            word_count INTEGER DEFAULT 0,
+            model TEXT DEFAULT ''
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+
+def load_progress() -> dict:
+    """Load compilation progress from SQLite (concurrent-safe).
+
+    Returns same format as before for backward compatibility.
+    """
+    import sqlite3
+    _ensure_progress_db()
+    db = _get_progress_db()
+    conn = sqlite3.connect(str(db))
+    conn.row_factory = sqlite3.Row
+    rows = conn.execute("SELECT * FROM compiled").fetchall()
+    conn.close()
+
+    articles = {}
+    for row in rows:
+        articles[row["article_key"]] = {
+            "status": row["status"],
+            "compiled_at": row["compiled_at"],
+            "source_count": row["source_count"],
+            "word_count": row["word_count"],
+            "model": row["model"],
+        }
+    return {"articles": articles, "last_updated": None}
 
 
 def save_progress(progress: dict) -> None:
-    """Save compilation progress to state file."""
-    _ensure_state_dir()
-    progress["last_updated"] = datetime.now(UTC).isoformat()
-    path = WIKI_STATE_DIR / "progress.yaml"
-    with open(path, "w", encoding="utf-8") as f:
-        yaml.dump(progress, f, default_flow_style=False, allow_unicode=True)
+    """Save compilation progress to SQLite (concurrent-safe)."""
+    import sqlite3
+    _ensure_progress_db()
+    db = _get_progress_db()
+    conn = sqlite3.connect(str(db))
+    conn.execute("PRAGMA journal_mode=WAL")
+    for key, data in progress.get("articles", {}).items():
+        conn.execute(
+            """INSERT OR REPLACE INTO compiled
+               (article_key, status, compiled_at, source_count, word_count, model)
+               VALUES (?, ?, ?, ?, ?, ?)""",
+            (key, data.get("status", "compiled"),
+             data.get("compiled_at", datetime.now(UTC).isoformat()),
+             data.get("source_count", 0),
+             data.get("word_count", 0),
+             data.get("model", "")),
+        )
+    conn.commit()
+    conn.close()
 
 
 def mark_compiled(article_key: str, *, source_count: int = 0,
                   word_count: int = 0, model: str = "") -> None:
-    """Mark an article as compiled in the progress tracker.
-
-    Args:
-        article_key: Wiki path relative to wiki/ (e.g., "folk/genres/bylyny").
-        source_count: Number of source chunks used.
-        word_count: Word count of the compiled article.
-        model: Model used for compilation.
-    """
-    progress = load_progress()
-    progress["articles"][article_key] = {
-        "status": "compiled",
-        "compiled_at": datetime.now(UTC).isoformat(),
-        "source_count": source_count,
-        "word_count": word_count,
-        "model": model,
-    }
-    save_progress(progress)
+    """Mark an article as compiled (concurrent-safe via SQLite WAL)."""
+    import sqlite3
+    _ensure_progress_db()
+    db = _get_progress_db()
+    conn = sqlite3.connect(str(db))
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute(
+        """INSERT OR REPLACE INTO compiled
+           (article_key, status, compiled_at, source_count, word_count, model)
+           VALUES (?, ?, ?, ?, ?, ?)""",
+        (article_key, "compiled", datetime.now(UTC).isoformat(),
+         source_count, word_count, model),
+    )
+    conn.commit()
+    conn.close()
 
 
 def is_compiled(article_key: str) -> bool:
