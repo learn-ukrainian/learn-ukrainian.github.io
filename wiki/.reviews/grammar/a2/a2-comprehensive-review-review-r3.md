@@ -1,4 +1,74 @@
-```markdown
+✅ Message sent to Gemini (ID: 28392) [auto-acked: self-addressed]
+
+🚀 Invoking Gemini to process message #28392...
+📨 Message #28392
+   From: gemini → To: gemini
+   Type: query
+   Task: wiki-review-a2-a2-comprehensive-review-r3
+   Time: 2026-04-06T12:59:46.425408+00:00
+
+============================================================
+
+You are a HARSH adversarial reviewer of a grammar brief for the Ukrainian language curriculum wiki. Your job is to find problems, not praise.
+
+Track: a2, Slug: a2-comprehensive-review, Round: 3
+
+## Review Rubric (score EACH dimension 1-10, then average)
+
+1. **Factual accuracy** — every claim must have evidence from sources. Vague or unsourced claims → deduct points.
+2. **Ukrainian language quality** — check for Russianisms (кон→кін), surzhyk (шо→що), calques (приймати душ→брати душ). Even ONE Russianism = max 7/10.
+3. **Decolonization** — is Ukrainian presented on its own terms? Any 'like Russian but...' framing = max 6/10.
+4. **Completeness** — does it cover ALL aspects a module writer needs? Missing sections or shallow treatment → deduct.
+5. **Actionable guidance** — can a writer actually USE this? Generic advice like 'teach it well' = max 5/10. Must have specific examples, sequences, exercises.
+
+## Rules
+- Score each dimension separately, then give weighted average.
+- Be honest. If the article is excellent, say so. 10/10 IS possible.
+- 9/10 = excellent with minor issues. 8/10 = good. 7/10 = needs work.
+- Output a <fixes> block with specific changes. If the article is clean, output <fixes></fixes> (empty).
+- Do NOT invent problems. Fabricated issues waste rebuild cycles.
+
+## Fix syntax
+
+Two formats are available:
+
+**1. Replace existing text** (for corrections, rewording):
+Use a SHORT anchor (1-2 sentences max) for the old: text. Do NOT paste massive paragraphs — they break exact matching.
+```
+old: short exact text to find
+new: replacement text
+```
+
+**2. Insert new content** (for missing sections, added examples):
+Use INSERT AFTER with a short anchor from the article, then the new text to add.
+```
+INSERT AFTER: short anchor text that exists in the article
+NEW TEXT: the new content to insert after the anchor
+```
+
+Separate multiple fixes with `---`.
+
+## Output format
+
+Dimension scores:
+1. Factual: X/10 — [evidence]
+2. Language: X/10 — [evidence]
+3. Decolonization: X/10 — [evidence]
+4. Completeness: X/10 — [evidence]
+5. Actionable: X/10 — [evidence]
+
+**Overall: X/10**
+
+<fixes>
+old: exact text to find in the article
+new: replacement text
+---
+INSERT AFTER: anchor text in article
+NEW TEXT: content to add after the anchor
+</fixes>
+
+## Article to review
+
 # Граматика A2: Повна картина
 
 <!-- wiki-meta
@@ -30,7 +100,7 @@ compiled: 2026-04-06
 
 ## Повна парадигма (Full Paradigm)
 
-На рівні A2 учень має опанувати базові парадигми відмінювання іменників, прикметників та найуживаніших займенників.
+На рівні A2 учень має опанувати базові парадигми відмінювання іменників, прикметників, найуживаніших займенників та систему часів дієслова.
 
 ### 1. Відмінки (Cases) та їхні питання
 
@@ -61,6 +131,19 @@ compiled: 2026-04-06
 | **М.** | (на) кон**і** / кон**еві** | (на) річц**і** |
 | **Кл.** | кон**ю**! | річк**о**! |
 (Джерело: `6-klas-ukrmova-avramenko-2023_s0241`)
+### 2.1 Відмінювання іменників у множині (Noun Declension - Plural)
+
+Для повноцінного А2 необхідно обов'язково ввести парадигму множини, особливо для кількісних конструкцій.
+
+| Відмінок | Множина (`коні`) | Множина (`річки`) |
+| :--- | :--- | :--- |
+| **Н.** | коні | річки |
+| **Р.** | коней | річок |
+| **Д.** | коням | річкам |
+| **Зн.** | коней | річки |
+| **Ор.** | конями | річками |
+| **М.** | (на) конях | (на) річках |
+| **Кл.** | коні! | річки! |
 
 ### 3. Відмінювання прикметників (Adjective Declension)
 
@@ -71,7 +154,7 @@ compiled: 2026-04-06
 | **Н.** | чист**ий** / чист**е** | чист**а** | чист**і** |
 | **Р.** | чист**ого** | чист**ої** | чист**их** |
 | **Д.** | чист**ому** | чист**ій** | чист**им** |
-| **Зн.** | як Н. або Р. | чист**у** | як Н. або Р. |
+| **Зн.** | ч. як Н./Р., с. як Н. | чист**у** | як Н. або Р. |
 | **Ор.** | чист**им** | чист**ою** | чист**ими** |
 | **М.** | (на) чист**ому** | (на) чист**ій** | (на) чист**их** |
 (Джерело: `6-klas-ukrmova-avramenko-2023_s0241`)
@@ -90,17 +173,27 @@ compiled: 2026-04-06
 
 ### 5. Відмінювання присвійних та вказівних займенників (Possessive & Demonstrative)
 
-Вони відмінюються подібно до прикметників.
+Вони відмінюються подібно до прикметників. Для вказівних займенників важливо розуміти послідовну парадигму.
 
-| Відмінок | `мій` (ч.р.) | `моя` (ж.р.) | `цей` (ч.р.) | `та` (ж.р.) | `ті` (мн.) |
+| Відмінок | `мій` (ч.р.) | `моя` (ж.р.) | `цей` (ч.р.) | `ця` (ж.р.) | `ці` (мн.) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Н.** | мій | моя | цей | та | ті |
-| **Р.** | мо**го** | мо**єї** | ць**ого** | тієї / тої | тих |
-| **Д.** | мо**єму** | мо**їй** | ць**ому** | тій | тим |
-| **Зн.** | мій / мо**го** | мо**ю** | цей / ць**ого** | ту | ті / тих |
-| **Ор.** | мо**їм** | мо**єю** | цим | тією / тою | тими |
-| **М.** | (на) мо**єму** | (на) мо**їй** | (на) ць**ому** | (на) тій | (на) тих |
+| **Н.** | мій | моя | цей | ця | ці |
+| **Р.** | мо**го** | мо**єї** | ць**ого** | ц**ієї** | цих |
+| **Д.** | мо**єму** | мо**їй** | ць**ому** | ц**ій** | цим |
+| **Зн.** | мій / мо**го** | мо**ю** | цей / ць**ого** | ц**ю** | ці / цих |
+| **Ор.** | мо**їм** | мо**єю** | цим | ц**ією** | цими |
+| **М.** | (на) мо**єму** | (на) мо**їй** | (на) ць**ому** | (на) ц**ій** | (на) цих |
 (Джерело: `6-klas-ukrmova-avramenko-2023_s0195`)
+
+### 6. Дієслово та Вид (Verb Conjugation & Aspect)
+
+Дієслово на рівні А2 розширюється поняттям **виду** (доконаний / недоконаний), що є фундаментальним для слов'янських мов.
+*   **Теперішній час:** тільки недоконаний вид (`читаю`, `роблю`). Змінюється за особами й числами.
+*   **Минулий час:** змінюється за родами й числами (`читав`, `читала`, `читало`, `читали`).
+*   **Майбутній час:**
+    *   *Недоконаний вид* (процес): складена форма (`буду читати`) та проста синтетична форма (`читатиму`).
+    *   *Доконаний вид* (результат): проста форма (`прочитаю`, `зроблю`).
+(Джерело: `7-klas-ukrmova-avramenko-2024_s0001`)
 
 ## Частотність і пріоритети
 
@@ -136,69 +229,60 @@ compiled: 2026-04-06
 
 **Це обов'язковий розділ.** Важливо з самого початку вчити українську мову як самостійну систему, а не як діалект чи варіант російської.
 
-1.  **Кличний відмінок (Vocative Case):** На відміну від сучасної російської мови, де кличний відмінок практично зник і зберігся лише в архаїчних формах (напр., "Боже!"), в українській мові він є **живою та обов'язковою** нормою сучасного мовлення (Джерело: `6-klas-ukrmova-litvinova-2023_s0148`). Звертання `Петре!`, `Олено!`, `пане!`, `колего!` — це не стилістичний вибір, а граматична необхідність. Ігнорування кличного відмінка є ознакою або недостатнього володіння мовою, або впливу російської граматичної моделі.
-2.  **Чергування `у-в`, `і-й`:** Українській мові властива милозвучність (еуфонія), яка досягається чергуванням приголосних і голосних. Наприклад, `іти в магазин`, але `вона вдома`; `він і я`, але `вона йде`. Російська мова не має такої розгалуженої системи обов'язкових евфонічних правил. Це слід подавати як унікальну рису української мови (Джерело: `7-klas-ukrmova-avramenko-2024_s0001`).
-3.  **Давальний відмінок для адресата:** Конструкції типу `мені холодно`, `йому треба`, `їй 20 років` для позначення стану або потреби є значно більш поширеними та природними в українській мові, ніж у російській, де часто використовуються безособові конструкції або інші моделі.
-4.  **Форми майбутнього часу дієслів:** Українська мова має дві форми недоконаного майбутнього часу: аналітичну (`буду читати`) і синтетичну (`читатиму`). Російська має тільки аналітичну (`буду читать`). Форма `читатиму` є унікальною українською рисою, яку слід активно вводити в мовлення. <!-- VERIFY -->
-5.  **Лексика:** При доборі прикладів уникати слів, які є поширеними в російській, але менш вживаними або стилістично забарвленими в українській (напр., `понятно` -> `зрозуміло`, `обязательно` -> `обов'язково`).
+1.  **Кличний відмінок (Vocative Case):** В українській мові кличний відмінок є **живою та обов'язковою** нормою сучасного мовлення (Джерело: `6-klas-ukrmova-litvinova-2023_s0148`). Звертання `Петре!`, `Олено!`, `пане!`, `колего!` — це не стилістичний вибір, а граматична необхідність. Ігнорування кличного відмінка є граматичною помилкою та свідчить про недостатнє володіння мовою.
+2.  **Чергування `у-в`, `і-й`:** Українській мові властива милозвучність (еуфонія), яка досягається чергуванням приголосних і голосних. Наприклад, `іти в магазин`, але `вона вдома`; `він і я`, але `вона йде`. Це слід подавати як фундаментальну фонетичну рису української мови, яку треба практикувати з перших занять (Джерело: `7-klas-ukrmova-avramenko-2024_s0001`).
+3.  **Давальний відмінок для стану:** Конструкції з давальним відмінком типу `мені холодно`, `йому треба`, `їй 20 років`, `нам пощастило` є базовим і високочастотним способом вираження стану або потреби в українській мові. Вони мають бути засвоєні як неподільні патерни.
+4.  **Форми майбутнього часу дієслів:** Українська мова має дві повноцінні форми недоконаного майбутнього часу: складену (`буду читати`) і складну синтетичну (`читатиму`). Обидві форми є нормативними і частотними. Форму на `-тиму` слід активно вводити в мовлення учнів як природний вибір.
+5.  **Автентична лексика:** При доборі граматичних прикладів слід використовувати питомо українську лексику та уникати поширених кальок і суржику (напр., замість суржикового `понятно` вживати `зрозуміло`, замість кальки `приймати участь` — `брати участь`). Граматичні вправи мають одночасно тренувати правильний слововжиток.
 
 ## Природні приклади (Natural Examples)
 
 **Група 1: Родовий відмінок (Genitive Case)**
 *   `Моя сестра не боїться яскравих кольорів.` (Відсутність страху перед "чимось") (Джерело: `8-klas-ukrmova-avramenko-2025_s0097`)
 *   `Не застібайте верхнього ґудзика.` (Заперечення + Родовий) (Джерело: `8-klas-ukrmova-avramenko-2025_s0097`)
-*   `Може, ми вип’ємо кави?` (Частина від цілого) (Джерело: `8-klas-ukrmova-avramenko-2025_s0097`)
+*   `Може, ми вип’ємо кави?` (Час
 
-**Група 2: Давальний та Орудний відмінки (Dative & Instrumental)**
-*   `Книжка — порадник і друг, частіше бери її до рук.` (Іменник "друг" в Називному відмінку) (Джерело: `5-klas-ukrmova-avramenko-2022_s0030`)
-*   `Я ніколи не ходжу з батьками по магазинах.` (Орудний, спільна дія) (Джерело: `8-klas-ukrmova-avramenko-2025_s0097`)
-*   `Щодо одягу раджуся з друзями.` (Орудний, спільна дія) (Джерело: `8-klas-ukrmova-avramenko-2025_s0097`)
+============================================================
+📎 Attached Data:
+{"to_model": "gemini-3.1-pro-preview"}
 
-**Група 3: Кличний відмінок (Vocative Case)**
-*   `Ой ти, дівчино, з горіха зерня...` (Джерело: `9-klas-ukrmova-zabolotnyi-2017_s0020`)
-*   `Прощай, мій зошит! Спасибі тобі, друже, що ти думок моїх не відцуравсь.` (Джерело: `9-klas-ukrmova-zabolotnyi-2017_s0020`)
-*   `Шановний пане, наш дорогий колего.` (Звертання з прикметниками) (Джерело: `6-klas-ukrmova-litvinova-2023_s0148`)
+🤖 Processing with Gemini (gemini-3.1-pro-preview) [sync, 30 min timeout]...
+  [gemini] attempt 1/5, model=gemini-3.1-pro-preview, prompt=18316 chars: You are Gemini, participating in a collaboration with Claude. This is a message from Claude to you:  --- You are a HARSH adversarial reviewer of a grammar brief for the Ukrainian language curriculum w...
+Dimension scores:
+1. Factual: 3/10 — FATAL ERROR: The document explicitly places the 2, 3, 4 numerals rule under the "Genitive case" (Родовий відмінок) heading, claiming `два столи` is Genitive. In Ukrainian, nouns after 2, 3, and 4 take the **Nominative Plural** (Називний множини). Teaching this as Genitive is a direct import of Russian grammar. Additionally, it incorrectly labels the future tense form `читатиму` as a "проста" synthetic form, when the correct grammatical term is "складна". The document also literally cuts off mid-sentence at the very end (`(Час`).
+2. Language: 8/10 — The Ukrainian phrasing is mostly natural and readable, but the abrupt, unfinished sentence at the end is sloppy. Terminological inaccuracies aside, there are no overt Russianisms in the prose itself. 
+3. Decolonization: 4/10 — Despite having a dedicated "Decolonization" section, the article ironically smuggles in Russian syntax by applying the Russian Genitive rule to the numerals 2, 3, and 4. Ukrainian grammar must be taught on its own terms, which means explicitly noting that we do *not* use the Genitive here.
+4. Completeness: 7/10 — The article provides a decent overview of the paradigms (nouns, adjectives, pronouns, verbs), but it misses a crucial A2 syntactic distinction: the contrast between the Locative and Accusative cases for location vs. direction (`в/на` + М. vs Зн.), which is a major pain point for L2 learners.
+5. Actionable: 4/10 — This is a descriptive grammar sheet, not a guide for curriculum writers. It lacks specific guidance on *how* a module writer should pace and introduce these cases. There are no suggestions for module sequencing or specific activity types needed to drill these paradigms progressively.
 
-**Група 4: Займенники в непрямих відмінках (Pronouns in Indirect Cases)**
-*   `Тебе в цьому капелюсі я не впізнав.` (Знахідний відмінок) (Джерело: `8-klas-ukrmova-avramenko-2025_s0097`)
-*   `Хто тебе навчив одягатися?` (Знахідний відмінок) (Джерело: `8-klas-ukrmova-avramenko-2025_s0097`)
-*   `Я без тебе нічого не значу, ніби птиця без крил.` (Родовий відмінок з прийменником) (Джерело: `8-klas-ukrmova-zabolotnyi-2025_s0014`)
+**Overall: 5.2/10**
 
-**Група 5: Складні речення (Complex Sentences)**
-*   `Приказка нам говорить, що праця людину годує.` (Підрядне з'ясувальне) (Джерело: `5-klas-ukrmova-avramenko-2022_s0185`)
-*   `Хто знання має, той мур ламає.` (Підрядне з відносним займенником) (Джерело: `5-klas-ukrmova-avramenko-2022_s0185`)
+<fixes>
+old:     *   **Кількість (з числівниками 2, 3, 4):** `два столи`, `три сестри`.
+new:     *   **Кількість (від 5 і більше):** `п'ять столів`, `десять сестер`. (Увага: на відміну від російської, в українській мові після 2, 3, 4 вживається Називний відмінок множини: `два столи`, `три сестри`, а НЕ родовий!).
+---
+old:     *   *Недоконаний вид* (процес): складена форма (`буду читати`) та проста синтетична форма (`читатиму`).
+new:     *   *Недоконаний вид* (процес): складена форма (`буду читати`) та складна синтетична форма (`читатиму`).
+---
+old: *   `Може, ми вип’ємо кави?` (Час
+new: *   `Може, ми вип’ємо кави?` (Частина від цілого — родовий розділовий) (Джерело: `8-klas-ukrmova-avramenko-2025_s0097`)
+---
+INSERT AFTER: *   `Може, ми вип’ємо кави?` (Частина від цілого — родовий розділовий) (Джерело: `8-klas-ukrmova-avramenko-2025_s0097`)
+NEW TEXT: 
 
-## Рекомендації для вправ (Activity Concepts)
+## Як впроваджувати це в модулях (Actionable Module Guidance)
 
-Послідовність введення та відпрацювання матеріалу має бути поетапною.
+Для авторів модулів рівня A2:
+1. **Секвенція відмінків:** Не давайте всю парадигму одразу. Вводьте відмінки по одному через їхню функцію. Наприклад, модуль "Моя сім'я" -> Родовий (володіння). Модуль "Транспорт" -> Орудний (інструмент).
+2. **Динаміка місця і напрямку:** Обов'язково створіть окремий модуль на протиставлення "Де?" (Місцевий) та "Куди?" (Знахідний). Це найскладніше для англомовних учнів (in vs. into).
+3. **Типи вправ:** Використовуйте `fill-in-the-blank` для відпрацювання закінчень (Він живе в Києв[і]), `matching` для запитань та відповідей. Займенники (`мені`, `тобі`) вводьте як лексичні чанки ще до пояснення граматики відмінків.
+</fixes>
 
-*   **Phase 1: Розпізнавання (Recognition)**
-    *   **Drill 1 (Matching):** З'єднати питання відмінка (кого? чого?) з його назвою (Родовий).
-    *   **Drill 2 (Highlighting):** У короткому тексті знайти й підкреслити всі іменники в місцевому відмінку або всі присвійні займенники.
 
-*   **Phase 2: Контрольована практика (Controlled Practice)**
-    *   **Drill 3 (Fill-in-the-blanks):** Речення з пропусками, де потрібно поставити слово в дужках у правильному відмінку. `Я дала книжку (брат) -> Я дала книжку братові.`
-    *   **Drill 4 (Transformation):** Перетворити два простих речення на одне складне за допомогою сполучного слова `який`. `Я купив телефон. Телефон дуже дорогий. -> Я купив телефон, який дуже дорогий.`
-    *   **Drill 5 (Multiple Choice):** Вибрати правильну форму слова з 2-3 варіантів. `Мені подобається (ця / цю / цієї) сукня.`
-
-*   **Phase 3: Вільна практика (Free Practice)**
-    *   **Drill 6 (Question-Answer):** Учень відповідає на питання, використовуючи певну граматичну структуру. `З ким ти вчора розмовляв? -> Я розмовляв з (другом).`
-    *   **Drill 7 (Sentence Creation):** Скласти власні речення з поданими словами в певному відмінку (напр., `з мамою`, `без грошей`, `на столі`).
-    *   **Drill 8 (Short Description):** Описати картинку або кімнату, використовуючи прийменники місця та місцевий відмінок.
-
-## Зв'язки з іншими темами
-
-*   **База для B1:** Без досконалого володіння системою відмінків на рівні А2 неможливо перейти до складніших тем B1, таких як:
-    *   **Дієслівне керування:** розуміння, якого відмінка вимагає те чи інше дієслово (`чекати на + Зн.`, `дякувати + Д.` і т.д.).
-    *   **Дієприкметникові та дієприслівникові звороти:** їхнє узгодження та відокремлення (Джерело: `9-klas-ukrajinska-mova-zabolotnij-2017_s0029`).
-    *   **Складні типи підрядних речень:** умови, причини, мети, які вимагають глибокого розуміння сполучників і відмінків (Джерело: `9-klas-ukrajinska-mova-zabolotnij-2017_s0142`).
-*   **Спирається на A1:** Рівень А2 систематизує знання, отримані на А1. Якщо на А1 учень вивчав фрази як `мене звати` або `у мене є` як лексичні одиниці, то на А2 він розуміє, що `мене` - це форма родового/знахідного відмінка від `я`.
-
-## Пов'язані статті (Related Articles)
-
-- `grammar/a2/vocative-case`
-- `grammar/a2/genitive-case-usage`
-- `grammar/b1/verbs-of-motion`
-- `grammar/b1/participles-and-gerunds`
-- `pedagogy/decolonization-in-language-teaching`
-```
+────────────────────────────────────────
+✅ Gemini finished (3343 chars)
+✅ Message sent to Claude (ID: 28394)
+✓ Message 28394 acknowledged
+   Auto-acknowledged reply #28394 (stdout delivery — no inbox accumulation)
+   ℹ️  No issue number in task_id 'wiki-review-a2-a2-comprehensive-review-r3' — skipping GH posting (review saved to orchestration/)
+✓ Message 28392 acknowledged

@@ -2,8 +2,8 @@
 
 Auto-generated index of compiled wiki articles.
 
-**Total articles:** 44
-**Total words:** 83,046
+**Total articles:** 45
+**Total words:** 85,315
 
 ## Academic
 
@@ -45,6 +45,7 @@ Auto-generated index of compiled wiki articles.
 
 - [Граматика A2: Ласкаво просимо до рівня А2](grammar/a2/a2-bridge.md) (2,880 words)
 - [Граматика A2: Повна картина](grammar/a2/a2-comprehensive-review.md) (2,308 words)
+- [Граматика A2: Фінал A2](grammar/a2/a2-finale.md) (2,269 words)
 - [Граматика B1: Абстрактні концепції: ідеї та думки](grammar/b1/abstract-concepts-ideas.md) (2,823 words)
 - [Граматика B1: Активні дієприкметники та їхній стиль](grammar/b1/active-participles-phrases.md) (1,372 words)
 - [Граматика B1: Ступені порівняння прикметників](grammar/b1/adjective-comparison.md) (6,062 words)
