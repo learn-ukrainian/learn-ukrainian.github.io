@@ -1,15 +1,59 @@
 """Wiki compilation state — tracks what's compiled, what's pending.
 
 State is stored in wiki/.state/progress.yaml and updated after each
-article compilation.
+article compilation. Build events are logged to wiki/.state/build.log.jsonl.
 """
 
+import json
 from datetime import UTC, datetime, timezone
 from pathlib import Path
 
 import yaml
 
 from .config import WIKI_DIR, WIKI_STATE_DIR
+
+# ── Build log (JSONL) ──────────────────────────────────────────────
+
+
+def log_event(track: str, slug: str, event: str, **data: object) -> None:
+    """Append a structured event to the build log.
+
+    Events: compile, review_round, rewrite, review_pass, review_fail, error.
+    All extra kwargs become fields in the JSON line.
+
+    Log file: wiki/.state/build.log.jsonl
+    Read with: .venv/bin/python scripts/wiki/compile.py --log [--track a2]
+    """
+    _ensure_state_dir()
+    log_path = WIKI_STATE_DIR / "build.log.jsonl"
+    entry = {
+        "ts": datetime.now(UTC).isoformat(timespec="seconds"),
+        "track": track,
+        "slug": slug,
+        "event": event,
+        **data,
+    }
+    with open(log_path, "a", encoding="utf-8") as f:
+        f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+
+
+def read_log(*, track: str | None = None,
+             last_n: int = 200) -> list[dict]:
+    """Read recent build log entries, optionally filtered by track."""
+    log_path = WIKI_STATE_DIR / "build.log.jsonl"
+    if not log_path.exists():
+        return []
+    entries = []
+    with open(log_path, encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            entry = json.loads(line)
+            if track and entry.get("track") != track:
+                continue
+            entries.append(entry)
+    return entries[-last_n:]
 
 
 def _ensure_state_dir() -> None:

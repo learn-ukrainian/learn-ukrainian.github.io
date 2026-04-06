@@ -252,30 +252,29 @@ class TestUpdateIndex:
         assert not (wiki_dir / "index.md").exists()
 
 
-# ── Tests: _parse_review_score ─────────────────────────────────
+# ── Tests: _parse_review_scores ────────────────────────────────
+
+
+def _overall(text: str) -> float:
+    """Helper: parse overall score from review text."""
+    from wiki.compile import _parse_review_scores
+    return _parse_review_scores(text)["overall"]
 
 
 class TestParseReviewScore:
     """Tests for decimal score parsing — the critical bug that prevented 9/10."""
 
     def test_integer_score(self):
-        from wiki.compile import _parse_review_score
-        text = "**Overall: 9/10**"
-        assert _parse_review_score(text) == 9.0
+        assert _overall("**Overall: 9/10**") == 9.0
 
     def test_decimal_score(self):
-        from wiki.compile import _parse_review_score
-        text = "**Overall: 8.8/10**"
-        assert _parse_review_score(text) == 8.8
+        assert _overall("**Overall: 8.8/10**") == 8.8
 
     def test_decimal_score_95(self):
-        from wiki.compile import _parse_review_score
-        text = "**Overall: 9.5/10**"
-        assert _parse_review_score(text) == 9.5
+        assert _overall("**Overall: 9.5/10**") == 9.5
 
     def test_score_with_dimensions(self):
         """The overall score should be picked, not a dimension score."""
-        from wiki.compile import _parse_review_score
         text = (
             "1. **Factual: 9/10** — good\n"
             "2. **Language: 9/10** — clean\n"
@@ -284,30 +283,22 @@ class TestParseReviewScore:
             "5. **Actionable: 9/10** — good\n\n"
             "**Overall: 8.8/10**"
         )
-        assert _parse_review_score(text) == 8.8
+        assert _overall(text) == 8.8
 
     def test_score_variant_formats(self):
-        from wiki.compile import _parse_review_score
-        # "Score:" label
-        assert _parse_review_score("Score: 7.5/10") == 7.5
-        # "verdict" label
-        assert _parse_review_score("Verdict: **9/10**") == 9.0
-        # Ukrainian label
-        assert _parse_review_score("Підсумок: 8/10") == 8.0
+        assert _overall("Score: 7.5/10") == 7.5
+        assert _overall("Verdict: **9/10**") == 9.0
+        assert _overall("Підсумок: 8/10") == 8.0
 
     def test_fallback_last_score(self):
         """When no 'overall' label exists, take the last score."""
-        from wiki.compile import _parse_review_score
-        text = "Factual: 9/10\nLanguage: 8/10\n\n7.5/10"
-        assert _parse_review_score(text) == 7.5
+        assert _overall("Factual: 9/10\nLanguage: 8/10\n\n7.5/10") == 7.5
 
     def test_no_score_returns_zero(self):
-        from wiki.compile import _parse_review_score
-        assert _parse_review_score("No scores here.") == 0.0
+        assert _overall("No scores here.") == 0.0
 
     def test_ten_out_of_ten(self):
-        from wiki.compile import _parse_review_score
-        assert _parse_review_score("**Overall: 10/10**") == 10.0
+        assert _overall("**Overall: 10/10**") == 10.0
 
 
 # ── Tests: _extract_and_apply_fixes ────────────────────────────
@@ -637,3 +628,273 @@ class TestFuzzyReplace:
         assert result is not None
         assert result.startswith("Before.")
         assert result.endswith("After.")
+
+
+# ── Tests: _clean_rewrite_response ──────────────────────────────
+
+
+class TestCleanRewriteResponse:
+    """Tests for the rewrite response extraction / cleaning logic."""
+
+    def test_clean_simple_response(self):
+        from wiki.compile import _clean_rewrite_response
+        # Must be >100 chars to pass minimum length check
+        response = (
+            "# My Title\n\n## Section 1\n"
+            "Content here with enough text to pass the minimum length check. "
+            "This needs to be over one hundred characters total."
+        )
+        result = _clean_rewrite_response(response)
+        assert result is not None
+        assert result.startswith("# My Title")
+
+    def test_strips_prompt_echo(self):
+        """Gemini echoes prompt instructions before the article."""
+        from wiki.compile import _clean_rewrite_response
+        response = (
+            "Sure, here's the rewrite:\n\n"
+            "## Instructions\n"
+            "1. Read the critique.\n"
+            "2. Fix the sections.\n\n"
+            "# Побудова галузевої експертизи\n\n"
+            "## Section 1\nGood content here.\n"
+        )
+        result = _clean_rewrite_response(response)
+        assert result is not None
+        assert result.startswith("# Побудова")
+        assert "## Instructions" not in result
+        assert "Read the critique" not in result
+
+    def test_takes_last_title_on_duplicate(self):
+        """When old article title is echoed, take the LAST occurrence."""
+        from wiki.compile import _clean_rewrite_response
+        response = (
+            "# Побудова галузевої експертизи\n\n"
+            "Old truncated content професі\n\n"
+            "## Instructions\n1. Fix it.\n\n"
+            "# Побудова галузевої експертизи\n\n"
+            "## Section 1\nNew good content.\n"
+        )
+        result = _clean_rewrite_response(response)
+        assert result is not None
+        assert "Old truncated content" not in result
+        assert "New good content" in result
+
+    def test_rejects_truncated_response(self):
+        """Reject responses that end mid-word (truncated output)."""
+        from wiki.compile import _clean_rewrite_response
+        response = (
+            "# Title\n\n"
+            "## Section\n"
+            "Content with enough text to pass length checks but then it "
+            "discusses important topics like linguistics and then trunca"
+        )
+        result = _clean_rewrite_response(response)
+        assert result is None
+
+    def _pad(self, text: str) -> str:
+        """Pad short text to pass the 100-char minimum."""
+        padding = "\n\nPadding text to meet minimum length requirement for test. " * 2
+        return text + padding
+
+    def test_accepts_response_ending_with_period(self):
+        from wiki.compile import _clean_rewrite_response
+        response = self._pad(
+            "# Title\n\n"
+            "## Section\n"
+            "Content that ends properly."
+        )
+        result = _clean_rewrite_response(response)
+        assert result is not None
+
+    def test_accepts_response_ending_with_table_row(self):
+        from wiki.compile import _clean_rewrite_response
+        response = self._pad(
+            "# Title\n\n"
+            "## Section\n"
+            "| cell1 | cell2 |"
+        )
+        result = _clean_rewrite_response(response)
+        assert result is not None
+
+    def test_accepts_response_ending_with_list_item(self):
+        from wiki.compile import _clean_rewrite_response
+        response = self._pad(
+            "# Title\n\n"
+            "## Section\n"
+            "- A valid list item"
+        )
+        result = _clean_rewrite_response(response)
+        assert result is not None
+
+    def test_rejects_empty_response(self):
+        from wiki.compile import _clean_rewrite_response
+        assert _clean_rewrite_response("") is None
+        assert _clean_rewrite_response("short") is None
+
+    def test_rejects_no_markdown_headings(self):
+        from wiki.compile import _clean_rewrite_response
+        response = "Just plain text without any markdown headings. " * 10
+        result = _clean_rewrite_response(response)
+        assert result is None
+
+    def test_accepts_section_headings_without_title(self):
+        """Accept articles that have ## sections but no # title."""
+        from wiki.compile import _clean_rewrite_response
+        response = self._pad(
+            "## Академічний контекст\n"
+            "Content here about academic context.\n\n"
+            "## Основний зміст\n"
+            "More content here with enough length."
+        )
+        result = _clean_rewrite_response(response)
+        assert result is not None
+
+    def test_real_world_prompt_leak(self):
+        """Reproduces the actual bug from C2 building-domain-expertise."""
+        from wiki.compile import _clean_rewrite_response
+        response = (
+            "# Майстерність C2: Побудова галузевої експертизи\n\n"
+            "<!-- wiki-meta\nslug: building-domain-expertise\n-->\n\n"
+            "## Академічний контекст\n"
+            "Content that gets cut off here професі\n\n"
+            "## Instructions\n"
+            "1. Read the critique carefully.\n"
+            "2. Identify which SPECIFIC sections need rewriting.\n"
+            "3. Output the COMPLETE article.\n\n"
+            "## Current article\n\n"
+            "# Майстерність C2: Побудова галузевої експертізи\n\n"
+            "<!-- wiki-meta\nslug: building-domain-expertise\n-->\n\n"
+            "## Академічний контекст\n"
+            "The REAL rewritten content here.\n\n"
+            "## Типові помилки L2\n"
+            "Error pairs and good content."
+        )
+        result = _clean_rewrite_response(response)
+        assert result is not None
+        assert "REAL rewritten content" in result
+        assert "## Instructions" not in result
+        assert "Read the critique" not in result
+
+    def test_strips_agent_bridge_metadata(self):
+        """Agent bridge stdout leaks into response — must be stripped."""
+        from wiki.compile import _clean_rewrite_response
+        response = (
+            "# Article Title\n\n"
+            "## Section 1\n"
+            "Good content about Ukrainian grammar with enough text to pass "
+            "the minimum length check and make this a proper article.\n\n"
+            "## Section 2\n"
+            "More content about decolonization and pedagogy.\n"
+            "\n"
+            "✅ Gemini finished (5340 chars)\n"
+            "✅ Message sent to Claude (ID: 28311)\n"
+            "✓ Message 28311 acknowledged\n"
+            "   Auto-acknowledged reply #28311\n"
+        )
+        result = _clean_rewrite_response(response)
+        assert result is not None
+        assert "Gemini finished" not in result
+        assert "Message 28311" not in result
+        assert "Auto-acknowledged" not in result
+        assert "Good content" in result
+
+    def test_strips_code_fence_wrapper(self):
+        """Gemini wraps response in ```markdown ... ```."""
+        from wiki.compile import _clean_rewrite_response
+        response = (
+            "```markdown\n"
+            "# Article Title\n\n"
+            "## Section 1\n"
+            "Content inside code fence with enough text to pass length checks "
+            "and demonstrate the code fence stripping works properly.\n"
+            "```"
+        )
+        result = _clean_rewrite_response(response)
+        assert result is not None
+        assert result.startswith("# Article Title")
+        assert "```" not in result
+
+    def test_accepts_ending_with_parenthesis(self):
+        """Response ending with ) from a markdown link should not be truncated."""
+        from wiki.compile import _clean_rewrite_response
+        response = self._pad(
+            "# Title\n\n"
+            "## Section\n"
+            "See [Правопис 2019](https://2019.pravopys.net)"
+        )
+        result = _clean_rewrite_response(response)
+        assert result is not None
+
+    def test_accepts_ending_with_quotation(self):
+        """Response ending with " should not be truncated."""
+        from wiki.compile import _clean_rewrite_response
+        response = self._pad(
+            '# Title\n\n'
+            '## Section\n'
+            'Як писав Шевченко: "Борітеся — поборете"'
+        )
+        result = _clean_rewrite_response(response)
+        assert result is not None
+
+    def test_prompt_fragment_to_h2(self):
+        """When article starts with ## (no H1), prompt echo should still be stripped."""
+        from wiki.compile import _clean_rewrite_response
+        response = (
+            "## Instructions\n"
+            "1. Fix the sections.\n\n"
+            "## Академічний контекст\n"
+            "Real content about academic context with enough text to meet "
+            "the minimum length requirements for the function.\n\n"
+            "## Основний зміст\n"
+            "More real content here."
+        )
+        result = _clean_rewrite_response(response)
+        assert result is not None
+        assert "## Академічний контекст" in result
+        assert "Fix the sections" not in result
+
+
+# ── Tests: log_event / read_log ─────────────────────────────────
+
+
+class TestBuildLog:
+    def test_log_and_read_roundtrip(self, tmp_path):
+        """log_event writes JSONL, read_log reads it back."""
+        from unittest.mock import patch
+
+        from wiki.state import log_event, read_log
+
+        with patch("wiki.state.WIKI_STATE_DIR", tmp_path):
+            log_event("a2", "genitive-intro", "compile", words=1500, sources=40)
+            log_event("a2", "genitive-intro", "review_round", round=1, score=8.4)
+            log_event("a2", "genitive-intro", "review_pass", score=9.2, rounds=2)
+
+            entries = read_log()
+            assert len(entries) == 3
+            assert entries[0]["event"] == "compile"
+            assert entries[0]["words"] == 1500
+            assert entries[1]["score"] == 8.4
+            assert entries[2]["event"] == "review_pass"
+
+    def test_read_log_filter_by_track(self, tmp_path):
+        from unittest.mock import patch
+
+        from wiki.state import log_event, read_log
+
+        with patch("wiki.state.WIKI_STATE_DIR", tmp_path):
+            log_event("a2", "slug1", "compile")
+            log_event("b1", "slug2", "compile")
+            log_event("a2", "slug3", "compile")
+
+            a2_entries = read_log(track="a2")
+            assert len(a2_entries) == 2
+            assert all(e["track"] == "a2" for e in a2_entries)
+
+    def test_read_log_empty(self, tmp_path):
+        from unittest.mock import patch
+
+        from wiki.state import read_log
+
+        with patch("wiki.state.WIKI_STATE_DIR", tmp_path):
+            assert read_log() == []

@@ -66,7 +66,7 @@ from wiki.sources import (
     list_discovery_slugs,
     list_literary_sources,
 )
-from wiki.state import get_status_summary
+from wiki.state import get_status_summary, log_event, read_log
 
 # ── Domain mapping: how to group discovery slugs into wiki articles ──
 
@@ -101,6 +101,63 @@ FOLK_DOMAIN_MAP: dict[str, str] = {
     "prykazky-ta-pryslivia": "folk/short-forms",
     "zahadky": "folk/short-forms",
 }
+
+
+def cmd_log(*, track: str | None = None) -> None:
+    """Show build log — structured events from compilation + review.
+
+    Usage:
+        --log                   Show all recent events
+        --log --track a2        Show only A2 events
+    """
+    entries = read_log(track=track)
+    if not entries:
+        print("No build log entries found.")
+        return
+
+    # Group by slug for a summary view
+    by_slug: dict[str, list[dict]] = {}
+    for e in entries:
+        key = f"{e['track']}/{e['slug']}"
+        by_slug.setdefault(key, []).append(e)
+
+    print(f"\n📊 Build Log ({len(entries)} events, {len(by_slug)} articles)")
+    if track:
+        print(f"   Filtered: {track}")
+    print(f"{'─' * 70}")
+
+    for key, events in by_slug.items():
+        # Find compile and final review events
+        compile_evt = next((e for e in events if e["event"] == "compile"), None)
+        final_evt = next((e for e in reversed(events)
+                         if e["event"] in ("review_pass", "review_fail", "review_reverted")), None)
+        rounds = [e for e in events if e["event"] == "review_round"]
+
+        words = compile_evt.get("words", "?") if compile_evt else "?"
+        if final_evt:
+            score = final_evt.get("score", "?")
+            status = "✅" if final_evt["event"] == "review_pass" else "❌"
+            n_rounds = final_evt.get("rounds", len(rounds))
+        else:
+            score = "pending"
+            status = "⏳"
+            n_rounds = len(rounds)
+
+        # Show round progression
+        round_scores = " → ".join(str(r.get("score", "?")) for r in rounds)
+
+        print(f"  {status} {key:<45} {score}/10  ({words}w, {n_rounds}r)")
+        if rounds:
+            print(f"     rounds: {round_scores}")
+
+    # Summary stats
+    passed = sum(1 for evts in by_slug.values()
+                 if any(e["event"] == "review_pass" for e in evts))
+    failed = sum(1 for evts in by_slug.values()
+                 if any(e["event"] == "review_fail" for e in evts))
+    pending = len(by_slug) - passed - failed
+    print(f"\n{'─' * 70}")
+    print(f"  ✅ Passed: {passed}  ❌ Failed: {failed}  ⏳ Pending: {pending}")
 
 
 def cmd_status() -> None:
@@ -184,6 +241,8 @@ def cmd_compile_one(track: str, slug: str, *, force: bool = False,
 
     if result:
         update_index()
+        word_count = len(result.read_text("utf-8").split()) if result.exists() else 0
+        log_event(track, slug, "compile", words=word_count, sources=len(all_chunks))
         if review and not dry_run:
             _review_article(result, track, slug)
         return True
@@ -237,11 +296,6 @@ def _parse_review_scores(review_text: str) -> dict[str, float]:
         scores["overall"] = float(all_scores[-1]) if all_scores else 0.0
 
     return scores
-
-
-def _parse_review_score(review_text: str) -> float:
-    """Parse just the overall score. Convenience wrapper for _parse_review_scores."""
-    return _parse_review_scores(review_text)["overall"]
 
 
 def _build_review_prompt(article_text: str, article_type: str,
@@ -494,6 +548,93 @@ def _send_review(track: str, slug: str, review_prompt: str,
     return result.stdout
 
 
+def _clean_rewrite_response(response: str) -> str | None:
+    """Extract a clean article from Gemini's rewrite response.
+
+    Handles common issues:
+    1. Prompt echo: Gemini echoes back parts of the rewrite prompt
+       (instructions, critique, old article) before producing the new article.
+    2. Duplicate titles: Old article title appears first, then the rewrite
+       starts with the same title again — take the LAST top-level heading.
+    3. Truncation: Response cuts off mid-word/mid-sentence.
+    4. Code fences: Gemini wraps response in ```markdown ... ```.
+    5. Agent bridge metadata: stdout diagnostics mixed into response.
+
+    Returns cleaned markdown string, or None if response is unusable.
+    """
+    import re
+
+    if not response or len(response) < 100:
+        return None
+
+    # Strip agent bridge metadata that leaks into stdout
+    lines = response.split("\n")
+    clean_lines = [
+        line for line in lines
+        if not re.match(
+            r"^\s*(✓|✅|ℹ️|Auto-acknowledged|────|📎 Attached|🤖 Processing|"
+            r"\[gemini\]|Dimension scores:|<fixes>|</fixes>)",
+            line,
+        )
+    ]
+    response = "\n".join(clean_lines).strip()
+
+    if len(response) < 100:
+        return None
+
+    # Strip markdown code fences wrapping the entire response
+    # Gemini sometimes wraps: ```markdown\n# Title\n...\n```
+    fence_match = re.match(r"^```\w*\n(.*)\n```\s*$", response, re.DOTALL)
+    if fence_match:
+        response = fence_match.group(1)
+
+    # Strip prompt fragments that Gemini sometimes echoes back
+    prompt_fragments = [
+        "## Instructions\n",
+        "## Reviewer critique\n",
+        "## Current article\n",
+        "## Weak dimensions:",
+    ]
+    for frag in prompt_fragments:
+        if frag in response:
+            idx = response.rfind(frag)
+            # Find next heading (H1 or H2) AFTER the prompt fragment line
+            after_frag = idx + len(frag)
+            next_heading = re.search(r"^#{1,2}\s+", response[after_frag:], re.MULTILINE)
+            if next_heading:
+                response = response[after_frag + next_heading.start():]
+                break
+
+    # Find the LAST top-level heading (# Title) — Gemini may echo the old
+    # article title first, then produce the actual rewrite starting with
+    # the same title again. We want the LAST occurrence.
+    title_matches = list(re.finditer(r"^(#\s+[^#\n].+)", response, re.MULTILINE))
+    if title_matches:
+        last_title = title_matches[-1]
+        if len(title_matches) > 1:
+            print(f"  ℹ️  Found {len(title_matches)} top-level headings, "
+                  "taking from last (stripping prompt echo)")
+        response = response[last_title.start():]
+    elif re.search(r"^##\s+", response, re.MULTILINE):
+        pass  # No top-level heading but has section headings — accept as-is
+    else:
+        return None
+
+    # Truncation detection: reject if response ends mid-word or mid-sentence
+    # Allow common terminal characters: punctuation, quotes, brackets, pipes
+    stripped = response.rstrip()
+    if stripped and stripped[-1] not in '.!?»"\')]\n`|':
+        last_line = stripped.split("\n")[-1].strip()
+        # Allow: headings, table rows, list items, code blocks, HTML comments
+        if (last_line and not last_line.startswith(("#", "|", "-", "*", ">", "```", "<!--"))
+                and len(last_line) > 20):
+            print(f"  ⚠️  Rewrite appears truncated (ends with: "
+                  f"...{last_line[-40:]!r})")
+            return None
+
+    return response
+
+
 def _targeted_rewrite(article_path: Path, article_text: str,
                       article_type: str,
                       track: str, slug: str, review_text: str,
@@ -524,7 +665,10 @@ def _targeted_rewrite(article_path: Path, article_text: str,
         "2. Identify which SPECIFIC sections need rewriting to address the critique.\n"
         "3. Output the COMPLETE article with those sections rewritten.\n"
         "4. Do NOT remove or degrade sections that scored well.\n"
-        "5. Do NOT add commentary — output ONLY the article markdown.\n\n"
+        "5. Do NOT add commentary — output ONLY the article markdown.\n"
+        "6. CRITICAL: Start your response DIRECTLY with `# Title`. Do NOT echo these "
+        "instructions, the critique, or any preamble. The very first line of your "
+        "output must be the `# Title` heading of the article.\n\n"
         f"## Current article\n\n{article_text[:15000]}"
     )
 
@@ -555,12 +699,12 @@ def _targeted_rewrite(article_path: Path, article_text: str,
         print("  ⚠️  Rewrite returned empty/short response — keeping original")
         return False
 
-    # Extract markdown from Gemini response (may have wrapper text)
-    # Find the first # heading and take everything from there
-    import re
-    md_match = re.search(r"^(#\s+.+)", response, re.MULTILINE)
-    if md_match:
-        response = response[md_match.start():]
+    # Clean the response: strip prompt echo, find article, detect truncation
+    cleaned = _clean_rewrite_response(response)
+    if cleaned is None:
+        print("  ⚠️  Could not extract clean article from rewrite response — keeping original")
+        return False
+    response = cleaned
 
     # Safety: don't accept if new article is <70% of original length (regression guard)
     if len(response) < len(article_text) * 0.7:
@@ -570,6 +714,8 @@ def _targeted_rewrite(article_path: Path, article_text: str,
 
     article_path.write_text(response + "\n", "utf-8")
     new_words = len(response.split())
+    log_event(track, slug, "rewrite", words=new_words,
+              weak_dimensions=weak_str)
     print(f"  ✏️  Rewrite applied ({new_words} words)")
     return True
 
@@ -640,6 +786,8 @@ def _review_article(article_path: Path, track: str, slug: str,
             f"{k[:4]}:{v}" for k, v in scores.items() if k != "overall"
         )
         print(f"  📋 Round {round_num}: {score}/10 [{dim_summary}]")
+        log_event(track, slug, "review_round", round=round_num,
+                  score=score, **{k: v for k, v in scores.items() if k != "overall"})
 
         # Step 4: Track peak score — if we regress, revert to best version
         if score > best_score:
@@ -654,11 +802,14 @@ def _review_article(article_path: Path, track: str, slug: str,
             if review_text:
                 final_path = review_dir / f"{slug}-review.md"
                 final_path.write_text(review_text, "utf-8")
+            log_event(track, slug, "review_reverted", score=score,
+                      peak_score=best_score)
             print(f"  📝 Final score: {score}/10 (peak from round {round_num - 1})")
             return
 
         # Step 5: Check if we're done
         if score >= 9.0:
+            log_event(track, slug, "review_pass", score=score, rounds=round_num)
             print(f"  ✅ Review PASSED ({score}/10)")
             final_path = review_dir / f"{slug}-review.md"
             final_path.write_text(review_text, "utf-8")
@@ -756,6 +907,9 @@ def _review_article(article_path: Path, track: str, slug: str,
     if review_text:
         final_path = review_dir / f"{slug}-review.md"
         final_path.write_text(review_text, "utf-8")
+    # If we reached here, we exhausted max_rounds without hitting 9.0
+    # (the >= 9.0 case returns early above)
+    log_event(track, slug, "review_fail", score=score, rounds=max_rounds)
     print(f"  📝 Final score: {score}/10 after review loop")
 
 
@@ -979,6 +1133,8 @@ def main() -> None:
                         help="Show compilation status for all tracks")
     parser.add_argument("--update-index", action="store_true",
                         help="Regenerate wiki/index.md from all compiled articles")
+    parser.add_argument("--log", action="store_true",
+                        help="Show build log (filter with --track)")
 
     # Track selection
     parser.add_argument("--track", choices=ALL_TRACKS,
@@ -1012,8 +1168,12 @@ def main() -> None:
         update_index()
         return
 
+    if args.log:
+        cmd_log(track=args.track)
+        return
+
     if not args.track:
-        parser.error("--track is required (or use --status)")
+        parser.error("--track is required (or use --status/--log)")
 
     if args.list:
         cmd_list(args.track)
