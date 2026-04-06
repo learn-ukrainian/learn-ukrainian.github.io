@@ -199,12 +199,16 @@ def _parse_review_scores(review_text: str) -> dict[str, float]:
 
     Missing dimensions default to 0.0. Overall is parsed from the explicit
     "Overall:" line, NOT averaged from dimensions (reviewer may weight them).
+
+    IMPORTANT: The review text contains the prompt template echo (with "X/10"
+    placeholders) followed by Gemini's actual response. We use findall and
+    take the LAST match for each dimension to skip the template.
     """
     import re
 
     scores: dict[str, float] = {}
 
-    # Parse individual dimensions: "1. **Factual: 9/10**" or "Factual: 9.5/10"
+    # Parse individual dimensions — take LAST match to skip prompt template echo
     dimension_names = {
         "factual": r"factual",
         "language": r"(?:language|ukrainian\s+language)",
@@ -213,19 +217,20 @@ def _parse_review_scores(review_text: str) -> dict[str, float]:
         "actionable": r"actionable",
     }
     for key, pattern in dimension_names.items():
-        match = re.search(
-            rf"{pattern}[:\s]*\**\s*(\d+(?:\.\d+)?)\s*/\s*10",
+        matches = re.findall(
+            rf"{pattern}\**[:\s]*\**\s*(\d+(?:\.\d+)?)\s*/\s*10",
             review_text, re.IGNORECASE,
         )
-        scores[key] = float(match.group(1)) if match else 0.0
+        # Last match = Gemini's actual score (first may be prompt template)
+        scores[key] = float(matches[-1]) if matches else 0.0
 
-    # Parse overall score
-    overall_match = re.search(
+    # Parse overall score — also take LAST match
+    overall_matches = re.findall(
         r"(?:overall|score|verdict|підсумок)[:\s]*\**\s*(\d+(?:\.\d+)?)\s*/\s*10",
         review_text, re.IGNORECASE,
     )
-    if overall_match:
-        scores["overall"] = float(overall_match.group(1))
+    if overall_matches:
+        scores["overall"] = float(overall_matches[-1])
     else:
         # Fallback: last X/10 in the text
         all_scores = re.findall(r"(\d+(?:\.\d+)?)\s*/\s*10", review_text)
