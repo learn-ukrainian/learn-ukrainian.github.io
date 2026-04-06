@@ -48,16 +48,16 @@ class TestBuildSourcesDb:
         from wiki.build_sources_db import build
 
         db_path = sample_jsonl / "sources.db"
-        result = build(db_path, source_dir=sample_jsonl)
+        result = build(db_path, external_dir=sample_jsonl, textbook_dir=sample_jsonl / "no_textbooks")
         assert result.exists()
 
         conn = sqlite3.connect(str(result))
-        count = conn.execute("SELECT COUNT(*) FROM articles").fetchone()[0]
+        count = conn.execute("SELECT COUNT(*) FROM sources").fetchone()[0]
         assert count == 4  # 3 blogs + 1 video
 
         # Check FTS index works
         fts_count = conn.execute(
-            "SELECT COUNT(*) FROM articles_fts WHERE articles_fts MATCH '\"родовий\"'"
+            "SELECT COUNT(*) FROM sources_fts WHERE sources_fts MATCH '\"родовий\"'"
         ).fetchone()[0]
         assert fts_count >= 2  # Blog + YouTube both mention родовий
 
@@ -74,11 +74,11 @@ class TestBuildSourcesDb:
             f.write(json.dumps(dup, ensure_ascii=False) + "\n")
 
         db_path = sample_jsonl / "sources.db"
-        build(db_path, source_dir=sample_jsonl)
+        build(db_path, external_dir=sample_jsonl, textbook_dir=sample_jsonl / "no_textbooks")
 
         conn = sqlite3.connect(str(db_path))
         count = conn.execute(
-            "SELECT COUNT(*) FROM articles WHERE url = 'https://example.com/genitive'"
+            "SELECT COUNT(*) FROM sources WHERE url = 'https://example.com/genitive'"
         ).fetchone()[0]
         assert count == 1
         conn.close()
@@ -88,11 +88,11 @@ class TestBuildSourcesDb:
         from wiki.build_sources_db import build
 
         db_path = sample_jsonl / "sources.db"
-        build(db_path, source_dir=sample_jsonl)
-        build(db_path, source_dir=sample_jsonl)  # Should not fail or double entries
+        build(db_path, external_dir=sample_jsonl, textbook_dir=sample_jsonl / "no_textbooks")
+        build(db_path, external_dir=sample_jsonl, textbook_dir=sample_jsonl / "no_textbooks")  # Should not fail or double entries
 
         conn = sqlite3.connect(str(db_path))
-        count = conn.execute("SELECT COUNT(*) FROM articles").fetchone()[0]
+        count = conn.execute("SELECT COUNT(*) FROM sources").fetchone()[0]
         assert count == 4
         conn.close()
 
@@ -103,15 +103,15 @@ class TestSourcesDb:
         from wiki.build_sources_db import build
 
         db_path = sample_jsonl / "sources.db"
-        build(db_path, source_dir=sample_jsonl)
+        build(db_path, external_dir=sample_jsonl, textbook_dir=sample_jsonl / "no_textbooks")
 
         import wiki.sources_db as sdb
         monkeypatch.setattr(sdb, "SOURCES_DB_PATH", db_path)
         monkeypatch.setattr(sdb, "_conn", None)
 
-        results = sdb.search_articles({"родовий", "відмінок", "володіння"}, max_total=10)
+        results = sdb.search_external({"родовий", "відмінок", "володіння"}, max_total=10)
         assert len(results) >= 1
-        assert results[0]["source_type"] == "external_keyword"
+        assert results[0]["source_type"] == "external"
         assert "chunk_id" in results[0]
         assert "_kw_score" in results[0]
 
@@ -120,13 +120,13 @@ class TestSourcesDb:
         from wiki.build_sources_db import build
 
         db_path = sample_jsonl / "sources.db"
-        build(db_path, source_dir=sample_jsonl)
+        build(db_path, external_dir=sample_jsonl, textbook_dir=sample_jsonl / "no_textbooks")
 
         import wiki.sources_db as sdb
         monkeypatch.setattr(sdb, "SOURCES_DB_PATH", db_path)
         monkeypatch.setattr(sdb, "_conn", None)
 
-        results = sdb.search_articles(
+        results = sdb.search_external(
             {"родовий", "відмінок"},
             exclude_urls={"https://example.com/genitive"},
         )
@@ -138,7 +138,7 @@ class TestSourcesDb:
         from wiki.build_sources_db import build
 
         db_path = sample_jsonl / "sources.db"
-        build(db_path, source_dir=sample_jsonl)
+        build(db_path, external_dir=sample_jsonl, textbook_dir=sample_jsonl / "no_textbooks")
 
         import wiki.sources_db as sdb
         monkeypatch.setattr(sdb, "SOURCES_DB_PATH", db_path)
@@ -153,7 +153,7 @@ class TestSourcesDb:
         from wiki.build_sources_db import build
 
         db_path = sample_jsonl / "sources.db"
-        build(db_path, source_dir=sample_jsonl)
+        build(db_path, external_dir=sample_jsonl, textbook_dir=sample_jsonl / "no_textbooks")
 
         import wiki.sources_db as sdb
         monkeypatch.setattr(sdb, "SOURCES_DB_PATH", db_path)
@@ -169,6 +169,6 @@ class TestSourcesDb:
         monkeypatch.setattr(sdb, "SOURCES_DB_PATH", tmp_path / "nonexistent.db")
         monkeypatch.setattr(sdb, "_conn", None)
 
-        assert sdb.search_articles({"test"}) == []
+        assert sdb.search_external({"test"}) == []
         assert sdb.lookup_by_url("https://example.com") is None
-        assert sdb.article_count() == 0
+        assert sdb.source_count() == 0

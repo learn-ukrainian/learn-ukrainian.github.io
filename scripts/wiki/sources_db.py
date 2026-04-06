@@ -1,7 +1,10 @@
-"""SQLite FTS5 interface for external article sources.
+"""SQLite FTS5 interface for ALL source content (textbooks + external articles).
 
-Provides search_articles() and lookup_by_url() as drop-in replacements
-for the JSONL-based _search_external_articles() and _get_article_cache().
+Provides:
+- search_sources() — FTS5 keyword search across all content
+- search_textbooks() — FTS5 search filtered to textbook chunks only
+- search_external() — FTS5 search filtered to external articles only
+- lookup_by_url() — exact URL lookup for YAML-mapped resources
 """
 
 import sqlite3
@@ -27,15 +30,35 @@ def _get_conn() -> sqlite3.Connection:
     return _conn
 
 
-def search_articles(
+def _build_fts_query(keywords: set[str], min_len: int = 3) -> str | None:
+    """Build FTS5 MATCH query from keywords. Returns None if no valid terms."""
+    terms = [f'"{kw}"' for kw in keywords if len(kw) >= min_len]
+    if not terms:
+        return None
+    return " OR ".join(terms)
+
+
+def _kw_score(text: str, title: str, keywords: set[str]) -> int:
+    """Count keyword hits using space-padded matching."""
+    searchable = f" {title} {text} ".lower()
+    return sum(1 for w in keywords if f" {w} " in searchable)
+
+
+def search_sources(
     ukr_keywords: set[str],
-    max_total: int = 10,
+    source_type: str | None = None,
+    max_total: int = 40,
     exclude_urls: set[str] | None = None,
 ) -> list[dict]:
-    """Search external articles using FTS5 full-text search.
+    """Search all sources using FTS5 full-text search.
 
-    Returns chunk dicts compatible with the enrichment pipeline:
-    {text, chunk_id, source_type, _kw_score}
+    Args:
+        ukr_keywords: Ukrainian keywords to search for
+        source_type: Filter by "textbook" or "external" (None = all)
+        max_total: Maximum results to return
+        exclude_urls: URLs to skip (for dedup with YAML-mapped)
+
+    Returns chunk dicts: {text, chunk_id, source_type, _kw_score, ...}
     """
     if not ukr_keywords:
         return []
@@ -45,24 +68,29 @@ def search_articles(
     except FileNotFoundError:
         return []
 
+    fts_query = _build_fts_query(ukr_keywords)
+    if not fts_query:
+        return []
+
     skip_urls = exclude_urls or set()
 
-    # Build FTS5 query: OR-ed quoted keywords
-    terms = [f'"{kw}"' for kw in ukr_keywords if len(kw) >= 3]
-    if not terms:
-        return []
-    fts_query = " OR ".join(terms)
+    # Build SQL with optional source_type filter
+    type_filter = "AND s.source_type = ?" if source_type else ""
+    params: list = [fts_query, max_total * 3]
+    if source_type:
+        params = [fts_query, source_type, max_total * 3]
 
-    # FTS5 MATCH with bm25 ranking (title weighted 5x over text)
     rows = conn.execute(
-        """SELECT a.url, a.title, a.domain, a.text, a.source_file,
-                  bm25(articles_fts, 5.0, 1.0) AS rank
-           FROM articles_fts
-           JOIN articles a ON a.id = articles_fts.rowid
-           WHERE articles_fts MATCH ?
-           ORDER BY rank
-           LIMIT ?""",
-        (fts_query, max_total * 3),  # Fetch extra to account for URL filtering
+        f"""SELECT s.chunk_id, s.url, s.title, s.text, s.source_type,
+                   s.source_file, s.grade, s.author, s.domain,
+                   bm25(sources_fts, 5.0, 1.0) AS rank
+            FROM sources_fts
+            JOIN sources s ON s.id = sources_fts.rowid
+            WHERE sources_fts MATCH ?
+            {type_filter}
+            ORDER BY rank
+            LIMIT ?""",
+        params,
     ).fetchall()
 
     chunks: list[dict] = []
@@ -70,40 +98,62 @@ def search_articles(
         if len(chunks) >= max_total:
             break
         url = row["url"]
-        if url in skip_urls:
+        if url and url in skip_urls:
             continue
 
         title = row["title"]
         text = row["text"]
-        domain = row["domain"] or row["source_file"]
+        score = _kw_score(text, title, ukr_keywords)
 
-        # Count actual keyword hits for _kw_score (for cross-source sorting)
-        searchable = f"{title} {text}".lower()
-        kw_score = sum(
-            1 for w in ukr_keywords
-            if f" {w} " in f" {searchable} "
-        )
+        chunk = {
+            "text": text,
+            "chunk_id": row["chunk_id"],
+            "source_type": row["source_type"],
+            "source_file": row["source_file"],
+            "_kw_score": score,
+        }
 
-        chunks.append({
-            "text": (
+        # Add metadata based on source type
+        if row["source_type"] == "textbook":
+            chunk["grade"] = row["grade"]
+            chunk["author"] = row["author"]
+            chunk["section_title"] = title
+        else:
+            chunk["url"] = url
+            chunk["domain"] = row["domain"]
+            chunk["title"] = title
+            # Format external articles for the compiler prompt
+            chunk["text"] = (
                 f"External article: {title}\n"
-                f"Source: {domain}\n"
+                f"Source: {row['domain'] or row['source_file']}\n"
                 f"URL: {url}\n\n"
                 f"{text}"
-            )[:8000],
-            "chunk_id": f"ext-fts-{len(chunks)}",
-            "source_type": "external_keyword",
-            "_kw_score": kw_score,
-        })
+            )[:8000]
+
+        chunks.append(chunk)
 
     return chunks
 
 
-def lookup_by_url(url: str) -> dict | None:
-    """Look up an article by URL. Handles www/non-www variants.
+def search_textbooks(ukr_keywords: set[str], max_total: int = 40) -> list[dict]:
+    """Search textbook chunks only."""
+    return search_sources(ukr_keywords, source_type="textbook", max_total=max_total)
 
-    Returns dict with url, title, domain, text keys, or None.
-    """
+
+def search_external(
+    ukr_keywords: set[str],
+    max_total: int = 10,
+    exclude_urls: set[str] | None = None,
+) -> list[dict]:
+    """Search external articles only."""
+    return search_sources(
+        ukr_keywords, source_type="external",
+        max_total=max_total, exclude_urls=exclude_urls,
+    )
+
+
+def lookup_by_url(url: str) -> dict | None:
+    """Look up an article by URL. Handles www/non-www variants."""
     try:
         conn = _get_conn()
     except FileNotFoundError:
@@ -111,7 +161,7 @@ def lookup_by_url(url: str) -> dict | None:
 
     normalized = url.replace("://www.", "://")
     row = conn.execute(
-        "SELECT url, title, domain, text FROM articles WHERE url = ? OR url_normalized = ? LIMIT 1",
+        "SELECT url, title, domain, text FROM sources WHERE url = ? OR url_normalized = ? LIMIT 1",
         (url, normalized),
     ).fetchone()
 
@@ -120,10 +170,14 @@ def lookup_by_url(url: str) -> dict | None:
     return None
 
 
-def article_count() -> int:
-    """Return total number of articles in the database."""
+def source_count(source_type: str | None = None) -> int:
+    """Return total number of entries in the database."""
     try:
         conn = _get_conn()
     except FileNotFoundError:
         return 0
-    return conn.execute("SELECT COUNT(*) FROM articles").fetchone()[0]
+    if source_type:
+        return conn.execute(
+            "SELECT COUNT(*) FROM sources WHERE source_type = ?", (source_type,)
+        ).fetchone()[0]
+    return conn.execute("SELECT COUNT(*) FROM sources").fetchone()[0]

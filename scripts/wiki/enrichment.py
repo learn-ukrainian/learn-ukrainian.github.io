@@ -190,16 +190,13 @@ def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
     # (the slug is Latin transliteration — useless for searching Ukrainian text)
     ukr_keywords = _extract_ukrainian_keywords(sources_info)
 
-    # 2. Core tracks: load textbook JSONL files directly (same as seminars use literary JSONLs)
-    if track in CORE_TRACKS:
-        include_lit = track in ("c1", "c2")  # C1/C2 also use literature textbooks
-        tb_files = _list_textbook_files(include_literature=include_lit)
-        if tb_files:
-            tb_chunks = _load_textbook_chunks(tb_files, ukr_keywords, max_total=40)
-            if tb_chunks:
-                print(f"  📖 +{len(tb_chunks)} chunks from {len(tb_files)} textbook files "
-                      f"({len(ukr_keywords)} keywords)")
-                all_chunks.extend(tb_chunks)
+    # 2. Core tracks: search textbooks via FTS5 database
+    if track in CORE_TRACKS and ukr_keywords:
+        from .sources_db import search_textbooks
+        tb_chunks = search_textbooks(ukr_keywords, max_total=40)
+        if tb_chunks:
+            print(f"  📖 +{len(tb_chunks)} textbook chunks ({len(ukr_keywords)} keywords)")
+            all_chunks.extend(tb_chunks)
 
     # 3. Seminar tracks: literary JSONL files
     track_files = TRACK_LITERARY_MAP.get(track, [])
@@ -251,8 +248,8 @@ def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
 
     # 8. External articles — FTS5 search (deduped against YAML-mapped URLs)
     if ukr_keywords:
-        from .sources_db import search_articles
-        ext_kw_chunks = search_articles(
+        from .sources_db import search_external
+        ext_kw_chunks = search_external(
             ukr_keywords, max_total=10, exclude_urls=mapped_urls,
         )
         if ext_kw_chunks:

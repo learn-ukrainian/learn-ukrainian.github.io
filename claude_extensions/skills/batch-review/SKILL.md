@@ -2,7 +2,6 @@
 name: batch-review
 description: Batch prompt-review + content-review across multiple modules using parallel subagents. Writes reports to audit/ and orchestration/, then aggregates cross-module findings and proposes template auto-fixes.
 argument-hint: <track start-end>
-effort: high
 ---
 
 # Batch Review: $ARGUMENTS
