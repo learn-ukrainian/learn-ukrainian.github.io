@@ -87,12 +87,16 @@ def build(db_path: Path | None = None,
 
     total = 0
 
-    # --- External articles ---
+    # --- External articles (batched inserts) ---
     seen_urls: set[str] = set()
+    ext_sql = """INSERT INTO sources
+                 (chunk_id, url, url_normalized, title, text,
+                  source_type, source_file, domain, char_count)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"""
     ext_files = sorted(ext_dir.glob("*.jsonl")) if ext_dir.exists() else []
     for jsonl_path in ext_files:
         source_file = jsonl_path.stem
-        count = 0
+        batch: list[tuple] = []
         with open(jsonl_path, encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
@@ -103,64 +107,49 @@ def build(db_path: Path | None = None,
                 if not url or url in seen_urls:
                     continue
                 seen_urls.add(url)
-                conn.execute(
-                    """INSERT INTO sources
-                       (chunk_id, url, url_normalized, title, text,
-                        source_type, source_file, domain, char_count)
-                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-                    (
-                        f"ext-{source_file}-{count}",
-                        url,
-                        _normalize_url(url),
-                        entry.get("title", ""),
-                        entry.get("text", ""),
-                        "external",
-                        source_file,
-                        entry.get("domain", ""),
-                        entry.get("char_count", len(entry.get("text", ""))),
-                    ),
-                )
-                count += 1
-        total += count
+                batch.append((
+                    f"ext-{source_file}-{len(batch)}",
+                    url, _normalize_url(url),
+                    entry.get("title", ""), entry.get("text", ""),
+                    "external", source_file, entry.get("domain", ""),
+                    entry.get("char_count", len(entry.get("text", ""))),
+                ))
+        if batch:
+            conn.executemany(ext_sql, batch)
+        total += len(batch)
         size_kb = jsonl_path.stat().st_size / 1024
-        print(f"  📥 external/{source_file}: {count} entries ({size_kb:.0f} KB)")
+        print(f"  📥 external/{source_file}: {len(batch)} entries ({size_kb:.0f} KB)")
 
-    # --- Textbook chunks ---
+    # --- Textbook chunks (batched inserts) ---
+    tb_sql = """INSERT INTO sources
+                (chunk_id, url, url_normalized, title, text,
+                 source_type, source_file, grade, author, char_count)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
     if tb_dir.exists():
         grade_dirs = sorted(tb_dir.glob("grade-*"))
         for grade_dir in grade_dirs:
-            grade = grade_dir.name  # e.g. "grade-05"
+            grade = grade_dir.name
             for jsonl_path in sorted(grade_dir.glob("*.jsonl")):
                 source_file = jsonl_path.stem
-                count = 0
+                batch: list[tuple] = []
                 with open(jsonl_path, encoding="utf-8") as f:
                     for line in f:
                         line = line.strip()
                         if not line:
                             continue
                         entry = json.loads(line)
-                        chunk_id = entry.get("chunk_id", f"tb-{source_file}-{count}")
-                        conn.execute(
-                            """INSERT INTO sources
-                               (chunk_id, url, url_normalized, title, text,
-                                source_type, source_file, grade, author, char_count)
-                               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-                            (
-                                chunk_id,
-                                "",  # Textbooks don't have URLs
-                                "",
-                                entry.get("section_title", ""),
-                                entry.get("text", ""),
-                                "textbook",
-                                source_file,
-                                entry.get("grade", grade),
-                                entry.get("author", ""),
-                                entry.get("token_count", len(entry.get("text", ""))),
-                            ),
-                        )
-                        count += 1
-                total += count
-                print(f"  📖 {grade}/{source_file}: {count} chunks")
+                        batch.append((
+                            entry.get("chunk_id", f"tb-{source_file}-{len(batch)}"),
+                            "", "",
+                            entry.get("section_title", ""), entry.get("text", ""),
+                            "textbook", source_file,
+                            entry.get("grade", grade), entry.get("author", ""),
+                            entry.get("token_count", len(entry.get("text", ""))),
+                        ))
+                if batch:
+                    conn.executemany(tb_sql, batch)
+                total += len(batch)
+                print(f"  📖 {grade}/{source_file}: {len(batch)} chunks")
     else:
         print(f"  ⚠️  Textbook dir not found: {tb_dir}")
 
