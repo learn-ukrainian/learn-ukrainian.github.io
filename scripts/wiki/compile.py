@@ -355,7 +355,7 @@ def _build_review_prompt(article_text: str, article_type: str,
         "INSERT AFTER: anchor text in article\n"
         "NEW TEXT: content to add after the anchor\n"
         "</fixes>\n\n"
-        f"## Article to review\n\n{article_text[:15000]}"
+        f"## Article to review\n\n{article_text}"
     )
 
 
@@ -717,7 +717,7 @@ def _targeted_rewrite(article_path: Path, article_text: str,
         "6. CRITICAL: Start your response DIRECTLY with `# Title`. Do NOT echo these "
         "instructions, the critique, or any preamble. The very first line of your "
         "output must be the `# Title` heading of the article.\n\n"
-        f"## Current article\n\n{article_text[:15000]}"
+        f"## Current article\n\n{article_text}"
     )
 
     try:
