@@ -1,17 +1,26 @@
-"""SQLite FTS5 interface for ALL source content (textbooks + external articles).
+"""SQLite interface for ALL source content — replaces Qdrant RAG entirely.
 
-Provides:
-- search_sources() — FTS5 keyword search across all content
-- search_textbooks() — FTS5 search filtered to textbook chunks only
-- search_external() — FTS5 search filtered to external articles only
-- lookup_by_url() — exact URL lookup for YAML-mapped resources
+FTS5 tables (prose search):
+- search_textbooks() — textbook chunks
+- search_external() — external articles (ULP, blogs, YouTube)
+- search_literary() — literary texts (chronicles, poetry, legal)
+
+Indexed tables (dictionary headword lookup):
+- search_definitions() — СУМ-11
+- search_etymology() — Грінченко
+- search_idioms() — Фразеологічний
+- search_synonyms() — Ukrajinet WordNet
+- translate_en_uk() — Балла EN→UK
+- query_cefr_level() — PULS CEFR
+- search_style_guide() — Антоненко-Давидович
+- lookup_by_url() — external article URL lookup
 """
 
 import sqlite3
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-SOURCES_DB_PATH = PROJECT_ROOT / "data" / "external_articles" / "sources.db"
+SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
 
 _conn: sqlite3.Connection | None = None
 
@@ -33,9 +42,7 @@ def _get_conn() -> sqlite3.Connection:
 def _build_fts_query(keywords: set[str], min_len: int = 3) -> str | None:
     """Build FTS5 MATCH query from keywords. Returns None if no valid terms."""
     terms = [f'"{kw}"' for kw in keywords if len(kw) >= min_len]
-    if not terms:
-        return None
-    return " OR ".join(terms)
+    return " OR ".join(terms) if terms else None
 
 
 def _kw_score(text: str, title: str, keywords: set[str]) -> int:
@@ -44,100 +51,47 @@ def _kw_score(text: str, title: str, keywords: set[str]) -> int:
     return sum(1 for w in keywords if f" {w} " in searchable)
 
 
-def search_sources(
-    ukr_keywords: set[str],
-    source_type: str | None = None,
-    max_total: int = 40,
-    exclude_urls: set[str] | None = None,
-) -> list[dict]:
-    """Search all sources using FTS5 full-text search.
+# ── FTS5 search functions (prose) ───────────────────────────────
 
-    Args:
-        ukr_keywords: Ukrainian keywords to search for
-        source_type: Filter by "textbook" or "external" (None = all)
-        max_total: Maximum results to return
-        exclude_urls: URLs to skip (for dedup with YAML-mapped)
 
-    Returns chunk dicts: {text, chunk_id, source_type, _kw_score, ...}
-    """
-    if not ukr_keywords:
-        return []
-
+def _fts_search(fts_table: str, data_table: str,
+                keywords: set[str], max_total: int,
+                extra_cols: str = "") -> list[dict]:
+    """Generic FTS5 search across any prose table."""
     try:
         conn = _get_conn()
     except FileNotFoundError:
         return []
 
-    fts_query = _build_fts_query(ukr_keywords)
+    fts_query = _build_fts_query(keywords)
     if not fts_query:
         return []
 
-    skip_urls = exclude_urls or set()
-
-    # Build SQL with optional source_type filter
-    type_filter = "AND s.source_type = ?" if source_type else ""
-    params: list = [fts_query, max_total * 3]
-    if source_type:
-        params = [fts_query, source_type, max_total * 3]
+    cols = f"s.*, bm25({fts_table}, 5.0, 1.0) AS rank"
+    if extra_cols:
+        cols = f"s.*, {extra_cols}, bm25({fts_table}, 5.0, 1.0) AS rank"
 
     rows = conn.execute(
-        f"""SELECT s.chunk_id, s.url, s.title, s.text, s.source_type,
-                   s.source_file, s.grade, s.author, s.domain,
-                   bm25(sources_fts, 5.0, 1.0) AS rank
-            FROM sources_fts
-            JOIN sources s ON s.id = sources_fts.rowid
-            WHERE sources_fts MATCH ?
-            {type_filter}
+        f"""SELECT {cols}
+            FROM {fts_table}
+            JOIN {data_table} s ON s.id = {fts_table}.rowid
+            WHERE {fts_table} MATCH ?
             ORDER BY rank
             LIMIT ?""",
-        params,
+        (fts_query, max_total),
     ).fetchall()
 
-    chunks: list[dict] = []
-    for row in rows:
-        if len(chunks) >= max_total:
-            break
-        url = row["url"]
-        if url and url in skip_urls:
-            continue
-
-        title = row["title"]
-        text = row["text"]
-        score = _kw_score(text, title, ukr_keywords)
-
-        chunk = {
-            "text": text,
-            "chunk_id": row["chunk_id"],
-            "source_type": row["source_type"],
-            "source_file": row["source_file"],
-            "_kw_score": score,
-        }
-
-        # Add metadata based on source type
-        if row["source_type"] == "textbook":
-            chunk["grade"] = row["grade"]
-            chunk["author"] = row["author"]
-            chunk["section_title"] = title
-        else:
-            chunk["url"] = url
-            chunk["domain"] = row["domain"]
-            chunk["title"] = title
-            # Format external articles for the compiler prompt
-            chunk["text"] = (
-                f"External article: {title}\n"
-                f"Source: {row['domain'] or row['source_file']}\n"
-                f"URL: {url}\n\n"
-                f"{text}"
-            )[:8000]
-
-        chunks.append(chunk)
-
-    return chunks
+    return [dict(row) for row in rows]
 
 
 def search_textbooks(ukr_keywords: set[str], max_total: int = 40) -> list[dict]:
-    """Search textbook chunks only."""
-    return search_sources(ukr_keywords, source_type="textbook", max_total=max_total)
+    """Search textbook chunks via FTS5."""
+    rows = _fts_search("textbooks_fts", "textbooks", ukr_keywords, max_total)
+    for r in rows:
+        r["_kw_score"] = _kw_score(r.get("text", ""), r.get("title", ""), ukr_keywords)
+        r["source_type"] = "textbook"
+        r["section_title"] = r.get("title", "")
+    return rows
 
 
 def search_external(
@@ -145,15 +99,112 @@ def search_external(
     max_total: int = 10,
     exclude_urls: set[str] | None = None,
 ) -> list[dict]:
-    """Search external articles only."""
-    return search_sources(
-        ukr_keywords, source_type="external",
-        max_total=max_total, exclude_urls=exclude_urls,
-    )
+    """Search external articles via FTS5."""
+    skip = exclude_urls or set()
+    rows = _fts_search("external_fts", "external_articles", ukr_keywords, max_total * 2)
+    results = []
+    for r in rows:
+        if len(results) >= max_total:
+            break
+        url = r.get("url", "")
+        if url in skip:
+            continue
+        r["_kw_score"] = _kw_score(r.get("text", ""), r.get("title", ""), ukr_keywords)
+        r["source_type"] = "external"
+        # Format for compiler prompt
+        title = r.get("title", "")
+        domain = r.get("domain", r.get("source_file", ""))
+        r["text"] = (
+            f"External article: {title}\n"
+            f"Source: {domain}\n"
+            f"URL: {url}\n\n"
+            f"{r.get('text', '')}"
+        )[:8000]
+        results.append(r)
+    return results
+
+
+def search_literary(ukr_keywords: set[str], max_total: int = 20) -> list[dict]:
+    """Search literary texts via FTS5."""
+    rows = _fts_search("literary_fts", "literary_texts", ukr_keywords, max_total)
+    for r in rows:
+        r["_kw_score"] = _kw_score(r.get("text", ""), r.get("title", ""), ukr_keywords)
+        r["source_type"] = "literary"
+    return rows
+
+
+# ── Dictionary lookup functions (indexed tables) ────────────────
+
+
+def _dict_lookup(table: str, word: str, limit: int = 10) -> list[dict]:
+    """Generic headword lookup on an indexed dictionary table."""
+    try:
+        conn = _get_conn()
+    except FileNotFoundError:
+        return []
+
+    # Exact match first, then prefix match
+    rows = conn.execute(
+        f"SELECT * FROM {table} WHERE word = ? COLLATE NOCASE LIMIT ?",
+        (word, limit),
+    ).fetchall()
+
+    if not rows:
+        rows = conn.execute(
+            f"SELECT * FROM {table} WHERE word LIKE ? COLLATE NOCASE LIMIT ?",
+            (f"{word}%", limit),
+        ).fetchall()
+
+    return [dict(r) for r in rows]
+
+
+def search_definitions(word: str, limit: int = 10) -> list[dict]:
+    """Look up word in СУМ-11 (Ukrainian explanatory dictionary)."""
+    return _dict_lookup("sum11", word, limit)
+
+
+def search_etymology(word: str, limit: int = 10) -> list[dict]:
+    """Look up word in Грінченко (historical dictionary)."""
+    return _dict_lookup("grinchenko", word, limit)
+
+
+def translate_en_uk(word: str, limit: int = 10) -> list[dict]:
+    """Look up English→Ukrainian translation in Балла."""
+    return _dict_lookup("balla_en_uk", word, limit)
+
+
+def search_idioms(word: str, limit: int = 10) -> list[dict]:
+    """Look up idioms/expressions in Фразеологічний."""
+    return _dict_lookup("frazeolohichnyi", word, limit)
+
+
+def search_synonyms(word: str, limit: int = 20) -> list[dict]:
+    """Look up synonyms in Ukrajinet WordNet."""
+    try:
+        conn = _get_conn()
+    except FileNotFoundError:
+        return []
+
+    # Search in the 'words' field (comma-separated synset members)
+    rows = conn.execute(
+        "SELECT * FROM ukrajinet WHERE words LIKE ? COLLATE NOCASE LIMIT ?",
+        (f"%{word}%", limit),
+    ).fetchall()
+    return [dict(r) for r in rows]
+
+
+def query_cefr_level(word: str) -> list[dict]:
+    """Look up CEFR level for a word in PULS vocabulary."""
+    return _dict_lookup("puls_cefr", word, limit=5)
+
+
+def search_style_guide(word: str, limit: int = 5) -> list[dict]:
+    """Look up calques/Russianisms in Антоненко-Давидович style guide."""
+    return _dict_lookup("style_guide", word, limit)
 
 
 def lookup_by_url(url: str) -> dict | None:
-    """Look up an article by URL. Handles www/non-www variants."""
+    """Look up an external article by URL. Handles www/non-www variants."""
     try:
         conn = _get_conn()
     except FileNotFoundError:
@@ -161,23 +212,46 @@ def lookup_by_url(url: str) -> dict | None:
 
     normalized = url.replace("://www.", "://")
     row = conn.execute(
-        "SELECT url, title, domain, text FROM sources WHERE url = ? OR url_normalized = ? LIMIT 1",
+        "SELECT * FROM external_articles WHERE url = ? OR url_normalized = ? LIMIT 1",
         (url, normalized),
     ).fetchone()
-
-    if row:
-        return dict(row)
-    return None
+    return dict(row) if row else None
 
 
-def source_count(source_type: str | None = None) -> int:
-    """Return total number of entries in the database."""
+def source_count(table: str | None = None) -> int:
+    """Return entry count for a table, or total across all tables."""
     try:
         conn = _get_conn()
     except FileNotFoundError:
         return 0
-    if source_type:
-        return conn.execute(
-            "SELECT COUNT(*) FROM sources WHERE source_type = ?", (source_type,)
-        ).fetchone()[0]
-    return conn.execute("SELECT COUNT(*) FROM sources").fetchone()[0]
+
+    if table:
+        return conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
+
+    tables = [
+        "textbooks", "external_articles", "literary_texts",
+        "sum11", "grinchenko", "balla_en_uk", "dmklinger_uk_en",
+        "ukrajinet", "wiktionary", "frazeolohichnyi", "puls_cefr", "style_guide",
+    ]
+    return sum(
+        conn.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]
+        for t in tables
+    )
+
+
+def list_tables() -> dict[str, int]:
+    """Return {table_name: count} for all content tables."""
+    try:
+        conn = _get_conn()
+    except FileNotFoundError:
+        return {}
+
+    tables = [
+        "textbooks", "external_articles", "literary_texts",
+        "sum11", "grinchenko", "balla_en_uk", "dmklinger_uk_en",
+        "ukrajinet", "wiktionary", "frazeolohichnyi", "puls_cefr", "style_guide",
+    ]
+    return {
+        t: conn.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]
+        for t in tables
+    }
