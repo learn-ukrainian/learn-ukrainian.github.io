@@ -476,9 +476,19 @@ def _load_external_resources(track: str, slug: str) -> list[dict]:
     actual content. Falls back to reference metadata if not cached.
 
     Keys in the YAML are formatted as "{level}-{slug}" (e.g. "a1-sounds-letters-and-hello").
+
+    Note: slug may include level prefix (e.g. "a2-bridge") or not (e.g. "around-the-city").
+    This function normalizes both formats.
     """
     resources = _get_external_resources()
-    key = f"{track}-{slug}"
+
+    # Normalize slug: if it starts with "{track}-", strip that prefix
+    # This handles both "a2-bridge" and "bridge" style slugs
+    normalized_slug = slug
+    if slug.startswith(f"{track}-"):
+        normalized_slug = slug[len(track) + 1:]  # Remove "{track}-"
+
+    key = f"{track}-{normalized_slug}"
     entry = resources.get(key)
     if not entry:
         return []
