@@ -470,10 +470,11 @@ def _send_review(track: str, slug: str, review_prompt: str,
         result = subprocess.run(
             [
                 sys.executable, "scripts/ai_agent_bridge/__main__.py",
-                "ask-gemini", review_prompt,
+                "ask-gemini", "-",  # Read prompt from stdin (avoids arg length limits)
                 "--task-id", f"wiki-review-{track}-{slug}-{round_label}",
                 "--model", "gemini-3.1-pro-preview",
             ],
+            input=review_prompt,
             capture_output=True, text=True, timeout=300,
             cwd=project_root,
         )
@@ -526,10 +527,11 @@ def _targeted_rewrite(article_path: Path, article_text: str,
         result = subprocess.run(
             [
                 sys.executable, "scripts/ai_agent_bridge/__main__.py",
-                "ask-gemini", rewrite_prompt,
+                "ask-gemini", "-",  # Read prompt from stdin
                 "--task-id", f"wiki-rewrite-{track}-{slug}",
                 "--model", "gemini-3.1-pro-preview",
             ],
+            input=rewrite_prompt,
             capture_output=True, text=True, timeout=600,
             cwd=project_root,
         )
