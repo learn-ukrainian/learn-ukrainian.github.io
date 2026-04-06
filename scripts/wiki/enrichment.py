@@ -233,13 +233,22 @@ def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
 
     # 7. External resources — explicit YAML mappings (URL-matched)
     ext_chunks = _load_external_resources(track, slug)
+    mapped_urls: set[str] = set()
     if ext_chunks:
         print(f"  🌐 +{len(ext_chunks)} external reference sources (mapped)")
         all_chunks.extend(ext_chunks)
+        # Collect URLs to avoid duplicates in keyword search
+        for c in ext_chunks:
+            text = c.get("text", "")
+            for line in text.split("\n")[:5]:
+                if line.startswith("URL: "):
+                    mapped_urls.add(line[5:].strip())
 
-    # 8. External articles — keyword search (same as textbooks, for unmapped modules)
+    # 8. External articles — keyword search (deduped against YAML-mapped URLs)
     if ukr_keywords:
-        ext_kw_chunks = _search_external_articles(ukr_keywords, max_total=10)
+        ext_kw_chunks = _search_external_articles(
+            ukr_keywords, max_total=10, exclude_urls=mapped_urls,
+        )
         if ext_kw_chunks:
             print(f"  🌐 +{len(ext_kw_chunks)} external articles (keyword-matched)")
             all_chunks.extend(ext_kw_chunks)
@@ -388,7 +397,7 @@ def _get_article_cache() -> dict[str, dict]:
     if not cache_dir:
         return _EXT_ARTICLE_CACHE
 
-    for jsonl_name in ["ulp_blogs.jsonl", "other_blogs.jsonl"]:
+    for jsonl_name in ["ulp_blogs.jsonl", "other_blogs.jsonl", "ulp_youtube.jsonl"]:
         jsonl_path = cache_dir / jsonl_name
         if not jsonl_path.exists():
             continue
@@ -411,50 +420,45 @@ def _get_article_cache() -> dict[str, dict]:
 
 
 def _search_external_articles(ukr_keywords: set[str],
-                              max_total: int = 10) -> list[dict]:
-    """Keyword-search cached external JSONL files (ULP blogs, other blogs, YouTube).
+                              max_total: int = 10,
+                              exclude_urls: set[str] | None = None) -> list[dict]:
+    """Keyword-search cached external articles using the in-memory article cache.
 
     Same scoring approach as _load_textbook_chunks: count keyword hits per entry,
     require minimum 2 hits, return top N globally sorted by score.
+    Uses word boundary matching to avoid substring false positives
+    (e.g., "село" matching inside "весело").
     """
-    cache_dir = _get_cache_dir()
-    if not cache_dir:
+    cache = _get_article_cache()
+    if not cache:
         return []
 
+    skip_urls = exclude_urls or set()
     all_scored: list[tuple[int, dict]] = []
     seen_urls: set[str] = set()
 
-    for jsonl_name in ["ulp_blogs.jsonl", "other_blogs.jsonl", "ulp_youtube.jsonl"]:
-        jsonl_path = cache_dir / jsonl_name
-        if not jsonl_path.exists():
+    for url, entry in cache.items():
+        if url in seen_urls or url in skip_urls:
             continue
-        with open(jsonl_path, encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if not line:
-                    continue
-                entry = json.loads(line)
-                url = entry.get("url", "")
-                if url in seen_urls:
-                    continue
-                seen_urls.add(url)
+        seen_urls.add(url)
 
-                text = entry.get("text", "")
-                title = entry.get("title", "")
-                searchable = f"{title} {text}".lower()
-                score = sum(1 for w in ukr_keywords if w in searchable)
-                if score >= 2:
-                    chunk = {
-                        "text": (
-                            f"External article: {title}\n"
-                            f"Source: {entry.get('domain', jsonl_name)}\n"
-                            f"URL: {url}\n\n"
-                            f"{text}"
-                        )[:8000],
-                        "chunk_id": f"ext-kw-{len(all_scored)}",
-                        "source_type": "external_keyword",
-                    }
-                    all_scored.append((score, chunk))
+        text = entry.get("text", "")
+        title = entry.get("title", "")
+        # Word boundary matching: pad with spaces to match whole words only
+        searchable = f" {title} {text} ".lower()
+        score = sum(1 for w in ukr_keywords if f" {w} " in searchable)
+        if score >= 2:
+            chunk = {
+                "text": (
+                    f"External article: {title}\n"
+                    f"Source: {entry.get('domain', 'external')}\n"
+                    f"URL: {url}\n\n"
+                    f"{text}"
+                )[:8000],
+                "chunk_id": f"ext-kw-{len(all_scored)}",
+                "source_type": "external_keyword",
+            }
+            all_scored.append((score, chunk))
 
     all_scored.sort(key=lambda x: -x[0])
     return [chunk for _score, chunk in all_scored[:max_total]]
