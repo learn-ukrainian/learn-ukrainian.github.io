@@ -1,7 +1,0 @@
-- source: auto-generated
-  date: '2026-04-03'
-  error_types:
-  - STRUCTURE
-  - WORD_COUNT
-  status: active
-  note: V6 build failed after 3 attempts
