@@ -23,8 +23,11 @@ Usage:
 """
 
 import argparse
+import html
 import json
+import os
 import re
+import socket
 import subprocess
 import sys
 import time
@@ -44,6 +47,13 @@ BLOG_DELAY = 1.5        # seconds between blog requests
 YOUTUBE_DELAY = 10.0    # seconds between YouTube requests
 YOUTUBE_BATCH_PAUSE = 90  # pause every N videos to avoid rate limit
 YOUTUBE_BATCH_SIZE = 10
+
+# Tor proxy settings — password from env or torrc (local-only control port)
+TOR_SOCKS_PROXY = "socks5://127.0.0.1:9050"
+TOR_CONTROL_PORT = 9051
+TOR_CONTROL_PASSWORD = os.environ.get("TOR_CONTROL_PASSWORD", "")
+COOKIE_FILE = Path("/tmp/yt-cookies.txt")
+MAX_429_RETRIES = 3  # rotate circuit up to 3 times per video
 
 
 def load_external_urls() -> dict[str, list[str]]:
@@ -186,55 +196,212 @@ def get_channel_video_urls(channel_url: str, max_videos: int = 500) -> list[str]
         return []
 
 
-def fetch_youtube_subtitle(video_url: str) -> dict | None:
-    """Fetch Ukrainian or English subtitles for a YouTube video."""
-    video_id = ""
+def _extract_video_id(video_url: str) -> str:
+    """Extract video ID from a YouTube URL."""
     if "v=" in video_url:
-        video_id = video_url.split("v=")[1].split("&")[0]
+        return video_url.split("v=")[1].split("&")[0]
     elif "youtu.be/" in video_url:
-        video_id = video_url.split("youtu.be/")[1].split("?")[0]
+        return video_url.split("youtu.be/")[1].split("?")[0]
+    return ""
 
+
+def _tor_is_running() -> bool:
+    """Check if Tor SOCKS proxy is accepting connections."""
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(2)
+        sock.connect(("127.0.0.1", 9050))
+        sock.close()
+        return True
+    except OSError:
+        return False
+
+
+def _tor_new_circuit() -> bool:
+    """Request a new Tor circuit via the control port.
+
+    Sends SIGNAL NEWNYM to get a fresh exit node (= new IP).
+    Waits 10s for the circuit to establish.
+    """
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(5)
+        sock.connect(("127.0.0.1", TOR_CONTROL_PORT))
+
+        # Read banner
+        sock.recv(1024)
+
+        # Authenticate
+        sock.sendall(f'AUTHENTICATE "{TOR_CONTROL_PASSWORD}"\r\n'.encode())
+        resp = sock.recv(1024).decode()
+        if "250 OK" not in resp:
+            print(f"    ⚠️  Tor auth failed: {resp.strip()}")
+            sock.close()
+            return False
+
+        # Request new circuit
+        sock.sendall(b"SIGNAL NEWNYM\r\n")
+        resp = sock.recv(1024).decode()
+        sock.close()
+
+        if "250 OK" in resp:
+            print("    🔄 New Tor circuit requested, waiting 10s...")
+            time.sleep(10)
+            return True
+        else:
+            print(f"    ⚠️  Tor NEWNYM failed: {resp.strip()}")
+            return False
+    except Exception as e:
+        print(f"    ⚠️  Tor control error: {e}")
+        return False
+
+
+def _ensure_cookie_file() -> Path:
+    """Export Chrome YouTube cookies to a Netscape cookie file for Tor use.
+
+    Cookies authenticate us as a real YouTube user when routing through Tor,
+    since Tor exit nodes are flagged by YouTube's bot detection.
+    """
+    if COOKIE_FILE.exists():
+        # Refresh if older than 1 hour
+        age = time.time() - COOKIE_FILE.stat().st_mtime
+        if age < 3600:
+            return COOKIE_FILE
+
+    try:
+        from pycookiecheat import chrome_cookies
+        cookies = chrome_cookies("https://www.youtube.com")
+        with open(COOKIE_FILE, "w") as f:
+            f.write("# Netscape HTTP Cookie File\n")
+            for name, value in cookies.items():
+                f.write(f".youtube.com\tTRUE\t/\tTRUE\t0\t{name}\t{value}\n")
+        print(f"  🍪 Exported {len(cookies)} YouTube cookies")
+    except Exception as e:
+        print(f"  ⚠️  Cookie export failed: {e}")
+
+    return COOKIE_FILE
+
+
+def _parse_vtt(vtt_text: str) -> str:
+    """Parse VTT subtitle content into plain text."""
+    lines = []
+    for line in vtt_text.split("\n"):
+        line = line.strip()
+        # Skip VTT header, timestamps, empty lines, NOTE blocks, position hints
+        if not line or line.startswith("WEBVTT") or line.startswith("Kind:") \
+                or line.startswith("Language:") or line.startswith("NOTE") \
+                or re.match(r"^\d{2}:\d{2}", line) or re.match(r"^\d+$", line):
+            continue
+        # Strip VTT tags like <c> </c> <00:00:01.234>
+        line = re.sub(r"<[^>]+>", "", line)
+        # Decode HTML entities (&gt; &amp; etc.)
+        line = html.unescape(line)
+        # Strip >> speaker indicators
+        line = re.sub(r"^>>+\s*", "", line)
+        if line:
+            lines.append(line)
+
+    # Deduplicate consecutive identical lines (VTT repeats lines across cues)
+    deduped = []
+    for line in lines:
+        if not deduped or line != deduped[-1]:
+            deduped.append(line)
+
+    text = " ".join(deduped)
+    # Remove [Music], [Applause] etc.
+    text = re.sub(r"\[.*?\]", "", text)
+    text = re.sub(r"\s+", " ", text).strip()
+    return text
+
+
+def _yt_dlp_fetch_sub(video_id: str, lang: str, tmpdir: str,
+                       use_tor: bool) -> subprocess.CompletedProcess:
+    """Run yt-dlp to fetch subtitles, optionally through Tor."""
+    output_template = str(Path(tmpdir) / "%(id)s.%(ext)s")
+    cmd = [
+        sys.executable, "-m", "yt_dlp",
+        "--write-sub", "--write-auto-sub",
+        "--sub-lang", lang,
+        "--sub-format", "vtt",
+        "--skip-download",
+        "--no-warnings",
+        "-o", output_template,
+        f"https://www.youtube.com/watch?v={video_id}",
+    ]
+    if use_tor:
+        cookie_file = _ensure_cookie_file()
+        cmd[3:3] = ["--proxy", TOR_SOCKS_PROXY, "--cookies", str(cookie_file)]
+    else:
+        cmd[3:3] = ["--cookies-from-browser", "chrome"]
+
+    return subprocess.run(cmd, capture_output=True, text=True, timeout=90)
+
+
+def fetch_youtube_subtitle(video_url: str) -> dict | None:
+    """Fetch Ukrainian or English subtitles for a YouTube video via yt-dlp.
+
+    Strategy:
+    1. If Tor is running → route through Tor with exported cookies.
+       On 429, rotate circuit and retry (up to MAX_429_RETRIES times).
+    2. If Tor is not running → use --cookies-from-browser chrome directly.
+    """
+    video_id = _extract_video_id(video_url)
     if not video_id:
         return None
 
-    # youtube_transcript_api v1.2+ uses instance methods
-    try:
-        from youtube_transcript_api import YouTubeTranscriptApi
+    import tempfile
 
-        api = YouTubeTranscriptApi()
+    use_tor = _tor_is_running()
 
+    with tempfile.TemporaryDirectory() as tmpdir:
         # Try Ukrainian first, then English
-        transcript = None
         for lang in ["uk", "en"]:
-            try:
-                transcript = api.fetch(video_id, languages=[lang])
+            for attempt in range(MAX_429_RETRIES + 1):
+                sub_file = Path(tmpdir) / f"{video_id}.{lang}.vtt"
+                # Clean up from previous attempt
+                if sub_file.exists():
+                    sub_file.unlink()
+
+                try:
+                    result = _yt_dlp_fetch_sub(video_id, lang, tmpdir, use_tor)
+                except subprocess.TimeoutExpired:
+                    print(f"    ⏱️  Timeout fetching subs ({lang})")
+                    break  # Don't retry timeouts
+                except Exception as e:
+                    print(f"    ❌ yt-dlp error ({lang}): {e}")
+                    break
+
+                if sub_file.exists():
+                    vtt_text = sub_file.read_text(encoding="utf-8")
+                    text = _parse_vtt(vtt_text)
+
+                    if len(text) < 30:
+                        break  # Try next language
+
+                    title = _get_video_title(video_url)
+
+                    return {
+                        "video_id": video_id,
+                        "url": f"https://www.youtube.com/watch?v={video_id}",
+                        "title": title,
+                        "language": lang,
+                        "text": text[:15000],
+                        "char_count": len(text),
+                    }
+
+                # Check if 429 — rotate circuit and retry
+                is_429 = result.stderr and "429" in result.stderr
+                if is_429 and use_tor and attempt < MAX_429_RETRIES:
+                    print(f"    🚫 429 on {lang} (attempt {attempt + 1}/"
+                          f"{MAX_429_RETRIES})")
+                    _tor_new_circuit()
+                    continue
+
+                # Not a 429 or can't retry — try next language
+                if is_429 and not use_tor:
+                    print("    🚫 429 — start Tor for auto-rotation: "
+                          "tor &")
                 break
-            except Exception:
-                continue
-
-        if transcript and transcript.snippets:
-            text = " ".join(s.text for s in transcript.snippets)
-            # Clean up
-            text = re.sub(r"\[.*?\]", "", text)  # Remove [Music], [Applause] etc.
-            text = re.sub(r"\s+", " ", text).strip()
-
-            if len(text) < 30:
-                return None
-
-            title = _get_video_title(video_url)
-
-            return {
-                "video_id": video_id,
-                "url": f"https://www.youtube.com/watch?v={video_id}",
-                "title": title,
-                "language": transcript.language_code,
-                "text": text[:15000],  # Cap at 15K chars
-                "char_count": len(text),
-            }
-    except ImportError:
-        pass
-    except Exception:
-        pass
 
     return None
 
@@ -242,10 +409,14 @@ def fetch_youtube_subtitle(video_url: str) -> dict | None:
 def _get_video_title(video_url: str) -> str:
     """Get video title via yt-dlp metadata."""
     try:
-        result = subprocess.run(
-            ["yt-dlp", "--print", "title", "--no-download", video_url],
-            capture_output=True, text=True, timeout=30,
-        )
+        cmd = [sys.executable, "-m", "yt_dlp", "--print", "title",
+               "--no-download"]
+        if _tor_is_running():
+            cmd += ["--proxy", TOR_SOCKS_PROXY, "--cookies", str(COOKIE_FILE)]
+        else:
+            cmd += ["--cookies-from-browser", "chrome"]
+        cmd.append(video_url)
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
         return result.stdout.strip()
     except Exception:
         return ""
@@ -268,12 +439,7 @@ def fetch_youtube_subtitles(video_urls: list[str], output_file: Path) -> None:
     output_file.parent.mkdir(parents=True, exist_ok=True)
     with open(output_file, "a", encoding="utf-8") as f:
         for i, url in enumerate(video_urls):
-            # Extract video_id for skip check
-            vid = ""
-            if "v=" in url:
-                vid = url.split("v=")[1].split("&")[0]
-            elif "youtu.be/" in url:
-                vid = url.split("youtu.be/")[1].split("?")[0]
+            vid = _extract_video_id(url)
 
             if vid in existing_ids:
                 skip_count += 1
@@ -332,17 +498,23 @@ def show_status() -> None:
 
 # ── YouTube channels to ingest ────────────────────────────────
 # Each entry: (flag_name, channel_url, output_filename, description)
+# Track mapping (for wiki enrichment):
+#   ulp          → A1-C2 core tracks (pedagogy, grammar, vocabulary)
+#   realna-istoria → HIST, BIO, ISTORIO
+#   imtgsh         → HIST, BIO, ISTORIO
+#   komik-istoryk  → HIST, BIO, ISTORIO
+#   istoria-movy   → OES, RUTH (history of Ukrainian language)
 YOUTUBE_CHANNELS = [
     ("ulp", "https://www.youtube.com/@UkrainianLessons/videos",
      "ulp_youtube.jsonl", "Ukrainian Lessons (Anna Ohoiko) — A1-B2 pedagogy, FMU, podcasts"),
     ("realna-istoria", "https://www.youtube.com/channel/UCdlVTngmxbh0oNE1pCwS64g/videos",
-     "realna_istoria.jsonl", "Реальна Історія — Ukrainian history, decolonization"),
+     "realna_istoria.jsonl", "Реальна Історія — HIST, BIO, ISTORIO"),
     ("imtgsh", "https://www.youtube.com/@imtgsh/videos",
-     "imtgsh.jsonl", "imtgsh — history content"),
+     "imtgsh.jsonl", "imtgsh — HIST, BIO, ISTORIO"),
     ("istoria-movy", "https://www.youtube.com/@Istoria-Movy/videos",
-     "istoria_movy.jsonl", "Istoria-Movy — history of Ukrainian language"),
+     "istoria_movy.jsonl", "Istoria-Movy — OES, RUTH (history of Ukrainian language)"),
     ("komik-istoryk", "https://www.youtube.com/@komikistoryk/videos",
-     "komik_istoryk.jsonl", "Комік Історик — Ukrainian history, entertaining format"),
+     "komik_istoryk.jsonl", "Комік Історик — HIST, BIO, ISTORIO"),
 ]
 
 

@@ -2,14 +2,14 @@
 
 Auto-generated index of compiled wiki articles.
 
-**Total articles:** 45
-**Total words:** 87,504
+**Total articles:** 44
+**Total words:** 83,046
 
 ## Academic
 
 - [Академічна C1: Жанр — Анотація та реферат](academic/c1/abstract-writing.md) (1,783 words)
 - [Академічна C1: Маркери академічного стилю](academic/c1/academic-style-markers.md) (1,813 words)
-- [Академічна C1: Поглиблена пунктуація](academic/c1/advanced-punctuation.md) (2,125 words)
+- [Академічна C1: Поглиблена пунктуація](academic/c1/advanced-punctuation.md) (1,788 words)
 
 ## Folk
 
@@ -43,9 +43,8 @@ Auto-generated index of compiled wiki articles.
 
 ## Grammar
 
-- [Граматика A2: Що ти робив? А що зробив?](grammar/a2/aspect-in-past.md) (1,922 words)
-- [Граматика A2: Студентові, сестрі, дитині](grammar/a2/dative-nouns.md) (2,880 words)
-- [Граматика A2: У мене немає...](grammar/a2/genitive-intro.md) (4,699 words)
+- [Граматика A2: Ласкаво просимо до рівня А2](grammar/a2/a2-bridge.md) (2,880 words)
+- [Граматика A2: Повна картина](grammar/a2/a2-comprehensive-review.md) (2,308 words)
 - [Граматика B1: Абстрактні концепції: ідеї та думки](grammar/b1/abstract-concepts-ideas.md) (2,823 words)
 - [Граматика B1: Активні дієприкметники та їхній стиль](grammar/b1/active-participles-phrases.md) (1,372 words)
 - [Граматика B1: Ступені порівняння прикметників](grammar/b1/adjective-comparison.md) (6,062 words)
@@ -55,7 +54,7 @@ Auto-generated index of compiled wiki articles.
 
 ## Mastery
 
-- [Майстерність C2: Академічне публікування українською мовою](mastery/c2/academic-publishing.md) (1,736 words)
+- [Майстерність C2: Академічне публікування українською мовою](mastery/c2/academic-publishing.md) (1,928 words)
 - [Майстерність C2: Поглиблена риторика](mastery/c2/advanced-rhetoric.md) (3,021 words)
 - [Майстерність C2: Побудова галузевої експертизи](mastery/c2/building-domain-expertise.md) (1,802 words)
 
