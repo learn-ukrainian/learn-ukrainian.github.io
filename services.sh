@@ -27,7 +27,7 @@ declare -A SVC_CMD SVC_PORT SVC_LOG SVC_DESC
 SVC_CMD[rag]="$VENV/python .mcp/servers/rag/server.py --standalone"
 SVC_PORT[rag]=8766
 SVC_LOG[rag]="$LOGS_DIR/rag-server.log"
-SVC_DESC[rag]="RAG MCP Server (Qdrant + embeddings)"
+SVC_DESC[rag]="RAG MCP Server (SQLite FTS5)"
 
 SVC_CMD[api]="$VENV/python -m uvicorn scripts.api.main:app --host 0.0.0.0 --port 8765"
 SVC_PORT[api]=8765
