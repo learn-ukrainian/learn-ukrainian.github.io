@@ -535,7 +535,7 @@ def _send_review(track: str, slug: str, review_prompt: str,
                 "--model", "gemini-3.1-pro-preview",
             ],
             input=review_prompt,
-            capture_output=True, text=True, timeout=300,
+            capture_output=True, text=True, timeout=600,
             cwd=project_root,
         )
     except Exception as e:
