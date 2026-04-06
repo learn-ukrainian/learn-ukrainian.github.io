@@ -248,15 +248,16 @@ def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
         print(f"  ⚠️  No source material found for {track}/{slug}")
         all_chunks = [{"text": f"Topic: {slug.replace('-', ' ')}", "chunk_id": "no-source"}]
     else:
-        # Cap total source material at ~80K chars to fit Gemini context
-        # (prompt template adds ~5K, so 80K source + 5K template ≈ 85K total)
+        # Cap total source material to fit Gemini context window.
+        # Gemini 3.1 Pro has 1M tokens (~4M chars). Prompt template adds ~5K.
+        # 200K chars ≈ 50K tokens — leaves plenty of room for output.
         total_chars = sum(len(c.get("text", "")) for c in all_chunks)
-        if total_chars > 80_000:
+        if total_chars > 200_000:
             capped = []
             char_count = 0
             for chunk in all_chunks:
                 chunk_len = len(chunk.get("text", ""))
-                if char_count + chunk_len > 80_000:
+                if char_count + chunk_len > 200_000:
                     break
                 capped.append(chunk)
                 char_count += chunk_len
