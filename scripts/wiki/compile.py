@@ -800,10 +800,11 @@ def _review_article(article_path: Path, track: str, slug: str,
     review_dir = WIKI_DIR / ".reviews" / str(article_path.parent.relative_to(WIKI_DIR))
     review_dir.mkdir(parents=True, exist_ok=True)
 
-    # Skip if a final review already exists (use --force to re-review)
-    final_review = review_dir / f"{slug}-review.md"
+    # Skip if a PASSING final review already exists (use --force to re-review).
+    # Failed reviews (score < 9) are retried on next run.
+    final_review = review_dir / f"{slug}-review-final.md"
     if final_review.exists() and final_review.stat().st_size > 100:
-        print(f"  ⏭️  Already reviewed: {track}/{slug}")
+        print(f"  ⏭️  Already reviewed (passed): {track}/{slug}")
         return
 
     project_root = str(Path(__file__).resolve().parents[2])
@@ -866,8 +867,9 @@ def _review_article(article_path: Path, track: str, slug: str,
         if score >= 9.0:
             log_event(track, slug, "review_pass", score=score, rounds=round_num)
             print(f"  ✅ Review PASSED ({score}/10)")
-            final_path = review_dir / f"{slug}-review.md"
-            final_path.write_text(review_text, "utf-8")
+            # Write both review.md (always) and review-final.md (pass marker)
+            (review_dir / f"{slug}-review.md").write_text(review_text, "utf-8")
+            (review_dir / f"{slug}-review-final.md").write_text(review_text, "utf-8")
             return
 
         # Step 6: Route — copyedit or structural rewrite?
@@ -954,9 +956,6 @@ def _review_article(article_path: Path, track: str, slug: str,
             if final_applied > 0:
                 article_path.write_text(article_text, "utf-8")
                 print(f"  🔧 Applied {final_applied}/{total_fixes} final fixes")
-
-            review_path = review_dir / f"{slug}-review-final.md"
-            review_path.write_text(review_text, "utf-8")
 
     # Save final review (from last successful round — never empty)
     if review_text:
