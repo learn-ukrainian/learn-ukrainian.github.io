@@ -620,6 +620,42 @@ def _clean_rewrite_response(response: str) -> str | None:
     else:
         return None
 
+    # Duplicate section detection: Gemini sometimes merges old + new article,
+    # producing duplicate H2/H3 headings with overlapping content.
+    h2_headings = re.findall(r"^(##\s+[^\n]+)", response, re.MULTILINE)
+    seen: dict[str, int] = {}
+    for h in h2_headings:
+        normalized = h.strip().lower()
+        seen[normalized] = seen.get(normalized, 0) + 1
+    duplicates = {h: c for h, c in seen.items() if c > 1}
+    if duplicates:
+        # Deduplicate: keep the LAST occurrence of each duplicated section.
+        # Collect all ranges to remove, then apply from end to start
+        # (so earlier indices stay valid).
+        ranges_to_remove: list[tuple[int, int]] = []
+        for dup_heading in duplicates:
+            positions = [
+                m.start() for m in re.finditer(
+                    r"^##\s+[^\n]+", response, re.MULTILINE
+                )
+                if response[m.start():m.end()].strip().lower() == dup_heading
+            ]
+            if len(positions) > 1:
+                for pos in positions[:-1]:
+                    # Skip past current heading line before searching for next
+                    eol = response.index("\n", pos) + 1 if "\n" in response[pos:] else len(response)
+                    next_heading = re.search(r"^#{1,2}\s+", response[eol:], re.MULTILINE)
+                    end = eol + next_heading.start() if next_heading else len(response)
+                    ranges_to_remove.append((pos, end))
+        # Remove from end to start so indices remain valid
+        for start, end in sorted(ranges_to_remove, reverse=True):
+            response = response[:start] + response[end:]
+        dup_names = ", ".join(f"{h} (×{c})" for h, c in duplicates.items())
+        print(f"  🔧  Deduplicated sections: {dup_names}")
+
+    # Strip trailing code fences that aren't part of a code block
+    response = re.sub(r"\n```\s*$", "", response)
+
     # Truncation detection: reject if response ends mid-word or mid-sentence
     # Allow common terminal characters: punctuation, quotes, brackets, pipes
     stripped = response.rstrip()

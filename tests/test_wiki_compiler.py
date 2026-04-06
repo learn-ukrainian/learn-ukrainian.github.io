@@ -854,6 +854,43 @@ class TestCleanRewriteResponse:
         assert "## Академічний контекст" in result
         assert "Fix the sections" not in result
 
+    def test_deduplicates_overlapping_h2_sections(self):
+        """Duplicate H2 sections from rewrite merge → keep last occurrence."""
+        from wiki.compile import _clean_rewrite_response
+        response = (
+            "# Граматика A2: Тест\n\n"
+            "## Рекомендації для вправ\n\n"
+            "Old Phase 1 content that was from the original article.\n\n"
+            "* Phase 2: Old broken content earners identify and correct.\n\n"
+            "## Зв'язки з іншими темами\n\n"
+            "Some links here.\n\n"
+            "## Рекомендації для вправ\n\n"
+            "New clean Phase 1 content from the rewrite.\n\n"
+            "* Phase 2: Proper controlled practice drills.\n\n"
+            "## Зв'язки з іншими темами\n\n"
+            "Updated links here."
+        )
+        result = _clean_rewrite_response(response)
+        assert result is not None
+        # Should keep the LAST occurrence of the duplicate section
+        assert "New clean Phase 1" in result
+        assert "Old Phase 1 content" not in result
+        assert "Old broken content" not in result
+
+    def test_strips_trailing_code_fence(self):
+        """Trailing ``` at end of article is stripped."""
+        from wiki.compile import _clean_rewrite_response
+        response = (
+            "# Граматика A2: Тест\n\n"
+            "## Розділ\n\n"
+            "Content with enough text to pass the minimum length check "
+            "and be considered a valid response by the cleaner.\n"
+            "```"
+        )
+        result = _clean_rewrite_response(response)
+        assert result is not None
+        assert not result.rstrip().endswith("```")
+
 
 # ── Tests: log_event / read_log ─────────────────────────────────
 
