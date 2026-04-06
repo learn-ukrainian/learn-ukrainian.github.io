@@ -799,6 +799,13 @@ def _review_article(article_path: Path, track: str, slug: str,
 
     review_dir = WIKI_DIR / ".reviews" / str(article_path.parent.relative_to(WIKI_DIR))
     review_dir.mkdir(parents=True, exist_ok=True)
+
+    # Skip if a final review already exists (use --force to re-review)
+    final_review = review_dir / f"{slug}-review.md"
+    if final_review.exists() and final_review.stat().st_size > 100:
+        print(f"  ⏭️  Already reviewed: {track}/{slug}")
+        return
+
     project_root = str(Path(__file__).resolve().parents[2])
 
     score = 0.0
