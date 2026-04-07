@@ -66,6 +66,143 @@ Parses `~/.claude/projects/` JSONL session files. Outputs report to `docs/token-
 
 ---
 
+## Wiki Knowledge Base
+
+The wiki is the research layer — compiled reference articles that module writers consume as inline context. Everything is pre-baked so module generation needs zero live API calls.
+
+### Architecture
+
+```
+Plan YAML → Discovery → Sources DB (SQLite FTS5) → Gemini compilation → Wiki article (.md)
+                              ↑
+                    Textbooks (24K chunks)
+                    Literary texts (127K chunks)
+                    External articles (1.2K entries)
+                    Wikipedia (batch-fetched)
+                    Dictionaries (530K entries)
+```
+
+All sources live in `data/sources.db` (SQLite FTS5). No Qdrant, no vector DB, no embedding models.
+
+### Build Sources Database
+
+```bash
+# Build/rebuild the unified SQLite database from all JSONL sources
+.venv/bin/python scripts/wiki/build_sources_db.py
+```
+
+Ingests: textbooks (Google Drive), external articles (`data/external_articles/`), literary texts (Google Drive), 9 dictionaries (Google Drive + local). ~660K entries, ~1.2GB.
+
+### Fetch Wikipedia Articles
+
+```bash
+# Fetch for a specific track (reads plan titles → searches Wikipedia)
+.venv/bin/python scripts/wiki/fetch_wikipedia.py --track folk
+.venv/bin/python scripts/wiki/fetch_wikipedia.py --track hist
+
+# Fetch for all seminar tracks
+.venv/bin/python scripts/wiki/fetch_wikipedia.py --all
+
+# Status
+.venv/bin/python scripts/wiki/fetch_wikipedia.py --status
+```
+
+Rate-limited (1 req/sec). Caches — won't re-fetch existing articles. Stored in `wikipedia` table in `sources.db`.
+
+### Compile Wiki Articles
+
+```bash
+# List available modules for a track
+.venv/bin/python scripts/wiki/compile.py --track a2 --list
+
+# Compile one article (dry run — shows prompt without calling Gemini)
+.venv/bin/python scripts/wiki/compile.py --track a2 --slug genitive-intro --dry-run
+
+# Compile one article
+.venv/bin/python scripts/wiki/compile.py --track a2 --slug genitive-intro
+
+# Compile all articles for a track (skips already-compiled)
+.venv/bin/python scripts/wiki/compile.py --track a2 --all
+
+# Force recompile (even if already done)
+.venv/bin/python scripts/wiki/compile.py --track a2 --slug genitive-intro --force
+
+# Update wiki index
+.venv/bin/python scripts/wiki/compile.py --update-index
+```
+
+Tracks: `a1, a2, b1, b2, c1, c2, folk, hist, bio, istorio, lit, lit-essay, lit-war, lit-hist-fic, lit-youth, lit-fantastika, lit-humor, lit-drama, oes, ruth`
+
+Prompt templates per track type:
+- A1: `compile_pedagogy_brief.md` (methodology, phonetics, vocab boundaries)
+- A2-B2: `compile_grammar_brief.md` (paradigms, frequency, L2 errors)
+- C1-C2: `compile_academic.md` (scholarly register, stylistics)
+- Seminars: `compile_article.md` (primary sources, historiography)
+
+### Quality Gate
+
+```bash
+# Check all compiled articles for problems
+.venv/bin/python scripts/wiki/quality_gate.py
+
+# Check specific track
+.venv/bin/python scripts/wiki/quality_gate.py --track a2
+
+# Auto-clear bad articles for recompile
+.venv/bin/python scripts/wiki/quality_gate.py --fix
+```
+
+Checks: short articles (below min word count), AI noise (thinking leaked), fence wrapping, missing headings, truncation. Run after every batch compilation.
+
+### Fetch External Sources
+
+```bash
+# Fetch ULP blog articles
+.venv/bin/python scripts/wiki/fetch_external_sources.py --ulp-blogs
+
+# Fetch all blogs + all YouTube channels + rebuild DB
+.venv/bin/python scripts/wiki/fetch_external_sources.py --all
+
+# Rebuild sources DB only (after adding new JSONL files)
+.venv/bin/python scripts/wiki/fetch_external_sources.py --build-db
+
+# Show cache status
+.venv/bin/python scripts/wiki/fetch_external_sources.py --status
+```
+
+### Services
+
+```bash
+# Start/stop/restart services
+./services.sh start              # Start all (rag, api, starlight)
+./services.sh start rag          # Start RAG MCP server (SQLite FTS5 backend)
+./services.sh stop rag           # Stop RAG server
+./services.sh restart            # Restart all
+./services.sh status             # Show what's running
+```
+
+RAG MCP Server (port 8766): serves 27 tools via SSE. Backend: SQLite FTS5 (`data/sources.db`). No Qdrant, no BGE-M3.
+
+### Key Files
+
+| File | Purpose |
+|------|---------|
+| `scripts/wiki/compile.py` | Wiki article compiler CLI |
+| `scripts/wiki/compiler.py` | Core compilation logic |
+| `scripts/wiki/enrichment.py` | Source enrichment pipeline |
+| `scripts/wiki/sources_db.py` | SQLite FTS5 query functions |
+| `scripts/wiki/build_sources_db.py` | Database builder |
+| `scripts/wiki/fetch_wikipedia.py` | Wikipedia batch fetcher |
+| `scripts/wiki/fetch_external_sources.py` | External source fetcher |
+| `scripts/wiki/quality_gate.py` | Article quality checker |
+| `scripts/wiki/state.py` | Progress tracking (SQLite) |
+| `.mcp/servers/rag/server.py` | MCP RAG server |
+| `.mcp.json` | MCP server configuration |
+| `data/sources.db` | Unified SQLite database (~660K entries) |
+| `wiki/.state/progress.db` | Compilation progress (SQLite) |
+
+---
+
 ## Module Creation Pipeline
 
 The complete module creation and validation pipeline:
@@ -1457,583 +1594,6 @@ Activity_quality 📋 Quality validation available (optional)
 
 ---
 
-## Track Scoring Verification System
-
-**Purpose:** Automated scoring for curriculum tracks enabling objective 10/10 scoring without manual estimation.
-
-### Overview
-
-The system extracts quantitative metrics from curriculum modules and calculates weighted scores per track. All measurements are deterministic (no LLM calls), ensuring reproducible results.
-
-**Architecture:**
-```
-Layer 1: Metric Extraction (scripts/scoring/metrics.py)
-   ↓ Extracts callouts, agency markers, toponyms, citations, etc.
-Layer 2: Track Aggregation (scripts/scoring/aggregator.py)
-   ↓ Applies track-specific weights and critical caps
-Output: Verified 10/10 score with evidence
-```
-
-### Quick Start
-
-```bash
-# Score a single track
-npm run score:hist
-
-# Score all tracks (summary table)
-npm run score:all
-
-# Extract raw metrics (for debugging)
-npm run metrics:extract hist
-```
-
-### Scripts
-
-| Script | Purpose | Command |
-|--------|---------|---------|
-| `score_track.py` | Score tracks with weighted criteria | `npm run score:hist` |
-| `extract_track_metrics.py` | Extract raw metrics from modules | `npm run metrics:extract hist` |
-
-### npm Scripts
-
-```bash
-npm run score:hist     # Score HIST track
-npm run score:bio      # Score BIO track
-npm run score:istorio     # Score ISTORIO track
-npm run score:lit         # Score LIT track
-npm run score:all         # Score all tracks (summary)
-npm run metrics:extract   # Extract raw metrics
-```
-
-### Supported Tracks
-
-| Track | Modules | Key Criteria |
-|-------|---------|--------------|
-| `hist` | 140 | Historical accuracy, primary sources, decolonization |
-| `istorio` | 30 | Source criticism, methodology, thematic coherence |
-| `bio` | 128 | Biographical accuracy, legacy, cultural context |
-| `lit` | 30 | Literary depth, authentic texts, stylistic devices |
-| `a1`-`c2` | varies | Grammar/content coverage, skills balance, CEFR alignment |
-
-### Key Metrics Extracted
-
-- **Callouts:** `[!quote]`, `[!myth-buster]`, `[!history-bite]`, `[!analysis]`
-- **Agency markers:** Ukrainian subjects with active verbs (decolonization metric)
-- **Toponym compliance:** Colonial vs. correct Ukrainian place names
-- **Cross-references:** Internal links between modules
-- **Citation ratio:** Direct quotes vs. total text (for LIT track)
-- **Stylistic devices:** Literary terms and analysis sections
-
-### Critical Failure Caps
-
-Certain conditions cap maximum scores regardless of other criteria:
-
-| Condition | Cap | Track |
-|-----------|-----|-------|
-| 0 `[!myth-buster]` callouts | Decolonization ≤ 4/10 | HIST |
-| 0 `[!quote]` blocks | Primary sources ≤ 3/10 | HIST/BIO |
-| Citation ratio < 5% | Authentic engagement ≤ 5/10 | LIT |
-| 0 cross-references | Internal consistency ≤ 5/10 | All |
-
-### Sample Output
-
-```
-══════════════════════════════════════════════════════════════════
-  HIST: Ukrainian History Scoring Report
-  Generated: 2026-02-02 | Modules: 140 | Coverage: 100%
-══════════════════════════════════════════════════════════════════
-
-CRITERIA SCORES:
-│ Criterion                       │ Weight │ Score │ Weighted │
-│ Audit Pass Rate                 │   15%  │ 10.0  │   1.50   │
-│ Primary Source Integration      │   15%  │ 10.0  │   1.50   │
-│ Decolonization Perspective      │   10%  │  8.0  │   0.80   │
-...
-│ TOTAL                           │  100%  │       │   9.35   │
-
-FINAL SCORE: 9.35/10
-```
-
-### Documentation
-
-Full technical documentation: `scripts/scoring/README.md`
-
----
-
-## Two-Stage Pipeline: Otaman + Hetman
-
-The pipeline is split into two stages for throughput optimization:
-
-- **Otaman** (`/otaman`) — Content sprint: prose only, no activities. ~30-60 min/module.
-- **Hetman** (`/hetman`) — Activity enrichment: adds activities, vocabulary, and final review.
-
-This split allows content generation to sprint ahead while activities (the bottleneck phase) are added later.
-
-### Architecture
-
-```
-User → /otaman {track} {num}  (Gemini interactive mode)
-         │
-    ┌────▼─────┐
-    │ OTAMAN   │  Content sprint (Phases 0-6b, prose only)
-    └────┬─────┘
-         │ dispatches via ai_agent_bridge
-    ┌────┼────────────┐
-    ▼                 ▼
- YELLOW (yw-)      GREEN (gr-)
- Builder           Reviewer (prose only)
- --stdout-only     --stdout-only
-    │                 │
-    ▼                 ▼
-  Phases 0-2, 4-fix  Phase 6 (prose review)
-  Phase 6b fixes
-         │
-    ┌────▼─────┐
-    │ content  │  ✅ Content-complete (activities deferred)
-    │ complete │
-    └────┬─────┘
-         │
-User → /hetman {track} {num}  (later, when capacity available)
-         │
-    ┌────▼─────┐
-    │ HETMAN   │  Activity enrichment (Phases 3, 4, 7)
-    └────┬─────┘
-         │
-    ┌────┼────────────┐
-    ▼                 ▼
- YELLOW (yw-)      FR (fr-)
- Activities        Final Review
- --stdout-only     --allow-write --delimiters
-    │                 │
-    ▼                 ▼
-  Phase 3           Phase 7 (adversarial)
-  Phase 4 (full)    3rd session, no memory
-         │
-    ┌────▼─────┐
-    │ CLAUDE   │  Spot-check only (1 in 5 modules)
-    └──────────┘
-```
-
-### Usage
-
-```bash
-# Stage 1: Content sprint (GEMINI skills — run in Gemini interactive mode)
-/otaman b1 5           # [Gemini] Prose-only rebuild of B1 module 5
-/otaman bio 12      # [Gemini] Prose-only rebuild of BIO module 12
-/otaman hist        # [Gemini] Batch: all remaining modules in track
-
-# Stage 2: Activity enrichment (GEMINI skills)
-/hetman b1 5           # [Gemini] Add activities + final review to B1 module 5
-/hetman bio         # [Gemini] Batch: enrich all content-complete modules
-
-# Full E2E mode (GEMINI skill — content + activities + review, no otaman needed)
-/hetman b1 5 --full    # [Gemini] Full pipeline for a single module
-/hetman bio --full  # [Gemini] Batch: all incomplete modules from scratch
-
-# After Hetman completes (CLAUDE skill):
-/final-review b1 5     # [Claude] Final QA (~5 turns)
-
-# Content-only audit (used by otaman)
-scripts/audit_module.sh --skip-activities curriculum/l2-uk-en/{level}/{file}.md
-
-# Batch verification (run AFTER Gemini finishes to catch lies)
-.venv/bin/python scripts/verify_track.py {track}              # Verify all modules in track
-.venv/bin/python scripts/verify_track.py {track} --range 1-5  # Verify modules 1-5 only
-.venv/bin/python scripts/verify_track.py {track} --full       # Require full pass (not just content-complete)
-.venv/bin/python scripts/verify_track.py {track} --quick      # Fast: cached status, skip re-audit
-
-# Per-module verification gates (Gemini MUST run before declaring success)
-.venv/bin/python scripts/otaman_verify.py curriculum/l2-uk-en/{track}/{slug}.md  # Content-complete
-.venv/bin/python scripts/hetman_verify.py curriculum/l2-uk-en/{track}/{slug}.md  # Fully-complete
-
-# Batch scan for structural activity errors (run after large Gemini batches)
-.venv/bin/python scripts/scan_activity_errors.py                    # Scan all tracks
-.venv/bin/python scripts/scan_activity_errors.py --track b2 hist # Scan specific tracks
-```
-
-### Module Builder v5 (Current — `build_module_v5.py`)
-
-`scripts/build_module_v5.py` — clean pipeline with VESUM morphological validation,
-textbook-grounded content generation, and no v3/v4 legacy code. State: `state-v5.json`.
-
-```bash
-# Single module — full E2E
-.venv/bin/python scripts/build_module_v5.py {track} {num}
-
-# Build entire track (skips already-passing modules)
-.venv/bin/python scripts/build_module_v5.py {track} --all
-
-# Build a range of modules
-.venv/bin/python scripts/build_module_v5.py {track} --range 1-20
-
-# Nuke state and rebuild from scratch
-.venv/bin/python scripts/build_module_v5.py {track} {num} --rebuild
-
-# Restart from a specific phase onward
-.venv/bin/python scripts/build_module_v5.py {track} {num} --restart-from content
-
-# Re-run a single phase
-.venv/bin/python scripts/build_module_v5.py {track} {num} --force-phase validate
-
-# Dry-run (show plan, no LLM dispatches)
-.venv/bin/python scripts/build_module_v5.py {track} {num} --dry-run
-
-# Just verify (run audit, print PASS/FAIL, exit)
-.venv/bin/python scripts/build_module_v5.py {track} {num} --verify
-
-# + Review: optional Claude QA gate
-.venv/bin/python scripts/build_module_v5.py {track} {num} --review
-
-# Review via Claude (cross-agent: Gemini builds, Claude reviews)
-.venv/bin/python scripts/build_module_v5.py {track} {num} --review-claude
-
-# Stop before a phase
-.venv/bin/python scripts/build_module_v5.py {track} {num} --stop-before review
-
-# Content via Claude Opus instead of Gemini
-.venv/bin/python scripts/build_module_v5.py {track} {num} --use-claude B
-
-# All generation phases via Claude (research + content + activities)
-.venv/bin/python scripts/build_module_v5.py {track} {num} --use-claude "A B C"
-
-# Custom Claude model for content
-.venv/bin/python scripts/build_module_v5.py {track} {num} --use-claude B --claude-model-B claude-sonnet-4-6
-```
-
-**Pipeline v5 phases:**
-```
-research    (research+meta)         [Gemini or Claude via --use-claude A]
-→ discover  (video+blog search)     [Gemini Flash; non-blocking]
-→ content   (prose)                 [Gemini or Claude via --use-claude B]
-→ activities (activities+vocab)     [Gemini or Claude via --use-claude C]
-→ validate  (audit+screen+fix)      [deterministic + Gemini fix loop]
-→ [review: Claude QA gate, --review/--review-claude to enable]
-→ mdx       (MDX generation, no LLM)
-```
-
-**Key v5 improvements over v4:**
-- Textbook-grounded generation: RAG textbook excerpts as primary complexity anchor (#819)
-- Morphological validator: deterministic grammar constraint checking via VESUM tags
-- Russicism detection: 9K+ LanguageTool replacement rules
-- Agreement checking: adj-noun gender/case mismatch detection
-- Multi-model dispatch: `--use-claude` routes phases to Claude Opus/Sonnet
-- Clean state management (no v3/v4 prefix legacy)
-
-> **v4 (`build_module.py`) and v3 are RETIRED.** Do not use them.
-
-**Legacy v3 phases (--v3 flag):**
-```
-Phase A (research+meta) → B (content) → C (activities) → audit → D (review) → [F] → E (MDX)
-```
-
-**v3 vs v2:**
-- Phase A = v2's phases 0 + 0.5 + 1 (1 call instead of 3)
-- Phase C = Claude writes activities (better quality than Gemini-only)
-- Phase D = v2's phases 6 + 6b + 7 (1-2 calls instead of 3+)
-- Phase F = Claude final review with fix iterations (replaces Gemini adversarial review)
-- Track context injected into Phases B + C for cross-module consistency
-- State: `state-v3.json` (no conflict with v2's `state.json`)
-- Templates: `phase-A-seminar.md`, `phase-A-core.md`, `phase-D-review-fix.md`
-- Shared utilities: `scripts/pipeline_lib.py` (extracted from v1+v2 in #671)
-
-### Shared Utility Library
-
-`scripts/pipeline_lib.py` — all shared functions used by v3 and external scripts.
-Extracted from the former v1 (`build_module.py`) and v2 (`build_module_v2.py`) in #671.
-
-Contains: `dispatch_gemini` (with rate-limit fallback), `dispatch_gemini_raw` (no fallback),
-`mark_phase` (thread-safe via FileLock), state helpers, template helpers, verify helpers,
-archive detection/restoration, Phase B/E/F delegates, preflight, logging, config tables.
-
-### Legacy (RETIRED)
-
-`scripts/build_module.py` — v4 pipeline, **RETIRED**. Use `build_module_v5.py`.
-`scripts/build_module_v2.py` — **deleted** (#671).
-
-### Key Components
-
-| Component | Location | Purpose |
-|-----------|----------|---------|
-| **Module builder v5** | `scripts/build_module_v5.py` | **Current pipeline** |
-| Pipeline v5 phases | `scripts/pipeline_v5.py` | Phase implementations + state |
-| Shared utilities | `scripts/pipeline_lib.py` | Dispatch, state, verify, config |
-| Final review (Claude) | `claude_extensions/commands/final-review.md` | Claude cross-agent QA |
-| Final review (Gemini) | `.gemini/skills/final-review/SKILL.md` | Gemini adversarial QA |
-| Verify gates | `scripts/otaman_verify.py`, `scripts/hetman_verify.py` | Hard pass/fail gates |
-| Template filler | `scripts/fill_template.py` | Fill phase templates with placeholders |
-| AI agent bridge | `scripts/ai_agent_bridge/__main__.py` | Dispatch to Gemini with `--allow-write`, `--delimiters` |
-| State persistence | `orchestration/{slug}/state.json` | Crash recovery |
-| Batch dispatcher | `scripts/batch_dispatcher.py` | Autonomous batch scheduling (old pipeline) |
-
-### Pipeline Phases
-
-**Otaman (content sprint):**
-
-| Phase | Action | Agent | Mode |
-|-------|--------|-------|------|
-| 0 | Research | Yellow Gemini | `--stdout-only` |
-| 1 | Meta rebuild | Yellow Gemini | `--stdout-only` |
-| 2 | Content writing (sharded) | Yellow Gemini | `--stdout-only` |
-| 4 | Content-only audit + fix loop (max 3) | Local + Yellow fixes | `--allow-write` |
-| 5 | MDX generation + status | Local | -- |
-| 6 | Prose review | Green Gemini (new session) | `--stdout-only` |
-| 6b | Apply prose fixes + IPA lint | Yellow + local | `--allow-write` |
-
-**Hetman (activity enrichment):**
-
-| Phase | Action | Agent | Mode |
-|-------|--------|-------|------|
-| 3 | Activities + vocabulary | Yellow Gemini | `--stdout-only` |
-| 4 | Full audit + fix loop (max 3) | Local + Yellow fixes | `--allow-write` |
-| 5 | MDX regeneration | Local | -- |
-| 7 | **Final review (adversarial)** | **FR Gemini (3rd session)** | `--allow-write --delimiters` |
-
-### Dispatch Modes
-
-The bridge (`ai_agent_bridge`) supports three execution modes:
-
-| Flag | Mode | Permissions | Used By |
-|------|------|------------|---------|
-| `--stdout-only` | READ-ONLY | Text output only, no file writes, no bash | Phases 0-3, 6 |
-| `--allow-write` | FULL-EXECUTION | Bash + file read/write | Phases 4 fixes, 6b, 7 |
-| `--allow-write --delimiters X,Y` | FULL-EXECUTION + specific tags | Same + model knows exact output delimiters | Phase 7 |
-
-**Silence Protocol:** In `--allow-write` mode, the system prompt enforces a **silence protocol** — the agent emits zero text between tool calls. Only the final delimited output is produced. This prevents the "planning loop" where the agent narrates instead of executing, wasting tokens and risking timeout.
-
-**Private Scratchpad:** Agents can use `<!-- thinking: ... -->` XML comments for internal reasoning (case endings, dates, IPA) without breaking the silence protocol. These don't count as narration and won't affect MDX builds or word counts.
-
-### Template Filling
-
-The Otaman/Hetman use `scripts/fill_template.py` to fill phase templates with computed placeholders:
-
-```bash
-.venv/bin/python scripts/fill_template.py \
-  --template claude_extensions/phases/gemini/phase-2-content.md \
-  --placeholders orchestration/{slug}/placeholders.yaml \
-  --output orchestration/{slug}/phase-2-prompt.md
-```
-
-Placeholders are computed once during pre-flight and stored in `orchestration/{slug}/placeholders.yaml`.
-
-### Crash Recovery
-
-State is persisted to `orchestration/{slug}/state.json` after every phase transition. On re-invocation, the orchestrator reads the state file and resumes from the last incomplete phase.
-
-### Content-Only Audit
-
-The `--skip-activities` flag enables content-only audits that defer activity/vocab gates:
-
-```bash
-scripts/audit_module.sh --skip-activities curriculum/l2-uk-en/{level}/{file}.md
-```
-
-Deferred gates serialize as `"status": "deferred"` in the status JSON, enabling:
-- Otaman to pass content-only audits without activities
-- `batch_otaman.py` to distinguish content-complete from fully-passing modules
-- Hetman to find modules that need activity enrichment
-
-### Verification Gates
-
-Hard pass/fail scripts that Gemini MUST run before declaring a module complete. These replace LLM self-assessment with deterministic checks.
-
-**Why these exist:** Gemini sometimes shortcuts conditional bash logic and declares success without running the actual audit. These scripts are the single source of truth — exit 0 = PASS, exit 1 = FAIL.
-
-**`scripts/otaman_verify.py`** — Content-complete gate (used after Otaman):
-```bash
-.venv/bin/python scripts/otaman_verify.py curriculum/l2-uk-en/{track}/{slug}.md
-```
-Checks: runs audit with `--skip-activities`, reads status JSON (no failing gates), verifies orchestration artifacts (phase-2 sections, placeholders.yaml).
-
-**`scripts/hetman_verify.py`** — Fully-complete gate (used after Hetman):
-```bash
-.venv/bin/python scripts/hetman_verify.py curriculum/l2-uk-en/{track}/{slug}.md
-```
-Checks: runs FULL audit (no `--skip-activities`), ALL gates must pass (no deferred, no fail), activities YAML and vocabulary YAML must exist.
-
-**`scripts/scan_activity_errors.py`** — Batch structural correctness scanner:
-```bash
-.venv/bin/python scripts/scan_activity_errors.py                     # All tracks
-.venv/bin/python scripts/scan_activity_errors.py --track b2 hist  # Selected tracks
-```
-Scans every `activities/*.yaml` file for 5 structural errors that the YAML schema cannot catch. Exit 0 = clean, exit 1 = critical errors found.
-
-Detects:
-| Error type | What it catches |
-|---|---|
-| `SELECT_MIN_CORRECT_MISMATCH` | `min_correct` ≠ actual count of `correct: true` options per question |
-| `QUIZ_CORRECT_COUNT` | Quiz items with 0 or 2+ correct answers (must be exactly 1) |
-| `FILL_IN_ANSWER_NOT_IN_OPTIONS` | `answer` not present in the `options` list — student can never select correct answer |
-| `TRANSLATE_CORRECT_COUNT` | Translate items with 0 or 2+ correct options (must be exactly 1) |
-| `MARK_THE_WORDS_ANSWER_NOT_IN_TEXT` | Answer word absent from the activity `text` — student cannot mark it |
-
-These same checks run automatically inside `audit_module.sh` (hooked into `audit/core.py`). The batch scanner is for spotting errors across many modules at once after a Gemini build batch.
-
----
-
-## Batch Dispatcher (Autonomous Scheduler)
-
-**Purpose:** Autonomous scheduler that processes all 20 tracks (~1,250 modules) in priority order, dispatching to `batch_gemini_runner.py`, handling quota/failures, and rotating between tracks.
-
-**Philosophy:** Slow but steady. Run continuously, one track at a time, hammering Gemini until everything is done. On quota hit → pause 30min, switch track, come back later. On stall → try once more, then move on, revisit later.
-
-### Quick Start
-
-```bash
-# Continuous mode — process everything until done
-.venv/bin/python scripts/batch_dispatcher.py run
-
-# Single cycle — pick one track, dispatch, exit
-.venv/bin/python scripts/batch_dispatcher.py run --one-shot
-
-# Dry run — show priorities without dispatching
-.venv/bin/python scripts/batch_dispatcher.py scan
-
-# Show current dispatcher state
-.venv/bin/python scripts/batch_dispatcher.py status
-
-# Force a specific track
-.venv/bin/python scripts/batch_dispatcher.py dispatch-one --track bio
-
-# Focus on specific tracks
-.venv/bin/python scripts/batch_dispatcher.py run --include-tracks hist bio lit
-
-# Exclude tracks
-.venv/bin/python scripts/batch_dispatcher.py run --exclude-tracks a1 b1 b2
-
-# Safety timeout (stop after 12 hours)
-.venv/bin/python scripts/batch_dispatcher.py run --max-runtime-hours 12
-```
-
-### Track Priority Order
-
-| # | Track | Modules | Type | Prerequisites |
-|---|-------|---------|------|---------------|
-| 1 | a1 | 44 | core | — |
-| 2 | a2 | 70 | core | a1 ≥80% |
-| 3 | b1 | 92 | core | a2 ≥80% |
-| 4 | b2 | 94 | core | b1 ≥80% |
-| 5 | c1 | 106 | core | b2 ≥80% |
-| 6 | hist | 140 | seminar | b1 ≥80% |
-| 7 | bio | 128 | seminar | b2 ≥80% |
-| 8 | istorio | 98 | seminar | hist ≥80%, c1 ≥30% |
-| 9 | lit | 30 | seminar | b2 ≥80% |
-| 10-15 | lit-* | varies | seminar | lit ≥80% |
-| 16 | oes | 102 | seminar | c1 ≥80% |
-| 17 | ruth | 79 | seminar | c1 ≥80% |
-| 18 | b2-pro | 15 | core | b1 ≥80% |
-| 19 | c1-pro | 48 | core | c1 ≥80% |
-| 20 | c2 | 100 | core | c1 ≥80% |
-
-Dependencies are satisfied at **80% pass rate** — don't block on a few stalled modules.
-
-### Dependency Graph
-
-```
-A1 → A2 → B1 → B2 → C1 → C2
-               │      │     ├→ OES
-               │      │     ├→ RUTH
-               │      │     └→ C1-PRO
-               │      ├→ BIO
-               │      ├→ LIT → lit-essay, lit-hist-fic, lit-fantastika,
-               │      │        lit-war, lit-humor, lit-juvenile
-               │      └→ HIST → ISTORIO (also needs C1 ≥30%)
-               └→ B2-PRO
-```
-
-### State Machine (per track)
-
-```
-PENDING → ELIGIBLE → RUNNING → DONE
-                ↑        ↓
-                ← COOLDOWN (quota hit, 30min pause)
-                ↑        ↓
-                ← STALLED (2x zero-progress, revisit later)
-```
-
-- **PENDING**: Not yet evaluated
-- **ELIGIBLE**: Dependencies met, ready to dispatch
-- **RUNNING**: Currently dispatched as subprocess
-- **COOLDOWN**: Quota hit or timeout, waiting 30min before retry
-- **STALLED**: 2 consecutive dispatches with zero progress; revisited after all other eligible tracks processed
-- **DONE**: All modules passing audit
-- **BLOCKED**: Prerequisites not met
-
-### Execution Strategy
-
-| Condition | Strategy |
-|-----------|----------|
-| Track has unbuilt modules (no .md or <500 bytes) | `--mode auto` (builds new, fixes existing) |
-| Track has content, some failing | `--mode fix --retry-failures` |
-| Track 100% done | Skip (DONE) |
-
-### Monitoring
-
-**State file:** `batch_state/dispatcher_state.json`
-
-Contains per-track state, stall counts, cooldowns, dispatch history, and global stats.
-
-```bash
-# Quick status check
-.venv/bin/python scripts/batch_dispatcher.py status
-
-# Full scan with priorities
-.venv/bin/python scripts/batch_dispatcher.py scan
-```
-
-### Troubleshooting
-
-| Issue | Solution |
-|-------|----------|
-| Track stuck in STALLED | Will auto-promote to ELIGIBLE after full rotation. Or use `dispatch-one --track X` to force |
-| All tracks BLOCKED | Check dependency pass rates with `scan`. Build prerequisite tracks first |
-| Quota hits every dispatch | Normal — dispatcher auto-rotates to other tracks and retries after cooldown |
-| Want to focus on specific tracks | Use `--include-tracks` or `--exclude-tracks` |
-| Need to stop safely | Ctrl+C (SIGINT) — finishes current module, saves state, exits cleanly |
-
-### Files
-
-| File | Purpose |
-|------|---------|
-| `scripts/batch_dispatcher.py` | Main dispatcher (entry point) |
-| `scripts/batch_dispatcher_config.py` | Track definitions, deps, weights, constants |
-| `batch_state/dispatcher_state.json` | Persistent state (tracks, history, stats) |
-
-### Batch API Endpoints (Web UI)
-
-The FastAPI server (`scripts/api/main.py`) exposes batch state as REST endpoints for the Batch Manager playground (`playground-batch-manager.html`).
-
-**Start the server:**
-
-```bash
-npm run api            # Start on port 8765
-npm run api:reload     # Start with auto-reload (development)
-```
-
-**Endpoints:**
-
-| Endpoint | Method | Returns |
-|----------|--------|---------|
-| `/api/batch/dispatcher` | GET | Full dispatcher state (tracks, stats, history) |
-| `/api/batch/state/{track}` | GET | Batch state for a specific track |
-| `/api/batch/failures` | GET | Global failure queue array |
-| `/api/batch/failures/{track}` | GET | Detailed failure records for a track |
-| `/api/batch/usage` | GET | API usage summaries merged across all tracks |
-| `/api/batch/health` | GET | Health check: lock status, running tracks, last activity |
-| `/api/batch/dispatcher/start` | POST | Start dispatcher process (body: `{one_shot, dry_run, track, include_tracks, exclude_tracks}`) |
-| `/api/batch/dispatcher/stop` | POST | Stop running dispatcher process |
-| `/api/batch/dispatcher/running` | GET | Check if dispatcher is running |
-| `/ws/batch` | WS | Real-time change notifications (pushes changed track names every 2s) |
-
-**Data sources:** Read endpoints use `batch_state/` directory (pure file reads). Dispatcher start/stop uses `subprocess.Popen` to manage the dispatcher process.
-
-**Real-time updates:** The WebSocket endpoint at `/ws/batch` pushes lightweight change notifications by monitoring file mtimes. Clients fetch full data via REST only for changed tracks, reducing polling overhead.
-
-**Browser notifications:** The Batch Manager UI can send browser notifications when tracks reach 50% or 100% completion. Click the bell icon in the header to enable.
-
-**Playground:** The Batch Manager auto-detects whether the API server is running. If available, uses API endpoints + WebSocket; otherwise falls back to direct file fetches via `../batch_state/` with 5s polling.
-
----
-
 ## Level Status Generation
 
 ### generate_level_status.py
@@ -2846,105 +2406,3 @@ npm run pipeline l2-uk-en a1 5  # In terminal 2
 
 ---
 
-## Review Files
-
-Review files are generated in `audit/` subdirectories alongside source modules. They consolidate all validation results in one place.
-
-**Location:** `curriculum/l2-uk-en/{level}/audit/{module-slug}-review.md`
-
-**Structure:**
-
-```markdown
-# Audit Report: 05-my-world-objects.md
-
-**Phase:** A1 | **Level:** A1 | **Pedagogy:** "PPP" | **Target:** 600
-**Overall Status:** ✅ PASS
-
-## Gates
-
-- **Words:** ✅ 650/600
-- **Activities:** ✅ 8/6
-- **Vocab:** ✅ 20/15
-- ...
-
-## MDX VALIDATION
-
-✅ No issues found
-
-## HTML VALIDATION
-
-✅ Renders correctly (8 interactive elements)
-
-## Section Audit
-
-| Section        | Status | Count | Notes               |
-| -------------- | ------ | ----- | ------------------- |
-| **Intro**      | ✅     | 85    | Included in Core    |
-| **quiz: Test** | 🎮     | 10    | Activity (10 items) |
-
-...
-```
-
-**Section Order:**
-
-1. **Header** - Module info and overall status
-2. **Gates** - Audit gate results (word count, activities, etc.)
-3. **MDX VALIDATION** - Content integrity check results
-4. **HTML VALIDATION** - Browser rendering check results
-5. **Section Audit** - Per-section breakdown
-
-**Generation:**
-
-- `audit_module.py` creates/updates Gates and Section Audit
-- `validate_mdx.py` adds/updates MDX VALIDATION section
-- `validate_html.py` adds/updates HTML VALIDATION section
-
-Each validator updates only its section, preserving other content.
-
----
-
-## Library Structure
-
-```
-scripts/
-├── # Python Pipeline (Primary)
-├── pipeline.py           # Unified validation pipeline
-├── generate_mdx.py       # MDX generator for Starlight
-├── generate_json.py      # Vibe JSON generator
-├── validate_mdx.py       # MDX content validator
-├── validate_html.py      # Browser rendering validator (Playwright)
-├── audit_module.py       # Module quality checker
-│
-├── audit/                # Python audit library
-│   ├── __init__.py
-│   ├── core.py           # Main audit logic
-│   ├── config.py         # Level-specific constraints
-│   ├── cleaners.py       # Text cleaning utilities
-│   ├── report.py         # Review file generation and updates
-│   └── checks/           # Individual check modules
-│       ├── activities.py
-│       ├── grammar.py
-│       ├── pedagogy.py
-│       └── meta_validator.py  # Meta YAML validation (NEW)
-│
-├── # TypeScript (Vocabulary + Legacy)
-├── vocab-*.ts            # Vocabulary scripts
-├── module-audit.ts       # Module quality checker (legacy)
-├── generate-mdx.ts       # MDX generator (legacy, kept for reference)
-└── lib/
-    ├── index.ts          # Main exports
-    ├── types.ts          # TypeScript types (Level, ModuleType, etc.)
-    ├── vocab-sqlite.ts   # SQLite vocabulary helpers
-    ├── utils/
-    │   ├── index.ts      # Utility exports
-    │   ├── files.ts      # File operations
-    │   └── markdown.ts   # Markdown parsing helpers
-    └── parsers/
-        ├── index.ts      # Parser exports
-        ├── frontmatter.ts    # YAML frontmatter parsing
-        ├── sections.ts       # Section parsing
-        ├── vocabulary.ts     # Vocabulary table parsing
-        └── activities/       # Activity type parsers
-```
-
-**Note:** Core pipeline has been ported to Python for reliability and maintainability. TypeScript vocabulary scripts remain active. Python requires `.venv/bin/python` (Python 3.12).
