@@ -54,7 +54,7 @@ Key changes from earlier versions:
 | Level | Prose | Словník |
 |-------|-------|---------|
 | A1 | All words | All words |
-| A2 | None (under review) | All words |
+| A2 | None | All words |
 | B1+ | Vocab only | All words |
 | Seminar | None | N/A |
 
