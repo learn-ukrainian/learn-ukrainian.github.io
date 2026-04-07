@@ -1,6 +1,6 @@
 # Build Summary: food-and-drink (A1)
 
-Generated: 2026-04-04 01:07
+Generated: 2026-04-07 17:08
 
 ## Pipeline Phases
 
@@ -19,8 +19,8 @@ Generated: 2026-04-04 01:07
 | enrich | complete | 2026-04-03 23:03:19 |
 | verify | complete | 2026-04-03 23:03:19 |
 | review | complete | 2026-04-03 23:07:13 |
-| stress | complete | 2026-04-03 23:07:16 |
-| publish | complete | 2026-04-03 23:07:17 |
+| stress | complete | 2026-04-07 15:08:52 |
+| publish | complete | 2026-04-07 15:08:58 |
 
 ## Reviews
 
@@ -46,6 +46,7 @@ Generated: 2026-04-04 01:07
 
 ## Files
 
+- `.build.lock`
 - `correction-attempt-1.md`
 - `exercise-verification.json`
 - `pre-verify-results.md`

@@ -1,6 +1,6 @@
 # Build Summary: where-to (A1)
 
-Generated: 2026-04-01 13:42
+Generated: 2026-04-07 17:08
 
 ## Pipeline Phases
 
@@ -18,9 +18,8 @@ Generated: 2026-04-01 13:42
 | vocab | complete | 2026-03-30 12:42:18 |
 | enrich | complete | 2026-03-30 12:42:19 |
 | verify | complete | 2026-03-30 12:42:19 |
-| review | complete | 2026-04-01 11:42:29 |
-| stress | complete | 2026-04-01 11:42:36 |
-| publish | complete | 2026-04-01 11:42:37 |
+| stress | complete | 2026-04-07 15:08:26 |
+| publish | complete | 2026-04-07 15:08:27 |
 
 ## Reviews
 
@@ -50,6 +49,7 @@ Generated: 2026-04-01 13:42
 - `quick-verify.json`
 - `research-quality.json`
 - `review-structured-r1.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`

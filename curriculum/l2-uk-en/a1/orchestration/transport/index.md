@@ -1,6 +1,6 @@
 # Build Summary: transport (A1)
 
-Generated: 2026-04-01 13:42
+Generated: 2026-04-07 17:08
 
 ## Pipeline Phases
 
@@ -18,9 +18,8 @@ Generated: 2026-04-01 13:42
 | vocab | complete | 2026-03-30 12:58:47 |
 | enrich | complete | 2026-03-30 12:58:47 |
 | verify | complete | 2026-03-30 12:58:48 |
-| review | complete | 2026-04-01 11:42:41 |
-| stress | complete | 2026-04-01 11:42:41 |
-| publish | complete | 2026-04-01 11:42:47 |
+| stress | complete | 2026-04-07 15:08:27 |
+| publish | complete | 2026-04-07 15:08:33 |
 
 ## Reviews
 
@@ -52,6 +51,7 @@ Generated: 2026-04-01 13:42
 - `quick-verify.json`
 - `research-quality.json`
 - `review-structured-r1.yaml`
+- `review-structured.md`
 - `skeleton.md`
 - `state.json`
 - `v6-activities-prompt.md`
