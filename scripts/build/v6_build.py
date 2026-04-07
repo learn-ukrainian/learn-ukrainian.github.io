@@ -610,10 +610,11 @@ def _is_seminar_track(level: str) -> bool:
 
 
 def step_research(level: str, module_num: int, slug: str) -> Path | None:
-    """Step 3: Build knowledge packet.
+    """Step 3: Build knowledge packet from wiki + discovery data.
 
-    Core tracks: RAG textbook search → knowledge packet.
-    Seminar tracks: wiki articles + discovery data → knowledge packet.
+    All tracks (core and seminar) use wiki articles as the primary knowledge
+    source.  RAG textbook search is no longer used — the wiki compiler already
+    distils textbook + literary + Wikipedia sources into verified articles.
     """
     _log(f"\n{'='*60}")
     _log("  Step 3: RESEARCH — Knowledge packet")
@@ -623,28 +624,22 @@ def step_research(level: str, module_num: int, slug: str) -> Path | None:
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / f"{slug}-knowledge-packet.md"
 
-    if _is_seminar_track(level):  # noqa: SIM108
-        packet = _build_seminar_packet(level, slug)
-    else:
-        packet = _build_core_packet(level, slug)
+    # All tracks use wiki-based packets (wiki articles + discovery + plan refs)
+    packet = _build_wiki_packet(level, slug)
 
     output_path.write_text(packet, "utf-8")
     word_count = len(packet.split())
     _log(f"  ✅ Knowledge packet built ({word_count} words)")
     _log(f"  → {output_path}")
 
-    # Assess research quality (core tracks only — seminars use wiki quality)
-    if not _is_seminar_track(level):
-        _assess_research_quality(output_path, level, slug)
-
     return output_path
 
 
-def _build_seminar_packet(level: str, slug: str) -> str:
-    """Build knowledge packet for seminar tracks from wiki + discovery.
+def _build_wiki_packet(level: str, slug: str) -> str:
+    """Build knowledge packet from wiki articles + discovery data + plan refs.
 
-    Wiki articles are compiled from primary sources — they're curated,
-    structured, and verified. No need for raw RAG search.
+    Wiki articles are compiled from primary sources (textbooks, literary texts,
+    Wikipedia) — they're curated, structured, and verified.  Used for ALL tracks.
     """
     import yaml as _yaml
 
@@ -725,48 +720,6 @@ def _build_seminar_packet(level: str, slug: str) -> str:
         lines.append("")
 
     return "\n".join(lines)
-
-
-def _build_core_packet(level: str, slug: str) -> str:
-    """Build knowledge packet for core tracks from RAG textbook search."""
-    from research.build_knowledge_packet import build_packet
-
-    plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
-    _log("  Building knowledge packet from plan + RAG...")
-    packet = build_packet(plan_path)
-
-    result_count = packet.count("> **Source:**")
-    _log(f"  📖 {result_count} textbook excerpts found")
-
-    return packet
-
-
-def _assess_research_quality(output_path: Path, level: str, slug: str) -> None:
-    """Assess research quality for core tracks."""
-    try:
-        from research.research_quality import assess_research_compat
-
-        assessment = assess_research_compat(output_path, level)
-        if assessment and assessment.get("score") is not None:
-            score = assessment["score"]
-            quality = assessment.get("quality", "unknown")
-            _log(f"  Research quality: {score}/10 ({quality})")
-
-            if score < 7:
-                _log("  ⚠️  Research quality below 7/10 — topic may have limited textbook coverage")
-
-            import json
-            orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
-            orch_dir.mkdir(parents=True, exist_ok=True)
-            assess_path = orch_dir / "research-quality.json"
-            assess_path.write_text(
-                json.dumps(assessment, indent=2, ensure_ascii=False, default=str),
-                "utf-8",
-            )
-        else:
-            _log("  ℹ️  Research quality: no rubric for this track")
-    except Exception as e:
-        _log(f"  ⚠️  Research quality assessment failed: {e}")
 
 
 def step_pre_verify(level: str, module_num: int, slug: str,
@@ -3939,8 +3892,7 @@ def _apply_review_fixes(review_text: str, content_path: Path) -> tuple[bool, int
 def _get_knowledge_packet_for_rewrite(level: str, slug: str) -> str:
     """Get knowledge packet for section rewrites.
 
-    For seminar tracks this contains wiki articles (compiled knowledge).
-    For core tracks this contains RAG textbook excerpts.
+    Contains wiki articles + discovery data (compiled knowledge).
     Returns empty string if no packet exists.
     """
     packet_path = CURRICULUM_ROOT / level / "research" / f"{slug}-knowledge-packet.md"

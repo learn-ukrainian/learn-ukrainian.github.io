@@ -1,7 +1,7 @@
 """Wiki context provider — supplies compiled wiki articles to the build pipeline.
 
 Given a track and slug, finds and returns relevant wiki articles as formatted
-context for injection into seminar build prompts.
+context for injection into build prompts (all tracks — core and seminar).
 """
 
 from pathlib import Path
@@ -15,14 +15,14 @@ WIKI_CONTEXT_BUDGET = 30_000
 
 
 def get_wiki_context(track: str, slug: str) -> str:
-    """Get formatted wiki context for a seminar module build.
+    """Get formatted wiki context for a module build.
 
     Finds wiki articles relevant to the track/slug and returns them
     as a formatted markdown block ready for prompt injection.
 
     Args:
-        track: Seminar track (e.g., "folk", "hist", "bio").
-        slug: Module slug (e.g., "dumy-lytsarski").
+        track: Any track (e.g., "a2", "folk", "hist", "bio").
+        slug: Module slug (e.g., "genitive-intro", "dumy-lytsarski").
 
     Returns:
         Formatted markdown string with wiki articles, or empty string
