@@ -195,7 +195,7 @@ def test_correction_directive():
     assert "<correction_directive>" in directive
     assert "Too short: 500 words" in directive
     assert "Latin chars found" in directive
-    assert "FROM SCRATCH" in directive
+    assert "Fix ONLY the listed errors" in directive
 
 
 def test_correction_directive_empty():

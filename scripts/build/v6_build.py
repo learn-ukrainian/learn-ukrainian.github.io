@@ -4952,7 +4952,7 @@ def main():
     # not in prose — annotator heteronym bugs cause more harm than good at
     # beginner levels where every word is new).
     _SKIP_ANNOTATE_TRACKS = {"hist", "bio", "istorio", "lit", "folk", "oes", "ruth"}
-    _SKIP_ANNOTATE_LEVELS = {"a1", "a2"}
+    _SKIP_ANNOTATE_LEVELS = {"a2"}
     _skip_annotate = (
         args.level.lower() in _SKIP_ANNOTATE_TRACKS
         or args.level.lower().startswith("lit-")
@@ -4960,7 +4960,7 @@ def main():
     )
     if steps in ("all", "review", "publish", "annotate") and "stress" not in completed_phases:
         if _skip_annotate:
-            reason = "seminar track" if args.level.lower() not in _SKIP_ANNOTATE_LEVELS else "A1/A2 — stress in словník only"
+            reason = "seminar track" if args.level.lower() not in _SKIP_ANNOTATE_LEVELS else "A2 — stress in словník only"
             _log(f"\n  ⏭️  Skipping stress marks ({reason})")
         else:
             step_annotate(content_path)

@@ -430,7 +430,8 @@ def build_correction_directive(results: list[QuickVerifyError]) -> str:
 
     lines = ["<correction_directive>",
              "CRITICAL: Your previous attempt failed the following checks. "
-             "Write the module FROM SCRATCH. All original constraints still apply.\n"]
+             "Fix ONLY the listed errors. Keep everything else exactly as is — "
+             "do not rewrite sections that are working correctly.\n"]
 
     for r in results:
         if r.severity == "ERROR":
