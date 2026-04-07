@@ -893,8 +893,8 @@ def step_skeleton(level: str, module_num: int, slug: str,
     packet = ""
     if packet_path and packet_path.exists():
         packet = packet_path.read_text("utf-8")
-        if len(packet) > 8000:
-            packet = packet[:8000] + "\n\n... (truncated for context window)"
+        if len(packet) > 30_000:
+            packet = packet[:30_000] + "\n\n... (truncated for context window)"
 
     word_target = plan.get("word_target", 1200)
     phase = plan.get("phase", "")
@@ -1056,9 +1056,21 @@ def _build_chunk_prompt(
     word_target = section["words"] or 300  # fallback if no budget in skeleton
     phase = plan.get("phase", "")
 
+    # Resolve persona for chunk prompt (same logic as single-call path)
+    _CHUNK_PERSONAS = {
+        "a1": "a patient and supportive Ukrainian tutor",
+        "a2": "an encouraging Ukrainian language guide and conversation partner",
+        "b1": "an experienced Ukrainian language instructor and cultural guide",
+        "b2": "a senior Ukrainian language and culture specialist",
+        "c1": "a Ukrainian language and literature scholar",
+        "c2": "a master Ukrainian philologist",
+    }
+    level_lower = level.lower().split("-")[0]
+    persona_desc = _CHUNK_PERSONAS.get(level_lower, "a knowledgeable Ukrainian language educator")
+
     section_prompt = f"""# Section-by-Section Generation — Section {section_index + 1}/{total_sections}
 
-You are writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
+You are {persona_desc}, writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
 
 **Module:** {module_num}: {plan.get("title", slug)} ({level.upper()}, {phase})
 **Section to write:** {section["title"]}
@@ -1115,7 +1127,7 @@ Continue naturally from where the previous section ended. Do not re-introduce co
 - **NO IPA, NO Latin transliteration** — describe sounds by comparison.
 - **Ukrainian quotes: «...»** for Ukrainian text.
 - **Place exercise markers only** — write `<!-- INJECT_ACTIVITY: type, topic hint -->` where the skeleton places exercises. Do NOT write :::quiz or :::fill-in DSL directly.
-- **NO meta-commentary** — no "In this section we will...", no vocabulary tables, no word count notes.
+- **You are a warm teacher** — natural teacher phrasing is fine. Avoid ONLY: self-congratulatory openers, gamified language, empty filler. No vocabulary tables or word count notes.
 - **Zero Russian, zero Surzhyk, zero calques.**
 - **Every bold Ukrainian word MUST have an English translation on first use.**
 - **NO stress marks** — a deterministic tool adds them later.
@@ -1168,8 +1180,8 @@ def step_write_chunked(
     packet = ""
     if packet_path and packet_path.exists():
         packet = packet_path.read_text("utf-8")
-        if len(packet) > 8000:
-            packet = packet[:8000] + "\n\n... (truncated for context window)"
+        if len(packet) > 30_000:
+            packet = packet[:30_000] + "\n\n... (truncated for context window)"
 
     # Load write template for reference (used to pull content rules)
     is_seminar = _is_seminar_track(level)
