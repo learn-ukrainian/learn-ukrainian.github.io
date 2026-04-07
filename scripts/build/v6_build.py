@@ -2815,9 +2815,12 @@ def step_activities(
     # Load module content
     module_content = content_path.read_text("utf-8")
 
-    # Extract injection markers from prose
+    # Extract injection markers from prose — writers use various formats:
+    # <!-- INJECT_ACTIVITY: quiz-case-identification -->  (strict kebab-case)
+    # <!-- INJECT_ACTIVITY: quiz, Case Identification Drill -->  (type + description)
+    # <!-- INJECT_ACTIVITY: quiz, Case Identification Drill, 8 items -->  (with count)
     injection_markers = re.findall(
-        r"<!--\s*INJECT_ACTIVITY:\s*([a-z0-9][a-z0-9-]*)\s*-->", module_content
+        r"<!--\s*INJECT_ACTIVITY:\s*(.+?)\s*-->", module_content
     )
     if injection_markers:
         markers_text = "\n".join(f"- `<!-- INJECT_ACTIVITY: {m} -->`" for m in injection_markers)
@@ -4812,6 +4815,26 @@ def main():
         _log("  Step 5b: EXERCISES — Skipped (ACTIVITIES step handles exercises)")
         _log(f"{'='*60}")
         _save_v6_state(args.level, slug, "exercises")
+
+    # Normalize INJECT_ACTIVITY markers before activities step.
+    # Writers produce various formats:
+    #   <!-- INJECT_ACTIVITY: quiz, Case Identification Drill, 8 items -->
+    #   <!-- INJECT_ACTIVITY: quiz-case-identification -->
+    # Normalize all to kebab-case: <!-- INJECT_ACTIVITY: quiz-case-identification-drill -->
+    if content_path and content_path.exists():
+        _content = content_path.read_text("utf-8")
+        _raw_markers = re.findall(r"(<!--\s*INJECT_ACTIVITY:\s*)(.+?)(\s*-->)", _content)
+        if _raw_markers:
+            for prefix, marker_text, suffix in _raw_markers:
+                # Normalize: lowercase, strip counts like "8 items", replace non-alnum with hyphens
+                normalized = re.sub(r",?\s*\d+\s*items?", "", marker_text)  # strip "8 items"
+                normalized = normalized.lower().strip().strip(",")
+                normalized = re.sub(r"[^a-z0-9]+", "-", normalized).strip("-")
+                old = f"{prefix}{marker_text}{suffix}"
+                new = f"<!-- INJECT_ACTIVITY: {normalized} -->"
+                if old != new:
+                    _content = _content.replace(old, new, 1)
+            content_path.write_text(_content, "utf-8")
 
     # Step 5e: ACTIVITIES — structured YAML generation (#1042)
     if steps in ("all", "activities") and "activities" not in completed_phases:
