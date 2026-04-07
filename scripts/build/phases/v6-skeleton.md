@@ -1,4 +1,4 @@
-<!-- version: 1.0.0 | updated: 2026-03-27 -->
+<!-- version: 2.0.0 | updated: 2026-04-07 | wiki replaces RAG -->
 # V6 Skeleton Prompt — Module Structure Planning
 
 You are planning the detailed paragraph-level structure of a Ukrainian language module. Do NOT write the full content — only plan the structure.
@@ -19,9 +19,9 @@ Create a detailed paragraph-level skeleton for module **{MODULE_NUM}: {TOPIC_TIT
 
 ---
 
-## Knowledge Packet (textbook excerpts from RAG)
+## Wiki Teaching Brief
 
-Skim these for content ideas. Reference specific examples you plan to use.
+Skim this for the key concepts, paradigms, and examples you must cover. Reference specific examples from the article that you plan to use in each paragraph.
 
 <knowledge_packet>
 {KNOWLEDGE_PACKET}

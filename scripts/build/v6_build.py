@@ -1329,11 +1329,12 @@ def step_write(level: str, module_num: int, slug: str,
     plan_content = plan_path.read_text("utf-8")
     plan = yaml.safe_load(plan_content)
 
-    # Load knowledge packet
+    # Load knowledge packet (wiki-compiled articles — authoritative teaching content)
     packet = packet_path.read_text("utf-8") if packet_path and packet_path.exists() else ""
-    # Truncate if too long (keep concise as Gemini requested)
-    if len(packet) > 8000:
-        packet = packet[:8000] + "\n\n... (truncated for context window)"
+    # Wiki articles are 25-30K chars of compiled pedagogy.  Gemini's 1M context
+    # handles this easily.  Truncation loses curated teaching content.
+    if len(packet) > 30_000:
+        packet = packet[:30_000] + "\n\n... (truncated for context window)"
 
     # Build section titles
     sections = plan.get("content_outline", [])
@@ -1421,8 +1422,7 @@ def step_write(level: str, module_num: int, slug: str,
         "{CORRECTION_SECTION}": "",  # Populated below for seminar templates
     }
 
-    # Wiki context is in the knowledge packet (step_research handles it for seminars).
-    # to avoid duplicate context confusing the writer.
+    # Wiki context is in the knowledge packet (step_research handles it for all tracks).
 
     # Build skeleton/correction blocks for seminar template placeholders
     if is_seminar and skeleton:
