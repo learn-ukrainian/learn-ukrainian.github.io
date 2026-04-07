@@ -140,6 +140,34 @@ def search_literary(ukr_keywords: set[str], max_total: int = 20) -> list[dict]:
     return rows
 
 
+def search_wikipedia(ukr_keywords: set[str], max_total: int = 10) -> list[dict]:
+    """Search Wikipedia articles via FTS5."""
+    try:
+        conn = _get_conn()
+        # Check if wikipedia table exists
+        tables = [r[0] for r in conn.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name='wikipedia'"
+        ).fetchall()]
+        if "wikipedia" not in tables:
+            return []
+    except (FileNotFoundError, Exception):
+        return []
+
+    rows = _fts_search("wikipedia_fts", "wikipedia", ukr_keywords, max_total)
+    for r in rows:
+        r["_kw_score"] = _kw_score(r.get("text", ""), r.get("title", ""), ukr_keywords)
+        r["source_type"] = "wikipedia"
+        # Format for compiler prompt
+        title = r.get("title", "")
+        url = r.get("url", "")
+        r["text"] = (
+            f"Wikipedia: {title}\n"
+            f"URL: {url}\n\n"
+            f"{r.get('text', '')}"
+        )[:10000]
+    return rows
+
+
 # ── Dictionary lookup functions (indexed tables) ────────────────
 
 

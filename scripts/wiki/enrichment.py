@@ -71,7 +71,15 @@ def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
             print(f"  📖 +{len(tb_chunks)} textbook chunks (cross-search)")
             all_chunks.extend(tb_chunks)
 
-    # 5. Local data enrichment
+    # 5. Wikipedia — for ALL tracks (factual grounding)
+    if ukr_keywords:
+        from .sources_db import search_wikipedia
+        wiki_chunks = search_wikipedia(ukr_keywords, max_total=10)
+        if wiki_chunks:
+            print(f"  🌐 +{len(wiki_chunks)} Wikipedia articles ({len(ukr_keywords)} keywords)")
+            all_chunks.extend(wiki_chunks)
+
+    # 6. Local data enrichment
     local_chunks = _load_local_data(track, slug)
     if local_chunks:
         print(f"  📄 +{len(local_chunks)} chunks from local data")
