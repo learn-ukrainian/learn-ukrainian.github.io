@@ -3467,6 +3467,7 @@ def step_review(content_path: Path, level: str, module_num: int,
         "{PHASE}": plan.get("phase", ""),
         "{WRITER_MODEL}": writer_model,
         "{WORD_TARGET}": str(plan.get("word_target", 1200)),
+        "{WORD_CEILING}": str(int(plan.get("word_target", 1200) * 1.5)),
         "{PLAN_CONTENT}": plan_content,
         "{GENERATED_CONTENT}": generated_content,
     }
