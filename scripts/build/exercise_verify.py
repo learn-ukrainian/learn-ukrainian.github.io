@@ -36,6 +36,15 @@ class ExerciseItem:
 
 
 @dataclass
+class UnjumbleIssue:
+    """A problem detected in an unjumble activity item."""
+
+    sentence: str  # the correct sentence
+    issue_type: str  # "comma_in_tile" | "ambiguous_order"
+    detail: str
+
+
+@dataclass
 class VerifyResult:
     """Result of exercise verification for one module."""
 
@@ -43,6 +52,7 @@ class VerifyResult:
     grounded_items: int = 0
     ungrounded: list[dict] = field(default_factory=list)
     vocab_coverage: dict = field(default_factory=dict)  # plan vocab check
+    unjumble_issues: list[UnjumbleIssue] = field(default_factory=list)
 
     @property
     def all_grounded(self) -> bool:
@@ -302,6 +312,65 @@ def extract_prose_words(content: str) -> set[str]:
     return words
 
 
+def _check_unjumble_issues(activities: dict) -> list[UnjumbleIssue]:
+    """Check unjumble activities for structural problems.
+
+    Detects:
+    1. Commas/semicolons inside word tiles — invisible to learner in UI
+    2. Short sentences (≤4 words) with flexible word order — multiple valid solutions
+    """
+    issues: list[UnjumbleIssue] = []
+
+    for section_key in ("inline", "workbook"):
+        for activity in activities.get(section_key, []) or []:
+            if not isinstance(activity, dict):
+                continue
+            if activity.get("type") != "unjumble":
+                continue
+
+            for item in activity.get("items", []) or []:
+                if not isinstance(item, dict):
+                    continue
+
+                words = item.get("words", [])
+                correct = item.get("correct_order", item.get("answer", ""))
+
+                # Build the sentence for reporting
+                if isinstance(correct, list):
+                    sentence = " ".join(correct)
+                elif isinstance(correct, str):
+                    sentence = correct
+                else:
+                    sentence = " ".join(words) if words else ""
+
+                # Check 1: commas/semicolons inside tiles
+                for w in words:
+                    w_str = str(w)
+                    # Allow final punctuation (.!?) on last word, but flag commas/semicolons
+                    if "," in w_str or ";" in w_str:
+                        issues.append(UnjumbleIssue(
+                            sentence=sentence,
+                            issue_type="comma_in_tile",
+                            detail=f"tile \"{w_str}\" contains comma/semicolon — invisible in UI",
+                        ))
+
+                # Check 2: short sentences with flexible word order
+                # Ukrainian has free word order — sentences ≤4 content words
+                # almost always have multiple valid orderings
+                content_words = [
+                    w for w in words
+                    if len(str(w).rstrip(".,!?:;—")) >= 2  # skip single-char
+                ]
+                if len(content_words) <= 4 and len(content_words) >= 3:
+                    issues.append(UnjumbleIssue(
+                        sentence=sentence,
+                        issue_type="ambiguous_order",
+                        detail=f"{len(content_words)} content words — likely multiple valid orderings in Ukrainian",
+                    ))
+
+    return issues
+
+
 def extract_plan_vocab(plan: dict) -> set[str]:
     """Extract Ukrainian words from plan vocabulary_hints."""
     from pipeline.vocab_helpers import extract_vocab_words
@@ -367,6 +436,10 @@ def verify_exercises(
                 "role": item.role,
             })
 
+    # Check unjumble activities for structural problems
+    if activities:
+        result.unjumble_issues = _check_unjumble_issues(activities)
+
     # Check plan vocab coverage separately
     if plan_vocab:
         exercise_words = {item.word.replace("\u0301", "") for item in exercise_items}
@@ -423,6 +496,29 @@ def format_verify_result(result: VerifyResult) -> str:
             f"  Summary: {result.grounded_items}/{result.total_items} grounded, "
             f"{len(answers)} answer gaps, {len(context)} context gaps"
         )
+
+    # Unjumble structural issues
+    if result.unjumble_issues:
+        comma_issues = [i for i in result.unjumble_issues if i.issue_type == "comma_in_tile"]
+        order_issues = [i for i in result.unjumble_issues if i.issue_type == "ambiguous_order"]
+
+        if comma_issues:
+            lines.append(
+                f"  ⚠️ {len(comma_issues)} unjumble tile(s) have commas — invisible in UI:"
+            )
+            for issue in comma_issues[:5]:
+                lines.append(f"    → {issue.detail} — \"{issue.sentence}\"")
+            if len(comma_issues) > 5:
+                lines.append(f"    ... and {len(comma_issues) - 5} more")
+
+        if order_issues:
+            lines.append(
+                f"  ⚠️ {len(order_issues)} unjumble sentence(s) may have multiple valid orderings:"
+            )
+            for issue in order_issues[:5]:
+                lines.append(f"    → \"{issue.sentence}\" ({issue.detail})")
+            if len(order_issues) > 5:
+                lines.append(f"    ... and {len(order_issues) - 5} more")
 
     if result.vocab_coverage:
         vc = result.vocab_coverage

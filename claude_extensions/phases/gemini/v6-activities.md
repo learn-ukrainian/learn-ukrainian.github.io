@@ -253,6 +253,15 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 10. **Explanations for true-false and error-correction** — help the learner understand WHY
 11. **Test LANGUAGE, not trivia** — exercises must test Ukrainian language skills. Not "In what year..." factual recall.
 
+**UNJUMBLE — critical rules (Ukrainian has flexible word order!):**
+12. **No commas or semicolons inside tiles** — punctuation like `,` and `;` is invisible in the UI. Only sentence-final punctuation (`.!?`) on the LAST word is allowed. If the sentence has commas, either rephrase without commas or choose a different sentence.
+13. **Only sentences with ONE unambiguous word order** — Ukrainian allows "Вона завжди мені допомагала" AND "Мені завжди допомагала вона" AND "Завжди мені вона допомагала." If multiple orderings are valid, DO NOT use that sentence. Good unjumble sentences have structural constraints that force one order:
+    - Prepositional phrases: "Ми їдемо **до** Одеси" (до + genitive must stay together)
+    - Fixed expressions: "Як тебе звати?" (fixed phrase)
+    - Sentences with 5+ words including particles, prepositions, conjunctions that anchor position
+    - BAD: "Вона завжди мені допомагала" (4 content words, free order)
+    - GOOD: "Завтра ми їдемо до Одеси на екскурсію." (prepositions anchor word positions)
+
 ---
 
 ## Verification Tools (MCP)
