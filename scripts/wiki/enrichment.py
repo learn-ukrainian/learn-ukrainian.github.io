@@ -38,9 +38,13 @@ def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
     """
     all_chunks: list[dict] = []
 
-    # 1. Discovery inline chunks
-    all_chunks.extend(sources_info.get("literary_chunks", []))
-    all_chunks.extend(sources_info.get("textbook_chunks", []))
+    # 1. Discovery inline chunks — these are the original plan sources,
+    # give them a high base score so they survive capping.
+    # Shallow-copy to avoid mutating the caller's data.
+    for chunk in sources_info.get("literary_chunks", []):
+        all_chunks.append({**chunk, "_kw_score": 100})
+    for chunk in sources_info.get("textbook_chunks", []):
+        all_chunks.append({**chunk, "_kw_score": 100})
     discovery_count = len(all_chunks)
 
     # Extract Ukrainian keywords from discovery for searching
@@ -113,23 +117,32 @@ def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
         all_chunks = [{"text": f"Topic: {slug.replace('-', ' ')}", "chunk_id": "no-source"}]
     else:
         # Cap total source material to fit Gemini context window.
-        # Cap at 120K chars (~30K tokens). Fits all textbook chunks + top external
-        # articles without hitting Gemini rate limits from oversized prompts.
+        # Higher levels and seminars produce longer articles from richer sources —
+        # give them more context. A1/A2 articles are 1-2K words, C2 articles are 3K+.
+        char_caps = {
+            "a1": 80_000, "a2": 100_000,
+            "b1": 120_000, "b2": 120_000,
+            "c1": 150_000, "c2": 150_000,
+        }
+        # Seminars get the same cap as C1/C2 — deep content needs deep sources
+        char_cap = char_caps.get(track, 150_000)
+
         total_chars = sum(len(c.get("text", "")) for c in all_chunks)
-        if total_chars > 120_000:
+        if total_chars > char_cap:
             # Sort by keyword score (highest first) so best content from ANY
             # source type survives capping — not just whatever was added first.
+            # Discovery chunks have _kw_score=100 so they always survive.
             scored = sorted(all_chunks, key=lambda c: c.get("_kw_score", 0), reverse=True)
             capped = []
             char_count = 0
             for chunk in scored:
                 chunk_len = len(chunk.get("text", ""))
-                if char_count + chunk_len > 120_000:
+                if char_count + chunk_len > char_cap:
                     continue  # Skip large chunks, keep checking smaller ones
                 capped.append(chunk)
                 char_count += chunk_len
             print(f"  ✂️  Capped from {len(all_chunks)} to {len(capped)} chunks "
-                  f"({total_chars:,} → {char_count:,} chars)")
+                  f"({total_chars:,} → {char_count:,} chars, cap: {char_cap:,})")
             all_chunks = capped
 
         print(f"  📊 Total: {len(all_chunks)} chunks "

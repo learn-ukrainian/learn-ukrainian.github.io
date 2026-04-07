@@ -186,12 +186,18 @@ def _format_sources(sources: list[dict]) -> str:
     return "\n\n---\n\n".join(parts)
 
 
-def _call_gemini(prompt: str, *, max_retries: int = 3) -> str | None:
+def _call_gemini(prompt: str, *, max_retries: int = 5) -> str | None:
     """Call Gemini CLI with the prompt and return the response.
 
     Uses the same pattern as the agent bridge: pipe prompt to stdin,
-    capture stdout.
+    capture stdout. Timeout scales with prompt size — larger prompts
+    (C2, seminars) need more time for generation.
     """
+    # Scale timeout: 300s base + 4s per 1K chars of prompt.
+    # A1 (80K chars) → ~620s. C2/seminar (150K chars) → ~900s.
+    timeout_s = 300 + len(prompt) // 250
+    timeout_s = min(timeout_s, 1200)  # Hard cap at 20 min
+
     for attempt in range(max_retries):
         try:
             gemini_cmd = [GEMINI_CLI, "-m", GEMINI_MODEL, "--approval-mode=yolo"]
@@ -209,7 +215,7 @@ def _call_gemini(prompt: str, *, max_retries: int = 3) -> str | None:
             # Use communicate() for input — handles large prompts and
             # avoids deadlocks from pipe buffer filling up
             try:
-                stdout, stderr = proc.communicate(input=prompt, timeout=900)
+                stdout, stderr = proc.communicate(input=prompt, timeout=timeout_s)
             except subprocess.TimeoutExpired:
                 proc.kill()
                 stdout, stderr = proc.communicate()
