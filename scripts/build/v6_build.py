@@ -1601,6 +1601,27 @@ def step_write(level: str, module_num: int, slug: str,
     output_dir = CURRICULUM_ROOT / level
     output_path = output_dir / f"{slug}.md"
 
+    # Inject plan-point checklist as the LAST thing in the prompt.
+    # Recency effect: the LLM attends most to what it just read.
+    # This prevents the #1 review rejection: "plan point X was not covered."
+    checklist_items = []
+    for s in plan.get("content_outline", []):
+        for p in s.get("points", []):
+            checklist_items.append(f"- [ ] {str(p)[:120]}")
+    if checklist_items:
+        checklist = (
+            "\n\n---\n\n"
+            "## MANDATORY PRE-SUBMIT CHECKLIST\n\n"
+            "**Before you output your final text, verify EVERY item below is covered "
+            "in your output. If you skip ANY item, the module will be REJECTED.**\n\n"
+            + "\n".join(checklist_items)
+            + f"\n- [ ] Word count is {word_target}–{int(word_target * 1.5)} words"
+            + "\n- [ ] No 'Let us...', 'In this section...', or formulaic openers"
+            + "\n- [ ] Every exercise marker from the skeleton is placed"
+            + "\n"
+        )
+        prompt = prompt + checklist
+
     # Inject tool instructions for -tools writers
     use_tools = writer.endswith("-tools")
     if use_tools:
