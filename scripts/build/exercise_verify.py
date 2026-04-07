@@ -354,18 +354,19 @@ def _check_unjumble_issues(activities: dict) -> list[UnjumbleIssue]:
                             detail=f"tile \"{w_str}\" contains comma/semicolon — invisible in UI",
                         ))
 
-                # Check 2: short sentences with flexible word order
-                # Ukrainian has free word order — sentences ≤4 content words
-                # almost always have multiple valid orderings
-                content_words = [
-                    w for w in words
-                    if len(str(w).rstrip(".,!?:;—")) >= 2  # skip single-char
-                ]
-                if len(content_words) <= 4 and len(content_words) >= 3:
+                # Check 2: missing positional anchors
+                # Capital letters, punctuation (.!?,) lock tiles to positions.
+                # Flag sentences that lack these cues — learner has no way to
+                # determine order.
+                has_capital = any(str(w)[0].isupper() for w in words if str(w))
+                has_final_punct = any(
+                    str(w)[-1] in ".!?" for w in words if str(w)
+                )
+                if not has_capital and not has_final_punct:
                     issues.append(UnjumbleIssue(
                         sentence=sentence,
-                        issue_type="ambiguous_order",
-                        detail=f"{len(content_words)} content words — likely multiple valid orderings in Ukrainian",
+                        issue_type="no_anchors",
+                        detail="no capital letter or final punctuation — learner can't determine first/last word",
                     ))
 
     return issues

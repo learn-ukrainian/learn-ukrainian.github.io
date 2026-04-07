@@ -255,12 +255,11 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 
 **UNJUMBLE — critical rules (Ukrainian has flexible word order!):**
 12. **No commas or semicolons inside tiles** — punctuation like `,` and `;` is invisible in the UI. Only sentence-final punctuation (`.!?`) on the LAST word is allowed. If the sentence has commas, either rephrase without commas or choose a different sentence.
-13. **Only sentences with ONE unambiguous word order** — Ukrainian allows "Вона завжди мені допомагала" AND "Мені завжди допомагала вона" AND "Завжди мені вона допомагала." If multiple orderings are valid, DO NOT use that sentence. Good unjumble sentences have structural constraints that force one order:
-    - Prepositional phrases: "Ми їдемо **до** Одеси" (до + genitive must stay together)
-    - Fixed expressions: "Як тебе звати?" (fixed phrase)
-    - Sentences with 5+ words including particles, prepositions, conjunctions that anchor position
-    - BAD: "Вона завжди мені допомагала" (4 content words, free order)
-    - GOOD: "Завтра ми їдемо до Одеси на екскурсію." (prepositions anchor word positions)
+13. **Use positional anchors** — the learner sees tiles and must figure out the order. Help them with visual cues that lock tile positions:
+    - **Capital letter** on the first word → learner knows it's first
+    - **Final punctuation** (`.!?`) on the last word → learner knows it's last
+    - **Prepositions** (на, в, до, з, із, за, під) → must precede their noun, locks a pair
+    - Every unjumble sentence MUST have a capitalized first word AND final punctuation. Without these anchors the exercise is unsolvable.
 
 ---
 
