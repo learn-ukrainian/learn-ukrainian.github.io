@@ -52,8 +52,28 @@ def _build_fts_query(keywords: set[str], min_len: int = 3) -> str | None:
     return " OR ".join(terms) if terms else None
 
 
+def _is_noise(text: str) -> bool:
+    """Detect chunks that are noise — no citable content for wiki articles.
+
+    Catches:
+    1. TOC pages — dot leaders (". . . . 154") with section numbers
+    2. Publisher/metadata fragments — multiple rnk.com.ua URLs
+    """
+    # TOC pages: 3+ dot-leader patterns
+    if text.count(". . .") >= 3:
+        return True
+
+    # Publisher/URL fragments
+    return text.count("rnk.com.ua") >= 2
+
+
 def _kw_score(text: str, title: str, keywords: set[str]) -> int:
-    """Count keyword hits using space-padded matching."""
+    """Count keyword hits using space-padded matching.
+
+    Returns 0 for TOC/noise chunks regardless of keyword matches.
+    """
+    if _is_noise(text):
+        return 0
     searchable = f" {title} {text} ".lower()
     return sum(1 for w in keywords if f" {w} " in searchable)
 
@@ -63,8 +83,18 @@ def _kw_score(text: str, title: str, keywords: set[str]) -> int:
 
 def _fts_search(fts_table: str, data_table: str,
                 keywords: set[str], max_total: int,
-                extra_cols: str = "") -> list[dict]:
-    """Generic FTS5 search across any prose table."""
+                extra_cols: str = "",
+                min_text_len: int = 300) -> list[dict]:
+    """Generic FTS5 search across any prose table.
+
+    Args:
+        min_text_len: Minimum text length to include (default 300).
+            Filters noise: TOC pages, captions, exercise headers,
+            publisher fragments, OCR artifacts. 300 chars ≈ 2 sentences
+            of real content — below that, chunks rarely contain
+            anything the wiki compiler can cite.
+            Set to 0 to disable.
+    """
     try:
         conn = _get_conn()
     except FileNotFoundError:
@@ -78,11 +108,15 @@ def _fts_search(fts_table: str, data_table: str,
     if extra_cols:
         cols = f"s.*, {extra_cols}, bm25({fts_table}, 5.0, 1.0) AS rank"
 
+    # Filter out short/noise chunks (TOC pages, captions, exercise headers)
+    length_filter = f"AND length(s.text) >= {min_text_len}" if min_text_len > 0 else ""
+
     rows = conn.execute(
         f"""SELECT {cols}
             FROM {fts_table}
             JOIN {data_table} s ON s.id = {fts_table}.rowid
             WHERE {fts_table} MATCH ?
+            {length_filter}
             ORDER BY rank
             LIMIT ?""",
         (fts_query, max_total),
@@ -92,13 +126,25 @@ def _fts_search(fts_table: str, data_table: str,
 
 
 def search_textbooks(ukr_keywords: set[str], max_total: int = 40) -> list[dict]:
-    """Search textbook chunks via FTS5."""
-    rows = _fts_search("textbooks_fts", "textbooks", ukr_keywords, max_total)
+    """Search textbook chunks via FTS5.
+
+    Filters out TOC pages and short noise chunks before returning.
+    Requests extra rows from FTS5 to compensate for filtered-out noise.
+    """
+    # Request 2x to compensate for filtered TOC/noise chunks
+    rows = _fts_search("textbooks_fts", "textbooks", ukr_keywords, max_total * 2)
+    results = []
     for r in rows:
-        r["_kw_score"] = _kw_score(r.get("text", ""), r.get("title", ""), ukr_keywords)
+        text = r.get("text", "")
+        if _is_noise(text):
+            continue
+        r["_kw_score"] = _kw_score(text, r.get("title", ""), ukr_keywords)
         r["source_type"] = "textbook"
         r["section_title"] = r.get("title", "")
-    return rows
+        results.append(r)
+        if len(results) >= max_total:
+            break
+    return results
 
 
 def search_external(

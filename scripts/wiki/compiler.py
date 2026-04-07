@@ -186,19 +186,62 @@ def _format_sources(sources: list[dict]) -> str:
     return "\n\n---\n\n".join(parts)
 
 
-def _call_gemini(prompt: str, *, max_retries: int = 5) -> str | None:
-    """Call Gemini CLI with the prompt and return the response.
+def _recover_from_session(before_ts: float) -> str | None:
+    """Try to recover Gemini's response from its session files.
 
-    Uses the same pattern as the agent bridge: pipe prompt to stdin,
-    capture stdout. Timeout scales with prompt size — larger prompts
-    (C2, seminars) need more time for generation.
+    Gemini CLI saves full conversation transcripts to
+    ~/.gemini/tmp/<project>/chats/session-*.json. Even when the CLI
+    process fails (timeout, rate limit, pipe error), the response may
+    already be in the session file.
+
+    Args:
+        before_ts: Only check session files created after this timestamp.
+
+    Returns:
+        The response text if found, None otherwise.
     """
-    # Scale timeout: 300s base + 4s per 1K chars of prompt.
-    # A1 (80K chars) → ~620s. C2/seminar (150K chars) → ~900s.
-    timeout_s = 300 + len(prompt) // 250
-    timeout_s = min(timeout_s, 1200)  # Hard cap at 20 min
+    import json
 
+    chats_dir = Path.home() / ".gemini" / "tmp" / "learn-ukrainian" / "chats"
+    if not chats_dir.exists():
+        return None
+
+    # Find session files created after we started the call
+    candidates = []
+    for f in chats_dir.glob("session-*.json"):
+        if f.stat().st_mtime >= before_ts:
+            candidates.append(f)
+
+    if not candidates:
+        return None
+
+    # Check most recent first
+    candidates.sort(key=lambda f: f.stat().st_mtime, reverse=True)
+    for session_file in candidates[:3]:
+        try:
+            data = json.loads(session_file.read_text(encoding="utf-8"))
+            messages = data.get("messages", [])
+            # Find the last gemini response
+            for msg in reversed(messages):
+                if msg.get("type") == "gemini":
+                    content = msg.get("content", "")
+                    if isinstance(content, str) and len(content) >= 100:
+                        print(f"  🔄 Recovered response from session file ({len(content)} chars)")
+                        return content
+        except (json.JSONDecodeError, OSError):
+            continue
+    return None
+
+
+def _call_gemini(prompt: str, *, max_retries: int = 3) -> str | None:
+    """Call Gemini CLI and return the response.
+
+    On failure, checks Gemini's session files (~/.gemini/tmp/.../chats/)
+    for the response before retrying. Gemini often completes generation
+    even when the CLI process fails (timeout, rate limit, pipe error).
+    """
     for attempt in range(max_retries):
+        call_start = time.time()
         try:
             gemini_cmd = [GEMINI_CLI, "-m", GEMINI_MODEL, "--approval-mode=yolo"]
 
@@ -213,33 +256,46 @@ def _call_gemini(prompt: str, *, max_retries: int = 5) -> str | None:
             )
 
             # Use communicate() for input — handles large prompts and
-            # avoids deadlocks from pipe buffer filling up
+            # avoids deadlocks from pipe buffer filling up.
+            # Timeout: 5 min base + 2s per 1K chars. Generous but bounded.
+            timeout_s = min(300 + len(prompt) // 500, 900)
             try:
                 stdout, stderr = proc.communicate(input=prompt, timeout=timeout_s)
             except subprocess.TimeoutExpired:
                 proc.kill()
-                stdout, stderr = proc.communicate()
-                print(f"  ⏱️  Gemini timed out (attempt {attempt + 1}/{max_retries})")
+                proc.communicate()
+                print(f"  ⏱️  Gemini timed out after {timeout_s}s")
+                # Check session file — Gemini may have finished
+                recovered = _recover_from_session(call_start)
+                if recovered:
+                    return recovered
                 if attempt < max_retries - 1:
-                    time.sleep(30)
+                    time.sleep(10)
                 continue
 
             if proc.returncode != 0:
-                # Check for rate limiting
-                if "429" in stderr or "quota" in stderr.lower() or "rate" in stderr.lower():
-                    delay = 60 * (attempt + 1)
-                    print(f"  ⏳ Rate limited, waiting {delay}s (attempt {attempt + 1}/{max_retries})")
-                    time.sleep(delay)
-                    continue
-                print(f"  ⚠️  Gemini exit code {proc.returncode}: {stderr[:200]}")
-                if not stdout.strip():
-                    if attempt < max_retries - 1:
-                        time.sleep(10)
-                    continue
+                stderr_text = stderr or ""
+                is_rate_limit = "429" in stderr_text or "quota" in stderr_text.lower() or "rate" in stderr_text.lower()
+                if is_rate_limit:
+                    print(f"  ⏳ Rate limited (attempt {attempt + 1}/{max_retries})")
+                else:
+                    print(f"  ⚠️  Gemini exit code {proc.returncode}: {stderr_text[:200]}")
+                # Check session file before retrying
+                recovered = _recover_from_session(call_start)
+                if recovered:
+                    return recovered
+                if is_rate_limit and attempt < max_retries - 1:
+                    time.sleep(60 * (attempt + 1))
+                elif attempt < max_retries - 1:
+                    time.sleep(10)
+                continue
 
             response = stdout.strip()
             if len(response) < 100:
-                print(f"  ⚠️  Very short response ({len(response)} chars), retrying...")
+                print(f"  ⚠️  Very short response ({len(response)} chars)")
+                recovered = _recover_from_session(call_start)
+                if recovered:
+                    return recovered
                 if attempt < max_retries - 1:
                     time.sleep(10)
                 continue
@@ -251,6 +307,9 @@ def _call_gemini(prompt: str, *, max_retries: int = 5) -> str | None:
             return None
         except Exception as e:
             print(f"  ❌ Error calling Gemini: {e}")
+            recovered = _recover_from_session(call_start)
+            if recovered:
+                return recovered
             if attempt < max_retries - 1:
                 time.sleep(10)
 
