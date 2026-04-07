@@ -28,6 +28,32 @@ WIKI_DIR = PROJECT_ROOT / "wiki"
 # pidruchnyk.com.ua hosts PDFs at this base URL
 _PDF_BASE = "https://pidruchnyk.com.ua/uploads/book"
 
+# Manual overrides: source_file → actual PDF filename on pidruchnyk
+# (site naming is inconsistent — some use hyphens, some underscores, some different spelling)
+_PDF_OVERRIDES: dict[str, str] = {
+    # Grade 5: underscores, no "klas"
+    "5-klas-ukrmova-avramenko-2022": "5_ukrmova_avramenko_2022",
+    "5-klas-ukrmova-golub-2022": "5_ukrmova_golub_2022",
+    "5-klas-ukrmova-litvinova-2022": "5_ukrmova_litvinova_2022",
+    "5-klas-ukrmova-zabolotnyi-2023": "5-ukrmova-zabolotny-2023",
+    # Grade 10/11: zabolotnyi uses different transliteration on site
+    "10-klas-ukrmova-zabolotnyi-2018": "10-klas-ukrajinska-mova-zabolotnij-2018",
+}
+
+# Source files confirmed NOT on pidruchnyk (skip, don't generate broken links)
+_PDF_NOT_AVAILABLE: set[str] = {
+    "4-klas-ukrmova-zaharijchuk",
+    "5-klas-ukrmova-uhor-2022-1",
+    "6-klas-ukrmova-betsa-2023",
+    "6-klas-ukrmova-zabolotnyi-2020",
+    "7-klas-ukrmova-litvinova-2024",
+    "9-klas-ukrajinska-mova-avramenko-2017",
+    "9-klas-ukrajinska-mova-voron-2017",
+    "9-klas-ukrajinska-mova-zabolotnij-2017",
+    "9-klas-ukrmova-zabolotnyi-2017",
+    "11-klas-ukrmova-zabolotnyi-2019",
+}
+
 # Author display names (source_file fragment → Ukrainian name)
 _AUTHORS = {
     "avramenko": "Авраменко О. М.",
@@ -152,9 +178,16 @@ def get_textbook_links(level: str, slug: str, max_refs: int = 5) -> list[dict]:
     # Build final links
     results = []
     for sf, info in sorted(seen_books.items()):
+        # Skip textbooks not available on pidruchnyk
+        if sf in _PDF_NOT_AVAILABLE:
+            continue
+
         grade = info["grade"] or "?"
         year = info["year"]
-        url = f"{_PDF_BASE}/{sf}.pdf"
+
+        # Resolve PDF filename: override → original
+        pdf_name = _PDF_OVERRIDES.get(sf, sf)
+        url = f"{_PDF_BASE}/{pdf_name}.pdf"
         if info["page"]:
             url += f"#page={info['page']}"
 
