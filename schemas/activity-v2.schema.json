@@ -189,7 +189,6 @@
     "quiz": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "instruction",
         "items"
@@ -257,7 +256,6 @@
     "fill-in": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "instruction",
         "items"
@@ -321,7 +319,6 @@
     "match-up": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "instruction",
         "pairs"
@@ -372,7 +369,6 @@
     "group-sort": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "instruction",
         "groups"
@@ -427,7 +423,6 @@
     "true-false": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "instruction",
         "items"
@@ -480,7 +475,6 @@
     "error-correction": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "instruction",
         "items"
@@ -559,7 +553,6 @@
     "anagram": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "instruction",
         "items"
@@ -618,7 +611,6 @@
     "translate": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "instruction",
         "items"
@@ -697,7 +689,6 @@
     "unjumble": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "instruction",
         "items"
@@ -761,7 +752,6 @@
     "order": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "instruction",
         "items",
@@ -809,7 +799,6 @@
     "cloze": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "instruction",
         "text"
@@ -882,7 +871,6 @@
     "select": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "instruction",
         "items"
@@ -957,7 +945,6 @@
     "grammar-identify": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "instruction",
         "items"
@@ -1019,7 +1006,6 @@
     "observe": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "examples",
         "prompt"
@@ -1060,7 +1046,6 @@
     "classify": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "instruction",
         "categories"
@@ -1118,7 +1103,6 @@
     "mark-the-words": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "instruction",
         "text",
@@ -1163,7 +1147,6 @@
     "highlight-morphemes": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "instruction",
         "items"
@@ -1237,7 +1220,6 @@
     "image-to-letter": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "instruction",
         "items"
@@ -1299,7 +1281,6 @@
     "letter-grid": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "letters"
       ],
@@ -1363,7 +1344,6 @@
     "phrase-table": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "groups"
       ],
@@ -1439,7 +1419,6 @@
     "critical-analysis": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "prompt"
       ],
@@ -1494,7 +1473,6 @@
     "essay-response": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "prompt"
       ],
@@ -1563,7 +1541,6 @@
     "source-evaluation": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "source_text",
         "criteria",
@@ -1633,7 +1610,6 @@
     "reading": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "passage",
         "questions"
@@ -1676,7 +1652,6 @@
     "comparative-study": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "items_to_compare",
         "criteria",
@@ -1728,7 +1703,6 @@
     "authorial-intent": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "excerpt",
         "questions"
@@ -1771,7 +1745,6 @@
     "debate": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "debate_question",
         "positions"
@@ -1836,7 +1809,6 @@
     "etymology-trace": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "instruction",
         "stages"
@@ -1890,7 +1862,6 @@
     "translation-critique": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "original",
         "translations"
@@ -1960,7 +1931,6 @@
     "transcription": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "original",
         "answer"
@@ -2003,7 +1973,6 @@
     "paleography-analysis": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "instruction",
         "image_url",
@@ -2065,7 +2034,6 @@
     "dialect-comparison": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "text_a",
         "text_b",
@@ -2138,7 +2106,6 @@
     "odd-one-out": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "items"
       ],
@@ -2194,7 +2161,6 @@
     "divide-words": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "items"
       ],
@@ -2243,7 +2209,6 @@
     "count-syllables": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "items"
       ],
@@ -2297,7 +2262,6 @@
     "pick-syllables": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "syllables",
         "correctIndices",
@@ -2346,7 +2310,6 @@
     "watch-and-repeat": {
       "type": "object",
       "required": [
-        "id",
         "type",
         "items"
       ],
