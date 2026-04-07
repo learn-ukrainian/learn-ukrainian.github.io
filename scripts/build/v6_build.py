@@ -1058,19 +1058,47 @@ def _build_chunk_prompt(
 
     # Resolve persona for chunk prompt (same logic as single-call path)
     _CHUNK_PERSONAS = {
+        # Core levels
         "a1": "a patient and supportive Ukrainian tutor",
         "a2": "an encouraging Ukrainian language guide and conversation partner",
         "b1": "an experienced Ukrainian language instructor and cultural guide",
         "b2": "a senior Ukrainian language and culture specialist",
         "c1": "a Ukrainian language and literature scholar",
         "c2": "a master Ukrainian philologist",
+        # Seminar tracks
+        "hist": "a professor of Ukrainian history with a decolonial perspective",
+        "bio": "a professor of Ukrainian studies specializing in biographical research",
+        "istorio": "a professor of historiography and source criticism",
+        "lit": "a professor of Ukrainian literature and stylistic analysis",
+        "lit-essay": "a professor of Ukrainian literature specializing in essay analysis",
+        "lit-hist-fic": "a professor of Ukrainian historical fiction",
+        "lit-fantastika": "a professor of Ukrainian speculative fiction",
+        "lit-war": "a professor of Ukrainian war literature",
+        "lit-humor": "a professor of Ukrainian satirical literature",
+        "lit-youth": "a professor of Ukrainian youth literature",
+        "lit-drama": "a professor of Ukrainian drama and theatre",
+        "lit-doc": "a professor of Ukrainian documentary literature",
+        "lit-crimea": "a professor of Crimean Tatar and Ukrainian literature",
+        "folk": "a professor of Ukrainian folklore and oral tradition",
+        "oes": "a professor of Old East Slavic paleography",
+        "ruth": "a professor of Ruthenian studies and Baroque literature",
     }
-    level_lower = level.lower().split("-")[0]
-    persona_desc = _CHUNK_PERSONAS.get(level_lower, "a knowledgeable Ukrainian language educator")
+    level_lower = level.lower()
+    # Try exact match (lit-essay), then base (lit), then default
+    persona_desc = _CHUNK_PERSONAS.get(
+        level_lower,
+        _CHUNK_PERSONAS.get(
+            level_lower.split("-")[0],
+            "a knowledgeable Ukrainian language educator",
+        ),
+    )
+
+    is_seminar = _is_seminar_track(level)
+    lang_directive = " Весь контент пишеться **українською мовою**." if is_seminar else ""
 
     section_prompt = f"""# Section-by-Section Generation — Section {section_index + 1}/{total_sections}
 
-You are {persona_desc}, writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.
+You are {persona_desc}, writing ONE SECTION of a Ukrainian language module. Write ONLY this section — nothing else.{lang_directive}
 
 **Module:** {module_num}: {plan.get("title", slug)} ({level.upper()}, {phase})
 **Section to write:** {section["title"]}
