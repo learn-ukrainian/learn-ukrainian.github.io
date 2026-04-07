@@ -17,13 +17,13 @@ Usage:
 """
 
 import argparse
+import datetime
 import json
 import sqlite3
 import sys
 import time
 import urllib.parse
 import urllib.request
-from datetime import datetime
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -192,7 +192,7 @@ def fetch_for_track(track: str) -> int:
                 """INSERT OR IGNORE INTO wikipedia (title, url, text, char_count, fetched_at)
                    VALUES (?, ?, ?, ?, ?)""",
                 (article["title"], article["url"], article["text"],
-                 article["char_count"], datetime.now(datetime.UTC).isoformat()),
+                 article["char_count"], datetime.datetime.now(tz=datetime.UTC).isoformat()),
             )
             new_count += 1
             print(f"    ✅ {article['title']} ({article['char_count']:,} chars)")
