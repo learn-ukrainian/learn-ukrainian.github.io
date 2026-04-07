@@ -40,19 +40,22 @@ _PDF_OVERRIDES: dict[str, str] = {
     "10-klas-ukrmova-zabolotnyi-2018": "10-klas-ukrajinska-mova-zabolotnij-2018",
 }
 
-# Source files confirmed NOT on pidruchnyk (skip, don't generate broken links)
-_PDF_NOT_AVAILABLE: set[str] = {
-    "4-klas-ukrmova-zaharijchuk",
-    "5-klas-ukrmova-uhor-2022-1",
-    "6-klas-ukrmova-betsa-2023",
-    "6-klas-ukrmova-zabolotnyi-2020",
-    "7-klas-ukrmova-litvinova-2024",
-    "9-klas-ukrajinska-mova-avramenko-2017",
-    "9-klas-ukrajinska-mova-voron-2017",
-    "9-klas-ukrajinska-mova-zabolotnij-2017",
-    "9-klas-ukrmova-zabolotnyi-2017",
-    "11-klas-ukrmova-zabolotnyi-2019",
+# Fallback: shkola.in.ua (Issuu viewer, no page deep-links but textbook is viewable)
+_SHKOLA_OVERRIDES: dict[str, str] = {
+    "4-klas-ukrmova-zaharijchuk": "https://shkola.in.ua/4-klas-ukrainska-mova-zaharijchuk.html",
+    "5-klas-ukrmova-uhor-2022-1": "https://shkola.in.ua/5-klas-ukrainska-mova-uhor-2022.html",
+    "6-klas-ukrmova-betsa-2023": "https://shkola.in.ua/6-klas-ukrainska-mova-betsa-2023.html",
+    "6-klas-ukrmova-zabolotnyi-2020": "https://shkola.in.ua/2835-ukrainska-mova-6-klas-zabolotnyi-2023.html",
+    "7-klas-ukrmova-litvinova-2024": "https://shkola.in.ua/7-klas-ukrainska-mova-litvinova-2024.html",
+    "9-klas-ukrajinska-mova-avramenko-2017": "https://shkola.in.ua/9-klas-ukrainska-mova-avramenko-2017.html",
+    "9-klas-ukrajinska-mova-voron-2017": "https://shkola.in.ua/9-klas-ukrainska-mova-voron-2017.html",
+    "9-klas-ukrajinska-mova-zabolotnij-2017": "https://shkola.in.ua/9-klas-ukrainska-mova-zabolotnyi-2017.html",
+    "9-klas-ukrmova-zabolotnyi-2017": "https://shkola.in.ua/9-klas-ukrainska-mova-zabolotnyi-2017.html",
+    "11-klas-ukrmova-zabolotnyi-2019": "https://shkola.in.ua/11-klas-ukrainska-mova-zabolotnyi-2019.html",
 }
+
+# Source files not on either site
+_PDF_NOT_AVAILABLE: set[str] = set()  # All covered by pidruchnyk or shkola fallback
 
 # Author display names (source_file fragment → Ukrainian name)
 _AUTHORS = {
@@ -178,18 +181,22 @@ def get_textbook_links(level: str, slug: str, max_refs: int = 5) -> list[dict]:
     # Build final links
     results = []
     for sf, info in sorted(seen_books.items()):
-        # Skip textbooks not available on pidruchnyk
+        # Skip textbooks not available anywhere
         if sf in _PDF_NOT_AVAILABLE:
             continue
 
         grade = info["grade"] or "?"
         year = info["year"]
 
-        # Resolve PDF filename: override → original
-        pdf_name = _PDF_OVERRIDES.get(sf, sf)
-        url = f"{_PDF_BASE}/{pdf_name}.pdf"
-        if info["page"]:
-            url += f"#page={info['page']}"
+        # Resolve URL: pidruchnyk override → pidruchnyk original → shkola fallback
+        if sf in _SHKOLA_OVERRIDES:
+            url = _SHKOLA_OVERRIDES[sf]
+            # shkola.in.ua uses Issuu, no page deep-linking
+        else:
+            pdf_name = _PDF_OVERRIDES.get(sf, sf)
+            url = f"{_PDF_BASE}/{pdf_name}.pdf"
+            if info["page"]:
+                url += f"#page={info['page']}"
 
         results.append({
             "author": info["author"],
