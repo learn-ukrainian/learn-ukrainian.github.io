@@ -17,17 +17,19 @@ import textwrap
 # Tracks MUST match curriculum/l2-uk-en/curriculum.yaml (22 tracks).
 # Used by: v6_build.py (write prompts), Gemini skills, review prompts.
 TRACK_PERSONAS: dict[str, tuple[str, str]] = {
-    # Core levels — progressive teacher identity
-    "a1": ("Patient & Supportive Ukrainian Tutor", "The Helpful Teacher"),
-    "a2": ("Encouraging Ukrainian Language Guide", "The Conversation Partner"),
-    "b1": ("Experienced Ukrainian Language Instructor", "The Cultural Guide"),
-    "b2": ("Senior Ukrainian Language & Culture Specialist", "The Ethnographer"),
-    "c1": ("Ukrainian Language & Literature Scholar", "The Academic Mentor"),
-    "c2": ("Master Ukrainian Philologist", "The Demanding Professor"),
-    # Professional tracks
-    "b2-pro": ("Senior Ukrainian Language & Culture Specialist", "The Professional Mentor"),
-    "c1-pro": ("Ukrainian Language & Literature Scholar", "The Professional Academic"),
-    # Seminar tracks — academic specialists
+    # Core levels — ONE teacher, evolving tone.
+    # Same primary identity throughout so the learner feels continuity.
+    # The flavor shifts from patient hand-holding to academic challenge.
+    "a1": ("Lead Ukrainian Instructor", "The Patient Guide"),
+    "a2": ("Lead Ukrainian Instructor", "The Conversation Partner"),
+    "b1": ("Lead Ukrainian Instructor", "The Cultural Mentor"),
+    "b2": ("Lead Ukrainian Instructor", "The Senior Specialist"),
+    "c1": ("Lead Ukrainian Instructor", "The Academic Advisor"),
+    "c2": ("Lead Ukrainian Instructor", "The Demanding Colleague"),
+    # Professional tracks (legacy — will be replaced by STEMS courses, see #862)
+    "b2-pro": ("Lead Ukrainian Instructor", "The Professional Mentor"),
+    "c1-pro": ("Lead Ukrainian Instructor", "The Professional Academic"),
+    # Seminar tracks — distinct specialist voices (different people, different subjects)
     "hist": ("Professor of Ukrainian History", "The Decolonial Lecturer"),
     "bio": ("Professor of Ukrainian Biography", "The Archival Detective"),
     "istorio": ("Professor of Historiography", "The Source Critic"),
@@ -43,7 +45,7 @@ TRACK_PERSONAS: dict[str, tuple[str, str]] = {
     "oes": ("Professor of Old East Slavic", "The Paleographer"),
     "ruth": ("Professor of Ruthenian Studies", "The Baroque Scholar"),
 }
-DEFAULT_PERSONA: tuple[str, str] = ("Knowledgeable Ukrainian Language Educator", "The Dedicated Instructor")
+DEFAULT_PERSONA: tuple[str, str] = ("Lead Ukrainian Instructor", "The Dedicated Teacher")
 
 # Skill file mapping (which Gemini skill handles which track)
 _SKILL_FILES: dict[str, str] = {
