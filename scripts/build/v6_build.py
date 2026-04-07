@@ -603,6 +603,67 @@ def step_check(level: str, module_num: int, slug: str) -> bool:
 
 _SEMINAR_TRACKS = {"hist", "bio", "istorio", "lit", "folk", "oes", "ruth"}
 
+# Single source of truth for all personas — used by both single-call and chunked write paths.
+# Tracks MUST match curriculum/l2-uk-en/curriculum.yaml — 22 tracks, no more.
+_PERSONAS: dict[str, tuple[str, str]] = {
+    # Core levels — progressive teacher identity
+    "a1": ("Patient & Supportive Ukrainian Tutor", "The Helpful Teacher"),
+    "a2": ("Encouraging Ukrainian Language Guide", "The Conversation Partner"),
+    "b1": ("Experienced Ukrainian Language Instructor", "The Cultural Guide"),
+    "b2": ("Senior Ukrainian Language & Culture Specialist", "The Ethnographer"),
+    "c1": ("Ukrainian Language & Literature Scholar", "The Academic Mentor"),
+    "c2": ("Master Ukrainian Philologist", "The Demanding Professor"),
+    # Professional tracks
+    "b2-pro": ("Senior Ukrainian Language & Culture Specialist", "The Professional Mentor"),
+    "c1-pro": ("Ukrainian Language & Literature Scholar", "The Professional Academic"),
+    # Seminar tracks — academic specialists
+    "hist": ("Professor of Ukrainian History", "The Decolonial Lecturer"),
+    "bio": ("Professor of Ukrainian Studies", "The Archival Detective"),
+    "istorio": ("Professor of Historiography", "The Source Critic"),
+    "lit": ("Professor of Ukrainian Literature", "The Stylistic Critic"),
+    "lit-essay": ("Professor of Ukrainian Literature", "The Essay Analyst"),
+    "lit-hist-fic": ("Professor of Ukrainian Literature", "The Historical Fiction Scholar"),
+    "lit-fantastika": ("Professor of Ukrainian Literature", "The Speculative Fiction Scholar"),
+    "lit-war": ("Professor of Ukrainian Literature", "The War Literature Scholar"),
+    "lit-humor": ("Professor of Ukrainian Literature", "The Satirist"),
+    "lit-youth": ("Professor of Ukrainian Literature", "The Youth Literature Scholar"),
+    "lit-drama": ("Professor of Ukrainian Drama", "The Theatre Scholar"),
+    "folk": ("Professor of Ukrainian Folklore", "The Oral Tradition Scholar"),
+    "oes": ("Professor of Old East Slavic", "The Paleographer"),
+    "ruth": ("Professor of Ruthenian Studies", "The Baroque Scholar"),
+}
+_DEFAULT_PERSONA = ("Knowledgeable Ukrainian Language Educator", "The Dedicated Instructor")
+
+
+def _resolve_persona(level: str, plan: dict | None = None) -> tuple[str, str]:
+    """Resolve persona (voice, role) for a level/track. Plan persona overrides fallback."""
+    if plan:
+        persona = plan.get("persona", {})
+        if isinstance(persona, dict) and persona.get("voice"):
+            return persona["voice"], persona.get("role", "")
+
+    level_lower = level.lower()
+    if level_lower in _PERSONAS:
+        return _PERSONAS[level_lower]
+    base = level_lower.split("-")[0]
+    if base in _PERSONAS:
+        return _PERSONAS[base]
+    return _DEFAULT_PERSONA
+
+
+def _get_persona_description(level: str, plan: dict | None = None) -> str:
+    """Get a one-line persona description for chunk prompts."""
+    voice, role = _resolve_persona(level, plan)
+    desc = voice.lower()
+    # Prefix with article if needed
+    if not desc.startswith(("a ", "an ", "the ")):
+        first_char = desc[0] if desc else ""
+        article = "an" if first_char in "aeiou" else "a"
+        desc = f"{article} {desc}"
+    if role:
+        desc += f" ({role})"
+    return desc
+
 
 def _is_seminar_track(level: str) -> bool:
     """Check if a level/track is a seminar track."""
@@ -1056,42 +1117,8 @@ def _build_chunk_prompt(
     word_target = section["words"] or 300  # fallback if no budget in skeleton
     phase = plan.get("phase", "")
 
-    # Resolve persona for chunk prompt (same logic as single-call path)
-    _CHUNK_PERSONAS = {
-        # Core levels
-        "a1": "a patient and supportive Ukrainian tutor",
-        "a2": "an encouraging Ukrainian language guide and conversation partner",
-        "b1": "an experienced Ukrainian language instructor and cultural guide",
-        "b2": "a senior Ukrainian language and culture specialist",
-        "c1": "a Ukrainian language and literature scholar",
-        "c2": "a master Ukrainian philologist",
-        # Seminar tracks
-        "hist": "a professor of Ukrainian history with a decolonial perspective",
-        "bio": "a professor of Ukrainian studies specializing in biographical research",
-        "istorio": "a professor of historiography and source criticism",
-        "lit": "a professor of Ukrainian literature and stylistic analysis",
-        "lit-essay": "a professor of Ukrainian literature specializing in essay analysis",
-        "lit-hist-fic": "a professor of Ukrainian historical fiction",
-        "lit-fantastika": "a professor of Ukrainian speculative fiction",
-        "lit-war": "a professor of Ukrainian war literature",
-        "lit-humor": "a professor of Ukrainian satirical literature",
-        "lit-youth": "a professor of Ukrainian youth literature",
-        "lit-drama": "a professor of Ukrainian drama and theatre",
-        "lit-doc": "a professor of Ukrainian documentary literature",
-        "lit-crimea": "a professor of Crimean Tatar and Ukrainian literature",
-        "folk": "a professor of Ukrainian folklore and oral tradition",
-        "oes": "a professor of Old East Slavic paleography",
-        "ruth": "a professor of Ruthenian studies and Baroque literature",
-    }
-    level_lower = level.lower()
-    # Try exact match (lit-essay), then base (lit), then default
-    persona_desc = _CHUNK_PERSONAS.get(
-        level_lower,
-        _CHUNK_PERSONAS.get(
-            level_lower.split("-")[0],
-            "a knowledgeable Ukrainian language educator",
-        ),
-    )
+    # Resolve persona from the SAME source as the single-call path (get_persona)
+    persona_desc = _get_persona_description(level, plan)
 
     is_seminar = _is_seminar_track(level)
     lang_directive = " Весь контент пишеться **українською мовою**." if is_seminar else ""
@@ -1489,51 +1516,8 @@ def step_write(level: str, module_num: int, slug: str,
     for key, value in replacements.items():
         prompt = prompt.replace(key, value)
 
-    # Inject persona/voice — from plan (seminar tracks) or fallback (core tracks)
-    persona = plan.get("persona", {})
-    if not isinstance(persona, dict):
-        persona = {}
-    voice = persona.get("voice", "")
-    role = persona.get("role", "")
-
-    # Fallback: levels/tracks without plan persona get appropriate identity
-    if not voice:
-        _PERSONAS = {
-            # Core levels — progressive teacher identity
-            "a1": ("Patient & Supportive Ukrainian Tutor", "The Helpful Teacher"),
-            "a2": ("Encouraging Ukrainian Language Guide", "The Conversation Partner"),
-            "b1": ("Experienced Ukrainian Language Instructor", "The Cultural Guide"),
-            "b2": ("Senior Ukrainian Language & Culture Specialist", "The Ethnographer"),
-            "c1": ("Ukrainian Language & Literature Scholar", "The Academic Mentor"),
-            "c2": ("Master Ukrainian Philologist", "The Demanding Professor"),
-            # Seminar tracks — academic specialists
-            "hist": ("Professor of Ukrainian History", "The Decolonial Lecturer"),
-            "bio": ("Professor of Ukrainian Studies", "The Archival Detective"),
-            "istorio": ("Professor of Historiography", "The Source Critic"),
-            "lit": ("Professor of Ukrainian Literature", "The Stylistic Critic"),
-            "lit-essay": ("Professor of Ukrainian Literature", "The Essay Analyst"),
-            "lit-hist-fic": ("Professor of Ukrainian Literature", "The Historical Fiction Scholar"),
-            "lit-fantastika": ("Professor of Ukrainian Literature", "The Speculative Fiction Scholar"),
-            "lit-war": ("Professor of Ukrainian Literature", "The War Literature Scholar"),
-            "lit-humor": ("Professor of Ukrainian Literature", "The Satirist"),
-            "lit-youth": ("Professor of Ukrainian Literature", "The Youth Literature Scholar"),
-            "lit-drama": ("Professor of Ukrainian Drama", "The Theatre Scholar"),
-            "oes": ("Professor of Old East Slavic", "The Paleographer"),
-            "ruth": ("Professor of Ruthenian Studies", "The Baroque Scholar"),
-            "folk": ("Professor of Ukrainian Folklore", "The Oral Tradition Scholar"),
-            # Additional LIT sub-tracks
-            "lit-doc": ("Professor of Ukrainian Documentary Literature", "The Chronicle Analyst"),
-        }
-        _DEFAULT_PERSONA = ("Knowledgeable Ukrainian Language Educator", "The Dedicated Instructor")
-
-        level_lower = level.lower()
-        # Try exact match first (lit-essay, b2-pro), then base level (a1, b2), then default
-        if level_lower in _PERSONAS:
-            voice, role = _PERSONAS[level_lower]
-        elif level_lower.split("-")[0] in _PERSONAS:
-            voice, role = _PERSONAS[level_lower.split("-")[0]]
-        else:
-            voice, role = _DEFAULT_PERSONA
+    # Inject persona/voice — from plan or shared _PERSONAS fallback
+    voice, role = _resolve_persona(level, plan)
 
     if voice:
         persona_section = (
