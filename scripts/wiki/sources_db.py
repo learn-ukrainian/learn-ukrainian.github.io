@@ -41,7 +41,14 @@ def _get_conn() -> sqlite3.Connection:
 
 def _build_fts_query(keywords: set[str], min_len: int = 3) -> str | None:
     """Build FTS5 MATCH query from keywords. Returns None if no valid terms."""
-    terms = [f'"{kw}"' for kw in keywords if len(kw) >= min_len]
+    terms = []
+    for kw in keywords:
+        if len(kw) < min_len:
+            continue
+        # Strip FTS5 special characters that break MATCH syntax
+        clean = kw.replace('"', '').replace("'", '').replace('/', ' ').strip()
+        if len(clean) >= min_len:
+            terms.append(f'"{clean}"')
     return " OR ".join(terms) if terms else None
 
 
