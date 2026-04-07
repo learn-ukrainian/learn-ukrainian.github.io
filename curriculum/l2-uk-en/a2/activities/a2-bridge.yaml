@@ -1,0 +1,342 @@
+version: '1.0'
+module: a2-bridge
+level: a2
+inline:
+- id: case-identification-drill
+  type: quiz
+  instruction: Визначте відмінок виділеного слова
+  items:
+  - question: Це мій **друг**.
+    options:
+    - Називний відмінок
+    - Знахідний відмінок
+    - Місцевий відмінок
+    - Кличний відмінок
+    correct: 0
+  - question: Я п'ю **каву**.
+    options:
+    - Називний відмінок
+    - Знахідний відмінок
+    - Місцевий відмінок
+    - Кличний відмінок
+    correct: 1
+  - question: Вона живе в **Києві**.
+    options:
+    - Називний відмінок
+    - Знахідний відмінок
+    - Місцевий відмінок
+    - Кличний відмінок
+    correct: 2
+  - question: Привіт, **Оксано**!
+    options:
+    - Називний відмінок
+    - Знахідний відмінок
+    - Місцевий відмінок
+    - Кличний відмінок
+    correct: 3
+  - question: Починається новий **урок**.
+    options:
+    - Називний відмінок
+    - Знахідний відмінок
+    - Місцевий відмінок
+    - Кличний відмінок
+    correct: 0
+  - question: Я читаю цікаву **книжку**.
+    options:
+    - Називний відмінок
+    - Знахідний відмінок
+    - Місцевий відмінок
+    - Кличний відмінок
+    correct: 1
+  - question: Ми працюємо на **заводі**.
+    options:
+    - Називний відмінок
+    - Знахідний відмінок
+    - Місцевий відмінок
+    - Кличний відмінок
+    correct: 2
+  - question: Добрий день, **вчителю**!
+    options:
+    - Називний відмінок
+    - Знахідний відмінок
+    - Місцевий відмінок
+    - Кличний відмінок
+    correct: 3
+- id: fill-in-phonology
+  type: fill-in
+  instruction: Вставте слово з правильним чергуванням голосних або приголосних
+  items:
+  - sentence: Це мій стіл. Немає _____.
+    answer: стола
+    options:
+    - стіла
+    - стола
+    - стілу
+  - sentence: Це Київ. Я їду з _____.
+    answer: Києва
+    options:
+    - Київа
+    - Києва
+    - Київу
+  - sentence: Довга дорога. Машина на _____.
+    answer: дорозі
+    options:
+    - дорогі
+    - дорожі
+    - дорозі
+  - sentence: Моя рука. Телефон у _____.
+    answer: руці
+    options:
+    - рукі
+    - руці
+    - ручі
+  - sentence: Велика муха. Даю крихту _____.
+    answer: мусі
+    options:
+    - мухі
+    - мусі
+    - муші
+  - sentence: Маленька нога — це _____.
+    answer: ніжка
+    options:
+    - ножка
+    - ніжка
+    - нужка
+  - sentence: Маленька рука — це _____.
+    answer: ручка
+    options:
+    - ручка
+    - річка
+    - руца
+  - sentence: Маленьке вухо — це _____.
+    answer: вушко
+    options:
+    - вушко
+    - вішко
+    - вюшко
+- id: match-up-euphony
+  type: match-up
+  instruction: З'єднайте частини речення за правилами милозвучності
+  pairs:
+  - left: Він був
+    right: у школі
+  - left: Вона була
+    right: в школі
+  - left: Брат
+    right: і сестра
+  - left: Мама
+    right: й тато
+  - left: Ти підеш
+    right: зі мною
+  - left: Ми працюємо
+    right: із задоволенням
+  - left: Я вітаю вас
+    right: зі святом
+  - left: Я живу
+    right: в Ужгороді
+- id: error-correction-euphony
+  type: error-correction
+  instruction: Знайдіть і виправте помилку в правилі милозвучності
+  items:
+  - sentence: Вона була у школі.
+    error: у
+    correction: в
+    error_type: word
+    options:
+    - в
+    - зі
+    - із
+    explanation: Після голосного (була) перед приголосним (школі) пишемо 'в'.
+  - sentence: Він і вона, ти і я.
+    error: і
+    correction: й
+    error_type: word
+    options:
+    - й
+    - в
+    - у
+    explanation: Між голосними або після голосного (ти) пишемо 'й'.
+  - sentence: Вона піде сьогодні з мною.
+    error: з
+    correction: зі
+    error_type: word
+    options:
+    - зі
+    - із
+    - й
+    explanation: Перед важким збігом приголосних (мн) пишемо 'зі'.
+  - sentence: Він в школі.
+    error: в
+    correction: у
+    error_type: word
+    options:
+    - у
+    - із
+    - зі
+    explanation: Між приголосними (Він, школі) пишемо 'у'.
+  - sentence: Ми робимо це з задоволенням.
+    error: з
+    correction: із
+    error_type: word
+    options:
+    - із
+    - зі
+    - у
+    explanation: Перед збігом приголосних (зд) пишемо 'із'.
+  - sentence: Вітаю з святом!
+    error: з
+    correction: зі
+    error_type: word
+    options:
+    - зі
+    - із
+    - в
+    explanation: Перед збігом приголосних (св) пишемо 'зі'.
+workbook:
+- id: fill-in-cases
+  type: fill-in
+  instruction: Вставте іменник у правильній відмінковій формі
+  items:
+  - sentence: Я читаю цікаву _____ (книжка).
+    answer: книжку
+  - sentence: Вона працює на _____ (завод).
+    answer: заводі
+  - sentence: Привіт, _____ (Оксана)!
+    answer: Оксано
+  - sentence: Добрий день, _____ (друг)!
+    answer: друже
+  - sentence: Телефон лежить у _____ (рука).
+    answer: руці
+  - sentence: Машина стоїть на _____ (дорога).
+    answer: дорозі
+  - sentence: Я даю крихту _____ (муха).
+    answer: мусі
+  - sentence: Я п'ю чорну _____ (кава).
+    answer: каву
+- id: group-sort-cases
+  type: group-sort
+  instruction: Розподіліть форми іменників за відмінками
+  groups:
+  - label: Називний (Хто? Що?)
+    items:
+    - студент
+    - Оксана
+    - стіл
+  - label: Знахідний (Кого? Що?)
+    items:
+    - книжку
+    - каву
+    - урок
+  - label: Місцевий (Де?)
+    items:
+    - в Києві
+    - на заводі
+    - у школі
+  - label: Кличний (Звертання)
+    items:
+    - друже
+    - Оксано
+    - вчителю
+- id: error-correction-cases
+  type: error-correction
+  instruction: Знайдіть неправильне відмінкове закінчення та виправте його
+  items:
+  - sentence: Я п'ю смачна кава.
+    error: кава
+    correction: каву
+    error_type: word
+    explanation: У знахідному відмінку (Accusative) закінчення жіночого роду змінюється
+      на -у.
+  - sentence: Він працює на завод.
+    error: завод
+    correction: заводі
+    error_type: word
+    explanation: У місцевому відмінку (Locative) використовуємо закінчення -і.
+  - sentence: Привіт, Оксана!
+    error: Оксана
+    correction: Оксано
+    error_type: word
+    explanation: При звертанні використовуємо кличний відмінок (Vocative).
+  - sentence: Добрий день, вчитель!
+    error: вчитель
+    correction: вчителю
+    error_type: word
+    explanation: При звертанні обов'язково використовується кличний відмінок.
+  - sentence: Починається новий уроку.
+    error: уроку
+    correction: урок
+    error_type: word
+    explanation: Це підмет (subject), тому використовуємо називний відмінок без змін.
+  - sentence: Телефон лежить у рука.
+    error: рука
+    correction: руці
+    error_type: word
+    explanation: У місцевому відмінку 'к' змінюється на 'ц' перед 'і' (рука -> руці).
+- id: unjumble-sentences
+  type: unjumble
+  instruction: Складіть правильне речення зі слів
+  items:
+  - words:
+    - працює
+    - Він
+    - на
+    - заводі.
+    correct_order:
+    - Він
+    - працює
+    - на
+    - заводі.
+  - words:
+    - у
+    - книжку
+    - руці.
+    - тримаю
+    - Я
+    correct_order:
+    - Я
+    - тримаю
+    - книжку
+    - у
+    - руці.
+  - words:
+    - зі
+    - святом!
+    - вас
+    - Вітаю
+    correct_order:
+    - Вітаю
+    - вас
+    - зі
+    - святом!
+  - words:
+    - школі.
+    - була
+    - Вона
+    - в
+    correct_order:
+    - Вона
+    - була
+    - в
+    - школі.
+  - words:
+    - п'ю
+    - із
+    - Я
+    - задоволенням.
+    - каву
+    correct_order:
+    - Я
+    - п'ю
+    - каву
+    - із
+    - задоволенням.
+  - words:
+    - мною?
+    - Ти
+    - підеш
+    - зі
+    correct_order:
+    - Ти
+    - підеш
+    - зі
+    - мною?

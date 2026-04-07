@@ -1,0 +1,31 @@
+{
+  "mode": "v6",
+  "track": "a2",
+  "slug": "aspect-concept",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-07T18:18:05.808351+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-07T18:18:05.815250+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-07T18:18:35.859130+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-07T18:43:50.335787+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-07T18:48:33.438904+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-07T18:48:33.439079+00:00"
+    }
+  }
+}

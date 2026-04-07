@@ -1,0 +1,51 @@
+round: 3
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'Covers almost all outline points with great detail, but misses two specific
+    details in the final "Що нас чекає на рівні А2?" section: "verb conjugation patterns"
+    and "Setting expectations: A2 is where'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: Excellent and perfectly accurate phonological descriptions. The only minor
+    issue is the use of "Добрий ранок" instead of the standard "Доброго ранку" in
+    the opening dialogue.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Exceptional PPP flow and very clear rules (e.g., stating the Locative
+    always taking a preposition, breaking down the mechanics of vowel alternations
+    in closed syllables). Examples are highly relevant.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary is used correctly and naturally in the text in
+    Ukrainian (e.g., "відмінок", "називний", "чергування", "наголос", "приголосний").
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Activity markers are placed precisely at the end of the relevant conceptual
+    sections and match the exact counts/focus requested.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Very natural teaching tone. "This case is a vibrant, living marker of
+    the authentic Ukrainian language" is motivating without being overly corporate.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All H2 headers are correct. Markdown is clean. Word count (2180) easily
+    exceeds the 2000-word target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Correctly highlights the Vocative case as a key distinction of authentic
+    Ukrainian versus Russian.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The dialogue integrates the required A1 grammar phrases successfully,
+    though it is slightly short.
+findings: []

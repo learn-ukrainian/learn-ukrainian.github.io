@@ -1,0 +1,49 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 6
+  evidence: 'Section word budgets are significantly off by >10%. For example, "Reviewing
+    Cases" is ~330 words (target: 600), "The Magic of Ukrainian Phonology" is ~440
+    words (target: 700).'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'Incorrect example for euphony: "as you hear in the phrase «ти й я»".
+    Before words starting with ''я'', ''й'' is prohibited (Pravopys 2019 § 24.3.2).'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent pedagogical flow and clear, concrete examples for phonological
+    alternations and euphony rules.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary hints are naturally integrated
+    into the prose.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All required exercise markers are present and correctly positioned after
+    their relevant instructional sections.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Warm, encouraging teacher persona without corporate filler.
+- dimension: 7
+  name: Structural integrity
+  score: 6
+  evidence: 'The word count is significantly below the 2000-word target (~1100 words),
+    and there is a meta-commentary artifact at the very end: "**Deterministic word
+    count: 2180 words**".'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Culturally grounded, accurately highlighting the Vocative case as a vibrant
+    marker of authentic Ukrainian.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: 'The dialogue is a bit stilted, specifically the teacher addressing herself:
+    "Привіт, Оксано! — так ти можеш вітатися зі мною."'
+findings: []

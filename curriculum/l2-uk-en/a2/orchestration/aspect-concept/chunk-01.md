@@ -1,0 +1,18 @@
+## Що таке вид дієслова?
+
+Welcome to one of the most important concepts in Ukrainian grammar. Until now, you have focused on verb tenses. Tense tells us exactly when an action happens. However, Ukrainian verbs have a hidden dimension called **вид дієслова** (verb aspect). While tense answers the question of time, aspect tells us how the action unfolds. In English, you use complex tense structures to express whether an action is ongoing or completed. In Ukrainian, this information is built directly into the vocabulary. The concept of aspect is not about time at all. Instead, it is about the internal completion of the action. It describes whether we view an event as a continuous, flowing process or as a single, finished point in time. Understanding this difference is the key to speaking naturally.
+
+To master this dimension, you need to meet the two main categories of Ukrainian verbs. The first category is called **недоконаний вид** (imperfective aspect). We will often abbreviate this as НВ. This aspect represents the unfinished nature of an action. We use it to describe an ongoing **процес** (process), a repeated habit, or a general fact. The second category is **доконаний вид** (perfective aspect). We will abbreviate this as ДВ. This represents the finished nature of an action. We use it when we want to highlight total completion and a successful **результат** (result). Every time you choose a verb, you must decide what matters more: the journey or the destination.
+
+When Ukrainian children learn grammar in school, they do not memorize long lists of rules to figure out the aspect of a verb. Instead, they use a simple question hack. Every verb form answers a specific question that reveals its true nature. Verbs of the imperfective aspect always answer the question «Що робити?» (What to be doing?). Verbs of the perfective aspect always answer the question «Що зробити?» (What to have done?). Notice the tiny difference at the beginning of the second question! This simple test helps you group vocabulary into pairs. For example, you have **робити** (to do) and **зробити** (to have done). You also have **писати** (to write) and **написати** (to have written), as well as **читати** (to read) and **прочитати** (to have read).
+
+If the grammar terms feel too abstract, imagine that every action is a visual medium. Using the imperfective aspect is exactly like watching the middle of a movie. The action is actively happening, the characters are moving, and you are immersed in the scene without knowing how it ends. Using the perfective aspect is like seeing the «Кінець» (The End) screen or looking at a still photograph of the finished scene. The action is over, and the result is locked in place. For instance, in the past tense, saying «Я писав» (I was writing) means you were inside the movie. Saying «Я написав» (I wrote) means the credits are already rolling.
+
+Let us look at how this plays out in real life. Imagine two friends watching a football match on television. The first friend describes the ongoing flow of the game, focusing on the process. The second friend reacts excitedly to the sudden, completed actions that change the score.
+
+> — **Марко:** Дивись, він біжить дуже швидко! *(Look, he is running very fast!)*
+> — **Андрій:** Так, він забив гол! *(Yes, he scored a goal!)*
+> — **Марко:** Вони грають сьогодні дуже добре. *(They are playing very well today.)*
+> — **Андрій:** Вона чудово передала м'яч. *(She passed the ball wonderfully.)*
+
+In this scenario, **бігти** (to run) and **грати** (to play) describe the ongoing process. Meanwhile, **забити** (to score) and **передати** (to pass) report a final result.

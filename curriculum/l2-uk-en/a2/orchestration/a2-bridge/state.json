@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "a2",
+  "slug": "a2-bridge",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-07T17:01:07.906406+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-07T17:01:07.913509+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-07T17:08:20.723657+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-07T17:12:10.513955+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-07T17:22:09.551483+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-07T17:22:09.551732+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-07T17:28:50.422671+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-07T17:28:50.436306+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-07T17:28:50.441277+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-07T17:33:21.455055+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-07T17:33:21.455187+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-07T17:33:21.575607+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-07T18:03:44.044540+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-07T18:03:44.370676+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-07T18:03:52.051125+00:00"
+    }
+  }
+}

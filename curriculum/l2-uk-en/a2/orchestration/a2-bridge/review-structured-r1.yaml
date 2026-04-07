@@ -1,0 +1,52 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 6
+  evidence: Failed to integrate several explicitly requested examples from the plan
+    (e.g., Locative case questions "на кому? на чому?", the term "звертання", verb
+    palatalization examples, "джерело", "боротьба", a
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Vowel and consonant alternations, euphony rules, and grammatical case
+    explanations are entirely accurate. No Russianisms or calques present.
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Excellent PPP flow starting from the dialogue. Explanations are grounded
+    with examples. However, missing the "на кому? на чому?" questions slightly weakens
+    the Locative case overview.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Effectively integrates all required vocabulary words in context (`відмінок`,
+    `голосний`, `наголос`, etc.). Missed the recommended word `огляд`.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers perfectly match the plan's requirements in type and focus, testing
+    the concepts immediately after they are presented.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Tone is encouraging and strikes an appropriate balance of a knowledgeable
+    teacher without dipping into overly corporate gamification.
+- dimension: 7
+  name: Structural integrity
+  score: 5
+  evidence: Contains a hallucinated AI formatting artifact at the end (`**Deterministic
+    word count...**`). The H2 heading for the final section misaligned with the plan's
+    translation. The actual word count (~1230
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Truthfully portrays the nuances of Ukrainian euphony and the living necessity
+    of the Vocative case in everyday speech.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 7
+  evidence: Accurately models the grammar targets, but Oksana's meta-statement ("Привіт,
+    Оксано! — так ти можеш вітатися зі мною") feels somewhat artificial and stilted
+    compared to a natural conversation.
+findings: []

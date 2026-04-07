@@ -1,0 +1,286 @@
+{
+  "total_items": 110,
+  "grounded_items": 57,
+  "ungrounded": [
+    {
+      "word": "мій",
+      "exercise_type": "quiz",
+      "context": "Це мій **друг**."
+    },
+    {
+      "word": "друг",
+      "exercise_type": "quiz",
+      "context": "Це мій **друг**."
+    },
+    {
+      "word": "п'ю",
+      "exercise_type": "quiz",
+      "context": "Я п'ю **каву**."
+    },
+    {
+      "word": "живе",
+      "exercise_type": "quiz",
+      "context": "Вона живе в **Києві**."
+    },
+    {
+      "word": "читаю",
+      "exercise_type": "quiz",
+      "context": "Я читаю цікаву **книжку**."
+    },
+    {
+      "word": "цікаву",
+      "exercise_type": "quiz",
+      "context": "Я читаю цікаву **книжку**."
+    },
+    {
+      "word": "працюємо",
+      "exercise_type": "quiz",
+      "context": "Ми працюємо на **заводі**."
+    },
+    {
+      "word": "день",
+      "exercise_type": "quiz",
+      "context": "Добрий день, **вчителю**!"
+    },
+    {
+      "word": "немає",
+      "exercise_type": "fill-in",
+      "context": "Це мій стіл. Немає _____."
+    },
+    {
+      "word": "стілу",
+      "exercise_type": "fill-in",
+      "context": "стілу"
+    },
+    {
+      "word": "їду",
+      "exercise_type": "fill-in",
+      "context": "Це Київ. Я їду з _____."
+    },
+    {
+      "word": "київу",
+      "exercise_type": "fill-in",
+      "context": "Київу"
+    },
+    {
+      "word": "довга",
+      "exercise_type": "fill-in",
+      "context": "Довга дорога. Машина на _____."
+    },
+    {
+      "word": "машина",
+      "exercise_type": "fill-in",
+      "context": "Довга дорога. Машина на _____."
+    },
+    {
+      "word": "дорогі",
+      "exercise_type": "fill-in",
+      "context": "дорогі"
+    },
+    {
+      "word": "дорожі",
+      "exercise_type": "fill-in",
+      "context": "дорожі"
+    },
+    {
+      "word": "моя",
+      "exercise_type": "fill-in",
+      "context": "Моя рука. Телефон у _____."
+    },
+    {
+      "word": "телефон",
+      "exercise_type": "fill-in",
+      "context": "Моя рука. Телефон у _____."
+    },
+    {
+      "word": "рукі",
+      "exercise_type": "fill-in",
+      "context": "рукі"
+    },
+    {
+      "word": "ручі",
+      "exercise_type": "fill-in",
+      "context": "ручі"
+    },
+    {
+      "word": "велика",
+      "exercise_type": "fill-in",
+      "context": "Велика муха. Даю крихту _____."
+    },
+    {
+      "word": "даю",
+      "exercise_type": "fill-in",
+      "context": "Велика муха. Даю крихту _____."
+    },
+    {
+      "word": "крихту",
+      "exercise_type": "fill-in",
+      "context": "Велика муха. Даю крихту _____."
+    },
+    {
+      "word": "мухі",
+      "exercise_type": "fill-in",
+      "context": "мухі"
+    },
+    {
+      "word": "муші",
+      "exercise_type": "fill-in",
+      "context": "муші"
+    },
+    {
+      "word": "маленька",
+      "exercise_type": "fill-in",
+      "context": "Маленька нога — це _____."
+    },
+    {
+      "word": "ножка",
+      "exercise_type": "fill-in",
+      "context": "ножка"
+    },
+    {
+      "word": "нужка",
+      "exercise_type": "fill-in",
+      "context": "нужка"
+    },
+    {
+      "word": "річка",
+      "exercise_type": "fill-in",
+      "context": "річка"
+    },
+    {
+      "word": "руца",
+      "exercise_type": "fill-in",
+      "context": "руца"
+    },
+    {
+      "word": "маленьке",
+      "exercise_type": "fill-in",
+      "context": "Маленьке вухо — це _____."
+    },
+    {
+      "word": "вішко",
+      "exercise_type": "fill-in",
+      "context": "вішко"
+    },
+    {
+      "word": "вюшко",
+      "exercise_type": "fill-in",
+      "context": "вюшко"
+    },
+    {
+      "word": "брат",
+      "exercise_type": "match-up",
+      "context": "Брат"
+    },
+    {
+      "word": "сестра",
+      "exercise_type": "match-up",
+      "context": "і сестра"
+    },
+    {
+      "word": "мама",
+      "exercise_type": "match-up",
+      "context": "Мама"
+    },
+    {
+      "word": "тато",
+      "exercise_type": "match-up",
+      "context": "й тато"
+    },
+    {
+      "word": "підеш",
+      "exercise_type": "match-up",
+      "context": "Ти підеш"
+    },
+    {
+      "word": "вітаю",
+      "exercise_type": "match-up",
+      "context": "Я вітаю вас"
+    },
+    {
+      "word": "вас",
+      "exercise_type": "match-up",
+      "context": "Я вітаю вас"
+    },
+    {
+      "word": "піде",
+      "exercise_type": "error-correction",
+      "context": "Вона піде сьогодні з мною."
+    },
+    {
+      "word": "сьогодні",
+      "exercise_type": "error-correction",
+      "context": "Вона піде сьогодні з мною."
+    },
+    {
+      "word": "робимо",
+      "exercise_type": "error-correction",
+      "context": "Ми робимо це з задоволенням."
+    },
+    {
+      "word": "книжка",
+      "exercise_type": "fill-in",
+      "context": "Я читаю цікаву _____ (книжка)."
+    },
+    {
+      "word": "працює",
+      "exercise_type": "fill-in",
+      "context": "Вона працює на _____ (завод)."
+    },
+    {
+      "word": "завод",
+      "exercise_type": "fill-in",
+      "context": "Вона працює на _____ (завод)."
+    },
+    {
+      "word": "стоїть",
+      "exercise_type": "fill-in",
+      "context": "Машина стоїть на _____ (дорога)."
+    },
+    {
+      "word": "чорну",
+      "exercise_type": "fill-in",
+      "context": "Я п'ю чорну _____ (кава)."
+    },
+    {
+      "word": "кава",
+      "exercise_type": "fill-in",
+      "context": "Я п'ю чорну _____ (кава)."
+    },
+    {
+      "word": "звертання",
+      "exercise_type": "group-sort",
+      "context": "Кличний (Звертання)"
+    },
+    {
+      "word": "смачна",
+      "exercise_type": "error-correction",
+      "context": "Я п'ю смачна кава."
+    },
+    {
+      "word": "вчитель",
+      "exercise_type": "error-correction",
+      "context": "Добрий день, вчитель!"
+    },
+    {
+      "word": "уроку",
+      "exercise_type": "error-correction",
+      "context": "Починається новий уроку."
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 13,
+    "tested_in_exercises": 5,
+    "not_tested": [
+      "голосний",
+      "милозвучність",
+      "наголос",
+      "огляд",
+      "правило",
+      "приголосний",
+      "система",
+      "чергування"
+    ]
+  },
+  "all_grounded": false
+}

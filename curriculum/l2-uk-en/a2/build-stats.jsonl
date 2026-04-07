@@ -1,0 +1,11 @@
+{"slug": "a2-bridge", "error_type": "VOCABULARY", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-07T10:23:11.757501+00:00"}
+{"slug": "a2-bridge", "error_type": "WRITE_FAILED", "attempt": 2, "model": "gemini-tools", "success": false, "timestamp": "2026-04-07T10:27:23.558557+00:00"}
+{"slug": "a2-bridge", "error_type": "WORD_COUNT", "attempt": 3, "model": "gemini-tools", "success": false, "timestamp": "2026-04-07T10:29:21.894669+00:00"}
+{"slug": "a2-bridge", "error_type": "PASS", "attempt": 4, "model": "gemini-tools", "success": true, "timestamp": "2026-04-07T10:32:24.106031+00:00"}
+{"slug": "a2-bridge", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-07T13:56:36.479436+00:00"}
+{"slug": "a2-bridge", "error_type": "VOCABULARY", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-07T15:12:47.908169+00:00"}
+{"slug": "a2-bridge", "error_type": "PASS", "attempt": 2, "model": "gemini-tools", "success": true, "timestamp": "2026-04-07T15:14:25.546974+00:00"}
+{"slug": "a2-bridge", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-07T16:23:33.129420+00:00"}
+{"slug": "a2-bridge", "error_type": "VOCABULARY", "attempt": 1, "model": "gemini-tools", "success": false, "timestamp": "2026-04-07T17:19:08.005678+00:00"}
+{"slug": "a2-bridge", "error_type": "PASS", "attempt": 2, "model": "gemini-tools", "success": true, "timestamp": "2026-04-07T17:22:09.551019+00:00"}
+{"slug": "aspect-concept", "error_type": "PASS", "attempt": 1, "model": "gemini-tools", "success": true, "timestamp": "2026-04-07T18:48:33.438425+00:00"}
