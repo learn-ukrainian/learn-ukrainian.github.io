@@ -3819,18 +3819,26 @@ def _apply_review_fixes(review_text: str, content_path: Path) -> tuple[bool, int
 
         # Try whitespace-normalized match for multi-line fixes
         # Reviewer may output \n\n where content has \n, or vice versa
+        # IMPORTANT: only normalize for MATCHING — apply to ORIGINAL content
         if "\n" in find_unstressed:
-            # Normalize runs of whitespace to single \n for matching
             import re as _re
             find_norm = _re.sub(r"\n\s*\n", "\n", find_unstressed).strip()
             content_norm = _re.sub(r"\n\s*\n", "\n", content).strip()
             if find_norm in content_norm:
-                pos_norm = content_norm.index(find_norm)
-                replace_norm = _re.sub(r"\n\s*\n", "\n", replace_unstressed).strip()
-                content = content_norm[:pos_norm] + replace_norm + content_norm[pos_norm + len(find_norm):]
-                applied += 1
-                _log(f"  ✅ Fix applied (whitespace-normalized): '{find_unstressed[:50]}...'")
-                continue
+                # Find the match position in normalized space, then locate the
+                # corresponding span in the original content by scanning for the
+                # first/last lines of the find string.
+                find_lines = [l for l in find_unstressed.strip().splitlines() if l.strip()]
+                if find_lines:
+                    first_line = find_lines[0].strip()
+                    last_line = find_lines[-1].strip()
+                    start = content.find(first_line)
+                    end = content.find(last_line, start) + len(last_line) if start >= 0 else -1
+                    if start >= 0 and end > start:
+                        content = content[:start] + replace_unstressed + content[end:]
+                        applied += 1
+                        _log(f"  ✅ Fix applied (whitespace-normalized): '{find_unstressed[:50]}...'")
+                        continue
 
         # Try stress-mark-aware match: strip stress from content for matching
         content_unstressed = content.replace(STRESS_MARK, "")
@@ -4825,9 +4833,10 @@ def main():
         _raw_markers = re.findall(r"(<!--\s*INJECT_ACTIVITY:\s*)(.+?)(\s*-->)", _content)
         if _raw_markers:
             for prefix, marker_text, suffix in _raw_markers:
-                # Normalize: lowercase, strip counts like "8 items", replace non-alnum with hyphens
-                normalized = re.sub(r",?\s*\d+\s*items?", "", marker_text)  # strip "8 items"
+                # Normalize: lowercase, strip counts like "8 items"/"8 Items", replace non-alnum with hyphens
+                normalized = re.sub(r",?\s*\d+\s*items?", "", marker_text, flags=re.IGNORECASE)
                 normalized = normalized.lower().strip().strip(",")
+                # Keep only ASCII alphanumeric (markers are always Latin ids, not Cyrillic)
                 normalized = re.sub(r"[^a-z0-9]+", "-", normalized).strip("-")
                 old = f"{prefix}{marker_text}{suffix}"
                 new = f"<!-- INJECT_ACTIVITY: {normalized} -->"
@@ -4938,8 +4947,12 @@ def main():
                 _log(f"\n✅ Review PASSED ({score}/10)")
             elif score >= 8.0:
                 _log(f"\n✅ Score {score}/10 ≥ 8.0 — accepting")
+            elif score >= 7.0:
+                _log(f"\n⚠️  Score {score}/10 — accepting with warnings (2 rounds done)")
             else:
-                _log(f"\n⚠️  Score {score}/10 — accepting (2 rounds done)")
+                _log(f"\n❌ Score {score}/10 < 7.0 — HALTING. Module has critical issues.")
+                _log("   Fix the plan or content manually, then re-run with --resume")
+                return  # Do not proceed to publish
         else:
             _log(f"\n✅ R1 score {r1_score}/10 ≥ 9.0 — accepting with {fix_count} fix(es)")
 

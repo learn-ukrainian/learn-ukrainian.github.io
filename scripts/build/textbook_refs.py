@@ -167,7 +167,8 @@ def get_textbook_links(level: str, slug: str, max_refs: int = 5) -> list[dict]:
             continue
 
         # Keep the lowest page per book (most representative)
-        if sf not in seen_books or (page and page < seen_books[sf].get("page", 9999)):
+        existing_page = seen_books.get(sf, {}).get("page")
+        if sf not in seen_books or (page is not None and (existing_page is None or page < existing_page)):
             seen_books[sf] = {
                 "author": _parse_author(sf),
                 "grade": _parse_grade(sf),
