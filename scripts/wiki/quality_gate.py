@@ -24,7 +24,6 @@ Usage:
 import argparse
 import re
 import sqlite3
-import sys
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -128,22 +127,20 @@ def scan_track(track: str) -> dict[str, list[str]]:
     return results
 
 
-def clear_for_recompile(track: str, slugs: list[str]) -> int:
+def clear_for_recompile(slugs: list[str]) -> int:
     """Clear articles from progress DB and delete files for recompile."""
     cleared = 0
     if PROGRESS_DB.exists():
-        conn = sqlite3.connect(str(PROGRESS_DB))
-        for slug in slugs:
-            # Find the article_key pattern
-            rows = conn.execute(
-                "SELECT article_key FROM compiled WHERE article_key LIKE ?",
-                (f"%/{slug}",),
-            ).fetchall()
-            for row in rows:
-                conn.execute("DELETE FROM compiled WHERE article_key = ?", (row[0],))
-                cleared += 1
-        conn.commit()
-        conn.close()
+        with sqlite3.connect(str(PROGRESS_DB)) as conn:
+            for slug in slugs:
+                rows = conn.execute(
+                    "SELECT article_key FROM compiled WHERE article_key LIKE ?",
+                    (f"%/{slug}",),
+                ).fetchall()
+                for row in rows:
+                    conn.execute("DELETE FROM compiled WHERE article_key = ?", (row[0],))
+                    cleared += 1
+            conn.commit()
 
     # Delete files
     for slug in slugs:
@@ -160,7 +157,9 @@ def main() -> None:
     parser.add_argument("--fix", action="store_true", help="Auto-clear bad articles for recompile")
     args = parser.parse_args()
 
-    tracks = [args.track] if args.track else ["a1", "a2", "b1", "b2", "c1", "c2"]
+    all_tracks = ["a1", "a2", "b1", "b2", "c1", "c2",
+                   "folk", "hist", "bio", "istorio", "lit", "oes", "ruth"]
+    tracks = [args.track] if args.track else all_tracks
 
     total_issues = 0
     all_bad: dict[str, list[str]] = {}
@@ -184,7 +183,7 @@ def main() -> None:
 
     if args.fix:
         slugs = list(all_bad.keys())
-        cleared = clear_for_recompile(args.track or "all", slugs)
+        cleared = clear_for_recompile(slugs)
         print(f"🗑️  Cleared {cleared} articles for recompile")
         print("Run compile.py --all to rebuild them")
     else:
