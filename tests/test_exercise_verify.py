@@ -341,7 +341,7 @@ title: "Test"
 """
     result = verify_exercises(content)
     output = format_verify_result(result)
-    assert "⚠️" in output
+    assert "🔍" in output
     assert "олівець" in output
 
 

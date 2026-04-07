@@ -384,8 +384,8 @@ def format_verify_result(result: VerifyResult) -> str:
     """Format verification result for logging.
 
     Groups ungrounded words by risk:
-    - ❌ answer words (high risk — learner must produce these)
-    - ⚠️ context words (low risk — sentence framing)
+    - 🔍 answer words (high risk — learner must produce these)
+    - 💬 context words (low risk — sentence framing)
     """
     lines = []
     if result.all_grounded:
@@ -398,7 +398,7 @@ def format_verify_result(result: VerifyResult) -> str:
 
         if answers:
             lines.append(
-                f"  ❌ {len(answers)} ANSWER word(s) not in prose (learner must produce these):"
+                f"  🔍 {len(answers)} answer word(s) not in prose — check if taught:"
             )
             for item in answers[:15]:
                 lines.append(
@@ -409,7 +409,7 @@ def format_verify_result(result: VerifyResult) -> str:
 
         if context:
             lines.append(
-                f"  ⚠️ {len(context)} context word(s) not in prose (sentence framing, lower risk)"
+                f"  💬 {len(context)} context word(s) not in prose (framing, low risk)"
             )
             # Only show first 5 context words — they're low priority
             for item in context[:5]:
