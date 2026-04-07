@@ -3561,57 +3561,20 @@ def step_review(content_path: Path, level: str, module_num: int,
         reviewer_agent = "claude-tools"
     _log(f"  Reviewer: {reviewer_agent} (writer was {writer})")
 
+    # Dispatch review — single call, no probe, no retry loop.
+    # Gemini on Google AI subscription is not rate-limited.
+    # The old probe + 5-retry + 60-300s backoff was pure waste.
     if reviewer == "gemini":
-        import time
-
         from batch_gemini_config import GEMINI_REVIEW_MODEL
 
-        # Probe Gemini with a cheap call to measure current latency
-        _log(f"  🏓 Probing Gemini latency ({GEMINI_REVIEW_MODEL})...")
-        probe_t0 = time.monotonic()
-        probe_ok, _ = _dispatch(
-            "Reply with exactly: OK",
-            agent=reviewer_agent, phase="review", orch_dir=orch_dir,
-            timeout=TIMEOUT_REVIEW_GEMINI_PROBE,
+        review_timeout = 900  # 15 min — generous for a ~30K prompt
+        ok, raw = _dispatch(
+            prompt, agent=reviewer_agent, phase="review", orch_dir=orch_dir,
+            timeout=review_timeout, mcp_tools=True,
             model=GEMINI_REVIEW_MODEL,
         )
-        probe_latency = time.monotonic() - probe_t0
-        if probe_ok:
-            # Scale timeout: probe took X seconds for a trivial call,
-            # review prompt is ~30K chars — give it 10x probe time (min 600s, max 1800s)
-            review_timeout = max(600, min(int(probe_latency * 10), 1800))
-            _log(f"  🏓 Gemini responded in {int(probe_latency)}s — review timeout set to {review_timeout}s")
-        else:
-            # Gemini probe failed, but do not fall back. Use default timeout.
-            review_timeout = 600
-            _log(f"  ⚠️  Gemini probe failed ({int(probe_latency)}s) — keeping Gemini reviewer with default {review_timeout}s timeout")
-
-    # Dispatch review — never fall back to a different agent
-    if reviewer == "gemini":
-        ok, raw = None, None
-        _GEMINI_REVIEW_MAX_RETRIES = 5
-        _NORMAL_BACKOFF_MIN = 60   # 1 min for non-rate-limit failures
-        _NORMAL_BACKOFF_MAX = 300  # 5 min cap
-        for attempt in range(1, _GEMINI_REVIEW_MAX_RETRIES + 1):
-            t0 = time.monotonic()
-            ok, raw = _dispatch(
-                prompt, agent=reviewer_agent, phase="review", orch_dir=orch_dir,
-                timeout=review_timeout, mcp_tools=True,
-                model=GEMINI_REVIEW_MODEL,
-            )
-            elapsed = time.monotonic() - t0
-            if ok and raw:
-                break
-            if attempt < _GEMINI_REVIEW_MAX_RETRIES:
-                if _handle_rate_limit_backoff(raw, attempt, _GEMINI_REVIEW_MAX_RETRIES, "review"):
-                    raw = None
-                    continue
-                wait = max(_NORMAL_BACKOFF_MIN, min(int(elapsed * 0.5), _NORMAL_BACKOFF_MAX))
-                _log(f"  ⚠️  Gemini review failed (attempt {attempt}/{_GEMINI_REVIEW_MAX_RETRIES}, {int(elapsed)}s) — retrying in {wait}s...")
-                time.sleep(wait)
-                raw = None
-            else:
-                _log(f"  ❌ Gemini review failed after {_GEMINI_REVIEW_MAX_RETRIES} attempts")
+        if not ok or not raw:
+            _log("  ❌ Gemini review failed — single attempt, no retry")
     else:
         from batch_gemini_config import CLAUDE_MODEL_FINAL_REVIEW
         ok, raw = _dispatch(
