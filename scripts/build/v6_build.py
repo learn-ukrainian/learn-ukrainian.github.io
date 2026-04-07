@@ -603,59 +603,31 @@ def step_check(level: str, module_num: int, slug: str) -> bool:
 
 _SEMINAR_TRACKS = {"hist", "bio", "istorio", "lit", "folk", "oes", "ruth"}
 
-# Single source of truth for all personas — used by both single-call and chunked write paths.
-# Tracks MUST match curriculum/l2-uk-en/curriculum.yaml — 22 tracks, no more.
-_PERSONAS: dict[str, tuple[str, str]] = {
-    # Core levels — progressive teacher identity
-    "a1": ("Patient & Supportive Ukrainian Tutor", "The Helpful Teacher"),
-    "a2": ("Encouraging Ukrainian Language Guide", "The Conversation Partner"),
-    "b1": ("Experienced Ukrainian Language Instructor", "The Cultural Guide"),
-    "b2": ("Senior Ukrainian Language & Culture Specialist", "The Ethnographer"),
-    "c1": ("Ukrainian Language & Literature Scholar", "The Academic Mentor"),
-    "c2": ("Master Ukrainian Philologist", "The Demanding Professor"),
-    # Professional tracks
-    "b2-pro": ("Senior Ukrainian Language & Culture Specialist", "The Professional Mentor"),
-    "c1-pro": ("Ukrainian Language & Literature Scholar", "The Professional Academic"),
-    # Seminar tracks — academic specialists
-    "hist": ("Professor of Ukrainian History", "The Decolonial Lecturer"),
-    "bio": ("Professor of Ukrainian Studies", "The Archival Detective"),
-    "istorio": ("Professor of Historiography", "The Source Critic"),
-    "lit": ("Professor of Ukrainian Literature", "The Stylistic Critic"),
-    "lit-essay": ("Professor of Ukrainian Literature", "The Essay Analyst"),
-    "lit-hist-fic": ("Professor of Ukrainian Literature", "The Historical Fiction Scholar"),
-    "lit-fantastika": ("Professor of Ukrainian Literature", "The Speculative Fiction Scholar"),
-    "lit-war": ("Professor of Ukrainian Literature", "The War Literature Scholar"),
-    "lit-humor": ("Professor of Ukrainian Literature", "The Satirist"),
-    "lit-youth": ("Professor of Ukrainian Literature", "The Youth Literature Scholar"),
-    "lit-drama": ("Professor of Ukrainian Drama", "The Theatre Scholar"),
-    "folk": ("Professor of Ukrainian Folklore", "The Oral Tradition Scholar"),
-    "oes": ("Professor of Old East Slavic", "The Paleographer"),
-    "ruth": ("Professor of Ruthenian Studies", "The Baroque Scholar"),
-}
-_DEFAULT_PERSONA = ("Knowledgeable Ukrainian Language Educator", "The Dedicated Instructor")
-
-
 def _resolve_persona(level: str, plan: dict | None = None) -> tuple[str, str]:
-    """Resolve persona (voice, role) for a level/track. Plan persona overrides fallback."""
+    """Resolve persona (voice, role) for a level/track. Plan persona overrides fallback.
+
+    Source of truth: pipeline.config_tables.TRACK_PERSONAS
+    """
+    from pipeline.config_tables import DEFAULT_PERSONA, TRACK_PERSONAS
+
     if plan:
         persona = plan.get("persona", {})
         if isinstance(persona, dict) and persona.get("voice"):
             return persona["voice"], persona.get("role", "")
 
     level_lower = level.lower()
-    if level_lower in _PERSONAS:
-        return _PERSONAS[level_lower]
+    if level_lower in TRACK_PERSONAS:
+        return TRACK_PERSONAS[level_lower]
     base = level_lower.split("-")[0]
-    if base in _PERSONAS:
-        return _PERSONAS[base]
-    return _DEFAULT_PERSONA
+    if base in TRACK_PERSONAS:
+        return TRACK_PERSONAS[base]
+    return DEFAULT_PERSONA
 
 
 def _get_persona_description(level: str, plan: dict | None = None) -> str:
     """Get a one-line persona description for chunk prompts."""
     voice, role = _resolve_persona(level, plan)
     desc = voice.lower()
-    # Prefix with article if needed
     if not desc.startswith(("a ", "an ", "the ")):
         first_char = desc[0] if desc else ""
         article = "an" if first_char in "aeiou" else "a"

@@ -12,24 +12,62 @@ import textwrap
 # 1. Config Tables (data only, no logic)
 # ============================================================================
 
+# ── Writer personas ──────────────────────────────────────────
+# Single source of truth for all track personas.
+# Tracks MUST match curriculum/l2-uk-en/curriculum.yaml (22 tracks).
+# Used by: v6_build.py (write prompts), Gemini skills, review prompts.
+TRACK_PERSONAS: dict[str, tuple[str, str]] = {
+    # Core levels — progressive teacher identity
+    "a1": ("Patient & Supportive Ukrainian Tutor", "The Helpful Teacher"),
+    "a2": ("Encouraging Ukrainian Language Guide", "The Conversation Partner"),
+    "b1": ("Experienced Ukrainian Language Instructor", "The Cultural Guide"),
+    "b2": ("Senior Ukrainian Language & Culture Specialist", "The Ethnographer"),
+    "c1": ("Ukrainian Language & Literature Scholar", "The Academic Mentor"),
+    "c2": ("Master Ukrainian Philologist", "The Demanding Professor"),
+    # Professional tracks
+    "b2-pro": ("Senior Ukrainian Language & Culture Specialist", "The Professional Mentor"),
+    "c1-pro": ("Ukrainian Language & Literature Scholar", "The Professional Academic"),
+    # Seminar tracks — academic specialists
+    "hist": ("Professor of Ukrainian History", "The Decolonial Lecturer"),
+    "bio": ("Professor of Ukrainian Biography", "The Archival Detective"),
+    "istorio": ("Professor of Historiography", "The Source Critic"),
+    "lit": ("Professor of Ukrainian Literature", "The Stylistic Critic"),
+    "lit-essay": ("Professor of Ukrainian Literature", "The Essay Analyst"),
+    "lit-hist-fic": ("Professor of Ukrainian Literature", "The Historical Fiction Scholar"),
+    "lit-fantastika": ("Professor of Ukrainian Literature", "The Speculative Fiction Scholar"),
+    "lit-war": ("Professor of Ukrainian Literature", "The War Literature Scholar"),
+    "lit-humor": ("Professor of Ukrainian Literature", "The Satirist"),
+    "lit-youth": ("Professor of Ukrainian Literature", "The Youth Literature Scholar"),
+    "lit-drama": ("Professor of Ukrainian Drama", "The Theatre Scholar"),
+    "folk": ("Professor of Ukrainian Folklore", "The Oral Tradition Scholar"),
+    "oes": ("Professor of Old East Slavic", "The Paleographer"),
+    "ruth": ("Professor of Ruthenian Studies", "The Baroque Scholar"),
+}
+DEFAULT_PERSONA: tuple[str, str] = ("Knowledgeable Ukrainian Language Educator", "The Dedicated Instructor")
+
+# Skill file mapping (which Gemini skill handles which track)
+_SKILL_FILES: dict[str, str] = {
+    "a1": "full-rebuild-core-a", "a2": "full-rebuild-core-a",
+    "b1": "full-rebuild-core-a",  # early B1
+    "b2": "full-rebuild-core-b", "b2-pro": "full-rebuild-core-b",
+    "c1": "full-rebuild-core-b", "c1-pro": "full-rebuild-core-b",
+    "c2": "full-rebuild-core-b",
+    "bio": "full-rebuild-bio", "hist": "full-rebuild-hist",
+    "istorio": "full-rebuild-istorio", "lit": "full-rebuild-lit",
+    "oes": "full-rebuild-oes", "ruth": "full-rebuild-ruth",
+    "folk": "full-rebuild-lit",  # folk uses lit skill
+}
+
 TRACK_SKILLS: dict[str, tuple[str, str, str]] = {
     # track_pattern: (skill_file, skill_identity, persona_flavor)
-    "a1":       ("full-rebuild-core-a", "Patient & Supportive Ukrainian Tutor", "The Helpful Neighbor"),
-    "a2":       ("full-rebuild-core-a", "Patient & Supportive Ukrainian Tutor", "The Helpful Neighbor"),
-    "b1-early": ("full-rebuild-core-a", "Patient & Supportive Ukrainian Tutor", "The Helpful Neighbor"),
-    "b1-late":  ("full-rebuild-core-b", "Senior Ukrainian Language & Culture Specialist", "Ethnographer"),
-    "b2":       ("full-rebuild-core-b", "Senior Ukrainian Language & Culture Specialist", "Ethnographer"),
-    "b2-pro":   ("full-rebuild-core-b", "Senior Ukrainian Language & Culture Specialist", "Ethnographer"),
-    "c1":       ("full-rebuild-core-b", "Senior Ukrainian Language & Culture Specialist", "Ethnographer"),
-    "c1-pro":   ("full-rebuild-core-b", "Senior Ukrainian Language & Culture Specialist", "Ethnographer"),
-    "c2":       ("full-rebuild-core-b", "Senior Ukrainian Language & Culture Specialist", "Ethnographer"),
-    "bio":   ("full-rebuild-bio", "Professor of Ukrainian Arts (biography)", "The Archival Detective"),
-    "hist":  ("full-rebuild-hist", "Professor of Ukrainian Arts (history)", "The Decolonial Lecturer"),
-    "istorio":  ("full-rebuild-istorio", "Professor of Ukrainian Arts (historiography)", "The Source Critic"),
-    "lit":      ("full-rebuild-lit", "Professor of Ukrainian Arts (literature)", "The Stylistic Critic"),
-    "oes":      ("full-rebuild-oes", "Professor of Ukrainian Arts (paleography)", "The Paleographer"),
-    "ruth":     ("full-rebuild-ruth", "Professor of Ukrainian Arts (Ruthenian)", "The Baroque Scholar"),
+    # Auto-built from TRACK_PERSONAS + _SKILL_FILES
+    k: (_SKILL_FILES.get(k.split("-")[0], "full-rebuild-core-b"), v[0], v[1])
+    for k, v in TRACK_PERSONAS.items()
+    if k in _SKILL_FILES or k.split("-")[0] in _SKILL_FILES
 }
+# B1 has early/late split for skills
+TRACK_SKILLS["b1-early"] = ("full-rebuild-core-a", *TRACK_PERSONAS["b1"])
+TRACK_SKILLS["b1-late"] = ("full-rebuild-core-b", *TRACK_PERSONAS["b1"])
 
 IMMERSION_RULES: dict[str, str] = {
     "a1-m01-06": (
