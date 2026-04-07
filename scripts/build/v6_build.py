@@ -3451,10 +3451,8 @@ def step_review(content_path: Path, level: str, module_num: int,
     generated_content = generated_content.replace("<!-- TAB:Урок -->", "").strip()
     generated_content = re.sub(r'\n{3,}', '\n\n', generated_content).strip()
 
-    # Inject deterministic word count so reviewer doesn't guess
+    # Calculate deterministic word count — injected OUTSIDE content block
     prose_words = len(re.sub(r":::.*?:::", "", generated_content, flags=re.DOTALL).split())
-    word_count_note = f"\n\n**Deterministic word count: {prose_words} words** (calculated by pipeline, do NOT estimate manually)\n"
-    generated_content = generated_content + word_count_note
 
     # Build review prompt
     writer_model = "Claude" if "claude" in writer else "Gemini"
@@ -3467,6 +3465,7 @@ def step_review(content_path: Path, level: str, module_num: int,
         "{WRITER_MODEL}": writer_model,
         "{WORD_TARGET}": str(plan.get("word_target", 1200)),
         "{WORD_CEILING}": str(int(plan.get("word_target", 1200) * 1.5)),
+        "{WORD_COUNT}": str(prose_words),
         "{PLAN_CONTENT}": plan_content,
         "{GENERATED_CONTENT}": generated_content,
     }

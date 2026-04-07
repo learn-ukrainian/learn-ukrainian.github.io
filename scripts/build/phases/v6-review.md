@@ -21,6 +21,8 @@ You are reviewing a Ukrainian language module for quality. The writer used a dif
 {GENERATED_CONTENT}
 </generated_module_content>
 
+**PIPELINE NOTE — Word count: {WORD_COUNT} words** (calculated deterministically by the pipeline, NOT by the writer. This number is CORRECT. Do NOT estimate your own word count — use this number for the Structural integrity dimension.)
+
 ---
 
 ## Review Protocol
