@@ -8,96 +8,17 @@ This module adds relevant textbook chunks, literary texts, local data files,
 and cross-references to build a rich context for wiki article compilation.
 """
 
-import json
-import re
 from pathlib import Path
 
 import yaml
 
-from .config import LITERARY_DIR, PROJECT_ROOT, TEXTBOOK_CHUNKS_DIR
-from .sources import load_literary_jsonl, load_textbook_jsonl
+from .config import PROJECT_ROOT
 
 # ── Core track textbook source mappings ───────────────────────
 # Maps core tracks to textbook JSONL files (Ukrainian language only).
 # Same approach as seminar tracks use literary JSONLs.
 # All files searched — keyword relevance scoring picks the right chunks.
 CORE_TRACKS = {"a1", "a2", "b1", "b2", "c1", "c2"}
-
-# ── Track-specific literary source mappings ──────────────────────
-# Maps seminar tracks to literary JSONL files known to contain relevant content.
-
-FOLK_LITERARY_SOURCES = [
-    "wave7-kostomarov-slovyanska-mifolohiia.jsonl",
-    "wave4-chyzhevsky-istoriia-lit.jsonl",        # Folk traditions section
-    "wave7-popovych-narys-kultury.jsonl",          # Cultural overview
-    "wave8-ukr-lit-entsyklopediia.jsonl",          # Genre entries
-]
-
-HIST_LITERARY_SOURCES = [
-    "грушевський-історія-україни-руси-т4.jsonl",
-    "грушевський-історія-україни-руси-т5.jsonl",
-    "wave7-hrushevsky-vybrani-statti.jsonl",
-    "wave7-krypyakevych-gvk.jsonl",
-    "wave7-krypyakevych-istkult.jsonl",
-    "wave7-holobutsky-zaporizhzhia.jsonl",
-    "wave7-shcherbak-kozatstvo.jsonl",
-    "wave7-antonovych-vybrani.jsonl",
-]
-
-OES_LITERARY_SOURCES = [
-    "wave9-shevelov-fonolohiia.jsonl",
-    "wave9-rusanivsky-ist-lit-movy.jsonl",
-    "wave9-pivtorak-pokhodzhennia.jsonl",
-    "wave8-hensiorsky-gvl-mova.jsonl",
-    "wave8-hensiorsky-gvl-process.jsonl",
-    "wave0-slovo-o-polku.jsonl",
-    "wave5-yushkov-ruska-pravda.jsonl",
-    "wave8-biletsky-ruska-pravda-tekst.jsonl",
-]
-
-RUTH_LITERARY_SOURCES = [
-    "wave9-ohiyenko-ist-lit-movy.jsonl",
-    "wave7-statut-1566.jsonl",
-    "wave9-uzhevych-hramatyka.jsonl",
-    "wave9-uzhevych-paryzky.jsonl",
-    "wave9-fedorovych-azbuka-1578.jsonl",
-    "wave9-verbytsky-bukvar-1627.jsonl",
-    "wave9-synonima-slavenoroskaia.jsonl",
-    "wave8-isaievych-knyhovydannia.jsonl",
-    "wave8-ohdruk-istoriia-drukarstva.jsonl",
-    "wave8-masliuk-poetyky-rytoryky.jsonl",
-]
-
-ISTORIO_LITERARY_SOURCES = [
-    "wave7-kohut-tsentralizm.jsonl",
-    "wave7-nalyvaiko-ochyma-zakhodu.jsonl",
-    "wave7-dzyuba-internatsionalizm.jsonl",
-    "wave7-shevchenko-ukraina-skhid-zakhid.jsonl",
-    "wave7-entsyklopediia-ukrainoznavstva.jsonl",
-    "wave7-hrushevsky-vybrani-statti.jsonl",
-]
-
-TRACK_LITERARY_MAP: dict[str, list[str]] = {
-    "folk": FOLK_LITERARY_SOURCES,
-    "hist": HIST_LITERARY_SOURCES,
-    "oes": OES_LITERARY_SOURCES,
-    "ruth": RUTH_LITERARY_SOURCES,
-    "istorio": ISTORIO_LITERARY_SOURCES,
-}
-
-# Keyword → literary file mappings for cross-track searches
-KEYWORD_SOURCE_MAP: dict[str, list[str]] = {
-    "kobzar": ["ukrlib-shevchenko.jsonl"],
-    "shevchenko": ["ukrlib-shevchenko.jsonl"],
-    "franko": ["ukrlib-franko.jsonl"],
-    "lesya": ["ukrlib-lesya.jsonl"],
-    "kotsyubynsky": ["ukrlib-kotsyubynsky.jsonl"],
-    "skovoroda": ["wave5-skovoroda-tvory.jsonl", "wave8-chyzhevsky-skovoroda.jsonl"],
-    "baroko": ["wave3-poeziya-baroko.jsonl", "wave8-chyzhevsky-baroko.jsonl"],
-    "kozak": ["wave7-holobutsky-zaporizhzhia.jsonl", "wave7-shcherbak-kozatstvo.jsonl"],
-    "mazepa": ["wave7-matskiv-mazepa-dzherela.jsonl"],
-    "khmelnytsky": ["wave7-gvozdyk-pritsak-khmelnytsky.jsonl"],
-}
 
 
 def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
@@ -134,40 +55,27 @@ def enrich_sources(track: str, slug: str, sources_info: dict) -> list[dict]:
             print(f"  📖 +{len(tb_chunks)} textbook chunks ({len(ukr_keywords)} keywords)")
             all_chunks.extend(tb_chunks)
 
-    # 3. Seminar tracks: literary JSONL files
-    track_files = TRACK_LITERARY_MAP.get(track, [])
-    if track_files:
-        track_chunks = _load_relevant_chunks(
-            track_files, slug, max_per_file=15, ukr_keywords=ukr_keywords,
-        )
-        if track_chunks:
-            print(f"  📚 +{len(track_chunks)} chunks from track literary sources")
-            all_chunks.extend(track_chunks)
+    # 3. Seminar + folk tracks: search ALL literary texts via FTS5
+    if track not in CORE_TRACKS and ukr_keywords:
+        from .sources_db import search_literary
+        lit_chunks = search_literary(ukr_keywords, max_total=40)
+        if lit_chunks:
+            print(f"  📚 +{len(lit_chunks)} literary chunks ({len(ukr_keywords)} keywords)")
+            all_chunks.extend(lit_chunks)
 
-    # 4. Keyword-matched sources from the slug
-    slug_words = slug.replace("-", " ").lower().split()
-    for keyword, files in KEYWORD_SOURCE_MAP.items():
-        if keyword in slug_words or keyword in slug:
-            kw_chunks = _load_relevant_chunks(
-                files, slug, max_per_file=10, ukr_keywords=ukr_keywords,
-            )
-            if kw_chunks:
-                print(f"  🔑 +{len(kw_chunks)} chunks from keyword '{keyword}'")
-                all_chunks.extend(kw_chunks)
+    # 4. Also search textbooks for seminar tracks (folk content appears in textbooks too)
+    if track not in CORE_TRACKS and ukr_keywords:
+        from .sources_db import search_textbooks
+        tb_chunks = search_textbooks(ukr_keywords, max_total=20)
+        if tb_chunks:
+            print(f"  📖 +{len(tb_chunks)} textbook chunks (cross-search)")
+            all_chunks.extend(tb_chunks)
 
     # 5. Local data enrichment
     local_chunks = _load_local_data(track, slug)
     if local_chunks:
         print(f"  📄 +{len(local_chunks)} chunks from local data")
         all_chunks.extend(local_chunks)
-
-    # 6. Literary files found by keyword search in sources.py
-    if len(all_chunks) < 10 and sources_info.get("literary_files"):
-        for lit_path in sources_info["literary_files"][:3]:
-            chunks = load_literary_jsonl(lit_path)
-            sampled = chunks[:20]
-            print(f"  📖 +{len(sampled)} chunks from {lit_path.name}")
-            all_chunks.extend(sampled)
 
     # 7. External resources — explicit YAML mappings (URL-matched)
     ext_chunks = _load_external_resources(track, slug)
@@ -248,48 +156,6 @@ def _extract_ukrainian_keywords(sources_info: dict) -> set[str]:
 
     return keywords
 
-
-def _load_relevant_chunks(filenames: list[str], slug: str,
-                          max_per_file: int = 15,
-                          ukr_keywords: set[str] | None = None) -> list[dict]:
-    """Load chunks from literary files, filtering for relevance.
-
-    Uses both Latin slug words AND Ukrainian keywords from discovery
-    to score chunks. Ukrainian keywords are weighted higher (x2) since
-    they match the actual text language.
-    """
-    slug_words = set(slug.replace("-", " ").lower().split())
-    slug_words = {w for w in slug_words if len(w) > 3}
-    ukr_kw = ukr_keywords or set()
-
-    all_relevant: list[dict] = []
-    for filename in filenames:
-        filepath = LITERARY_DIR / filename
-        if not filepath.exists():
-            continue
-
-        try:
-            chunks = load_literary_jsonl(filepath)
-        except Exception as e:
-            print(f"  ⚠️  Error loading {filename}: {e}")
-            continue
-
-        # Score each chunk by keyword overlap
-        scored = []
-        for chunk in chunks:
-            text_lower = chunk.get("text", "").lower()
-            # Ukrainian keywords score 2x (they actually match the text)
-            score = sum(2 for w in ukr_kw if w in text_lower)
-            score += sum(1 for w in slug_words if w in text_lower)
-            if score > 0:
-                scored.append((score, chunk))
-
-        # Take top N by score
-        scored.sort(key=lambda x: -x[0])
-        for _score, chunk in scored[:max_per_file]:
-            all_relevant.append(chunk)
-
-    return all_relevant
 
 
 # Cached external_resources.yaml (loaded once per process)
