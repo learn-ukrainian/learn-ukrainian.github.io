@@ -1,0 +1,1 @@
+I will now attempt to locate the grammar rules for verb aspect in the 2019 Pravopys by searching for "вид" and "дієслова", and I'll retry the CEFR level verification for several key words to ensure they are appropriate for the A2 level.
