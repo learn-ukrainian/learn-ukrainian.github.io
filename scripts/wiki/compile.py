@@ -67,7 +67,7 @@ from wiki.sources import (
     list_discovery_slugs,
     list_literary_sources,
 )
-from wiki.state import get_status_summary, log_event, read_log
+from wiki.state import log_event, read_log
 
 # ── Domain mapping: how to group discovery slugs into wiki articles ──
 
@@ -161,34 +161,101 @@ def cmd_log(*, track: str | None = None) -> None:
     print(f"  ✅ Passed: {passed}  ❌ Failed: {failed}  ⏳ Pending: {pending}")
 
 
+def _progress_bar(done: int, total: int, width: int = 20) -> str:
+    """Render a compact progress bar: [████████░░░░] 8/12."""
+    if total == 0:
+        return f"[{'░' * width}] 0/0"
+    filled = round(width * done / total)
+    bar = "█" * filled + "░" * (width - filled)
+    return f"[{bar}] {done}/{total}"
+
+
 def cmd_status() -> None:
-    """Show compilation status."""
-    summary = get_status_summary()
-    print("\n📊 Wiki Compilation Status")
-    print(f"{'─' * 40}")
-    print(f"Total compiled: {summary['total_compiled']} articles")
-    print(f"Total words:    {summary['total_words']:,}")
-    if summary['last_updated']:
-        print(f"Last updated:   {summary['last_updated']}")
+    """Show per-track compilation progress."""
+    from wiki.state import load_progress
 
-    if summary["by_domain"]:
-        print("\nBy domain:")
-        for domain, count in sorted(summary["by_domain"].items()):
-            print(f"  {domain}: {count}")
+    progress = load_progress()
+    articles = progress["articles"]
 
-    # Show available tracks (check plans dir, don't auto-generate discovery)
-    print("\nAvailable tracks:")
-    for track in ALL_TRACKS:
-        plans_dir = CURRICULUM_DIR / "plans" / track
+    # Collect per-track stats
+    core_tracks = [t for t in ALL_TRACKS if t in ("a1", "a2", "b1", "b2", "c1", "c2")]
+    seminar_tracks = [t for t in ALL_TRACKS if t not in core_tracks]
+
+    total_compiled = 0
+    total_available = 0
+    total_words = 0
+
+    def _track_stats(track: str) -> tuple[int, int, int]:
+        """Return (compiled, total, words) for a track."""
         disc_dir = CURRICULUM_DIR / track / "discovery"
-        plan_count = len(list(plans_dir.glob("*.yaml"))) if plans_dir.exists() else 0
-        disc_count = len(list(disc_dir.glob("*.yaml"))) if disc_dir.exists() else 0
-        if plan_count or disc_count:
-            status = f"{disc_count} discovery" if disc_count else f"{plan_count} plans (discovery auto-generates on compile)"
-            print(f"  {track}: {status}")
+        if not disc_dir.exists():
+            return 0, 0, 0
+        slugs = sorted(f.stem for f in disc_dir.glob("*.yaml"))
+        if not slugs:
+            return 0, 0, 0
+        compiled = 0
+        words = 0
+        for slug in slugs:
+            domain = _get_domain(track, slug)
+            key = f"{domain}/{slug}"
+            entry = articles.get(key)
+            if entry and entry.get("status") == "compiled":
+                compiled += 1
+                words += entry.get("word_count", 0)
+        return compiled, len(slugs), words
 
+    print("\n📊 Wiki Compilation Status")
+    print(f"{'═' * 56}")
+
+    # Core levels
+    print("\n  Core levels")
+    print(f"  {'─' * 52}")
+    for track in core_tracks:
+        compiled, total, words = _track_stats(track)
+        total_compiled += compiled
+        total_available += total
+        total_words += words
+        if total == 0:
+            continue
+        bar = _progress_bar(compiled, total)
+        pct = f"{100 * compiled // total}%" if total else "—"
+        words_str = f"{words:>8,}w" if words else ""
+        label = f"  {track.upper():<6}"
+        if compiled == total:
+            print(f"  {label} {bar}  ✅ {pct:>4} {words_str}")
+        elif compiled > 0:
+            print(f"  {label} {bar}  🔶 {pct:>4} {words_str}")
+        else:
+            print(f"  {label} {bar}       {words_str}")
+
+    # Seminar tracks
+    print("\n  Seminar tracks")
+    print(f"  {'─' * 52}")
+    for track in seminar_tracks:
+        compiled, total, words = _track_stats(track)
+        total_compiled += compiled
+        total_available += total
+        total_words += words
+        if total == 0:
+            continue
+        bar = _progress_bar(compiled, total)
+        pct = f"{100 * compiled // total}%" if total else "—"
+        words_str = f"{words:>8,}w" if words else ""
+        label = f"  {track:<12}"
+        if compiled == total:
+            print(f"  {label} {bar}  ✅ {pct:>4} {words_str}")
+        elif compiled > 0:
+            print(f"  {label} {bar}  🔶 {pct:>4} {words_str}")
+        else:
+            print(f"  {label} {bar}       {words_str}")
+
+    # Totals
+    print(f"\n{'═' * 56}")
+    bar = _progress_bar(total_compiled, total_available)
+    pct = f"{100 * total_compiled // total_available}%" if total_available else "—"
+    print(f"  Total    {bar}  {pct:>4}  {total_words:,} words")
     lit_count = len(list_literary_sources())
-    print(f"\nLiterary sources: {lit_count} JSONL files")
+    print(f"  Sources  {lit_count} literary JSONL files")
 
 
 def cmd_list(track: str) -> None:

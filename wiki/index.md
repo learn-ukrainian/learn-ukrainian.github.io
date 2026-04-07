@@ -2,8 +2,21 @@
 
 Auto-generated index of compiled wiki articles.
 
-**Total articles:** 318
-**Total words:** 597,345
+**Total articles:** 346
+**Total words:** 653,391
+
+## Academic
+
+- [Академічна C1: Жанр — Анотація та реферат](academic/c1/abstract-writing.md) (2,030 words)
+- [Академічна C1: Маркери академічного стилю](academic/c1/academic-style-markers.md) (2,106 words)
+- [Академічна C1: Поглиблена пунктуація](academic/c1/advanced-punctuation.md) (2,285 words)
+- [Академічна C1: Аналіз поезії](academic/c1/analiz-poezii.md) (2,293 words)
+- [Академічна C1: Словник аналізу та критики](academic/c1/analysis-vocabulary.md) (1,874 words)
+- [Академічна C1: Безсполучникове речення: логіка тире і двокрапки](academic/c1/asyndetic-semantics.md) (1,909 words)
+- [Академічна C1: Огляд B2 та міст до C1](academic/c1/b2-review-bridge.md) (2,033 words)
+- [Академічна C1: Балет і танець](academic/c1/balet-i-tanets.md) (2,450 words)
+- [Академічна C1: Діловий етикет в Україні](academic/c1/business-etiquette.md) (2,050 words)
+- [Академічна C1: Контрольна точка — Академічна база](academic/c1/c1-1-checkpoint.md) (2,298 words)
 
 ## Folk
 
@@ -11,7 +24,18 @@ Auto-generated index of compiled wiki articles.
 - [Билини київського циклу: дружинний епос княжої доби](folk/genres/bylyny-kyivskoho-tsyklu.md) (1,917 words)
 - [Билинний епос: Соціальний конфлікт в образах Вольги і Микули](folk/genres/bylyny-sotsialni.md) (1,509 words)
 - [Чарівна казка: міфологічні архетипи та обряди ініціації](folk/genres/charivni-kazky.md) (1,837 words)
+- [Українські Лицарські Думи: Епос про Звитягу та Волю](folk/genres/dumy-lytsarski.md) (2,038 words)
+- [Невільницькі плачі: Думи про турецьку неволю](folk/genres/dumy-nevilnytski.md) (1,911 words)
+- [Українські думи: Ідея роду та родинна мораль](folk/genres/dumy-sotsialno-pobutovi.md) (1,506 words)
+- [Український фольклор: Казки про тварин: Від тотемізму до алегорії](folk/genres/kazky-pro-tvaryn.md) (1,663 words)
 - [Український Фольклор: Чумацькі та Бурлацькі Пісні — Голос Мандрівника](folk/lyric/chumatski-burlatski-pisni.md) (1,953 words)
+- [Український фольклор: Історичні перекази як пам'ять народу](folk/prose/istorychni-perekazy.md) (2,105 words)
+- [Українська сміхова культура: Анекдоти та небилиці](folk/prose/narodni-anekdoty.md) (1,530 words)
+- [Українська народна балада: Поетика трагізму та долі](folk/prose/narodni-balady.md) (1,556 words)
+- [Українські колядки: Космогонічний міф про створення світу](folk/ritual/koliadky-shchedrivky.md) (1,838 words)
+- [Український фольклор: Купальські пісні: Магія літнього сонцестояння](folk/ritual/kupalski-pisni.md) (1,943 words)
+- [Українські голосіння: Поетика скорботи та ритуальний плач](folk/tradition/holosinnya.md) (1,984 words)
+- [Кобзарство: Феномен української духовної культури](folk/tradition/kobzarstvo-fenomen.md) (2,007 words)
 
 ## Grammar
 
@@ -273,6 +297,16 @@ Auto-generated index of compiled wiki articles.
 - [Граматика B2: Словотворення: прислівники та інтеграція](grammar/b2/word-formation-adverbs-integration.md) (2,048 words)
 - [Граматика B2: Словотворення: суфікси на позначення осіб](grammar/b2/word-formation-person-suffixes.md) (2,210 words)
 - [Граматика B2: Словотворення: назви місць та об'єктів](grammar/b2/word-formation-place-object-names.md) (2,145 words)
+
+## Mastery
+
+- [Майстерність C2: Академічне публікування українською мовою](mastery/c2/academic-publishing.md) (2,048 words)
+- [Майстерність C2: Поглиблена риторика](mastery/c2/advanced-rhetoric.md) (2,078 words)
+- [Майстерність C2: Побудова галузевої експертизи](mastery/c2/building-domain-expertise.md) (2,212 words)
+- [Майстерність C2: Перехідний модуль C1→C2 та діагностика](mastery/c2/c1-bridge-assessment.md) (1,953 words)
+- [Майстерність C2: Контрольна точка C2.1 — Стилістика та риторика](mastery/c2/c2-1-checkpoint.md) (1,943 words)
+- [Майстерність C2: Практика C2.1 I — Стилістичне портфоліо](mastery/c2/c2-1-practice-i.md) (2,196 words)
+- [Майстерність C2: Практика C2.1 II — Вправи на трансформацію](mastery/c2/c2-1-practice-ii.md) (2,207 words)
 
 ## Pedagogy
 
