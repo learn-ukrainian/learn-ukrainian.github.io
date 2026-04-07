@@ -4407,8 +4407,19 @@ def step_publish(content_path: Path, level: str, slug: str) -> bool:
     # Tab 3: Зошит (from activities YAML or placeholder)
     workbook_content = _build_workbook_tab(workbook_activities)
 
-    # Tab 4: Ресурси (from plan + external resources)
+    # Tab 4: Ресурси (from plan + external resources + textbook deep links)
     resources_content = _build_resources_tab_full(level, slug)
+
+    # Add pidruchnyk.com.ua textbook links (deep links to exact PDF pages)
+    try:
+        from build.textbook_refs import format_textbook_section, get_textbook_links
+        tb_links = get_textbook_links(level, slug)
+        if tb_links:
+            tb_section = format_textbook_section(tb_links)
+            resources_content = tb_section + "\n" + resources_content
+            _log(f"  📚 Added {len(tb_links)} textbook reference(s) with pidruchnyk.com.ua links")
+    except Exception as e:
+        _log(f"  ⚠️  Textbook refs skipped: {e}")
 
     tab_parts = []
     tab_parts.append('<Tabs syncKey="module-tab">')
@@ -4937,14 +4948,20 @@ def main():
             _log(f"\n⚠️  Score {score}/10 — accepting as final (fix rounds exhausted)")
 
     # Step 8b: ANNOTATE (stress marks — after review, before publish)
-    # Moved here from step 6 because the stress annotator has heteronym bugs
-    # (e.g., бра́ти vs брати́) that caused review rejections
-    # Skip for seminar tracks — B2+ immersion doesn't need stress marks
-    _SEMINAR_TRACKS_ANNOTATE = {"hist", "bio", "istorio", "lit", "folk", "oes", "ruth"}
-    _is_seminar_annotate = args.level.lower() in _SEMINAR_TRACKS_ANNOTATE or args.level.lower().startswith("lit-")
+    # Skip for: seminar tracks (B2+ immersion), A1/A2 (stress in словník only,
+    # not in prose — annotator heteronym bugs cause more harm than good at
+    # beginner levels where every word is new).
+    _SKIP_ANNOTATE_TRACKS = {"hist", "bio", "istorio", "lit", "folk", "oes", "ruth"}
+    _SKIP_ANNOTATE_LEVELS = {"a1", "a2"}
+    _skip_annotate = (
+        args.level.lower() in _SKIP_ANNOTATE_TRACKS
+        or args.level.lower().startswith("lit-")
+        or args.level.lower() in _SKIP_ANNOTATE_LEVELS
+    )
     if steps in ("all", "review", "publish", "annotate") and "stress" not in completed_phases:
-        if _is_seminar_annotate:
-            _log("\n  ⏭️  Skipping stress marks (seminar track — B2+ immersion)")
+        if _skip_annotate:
+            reason = "seminar track" if args.level.lower() not in _SKIP_ANNOTATE_LEVELS else "A1/A2 — stress in словník only"
+            _log(f"\n  ⏭️  Skipping stress marks ({reason})")
         else:
             step_annotate(content_path)
         _save_v6_state(args.level, slug, "stress")
