@@ -297,6 +297,85 @@ def _build_video_embeds(plan: dict) -> str:
     return "\n".join(lines)
 
 
+def _resolve_textbook_url(title: str) -> str:
+    """Try to resolve a plan reference title to a textbook PDF URL.
+
+    Parses author + grade + page from titles like:
+      "Большакова Grade 1 буквар, p.24"
+      "Заболотний Grade 5, p.83"
+      "Litvinova Grade 5, p.130"
+
+    Returns URL or empty string.
+    """
+    import re
+
+    # Parse grade and page
+    grade_m = re.search(r"Grade\s+(\d+)", title, re.IGNORECASE)
+    page_m = re.search(r"p\.?\s*(\d+)", title)
+    if not grade_m:
+        return ""
+    grade = int(grade_m.group(1))
+    page = int(page_m.group(1)) if page_m else None
+
+    # Parse author (first word, case-insensitive match)
+    author_map = {
+        "большакова": "bolshakova", "bolshakova": "bolshakova",
+        "захарійчук": "zaharijchuk", "zaharijchuk": "zaharijchuk",
+        "заболотний": "zabolotnyi", "zabolotnyi": "zabolotnyi", "zabolotnij": "zabolotnij",
+        "авраменко": "avramenko", "avramenko": "avramenko",
+        "голуб": "golub", "golub": "golub",
+        "літвінова": "litvinova", "litvinova": "litvinova",
+        "глазова": "glazova", "glazova": "glazova",
+        "ворон": "voron", "voron": "voron",
+        "караман": "karaman", "karaman": "karaman",
+        "вашуленко": "vashulenko", "vashulenko": "vashulenko",
+        "кравцова": "kravcova", "kravcova": "kravcova",
+        "онатій": "onatiy", "onatiy": "onatiy",
+    }
+
+    first_word = title.split()[0].lower().rstrip(",")
+    author_key = author_map.get(first_word, "")
+    if not author_key:
+        return ""
+
+    # Try to find matching source_file in our textbook_refs module
+    try:
+        import sqlite3
+        from pathlib import Path
+
+        from build.textbook_refs import _PDF_BASE, _PDF_NOT_AVAILABLE, _PDF_OVERRIDES, _SHKOLA_OVERRIDES
+        db_path = Path(__file__).resolve().parents[2] / "data" / "sources.db"
+        if not db_path.exists():
+            return ""
+
+        conn = sqlite3.connect(str(db_path))
+        # Find source_file matching author + grade, prefer ukrmova over ukrlit
+        rows = conn.execute(
+            "SELECT DISTINCT source_file FROM textbooks "
+            "WHERE source_file LIKE ? AND source_file LIKE ? "
+            "ORDER BY CASE WHEN source_file LIKE '%ukrmova%' THEN 0 "
+            "WHEN source_file LIKE '%ukrajinska-mova%' THEN 1 ELSE 2 END",
+            (f"{grade}-klas-%", f"%{author_key}%"),
+        ).fetchall()
+        conn.close()
+
+        if not rows:
+            return ""
+
+        sf = rows[0][0]  # Take first match
+
+        if sf in _SHKOLA_OVERRIDES:
+            return _SHKOLA_OVERRIDES[sf]
+
+        pdf_name = _PDF_OVERRIDES.get(sf, sf)
+        url = f"{_PDF_BASE}/{pdf_name}.pdf"
+        if page:
+            url += f"#page={page}"
+        return url
+    except Exception:
+        return ""
+
+
 def _build_resources(plan: dict, slug: str = "") -> str:
     """Generate external resources section from plan references + external_resources.yaml."""
     refs = plan.get("references", [])
@@ -316,6 +395,7 @@ def _build_resources(plan: dict, slug: str = "") -> str:
     lines = []
 
     # Plan references (textbook citations, ULP episodes)
+    # Linkify textbook refs to pidruchnyk.com.ua / shkola.in.ua where possible
     if refs:
         lines.append("**Джерела — References**")
         lines.append("")
@@ -323,6 +403,9 @@ def _build_resources(plan: dict, slug: str = "") -> str:
             title = ref.get("title", "")
             url = ref.get("url", "")
             notes = ref.get("notes", "")
+            # Try to add textbook PDF link if no URL provided
+            if not url:
+                url = _resolve_textbook_url(title)
             if url:
                 lines.append(f"- [{title}]({url})")
             else:

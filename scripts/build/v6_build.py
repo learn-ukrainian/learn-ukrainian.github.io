@@ -4429,19 +4429,9 @@ def step_publish(content_path: Path, level: str, slug: str) -> bool:
     # Tab 3: Зошит (from activities YAML or placeholder)
     workbook_content = _build_workbook_tab(workbook_activities)
 
-    # Tab 4: Ресурси (from plan + external resources + textbook deep links)
+    # Tab 4: Ресурси (from plan + external resources)
+    # Textbook references are linkified inline by _build_resources() via _resolve_textbook_url()
     resources_content = _build_resources_tab_full(level, slug)
-
-    # Add pidruchnyk.com.ua textbook links (deep links to exact PDF pages)
-    try:
-        from build.textbook_refs import format_textbook_section, get_textbook_links
-        tb_links = get_textbook_links(level, slug)
-        if tb_links:
-            tb_section = format_textbook_section(tb_links)
-            resources_content = tb_section + "\n" + resources_content
-            _log(f"  📚 Added {len(tb_links)} textbook reference(s) with pidruchnyk.com.ua links")
-    except Exception as e:
-        _log(f"  ⚠️  Textbook refs skipped: {e}")
 
     tab_parts = []
     tab_parts.append('<Tabs syncKey="module-tab">')

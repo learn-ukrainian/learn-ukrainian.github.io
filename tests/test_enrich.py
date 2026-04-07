@@ -213,7 +213,8 @@ class TestResources:
             ]
         }
         result = _build_resources(plan)
-        assert "- Большакова Grade 1, p.24" in result
+        # Reference should be linkified to pidruchnyk/shkola if DB available, or plain text
+        assert "Большакова Grade 1, p.24" in result
 
     def test_no_references(self):
         plan = {}
