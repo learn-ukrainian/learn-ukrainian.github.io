@@ -393,10 +393,11 @@ def test_yaml_fill_in():
     }
     items = extract_exercise_items_from_yaml(activities)
     words = {i.word for i in items}
-    assert "читай" in words
-    assert "друже" in words
-    assert "читайте" in words
-    assert "читати" in words
+    assert "читай" in words   # answer — extracted
+    assert "друже" in words    # sentence context — extracted
+    # Options (distractors) are intentionally skipped — they include wrong answers
+    assert "читайте" not in words
+    assert "читати" not in words
 
 
 def test_yaml_quiz():
@@ -412,10 +413,11 @@ def test_yaml_quiz():
     }
     items = extract_exercise_items_from_yaml(activities)
     words = {i.word for i in items}
-    assert "оленко" in words
-    assert "підручник" in words
-    assert "дай" in words
-    assert "дайте" in words
+    assert "оленко" in words      # question context — extracted
+    assert "підручник" in words    # question context — extracted
+    # Options (mix of correct + distractors) are skipped — can't distinguish
+    assert "дай" not in words
+    assert "дайте" not in words
 
 
 def test_yaml_match_up():
@@ -536,13 +538,13 @@ def test_yaml_no_exercises_in_markdown_but_yaml_provided():
     }
     plan = {
         "vocabulary_hints": {
-            "required": ["читати (to read)", "писати (to write)"],
+            "required": ["читай (read — imperative)", "писати (to write)"],
         }
     }
     result = verify_exercises(content, plan, activities=activities)
-    # Must find exercise items from YAML
+    # Must find exercise items from YAML (answer + sentence context)
     assert result.total_items > 0
-    # "читати" from plan vocab should be found in exercise words
+    # "читай" from plan vocab is the answer in the fill-in exercise
     assert result.vocab_coverage["tested_in_exercises"] > 0
 
 

@@ -3,6 +3,9 @@
 Extracts Ukrainian words from exercises and verifies they appear in the prose
 sections that precede them. Also checks against plan vocabulary_hints.
 
+Words are tagged as "answer" (the tested word — high risk if ungrounded)
+or "context" (sentence framing — low risk). Report groups by risk level.
+
 Issue: #1016
 """
 
@@ -21,9 +24,6 @@ _EXERCISE_BLOCK_RE = re.compile(
     re.MULTILINE | re.DOTALL,
 )
 
-# H2 heading pattern
-_H2_RE = re.compile(r"^## .+", re.MULTILINE)
-
 
 @dataclass
 class ExerciseItem:
@@ -32,6 +32,7 @@ class ExerciseItem:
     word: str
     exercise_type: str
     context: str  # short snippet showing where it came from
+    role: str = "context"  # "answer" = tested word (high risk), "context" = framing
 
 
 @dataclass
@@ -46,6 +47,16 @@ class VerifyResult:
     @property
     def all_grounded(self) -> bool:
         return len(self.ungrounded) == 0
+
+    @property
+    def ungrounded_answers(self) -> list[dict]:
+        """High-risk: answer words not found in prose."""
+        return [u for u in self.ungrounded if u.get("role") == "answer"]
+
+    @property
+    def ungrounded_context(self) -> list[dict]:
+        """Low-risk: context/framing words not found in prose."""
+        return [u for u in self.ungrounded if u.get("role") != "answer"]
 
 
 def extract_exercise_items(content: str) -> list[ExerciseItem]:
@@ -93,49 +104,59 @@ def extract_exercise_items_from_yaml(activities: dict) -> list[ExerciseItem]:
     return items
 
 
-def _words_from_text(text: str, ex_type: str) -> list[ExerciseItem]:
+def _words_from_text(text: str, ex_type: str, role: str = "context") -> list[ExerciseItem]:
     """Extract Ukrainian words from a text string into ExerciseItems."""
     return [
-        ExerciseItem(word=w.lower(), exercise_type=ex_type, context=text[:60])
+        ExerciseItem(word=w.lower(), exercise_type=ex_type, context=text[:60], role=role)
         for w in _UK_WORD_RE.findall(text)
     ]
 
-
-def _words_from_options(
-    options: list | None, ex_type: str
-) -> list[ExerciseItem]:
-    """Extract Ukrainian words from an options list."""
-    items: list[ExerciseItem] = []
-    for opt in options or []:
-        items.extend(_words_from_text(str(opt), ex_type))
-    return items
 
 
 def _extract_words_from_activity(
     activity: dict, ex_type: str
 ) -> list[ExerciseItem]:
-    """Extract Ukrainian words from a single activity dict."""
+    """Extract Ukrainian words from a single activity dict.
+
+    Tags words as "answer" (the tested/correct word) or "context" (framing).
+    """
     items: list[ExerciseItem] = []
 
     activity_items = activity.get("items", [])
     if not isinstance(activity_items, list):
         activity_items = []
 
-    if ex_type in ("fill-in", "error-correction"):
+    if ex_type == "fill-in":
         for item in activity_items:
             if not isinstance(item, dict):
                 continue
-            answer = str(item.get("answer", "") or item.get("correction", ""))
-            items.extend(_words_from_text(answer, ex_type))
-            items.extend(_words_from_text(str(item.get("sentence", "")), ex_type))
-            items.extend(_words_from_options(item.get("options"), ex_type))
+            # Answer = what the learner must produce → high risk
+            answer = str(item.get("answer", ""))
+            items.extend(_words_from_text(answer, ex_type, role="answer"))
+            # Sentence context = framing → low risk
+            items.extend(_words_from_text(str(item.get("sentence", "")), ex_type, role="context"))
+            # Options = distractors (intentionally wrong) → skip
+
+    elif ex_type == "error-correction":
+        for item in activity_items:
+            if not isinstance(item, dict):
+                continue
+            # Correction = the correct form → answer (must be grounded)
+            correction = str(item.get("answer", "") or item.get("correction", ""))
+            items.extend(_words_from_text(correction, ex_type, role="answer"))
+            # Sentence context = framing → low risk
+            items.extend(_words_from_text(str(item.get("sentence", "")), ex_type, role="context"))
+            # Error field = intentionally wrong word → skip (won't be in prose)
+            # Options = distractors → skip
 
     elif ex_type == "quiz":
         for item in activity_items:
             if not isinstance(item, dict):
                 continue
-            items.extend(_words_from_text(str(item.get("question", "")), ex_type))
-            items.extend(_words_from_options(item.get("options"), ex_type))
+            # Question text = context
+            items.extend(_words_from_text(str(item.get("question", "")), ex_type, role="context"))
+            # Options = mix of correct + distractors → skip
+            # (We can't distinguish correct from wrong without the answer key)
 
     elif ex_type == "match-up":
         pairs = activity.get("pairs", [])
@@ -144,8 +165,10 @@ def _extract_words_from_activity(
         for pair in pairs:
             if not isinstance(pair, dict):
                 continue
-            for side in ("left", "right"):
-                items.extend(_words_from_text(str(pair.get(side, "")), ex_type))
+            # Left side = the term being matched → answer
+            items.extend(_words_from_text(str(pair.get("left", "")), ex_type, role="answer"))
+            # Right side = definition/description → context
+            items.extend(_words_from_text(str(pair.get("right", "")), ex_type, role="context"))
 
     elif ex_type == "group-sort":
         groups = activity.get("groups", [])
@@ -154,22 +177,33 @@ def _extract_words_from_activity(
         for group in groups:
             if not isinstance(group, dict):
                 continue
-            items.extend(_words_from_text(str(group.get("label", "")), ex_type))
+            # Group label = context (category name)
+            items.extend(_words_from_text(str(group.get("label", "")), ex_type, role="context"))
+            # Items being sorted = answer (learner must categorize)
             for gi in group.get("items", []) or []:
-                items.extend(_words_from_text(str(gi), ex_type))
+                items.extend(_words_from_text(str(gi), ex_type, role="answer"))
 
     elif ex_type == "true-false":
         for item in activity_items:
             if not isinstance(item, dict):
                 continue
-            items.extend(_words_from_text(str(item.get("statement", "")), ex_type))
+            # Statement = context (learner reads and evaluates, doesn't produce words)
+            items.extend(_words_from_text(str(item.get("statement", "")), ex_type, role="context"))
+
+    elif ex_type == "unjumble":
+        for item in activity_items:
+            if not isinstance(item, dict):
+                continue
+            # Words to reorder = answer (learner must know these)
+            for w in item.get("words", []) or []:
+                items.extend(_words_from_text(str(w), ex_type, role="answer"))
 
     elif ex_type == "order":
         for item in activity_items:
             if not isinstance(item, dict):
                 continue
             for seg in item.get("segments", []) or []:
-                items.extend(_words_from_text(str(seg), ex_type))
+                items.extend(_words_from_text(str(seg), ex_type, role="answer"))
 
     return items
 
@@ -182,11 +216,11 @@ def _parse_quiz(block: str) -> list[ExerciseItem]:
         options_str = m.group(1)
         for opt in re.findall(r'"([^"]*)"', options_str):
             for w in _UK_WORD_RE.findall(opt):
-                items.append(ExerciseItem(word=w.lower(), exercise_type="quiz", context=opt[:60]))
+                items.append(ExerciseItem(word=w.lower(), exercise_type="quiz", context=opt[:60], role="answer"))
     # Extract question text for Ukrainian words
     for m in re.finditer(r'q:\s*"([^"]*)"', block):
         for w in _UK_WORD_RE.findall(m.group(1)):
-            items.append(ExerciseItem(word=w.lower(), exercise_type="quiz", context=m.group(1)[:60]))
+            items.append(ExerciseItem(word=w.lower(), exercise_type="quiz", context=m.group(1)[:60], role="context"))
     return items
 
 
@@ -196,36 +230,40 @@ def _parse_fill_in(block: str) -> list[ExerciseItem]:
     # Extract answers
     for m in re.finditer(r'answer:\s*"([^"]*)"', block):
         for w in _UK_WORD_RE.findall(m.group(1)):
-            items.append(ExerciseItem(word=w.lower(), exercise_type="fill-in", context=m.group(1)[:60]))
+            items.append(ExerciseItem(word=w.lower(), exercise_type="fill-in", context=m.group(1)[:60], role="answer"))
     # Extract sentence context words
     for m in re.finditer(r'sentence:\s*"([^"]*)"', block):
         for w in _UK_WORD_RE.findall(m.group(1)):
-            items.append(ExerciseItem(word=w.lower(), exercise_type="fill-in", context=m.group(1)[:60]))
+            items.append(ExerciseItem(word=w.lower(), exercise_type="fill-in", context=m.group(1)[:60], role="context"))
     return items
 
 
 def _parse_match_up(block: str) -> list[ExerciseItem]:
     """Extract Ukrainian words from match-up left/right pairs."""
     items = []
-    for side in ("left", "right"):
-        for m in re.finditer(rf'{side}:\s*"([^"]*)"', block):
-            for w in _UK_WORD_RE.findall(m.group(1)):
-                items.append(ExerciseItem(word=w.lower(), exercise_type="match-up", context=m.group(1)[:60]))
+    # Left = term being matched → answer
+    for m in re.finditer(r'left:\s*"([^"]*)"', block):
+        for w in _UK_WORD_RE.findall(m.group(1)):
+            items.append(ExerciseItem(word=w.lower(), exercise_type="match-up", context=m.group(1)[:60], role="answer"))
+    # Right = definition → context
+    for m in re.finditer(r'right:\s*"([^"]*)"', block):
+        for w in _UK_WORD_RE.findall(m.group(1)):
+            items.append(ExerciseItem(word=w.lower(), exercise_type="match-up", context=m.group(1)[:60], role="context"))
     return items
 
 
 def _parse_group_sort(block: str) -> list[ExerciseItem]:
     """Extract Ukrainian words from group-sort items and group names."""
     items = []
-    # Group names
+    # Group names → context
     for m in re.finditer(r'name:\s*"([^"]*)"', block):
         for w in _UK_WORD_RE.findall(m.group(1)):
-            items.append(ExerciseItem(word=w.lower(), exercise_type="group-sort", context=m.group(1)[:60]))
-    # Items in arrays
+            items.append(ExerciseItem(word=w.lower(), exercise_type="group-sort", context=m.group(1)[:60], role="context"))
+    # Items in arrays → answer
     for m in re.finditer(r'items:\s*\[([^\]]+)\]', block):
         for item in re.findall(r'"([^"]*)"', m.group(1)):
             for w in _UK_WORD_RE.findall(item):
-                items.append(ExerciseItem(word=w.lower(), exercise_type="group-sort", context=item[:60]))
+                items.append(ExerciseItem(word=w.lower(), exercise_type="group-sort", context=item[:60], role="answer"))
     return items
 
 
@@ -234,7 +272,7 @@ def _parse_true_false(block: str) -> list[ExerciseItem]:
     items = []
     for m in re.finditer(r'statement:\s*"([^"]*)"', block):
         for w in _UK_WORD_RE.findall(m.group(1)):
-            items.append(ExerciseItem(word=w.lower(), exercise_type="true-false", context=m.group(1)[:60]))
+            items.append(ExerciseItem(word=w.lower(), exercise_type="true-false", context=m.group(1)[:60], role="context"))
     return items
 
 
@@ -305,13 +343,14 @@ def verify_exercises(
     # Combine prose + plan vocab as the "taught" set
     taught = prose_words | plan_vocab
 
-    # Deduplicate exercise items by word
-    seen_words: set[str] = set()
-    unique_items: list[ExerciseItem] = []
+    # Deduplicate exercise items by word (keep highest-risk role)
+    seen_words: dict[str, ExerciseItem] = {}
     for item in exercise_items:
-        if item.word not in seen_words:
-            seen_words.add(item.word)
-            unique_items.append(item)
+        if item.word not in seen_words or (
+            item.role == "answer" and seen_words[item.word].role != "answer"
+        ):
+            seen_words[item.word] = item
+    unique_items = list(seen_words.values())
 
     result.total_items = len(unique_items)
 
@@ -325,6 +364,7 @@ def verify_exercises(
                 "word": item.word,
                 "exercise_type": item.exercise_type,
                 "context": item.context,
+                "role": item.role,
             })
 
     # Check plan vocab coverage separately
@@ -341,23 +381,48 @@ def verify_exercises(
 
 
 def format_verify_result(result: VerifyResult) -> str:
-    """Format verification result for logging."""
+    """Format verification result for logging.
+
+    Groups ungrounded words by risk:
+    - ❌ answer words (high risk — learner must produce these)
+    - ⚠️ context words (low risk — sentence framing)
+    """
     lines = []
     if result.all_grounded:
         lines.append(
             f"  ✅ All {result.total_items} exercise item(s) grounded in prose"
         )
     else:
-        lines.append(
-            f"  ⚠️ {len(result.ungrounded)} exercise item(s) not found in prose "
-            f"(out of {result.total_items}):"
-        )
-        for item in result.ungrounded[:10]:
+        answers = result.ungrounded_answers
+        context = result.ungrounded_context
+
+        if answers:
             lines.append(
-                f"    — {item['word']} ({item['exercise_type']}: {item['context']})"
+                f"  ❌ {len(answers)} ANSWER word(s) not in prose (learner must produce these):"
             )
-        if len(result.ungrounded) > 10:
-            lines.append(f"    ... and {len(result.ungrounded) - 10} more")
+            for item in answers[:15]:
+                lines.append(
+                    f"    → {item['word']} ({item['exercise_type']}: {item['context']})"
+                )
+            if len(answers) > 15:
+                lines.append(f"    ... and {len(answers) - 15} more")
+
+        if context:
+            lines.append(
+                f"  ⚠️ {len(context)} context word(s) not in prose (sentence framing, lower risk)"
+            )
+            # Only show first 5 context words — they're low priority
+            for item in context[:5]:
+                lines.append(
+                    f"    — {item['word']} ({item['exercise_type']}: {item['context']})"
+                )
+            if len(context) > 5:
+                lines.append(f"    ... and {len(context) - 5} more")
+
+        lines.append(
+            f"  Summary: {result.grounded_items}/{result.total_items} grounded, "
+            f"{len(answers)} answer gaps, {len(context)} context gaps"
+        )
 
     if result.vocab_coverage:
         vc = result.vocab_coverage

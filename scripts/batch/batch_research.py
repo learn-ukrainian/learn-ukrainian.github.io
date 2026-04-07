@@ -11,6 +11,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from batch_gemini_config import FLASH_MODEL
 from slug_utils import to_bare_slug
 
 REPO = Path(__file__).parent.parent.parent
@@ -256,7 +257,7 @@ def main():
     parser.add_argument("--from", dest="from_num", type=int, default=1)
     parser.add_argument("--to", dest="to_num", type=int, default=None)
     parser.add_argument("--module", type=int)
-    parser.add_argument("--model", default="gemini-3-flash-preview")
+    parser.add_argument("--model", default=FLASH_MODEL)
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 

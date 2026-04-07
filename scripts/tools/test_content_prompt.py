@@ -26,6 +26,8 @@ SCRIPTS_DIR = Path(__file__).resolve().parent.parent
 PROJECT_ROOT = SCRIPTS_DIR.parent
 sys.path.insert(0, str(SCRIPTS_DIR))
 
+from batch_gemini_config import FLASH_MODEL
+
 
 def measure_immersion(text: str) -> dict:
     """Measure Ukrainian vs English word ratio."""
@@ -158,7 +160,7 @@ def run_prompt(prompt_path: Path, output_dir: Path, content_only: bool = True) -
     ok, raw = dispatch_gemini_raw(
         prompt_text,
         task_id=f"test-content-{timestamp}",
-        model="gemini-3-flash-preview",
+        model=FLASH_MODEL,
         stdout_only=True,
         timeout=600,
     )

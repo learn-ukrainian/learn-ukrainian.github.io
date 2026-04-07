@@ -54,6 +54,8 @@ SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 from batch_gemini_config import (
+    FLASH_MODEL,
+    PRO_MODEL,
     TIMEOUT_ACTIVITIES,
     TIMEOUT_ANNOTATE,
     TIMEOUT_PRE_VERIFY,
@@ -195,8 +197,8 @@ CLAUDE_FAMILY = ModelFamily(
 
 GEMINI_FAMILY = ModelFamily(
     name="gemini",
-    thinking="gemini-3.1-pro-preview",
-    fast="gemini-3-flash-preview",
+    thinking=PRO_MODEL,
+    fast=FLASH_MODEL,
     tool_prefix="mcp_rag_",
 )
 
@@ -2847,6 +2849,10 @@ def step_activities(
     # Build pedagogy patterns — topic-specific exercise recommendations (#1051)
     pedagogy_patterns = _build_pedagogy_patterns(plan, level)
 
+    # Build item minimums table — per-type minItems from schema (prevents retry loops)
+    from pipeline.config_tables import get_item_minimums_table
+    item_minimums_table = get_item_minimums_table(level, module_num)
+
     # Fill template
     prompt = template
     replacements = {
@@ -2861,6 +2867,7 @@ def step_activities(
         "{TOOL_INSTRUCTIONS}": tool_instructions,
         "{LEVEL_CONTEXT}": level_context,
         "{PEDAGOGY_PATTERNS}": pedagogy_patterns,
+        "{ITEM_MINIMUMS_TABLE}": item_minimums_table,
     }
     for key, value in replacements.items():
         prompt = prompt.replace(key, value)

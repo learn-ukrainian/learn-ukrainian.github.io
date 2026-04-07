@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+from batch_gemini_config import FLASH_MODEL
 
 # Import helpers — keyword building, blog/RAG search, formatting
 from content.video_discovery_helpers import (
@@ -472,7 +473,7 @@ def score_candidates(
     outline: list[dict],
     vocab: list[str],
     dispatch_fn: Callable[..., tuple[bool, str]],
-    model: str = "gemini-2.5-flash",
+    model: str = FLASH_MODEL,
 ) -> list[VideoCandidate]:
     """Score candidates for relevance using Gemini Flash. Modifies in-place."""
     if not candidates:
