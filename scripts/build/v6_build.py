@@ -4900,49 +4900,52 @@ def main():
         # Apply deterministic fixes from R1.  NEVER fall back to LLM section
         # rewrite — evidence shows rewrites introduce new errors and degrade
         # scores (8.2→7.8 on a2-bridge, 2026-04-07).  Apply what matches,
-        # skip what doesn't, accept the result.
+        # skip what doesn't.
+        r1_score = score
         fixes_applied, fix_count = _apply_review_fixes(review_text, content_path)
         if fixes_applied:
-            _log(f"\n🔧 Applied {fix_count} deterministic fix(es) from review")
+            _log(f"\n🔧 Applied {fix_count} deterministic fix(es) from R1")
             step_verify(content_path, args.level, args.module)
 
-        # Accept if score >= 8.0 after fixes — re-reviewing risks degradation
-        if score >= 8.0:
-            _log(f"\n✅ Score {score}/10 ≥ 8.0 with {fix_count} fix(es) applied — accepting")
-        elif not fixes_applied:
-            _log(f"\n⚠️  Score {score}/10, no fixes could be applied — accepting as-is")
-        else:
-            # Score < 8.0 but fixes were applied — one re-review to check
+        # R2 only if R1 < 9.0 — above 9, fixes are sufficient
+        if r1_score < 9.0:
+            _log(f"\n🔄 R1 score {r1_score}/10 < 9.0 — running R2 to measure improvement")
             passed, score, review_text = step_review(
                 content_path, args.level, args.module, slug,
                 writer=args.writer, reviewer_override=args.reviewer,
             )
             _save_v6_state(args.level, slug, "review")
 
-            # Apply R2 fixes if any
+            # Apply R2 fixes
             r2_applied, r2_count = _apply_review_fixes(review_text, content_path)
             if r2_applied:
                 _log(f"\n🔧 Applied {r2_count} fix(es) from R2")
                 step_verify(content_path, args.level, args.module)
 
-            if passed:
-                _log(f"\n✅ Review PASSED after R2 ({score}/10)")
-            elif score >= 8.0:
-                _log(f"\n✅ Score {score}/10 ≥ 8.0 after R2 — accepting")
-            else:
-                _log(f"\n⚠️  Score {score}/10 after R2 — accepting (no further rounds)")
+            delta = score - r1_score
+            delta_str = f"+{delta:.1f}" if delta >= 0 else f"{delta:.1f}"
+            _log(f"\n📊 R1: {r1_score}/10 → R2: {score}/10 ({delta_str})")
 
-            # Run deterministic style cleanup if engagement is weak
-            engagement_match = re.search(
-                r"Engagement.*?(\d+)/10", review_text, re.IGNORECASE
-            )
-            if engagement_match:
-                engagement = int(engagement_match.group(1))
-                if engagement <= 7:
-                    _log(f"\n🎨 Engagement {engagement}/10 — running style cleanup")
-                    style_fixes = _post_process_content(content_path)
-                    if style_fixes > 0:
-                        _log(f"  Applied {style_fixes} deterministic style fixes")
+            if passed:
+                _log(f"\n✅ Review PASSED ({score}/10)")
+            elif score >= 8.0:
+                _log(f"\n✅ Score {score}/10 ≥ 8.0 — accepting")
+            else:
+                _log(f"\n⚠️  Score {score}/10 — accepting (2 rounds done)")
+        else:
+            _log(f"\n✅ R1 score {r1_score}/10 ≥ 9.0 — accepting with {fix_count} fix(es)")
+
+        # Run deterministic style cleanup if engagement is weak
+        engagement_match = re.search(
+            r"Engagement.*?(\d+)/10", review_text, re.IGNORECASE
+        )
+        if engagement_match:
+            engagement = int(engagement_match.group(1))
+            if engagement <= 7:
+                _log(f"\n🎨 Engagement {engagement}/10 — running style cleanup")
+                style_fixes = _post_process_content(content_path)
+                if style_fixes > 0:
+                    _log(f"  Applied {style_fixes} deterministic style fixes")
         # Apply any remaining fixes from the final review (even PASS verdicts
         # may have minor style suggestions worth applying).
         if passed:
