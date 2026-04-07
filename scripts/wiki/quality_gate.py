@@ -7,6 +7,8 @@ Scans wiki articles and flags:
 3. Fence wrapping (```markdown)
 4. Missing heading (doesn't start with #)
 5. Truncated (ends mid-sentence)
+6. Placeholder text (TODO, [Insert, etc.)
+7. Unclosed code blocks (odd number of ``` fences)
 
 Can auto-clear flagged articles from progress DB for recompile.
 
@@ -47,6 +49,7 @@ MIN_WORDS = {
 }
 
 AI_NOISE_PATTERNS = [
+    # English thinking
     r"^I am now ",
     r"^My plan is to ",
     r"^I will address ",
@@ -57,8 +60,39 @@ AI_NOISE_PATTERNS = [
     r"^Here is my ",
     r"^Let me now ",
     r"^Now I will ",
+    r"^Let me know if ",
+    r"^Here is the compiled ",
+    # Ukrainian thinking
+    r"^Ось мій план",
+    r"^Зараз я ",
+    r"^По-перше, я ",
+    r"^Мені потрібно ",
 ]
 _AI_NOISE_RE = re.compile("|".join(AI_NOISE_PATTERNS), re.MULTILINE)
+
+# Track → wiki directory mapping (resolved once)
+TRACK_DIRS = {
+    "a1": WIKI_DIR / "pedagogy" / "a1",
+    "a2": WIKI_DIR / "grammar" / "a2",
+    "b1": WIKI_DIR / "grammar" / "b1",
+    "b2": WIKI_DIR / "grammar" / "b2",
+    "c1": WIKI_DIR / "academic" / "c1",
+    "c2": WIKI_DIR / "mastery" / "c2",
+}
+# Add seminar tracks with explicit paths (no glob)
+for _t, _subdir in [
+    ("folk", "folk"), ("hist", "hist"), ("bio", "bio"),
+    ("istorio", "istorio"), ("lit", "lit"), ("oes", "oes"), ("ruth", "ruth"),
+]:
+    # Seminar wiki dirs can be under various parent dirs
+    for _parent in (WIKI_DIR, WIKI_DIR / "seminar"):
+        _candidate = _parent / _subdir
+        if _candidate.is_dir():
+            TRACK_DIRS[_t] = _candidate
+            break
+
+ALL_TRACKS = ["a1", "a2", "b1", "b2", "c1", "c2",
+              "folk", "hist", "bio", "istorio", "lit", "oes", "ruth"]
 
 
 def check_article(path: Path, track: str) -> list[str]:
@@ -73,46 +107,39 @@ def check_article(path: Path, track: str) -> list[str]:
     if words < min_w:
         issues.append(f"SHORT ({words}w < {min_w})")
 
-    # 2. AI noise
-    if _AI_NOISE_RE.search(text[:500]):
+    # 2. AI noise — scan full text, not just first 500 chars
+    if _AI_NOISE_RE.search(text):
         issues.append("AI_NOISE (thinking leaked)")
 
-    # 3. Fence wrapping
+    # 3. Fence wrapping (also covers NO_HEADING — don't double-flag)
     if first_line.startswith("```"):
         issues.append("FENCE_WRAPPED")
-
-    # 4. Missing heading
-    if not first_line.startswith("#"):
+    elif not first_line.startswith("#"):
+        # 4. Missing heading (only if not fence-wrapped)
         issues.append(f"NO_HEADING (starts: {first_line[:40]}...)")
 
-    # 5. Truncated
+    # 5. Truncated — check last non-whitespace char
     stripped = text.rstrip()
-    if stripped and stripped[-1] not in ".!?»\")]\n`|":
+    if stripped and stripped[-1] not in '.!?»")\']`|…"':
         last_line = stripped.split("\n")[-1].strip()
         if last_line and not last_line.startswith(("#", "|", "-", "*", ">", "```", "<!--")):
             issues.append(f"TRUNCATED (ends: ...{last_line[-30:]})")
+
+    # 6. Placeholder text
+    if re.search(r"\[Insert|\bTODO\b|\[Your text here\]|<text>", text):
+        issues.append("PLACEHOLDER_TEXT")
+
+    # 7. Unclosed code blocks (odd fence count)
+    fence_count = len(re.findall(r"^```", text, re.MULTILINE))
+    if fence_count % 2 == 1:
+        issues.append("UNCLOSED_CODE_BLOCK")
 
     return issues
 
 
 def scan_track(track: str) -> dict[str, list[str]]:
-    """Scan all articles for a track. Returns {slug: [issues]}."""
-    # Map track to wiki directory
-    track_dirs = {
-        "a1": WIKI_DIR / "pedagogy" / "a1",
-        "a2": WIKI_DIR / "grammar" / "a2",
-        "b1": WIKI_DIR / "grammar" / "b1",
-        "b2": WIKI_DIR / "grammar" / "b2",
-        "c1": WIKI_DIR / "academic" / "c1",
-        "c2": WIKI_DIR / "mastery" / "c2",
-    }
-    # Seminar tracks
-    for t in ("folk", "hist", "bio", "istorio", "lit", "oes", "ruth"):
-        for sub in WIKI_DIR.glob(f"**/{t}"):
-            if sub.is_dir():
-                track_dirs[t] = sub
-
-    wiki_dir = track_dirs.get(track)
+    """Scan all articles for a track. Returns {path_relative: [issues]}."""
+    wiki_dir = TRACK_DIRS.get(track)
     if not wiki_dir or not wiki_dir.exists():
         return {}
 
@@ -120,33 +147,38 @@ def scan_track(track: str) -> dict[str, list[str]]:
     for md in sorted(wiki_dir.rglob("*.md")):
         if md.name == "index.md":
             continue
-        slug = md.stem
+        # Use relative path as key to avoid slug collisions across tracks
+        rel_key = str(md.relative_to(WIKI_DIR))
         issues = check_article(md, track)
         if issues:
-            results[slug] = issues
+            results[rel_key] = issues
     return results
 
 
-def clear_for_recompile(slugs: list[str]) -> int:
-    """Clear articles from progress DB and delete files for recompile."""
+def clear_for_recompile(bad_paths: list[str]) -> int:
+    """Clear articles from progress DB and delete files.
+
+    Args:
+        bad_paths: list of paths relative to wiki/ (e.g. "grammar/a2/genitive-intro.md")
+    """
     cleared = 0
     if PROGRESS_DB.exists():
         with sqlite3.connect(str(PROGRESS_DB)) as conn:
-            for slug in slugs:
-                rows = conn.execute(
-                    "SELECT article_key FROM compiled WHERE article_key LIKE ?",
-                    (f"%/{slug}",),
-                ).fetchall()
-                for row in rows:
-                    conn.execute("DELETE FROM compiled WHERE article_key = ?", (row[0],))
-                    cleared += 1
+            for rel_path in bad_paths:
+                # article_key in DB is path without .md extension
+                article_key = rel_path.replace(".md", "")
+                deleted = conn.execute(
+                    "DELETE FROM compiled WHERE article_key = ?",
+                    (article_key,),
+                ).rowcount
+                cleared += deleted
             conn.commit()
 
     # Delete files
-    for slug in slugs:
-        for md in WIKI_DIR.rglob(f"{slug}.md"):
-            if md.exists():
-                md.unlink()
+    for rel_path in bad_paths:
+        md = WIKI_DIR / rel_path
+        if md.exists():
+            md.unlink()
 
     return cleared
 
@@ -157,9 +189,7 @@ def main() -> None:
     parser.add_argument("--fix", action="store_true", help="Auto-clear bad articles for recompile")
     args = parser.parse_args()
 
-    all_tracks = ["a1", "a2", "b1", "b2", "c1", "c2",
-                   "folk", "hist", "bio", "istorio", "lit", "oes", "ruth"]
-    tracks = [args.track] if args.track else all_tracks
+    tracks = [args.track] if args.track else ALL_TRACKS
 
     total_issues = 0
     all_bad: dict[str, list[str]] = {}
@@ -170,9 +200,9 @@ def main() -> None:
             print(f"\n{'='*50}")
             print(f"  {track.upper()}: {len(issues)} issues")
             print(f"{'='*50}")
-            for slug, problems in issues.items():
-                print(f"  ❌ {slug}: {', '.join(problems)}")
-                all_bad[slug] = problems
+            for rel_path, problems in issues.items():
+                print(f"  ❌ {rel_path}: {', '.join(problems)}")
+                all_bad[rel_path] = problems
             total_issues += len(issues)
 
     if total_issues == 0:
@@ -182,9 +212,9 @@ def main() -> None:
     print(f"\n📊 Total: {total_issues} articles with issues")
 
     if args.fix:
-        slugs = list(all_bad.keys())
-        cleared = clear_for_recompile(slugs)
-        print(f"🗑️  Cleared {cleared} articles for recompile")
+        paths = list(all_bad.keys())
+        cleared = clear_for_recompile(paths)
+        print(f"🗑️  Cleared {cleared} entries + deleted {len(paths)} files")
         print("Run compile.py --all to rebuild them")
     else:
         print("Run with --fix to auto-clear for recompile")
