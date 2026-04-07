@@ -4864,71 +4864,52 @@ def main():
         #    No review fix is ever left unapplied.
 
 
-        fix_round = 1
-        max_fix_rounds = 4  # Was 5, then 2 — 4 gives enough room without endless loops
-        prev_score = score
-
-        while not passed and fix_round <= max_fix_rounds:
-            # Always apply fixes first, THEN decide whether to accept or re-review
-            fixes_applied, fix_count = _apply_review_fixes(review_text, content_path)
-
-            if fixes_applied:
-                _log(f"\n🔧 Applied {fix_count} reviewer fix(es) (round {fix_round}) — re-reviewing")
-            else:
-                _log(f"\n🔧 Review {score}/10 — section rewrite (fallback round {fix_round})")
-                rewritten = _rewrite_weak_sections(
-                    review_text, content_path, args.level, slug,
-                    writer=args.writer,
-                    verification_text=verification_text,
-                )
-                if not rewritten:
-                    _log(f"\n⚠️  Section rewrite produced no changes ({score}/10). Stopping fixes.")
-                    break
-
+        # Apply deterministic fixes from R1.  NEVER fall back to LLM section
+        # rewrite — evidence shows rewrites introduce new errors and degrade
+        # scores (8.2→7.8 on a2-bridge, 2026-04-07).  Apply what matches,
+        # skip what doesn't, accept the result.
+        fixes_applied, fix_count = _apply_review_fixes(review_text, content_path)
+        if fixes_applied:
+            _log(f"\n🔧 Applied {fix_count} deterministic fix(es) from review")
             step_verify(content_path, args.level, args.module)
 
+        # Accept if score >= 8.0 after fixes — re-reviewing risks degradation
+        if score >= 8.0:
+            _log(f"\n✅ Score {score}/10 ≥ 8.0 with {fix_count} fix(es) applied — accepting")
+        elif not fixes_applied:
+            _log(f"\n⚠️  Score {score}/10, no fixes could be applied — accepting as-is")
+        else:
+            # Score < 8.0 but fixes were applied — one re-review to check
             passed, score, review_text = step_review(
                 content_path, args.level, args.module, slug,
                 writer=args.writer, reviewer_override=args.reviewer,
             )
             _save_v6_state(args.level, slug, "review")
 
+            # Apply R2 fixes if any
+            r2_applied, r2_count = _apply_review_fixes(review_text, content_path)
+            if r2_applied:
+                _log(f"\n🔧 Applied {r2_count} fix(es) from R2")
+                step_verify(content_path, args.level, args.module)
+
             if passed:
-                _log(f"\n✅ Review PASSED after round {fix_round} ({score}/10)")
-                break
+                _log(f"\n✅ Review PASSED after R2 ({score}/10)")
+            elif score >= 8.0:
+                _log(f"\n✅ Score {score}/10 ≥ 8.0 after R2 — accepting")
+            else:
+                _log(f"\n⚠️  Score {score}/10 after R2 — accepting (no further rounds)")
 
-            # Score gate: if score is high enough after re-review, accept
-            # The reviewer may say REVISE for minor style issues at 9.5/10 —
-            # that's Gemini being conservative, not a real quality problem.
-            if score >= 9.0:
-                _log(f"\n✅ Score {score}/10 ≥ 9.0 after re-review — accepting (severity gate override)")
-                break
-
-            # Style-specific fix: if engagement is the weak dimension and other
-            # scores are strong, run deterministic intensifier cleanup + accept.
-            # More LLM rounds won't fix a systemic style habit.
-            if score >= 7.5 and fix_round >= 2:
-                # Check if engagement is dragging the score down
-                engagement_match = re.search(
-                    r"Engagement.*?(\d+)/10", review_text, re.IGNORECASE
-                )
-                if engagement_match:
-                    engagement = int(engagement_match.group(1))
-                    if engagement <= 7:
-                        _log(f"\n🎨 Engagement {engagement}/10 — running style cleanup")
-                        style_fixes = _post_process_content(content_path)
-                        if style_fixes > 0:
-                            _log(f"  Applied {style_fixes} deterministic style fixes")
-                        _log(f"  ✅ Accepting at {score}/10 (style is a writer issue, not content)")
-                        break
-
-            # Score degradation detection: fixes made it worse → stop immediately
-            if score < prev_score:
-                _log(f"\n⚠️  Score degraded ({prev_score} → {score}) — fixes are harmful, stopping")
-                break
-            prev_score = score
-
-            fix_round += 1
+            # Run deterministic style cleanup if engagement is weak
+            engagement_match = re.search(
+                r"Engagement.*?(\d+)/10", review_text, re.IGNORECASE
+            )
+            if engagement_match:
+                engagement = int(engagement_match.group(1))
+                if engagement <= 7:
+                    _log(f"\n🎨 Engagement {engagement}/10 — running style cleanup")
+                    style_fixes = _post_process_content(content_path)
+                    if style_fixes > 0:
+                        _log(f"  Applied {style_fixes} deterministic style fixes")
         # Apply any remaining fixes from the final review (even PASS verdicts
         # may have minor style suggestions worth applying).
         if passed:
