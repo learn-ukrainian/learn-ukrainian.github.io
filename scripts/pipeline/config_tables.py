@@ -1021,8 +1021,9 @@ ACTIVITY_CONFIGS: dict[str, dict[str, str]] = {
         "REQUIRED_TYPES": "", "PRIORITY_TYPES": "error-correction, unjumble, fill-in, classify, watch-and-repeat",
     },
     # b1-bridge removed — bridge is now in A2. B1 starts at full core from module 1.
+    # Count: 12 workbook + 4 inline = 16 total. Ukrainian textbooks have 15-20 per topic.
     "b1-core": {
-        "ACTIVITY_COUNT_TARGET": "12", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "18", "ITEMS_MIN": "8",
+        "ACTIVITY_COUNT_TARGET": "16", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "20", "ITEMS_MIN": "8",
         "VOCAB_COUNT_TARGET": "30",
         "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, critical-analysis, source-evaluation, comparative-study, authorial-intent, debate, paleography-analysis, dialect-comparison, transcription, translation-critique, etymology-trace",
         "ALLOWED_ACTIVITY_TYPES": "quiz, true-false, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction, group-sort, translate, essay-response, grammar-identify, highlight-morphemes",
@@ -1030,8 +1031,8 @@ ACTIVITY_CONFIGS: dict[str, dict[str, str]] = {
     },
     "b2": {
         # Upper-intermediate: production + analysis. 4000-word modules.
-        # Shift from recognition → register awareness, translation, essay writing.
-        "ACTIVITY_COUNT_TARGET": "12", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "18", "ITEMS_MIN": "8",
+        # Count: 12 workbook + 4 inline = 16 total.
+        "ACTIVITY_COUNT_TARGET": "16", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "20", "ITEMS_MIN": "8",
         "VOCAB_COUNT_TARGET": "30",
         "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, paleography-analysis, dialect-comparison, transcription",
         "ALLOWED_ACTIVITY_TYPES": "quiz, true-false, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction, group-sort, select, translate, essay-response, grammar-identify, highlight-morphemes, reading, translation-critique",
@@ -1039,7 +1040,8 @@ ACTIVITY_CONFIGS: dict[str, dict[str, str]] = {
     },
     "c1-core": {
         # Advanced: analytical depth. Unlock seminar-lite types.
-        "ACTIVITY_COUNT_TARGET": "12", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "18", "ITEMS_MIN": "8",
+        # Count: 12 workbook + 4 inline = 16 total.
+        "ACTIVITY_COUNT_TARGET": "16", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "20", "ITEMS_MIN": "8",
         "VOCAB_COUNT_TARGET": "30",
         "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables",
         "ALLOWED_ACTIVITY_TYPES": "quiz, true-false, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction, group-sort, select, translate, essay-response, grammar-identify, highlight-morphemes, reading, critical-analysis, translation-critique, etymology-trace",

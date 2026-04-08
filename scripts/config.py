@@ -39,6 +39,18 @@ TRACK_CONFIG: dict[str, dict[str, Any]] = {
         "persona": "The Urbanist",
         "immersion_range": [0.95, 1.0],
     },
+    "c1": {
+        "model": PRO_MODEL,
+        "word_floor": 4000,
+        "persona": "The Analyst",
+        "immersion_range": [1.0, 1.0],
+    },
+    "c2": {
+        "model": PRO_MODEL,
+        "word_floor": 5000,
+        "persona": "The Connoisseur",
+        "immersion_range": [1.0, 1.0],
+    },
 
     # --- Seminar Tracks (Advanced/Scholar) ---
     "hist": {
