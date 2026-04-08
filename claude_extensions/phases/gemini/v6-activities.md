@@ -19,7 +19,7 @@ Activities have two placement categories:
 
 2. **workbook** — extended practice exercises in the workbook (Зошит tab). These do NOT need ids.
 
-**Targets:** Generate **{ACTIVITY_COUNT_TARGET} activities total**. Split: at least 4 inline (quick checks after teaching points) + the rest as workbook (deeper practice). Ukrainian textbooks always practice right after theory — follow that pattern.
+**Targets:** Generate **{ACTIVITY_COUNT_TARGET} activities total**: at least **4 inline** (quick checks after teaching points) AND at least **{WORKBOOK_MIN} workbook** (deeper practice). Count both before outputting — if under target, add more workbook activities. Ukrainian textbooks always practice right after theory — follow that pattern.
 
 ---
 

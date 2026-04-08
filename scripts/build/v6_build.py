@@ -2850,8 +2850,13 @@ def step_activities(
     pedagogy_patterns = _build_pedagogy_patterns(plan, level)
 
     # Build item minimums table — per-type minItems from schema (prevents retry loops)
-    from pipeline.config_tables import get_item_minimums_table
+    from pipeline.config_tables import get_activity_config, get_item_minimums_table
     item_minimums_table = get_item_minimums_table(level, module_num)
+
+    # Activity count targets from config
+    activity_config = get_activity_config(level, module_num)
+    activity_count_target = activity_config.get("ACTIVITY_COUNT_TARGET", "12")
+    workbook_min = str(int(activity_count_target) - 4)  # total minus 4 inline
 
     # Fill template
     prompt = template
@@ -2868,6 +2873,8 @@ def step_activities(
         "{LEVEL_CONTEXT}": level_context,
         "{PEDAGOGY_PATTERNS}": pedagogy_patterns,
         "{ITEM_MINIMUMS_TABLE}": item_minimums_table,
+        "{ACTIVITY_COUNT_TARGET}": activity_count_target,
+        "{WORKBOOK_MIN}": workbook_min,
     }
     for key, value in replacements.items():
         prompt = prompt.replace(key, value)
