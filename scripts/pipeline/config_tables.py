@@ -1029,18 +1029,21 @@ ACTIVITY_CONFIGS: dict[str, dict[str, str]] = {
         "REQUIRED_TYPES": "", "PRIORITY_TYPES": "cloze, error-correction, translate, mark-the-words, essay-response",
     },
     "b2": {
-        "ACTIVITY_COUNT_TARGET": "8", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "15", "ITEMS_MIN": "14",
+        # Upper-intermediate: production + analysis. 4000-word modules.
+        # Shift from recognition → register awareness, translation, essay writing.
+        "ACTIVITY_COUNT_TARGET": "12", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "18", "ITEMS_MIN": "8",
         "VOCAB_COUNT_TARGET": "30",
-        "FORBIDDEN_ACTIVITY_TYPES": "anagram",
-        "ALLOWED_ACTIVITY_TYPES": "quiz, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction, group-sort, select, translate",
-        "REQUIRED_TYPES": "", "PRIORITY_TYPES": "fill-in, unjumble, error-correction",
+        "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, paleography-analysis, dialect-comparison, transcription",
+        "ALLOWED_ACTIVITY_TYPES": "quiz, true-false, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction, group-sort, select, translate, essay-response, grammar-identify, highlight-morphemes, reading, translation-critique",
+        "REQUIRED_TYPES": "", "PRIORITY_TYPES": "cloze, error-correction, translate, essay-response, translation-critique, mark-the-words",
     },
     "c1-core": {
-        "ACTIVITY_COUNT_TARGET": "10", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "18", "ITEMS_MIN": "12",
+        # Advanced: analytical depth. Unlock seminar-lite types.
+        "ACTIVITY_COUNT_TARGET": "12", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "18", "ITEMS_MIN": "8",
         "VOCAB_COUNT_TARGET": "30",
-        "FORBIDDEN_ACTIVITY_TYPES": "anagram",
-        "ALLOWED_ACTIVITY_TYPES": "quiz, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction, group-sort, select, translate",
-        "REQUIRED_TYPES": "", "PRIORITY_TYPES": "fill-in, unjumble, error-correction",
+        "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables",
+        "ALLOWED_ACTIVITY_TYPES": "quiz, true-false, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction, group-sort, select, translate, essay-response, grammar-identify, highlight-morphemes, reading, critical-analysis, translation-critique, etymology-trace",
+        "REQUIRED_TYPES": "", "PRIORITY_TYPES": "essay-response, critical-analysis, translation-critique, cloze, error-correction",
     },
     "c2": {
         "ACTIVITY_COUNT_TARGET": "5", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "9", "ITEMS_MIN": "1",
