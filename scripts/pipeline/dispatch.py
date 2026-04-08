@@ -50,6 +50,11 @@ def _flash_model() -> str:
     return FLASH_MODEL
 
 
+def _flash_lite_model() -> str:
+    from batch_gemini_config import FLASH_LITE_MODEL
+    return FLASH_LITE_MODEL
+
+
 # ---------------------------------------------------------------------------
 # Heartbeat subprocess runner
 # ---------------------------------------------------------------------------
@@ -201,21 +206,31 @@ def dispatch_gemini(
         stdout_only=True,  # Always stdout-only in pipeline
         allow_write=allow_write, output_file=output_file, timeout=timeout,
     )
-    # Fallback: if rate limited OR timed out (empty output = silent hang), try the other model
+    # Fallback cascade: try other models if rate-limited or timed out
     should_fallback = not ok and (_is_rate_limited(output) or output.strip() == "")
     if should_fallback:
-        flash = _flash_model()
-        pro = _pro_model()
-        fallback = pro if model == flash else flash
+        # Build fallback chain: flash → flash-lite → pro (skip the one that just failed)
+        all_models = [_flash_model(), _flash_lite_model(), _pro_model()]
+        # Deduplicate while preserving order
+        seen = set()
+        fallbacks = []
+        for m in all_models:
+            if m not in seen and m != model:
+                seen.add(m)
+                fallbacks.append(m)
+
         reason = "rate-limited" if _is_rate_limited(output) else "timeout/hang"
-        _log(f"  [fallback] {model} {reason}, retrying with {fallback}...")
-        ok, output = dispatch_gemini_raw(
-            prompt, task_id, model=fallback,
-            stdout_only=True, allow_write=allow_write,
-            output_file=output_file, timeout=timeout,
-        )
-        if ok:
-            _log(f"  [fallback] {fallback} succeeded")
+        for fallback in fallbacks:
+            _log(f"  [fallback] {model} {reason}, trying {fallback}...")
+            ok, output = dispatch_gemini_raw(
+                prompt, task_id, model=fallback,
+                stdout_only=True, allow_write=allow_write,
+                output_file=output_file, timeout=timeout,
+            )
+            if ok:
+                _log(f"  [fallback] {fallback} succeeded")
+                break
+            reason = "also failed"
     return ok, output
 
 
