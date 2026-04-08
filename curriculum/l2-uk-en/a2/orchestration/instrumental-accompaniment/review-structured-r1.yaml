@@ -1,0 +1,45 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Missed mentioning the Dative case in the intro, missed explicitly creating
+    a Transformation drill in the practice prose, and missed the quiz marker entirely.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: The text erroneously claims `й` is a "vowel sound" (`stems ending in a
+    vowel sound take "є"`). It also uses "з собакою" which violates the very euphony
+    rules being taught, and "Давайте подивимося/проч
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: The explanation for `зі` is broken and unfinished because the markdown
+    table was cut off mid-sentence.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary is used naturally in the text.
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: The `quiz` marker for `з/із/зі` is completely missing from the module.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Warm, natural teacher phrasing with no corporate filler and great examples.
+- dimension: 7
+  name: Structural integrity
+  score: 5
+  evidence: The markdown table at the end of section 3 is truncated and missing its
+    closing pipe (`\
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Good use of authentic cultural food references like "борщ зі сметаною".
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The cafe dialogue is natural, multi-turn, and properly tests the targeted
+    grammar in context.
+findings: []

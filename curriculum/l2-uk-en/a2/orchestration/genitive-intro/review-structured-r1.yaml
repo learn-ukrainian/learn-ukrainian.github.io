@@ -1,0 +1,52 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'The module covers all three major grammatical concepts from the outline
+    (absence with `немає`, singular endings `-а/-у`, plural endings with quantity).
+    However, it misses the required vocabulary word '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'The distinction between `-а/-я` and `-у/-ю` is brilliantly explained.
+    However, the text incorrectly states: "the dominant ending is **-ів** (or **-їв**
+    after a vowel or soft sign)." After a soft sign,'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Superb PPP flow. The use of "mental charts" and clear contrasts (*Тут
+    є стіл* vs *Тут немає стола*) makes a complex topic highly accessible. The explanation
+    of `немає` vs `не має` directly aligns with
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: Covers most required words (`родовий відмінок`, `немає`, `багато`, `мало`,
+    `кілька`, `скільки`, `закінчення`), but completely fails to introduce the Ukrainian
+    term `множина` in the prose, and `однина`
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All required exercise markers are present, perfectly matching the plan's
+    requested types and focuses.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is warm, encouraging, and natural ("Think of it as saying...",
+    "Let's see this in action"), devoid of corporate or gamified filler.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: The module is well-structured, follows the plan's exact sections, and
+    the word count (3245) generously exceeds the target without rambling.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Neutral, practical, and highly authentic everyday examples (apartments,
+    cafes, time, money).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogues are contextual, realistic, and effectively isolate the target
+    grammar (e.g., discovering missing furniture in a new apartment).
+findings: []

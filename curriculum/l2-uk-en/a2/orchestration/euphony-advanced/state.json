@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "a2",
+  "slug": "euphony-advanced",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-07T19:53:36.646455+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-07T19:53:36.653407+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-07T19:55:13.751937+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-07T19:58:09.981963+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-07T20:07:13.099283+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-07T21:27:50.805084+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-07T20:32:49.893603+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-07T21:27:50.823187+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-07T20:32:49.914791+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-07T20:35:34.997105+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-07T20:35:34.997239+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-07T20:35:35.171871+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-07T20:46:01.395955+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-07T21:27:50.941648+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-07T21:27:56.854946+00:00"
+    }
+  }
+}

@@ -1,0 +1,307 @@
+vocabulary:
+- word: вподо́бання
+  translation: preferences, interests
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: прогу́лянка
+  translation: walk, stroll
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: змага́ння
+  translation: competition
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: малюва́ння
+  translation: drawing, painting
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: кіно́
+  translation: cinema, movies
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: дозві́лля
+  translation: leisure, free time
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: хо́бі
+  translation: hobby
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: захо́плюватися
+  translation: to be passionate about
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: займа́тися
+  translation: to engage in, to do
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: розва́га
+  translation: entertainment
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ві́льний
+  translation: free
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: пла́вання
+  translation: swimming
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: му́зика
+  translation: music
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ви́ставка
+  translation: exhibition
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: Що ти любиш робити у вільний час?
+  translation: What do you like to do in your free time?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: грати в
+  translation: to play (sports/games)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: грати на
+  translation: to play (musical instruments)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: кататися на
+  translation: to ride (bicycle/boat/skis)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: за́вжди́
+  translation: always
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ча́сто
+  translation: often
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: і́ноді
+  translation: sometimes
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: рі́дко
+  translation: rarely
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ніколи
+  translation: never
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: щодня́
+  translation: every day
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: раз на тиждень
+  translation: once a week
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: басе́йн
+  translation: pool
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: теа́тр
+  translation: theater
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: стадіо́н
+  translation: stadium
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ша́хи
+  translation: chess
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: гіта́ра
+  translation: guitar
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: піані́но
+  translation: piano
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: скри́пка
+  translation: violin
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: велосипе́д
+  translation: bicycle
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: чо́вен
+  translation: boat
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ли́жі
+  translation: skis
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ковзани́
+  translation: ice skates
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: Ходімо!
+  translation: Let's go!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Може, підемо...?
+  translation: Maybe we'll go...?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Давай пограємо!
+  translation: Let's play!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: З задоволенням!
+  translation: With pleasure!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Чудова ідея!
+  translation: Great idea!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Я — за!
+  translation: I'm in!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: На жаль
+  translation: unfortunately
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: за́йнятий
+  translation: busy
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: О котрій?
+  translation: At what time?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: бі́ля
+  translation: near
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: обо́жнювати
+  translation: to adore
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: найбільше подобається
+  translation: like most
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: збирати гриби
+  translation: to hunt mushrooms
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: збирати ягоди
+  translation: to pick berries
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Домовилися!
+  translation: Agreed!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

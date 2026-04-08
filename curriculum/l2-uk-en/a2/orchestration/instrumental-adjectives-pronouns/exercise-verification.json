@@ -1,0 +1,185 @@
+{
+  "total_items": 146,
+  "grounded_items": 118,
+  "ungrounded": [
+    {
+      "word": "пише",
+      "exercise_type": "unjumble",
+      "context": "пише",
+      "role": "answer"
+    },
+    {
+      "word": "кіт",
+      "exercise_type": "unjumble",
+      "context": "Кіт",
+      "role": "answer"
+    },
+    {
+      "word": "сидимо",
+      "exercise_type": "fill-in",
+      "context": "Ми сидимо під (старий) ____ деревом.",
+      "role": "context"
+    },
+    {
+      "word": "добрий",
+      "exercise_type": "fill-in",
+      "context": "Я говорю з (добрий) ____ сусідом.",
+      "role": "context"
+    },
+    {
+      "word": "моя",
+      "exercise_type": "match-up",
+      "context": "моя гарна сусідка",
+      "role": "answer"
+    },
+    {
+      "word": "стіл",
+      "exercise_type": "match-up",
+      "context": "наш старий стіл",
+      "role": "answer"
+    },
+    {
+      "word": "ця",
+      "exercise_type": "match-up",
+      "context": "ця велика машина",
+      "role": "answer"
+    },
+    {
+      "word": "брат",
+      "exercise_type": "match-up",
+      "context": "той найкращий брат",
+      "role": "answer"
+    },
+    {
+      "word": "школа",
+      "exercise_type": "match-up",
+      "context": "ваша нова школа",
+      "role": "answer"
+    },
+    {
+      "word": "будинок",
+      "exercise_type": "match-up",
+      "context": "її старий будинок",
+      "role": "answer"
+    },
+    {
+      "word": "гуляє",
+      "exercise_type": "quiz",
+      "context": "Вона гуляє з ____ сестрою.",
+      "role": "context"
+    },
+    {
+      "word": "стояли",
+      "exercise_type": "quiz",
+      "context": "Ми стояли за ____ машиною.",
+      "role": "context"
+    },
+    {
+      "word": "вечеряю",
+      "exercise_type": "unjumble",
+      "context": "вечеряю",
+      "role": "answer"
+    },
+    {
+      "word": "йдемо",
+      "exercise_type": "quiz",
+      "context": "Ми йдемо в кіно з ____ подругою.",
+      "role": "context"
+    },
+    {
+      "word": "розмовляє",
+      "exercise_type": "unjumble",
+      "context": "розмовляє",
+      "role": "answer"
+    },
+    {
+      "word": "сестра",
+      "exercise_type": "fill-in",
+      "context": "Він гуляє (з + її + гарна + сестра): Він гуляє ____.",
+      "role": "context"
+    },
+    {
+      "word": "їдемо",
+      "exercise_type": "fill-in",
+      "context": "Ми їдемо (ваша + нова + машина): Ми їдемо ____.",
+      "role": "context"
+    },
+    {
+      "word": "твоя",
+      "exercise_type": "fill-in",
+      "context": "Вона малює (твоя + синя + ручка): Вона малює ____.",
+      "role": "context"
+    },
+    {
+      "word": "синя",
+      "exercise_type": "fill-in",
+      "context": "Вона малює (твоя + синя + ручка): Вона малює ____.",
+      "role": "context"
+    },
+    {
+      "word": "ручка",
+      "exercise_type": "fill-in",
+      "context": "Вона малює (твоя + синя + ручка): Вона малює ____.",
+      "role": "context"
+    },
+    {
+      "word": "їїм",
+      "exercise_type": "error-correction",
+      "context": "Ми розмовляємо з їїм братом.",
+      "role": "context"
+    },
+    {
+      "word": "гуляємо",
+      "exercise_type": "unjumble",
+      "context": "гуляємо",
+      "role": "answer"
+    },
+    {
+      "word": "їдуть",
+      "exercise_type": "unjumble",
+      "context": "їдуть",
+      "role": "answer"
+    },
+    {
+      "word": "середній",
+      "exercise_type": "group-sort",
+      "context": "Чоловічий та середній рід (-им, -ім)",
+      "role": "context"
+    },
+    {
+      "word": "синим",
+      "exercise_type": "true-false",
+      "context": "Прикметники чоловічого роду м'якої групи мають закінчення -и",
+      "role": "context"
+    },
+    {
+      "word": "фраза",
+      "exercise_type": "true-false",
+      "context": "Фраза «тим часом» означає «this evening».",
+      "role": "context"
+    },
+    {
+      "word": "означає",
+      "exercise_type": "true-false",
+      "context": "Фраза «тим часом» означає «this evening».",
+      "role": "context"
+    },
+    {
+      "word": "можна",
+      "exercise_type": "true-false",
+      "context": "Можна сказати «з його другом», і слово «його» не змінюється.",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 19,
+    "tested_in_exercises": 15,
+    "not_tested": [
+      "ваш",
+      "вечором",
+      "домашній",
+      "сусід"
+    ]
+  },
+  "all_grounded": false
+}

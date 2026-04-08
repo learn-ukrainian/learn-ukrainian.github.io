@@ -1,0 +1,163 @@
+{
+  "total_items": 130,
+  "grounded_items": 106,
+  "ungrounded": [
+    {
+      "word": "щовихідних",
+      "exercise_type": "fill-in",
+      "context": "Щовихідних вони ходять у ____.",
+      "role": "context"
+    },
+    {
+      "word": "ходять",
+      "exercise_type": "fill-in",
+      "context": "Щовихідних вони ходять у ____.",
+      "role": "context"
+    },
+    {
+      "word": "йдеш",
+      "exercise_type": "quiz",
+      "context": "Куди ти йдеш? — Я йду в ____.",
+      "role": "context"
+    },
+    {
+      "word": "твій",
+      "exercise_type": "quiz",
+      "context": "Де твій брат? — Він зараз у ____.",
+      "role": "context"
+    },
+    {
+      "word": "зараз",
+      "exercise_type": "quiz",
+      "context": "Де твій брат? — Він зараз у ____.",
+      "role": "context"
+    },
+    {
+      "word": "були",
+      "exercise_type": "quiz",
+      "context": "Де ви були вчора? — Ми були на ____.",
+      "role": "context"
+    },
+    {
+      "word": "вчора",
+      "exercise_type": "quiz",
+      "context": "Де ви були вчора? — Ми були на ____.",
+      "role": "context"
+    },
+    {
+      "word": "йти",
+      "exercise_type": "match-up",
+      "context": "йти в",
+      "role": "answer"
+    },
+    {
+      "word": "гітара",
+      "exercise_type": "error-correction",
+      "context": "Вона любить грати на гітара.",
+      "role": "context"
+    },
+    {
+      "word": "катаються",
+      "exercise_type": "error-correction",
+      "context": "Взимку діти катаються на лижі.",
+      "role": "context"
+    },
+    {
+      "word": "лижі",
+      "exercise_type": "error-correction",
+      "context": "Взимку діти катаються на лижі.",
+      "role": "context"
+    },
+    {
+      "word": "граємо",
+      "exercise_type": "error-correction",
+      "context": "Ми часто граємо на теніс.",
+      "role": "context"
+    },
+    {
+      "word": "вимагають",
+      "exercise_type": "true-false",
+      "context": "Дієслова «займатися» та «захоплюватися» вимагають орудного в",
+      "role": "context"
+    },
+    {
+      "word": "орудного",
+      "exercise_type": "true-false",
+      "context": "Дієслова «займатися» та «захоплюватися» вимагають орудного в",
+      "role": "context"
+    },
+    {
+      "word": "відмінка",
+      "exercise_type": "true-false",
+      "context": "Дієслова «займатися» та «захоплюватися» вимагають орудного в",
+      "role": "context"
+    },
+    {
+      "word": "музичні",
+      "exercise_type": "true-false",
+      "context": "Коли ми говоримо про музичні інструменти, ми використовуємо ",
+      "role": "context"
+    },
+    {
+      "word": "інструменти",
+      "exercise_type": "true-false",
+      "context": "Коли ми говоримо про музичні інструменти, ми використовуємо ",
+      "role": "context"
+    },
+    {
+      "word": "напрямок",
+      "exercise_type": "true-false",
+      "context": "Фраза «Я йду в театр» означає напрямок руху (Accusative case",
+      "role": "context"
+    },
+    {
+      "word": "використовують",
+      "exercise_type": "true-false",
+      "context": "Для регулярних занять часто використовують дієслово «ходити»",
+      "role": "context"
+    },
+    {
+      "word": "використовується",
+      "exercise_type": "true-false",
+      "context": "Фраза «О котрій?» використовується, щоб запитати про місце з",
+      "role": "context"
+    },
+    {
+      "word": "зустрічі",
+      "exercise_type": "true-false",
+      "context": "Фраза «О котрій?» використовується, щоб запитати про місце з",
+      "role": "context"
+    },
+    {
+      "word": "сильну",
+      "exercise_type": "true-false",
+      "context": "Слово «обожнювати» показує дуже сильну любов до якогось заня",
+      "role": "context"
+    },
+    {
+      "word": "любов",
+      "exercise_type": "true-false",
+      "context": "Слово «обожнювати» показує дуже сильну любов до якогось заня",
+      "role": "context"
+    },
+    {
+      "word": "якогось",
+      "exercise_type": "true-false",
+      "context": "Слово «обожнювати» показує дуже сильну любов до якогось заня",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 15,
+    "tested_in_exercises": 9,
+    "not_tested": [
+      "вільний",
+      "дозвілля",
+      "змагання",
+      "прогулянка",
+      "розвага",
+      "хобі"
+    ]
+  },
+  "all_grounded": false
+}

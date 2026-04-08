@@ -1,0 +1,321 @@
+version: '1.0'
+module: aspect-concept
+level: a2
+inline:
+- id: aspect-sorting-process-result
+  type: group-sort
+  instruction: Розподіліть дієслова за видами (процес чи результат)
+  groups:
+  - label: Недоконаний вид (Процес)
+    items:
+    - робити
+    - читати
+    - писати
+    - грати
+    - шукати
+    - пити
+    - їсти
+    - бачити
+  - label: Доконаний вид (Результат)
+    items:
+    - зробити
+    - прочитати
+    - написати
+    - забити
+    - знайти
+    - випити
+    - поїсти
+    - побачити
+- id: identify-aspect-in-sentences
+  type: fill-in
+  instruction: Оберіть правильну форму дієслова за змістом (процес чи результат)
+  items:
+  - sentence: Я _____ книгу цілий вечір.
+    answer: читав
+    options:
+    - прочитав
+    - читав
+    - прочитаю
+    - почитав
+  - sentence: Ми нарешті _____ завдання!
+    answer: зробили
+    options:
+    - робили
+    - зробили
+    - робимо
+    - зробимо
+  - sentence: Вона щодня _____ вправи.
+    answer: робить
+    options:
+    - зробить
+    - зробила
+    - робить
+    - робила
+  - sentence: Він довго _____ свої ключі.
+    answer: шукав
+    options:
+    - знайшов
+    - знайде
+    - шукав
+    - пошукав
+  - sentence: Вони раптом _____ гол!
+    answer: забили
+    options:
+    - грали
+    - грають
+    - забили
+    - забивали
+  - sentence: Я _____ квиток, тепер можемо їхати.
+    answer: купив
+    options:
+    - купував
+    - купую
+    - купив
+    - покупував
+  - sentence: Діти часто _____ молоко.
+    answer: п'ють
+    options:
+    - випили
+    - вип'ють
+    - питимуть
+    - п'ють
+  - sentence: Він швидко _____ свій борщ.
+    answer: поїв
+    options:
+    - їв
+    - поїв
+    - їсть
+    - їстиме
+- id: match-up-context-aspect
+  type: match-up
+  instruction: З'єднайте початок речення з правильною кінцівкою
+  pairs:
+  - left: Я шукав ключі, але
+    right: не знайшов.
+  - left: Він довго писав лист,
+    right: і нарешті написав.
+  - left: Ми пили каву
+    right: цілий ранок.
+  - left: Вони грали у футбол,
+    right: і він забив гол.
+  - left: Я читав книгу,
+    right: але ще не прочитав.
+  - left: Вона щодня робила вправи,
+    right: щоб бути сильною.
+- id: error-correction-aspect
+  type: error-correction
+  instruction: Знайдіть і виправте помилку (неправильний вид дієслова)
+  items:
+  - sentence: Він щодня зробив вправи вранці.
+    error: зробив
+    correction: робив
+    error_type: word
+    options:
+    - робив
+    - зробить
+    - робитиме
+    explanation: Слово «щодня» означає повторення, тому потрібен недоконаний вид (робив).
+  - sentence: Вона довго написала цей лист.
+    error: написала
+    correction: писала
+    error_type: word
+    options:
+    - писала
+    - напише
+    - пише
+    explanation: Слово «довго» вказує на процес, тому використовуємо недоконаний вид
+      (писала).
+  - sentence: Я часто купив хліб у цьому магазині.
+    error: купив
+    correction: купував
+    error_type: word
+    options:
+    - купував
+    - купую
+    - покупував
+    explanation: '«Часто» — це повторення (недоконаний вид: купував).'
+  - sentence: Ми нарешті робили це складне завдання!
+    error: робили
+    correction: зробили
+    error_type: word
+    options:
+    - зробили
+    - робимо
+    - робитимемо
+    explanation: Слово «нарешті» показує результат, тому потрібен доконаний вид (зробили).
+  - sentence: Я цілий вечір прочитав цікаву книгу.
+    error: прочитав
+    correction: читав
+    error_type: word
+    options:
+    - читав
+    - прочитаю
+    - читаю
+    explanation: «Цілий вечір» означає тривалий процес (читав).
+  - sentence: Вони завжди випили чай після обіду.
+    error: випили
+    correction: пили
+    error_type: word
+    options:
+    - пили
+    - вип'ють
+    - п'ють
+    explanation: «Завжди» позначає звичку, тому використовуємо недоконаний вид (пили).
+workbook:
+- id: workbook-true-false
+  type: true-false
+  instruction: Правда чи ні? (Правила виду)
+  items:
+  - statement: Недоконаний вид описує завершену дію та результат.
+    correct: false
+    explanation: Недоконаний вид описує процес і повторення. Результат — це доконаний
+      вид.
+  - statement: Дієслова недоконаного виду відповідають на питання «Що робити?».
+    correct: true
+    explanation: 'Так, наприклад: що робити? — читати, писати, робити.'
+  - statement: Дієслова доконаного виду мають теперішній час.
+    correct: false
+    explanation: Доконаний вид означає результат, тому дія не може відбуватися прямо
+      зараз. У теперішньому часі всі дієслова мають недоконаний вид.
+  - statement: Слово «щодня» — це сильний сигнал для недоконаного виду.
+    correct: true
+    explanation: «Щодня» означає регулярну дію (повторення), тому це завжди недоконаний
+      вид.
+  - statement: Дієслово «зробити» — це доконаний вид (результат).
+    correct: true
+    explanation: Префікс з- вказує на завершеність дії та чіткий результат.
+  - statement: Будь-яке дієслово в теперішньому часі означає процес.
+    correct: true
+    explanation: Якщо дія відбувається зараз, вона ще не завершена.
+- id: workbook-unjumble
+  type: unjumble
+  instruction: Складіть правильні речення зі слів
+  items:
+  - words:
+    - книгу
+    - цілий
+    - Я
+    - читав
+    - вечір.
+    correct_order:
+    - Я
+    - читав
+    - книгу
+    - цілий
+    - вечір.
+  - words:
+    - Він
+    - гол!
+    - швидко
+    - дуже
+    - забив
+    correct_order:
+    - Він
+    - дуже
+    - швидко
+    - забив
+    - гол!
+  - words:
+    - робить
+    - щодня
+    - вправи.
+    - Вона
+    correct_order:
+    - Вона
+    - щодня
+    - робить
+    - вправи.
+  - words:
+    - квиток.
+    - купив
+    - Я
+    - нарешті
+    correct_order:
+    - Я
+    - нарешті
+    - купив
+    - квиток.
+  - words:
+    - Ви
+    - бачили
+    - телефон?
+    - мій
+    correct_order:
+    - Ви
+    - бачили
+    - мій
+    - телефон?
+  - words:
+    - Ми
+    - завдання.
+    - зробили
+    - вже
+    correct_order:
+    - Ми
+    - вже
+    - зробили
+    - завдання.
+- id: workbook-translate
+  type: translate
+  instruction: Оберіть правильний переклад, звертаючи увагу на процес та результат
+  items:
+  - source: I was reading a book.
+    options:
+    - text: Я читав книгу.
+      correct: true
+    - text: Я прочитав книгу.
+      correct: false
+    - text: Я читаю книгу.
+      correct: false
+    - text: Я прочитаю книгу.
+      correct: false
+  - source: I read (finished) the book.
+    options:
+    - text: Я прочитав книгу.
+      correct: true
+    - text: Я читав книгу.
+      correct: false
+    - text: Я прочитаю книгу.
+      correct: false
+    - text: Я читаю книгу.
+      correct: false
+  - source: She used to call often.
+    options:
+    - text: Вона часто телефонувала.
+      correct: true
+    - text: Вона зателефонувала часто.
+      correct: false
+    - text: Вона телефонує часто.
+      correct: false
+    - text: Вона зателефонує часто.
+      correct: false
+  - source: He finally bought the ticket.
+    options:
+    - text: Він нарешті купив квиток.
+      correct: true
+    - text: Він купував квиток нарешті.
+      correct: false
+    - text: Він купує квиток.
+      correct: false
+    - text: Він купить квиток нарешті.
+      correct: false
+  - source: I was looking for my keys.
+    options:
+    - text: Я шукав свої ключі.
+      correct: true
+    - text: Я знайшов свої ключі.
+      correct: false
+    - text: Я шукаю свої ключі.
+      correct: false
+    - text: Я знайду свої ключі.
+      correct: false
+  - source: They played football every day.
+    options:
+    - text: Вони грали у футбол щодня.
+      correct: true
+    - text: Вони забили гол щодня.
+      correct: false
+    - text: Вони грають у футбол щодня.
+      correct: false
+    - text: Вони зіграють у футбол щодня.
+      correct: false

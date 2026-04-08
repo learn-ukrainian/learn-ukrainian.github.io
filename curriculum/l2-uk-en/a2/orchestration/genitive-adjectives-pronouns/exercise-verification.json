@@ -1,0 +1,226 @@
+{
+  "total_items": 191,
+  "grounded_items": 156,
+  "ungrounded": [
+    {
+      "word": "молода",
+      "exercise_type": "match-up",
+      "context": "молода мама",
+      "role": "answer"
+    },
+    {
+      "word": "мама",
+      "exercise_type": "match-up",
+      "context": "молода мама",
+      "role": "answer"
+    },
+    {
+      "word": "високе",
+      "exercise_type": "fill-in",
+      "context": "Ми стоїмо біля ____ (високе дерево).",
+      "role": "context"
+    },
+    {
+      "word": "дерево",
+      "exercise_type": "fill-in",
+      "context": "Ми стоїмо біля ____ (високе дерево).",
+      "role": "context"
+    },
+    {
+      "word": "п'ю",
+      "exercise_type": "fill-in",
+      "context": "Я не п'ю ____ (солодкий чай).",
+      "role": "context"
+    },
+    {
+      "word": "солодкий",
+      "exercise_type": "fill-in",
+      "context": "Я не п'ю ____ (солодкий чай).",
+      "role": "context"
+    },
+    {
+      "word": "гарячої",
+      "exercise_type": "fill-in",
+      "context": "гарячої кави",
+      "role": "answer"
+    },
+    {
+      "word": "гаряча",
+      "exercise_type": "fill-in",
+      "context": "Тут немає ____ (гаряча кава).",
+      "role": "context"
+    },
+    {
+      "word": "кава",
+      "exercise_type": "fill-in",
+      "context": "Тут немає ____ (гаряча кава).",
+      "role": "context"
+    },
+    {
+      "word": "балкону",
+      "exercise_type": "fill-in",
+      "context": "відкритого балкону",
+      "role": "answer"
+    },
+    {
+      "word": "відкритий",
+      "exercise_type": "fill-in",
+      "context": "Я шукаю вікно з ____ (відкритий балкон).",
+      "role": "context"
+    },
+    {
+      "word": "балкон",
+      "exercise_type": "fill-in",
+      "context": "Я шукаю вікно з ____ (відкритий балкон).",
+      "role": "context"
+    },
+    {
+      "word": "хліб",
+      "exercise_type": "fill-in",
+      "context": "У нього немає ____ (вчорашній хліб).",
+      "role": "context"
+    },
+    {
+      "word": "комп'ютер",
+      "exercise_type": "match-up",
+      "context": "новий комп'ютер",
+      "role": "answer"
+    },
+    {
+      "word": "брат",
+      "exercise_type": "match-up",
+      "context": "старший брат",
+      "role": "answer"
+    },
+    {
+      "word": "магазин",
+      "exercise_type": "fill-in",
+      "context": "Ми їдемо від ____ (цей великий магазин).",
+      "role": "context"
+    },
+    {
+      "word": "останній",
+      "exercise_type": "fill-in",
+      "context": "Вона чекає після ____ (той останній урок).",
+      "role": "context"
+    },
+    {
+      "word": "урок",
+      "exercise_type": "fill-in",
+      "context": "Вона чекає після ____ (той останній урок).",
+      "role": "context"
+    },
+    {
+      "word": "червона",
+      "exercise_type": "fill-in",
+      "context": "Ти не бачив ____ (ця червона ручка)?",
+      "role": "context"
+    },
+    {
+      "word": "ручка",
+      "exercise_type": "fill-in",
+      "context": "Ти не бачив ____ (ця червона ручка)?",
+      "role": "context"
+    },
+    {
+      "word": "стара",
+      "exercise_type": "fill-in",
+      "context": "Ми стоїмо навпроти ____ (та стара школа).",
+      "role": "context"
+    },
+    {
+      "word": "чоловік",
+      "exercise_type": "fill-in",
+      "context": "Я не знаю ____ (цей молодий чоловік).",
+      "role": "context"
+    },
+    {
+      "word": "ранкової",
+      "exercise_type": "error-correction",
+      "context": "Вони приїхали після ранкової дощу.",
+      "role": "context"
+    },
+    {
+      "word": "неї",
+      "exercise_type": "fill-in",
+      "context": "неї",
+      "role": "answer"
+    },
+    {
+      "word": "вас",
+      "exercise_type": "fill-in",
+      "context": "вас",
+      "role": "answer"
+    },
+    {
+      "word": "них",
+      "exercise_type": "fill-in",
+      "context": "них",
+      "role": "answer"
+    },
+    {
+      "word": "вільного",
+      "exercise_type": "fill-in",
+      "context": "У ____ (вони) немає вільного часу.",
+      "role": "context"
+    },
+    {
+      "word": "часу",
+      "exercise_type": "fill-in",
+      "context": "У ____ (вони) немає вільного часу.",
+      "role": "context"
+    },
+    {
+      "word": "змінюють",
+      "exercise_type": "true-false",
+      "context": "Займенники «його» та «її» змінюють своє закінчення у родовом",
+      "role": "context"
+    },
+    {
+      "word": "своє",
+      "exercise_type": "true-false",
+      "context": "Займенники «його» та «її» змінюють своє закінчення у родовом",
+      "role": "context"
+    },
+    {
+      "word": "твердої",
+      "exercise_type": "true-false",
+      "context": "Прикметники твердої групи чоловічого роду мають закінчення -",
+      "role": "context"
+    },
+    {
+      "word": "групи",
+      "exercise_type": "true-false",
+      "context": "Прикметники твердої групи чоловічого роду мають закінчення -",
+      "role": "context"
+    },
+    {
+      "word": "форму",
+      "exercise_type": "true-false",
+      "context": "Вказівний займенник «ця» у родовому відмінку має форму «цієї",
+      "role": "context"
+    },
+    {
+      "word": "м'якої",
+      "exercise_type": "true-false",
+      "context": "Прикметники жіночого роду м'якої групи мають закінчення -ого",
+      "role": "context"
+    },
+    {
+      "word": "відмінюється",
+      "exercise_type": "true-false",
+      "context": "Займенник «їхній» відмінюється як прикметник м'якої групи.",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 14,
+    "tested_in_exercises": 11,
+    "not_tested": [
+      "вчителька",
+      "дозвіл",
+      "узгодження"
+    ]
+  },
+  "all_grounded": false
+}

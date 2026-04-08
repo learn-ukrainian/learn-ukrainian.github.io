@@ -1,0 +1,52 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: The module perfectly covers all plan points, including abstract nouns,
+    temporal expressions, and means of communication.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'The Ukrainian text is flawless. Minor deduction for a slightly awkward
+    English literal translation: "*(In October it often rains coldly.)*".'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: 'Exceptional pedagogical contrast (e.g., "Засіб: Я говорю по телефону."
+    vs. "Тема: Я думаю про новий телефон."). The explanations for *у/в* vs *на* are
+    clear and memorable.'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary words are present and used naturally
+    in context (e.g., "у думках", "на зустрічі", "про подорожі").
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: Exercises are high quality and test the right concepts, but the markers
+    are clustered at the very end of the file instead of being spread evenly through
+    the module.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The teacher persona is encouraging and clear without using empty filler
+    or corporate gamification language. The dialogue examples feel authentic to real-life
+    situations.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 2936 words (well above the 2000 target). All required H2
+    headings are present. Markdown formatting is clean.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The text accurately reflects standard modern Ukrainian usage, distinguishing
+    between prepositional patterns while acknowledging the instrumental alternative
+    for means of communication.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are natural, contextually appropriate, and efficiently demonstrate
+    the target grammar points in a realistic conversational flow.
+findings: []

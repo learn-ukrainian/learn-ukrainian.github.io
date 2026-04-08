@@ -1,0 +1,332 @@
+---
+title: "Студентові, сестрі, дитині"
+sidebar:
+  order: 18
+  label: "18. Студентові, сестрі, дитині"
+pipeline: v6
+build_status: draft
+---
+
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import FillIn from '@site/src/components/FillIn';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import GroupSort from '@site/src/components/GroupSort';
+import MatchUp from '@site/src/components/MatchUp';
+import Quiz from '@site/src/components/Quiz';
+import Translate from '@site/src/components/Translate';
+import Unjumble from '@site/src/components/Unjumble';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Давальний відмінок іменників чоловічого роду (Dative of Masculine Nouns)
+
+Уявіть ситуацію: ви хочете передати лист або подарунок. Як сказати, кому саме він призначений? Відповідь дає **Давальний відмінок** (the Dative case). Сама назва цього відмінка походить від дієслова **давати** (to give). Він відповідає на питання **кому?** (to whom?) для істот та **чому?** (to what?) для неістот. 
+
+Ukrainian masculine nouns are incredibly rich in the Dative case because they offer choices. Unlike many other cases where you have a single strict rule, II declension masculine nouns have parallel endings: **-ові/-еві/-єві** and **-у/-ю**. Both are correct: **братові = брату**, **лікареві = лікарю**. This gives the language a special melodic quality. 
+
+Let's look at the specific rules for these parallel endings based on the stem type.
+
+1. We use **-ові** for hard stems. For example: **студентові** (to the student), **другові** (to the friend), **батькові** (to the father).
+2. We use **-еві** for soft stems and sibilants. For example: **вчителеві** (to the teacher), **товаришеві** (to the comrade/friend).
+3. We use **-єві** after vowels. For example: **героєві** (to the hero), **Андрієві** (to Andrii).
+
+If you prefer the shorter forms, hard stems take **-у** (**студенту**, **другу**, **батьку**), and soft stems take **-ю** (**вчителю**, **герою**). 
+
+<div class="dialogue">
+
+<div class="dialogue-line">**Читаємо українською: Кому ти даєш?**</div>
+
+<div class="dialogue-line">— Ти пишеш лист **другові** чи **брату**? (Are you writing a letter to a friend or to a brother?)</div>
+
+<div class="dialogue-line">— Я пишу лист **братові**. Він зараз дуже далеко. (I am writing a letter to my brother. He is very far away right now.)</div>
+
+<div class="dialogue-line">— А що ти даси **студентові**? (And what will you give to the student?)</div>
+
+<div class="dialogue-line">— **Студенту** я дам новий словник. (I will give the student a new dictionary.)</div>
+
+<div class="dialogue-line">— Треба також допомогти нашому **вчителеві**. (We also need to help our teacher.)</div>
+
+<div class="dialogue-line">— Звичайно, я з радістю допоможу **вчителю**. (Of course, I will gladly help the teacher.)</div>
+
+</div>
+
+:::tip
+Both endings are equally correct and often used interchangeably. However, native speakers often prefer the **-ові/-еві/-єві** endings for people and professions, as they sound more traditionally Ukrainian and give a respectful tone.
+:::
+
+When we look at masculine nouns ending in -о (Дмитро, батько): follow their declension pattern — **Дмитрові**, **батькові**. These are very common names and words, and they behave exactly like other masculine nouns of the second declension in this regard. Whether it is a formal name or a family title, the ending brings clarity to the recipient of the action.
+
+There is also a very elegant style rule from Заболотний: when multiple dative nouns appear together, alternate endings to avoid monotony — **подякувати сусідові Данилу** (to thank neighbor Danylo). By mixing the **-ові** and **-у** endings, you create a rhythmic flow instead of repeating the same sound twice. You could also say **подякувати сусіду Данилові**, which is equally beautiful.
+
+Let's practice with common masculine nouns learners already know from A1-A2. 
+
+<div class="dialogue">
+
+<div class="dialogue-line">**Читаємо українською: Стиль і милозвучність**</div>
+
+<div class="dialogue-line">— Я хочу подякувати **братові Максиму** за допомогу. (I want to thank brother Maksym for the help.)</div>
+
+<div class="dialogue-line">— Він завжди радий допомогти. А ти вже дзвонив **лікарю Іванові**? (He is always happy to help. And have you already called doctor Ivan?)</div>
+
+<div class="dialogue-line">— Ні, я зателефоную **лікареві** завтра. (No, I will call the doctor tomorrow.)</div>
+
+<div class="dialogue-line">— Передай привіт нашому **другові Сергію**. (Send greetings to our friend Serhii.)</div>
+
+<div class="dialogue-line">— Добре, я обов'язково напишу **Сергієві**. (Okay, I will definitely write to Serhii.)</div>
+
+</div>
+
+<FillIn client:only="react" items={[{"sentence": "Я пишу лист _____ (брат).", "answer": "братові", "options": ["братові", "брата", "братом"]}, {"sentence": "Що ти даси _____ (студент)?", "answer": "студенту", "options": ["студента", "студенту", "студентом"]}, {"sentence": "Треба допомогти _____ (вчитель).", "answer": "вчителеві", "options": ["вчителеві", "вчителя", "вчителі"]}, {"sentence": "Слава _____ (герой)!", "answer": "героєві", "options": ["героя", "героєві", "герої"]}, {"sentence": "Я зателефоную _____ (лікар) завтра.", "answer": "лікареві", "options": ["лікаря", "лікарем", "лікареві"]}, {"sentence": "Він допомагає _____ (сусід).", "answer": "сусідові", "options": ["сусідові", "сусіда", "сусідом"]}, {"sentence": "Передай привіт нашому _____ (друг).", "answer": "другові", "options": ["друга", "другом", "другові"]}, {"sentence": "Він завжди допомагає _____ (батько).", "answer": "батькові", "options": ["батькові", "батька", "батьком"]}]} instruction={"Оберіть правильну форму Давального відмінка (чоловічий рід)"} />
+
+As you can see, combining a title and a name makes the alternation rule very natural. If the title takes **-ові**, the name takes **-у**, and vice versa.
+
+## Давальний відмінок іменників жіночого роду (Dative of Feminine Nouns)
+
+Feminine nouns in the Dative case are highly predictable, but they have a fascinating phonetic feature: consonant alternations. When you give something to a woman, a girl, or interact with a feminine object, you usually need the **-і** ending.
+
+For the I declension: hard stems take **-і** (**мамі**, **подрузі**, **сестрі**), soft stems take **-і** (**землі**, **пісні**), stems in -ія take **-ії** (**станції**). The ending **-і** is a hallmark of the Ukrainian Dative case for feminine nouns, distinguishing it clearly from other Slavic languages.
+
+Before adding this **-і** to hard stems, we often encounter a phonetic shift. Because the sound **[і]** makes the preceding consonant soft, velar consonants at the end of the stem change their shape. These are the consonant alternations before -і: к→ц (жінка→жінці), г→з (книга→книзі), х→с (свекруха→свекрусі). Note that for a word like **жінка** (woman), the change is **к→ц** (**жінці**), and for **подруга** (female friend), the change is **г→з** (**подрузі**).
+
+<div class="dialogue">
+
+<div class="dialogue-line">**Читаємо українською: Кому це?**</div>
+
+<div class="dialogue-line">— Ти вже купив подарунок **мамі**? (Have you already bought a gift for mom?)</div>
+
+<div class="dialogue-line">— Так, і **сестрі** також. (Yes, and for sister too.)</div>
+
+<div class="dialogue-line">— А що ти скажеш своїй **подрузі**? (And what will you say to your female friend?)</div>
+
+<div class="dialogue-line">— Я скажу **подрузі**, що вона найкраща. (I will tell my friend that she is the best.)</div>
+
+<div class="dialogue-line">— Ця інформація є в новій **книзі**. (This information is in the new book.)</div>
+
+<div class="dialogue-line">— Треба написати про це в **газеті**. (We need to write about this in the newspaper.)</div>
+
+</div>
+
+:::note
+The alternation rule (к→ц, г→з, х→с) might seem tricky at first, but it exists because it is physically easier to transition from a soft [ц], [з], or [с] into the vowel [і]. This makes the language flow more smoothly.
+:::
+
+Not all feminine nouns end in **-а** or **-я**. We also have III declension feminine nouns: **-і** (**ночі**, **матері**, **любові**, **радості**). These are nouns that end in a consonant or a soft sign in their basic dictionary form. When we put them in the Dative case, they also comfortably take the **-і** ending. For instance, **мати** (mother) becomes **матері** (to the mother), and **ніч** (night) becomes **ночі** (to the night).
+
+Let's look at some practice sentences using indirect object pattern (**подарувати квіти мамі**, **написати листа подрузі**). This pattern is the foundation of communication when you want to describe an exchange between two people.
+
+<div class="dialogue">
+
+<div class="dialogue-line">**Читаємо українською: Передача інформації та речей**</div>
+
+<div class="dialogue-line">— Тарас хоче **подарувати квіти мамі** на свято. (Taras wants to give flowers to mom for the holiday.)</div>
+
+<div class="dialogue-line">— Це чудова ідея. А я хочу **написати листа подрузі**. (That is a wonderful idea. And I want to write a letter to a friend.)</div>
+
+<div class="dialogue-line">— Що ти подаруєш **учительці**? (What will you give the teacher?)</div>
+
+<div class="dialogue-line">— Я дам **учительці** гарну листівку. (I will give the teacher a nice postcard.)</div>
+
+<div class="dialogue-line">— Ми бажаємо всім **радості** та **любові**. (We wish everyone joy and love.)</div>
+
+<div class="dialogue-line">— Дякую! Я розповім про це моїй **сестрі**. (Thanks! I will tell my sister about this.)</div>
+
+</div>
+
+<Quiz client:only="react" questions={[{"question": "Я скажу _____ (подруга), що вона найкраща.", "options": [{"text": "подругі", "correct": false}, {"text": "подрузі", "correct": true}, {"text": "подружі", "correct": false}, {"text": "подругу", "correct": false}]}, {"question": "Ця інформація є в новій _____ (книга).", "options": [{"text": "книгі", "correct": false}, {"text": "книжі", "correct": false}, {"text": "книзі", "correct": true}, {"text": "книгу", "correct": false}]}, {"question": "Ми подарували квіти цій _____ (жінка).", "options": [{"text": "жінці", "correct": true}, {"text": "жінкі", "correct": false}, {"text": "жінчі", "correct": false}, {"text": "жінку", "correct": false}]}, {"question": "Ти вже купив подарунок _____ (свекруха)?", "options": [{"text": "свекрухі", "correct": false}, {"text": "свекруші", "correct": false}, {"text": "свекрусі", "correct": true}, {"text": "свекруху", "correct": false}]}, {"question": "Він допомагає своїй _____ (колега).", "options": [{"text": "колегі", "correct": false}, {"text": "колежі", "correct": false}, {"text": "колезі", "correct": true}, {"text": "колегу", "correct": false}]}, {"question": "Вони купили іграшку маленькій _____ (дівчинка).", "options": [{"text": "дівчинкі", "correct": false}, {"text": "дівчиньці", "correct": false}, {"text": "дівчинці", "correct": true}, {"text": "дівчинку", "correct": false}]}, {"question": "Тарас хоче подарувати квіти _____ (мама).", "options": [{"text": "маму", "correct": false}, {"text": "мамі", "correct": true}, {"text": "мамє", "correct": false}, {"text": "мамою", "correct": false}]}, {"question": "Я розповім про це моїй _____ (сестра).", "options": [{"text": "сестру", "correct": false}, {"text": "сестрі", "correct": true}, {"text": "сестрє", "correct": false}, {"text": "сестрою", "correct": false}]}]} instruction={"Оберіть правильну форму слова в Давальному відмінку (зверніть увагу на чергування)"} />
+
+As you practice, remember to listen for the soft **-і** at the end of feminine words. It is the clearest signal that someone is on the receiving end of your action.
+
+## Давальний відмінок іменників середнього роду (Dative of Neuter Nouns)
+
+Neuter nouns share many similarities with masculine nouns in the Dative case, but their system is slightly simpler. Since neuter nouns mostly describe inanimate objects or concepts, they answer the question **чому?** (to what?). However, there is a special group of neuter nouns that describe baby animals and human infants, which answer **кому?** (to whom?).
+
+For II declension neuter: **-у** for hard stems (**місту**, **слову**, **вікну**), **-ю** for soft stems (**морю**, **серцю**). This mirrors the short endings of the masculine nouns. When you direct an action toward a place or a concept, this is the pattern you will use.
+
+Then we have the special IV declension (nouns in -а/-ят-): **-аті/-яті** (**немовляті**, **курчаті**). These words usually describe young beings. When they decline, a special suffix **-ят-** or **-ат-** appears before the ending **-і**. For example, a baby is **немовля**, but to give a toy to a baby is дати іграшку **немовляті**.
+
+Let's see examples with neuter nouns in real contexts (**дати назву місту**, **радіти сонцю**).
+
+<div class="dialogue">
+
+<div class="dialogue-line">**Читаємо українською: Звернення до неістот та малят**</div>
+
+<div class="dialogue-line">— Туристи завжди радіють **сонцю** і теплому **морю**. (Tourists always rejoice at the sun and the warm sea.)</div>
+
+<div class="dialogue-line">— Люди хочуть дати нову назву цьому **місту**. (People want to give a new name to this city.)</div>
+
+<div class="dialogue-line">— Ми поїдемо до бабусі і допоможемо **селу**. (We will go to grandma's and help the village.)</div>
+
+<div class="dialogue-line">— Треба дати теплого молока **курчаті**. (We need to give warm milk to the chick.)</div>
+
+<div class="dialogue-line">— Мама заспівала пісню маленькому **немовляті**. (Mom sang a song to the little baby.)</div>
+
+<div class="dialogue-line">— Я вірю твоєму **слову**. (I believe your word.)</div>
+
+</div>
+
+As you can see, the Dative case isn't just for physical giving. We also use it with verbs that express emotional reactions, like **радіти** (to be glad / to rejoice). You rejoice *to* something in Ukrainian (**радіти життю** — to rejoice at life, **радіти сонцю** — to rejoice at the sun).
+
+:::tip
+Words like **сонце** (sun) and **море** (sea) are common soft and hard neuter nouns. Remember: if the dictionary form ends in **-е**, it usually takes **-ю** in Dative (**сонцю**, **морю**). If it ends in **-о**, it takes **-у** (**вікну**, **місту**).
+:::
+
+It is rare to give a physical gift to a window (**вікно**) or a word (**слово**), but you might "give attention" to them, or "give a name" to a city. In all these metaphorical transfers, the Dative case is your reliable tool.
+
+<GroupSort client:only="react" groups={{"Закінчення -ові/-еві + -у/-ю": ["братові Максиму", "лікареві Івану", "сусідові Данилу", "товаришеві Дмитру"], "Закінчення -у/-ю + -ові/-еві/-єві": ["брату Максимові", "лікарю Іванові", "сусіду Данилові", "товаришу Дмитрові"]}} instruction={"Розподіліть фрази за правилом чергування закінчень (для милозвучності)"} />
+
+## Давальний відмінок у реченні (Dative Nouns in Sentences)
+
+Now that we know the **закінчення** (ending (grammar)) for all genders, we can start building complex, native-sounding sentences. The Dative case shines brightest when it works together with the Accusative case to show a complete transaction.
+
+This is the Two-object verb pattern: Subject + Verb + Dative (recipient) + Accusative (thing). **Тетяна подарувала братові книгу.** (Tetiana gave a book to her brother). **Вчитель показав студентам карту.** (The teacher showed a map to the students). 
+
+In these sentences, the Accusative case tells us *what* is being moved (the book, the map), and the Dative case tells us the **одержувач** (recipient) of the item.
+
+To use this pattern, you need to know the right verbs. Here are the common verbs with indirect objects: **подарувати** (to give as a gift), **показати** (to show), **дати** (to give), **розповісти** (to tell, to narrate), **написати** (to write), **пояснити** (to explain), **відповісти** (to answer, to reply). Every time you use one of these verbs, your brain should automatically prepare a Dative noun.
+
+Let's look at a dialogue practice — giving gifts, explaining things, writing to someone. We will visit a post office where people are sending items to their relatives.
+
+<div class="dialogue">
+
+<div class="dialogue-line">**(На пошті / At the post office)**</div>
+
+<div class="dialogue-line"><span class="speaker">Відправник:</span> Добрий день! Я хочу відправити ці пакунки. *(Good day! I want to send these packages.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Працівник пошти:</span> Добрий день. Кому ви відправляєте? *(Good day. To whom are you sending?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Відправник:</span> **Студентові Петренку** — підручник. Це для навчання. *(To the student Petrenko — a textbook. It's for studying.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Працівник пошти:</span> Добре. А цей маленький пакунок? *(Okay. And this small package?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Відправник:</span> **Сестрі Олені** — листівка. Вона живе у Львові. *(To sister Olena — a postcard. She lives in Lviv.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Працівник пошти:</span> Зрозуміло. А третя коробка? *(Understood. And the third box?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Відправник:</span> **Дитині** — іграшка. Це подарунок на день народження. *(To the child — a toy. It's a birthday gift.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Працівник пошти:</span> Чудово. Я зараз **вам** усе оформлю. *(Wonderful. I will process everything for you now.)*</div>
+
+</div>
+
+<MatchUp client:only="react" pairs={[{"left": "подарувати братові", "right": "to give as a gift to a brother"}, {"left": "показати другові", "right": "to show to a friend"}, {"left": "написати сестрі", "right": "to write to a sister"}, {"left": "розповісти студентові", "right": "to tell a student"}, {"left": "пояснити вчителеві", "right": "to explain to a teacher"}, {"left": "відповісти лікарю", "right": "to answer a doctor"}, {"left": "дати дитині", "right": "to give to a child"}, {"left": "допомогти батькові", "right": "to help a father"}]} instruction={"З'єднайте українські фрази з їхнім англійським перекладом"} />
+
+In this conversation, the sender clearly identifies each **одержувач** using the Dative case: **студентові** (masculine, hard stem), **сестрі** (feminine, hard stem), and **дитині** (feminine, hard stem). Without the Dative case, the postal worker wouldn't know who receives what.
+
+It is critical to contrast with Genitive constructions (**дати братові** vs. **немає брата**) to reinforce case discrimination. The Genitive case is used for absence, possession, and quantity. The Dative case is used for direction and receiving.
+
+<div class="dialogue">
+
+<div class="dialogue-line">**Читаємо українською: Давальний чи Родовий?**</div>
+
+<div class="dialogue-line">— Ти дав словник **братові**? (Did you give the dictionary to the brother?)</div>
+
+<div class="dialogue-line">— Ні, у мене зараз немає **брата** вдома. (No, I don't have the brother at home right now.)</div>
+
+<div class="dialogue-line">— Я хочу написати повідомлення **подрузі**. (I want to write a message to the female friend.)</div>
+
+<div class="dialogue-line">— Але у тебе немає номера цієї **подруги**! (But you don't have the number of this friend!)</div>
+
+<div class="dialogue-line">— Ми купили подарунок **вчителеві**. (We bought a gift for the teacher.)</div>
+
+<div class="dialogue-line">— Це книга нашого **вчителя**. (This is the book of our teacher.)</div>
+
+</div>
+
+<Unjumble client:only="react" items={[{"words": "братові / Тетяна / подарувала / книгу.", "answer": "Тетяна подарувала братові книгу.", "hint": "Subject + Verb + Dative (recipient) + Accusative (object)"}, {"words": "студентам / показав / Вчитель / карту.", "answer": "Вчитель показав студентам карту."}, {"words": "написати / Я / подрузі. / повідомлення / хочу", "answer": "Я хочу написати повідомлення подрузі."}, {"words": "цьому / місту. / назву / дати / Вони / хочуть / нову", "answer": "Вони хочуть дати нову назву цьому місту."}, {"words": "допомогти / Ми / вчителеві. / нашому / повинні", "answer": "Ми повинні допомогти нашому вчителеві."}, {"words": "немовляті. / маленькому / заспівала / пісню / Мама", "answer": "Мама заспівала пісню маленькому немовляті."}]} instruction={"Складіть правильне речення зі слів"} />
+
+Notice how the ending shifts depending on the verb's requirement. **Дати братові** (to give to the brother) points toward him. **Немає брата** (there is no brother) indicates absence. Mastering this difference is what separates a beginner from a confident speaker. The Dative case gives your sentences movement, connecting people through words, gifts, and actions.
+
+## Підсумок
+
+У цьому модулі ми вивчили **Давальний відмінок** (the Dative case) для іменників усіх трьох родів. Тепер ви знаєте, як сказати, кому ви даєте подарунок, пишете лист або пояснюєте правило. 
+
+Ви запам'ятали, що іменники чоловічого роду мають красиві паралельні закінчення **-ові/-еві/-єві** та **-у/-ю**, які можна чергувати для милозвучності. Іменники жіночого роду твердої групи приймають закінчення **-і** і часто мають **чергування** приголосних (к→ц, г→з, х→с). Іменники середнього роду використовують закінчення **-у/-ю**, а слова для малят мають особливе закінчення **-аті/-яті**. 
+
+Завдяки дієсловам, таким як **подарувати**, **показати**, **написати** та **відповісти**, ви можете будувати розгорнуті речення і чітко розрізняти Давальний відмінок від Родового. Продовжуйте практикувати, і ці форми стануть для вас абсолютно природними!
+
+</TabItem>
+<TabItem label="Словник">
+
+### Обов'язкові та рекомендовані слова
+
+| Слово | Переклад | Частина мови | Рід |
+|-------|----------|-------------|-----|
+| **відмі́на** | declension | ім. | ж. |
+| **чергува́ння** | alternation (grammar) | ім. | с. |
+| **оде́ржувач** | recipient | ім. | ч. |
+| **немовля́** | baby, infant | ім. | с. |
+| **студе́нтові** | to the student (dat.) | ім. | ч. |
+| **сестрі́** | to the sister (dat.) | ім. | ж. |
+| **дру́гові** | to the friend (dat.) | ім. | ч. |
+| **подарува́ти** | to give as a gift | дієсл. |  |
+| **показа́ти** | to show | дієсл. |  |
+| **написа́ти** | to write | дієсл. |  |
+| **розпові́сти́** | to tell, to narrate | дієсл. |  |
+| **поясни́ти** | to explain | дієсл. |  |
+| **відпові́сти́** | to answer, to reply | дієсл. |  |
+| **закі́нчення** | ending (grammar) | ім. | с. |
+| **дава́ти** | to give | дієсл. |  |
+| **подя́кувати** | to thank | дієсл. |  |
+| **допомогти́** | to help | дієсл. |  |
+| **зателефонува́ти** | to call (by phone) | дієсл. |  |
+| **бажа́ти** | to wish | дієсл. |  |
+| **раді́ти** | to rejoice, to be glad | дієсл. |  |
+| **ві́рити** | to believe | дієсл. |  |
+| **обов'язко́во** | definitely, certainly | присл. |  |
+| **милозву́чність** | euphony, melodic quality | ім. | ж. |
+| **відпра́вник** | sender | ім. | ч. |
+| **паку́нок** | package | ім. | ч. |
+| **листі́вка** | postcard | ім. | ж. |
+| **і́грашка** | toy | ім. | ж. |
+| **курча́** | chick | виг. |  |
+| **офо́рмити** | to process, to register | дієсл. |  |
+
+### Вирази
+
+| Вираз | Переклад |
+|-------|----------|
+| **з радістю** | gladly, with joy |
+| **передати привіт** | to send greetings |
+| **працівник пошти** | postal worker |
+
+### Картки — Flashcards
+
+<FlashcardDeck client:only="react" cards={[{ front: "відмі́на", back: "declension", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "чергува́ння", back: "alternation (grammar)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "оде́ржувач", back: "recipient", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "немовля́", back: "baby, infant", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "студе́нтові", back: "to the student (dat.)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сестрі́", back: "to the sister (dat.)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "дру́гові", back: "to the friend (dat.)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "подарува́ти", back: "to give as a gift", subtitle: "дієсл." }, { front: "показа́ти", back: "to show", subtitle: "дієсл." }, { front: "написа́ти", back: "to write", subtitle: "дієсл." }, { front: "розпові́сти́", back: "to tell, to narrate", subtitle: "дієсл." }, { front: "поясни́ти", back: "to explain", subtitle: "дієсл." }, { front: "відпові́сти́", back: "to answer, to reply", subtitle: "дієсл." }, { front: "закі́нчення", back: "ending (grammar)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "дава́ти", back: "to give", subtitle: "дієсл." }, { front: "подя́кувати", back: "to thank", subtitle: "дієсл." }, { front: "допомогти́", back: "to help", subtitle: "дієсл." }, { front: "зателефонува́ти", back: "to call (by phone)", subtitle: "дієсл." }, { front: "бажа́ти", back: "to wish", subtitle: "дієсл." }, { front: "раді́ти", back: "to rejoice, to be glad", subtitle: "дієсл." }, { front: "ві́рити", back: "to believe", subtitle: "дієсл." }, { front: "обов&#39;язко́во", back: "definitely, certainly", subtitle: "присл." }, { front: "милозву́чність", back: "euphony, melodic quality", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "відпра́вник", back: "sender", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "паку́нок", back: "package", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "листі́вка", back: "postcard", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "і́грашка", back: "toy", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "курча́", back: "chick", subtitle: "виг." }, { front: "офо́рмити", back: "to process, to register", subtitle: "дієсл." }]} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+<GroupSort client:only="react" groups={{"Чоловічий рід (-ові/-еві/-єві, -у/-ю)": ["студентові", "лікареві", "брату", "героєві"], "Жіночий рід (-і, -ї)": ["сестрі", "подрузі", "мамі", "радості"], "Середній рід (-у/-ю, -аті/-яті)": ["місту", "вікну", "сонцю", "немовляті"]}} instruction={"Розподіліть іменники в Давальному відмінку за родами"} />
+
+<ErrorCorrection client:only="react" items={[{"sentence": "Я хочу подарувати книгу брат.", "errorWord": "брат", "correctForm": "братові", "options": ["брата", "братом", "братові"], "explanation": "Дієслово 'подарувати' вимагає Давального відмінка для одержувача (кому?)."}, {"sentence": "Ми написали лист подругі.", "errorWord": "подругі", "correctForm": "подрузі", "options": ["подрузі", "подружі", "подругу"], "explanation": "У жіночому роді твердої групи перед закінченням -і відбувається чергування г → з (подруга → подрузі)."}, {"sentence": "Треба допомогти вчитель.", "errorWord": "вчитель", "correctForm": "вчителеві", "options": ["вчителя", "вчителі", "вчителеві"], "explanation": "Дієслово 'допомогти' вимагає Давального відмінка (кому?)."}, {"sentence": "Мама дала молоко курчі.", "errorWord": "курчі", "correctForm": "курчаті", "options": ["курчу", "курчаті", "курчату"], "explanation": "Слова, що означають малят (IV відміна), у Давальному відмінку мають суфікс -ат-/-ят- і закінчення -і."}, {"sentence": "Він відправив пакунок мама.", "errorWord": "мама", "correctForm": "мамі", "options": ["маму", "мамою", "мамі"], "explanation": "Дієслово 'відправити' вимагає Давального відмінка для одержувача (кому?)."}, {"sentence": "Вона дуже радіє сонце.", "errorWord": "сонце", "correctForm": "сонцю", "options": ["сонця", "сонцем", "сонцю"], "explanation": "Дієслово 'радіти' вимагає Давального відмінка (чому?). 'Сонце' — іменник середнього роду."}]} instruction={"Знайдіть і виправте помилку у відмінковому закінченні"} />
+
+<Translate client:only="react" questions={[{"source": "I am writing a letter to a friend.", "options": [{"text": "Я пишу лист другові.", "correct": true}, {"text": "Я пишу лист друга.", "correct": false}, {"text": "Я пишу лист другом.", "correct": false}]}, {"source": "Taras gave flowers to his mother.", "options": [{"text": "Тарас подарував квіти мамі.", "correct": true}, {"text": "Тарас подарував квіти маму.", "correct": false}, {"text": "Тарас подарував квіти мамою.", "correct": false}]}, {"source": "We want to help the village.", "options": [{"text": "Ми хочемо допомогти селу.", "correct": true}, {"text": "Ми хочемо допомогти села.", "correct": false}, {"text": "Ми хочемо допомогти селом.", "correct": false}]}, {"source": "Did you give the dictionary to your brother?", "options": [{"text": "Ти дав словник братові?", "correct": true}, {"text": "Ти дав словник брата?", "correct": false}, {"text": "Ти дав словник брат?", "correct": false}]}, {"source": "I will tell my sister about this.", "options": [{"text": "Я розповім про це моїй сестрі.", "correct": true}, {"text": "Я розповім про це моїй сестру.", "correct": false}, {"text": "Я розповім про це моя сестра.", "correct": false}]}, {"source": "The teacher showed a map to the students.", "options": [{"text": "Вчитель показав студентам карту.", "correct": true}, {"text": "Вчитель показав студентів карту.", "correct": false}, {"text": "Вчитель показав студентами карту.", "correct": false}]}]} instruction={"Оберіть правильний переклад речень"} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+## Підручники (Textbooks)
+
+- [Авраменко О. М. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-avramenko-2018.pdf#page=156), стор. 156
+- [Заболотний О. В. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-zabolotnij-2018.pdf#page=157), стор. 157
+- [Караман С. О. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-karaman-2018.pdf#page=147), стор. 147
+- [Заболотний О. В. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-zabolotnij-2018.pdf#page=157), стор. 157
+- [Авраменко О. М. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-avramenko-2019.pdf#page=181), стор. 181
+
+**Статті — Articles**
+
+- [Dative Case Guide](https://www.ukrainianlessons.com/intro-cases/) (Unknown)
+- [Dobra Forma 11-1: Dative Case (Feminine)](https://opentext.ku.edu/dobraforma/chapter/11-1/) (University of Kansas)
+- [Dobra Forma 11-2: Dative Case (Masculine/Neuter)](https://opentext.ku.edu/dobraforma/chapter/11-2/) (University of Kansas)
+- [Dobra Forma 11-3: Dative Case (Animate Masculine)](https://opentext.ku.edu/dobraforma/chapter/11-3/) (University of Kansas)
+- [Dobra Forma 11-4: Dative Case (Plural)](https://opentext.ku.edu/dobraforma/chapter/11-4/) (University of Kansas)
+
+**Відео — Videos**
+
+- [Dative Case Practice](https://www.youtube.com/watch?v=Cm0Ay7NEOlw) (Let's Learn Ukrainian)
+
+</TabItem>
+</Tabs>

@@ -1,0 +1,372 @@
+version: '1.0'
+module: instrumental-means
+level: a2
+inline:
+- id: fill-in-tool-singular
+  type: fill-in
+  instruction: Вставте правильну форму слова в орудному відмінку (інструмент)
+  items:
+  - sentence: Учень пише синьою _____.
+    answer: ручкою
+    options:
+    - ручка
+    - ручкою
+    - ручку
+  - sentence: Художник малює картину чорним _____.
+    answer: олівцем
+    options:
+    - олівець
+    - олівцем
+    - олівцю
+  - sentence: Кухар швидко ріже м'ясо гострим _____.
+    answer: ножем
+    options:
+    - ніж
+    - ножем
+    - ножу
+  - sentence: Дівчинка їсть суп великою _____.
+    answer: ложкою
+    options:
+    - ложка
+    - ложкою
+    - ложці
+  - sentence: Жінка миє руки запашним _____.
+    answer: милом
+    options:
+    - мило
+    - милом
+    - милу
+  - sentence: Він відкриває двері старим _____.
+    answer: ключем
+    options:
+    - ключ
+    - ключем
+    - ключу
+  - sentence: Вона вимірює папір довгою _____.
+    answer: лінійкою
+    options:
+    - лінійка
+    - лінійкою
+    - лінійку
+  - sentence: Садівник працює з м'якою _____.
+    answer: землею
+    options:
+    - земля
+    - землею
+    - землі
+- id: match-up-transport
+  type: match-up
+  instruction: З'єднайте базову форму транспорту з її формою в орудному відмінку
+  pairs:
+  - left: автобус
+    right: автобусом
+  - left: потяг
+    right: потягом
+  - left: літак
+    right: літаком
+  - left: трамвай
+    right: трамваєм
+  - left: корабель
+    right: кораблем
+  - left: машина
+    right: машиною
+  - left: метро
+    right: метро (не змінюється)
+  - left: свої ноги
+    right: пішки
+- id: unjumble-plural-phrases
+  type: unjumble
+  instruction: Складіть правильне речення зі слів
+  items:
+  - words:
+    - фарбами.
+    - малювати
+    - люблять
+    - Діти
+    correct_order:
+    - Діти
+    - люблять
+    - малювати
+    - фарбами.
+  - words:
+    - великими
+    - роботу
+    - на
+    - автобусами.
+    - їдемо
+    - Ми
+    correct_order:
+    - Ми
+    - їдемо
+    - на
+    - роботу
+    - великими
+    - автобусами.
+  - words:
+    - на
+    - пишуть
+    - Учні
+    - уроці
+    - олівцями.
+    correct_order:
+    - Учні
+    - пишуть
+    - на
+    - уроці
+    - олівцями.
+  - words:
+    - їдять
+    - традиційно
+    - В Азії
+    - паличками.
+    correct_order:
+    - В Азії
+    - традиційно
+    - їдять
+    - паличками.
+  - words:
+    - часто
+    - руками.
+    - Фермери
+    - працюють
+    correct_order:
+    - Фермери
+    - часто
+    - працюють
+    - руками.
+  - words:
+    - потягами.
+    - новими
+    - подорожують
+    - Туристи
+    correct_order:
+    - Туристи
+    - подорожують
+    - новими
+    - потягами.
+- id: quiz-companion-choice
+  type: quiz
+  instruction: 'Оберіть правильний варіант: інструмент (без прийменника) чи супутник
+    (з прийменником ''з'')'
+  items:
+  - question: Я малюю картину _____.
+    options:
+    - олівцем
+    - з олівцем
+    - олівець
+    - в олівці
+    correct: 0
+  - question: Я йду в кіно _____.
+    options:
+    - з братом
+    - братом
+    - з брату
+    - в брата
+    correct: 0
+  - question: Він їде на роботу _____.
+    options:
+    - автобусом
+    - з автобусом
+    - автобусу
+    - до автобуса
+    correct: 0
+  - question: Вона гуляє в парку _____.
+    options:
+    - з собакою
+    - собакою
+    - собаку
+    - про собаку
+    correct: 0
+  - question: Ми їмо смачний суп _____.
+    options:
+    - ложкою
+    - з ложкою
+    - ложка
+    - в ложці
+    correct: 0
+  - question: Вони подорожують _____.
+    options:
+    - з друзями
+    - друзями
+    - друзі
+    - на друзях
+    correct: 0
+  - question: Студент пише складний тест _____.
+    options:
+    - ручкою
+    - з ручкою
+    - ручку
+    - до ручки
+    correct: 0
+  - question: Дівчина п'є каву _____.
+    options:
+    - з сестрою
+    - сестрою
+    - в сестри
+    - від сестри
+    correct: 0
+- id: group-sort-categories
+  type: group-sort
+  instruction: 'Розподіліть фрази на дві категорії: Засіб/Інструмент та Супутник'
+  groups:
+  - label: Знаряддя або засіб (без 'з')
+    items:
+    - писати ручкою
+    - їхати автобусом
+    - малювати олівцем
+    - летіти літаком
+    - різати ножем
+  - label: Супутник (разом із 'з')
+    items:
+    - іти з другом
+    - їхати з мамою
+    - малювати з братом
+    - подорожувати з сестрою
+workbook:
+- type: error-correction
+  instruction: Знайдіть і виправте помилку у вживанні прийменника
+  items:
+  - sentence: Я завжди пишу тести з синьою ручкою.
+    error: з синьою ручкою
+    correction: синьою ручкою
+    error_type: phrase
+    options:
+    - синьою ручкою
+    - на синій ручці
+    - від синьої ручки
+    explanation: Ручка — це інструмент. Інструменти використовують Орудний відмінок
+      без прийменника 'з'.
+  - sentence: Він щодня їде на роботу з автобусом.
+    error: з автобусом
+    correction: автобусом
+    error_type: phrase
+    options:
+    - автобусом
+    - на автобус
+    - від автобуса
+    explanation: Автобус — це засіб пересування. Ми не використовуємо 'з' для транспорту.
+  - sentence: Ми дуже швидко летимо в Київ з літаком.
+    error: з літаком
+    correction: літаком
+    error_type: phrase
+    options:
+    - літаком
+    - на літак
+    - до літака
+    explanation: Літак — це транспорт, засіб. Використовуйте Орудний відмінок без
+      'з'.
+  - sentence: Вона їсть смачний борщ з ложкою.
+    error: з ложкою
+    correction: ложкою
+    error_type: phrase
+    options:
+    - ложкою
+    - для ложки
+    - в ложці
+    explanation: Ложка — це інструмент дії, тому прийменник не потрібен.
+  - sentence: Мій брат серйозно цікавиться з історією.
+    error: з історією
+    correction: історією
+    error_type: phrase
+    options:
+    - історією
+    - на історію
+    - про історію
+    explanation: Дієслово 'цікавитися' вимагає Орудного відмінка без прийменника 'з'.
+  - sentence: Цей весняний парк гарно пахне з квітами.
+    error: з квітами
+    correction: квітами
+    error_type: phrase
+    options:
+    - квітами
+    - про квіти
+    - на квіти
+    explanation: Дієслово 'пахнути' вимагає Орудного відмінка без прийменника.
+- type: translate
+  instruction: Оберіть правильний переклад речення
+  items:
+  - source: I am writing with a pen.
+    options:
+    - text: Я пишу ручкою.
+      correct: true
+    - text: Я пишу з ручкою.
+      correct: false
+    - text: Я пишу на ручці.
+      correct: false
+    - text: Я пишу до ручки.
+      correct: false
+  - source: We travel by train.
+    options:
+    - text: Ми подорожуємо потягом.
+      correct: true
+    - text: Ми подорожуємо з потягом.
+      correct: false
+    - text: Ми подорожуємо на потяг.
+      correct: false
+    - text: Ми подорожуємо до потяга.
+      correct: false
+  - source: He cuts meat with a sharp knife.
+    options:
+    - text: Він ріже м'ясо гострим ножем.
+      correct: true
+    - text: Він ріже м'ясо з гострим ножем.
+      correct: false
+    - text: Він ріже м'ясо гострий ніж.
+      correct: false
+    - text: Він ріже м'ясо до гострого ножа.
+      correct: false
+  - source: She goes to the park with a friend.
+    options:
+    - text: Вона йде в парк з другом.
+      correct: true
+    - text: Вона йде в парк другом.
+      correct: false
+    - text: Вона йде в парк для друга.
+      correct: false
+    - text: Вона йде в парк від друга.
+      correct: false
+  - source: They are interested in history.
+    options:
+    - text: Вони цікавляться історією.
+      correct: true
+    - text: Вони цікавляться з історією.
+      correct: false
+    - text: Вони цікавляться про історію.
+      correct: false
+    - text: Вони цікавляться на історію.
+      correct: false
+  - source: My brother does sports.
+    options:
+    - text: Мій брат займається спортом.
+      correct: true
+    - text: Мій брат займається зі спортом.
+      correct: false
+    - text: Мій брат займається про спорт.
+      correct: false
+    - text: Мій брат займається на спорт.
+      correct: false
+- type: true-false
+  instruction: Правда чи ні? Оцініть граматичні правила
+  items:
+  - statement: Речення 'Я пишу з ручкою' є абсолютно правильним.
+    correct: false
+    explanation: Це помилка. Ручка — це інструмент, тому правильно казати 'Я пишу
+      ручкою' (без прийменника).
+  - statement: Для засобів транспорту ми використовуємо Орудний відмінок без прийменника
+      'з'.
+    correct: true
+    explanation: Так, правильно казати 'їхати автобусом', 'летіти літаком'.
+  - statement: Слово 'метро' має форму 'метром' в орудному відмінку.
+    correct: false
+    explanation: Слово 'метро' є незмінним. Воно ніколи не змінює своє закінчення.
+  - statement: Дієслова 'цікавитися' та 'займатися' вимагають Орудного відмінка без
+      'з'.
+    correct: true
+    explanation: 'Так. Наприклад: ''цікавитися мистецтвом'', ''займатися спортом''.'
+  - statement: Коли ви йдете своїми ногами, треба казати 'я йду ногами'.
+    correct: false
+    explanation: 'Для цього є спеціальний прислівник: ''іти пішки''.'
+  - statement: Фраза 'іти з другом' використовує 'з', бо друг — це ваш супутник.
+    correct: true
+    explanation: Так, прийменник 'з' плюс Орудний відмінок позначає супутника (разом
+      із кимось).

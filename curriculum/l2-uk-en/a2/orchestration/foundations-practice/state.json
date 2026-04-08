@@ -1,0 +1,63 @@
+{
+  "mode": "v6",
+  "track": "a2",
+  "slug": "foundations-practice",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-07T19:56:31.862240+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-07T19:56:31.870437+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-07T19:57:54.772394+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-07T20:01:21.816489+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-07T20:19:52.395264+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-07T20:19:52.395467+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-07T20:35:36.855619+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-07T20:35:36.861577+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-07T20:41:20.972478+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-07T20:41:20.972606+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-07T20:41:21.113670+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-07T20:44:03.817038+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-07T20:44:03.973161+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-07T20:44:05.888764+00:00"
+    }
+  }
+}

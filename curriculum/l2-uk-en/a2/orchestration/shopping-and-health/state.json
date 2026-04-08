@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "a2",
+  "slug": "shopping-and-health",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-07T21:28:35.347357+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-07T21:28:35.354581+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-07T21:31:28.007445+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-07T21:37:53.043374+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-07T21:42:50.909978+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-07T21:42:50.910126+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-07T21:44:00.582696+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-07T21:44:00.598169+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-07T21:44:00.604431+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-07T21:46:24.513039+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-07T21:46:24.513193+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-07T21:46:24.805531+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-07T21:50:02.682627+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-07T21:50:02.863367+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-07T21:50:04.743548+00:00"
+    }
+  }
+}

@@ -1,0 +1,397 @@
+version: '1.0'
+module: aspect-in-vocabulary
+level: a2
+inline:
+- id: quiz-find-partner
+  type: quiz
+  instruction: Оберіть правильну видову пару для дієслова.
+  items:
+  - question: читати
+    options:
+    - прочитати
+    - вичитати
+    - зачитати
+    - почитати
+    correct: 0
+  - question: робити
+    options:
+    - зробити
+    - виробити
+    - заробити
+    - поробити
+    correct: 0
+  - question: бачити
+    options:
+    - побачити
+    - вибачити
+    - забачити
+    - пробачити
+    correct: 0
+  - question: чути
+    options:
+    - почути
+    - вичути
+    - зачути
+    - прочути
+    correct: 0
+  - question: писати
+    options:
+    - написати
+    - виписати
+    - переписати
+    - підписати
+    correct: 0
+  - question: жити
+    options:
+    - прожити
+    - зажити
+    - пожити
+    - вижити
+    correct: 0
+  - question: пити
+    options:
+    - випити
+    - напитися
+    - попити
+    - запити
+    correct: 0
+  - question: платити
+    options:
+    - заплатити
+    - відплатити
+    - переплатити
+    - виплатити
+    correct: 0
+- id: fill-in-categorize-by-formation-type
+  type: fill-in
+  instruction: Вставте правильне дієслово (процес або результат).
+  items:
+  - sentence: Я довго ____, що робити.
+    answer: вирішував
+    options:
+    - вирішував
+    - вирішив
+  - sentence: Нарешті я ____ цю проблему.
+    answer: вирішив
+    options:
+    - вирішував
+    - вирішив
+  - sentence: Він завжди ____ мені.
+    answer: допомагав
+    options:
+    - допомагав
+    - допоміг
+  - sentence: Вона ____ мені вчора.
+    answer: допомогла
+    options:
+    - допомагала
+    - допомогла
+  - sentence: Хто ____ вікно?
+    answer: відчиняв
+    options:
+    - відчиняв
+    - відчинив
+  - sentence: Будь ласка, ____ двері.
+    answer: відчинити
+    options:
+    - відчиняти
+    - відчинити
+  - sentence: Я постійно ____ про це.
+    answer: запитував
+    options:
+    - запитував
+    - запитав
+  - sentence: Можна тебе ____?
+    answer: запитати
+    options:
+    - запитувати
+    - запитати
+- id: match-up-fill-in-the-blanks-with-the-correct-pair
+  type: match-up
+  instruction: З'єднайте дієслова недоконаного та доконаного виду.
+  pairs:
+  - left: брати
+    right: взяти
+  - left: говорити
+    right: сказати
+  - left: ловити
+    right: піймати
+  - left: шукати
+    right: знайти
+  - left: купувати
+    right: купити
+  - left: вирішувати
+    right: вирішити
+  - left: відповідати
+    right: відповісти
+  - left: допомагати
+    right: допомогти
+- id: fill-in-choose-the-correct-aspect-partner
+  type: fill-in
+  instruction: Оберіть правильне дієслово (недоконаний чи доконаний вид).
+  items:
+  - sentence: Щодня я ____ каву.
+    answer: купую
+    options:
+    - купую
+    - куплю
+  - sentence: Завтра я ____ нову книгу.
+    answer: куплю
+    options:
+    - купую
+    - куплю
+  - sentence: Він довго ____ ключі.
+    answer: шукав
+    options:
+    - шукав
+    - знайшов
+  - sentence: Нарешті вона ____ свій телефон.
+    answer: знайшла
+    options:
+    - шукала
+    - знайшла
+  - sentence: Ми часто ____ про мистецтво.
+    answer: говорили
+    options:
+    - говорили
+    - сказали
+  - sentence: Він ____ мені правду.
+    answer: сказав
+    options:
+    - говорив
+    - сказав
+  - sentence: Вона завжди ____ мої речі.
+    answer: брала
+    options:
+    - брала
+    - взяла
+  - sentence: Хто ____ мій зошит?
+    answer: взяв
+    options:
+    - брав
+    - взяв
+workbook:
+- id: wb-group-aspect
+  type: group-sort
+  instruction: Розподіліть дієслова за видом (процес чи результат).
+  groups:
+  - label: Процес (Недоконаний вид)
+    items:
+    - читати
+    - робити
+    - вирішувати
+    - брати
+    - говорити
+    - шукати
+    - допомагати
+    - прибирати
+  - label: Результат (Доконаний вид)
+    items:
+    - прочитати
+    - зробити
+    - вирішити
+    - взяти
+    - сказати
+    - знайти
+    - допомогти
+    - прибрати
+- id: wb-error-aspect
+  type: error-correction
+  instruction: Знайдіть і виправте помилку у виборі виду дієслова.
+  items:
+  - sentence: Я прочитав цю книгу весь вчорашній вечір.
+    error: прочитав
+    correction: читав
+    error_type: word
+    options:
+    - читав
+    - прочитаю
+    - читаю
+    explanation: «Весь вечір» вказує на тривалий процес, тому потрібен недоконаний
+      вид (читав).
+  - sentence: Нарешті він робив своє домашнє завдання.
+    error: робив
+    correction: зробив
+    error_type: word
+    options:
+    - зробив
+    - робить
+    - робитиме
+    explanation: Слово «нарешті» вказує на успішний результат, тому потрібен доконаний
+      вид (зробив).
+  - sentence: Вона дуже довго сказала про свою нову роботу.
+    error: сказала
+    correction: говорила
+    error_type: word
+    options:
+    - говорила
+    - каже
+    - скаже
+    explanation: «Довго» вказує на процес розмови, тому треба використовувати дієслово
+      «говорити».
+  - sentence: Ми часто взяли смачну каву в цьому кафе.
+    error: взяли
+    correction: брали
+    error_type: word
+    options:
+    - брали
+    - візьмемо
+    - беремо
+    explanation: Слово «часто» вказує на регулярну дію, тому потрібен недоконаний
+      вид (брати).
+  - sentence: Я вивчив нові слова щодня.
+    error: вивчив
+    correction: вчив
+    error_type: word
+    options:
+    - вчив
+    - вивчу
+    - вчу
+    explanation: «Щодня» вказує на повторення дії (регулярний процес), тому правильно
+      «вчив».
+  - sentence: Нарешті я вирішував цю проблему!
+    error: вирішував
+    correction: вирішив
+    error_type: word
+    options:
+    - вирішив
+    - вирішую
+    - вирішу
+    explanation: Слово «нарешті» підкреслює кінцевий результат (вирішив).
+- id: wb-true-false-aspect
+  type: true-false
+  instruction: Визначте, чи правильне твердження про вид дієслова.
+  items:
+  - statement: Дієслово «прочитати» описує завершений результат (доконаний вид).
+    correct: true
+    explanation: Префікс «про-» додає значення завершеності до тривалого процесу «читати».
+  - statement: Дієслова «шукати» і «знайти» — це два різні варіанти недоконаного виду.
+    correct: false
+    explanation: Шукати — це процес (недоконаний вид), а знайти — це результат (доконаний
+      вид).
+  - statement: Якщо дія повторюється часто (наприклад, «щодня»), ми зазвичай використовуємо
+      недоконаний вид.
+    correct: true
+    explanation: Недоконаний вид описує регулярні, повторювані дії та тривалі процеси.
+  - statement: Пара «говорити / сказати» утворюється за допомогою префікса.
+    correct: false
+    explanation: Це суплетивна пара, тобто абсолютно різні слова для процесу та результату.
+  - statement: Суфікс «-ну-» (наприклад, у слові «стукнути») вказує на дуже довгу
+      дію.
+    correct: false
+    explanation: Суфікс «-ну-» вказує на коротку, раптову і завершену дію.
+  - statement: 'У словниках дієслова зазвичай подають парами: спочатку недоконаний
+      вид, а потім доконаний.'
+    correct: true
+    explanation: Так, зазвичай першим іде базовий процес (нед.), а другим — його результат
+      (док.).
+- id: wb-unjumble-aspect
+  type: unjumble
+  instruction: Складіть правильне речення зі слів.
+  items:
+  - words:
+    - вже
+    - Я
+    - прочитав
+    - книгу.
+    - цю
+    correct_order:
+    - Я
+    - вже
+    - прочитав
+    - цю
+    - книгу.
+  - words:
+    - вчора
+    - довго
+    - Ми
+    - говорили.
+    correct_order:
+    - Ми
+    - вчора
+    - довго
+    - говорили.
+  - words:
+    - телефон?
+    - Хто
+    - мій
+    - взяв
+    correct_order:
+    - Хто
+    - взяв
+    - мій
+    - телефон?
+  - words:
+    - завжди
+    - Вона
+    - мені
+    - допомагала.
+    correct_order:
+    - Вона
+    - завжди
+    - мені
+    - допомагала.
+  - words:
+    - Нарешті
+    - що
+    - робити.
+    - я
+    - вирішив,
+    correct_order:
+    - Нарешті
+    - я
+    - вирішив,
+    - що
+    - робити.
+  - words:
+    - нові
+    - слова
+    - вчив
+    - Я
+    - щодня.
+    correct_order:
+    - Я
+    - щодня
+    - вчив
+    - нові
+    - слова.
+- id: wb-translate-aspect
+  type: translate
+  instruction: Оберіть правильний переклад речення.
+  items:
+  - source: I have already read this book.
+    options:
+    - text: Я вже прочитав цю книгу.
+      correct: true
+    - text: Я вже читав цю книгу.
+      correct: false
+  - source: He told me the truth.
+    options:
+    - text: Він сказав мені правду.
+      correct: true
+    - text: Він говорив мені правду.
+      correct: false
+  - source: We were deciding what to do for a long time.
+    options:
+    - text: Ми довго вирішували, що робити.
+      correct: true
+    - text: Ми довго вирішили, що робити.
+      correct: false
+  - source: Have you bought the tickets yet?
+    options:
+    - text: Ти вже купив квитки?
+      correct: true
+    - text: Ти вже купував квитки?
+      correct: false
+  - source: She finally found her keys.
+    options:
+    - text: Вона нарешті знайшла свої ключі.
+      correct: true
+    - text: Вона нарешті шукала свої ключі.
+      correct: false
+  - source: I was cleaning my room all evening.
+    options:
+    - text: Я прибирав свою кімнату весь вечір.
+      correct: true
+    - text: Я прибрав свою кімнату весь вечір.
+      correct: false

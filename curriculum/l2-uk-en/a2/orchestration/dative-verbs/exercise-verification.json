@@ -1,0 +1,325 @@
+{
+  "total_items": 154,
+  "grounded_items": 103,
+  "ungrounded": [
+    {
+      "word": "шум",
+      "exercise_type": "fill-in",
+      "context": "Цей шум дуже заважає _____.",
+      "role": "context"
+    },
+    {
+      "word": "заважає",
+      "exercise_type": "fill-in",
+      "context": "Цей шум дуже заважає _____.",
+      "role": "context"
+    },
+    {
+      "word": "радить",
+      "exercise_type": "fill-in",
+      "context": "Вона радить _____ прочитати цю книгу.",
+      "role": "context"
+    },
+    {
+      "word": "прочитати",
+      "exercise_type": "fill-in",
+      "context": "Вона радить _____ прочитати цю книгу.",
+      "role": "context"
+    },
+    {
+      "word": "книгу",
+      "exercise_type": "fill-in",
+      "context": "Вона радить _____ прочитати цю книгу.",
+      "role": "context"
+    },
+    {
+      "word": "книга",
+      "exercise_type": "match-up",
+      "context": "Мені подобається ця книга.",
+      "role": "answer"
+    },
+    {
+      "word": "стара",
+      "exercise_type": "match-up",
+      "context": "Нам подобалася та стара квартира.",
+      "role": "answer"
+    },
+    {
+      "word": "тридцять",
+      "exercise_type": "true-false",
+      "context": "Мені тридцять три років.",
+      "role": "context"
+    },
+    {
+      "word": "одинадцять",
+      "exercise_type": "true-false",
+      "context": "Моїй сестрі одинадцять рік.",
+      "role": "context"
+    },
+    {
+      "word": "п'ять",
+      "exercise_type": "true-false",
+      "context": "Йому двадцять п'ять років.",
+      "role": "context"
+    },
+    {
+      "word": "мою",
+      "exercise_type": "quiz",
+      "context": "Я часто бачу мою _____ в парку.",
+      "role": "context"
+    },
+    {
+      "word": "ввечері",
+      "exercise_type": "quiz",
+      "context": "Я часто дзвоню моїй _____ ввечері.",
+      "role": "context"
+    },
+    {
+      "word": "любимо",
+      "exercise_type": "quiz",
+      "context": "Ми дуже любимо нашу _____.",
+      "role": "context"
+    },
+    {
+      "word": "нашу",
+      "exercise_type": "quiz",
+      "context": "Ми дуже любимо нашу _____.",
+      "role": "context"
+    },
+    {
+      "word": "нашій",
+      "exercise_type": "quiz",
+      "context": "Ми дуже дякуємо нашій _____.",
+      "role": "context"
+    },
+    {
+      "word": "знаю",
+      "exercise_type": "quiz",
+      "context": "Я добре знаю _____.",
+      "role": "context"
+    },
+    {
+      "word": "чекає",
+      "exercise_type": "quiz",
+      "context": "Вона чекає _____ біля школи.",
+      "role": "context"
+    },
+    {
+      "word": "біля",
+      "exercise_type": "quiz",
+      "context": "Вона чекає _____ біля школи.",
+      "role": "context"
+    },
+    {
+      "word": "школи",
+      "exercise_type": "quiz",
+      "context": "Вона чекає _____ біля школи.",
+      "role": "context"
+    },
+    {
+      "word": "постійно",
+      "exercise_type": "quiz",
+      "context": "Він постійно заважає _____ працювати.",
+      "role": "context"
+    },
+    {
+      "word": "кого",
+      "exercise_type": "group-sort",
+      "context": "Знахідний відмінок (кого? що?)",
+      "role": "context"
+    },
+    {
+      "word": "бачити",
+      "exercise_type": "group-sort",
+      "context": "бачити",
+      "role": "answer"
+    },
+    {
+      "word": "чекати",
+      "exercise_type": "group-sort",
+      "context": "чекати",
+      "role": "answer"
+    },
+    {
+      "word": "любити",
+      "exercise_type": "group-sort",
+      "context": "любити",
+      "role": "answer"
+    },
+    {
+      "word": "купувати",
+      "exercise_type": "group-sort",
+      "context": "купувати",
+      "role": "answer"
+    },
+    {
+      "word": "мами",
+      "exercise_type": "error-correction",
+      "context": "Він часто дзвонить до мами.",
+      "role": "context"
+    },
+    {
+      "word": "мене",
+      "exercise_type": "error-correction",
+      "context": "Вона дуже заважає мене.",
+      "role": "context"
+    },
+    {
+      "word": "ти",
+      "exercise_type": "error-correction",
+      "context": "Скільки ти років?",
+      "role": "context"
+    },
+    {
+      "word": "студент",
+      "exercise_type": "fill-in",
+      "context": "Студент відповідає _____.",
+      "role": "context"
+    },
+    {
+      "word": "допомагаємо",
+      "exercise_type": "fill-in",
+      "context": "Ми допомагаємо _____.",
+      "role": "context"
+    },
+    {
+      "word": "посміхається",
+      "exercise_type": "fill-in",
+      "context": "Вона посміхається своєму _____.",
+      "role": "context"
+    },
+    {
+      "word": "дідусь",
+      "exercise_type": "fill-in",
+      "context": "Дідусь щиро дякує _____.",
+      "role": "context"
+    },
+    {
+      "word": "дякує",
+      "exercise_type": "fill-in",
+      "context": "Дідусь щиро дякує _____.",
+      "role": "context"
+    },
+    {
+      "word": "кожного",
+      "exercise_type": "unjumble",
+      "context": "кожного",
+      "role": "answer"
+    },
+    {
+      "word": "вечора",
+      "exercise_type": "unjumble",
+      "context": "вечора.",
+      "role": "answer"
+    },
+    {
+      "word": "заважаємо",
+      "exercise_type": "unjumble",
+      "context": "заважаємо",
+      "role": "answer"
+    },
+    {
+      "word": "п'ятнадцять",
+      "exercise_type": "match-up",
+      "context": "п'ятнадцять років",
+      "role": "context"
+    },
+    {
+      "word": "чотири",
+      "exercise_type": "match-up",
+      "context": "п'ятдесят чотири роки",
+      "role": "context"
+    },
+    {
+      "word": "дванадцять",
+      "exercise_type": "match-up",
+      "context": "дванадцять років",
+      "role": "context"
+    },
+    {
+      "word": "чесний",
+      "exercise_type": "quiz",
+      "context": "Я завжди _____ моєму другові, він чесний.",
+      "role": "context"
+    },
+    {
+      "word": "цій",
+      "exercise_type": "quiz",
+      "context": "Ми _____ цій людині, це складна ситуація.",
+      "role": "context"
+    },
+    {
+      "word": "складна",
+      "exercise_type": "quiz",
+      "context": "Ми _____ цій людині, це складна ситуація.",
+      "role": "context"
+    },
+    {
+      "word": "ситуація",
+      "exercise_type": "quiz",
+      "context": "Ми _____ цій людині, це складна ситуація.",
+      "role": "context"
+    },
+    {
+      "word": "теж",
+      "exercise_type": "quiz",
+      "context": "Вона _____ другові, і він теж радіє.",
+      "role": "context"
+    },
+    {
+      "word": "радіє",
+      "exercise_type": "quiz",
+      "context": "Вона _____ другові, і він теж радіє.",
+      "role": "context"
+    },
+    {
+      "word": "треба",
+      "exercise_type": "quiz",
+      "context": "Не треба _____ іншим людям, треба багато працювати.",
+      "role": "context"
+    },
+    {
+      "word": "іншим",
+      "exercise_type": "quiz",
+      "context": "Не треба _____ іншим людям, треба багато працювати.",
+      "role": "context"
+    },
+    {
+      "word": "людям",
+      "exercise_type": "quiz",
+      "context": "Не треба _____ іншим людям, треба багато працювати.",
+      "role": "context"
+    },
+    {
+      "word": "помилку",
+      "exercise_type": "quiz",
+      "context": "Мама _____ синові його велику помилку.",
+      "role": "context"
+    },
+    {
+      "word": "лікар",
+      "exercise_type": "quiz",
+      "context": "Лікар _____ бабусі багато відпочивати.",
+      "role": "context"
+    },
+    {
+      "word": "відпочивати",
+      "exercise_type": "quiz",
+      "context": "Лікар _____ бабусі багато відпочивати.",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 15,
+    "tested_in_exercises": 9,
+    "not_tested": [
+      "вибачати",
+      "довіряти",
+      "заздрити",
+      "подобатися",
+      "посміхатися",
+      "співчувати"
+    ]
+  },
+  "all_grounded": false
+}

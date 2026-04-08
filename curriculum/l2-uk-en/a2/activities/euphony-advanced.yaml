@@ -1,0 +1,406 @@
+version: '1.0'
+module: euphony-advanced
+level: a2
+inline:
+- id: quiz-euphony-variants
+  type: quiz
+  instruction: Оберіть правильний варіант (у чи в), щоб речення було милозвучним.
+  items:
+  - question: Він був ___ парку вранці.
+    options:
+    - в
+    - у
+    - із
+    - зі
+    correct: 1
+  - question: Вона зараз живе ___ Одесі.
+    options:
+    - в
+    - у
+    - із
+    - зі
+    correct: 0
+  - question: Мій брат працює ___ Львові.
+    options:
+    - в
+    - у
+    - і
+    - зі
+    correct: 1
+  - question: Ми вчимося ___ університеті.
+    options:
+    - в
+    - у
+    - і
+    - й
+    correct: 0
+  - question: Це мій новий ___читель.
+    options:
+    - в
+    - у
+    - і
+    - й
+    correct: 1
+  - question: Це наша нова ___чителька.
+    options:
+    - в
+    - у
+    - і
+    - й
+    correct: 0
+  - question: Він ___війшов до кімнати.
+    options:
+    - в
+    - у
+    - і
+    - й
+    correct: 1
+  - question: Вона ___війшла до кабінету.
+    options:
+    - в
+    - у
+    - і
+    - й
+    correct: 0
+- id: fill-in-z-variants
+  type: fill-in
+  instruction: Вставте правильну форму прийменника (з, із, зі).
+  items:
+  - sentence: Я сьогодні гуляю ___ мамою.
+    answer: з
+    options:
+    - з
+    - із
+    - зі
+    - і
+  - sentence: Це нова студентка ___ Франції.
+    answer: із
+    options:
+    - з
+    - із
+    - зі
+    - в
+  - sentence: Ви приїхали ___ Львова?
+    answer: зі
+    options:
+    - з
+    - із
+    - зі
+    - у
+  - sentence: Ти поїдеш завтра ___ мною?
+    answer: зі
+    options:
+    - з
+    - із
+    - зі
+    - у
+  - sentence: Вона швидко вийшла ___ кімнати.
+    answer: з
+    options:
+    - з
+    - із
+    - зі
+    - і
+  - sentence: Я працюю ___ задоволенням.
+    answer: із
+    options:
+    - з
+    - із
+    - зі
+    - у
+  - sentence: Ми зараз ідемо ___ школи.
+    answer: зі
+    options:
+    - з
+    - із
+    - зі
+    - в
+  - sentence: Мій брат повернувся ___ Америки.
+    answer: з
+    options:
+    - з
+    - із
+    - зі
+    - і
+- id: match-up-conjunctions
+  type: match-up
+  instruction: З'єднайте частини речень, дотримуючись правил милозвучності для сполучників
+    і/й/та.
+  pairs:
+  - left: Ольга
+    right: й Андрій
+  - left: Студент
+    right: і вчитель
+  - left: Мама
+    right: та тато
+  - left: Хліб
+    right: та молоко
+  - left: Кава
+    right: і яблука
+  - left: Тепло
+    right: й затишно
+  - left: Вона співала,
+    right: і всі слухали
+  - left: Олена
+    right: і її брат
+- id: error-correction
+  type: error-correction
+  instruction: Знайдіть і виправте помилку в правилах милозвучності.
+  items:
+  - sentence: Він був в парку.
+    error: в
+    correction: у
+    error_type: word
+    options:
+    - у
+    - із
+    - зі
+    explanation: Між двома приголосними (був — п) пишемо «у».
+  - sentence: Я йду з школи.
+    error: з
+    correction: зі
+    error_type: word
+    options:
+    - із
+    - зі
+    - у
+    explanation: Перед важким збігом приголосних (шк) використовуємо «зі».
+  - sentence: Вона живе у Одесі.
+    error: у
+    correction: в
+    error_type: word
+    options:
+    - в
+    - із
+    - зі
+    explanation: Між голосними (живе — О) пишемо «в».
+  - sentence: Мій брат в Львові.
+    error: в
+    correction: у
+    error_type: word
+    options:
+    - у
+    - і
+    - зі
+    explanation: Перед «льв» завжди пишемо «у», щоб уникнути збігу.
+  - sentence: Ти підеш з мною?
+    error: з
+    correction: зі
+    error_type: word
+    options:
+    - із
+    - зі
+    - у
+    explanation: Зі словом «мною» завжди вживаємо «зі».
+  - sentence: Анна й Яна ідуть.
+    error: й
+    correction: і
+    error_type: word
+    options:
+    - і
+    - та
+    - в
+    explanation: Перед буквами я, ю, є, ї ніколи не ставимо «й».
+  - sentence: Він пив вранці каву.
+    error: вранці
+    correction: уранці
+    error_type: word
+    options:
+    - уранці
+    - вранці
+    - ізранку
+    explanation: Після приголосного (пив) перед приголосним (р) краще звучить «уранці».
+  - sentence: Це лист з Франції.
+    error: з
+    correction: із
+    error_type: word
+    options:
+    - із
+    - зі
+    - у
+    explanation: Перед «ф» та між приголосними краще вживати «із».
+workbook:
+- id: workbook-unjumble-euphony
+  type: unjumble
+  instruction: Складіть правильне речення зі слів. Зверніть увагу на чергування у/в
+    та і/й.
+  items:
+  - words:
+    - у
+    - Вони
+    - зустрілися
+    - філармонії.
+    correct_order:
+    - Вони
+    - зустрілися
+    - у
+    - філармонії.
+  - words:
+    - Олена
+    - й
+    - ідуть
+    - Андрій
+    - додому.
+    correct_order:
+    - Олена
+    - й
+    - Андрій
+    - ідуть
+    - додому.
+  - words:
+    - зі
+    - Я
+    - школи.
+    - йду
+    correct_order:
+    - Я
+    - йду
+    - зі
+    - школи.
+  - words:
+    - брат
+    - Мій
+    - і
+    - його
+    - друг
+    - —
+    - студенти.
+    correct_order:
+    - Мій
+    - брат
+    - і
+    - його
+    - друг
+    - —
+    - студенти.
+  - words:
+    - в
+    - живе
+    - Одесі.
+    - Вона
+    correct_order:
+    - Вона
+    - живе
+    - в
+    - Одесі.
+  - words:
+    - Франції.
+    - Це
+    - із
+    - лист
+    correct_order:
+    - Це
+    - лист
+    - із
+    - Франції.
+- id: workbook-translate-euphony
+  type: translate
+  instruction: Оберіть правильний переклад, який відповідає правилам української милозвучності.
+  items:
+  - source: Where is Maksym now? Is he at school?
+    options:
+    - text: Де зараз Максим? Він у школі?
+      correct: true
+    - text: Де зараз Максим? Він в школі?
+      correct: false
+  - source: She read, the auditorium was quiet.
+    options:
+    - text: Вона читала, в аудиторії було тихо.
+      correct: true
+    - text: Вона читала, у аудиторії було тихо.
+      correct: false
+  - source: Are you walking with sister?
+    options:
+    - text: Ти гуляєш із сестрою?
+      correct: true
+    - text: Ти гуляєш з сестрою?
+      correct: false
+  - source: Are you walking from school now?
+    options:
+    - text: Ти зараз ідеш зі школи?
+      correct: true
+    - text: Ти зараз ідеш із школи?
+      correct: false
+  - source: This is Olena and her brother.
+    options:
+    - text: Це Олена і її брат.
+      correct: true
+    - text: Це Олена й її брат.
+      correct: false
+  - source: We finished, and the concert ended.
+    options:
+    - text: Ми закінчили, і концерт завершився.
+      correct: true
+    - text: Ми закінчили, й концерт завершився.
+      correct: false
+- id: workbook-odd-one-out-euphony
+  type: odd-one-out
+  instruction: Яка фраза порушує правила милозвучності (звучить неправильно)?
+  items:
+  - words:
+    - був у парку
+    - був в парку
+    - була в парку
+    correct: 1
+    explanation: Після приголосного (був) перед приголосним (п) потрібно писати «у».
+  - words:
+    - у Львові
+    - в Львові
+    - до Львова
+    correct: 1
+    explanation: Перед «льв» завжди пишемо «у», щоб уникнути збігу «в льв».
+  - words:
+    - з школою
+    - зі школою
+    - до школи
+    correct: 0
+    explanation: Перед важким збігом «шк» потрібно писати «зі».
+  - words:
+    - Ольга й Андрій
+    - Марія й Іван
+    - Анна й Яна
+    correct: 2
+    explanation: 'Перед «я», «ю», «є», «ї» ми ніколи не ставимо «й». Правильно: «Анна
+      і Яна».'
+  - words:
+    - читала вранці
+    - пив вранці
+    - пив уранці
+    correct: 1
+    explanation: Після приголосного (пив) перед приголосним (р) краще звучить «уранці».
+  - words:
+    - лист з Франції
+    - лист із Франції
+    - лист від Франції
+    correct: 0
+    explanation: Між приголосними та перед «ф» краще звучить «із».
+- id: workbook-true-false-euphony
+  type: true-false
+  instruction: Правда чи ні? Перевірте свої знання правил милозвучності.
+  items:
+  - statement: Після коми ми завжди пишемо «й», якщо попереднє слово закінчується
+      на голосний.
+    correct: false
+    explanation: Кома — це пауза, вона починає новий ритм, тому ми використовуємо
+      «і».
+  - statement: Слова «зі мною» та «зі школи» — це правильні форми, бо вони уникають
+      важкого збігу приголосних.
+    correct: true
+    explanation: Форма «зі» пом'якшує важкі збіги приголосних.
+  - statement: Перед словами, які починаються на «й», «я», «ю», «є», «ї», не можна
+      ставити сполучник «й».
+    correct: true
+    explanation: Це правило забороненого збігу, ми завжди ставимо «і» перед цими літерами.
+  - statement: Ми завжди пишемо «у» перед словами, що починаються на «в», «ф», «хв»,
+      «св», «льв».
+    correct: true
+    explanation: Це обов'язкове правило, щоб уникнути складного звукового стику.
+  - statement: Сполучник «та» не підпорядковується правилам чергування і може використовуватися
+      в будь-якій позиції.
+    correct: true
+    explanation: «Та» — це стабільне слово, яке ідеально працює в будь-якому фонетичному
+      середовищі.
+  - statement: Українська мова уникає збігу голосних і приголосних, щоб звучати більш
+      мелодійно.
+    correct: true
+    explanation: Саме це робить мову такою милозвучною (евфонічною).

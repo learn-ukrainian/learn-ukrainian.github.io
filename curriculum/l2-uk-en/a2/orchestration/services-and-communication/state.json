@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "a2",
+  "slug": "services-and-communication",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-07T23:50:05.108176+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-07T23:50:05.115508+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-07T23:50:52.611327+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-07T23:51:37.420573+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-07T23:55:24.639401+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-07T23:55:24.639612+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-07T23:56:33.783880+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-07T23:56:33.800910+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-07T23:56:33.806704+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-07T23:57:23.319490+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-07T23:57:23.319606+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-07T23:57:23.526098+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-07T23:59:15.425953+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-07T23:59:15.612658+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-07T23:59:16.856194+00:00"
+    }
+  }
+}

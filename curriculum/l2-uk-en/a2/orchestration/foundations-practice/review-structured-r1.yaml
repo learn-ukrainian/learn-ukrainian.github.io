@@ -1,0 +1,50 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: The module covers all plan points except for the exact example "дві дині"
+    which was explicitly specified in the plan for the 1, 2-4, 5+ rule. It uses other
+    examples (кавуни, лимони) instead.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: The text incorrectly uses the Russianism/Surzhyk "**винишко**" instead
+    of the Ukrainian "**винце**" (Section 1, tip "Українська гостинність").
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow. Grammar rules are explained with clear contrasts (imperfective
+    process vs perfective result) and followed by numerous concrete examples.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary is used naturally in context (планувати, купувати,
+    готувати, ринок, коштувати, кілограм, вечірка, день).
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers are placed logically after the corresponding teaching sections
+    and match the plan's activity hints exactly.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Warm and encouraging teacher tone ("Notice how Maksym and Olena use...",
+    "One of the most elegant ways..."). Excellent cultural notes on hospitality and
+    market interactions.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 3140 words, well above the 2000 target. Headings match the
+    plan perfectly. Clean markdown structure.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Accurate description of Ukrainian hospitality (diminutives), market culture,
+    and the explicit instruction to avoid the Russian-influenced "здавати іспит".
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Natural dialogues with named speakers. Dialogues demonstrate the grammar
+    points perfectly in context (e.g., mixing process and result in party planning).
+findings: []

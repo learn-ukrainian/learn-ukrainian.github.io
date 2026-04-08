@@ -1,0 +1,49 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Covered almost all points, but failed to perfectly align the activity
+    injections with the lesson pacing.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: 'Critical hallucination regarding phonetic rules ("change **к** to **ц**
+    in **подрузі**" instead of **г** to **з**). Rule for age omits "роки" in the text
+    description: "числа, та слова рік або років." '
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Excellent PPP flow and clear English explanations, but teaching an incomplete
+    age rule ("рік або років") creates a gap for learners who then see "три роки"
+    in the examples.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words from the plan were integrated naturally.
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: The `match-verbs-to-case` activity is injected before the concept (dative-governing
+    verbs) is explicitly taught in Part 3.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Good teacher persona without generic, corporate-style enthusiasm. Encouraging
+    and structured.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, target word count met (1647 words > 1500 target), all
+    sections present.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Secret Santa situation is culturally familiar in modern Ukrainian offices,
+    and envelope addressing follows authentic Ukrainian norms.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Office dialogue is natural and demonstrates multiple Dative usages, though
+    it relied on the sub-optimal word "кружка".
+findings: []

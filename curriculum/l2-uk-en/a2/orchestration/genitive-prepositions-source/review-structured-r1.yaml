@@ -1,0 +1,51 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Word count (3758) strongly exceeds the target (2000). However, required
+    vocabulary words (`джерело`, `походження`) are missing from the text. Additionally,
+    plan references (Заболотний, ULP) were not e
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Identified a Russianism calque ("знаходиться" instead of "розташовано"
+    for location) and a semantic error ("до їжі" instead of the prescriptive normative
+    "до їди").
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow. Introduces the situation naturally with an international
+    dinner, explains grammar rules simply, and uses multiple context-rich examples.
+    No overly long English theory blocks.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: Included almost all required and recommended words (e.g., `сніданок`,
+    `вечеря`, `дитинство`, `шовк`), but missed `джерело` and `походження`.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers perfectly align with the `activity_hints` from the plan, and appear
+    exactly where the concepts have just been taught.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Warm, supportive teacher tone without being generic. The decolonization
+    tip regarding "з України" is extremely valuable and engaging.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean Markdown. All H2 headings from the plan outline are present. The
+    word count is well above the target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Factually correct. Strong emphasis on euphony and a great decolonized
+    rule addressing the "з України" vs obsolete colonial forms.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogues are multi-turn, very natural, and feature distinct voices. Minor
+    deduction for a speaker using the tautology "ранкового сніданку".
+findings: []

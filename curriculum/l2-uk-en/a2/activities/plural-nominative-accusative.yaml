@@ -1,0 +1,381 @@
+version: '1.0'
+module: plural-nominative-accusative
+level: a2
+inline:
+- id: fill-in-nom-plural
+  type: fill-in
+  instruction: Напишіть множину (Nominative plural)
+  items:
+  - sentence: Це моя ____ (сестра).
+    answer: сестри
+    options:
+    - сестри
+    - сестра
+    - сестрів
+  - sentence: Тут стоять нові ____ (стіл).
+    answer: столи
+    options:
+    - столи
+    - столів
+    - стіли
+  - sentence: У зоопарку живуть великі ____ (лев).
+    answer: леви
+    options:
+    - леви
+    - левів
+    - лева
+  - sentence: Де мої ____ (річ)?
+    answer: речі
+    options:
+    - речі
+    - річі
+    - речей
+  - sentence: У нас є нові ____ (телефон).
+    answer: телефони
+    options:
+    - телефони
+    - телефон
+    - телефонів
+  - sentence: Там бігають маленькі ____ (кошеня).
+    answer: кошенята
+    options:
+    - кошенята
+    - кошеняти
+    - кошенят
+  - sentence: Ці ____ (людина) дуже добрі.
+    answer: люди
+    options:
+    - люди
+    - людини
+    - людей
+  - sentence: Які красиві ____ (місто)!
+    answer: міста
+    options:
+    - міста
+    - місти
+    - міст
+- id: sort-animate-inanimate
+  type: group-sort
+  instruction: Розподіліть іменники на живі (animate) та неживі (inanimate) істоти/предмети.
+  groups:
+  - label: Живі істоти (Знахідний = Родовий)
+    items:
+    - леви
+    - студенти
+    - сестри
+    - діти
+    - друзі
+    - птахи
+    - лікарі
+    - коти
+  - label: Неживі предмети (Знахідний = Називний)
+    items:
+    - столи
+    - книжки
+    - міста
+    - телефони
+    - заводи
+    - речі
+    - зошити
+    - овочі
+- id: quiz-acc-plural-choice
+  type: quiz
+  instruction: Оберіть правильну форму знахідного відмінка (Accusative plural) для
+    прямого додатка.
+  items:
+  - question: Я бачу нові _____ (столи).
+    options:
+    - столи
+    - столів
+    - столам
+    - столами
+    correct: 0
+  - question: Вона щодня бачить цих _____ (студенти).
+    options:
+    - студентів
+    - студенти
+    - студентам
+    - студентами
+    correct: 0
+  - question: Ми дуже любимо великі _____ (міста).
+    options:
+    - міста
+    - міст
+    - містам
+    - містами
+    correct: 0
+  - question: Він шукає старих _____ (друзі).
+    options:
+    - друзів
+    - друзі
+    - друзям
+    - друзями
+    correct: 0
+  - question: Вони купують свіжі _____ (фрукти).
+    options:
+    - фрукти
+    - фруктів
+    - фруктам
+    - фруктами
+    correct: 0
+  - question: Ми зустрічаємо своїх _____ (колеги).
+    options:
+    - колег
+    - колеги
+    - колегам
+    - колегами
+    correct: 0
+  - question: Вона читає довгі _____ (тексти).
+    options:
+    - тексти
+    - текстів
+    - текстам
+    - текстами
+    correct: 0
+  - question: Я знаю цих _____ (лікарі).
+    options:
+    - лікарів
+    - лікарі
+    - лікарям
+    - лікарями
+    correct: 0
+- id: error-correction-plural
+  type: error-correction
+  instruction: Знайдіть і виправте помилку у формі іменника.
+  items:
+  - sentence: Дітей грають у парку.
+    error: дітей
+    correction: діти
+    error_type: word
+    options:
+    - діти
+    - дитина
+    - дітям
+    explanation: The children are performing the action, so they must be in the Nominative
+      case (діти).
+  - sentence: Я бачу студенти біля університету.
+    error: студенти
+    correction: студентів
+    error_type: word
+    options:
+    - студентів
+    - студентам
+    - студентами
+    explanation: Students are animate direct objects, so the Accusative plural looks
+      like the Genitive (студентів).
+  - sentence: Вона читає нові книжок.
+    error: книжок
+    correction: книжки
+    error_type: word
+    options:
+    - книжки
+    - книжкам
+    - книжками
+    explanation: Books are inanimate direct objects, so the Accusative plural is the
+      same as the Nominative (книжки).
+  - sentence: Людей ідуть на роботу.
+    error: людей
+    correction: люди
+    error_type: word
+    options:
+    - люди
+    - людям
+    - людьми
+    explanation: The people are performing the action, so they must be in the Nominative
+      case (люди).
+  - sentence: Ми зустріли старі друзі.
+    error: друзі
+    correction: друзів
+    error_type: word
+    options:
+    - друзів
+    - друзям
+    - друзями
+    explanation: Friends are animate direct objects, so they take the Accusative form
+      identical to the Genitive (друзів).
+  - sentence: Він любить ці старі міст.
+    error: міст
+    correction: міста
+    error_type: word
+    options:
+    - міста
+    - містам
+    - містами
+    explanation: Cities are inanimate, so their Accusative plural form is identical
+      to the Nominative (міста).
+workbook:
+- type: match-up
+  id: match-singular-plural
+  instruction: З'єднайте форму однини з формою множини (Singular to Plural).
+  pairs:
+  - left: стіл
+    right: столи
+  - left: книжка
+    right: книжки
+  - left: річ
+    right: речі
+  - left: місто
+    right: міста
+  - left: людина
+    right: люди
+  - left: дитина
+    right: діти
+  - left: око
+    right: очі
+  - left: кошеня
+    right: кошенята
+- type: true-false
+  id: tf-acc-rules
+  instruction: Правда чи ні? (Оберіть правильне твердження про знахідний відмінок)
+  items:
+  - statement: Для неживих предметів знахідний відмінок множини такий самий, як називний.
+    correct: true
+    explanation: This is correct. Inanimate nouns use the Nominative form for the
+      Accusative plural.
+  - statement: Для живих істот знахідний відмінок множини такий самий, як називний.
+    correct: false
+    explanation: This is false. Animate nouns use the Genitive form for the Accusative
+      plural.
+  - statement: Слово 'книжки' у реченні 'Я читаю книжки' — це знахідний відмінок.
+    correct: true
+    explanation: True. 'Книжки' is the direct object (Accusative). Since it's inanimate,
+      it looks like the Nominative.
+  - statement: Слово 'студенти' у реченні 'Я бачу студенти' написано правильно.
+    correct: false
+    explanation: False. 'Студенти' is animate, so the Accusative plural must be 'студентів'.
+  - statement: Після прийменника 'про' ми завжди використовуємо знахідний відмінок.
+    correct: true
+    explanation: Correct. 'Про' (about) requires the Accusative case.
+  - statement: Слова 'люди' і 'діти' мають однакову форму в називному і знахідному
+      відмінках.
+    correct: false
+    explanation: False. Because they are animate, their Accusative forms are 'людей'
+      and 'дітей'.
+- type: unjumble
+  id: unjumble-plural-sentences
+  instruction: Складіть правильне речення зі слів (Увага на відмінки!).
+  items:
+  - words:
+    - нові
+    - купує
+    - Вона
+    - телефони.
+    correct_order:
+    - Вона
+    - купує
+    - нові
+    - телефони.
+  - words:
+    - у
+    - парку.
+    - бачу
+    - Я
+    - дітей
+    correct_order:
+    - Я
+    - бачу
+    - дітей
+    - у
+    - парку.
+  - words:
+    - люблять
+    - моря.
+    - вони
+    - Дуже
+    - теплі
+    correct_order:
+    - Дуже
+    - вони
+    - люблять
+    - теплі
+    - моря.
+  - words:
+    - наших
+    - Ми
+    - зустрічаємо
+    - викладачів.
+    correct_order:
+    - Ми
+    - зустрічаємо
+    - наших
+    - викладачів.
+  - words:
+    - Ці
+    - речі.
+    - нові
+    - купують
+    - люди
+    correct_order:
+    - Ці
+    - люди
+    - купують
+    - нові
+    - речі.
+  - words:
+    - про
+    - говоримо
+    - Ми
+    - студентів.
+    - розумних
+    correct_order:
+    - Ми
+    - говоримо
+    - про
+    - розумних
+    - студентів.
+- type: fill-in
+  id: fill-in-acc-mixed
+  instruction: Вставте правильну форму іменника (Називний чи Знахідний відмінок).
+  items:
+  - sentence: У цьому лісі живуть красиві ____ (птах).
+    answer: птахи
+    options:
+    - птахи
+    - птахів
+    - птахам
+  - sentence: Я часто бачу цих ____ (птах) біля дому.
+    answer: птахів
+    options:
+    - птахів
+    - птахи
+    - птахами
+  - sentence: На столі лежать нові ____ (зошит).
+    answer: зошити
+    options:
+    - зошити
+    - зошитів
+    - зошитам
+  - sentence: Студенти швидко відкривають свої ____ (зошит).
+    answer: зошити
+    options:
+    - зошити
+    - зошитів
+    - зошитам
+  - sentence: У нас є хороші ____ (друг).
+    answer: друзі
+    options:
+    - друзі
+    - друзів
+    - друзям
+  - sentence: Ми любимо наших ____ (друг).
+    answer: друзів
+    options:
+    - друзів
+    - друзі
+    - друзям
+- type: group-sort
+  id: sort-case-endings
+  instruction: Розподіліть слова за відмінком у цих реченнях.
+  groups:
+  - label: Називний відмінок (Хто? Що робить дія?)
+    items:
+    - (Студенти) читають.
+    - (Леви) сплять.
+    - (Книжки) лежать.
+    - (Діти) граються.
+  - label: Знахідний відмінок (Кого? Що отримує дію?)
+    items:
+    - Бачу (студентів).
+    - Люблю (левів).
+    - Купую (книжки).
+    - Зустрічаю (дітей).

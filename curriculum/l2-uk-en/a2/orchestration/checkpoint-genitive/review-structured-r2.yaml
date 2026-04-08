@@ -1,0 +1,53 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'The module follows the structural outline perfectly and uses all required
+    vocabulary. It misses one specific plan point in the dialogue: the plan requested
+    "Для групи з десяти людей" to test number+no'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: All Ukrainian phrases are flawless and naturally constructed. However,
+    there is a technical inaccuracy in the English grammatical explanation classifying
+    "people, animals" as inanimate nouns.
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: 'The English explanation for the Genitive singular endings mixes animate
+    and inanimate nouns: "For inanimate masculine nouns in the singular... Concrete
+    objects, people, animals... take -а / -я." Peopl'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words (родовий відмінок, прийменник, узгодження,
+    множина, однина, закінчення, перевірка, помилка, виправити, впізнати, вибрати)
+    are present, bolded, and used naturally.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The markers are injected logically at the end of their respective sections,
+    testing exactly what was just taught.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: 'Excellent encouraging tone. The writer gives practical advice: "Every
+    time you correctly say ''для мами'' instead of ''для мама''... you are thinking
+    in Ukrainian."'
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 1929 (well above the 1500 target). All H2 headers match
+    the plan. Clean markdown.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Correct usage of real-world Kyiv landmarks (Золоті ворота, Софійський
+    собор, Хрещатик).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The dialogue is a great multi-turn contextualization of the grammar points.
+    It feels natural but loses a point for missing the required phrase from the plan.
+findings: []

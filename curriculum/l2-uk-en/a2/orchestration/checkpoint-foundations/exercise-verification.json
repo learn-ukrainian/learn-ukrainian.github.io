@@ -1,0 +1,230 @@
+{
+  "total_items": 146,
+  "grounded_items": 111,
+  "ungrounded": [
+    {
+      "word": "нього",
+      "exercise_type": "quiz",
+      "context": "У нього є два _____.",
+      "role": "context"
+    },
+    {
+      "word": "друг",
+      "exercise_type": "fill-in",
+      "context": "Я чекаю свого старого (друг) _____.",
+      "role": "context"
+    },
+    {
+      "word": "парк",
+      "exercise_type": "fill-in",
+      "context": "парк",
+      "role": "answer"
+    },
+    {
+      "word": "місті",
+      "exercise_type": "fill-in",
+      "context": "Один великий (парк) _____ є в місті.",
+      "role": "context"
+    },
+    {
+      "word": "неї",
+      "exercise_type": "fill-in",
+      "context": "У неї є чотири (сестра) _____.",
+      "role": "context"
+    },
+    {
+      "word": "сестра",
+      "exercise_type": "group-sort",
+      "context": "сестра",
+      "role": "answer"
+    },
+    {
+      "word": "читали",
+      "exercise_type": "error-correction",
+      "context": "читали",
+      "role": "answer"
+    },
+    {
+      "word": "брала",
+      "exercise_type": "error-correction",
+      "context": "брала участь",
+      "role": "answer"
+    },
+    {
+      "word": "приймала",
+      "exercise_type": "error-correction",
+      "context": "Вона приймала участь у проекті.",
+      "role": "context"
+    },
+    {
+      "word": "проекті",
+      "exercise_type": "error-correction",
+      "context": "Вона приймала участь у проекті.",
+      "role": "context"
+    },
+    {
+      "word": "стола",
+      "exercise_type": "error-correction",
+      "context": "великого стола",
+      "role": "answer"
+    },
+    {
+      "word": "купити",
+      "exercise_type": "match-up",
+      "context": "купити",
+      "role": "context"
+    },
+    {
+      "word": "сказати",
+      "exercise_type": "match-up",
+      "context": "сказати",
+      "role": "context"
+    },
+    {
+      "word": "зустрічати",
+      "exercise_type": "match-up",
+      "context": "зустрічати",
+      "role": "answer"
+    },
+    {
+      "word": "зустріти",
+      "exercise_type": "match-up",
+      "context": "зустріти",
+      "role": "context"
+    },
+    {
+      "word": "один'",
+      "exercise_type": "true-false",
+      "context": "Після числа 'один' іменник стоїть у називному відмінку однин",
+      "role": "context"
+    },
+    {
+      "word": "іменник",
+      "exercise_type": "true-false",
+      "context": "Після числа 'один' іменник стоїть у називному відмінку однин",
+      "role": "context"
+    },
+    {
+      "word": "називному",
+      "exercise_type": "true-false",
+      "context": "Після числа 'один' іменник стоїть у називному відмінку однин",
+      "role": "context"
+    },
+    {
+      "word": "відмінку",
+      "exercise_type": "true-false",
+      "context": "Після числа 'один' іменник стоїть у називному відмінку однин",
+      "role": "context"
+    },
+    {
+      "word": "однини",
+      "exercise_type": "true-false",
+      "context": "Після числа 'один' іменник стоїть у називному відмінку однин",
+      "role": "context"
+    },
+    {
+      "word": "чисел",
+      "exercise_type": "true-false",
+      "context": "Після чисел 'два, три, чотири' ми використовуємо родовий від",
+      "role": "context"
+    },
+    {
+      "word": "чотири'",
+      "exercise_type": "true-false",
+      "context": "Після чисел 'два, три, чотири' ми використовуємо родовий від",
+      "role": "context"
+    },
+    {
+      "word": "п'ять'",
+      "exercise_type": "true-false",
+      "context": "Після числа 'п'ять' ми використовуємо родовий відмінок множи",
+      "role": "context"
+    },
+    {
+      "word": "слово",
+      "exercise_type": "true-false",
+      "context": "Слово 'немає' завжди вимагає родового відмінка.",
+      "role": "context"
+    },
+    {
+      "word": "немає'",
+      "exercise_type": "true-false",
+      "context": "Слово 'немає' завжди вимагає родового відмінка.",
+      "role": "context"
+    },
+    {
+      "word": "вимагає",
+      "exercise_type": "true-false",
+      "context": "Слово 'немає' завжди вимагає родового відмінка.",
+      "role": "context"
+    },
+    {
+      "word": "недоконаного",
+      "exercise_type": "true-false",
+      "context": "Дієслова недоконаного виду відповідають на питання 'що зроби",
+      "role": "context"
+    },
+    {
+      "word": "виду",
+      "exercise_type": "true-false",
+      "context": "Дієслова недоконаного виду відповідають на питання 'що зроби",
+      "role": "context"
+    },
+    {
+      "word": "відповідають",
+      "exercise_type": "true-false",
+      "context": "Дієслова недоконаного виду відповідають на питання 'що зроби",
+      "role": "context"
+    },
+    {
+      "word": "питання",
+      "exercise_type": "true-false",
+      "context": "Дієслова недоконаного виду відповідають на питання 'що зроби",
+      "role": "context"
+    },
+    {
+      "word": "вираз",
+      "exercise_type": "true-false",
+      "context": "Вираз 'приймати участь' є правильним українським варіантом.",
+      "role": "context"
+    },
+    {
+      "word": "участь'",
+      "exercise_type": "true-false",
+      "context": "Вираз 'приймати участь' є правильним українським варіантом.",
+      "role": "context"
+    },
+    {
+      "word": "правильним",
+      "exercise_type": "true-false",
+      "context": "Вираз 'приймати участь' є правильним українським варіантом.",
+      "role": "context"
+    },
+    {
+      "word": "українським",
+      "exercise_type": "true-false",
+      "context": "Вираз 'приймати участь' є правильним українським варіантом.",
+      "role": "context"
+    },
+    {
+      "word": "варіантом",
+      "exercise_type": "true-false",
+      "context": "Вираз 'приймати участь' є правильним українським варіантом.",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 12,
+    "tested_in_exercises": 5,
+    "not_tested": [
+      "варіант",
+      "вправа",
+      "контрольна",
+      "обрати",
+      "перевірка",
+      "правильний",
+      "точка"
+    ]
+  },
+  "all_grounded": false
+}

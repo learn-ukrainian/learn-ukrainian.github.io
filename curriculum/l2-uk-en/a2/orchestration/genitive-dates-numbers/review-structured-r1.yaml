@@ -1,0 +1,50 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Missing explicit examples of holidays/birthdays in the theory section,
+    though dates are extensively practiced throughout the module.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: The sentence `* «Це мій двадцять один рік.»` is a direct grammatical calque
+    from English. The word `папок` is missing from VESUM and is a Russian-influenced
+    noun.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow with strong, clear explanations of complex rules like
+    the 1, 2-4, 5+ counting hierarchy. Etymological hints ("a five of tables") are
+    very helpful.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: The required word "місяць" is never explicitly presented in Ukrainian
+    in the text, although "month" is discussed in English. All other words are present.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 4 activity markers from the plan are present and placed logically
+    after their corresponding topics.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Warm, encouraging tone ("This is the biggest mental shift you need to
+    make...") without being overly colloquial or gamified.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean formatting. All sections are present and ordered correctly. The
+    word count is 3461, comfortably exceeding the 2000-word target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Natural and culturally appropriate context in dialogues (e.g., using hryvnias,
+    natural store interactions).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Natural multi-turn conversations that seamlessly integrate the target
+    grammar in realistic settings (salon, hotel, store).
+findings: []

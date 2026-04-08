@@ -1,0 +1,20 @@
+## Їхати автобусом: Засіб пересування (Travel by Bus: Means of Transport)
+
+Часто ми використовуємо Орудний відмінок, коли говоримо про подорожі. *(Often we use the Instrumental case when we talk about traveling.)* The Instrumental case is the perfect tool for expressing your means of transportation. When you want to ask someone how they are traveling, you use the standard question: «**Чим ти їдеш?**» *(How/By what means are you going?)*. This question asks about the instrument of your travel. You do not need a preposition here. The case ending alone tells us that the vehicle is the means of your movement. Ось базові слова, які вам потрібні. *(Here are the basic words you need.)* Ми подорожуємо **автобусом** *(by bus)*. Люди часто їздять **потягом** *(by train)* або **трамваєм** *(by tram)*. Моя сестра летить **літаком** *(by airplane)*. Мої батьки люблять подорожувати **машиною** *(by car)*.
+
+Студенти часто плутають два відмінки. *(Students often confuse two cases.)* It is very important to understand the conceptual difference between the Locative case and the Instrumental case when talking about transport. The Locative case describes location or position. For example, «**в автобусі**» *(in the bus)* means you are physically sitting or standing inside the vehicle. The Instrumental case describes the method of your travel. «Автобусом» means the bus is the tool that moves you from place to place. Порівняйте ці два речення. *(Compare these two sentences.)* Я сиджу в автобусі і читаю книгу *(I am sitting in the bus and reading a book)*. Я їду на роботу автобусом *(I travel to work by bus)*. У першому реченні важливе місце. *(In the first sentence, the place is important.)* У другому реченні важливий метод подорожі. *(In the second sentence, the method of travel is important.)*
+
+Послухайте розмову двох колег. *(Listen to a conversation between two colleagues.)* Вони обговорюють свій ранковий маршрут. *(They are discussing their morning route.)*
+> — **Олена:** Привіт! Чим ти їдеш на роботу? *(Hi! How do you travel to work?)*
+> — **Марко:** Я їду на роботу автобусом, а потім **метро** *(subway)*. *(I travel to work by bus, and then by subway.)*
+> — **Олена:** А я зазвичай їду власною машиною. *(And I usually travel by my own car.)*
+> — **Марко:** Ти ніколи не береш **таксі** *(taxi)*? *(Do you never take a taxi?)*
+> — **Олена:** Ні, це занадто дорого. *(No, it is too expensive.)*
+
+Notice the words «метро» and «таксі» in the dialogue. These borrowed words are indeclinable in Ukrainian. Вони ніколи не змінюють своє закінчення. *(They never change their ending.)* However, grammatically, they still function exactly like nouns in the Instrumental case here.
+
+Є один важливий виняток із цього правила. *(There is one important exception to this rule.)* When you travel on foot, you are using your own body, not an external tool or vehicle. Because of this, Ukrainian uses a specific adverb instead of a noun in the Instrumental case. Ми говоримо «**іти пішки**» *(to go on foot)*. The word «пішки» is an adverb, so it never changes its form. Він їде потягом, а я йду пішки *(He travels by train, and I walk on foot)*. Вони їдуть трамваєм, а ми йдемо пішки *(They travel by tram, and we walk on foot)*.
+
+Як правильно сказати, що транспорт починає рух? *(How to correctly say that transport starts moving?)* Many learners use the Russianism «відправлятися» *(to depart)*. Це лексична помилка в українській мові. *(This is a lexical error in the Ukrainian language.)* Instead, you should use authentic Ukrainian verbs to describe departure. Автобус **відбуває** *(departs)* з Києва вранці. Поїзд **рушає** *(starts moving)* дуже швидко. Ми **вирушаємо** *(set off)* літаком о восьмій годині. These verbs sound natural and pair perfectly with the transport nouns in the Instrumental case. Ми вирушаємо машиною на вихідних *(We set off by car on the weekend)*. Потяг рушає, а ми махаємо руками *(The train starts moving, and we wave our hands)*.
+
+<!-- INJECT_ACTIVITY: match-up-transport -->

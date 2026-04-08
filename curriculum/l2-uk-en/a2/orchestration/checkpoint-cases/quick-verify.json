@@ -1,0 +1,13 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 1/8 required vocab: помилка (error, mistake)"
+    }
+  ],
+  "timestamp": "2026-04-08T02:50:02.638978+00:00"
+}

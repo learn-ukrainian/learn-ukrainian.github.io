@@ -1,0 +1,56 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Every single bullet point from the plan is meticulously covered. The text
+    includes the exact previews of `з + instrumental` ("Вона з карими очима"), the
+    exact cultural note about "добра людина", and t
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: 'Flawless Ukrainian. The use of "має вигляд", "кароока", and the proper
+    case assignments (Dative for "допомагати/довіряти", Accusative for "поважати")
+    are idiomatically and grammatically sound. Proper '
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Textbook-perfect PPP (Presentation, Practice, Production) flow. Grammar
+    is never introduced as a bare list; the contrast between Imperfective (habitual
+    traits) and Perfective (one-time proof) is expla
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words (описувати, зовнішність, привітний,
+    наполегливий, впертий, etc.) are integrated naturally into the prose and dialogues
+    without feeling like a forced checklist.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The 4 required activity markers are present and strategically placed after
+    the learner has been exposed to the relevant theory and vocabulary.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is that of a warm, encouraging teacher. The text transitions
+    smoothly between theory and practice using natural classroom phrasing ("Let's
+    see how these words are used in a real conversation"
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: The module exceeds the 2000-word target significantly (3204 words per
+    pipeline), features clean Markdown, and uses all required H2 headings exactly
+    as dictated by the plan.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: 'The module beautifully captures the Ukrainian perspective on the word
+    "впертий" (principled/persistent rather than just stubborn) and correctly emphasizes
+    that "добра людина" is the highest praise in '
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are contextual, varied (looking at photos, meeting a new colleague),
+    and use named speakers (Олена, Марія, Антон). They model the target language naturally
+    rather than reading like robotic d
+findings: []

@@ -1,0 +1,50 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: The plan requires teaching plural endings ("produce Instrumental singular
+    and plural endings"), but the text completely omits plural noun and adjective
+    endings. The plan also requires temporal preposi
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: 'CRITICAL ERROR: The text incorrectly states that words ending in two
+    consonants take an apostrophe ("If the word ends in two consonants... we use an
+    apostrophe"). This directly contradicts standard gr'
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Good flow and excellent distinction between tool vs. accompaniment, but
+    failing to teach plural endings before putting them in the dialogue (`дітьми`)
+    leaves a massive pedagogical gap.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Almost all required vocabulary is used beautifully in context, but the
+    required word `вправа` (exercise) is completely absent.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Injection markers match the plan exactly and are placed well.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: The tone is appropriately instructional, and the "Мій вівторок" narrative
+    successfully grounds the grammar in real-world use.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: The word count (2020) exceeds the 1500 target, ensuring plenty of instructional
+    depth. Sections match the outline.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Excellent "linguistic hygiene" section addressing common Russianisms (`розмовляти
+    на мові`, `сміятися над`).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The dialogue is natural and successfully incorporates four different Instrumental
+    functions in a short exchange.
+findings: []

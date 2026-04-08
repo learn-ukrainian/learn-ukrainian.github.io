@@ -1,0 +1,52 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 6
+  evidence: 'Deductions for missing the verb "цікавитися" (and then testing it in
+    the final summary: "Як сказати ''I am interested in photography''?"), missing
+    four hobby nouns ("садівництво", "програмування", "кулі'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Deduction for the prominent use of the Russian calque "на вихідних" instead
+    of standard "у вихідні" in two places ("Мій старший брат любить плавати в басейні
+    на вихідних", "Що ти робитимеш на вихідних
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Deduction for testing the untaught verb "цікавитися" in the final self-assessment
+    ("Спробуйте відповісти на три запитання... Як сказати 'I am interested in photography'?").
+    Testing unintroduced materi
+- dimension: 4
+  name: Vocabulary coverage
+  score: 7
+  evidence: 'Several specific plan words were omitted from the text: "садівництво",
+    "програмування", "кулінарія", "читання" (as a noun), "folk festivals", "щовихідних".'
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: The exercise marker `fill-in-hobbies-cases` is placed in Section 1, but
+    its focus is testing Accusative/Locative destinations ("Ми йдемо в/на"), which
+    is not taught until Section 2.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Great teacher tone. Very good flow. Explanations are warm and encouraging
+    ("Це дуже важливе та корисне питання").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: The module is perfectly structured with all exact H2 headings present.
+    Word count of 2516 safely exceeds the 2000-word target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: Good integration of Carpathians, castles, and mushroom/berry picking.
+    Slight deduction for missing the planned "folk festivals" mention.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogues are highly authentic, accurately contextualized, and represent
+    real-world use cases (lunch with colleagues, meeting a new person, weekend planning).
+findings: []

@@ -1,0 +1,428 @@
+{
+  "total_items": 144,
+  "grounded_items": 76,
+  "ungrounded": [
+    {
+      "word": "цю",
+      "exercise_type": "unjumble",
+      "context": "цю",
+      "role": "answer"
+    },
+    {
+      "word": "проблему",
+      "exercise_type": "fill-in",
+      "context": "Нарешті я ____ цю проблему.",
+      "role": "context"
+    },
+    {
+      "word": "допомагав",
+      "exercise_type": "fill-in",
+      "context": "допомагав",
+      "role": "answer"
+    },
+    {
+      "word": "допомогла",
+      "exercise_type": "fill-in",
+      "context": "допомогла",
+      "role": "answer"
+    },
+    {
+      "word": "будь",
+      "exercise_type": "fill-in",
+      "context": "Будь ласка, ____ двері.",
+      "role": "context"
+    },
+    {
+      "word": "ласка",
+      "exercise_type": "fill-in",
+      "context": "Будь ласка, ____ двері.",
+      "role": "context"
+    },
+    {
+      "word": "двері",
+      "exercise_type": "fill-in",
+      "context": "Будь ласка, ____ двері.",
+      "role": "context"
+    },
+    {
+      "word": "запитував",
+      "exercise_type": "fill-in",
+      "context": "запитував",
+      "role": "answer"
+    },
+    {
+      "word": "постійно",
+      "exercise_type": "fill-in",
+      "context": "Я постійно ____ про це.",
+      "role": "context"
+    },
+    {
+      "word": "це",
+      "exercise_type": "fill-in",
+      "context": "Я постійно ____ про це.",
+      "role": "context"
+    },
+    {
+      "word": "можна",
+      "exercise_type": "fill-in",
+      "context": "Можна тебе ____?",
+      "role": "context"
+    },
+    {
+      "word": "тебе",
+      "exercise_type": "fill-in",
+      "context": "Можна тебе ____?",
+      "role": "context"
+    },
+    {
+      "word": "купую",
+      "exercise_type": "fill-in",
+      "context": "купую",
+      "role": "answer"
+    },
+    {
+      "word": "щодня",
+      "exercise_type": "unjumble",
+      "context": "щодня.",
+      "role": "answer"
+    },
+    {
+      "word": "каву",
+      "exercise_type": "fill-in",
+      "context": "Щодня я ____ каву.",
+      "role": "context"
+    },
+    {
+      "word": "куплю",
+      "exercise_type": "fill-in",
+      "context": "куплю",
+      "role": "answer"
+    },
+    {
+      "word": "завтра",
+      "exercise_type": "fill-in",
+      "context": "Завтра я ____ нову книгу.",
+      "role": "context"
+    },
+    {
+      "word": "нову",
+      "exercise_type": "fill-in",
+      "context": "Завтра я ____ нову книгу.",
+      "role": "context"
+    },
+    {
+      "word": "книгу",
+      "exercise_type": "unjumble",
+      "context": "книгу.",
+      "role": "answer"
+    },
+    {
+      "word": "шукав",
+      "exercise_type": "fill-in",
+      "context": "шукав",
+      "role": "answer"
+    },
+    {
+      "word": "ключі",
+      "exercise_type": "fill-in",
+      "context": "Він довго ____ ключі.",
+      "role": "context"
+    },
+    {
+      "word": "знайшла",
+      "exercise_type": "fill-in",
+      "context": "знайшла",
+      "role": "answer"
+    },
+    {
+      "word": "свій",
+      "exercise_type": "fill-in",
+      "context": "Нарешті вона ____ свій телефон.",
+      "role": "context"
+    },
+    {
+      "word": "мистецтво",
+      "exercise_type": "fill-in",
+      "context": "Ми часто ____ про мистецтво.",
+      "role": "context"
+    },
+    {
+      "word": "взяв",
+      "exercise_type": "fill-in",
+      "context": "взяв",
+      "role": "answer"
+    },
+    {
+      "word": "зошит",
+      "exercise_type": "fill-in",
+      "context": "Хто ____ мій зошит?",
+      "role": "context"
+    },
+    {
+      "word": "читав",
+      "exercise_type": "error-correction",
+      "context": "читав",
+      "role": "answer"
+    },
+    {
+      "word": "прочитав",
+      "exercise_type": "unjumble",
+      "context": "прочитав",
+      "role": "answer"
+    },
+    {
+      "word": "весь",
+      "exercise_type": "error-correction",
+      "context": "Я прочитав цю книгу весь вчорашній вечір.",
+      "role": "context"
+    },
+    {
+      "word": "вчорашній",
+      "exercise_type": "error-correction",
+      "context": "Я прочитав цю книгу весь вчорашній вечір.",
+      "role": "context"
+    },
+    {
+      "word": "вечір",
+      "exercise_type": "error-correction",
+      "context": "Я прочитав цю книгу весь вчорашній вечір.",
+      "role": "context"
+    },
+    {
+      "word": "своє",
+      "exercise_type": "error-correction",
+      "context": "Нарешті він робив своє домашнє завдання.",
+      "role": "context"
+    },
+    {
+      "word": "домашнє",
+      "exercise_type": "error-correction",
+      "context": "Нарешті він робив своє домашнє завдання.",
+      "role": "context"
+    },
+    {
+      "word": "завдання",
+      "exercise_type": "error-correction",
+      "context": "Нарешті він робив своє домашнє завдання.",
+      "role": "context"
+    },
+    {
+      "word": "говорила",
+      "exercise_type": "error-correction",
+      "context": "говорила",
+      "role": "answer"
+    },
+    {
+      "word": "дуже",
+      "exercise_type": "error-correction",
+      "context": "Вона дуже довго сказала про свою нову роботу.",
+      "role": "context"
+    },
+    {
+      "word": "сказала",
+      "exercise_type": "error-correction",
+      "context": "Вона дуже довго сказала про свою нову роботу.",
+      "role": "context"
+    },
+    {
+      "word": "свою",
+      "exercise_type": "error-correction",
+      "context": "Вона дуже довго сказала про свою нову роботу.",
+      "role": "context"
+    },
+    {
+      "word": "роботу",
+      "exercise_type": "error-correction",
+      "context": "Вона дуже довго сказала про свою нову роботу.",
+      "role": "context"
+    },
+    {
+      "word": "брали",
+      "exercise_type": "error-correction",
+      "context": "брали",
+      "role": "answer"
+    },
+    {
+      "word": "взяли",
+      "exercise_type": "error-correction",
+      "context": "Ми часто взяли смачну каву в цьому кафе.",
+      "role": "context"
+    },
+    {
+      "word": "смачну",
+      "exercise_type": "error-correction",
+      "context": "Ми часто взяли смачну каву в цьому кафе.",
+      "role": "context"
+    },
+    {
+      "word": "цьому",
+      "exercise_type": "error-correction",
+      "context": "Ми часто взяли смачну каву в цьому кафе.",
+      "role": "context"
+    },
+    {
+      "word": "нові",
+      "exercise_type": "unjumble",
+      "context": "нові",
+      "role": "answer"
+    },
+    {
+      "word": "дієслово",
+      "exercise_type": "true-false",
+      "context": "Дієслово «прочитати» описує завершений результат (доконаний ",
+      "role": "context"
+    },
+    {
+      "word": "описує",
+      "exercise_type": "true-false",
+      "context": "Дієслово «прочитати» описує завершений результат (доконаний ",
+      "role": "context"
+    },
+    {
+      "word": "завершений",
+      "exercise_type": "true-false",
+      "context": "Дієслово «прочитати» описує завершений результат (доконаний ",
+      "role": "context"
+    },
+    {
+      "word": "два",
+      "exercise_type": "true-false",
+      "context": "Дієслова «шукати» і «знайти» — це два різні варіанти недокон",
+      "role": "context"
+    },
+    {
+      "word": "різні",
+      "exercise_type": "true-false",
+      "context": "Дієслова «шукати» і «знайти» — це два різні варіанти недокон",
+      "role": "context"
+    },
+    {
+      "word": "варіанти",
+      "exercise_type": "true-false",
+      "context": "Дієслова «шукати» і «знайти» — це два різні варіанти недокон",
+      "role": "context"
+    },
+    {
+      "word": "недоконаного",
+      "exercise_type": "true-false",
+      "context": "Дієслова «шукати» і «знайти» — це два різні варіанти недокон",
+      "role": "context"
+    },
+    {
+      "word": "виду",
+      "exercise_type": "true-false",
+      "context": "Дієслова «шукати» і «знайти» — це два різні варіанти недокон",
+      "role": "context"
+    },
+    {
+      "word": "якщо",
+      "exercise_type": "true-false",
+      "context": "Якщо дія повторюється часто (наприклад, «щодня»), ми зазвича",
+      "role": "context"
+    },
+    {
+      "word": "дія",
+      "exercise_type": "true-false",
+      "context": "Якщо дія повторюється часто (наприклад, «щодня»), ми зазвича",
+      "role": "context"
+    },
+    {
+      "word": "повторюється",
+      "exercise_type": "true-false",
+      "context": "Якщо дія повторюється часто (наприклад, «щодня»), ми зазвича",
+      "role": "context"
+    },
+    {
+      "word": "наприклад",
+      "exercise_type": "true-false",
+      "context": "Якщо дія повторюється часто (наприклад, «щодня»), ми зазвича",
+      "role": "context"
+    },
+    {
+      "word": "зазвичай",
+      "exercise_type": "true-false",
+      "context": "Якщо дія повторюється часто (наприклад, «щодня»), ми зазвича",
+      "role": "context"
+    },
+    {
+      "word": "використовуємо",
+      "exercise_type": "true-false",
+      "context": "Якщо дія повторюється часто (наприклад, «щодня»), ми зазвича",
+      "role": "context"
+    },
+    {
+      "word": "утворюється",
+      "exercise_type": "true-false",
+      "context": "Пара «говорити / сказати» утворюється за допомогою префікса.",
+      "role": "context"
+    },
+    {
+      "word": "допомогою",
+      "exercise_type": "true-false",
+      "context": "Пара «говорити / сказати» утворюється за допомогою префікса.",
+      "role": "context"
+    },
+    {
+      "word": "слові",
+      "exercise_type": "true-false",
+      "context": "Суфікс «-ну-» (наприклад, у слові «стукнути») вказує на дуже",
+      "role": "context"
+    },
+    {
+      "word": "вказує",
+      "exercise_type": "true-false",
+      "context": "Суфікс «-ну-» (наприклад, у слові «стукнути») вказує на дуже",
+      "role": "context"
+    },
+    {
+      "word": "довгу",
+      "exercise_type": "true-false",
+      "context": "Суфікс «-ну-» (наприклад, у слові «стукнути») вказує на дуже",
+      "role": "context"
+    },
+    {
+      "word": "дію",
+      "exercise_type": "true-false",
+      "context": "Суфікс «-ну-» (наприклад, у слові «стукнути») вказує на дуже",
+      "role": "context"
+    },
+    {
+      "word": "словниках",
+      "exercise_type": "true-false",
+      "context": "У словниках дієслова зазвичай подають парами: спочатку недок",
+      "role": "context"
+    },
+    {
+      "word": "подають",
+      "exercise_type": "true-false",
+      "context": "У словниках дієслова зазвичай подають парами: спочатку недок",
+      "role": "context"
+    },
+    {
+      "word": "спочатку",
+      "exercise_type": "true-false",
+      "context": "У словниках дієслова зазвичай подають парами: спочатку недок",
+      "role": "context"
+    },
+    {
+      "word": "потім",
+      "exercise_type": "true-false",
+      "context": "У словниках дієслова зазвичай подають парами: спочатку недок",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 16,
+    "tested_in_exercises": 9,
+    "not_tested": [
+      "базовий",
+      "запам'ятовувати",
+      "корінь",
+      "написати",
+      "префікс",
+      "словник",
+      "утворювати"
+    ]
+  },
+  "all_grounded": false
+}

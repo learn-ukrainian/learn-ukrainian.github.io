@@ -1,0 +1,175 @@
+vocabulary:
+- word: дома́шній
+  translation: home (adj.), domestic
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: си́ній
+  translation: blue
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: сусі́дка
+  translation: neighbor (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: тим часом
+  translation: meanwhile
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: цим вечором
+  translation: this evening
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: мій
+  translation: my
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: твій
+  translation: your (informal)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: наш
+  translation: our
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ваш
+  translation: your (formal/plural)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: нови́й
+  translation: new
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: стари́й
+  translation: old
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: вели́кий
+  translation: big, large
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: га́рний
+  translation: nice, beautiful
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: найкра́щий
+  translation: the best
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: сусі́д
+  translation: neighbor (male)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лі́тній
+  translation: summer (adj.)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: свій
+  translation: one's own
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ї́хній
+  translation: their
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: йо́го
+  translation: his
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: її
+  translation: her
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: висо́кий
+  translation: high
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: да́вній
+  translation: long-standing, old
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: цим разом
+  translation: this time
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: з великим задоволенням
+  translation: with great pleasure
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: з вашою допомогою
+  translation: with your help
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: щоде́нник
+  translation: diary
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: коле́га
+  translation: colleague
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ремо́нт
+  translation: repair
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сеа́нс
+  translation: screening, session
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true

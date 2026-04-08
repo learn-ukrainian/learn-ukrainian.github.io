@@ -1,0 +1,368 @@
+version: '1.0'
+module: dative-nouns
+level: a2
+inline:
+- id: fill-in
+  type: fill-in
+  instruction: Оберіть правильну форму Давального відмінка (чоловічий рід)
+  items:
+  - sentence: Я пишу лист _____ (брат).
+    answer: братові
+    options:
+    - братові
+    - брата
+    - братом
+  - sentence: Що ти даси _____ (студент)?
+    answer: студенту
+    options:
+    - студента
+    - студенту
+    - студентом
+  - sentence: Треба допомогти _____ (вчитель).
+    answer: вчителеві
+    options:
+    - вчителеві
+    - вчителя
+    - вчителі
+  - sentence: Слава _____ (герой)!
+    answer: героєві
+    options:
+    - героя
+    - героєві
+    - герої
+  - sentence: Я зателефоную _____ (лікар) завтра.
+    answer: лікареві
+    options:
+    - лікаря
+    - лікарем
+    - лікареві
+  - sentence: Він допомагає _____ (сусід).
+    answer: сусідові
+    options:
+    - сусідові
+    - сусіда
+    - сусідом
+  - sentence: Передай привіт нашому _____ (друг).
+    answer: другові
+    options:
+    - друга
+    - другом
+    - другові
+  - sentence: Він завжди допомагає _____ (батько).
+    answer: батькові
+    options:
+    - батькові
+    - батька
+    - батьком
+- id: group-sort
+  type: group-sort
+  instruction: Розподіліть фрази за правилом чергування закінчень (для милозвучності)
+  groups:
+  - label: Закінчення -ові/-еві + -у/-ю
+    items:
+    - братові Максиму
+    - лікареві Івану
+    - сусідові Данилу
+    - товаришеві Дмитру
+  - label: Закінчення -у/-ю + -ові/-еві/-єві
+    items:
+    - брату Максимові
+    - лікарю Іванові
+    - сусіду Данилові
+    - товаришу Дмитрові
+- id: quiz
+  type: quiz
+  instruction: Оберіть правильну форму слова в Давальному відмінку (зверніть увагу
+    на чергування)
+  items:
+  - question: Я скажу _____ (подруга), що вона найкраща.
+    options:
+    - подругі
+    - подрузі
+    - подружі
+    - подругу
+    correct: 1
+  - question: Ця інформація є в новій _____ (книга).
+    options:
+    - книгі
+    - книжі
+    - книзі
+    - книгу
+    correct: 2
+  - question: Ми подарували квіти цій _____ (жінка).
+    options:
+    - жінці
+    - жінкі
+    - жінчі
+    - жінку
+    correct: 0
+  - question: Ти вже купив подарунок _____ (свекруха)?
+    options:
+    - свекрухі
+    - свекруші
+    - свекрусі
+    - свекруху
+    correct: 2
+  - question: Він допомагає своїй _____ (колега).
+    options:
+    - колегі
+    - колежі
+    - колезі
+    - колегу
+    correct: 2
+  - question: Вони купили іграшку маленькій _____ (дівчинка).
+    options:
+    - дівчинкі
+    - дівчиньці
+    - дівчинці
+    - дівчинку
+    correct: 2
+  - question: Тарас хоче подарувати квіти _____ (мама).
+    options:
+    - маму
+    - мамі
+    - мамє
+    - мамою
+    correct: 1
+  - question: Я розповім про це моїй _____ (сестра).
+    options:
+    - сестру
+    - сестрі
+    - сестрє
+    - сестрою
+    correct: 1
+- id: match-up
+  type: match-up
+  instruction: З'єднайте українські фрази з їхнім англійським перекладом
+  pairs:
+  - left: подарувати братові
+    right: to give as a gift to a brother
+  - left: показати другові
+    right: to show to a friend
+  - left: написати сестрі
+    right: to write to a sister
+  - left: розповісти студентові
+    right: to tell a student
+  - left: пояснити вчителеві
+    right: to explain to a teacher
+  - left: відповісти лікарю
+    right: to answer a doctor
+  - left: дати дитині
+    right: to give to a child
+  - left: допомогти батькові
+    right: to help a father
+- id: unjumble
+  type: unjumble
+  instruction: Складіть правильне речення зі слів
+  items:
+  - words:
+    - братові
+    - Тетяна
+    - подарувала
+    - книгу.
+    correct_order:
+    - Тетяна
+    - подарувала
+    - братові
+    - книгу.
+    hint: Subject + Verb + Dative (recipient) + Accusative (object)
+  - words:
+    - студентам
+    - показав
+    - Вчитель
+    - карту.
+    correct_order:
+    - Вчитель
+    - показав
+    - студентам
+    - карту.
+  - words:
+    - написати
+    - Я
+    - подрузі.
+    - повідомлення
+    - хочу
+    correct_order:
+    - Я
+    - хочу
+    - написати
+    - повідомлення
+    - подрузі.
+  - words:
+    - цьому
+    - місту.
+    - назву
+    - дати
+    - Вони
+    - хочуть
+    - нову
+    correct_order:
+    - Вони
+    - хочуть
+    - дати
+    - нову
+    - назву
+    - цьому
+    - місту.
+  - words:
+    - допомогти
+    - Ми
+    - вчителеві.
+    - нашому
+    - повинні
+    correct_order:
+    - Ми
+    - повинні
+    - допомогти
+    - нашому
+    - вчителеві.
+  - words:
+    - немовляті.
+    - маленькому
+    - заспівала
+    - пісню
+    - Мама
+    correct_order:
+    - Мама
+    - заспівала
+    - пісню
+    - маленькому
+    - немовляті.
+workbook:
+- id: wb-group-sort-gender
+  type: group-sort
+  instruction: Розподіліть іменники в Давальному відмінку за родами
+  groups:
+  - label: Чоловічий рід (-ові/-еві/-єві, -у/-ю)
+    items:
+    - студентові
+    - лікареві
+    - брату
+    - героєві
+  - label: Жіночий рід (-і, -ї)
+    items:
+    - сестрі
+    - подрузі
+    - мамі
+    - радості
+  - label: Середній рід (-у/-ю, -аті/-яті)
+    items:
+    - місту
+    - вікну
+    - сонцю
+    - немовляті
+- id: wb-error-correction-case
+  type: error-correction
+  instruction: Знайдіть і виправте помилку у відмінковому закінченні
+  items:
+  - sentence: Я хочу подарувати книгу брат.
+    error: брат
+    correction: братові
+    error_type: word
+    options:
+    - брата
+    - братом
+    - братові
+    explanation: Дієслово 'подарувати' вимагає Давального відмінка для одержувача
+      (кому?).
+  - sentence: Ми написали лист подругі.
+    error: подругі
+    correction: подрузі
+    error_type: word
+    options:
+    - подрузі
+    - подружі
+    - подругу
+    explanation: У жіночому роді твердої групи перед закінченням -і відбувається чергування
+      г → з (подруга → подрузі).
+  - sentence: Треба допомогти вчитель.
+    error: вчитель
+    correction: вчителеві
+    error_type: word
+    options:
+    - вчителя
+    - вчителі
+    - вчителеві
+    explanation: Дієслово 'допомогти' вимагає Давального відмінка (кому?).
+  - sentence: Мама дала молоко курчі.
+    error: курчі
+    correction: курчаті
+    error_type: word
+    options:
+    - курчу
+    - курчаті
+    - курчату
+    explanation: Слова, що означають малят (IV відміна), у Давальному відмінку мають
+      суфікс -ат-/-ят- і закінчення -і.
+  - sentence: Він відправив пакунок мама.
+    error: мама
+    correction: мамі
+    error_type: word
+    options:
+    - маму
+    - мамою
+    - мамі
+    explanation: Дієслово 'відправити' вимагає Давального відмінка для одержувача
+      (кому?).
+  - sentence: Вона дуже радіє сонце.
+    error: сонце
+    correction: сонцю
+    error_type: word
+    options:
+    - сонця
+    - сонцем
+    - сонцю
+    explanation: Дієслово 'радіти' вимагає Давального відмінка (чому?). 'Сонце' —
+      іменник середнього роду.
+- id: wb-translate-sentences
+  type: translate
+  instruction: Оберіть правильний переклад речень
+  items:
+  - source: I am writing a letter to a friend.
+    options:
+    - text: Я пишу лист другові.
+      correct: true
+    - text: Я пишу лист друга.
+      correct: false
+    - text: Я пишу лист другом.
+      correct: false
+  - source: Taras gave flowers to his mother.
+    options:
+    - text: Тарас подарував квіти мамі.
+      correct: true
+    - text: Тарас подарував квіти маму.
+      correct: false
+    - text: Тарас подарував квіти мамою.
+      correct: false
+  - source: We want to help the village.
+    options:
+    - text: Ми хочемо допомогти селу.
+      correct: true
+    - text: Ми хочемо допомогти села.
+      correct: false
+    - text: Ми хочемо допомогти селом.
+      correct: false
+  - source: Did you give the dictionary to your brother?
+    options:
+    - text: Ти дав словник братові?
+      correct: true
+    - text: Ти дав словник брата?
+      correct: false
+    - text: Ти дав словник брат?
+      correct: false
+  - source: I will tell my sister about this.
+    options:
+    - text: Я розповім про це моїй сестрі.
+      correct: true
+    - text: Я розповім про це моїй сестру.
+      correct: false
+    - text: Я розповім про це моя сестра.
+      correct: false
+  - source: The teacher showed a map to the students.
+    options:
+    - text: Вчитель показав студентам карту.
+      correct: true
+    - text: Вчитель показав студентів карту.
+      correct: false
+    - text: Вчитель показав студентами карту.
+      correct: false

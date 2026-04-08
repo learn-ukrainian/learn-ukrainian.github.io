@@ -1,0 +1,27 @@
+## Множина називного відмінка (Nominative Plural)
+
+Сьогодні теплий вихідний день, і велика сім’я гуляє в зоопарку. Вони дивляться на різних тварин і птахів.
+> — **Мама:** Діти, подивіться туди! Там спокійно сплять великі **леви** *(lions)*.
+> — **Син:** Ого, які вони красиві та сильні! А хто там швидко стрибає?
+> — **Тато:** Це веселі **мавпи** *(monkeys)*. Вони дуже люблять активно гратися.
+> — **Донька:** Я бачу високі зелені дерева. А біля дерев стоять **жирафи** *(giraffes)*.
+> — **Мама:** Так, це справжні жирафи. Вони зараз їдять свіже листя.
+> — **Син:** А де живуть птахи? Я дуже люблю **пінгвінів** *(penguins)*! Хочу їх побачити.
+> — **Тато:** Пінгвіни живуть там, де холодна вода. Ми зараз ідемо саме до них.
+> — **Донька:** Чудово! Я дуже хочу побачити маленьких і смішних пінгвінів.
+
+Ми часто говоримо про предмети або людей у множині. In Ukrainian, changing a noun from singular to plural depends heavily on its gender and its declension class, known as **відміна** *(declension)*. Усі українські іменники мають чотири відміни. You already know that these four classes group nouns by their endings and genders. To form the Nominative plural correctly, we use this system as our roadmap. Кожна відміна має свої правила та закінчення. The endings will also change depending on whether the final consonant of the stem is hard, soft, or mixed. Давайте подивимося на правила для кожної відміни.
+
+Перша відміна — це слова жіночого, чоловічого або спільного роду. Вони завжди закінчуються на «-а» або «-я». The plural endings for this class are very straightforward and depend on the stem. Якщо слово має тверду основу, ми додаємо закінчення «-и». For example, **сестра** *(sister)* becomes **сестри** *(sisters)*, **мама** *(mom)* becomes **мами** *(moms)*, and **книжка** *(book)* becomes **книжки** *(books)*. Якщо слово має м'яку або мішану основу, ми використовуємо закінчення «-і» або «-ї». This makes pronunciation much smoother. Так, **земля** *(land)* becomes **землі** *(lands)*, **суддя** *(judge)* becomes **судді** *(judges)*, and **пісня** *(song)* becomes **пісні** *(songs)*.
+
+Друга відміна є найбільшою. Сюди належить багато слів чоловічого та середнього роду. Let's look at the masculine nouns first. Для слів чоловічого роду з твердою основою стандартне закінчення множини — це «-и». Наприклад, **стіл** *(table)* is **столи** *(tables)*, **завод** *(factory)* is **заводи** *(factories)*, and **телефон** *(phone)* is **телефони** *(phones)*. Якщо основа м'яка або мішана, закінчення змінюється на «-і» або «-ї». Тому **кінь** *(horse)* changes to **коні** *(horses)*, **плащ** *(cloak)* changes to **плащі** *(cloaks)*, and **герой** *(hero)* becomes **герої** *(heroes)*. A very important feature of this group is consonant alternation. Деякі популярні слова змінюють останній приголосний перед закінченням «-і». The most common example you must know is **друг** *(friend)*, which changes to **друзі** *(friends)* in the plural. Another common one is **рік** *(year)*, which becomes **роки** *(years)*.
+
+Тепер подивимося на слова середнього роду другої відміни. Neuter nouns form their plurals differently than masculine nouns in the same class. Замість закінчень «-и» та «-і», слова середнього роду зазвичай отримують закінчення «-а» або «-я». Якщо слово в однині закінчується на «-о», у множині воно матиме закінчення «-а». Наприклад, велике **місто** *(city)* changes to **міста** *(cities)*, **село** *(village)* becomes **села** *(villages)*, and **вікно** *(window)* is **вікна** *(windows)*. If the neuter noun ends in «-е» or «-я» in the singular, it takes the plural ending «-я». Тому **поле** *(field)* becomes **поля** *(fields)*, **море** *(sea)* becomes **моря** *(seas)*, and **обличчя** *(face)* is simply **обличчя** *(faces)* in plural as well.
+
+Третя відміна — це слова жіночого роду, які закінчуються на приголосний звук, а також слово «мати». This class is very consistent and easy to remember. Усі ці слова в називному відмінку множини мають закінчення «-і». Наприклад, темна **ніч** *(night)* becomes **ночі** *(nights)*, **річ** *(thing)* becomes **речі** *(things)*, **подорож** *(journey)* is **подорожі** *(journeys)*, and **сіль** *(salt)* is **солі** *(salts)*. Слово **мати** *(mother)* має особливу форму множини — **матері** *(mothers)*.
+
+Четверта відміна також дуже цікава. Вона об’єднує слова середнього роду, які часто позначають малих тварин або дітей. When forming the plural, these nouns reveal a hidden suffix «-ат-» or «-ят-» before the ending «-а». Наприклад, маленьке **курча** *(chick)* becomes **курчата** *(chicks)*. Так само **теля** *(calf)* changes to **телята** *(calves)*, **кошеня** *(kitten)* becomes **кошенята** *(kittens)*, and **лоша** *(foal)* is **лошата** *(foals)*. Ці слова часто можна почути в селі або в зоопарку.
+
+Деякі українські іменники мають унікальні форми множини. These are common irregular forms that you must memorize as complete lexical units, because they do not follow the standard declension rules. Найважливіші слова — це **людина** *(person)* та **дитина** *(child)*. У множині вони повністю змінюють форму: «людина» стає **люди** *(people)*, а «дитина» стає **діти** *(children)*. Також є слова, які позначають парні частини тіла. Вони зберегли стародавні форми множини. Наприклад, **око** *(eye)* стає **очі** *(eyes)*, **вухо** *(ear)* стає **вуха** *(ears)*, а **плече** *(shoulder)* стає **плечі** *(shoulders)*. Це дуже важливі слова для щоденного спілкування.
+
+<!-- INJECT_ACTIVITY: fill-in-nom-plural -->

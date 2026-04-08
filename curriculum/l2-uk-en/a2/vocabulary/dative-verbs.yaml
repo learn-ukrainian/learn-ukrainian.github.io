@@ -1,0 +1,115 @@
+vocabulary:
+- word: допомага́ти
+  translation: to help
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: дзвони́ти
+  translation: to call, to phone
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ра́дити
+  translation: to advise
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: заважа́ти
+  translation: to bother, to disturb
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: подо́батися
+  translation: to be pleasing to, to like
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відповіда́ти
+  translation: to answer
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ро́ки́
+  translation: years (used for age 2-4, 22-24...)
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: ро́кі́в
+  translation: years (used for age 5-20, 25-30...)
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: телефонува́ти
+  translation: to phone
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вибача́ти
+  translation: to forgive, to excuse
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: вік
+  translation: age
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: скі́льки
+  translation: how many
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: дава́ти
+  translation: to give
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: розповіда́ти
+  translation: to tell, to narrate
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: кли́кати
+  translation: to call, to summon
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Мені подобається
+  translation: 'I like (literally: it is pleasing to me)'
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Скільки тобі років?
+  translation: How old are you?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дякую тобі
+  translation: thank you (informal)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дякую вам
+  translation: thank you (formal/plural)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

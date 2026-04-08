@@ -1,0 +1,13 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 1/10 required vocab: гривня (hryvnia)"
+    }
+  ],
+  "timestamp": "2026-04-07T23:57:30.395076+00:00"
+}

@@ -1,0 +1,50 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'The text misses the plan requirement for Dialogue 2: "asking about delivery
+    time". The client only asks `«Де треба писати номер телефону одержувача?»` without
+    inquiring about delivery duration. All ot'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'Contains a textbook calque: `«Що знаходиться всередині?»` instead of
+    the natural `«Що всередині?»`. Otherwise, the language is highly accurate.'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent pedagogical breakdown of the Dative case answering "Кому?".
+    The distinction between `дати листоноші` and `заповнити бланк` is well contextualized.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words (`пошта`, `відправник`, `одержувач`,
+    `індекс`, `бандероль`) are naturally embedded in the narrative.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The 4 injected activity markers correspond exactly to the plan's focus
+    areas and are spaced appropriately.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Generally excellent teacher persona, though some phrasing is overly robotic,
+    e.g., `«купіть інший предмет. Це листівка»`.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: 'Formatting artifact present where the Genitive case English translation
+    was replaced by a duplicate in backticks: `родовий відмінок (\`родовий відмінок\`)`.
+    The 2556 word count easily hits the target.'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Authentic mention of `Укрпошта` services, yellow postboxes, and addressing
+    protocols perfectly reflects Ukrainian postal culture.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogues are polite, natural, and accurately capture service interactions
+    (e.g., `«Дайте мені, будь ласка, два конверти...»`).
+findings: []

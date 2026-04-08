@@ -1,0 +1,35 @@
+## Пане, пані: формальне звертання (Formal Address) (~550 words)
+- P1 (~100 words): [Introduction to A2 formal address. Moving from A1 basic names (Тарасе!, Олено!) to professional and social etiquette. Explain that the vocative case is mandatory and using the nominative sounds like a "Russianism" or a mistake. Examples: Маріє vs Пані Маріє.]
+- P2 (~120 words): [The construction of "Пане/Пані" + Professional title or position. Explain that "пане" triggers the vocative in the following noun. Hard stem nouns take -е (пане директоре, пане професоре), while soft stem nouns take -ю (пане лікарю, пане водію). For women, "пані" is invariable, and the profession takes the feminine vocative -о (пані вчителько, пані директорко).]
+- P3 (~130 words): [Formal address with surnames. Explain that masculine surnames decline in the vocative after "пане" (пане Коваленку, пане Шевченку), typically taking the -у ending. Contrast this with feminine surnames, which remain in the nominative after "пані" (пані Коваленко, пані Шевченко), reflecting the general rule that many feminine surnames in -о/-ко are indeclinable.]
+- P4 (~100 words): [Decolonization and Cultural Context. Explain the history of "пан/пані" as the traditional Ukrainian address, which was suppressed in favor of the Soviet "товариш" (comrade). Emphasize that using "пане" today is a conscious choice to speak authentic, decolonized Ukrainian. Reference the classic carol line: "Добрий вечір тобі, пане господарю!"]
+- P5 (~100 words): [Literary and high-formal alternatives: добродію and добродійко. Explain that while these are less common in modern street slang, they are beautiful, polite forms used in formal letters or by the diaspora. Examples: "Шановний добродію!", "Вельмишановна добродійко!"]
+- <!-- INJECT_ACTIVITY: fill-in-formal-vocative --> [fill-in, focus: Form the correct vocative of professional titles and names (пане _____, пані _____), 8 items]
+
+## Професійні звертання (Professional Vocative) (~500 words)
+- P1 (~120 words): [Detailed rules for masculine professional titles. Focus on the distinction between the -е ending for hard consonants (інженер → інженере, майстер → майстре) and the -ю ending for soft/liquid consonants (лікар → лікарю, вчитель → учителю). Note the specific case of -ер suffixes (професоре vs лікарю).]
+- P2 (~120 words): [Femininitives in the Vocative. Explain that Ukrainian naturally uses feminine forms for professions. Focus on the -о ending for nouns like вчителька → вчителько, лікарка → лікарко, журналістка → журналістко. This reinforces the "feminine-hard" pattern (1st declension) taught in A1.]
+- P3 (~100 words): [Common gender and special professional roles. Explain nouns like "колега" which takes -о for both genders (колего), and "суддя" which takes -ю (суддю). Mention "товариш" which takes -у (товаришу) as a mixed-declension noun.]
+- P4 (~160 words): [Dialogue Situation 1: At the Medical Clinic. A patient (Oleh) enters and addresses the doctor formally, and the doctor responds using the patient's surname. Speakers: Пацієнт (Олег), Лікар. Includes phrases: "Пане лікарю, мені потрібна допомога", "Добре, пане Ковальчуку, що вас турбує?", "Дякую, лікарю". Focus on the transition from formal title to professional respect.]
+- <!-- INJECT_ACTIVITY: match-professions-vocative --> [match-up, focus: Match nominative forms to their vocative equivalents (лікар → лікарю, вчитель → вчителю, друг → друже), 8 items]
+
+## Друже мій, люба моя: емоційний кличний (Emotional Vocative) (~550 words)
+- P1 (~120 words): [Vocative between friends and loved ones. Explain the mutation in "друг" (г → ж) resulting in "друже". Contrast with the feminine "подруга" → "подруго". Introduce common emotive forms like "любий" (dear/masc) and "люба" (dear/fem), which in the vocative match the nominative for adjectives.]
+- P2 (~130 words): [Diminutive vocatives (Пестливі форми). Explain why Ukrainian is called "пісенна" and "ніжна". Introduce affectionate addresses: серденько (sweetheart), сонечко (sunshine), зіронько (little star), любочко (darling). Explain that neuter nouns in -ко take -о or stay the same (серденько).]
+- P3 (~100 words): [The word order of possessive pronouns. Explain the specific Ukrainian pattern "Noun + Pronoun" in the vocative. Unlike English "My friend", Ukrainian prefers "Друже мій!" or "Мамо моя!". Explain that "мій/моя" stay in the nominative form.]
+- P4 (~100 words): [Exclamatory and religious vocative roots. Explain common expressions like "Боже мій!" (My God!), "Господи!" (Lord!). Mention that plural vocatives are usually the same as nominative (Друзі! Колеги!), with the major exception of "Панове!" (Gentlemen/Sirs).]
+- P5 (~100 words): [Dialogue Situation 2: The Phone Call. After leaving the doctor, Oleh calls his friend to share the news. Speakers: Олег, Друг. Uses: "Друже мій!", "Кохана моя!" (if calling a wife), "Сонечко!". Focus on the shift from the formal "пане лікарю" of the previous section to this intimate emotional register.]
+- <!-- INJECT_ACTIVITY: error-correction-vocative --> [error-correction, focus: Fix vocative errors (*пан лікар → пане лікарю, *друже моя → подруго моя, *Мій друже → Друже мій), 8 items]
+
+## Який кличний обрати? (Choosing the Right Vocative) (~400 words)
+- P1 (~100 words): [Register Awareness and Social Distance. Provide a summary of how to choose: Formal (пане + surname), Professional (лікарю), Neutral-Polite (пані Олено), Friendly (Тарасе), and Intimate (серденько). Explain that using the wrong one can sound cold or overly familiar.]
+- P2 (~100 words): [Practical Scenario analysis. How to address a professor in an email (Шановний пане професоре) versus a waiter in a restaurant (Пане офіціанте) versus a neighbor (Пане Степане). Explain that first names in the vocative are the "middle ground" of politeness.]
+- P3 (~100 words): [Common L2 Pitfalls. Warning against using the Nominative for address (*Привіт, Іван). Warning against wrong gender agreement in possessives (*друже моя). Warning against the "Igor" trap: Ігорю (soft) is the modern standard, not Ігоре (archaic).]
+- P4 (~100 words): [Conclusion: The Vocative as a mark of respect. Sum up that the vocative isn't just a grammar rule; it's the music of the Ukrainian language and a way to build a bridge to the person you are talking to.]
+- <!-- INJECT_ACTIVITY: quiz-register-choice --> [quiz, focus: Choose the correct vocative register for a given social situation, 8 items]
+- <!-- INJECT_ACTIVITY: group-sort-registers --> [group-sort, focus: Sort vocative forms by register (formal, professional, emotional), 8 items]
+
+## Підсумок (~150 words)
+- P1 (~150 words): [Recap of the three main endings: -о (feminine/hard), -е (masculine/hard), -ю (soft stem/diminutives). Self-check questions: 1. Як звернутися до вчителя чоловіка (Пане вчителю)? 2. Як сказати "My friend" українською (Друже мій)? 3. Чи змінюється прізвище жінки після "пані" (Ні)? 4. Яка форма є стандартною для імені Олег (Олегу)?]
+
+Grand total: ~2150 words

@@ -1,0 +1,18 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 3/10 required vocab: вечірка (party), визначне місце (landmark, sight), запрошувати (to invite)"
+    },
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 4 exercise(s) but content has 1"
+    }
+  ],
+  "timestamp": "2026-04-08T01:41:15.852839+00:00"
+}

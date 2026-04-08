@@ -1,0 +1,53 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: 'Covers all 3 sections perfectly. Adheres to word budgets. Incorporates
+    the specific dialogue situations provided in the plan (e.g., "Це сумка мого старшого
+    брата", "Ви не бачили цієї чорної сумки?"). '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'Contains morphological errors with Genitive noun endings: "чемодану"
+    (instead of "чемодана") and "балкону" (instead of "балкона"). Verified via VESUM
+    and СУМ-11. Adjective and pronoun declensions are '
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: 'Outstanding pedagogical breakdown. Excellent use of the PPP flow. The
+    writer explicitly calls out important phonetic differences ("It is pronounced
+    exactly as it is written: with a clear, deep «г» sou'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words (прикметник, узгодження, документ,
+    підручник, старший, дівчина, etc.) are integrated naturally into the text and
+    examples without feeling forced.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Exercise markers match the plan's intent precisely and test exactly what
+    was just taught in the preceding sections.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is warm, encouraging, and academically grounded. It feels like
+    an actual teacher explaining the mechanics of the language clearly.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Well-structured markdown. Proper headings. Word count is 2962, comfortably
+    exceeding the 2000-word target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Factually correct about the direct Russian borrowing of short pronouns
+    for possession ("direct borrowing from Russian grammar... Always use the proper,
+    declinable forms").
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The opening lost-and-found dialogue flows naturally and organically integrates
+    the complex grammar points targeted in this module.
+findings: []

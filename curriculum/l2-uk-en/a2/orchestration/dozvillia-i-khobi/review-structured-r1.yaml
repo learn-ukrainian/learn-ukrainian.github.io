@@ -1,0 +1,48 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Missed the explicit plan instruction to include the practice pair `Вона
+    їде на змагання → Вона на змаганні`. All other sections are thoroughly covered.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: Contained critical calques ("Давай пограємо", "Так, давай"), an incorrect
+    vocative ("Софійо"), and an orthographic/euphony error ("З задоволенням").
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent PPP flow. Clear explanations for accusative/locative directions
+    and strong differentiation between "грати в" and "грати на".
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Required words are all used naturally. The recommended word "змагання"
+    was missed but can be easily patched.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 5 markers are correctly mapped to the plan and logically inserted
+    after their relevant theory blocks.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Great teacher persona with natural, culturally-resonant examples. No gamified
+    filler.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is 2497 (well above the 2000 target). All headers are properly
+    formatted and ordered.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Explains Ukrainian leisure authentically, specifically mentioning Carpathians,
+    castle trips, and the "quiet hunt" (mushroom picking).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: The dialogues are realistic and natural, though marred by the vocative
+    and calque errors ("Софійо", "Давай зустрінемося").
+findings: []

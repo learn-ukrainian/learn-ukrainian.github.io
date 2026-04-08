@@ -1,0 +1,219 @@
+{
+  "total_items": 188,
+  "grounded_items": 155,
+  "ungrounded": [
+    {
+      "word": "чоловічий",
+      "exercise_type": "group-sort",
+      "context": "Чоловічий та середній (-ому, -ьому)",
+      "role": "context"
+    },
+    {
+      "word": "середній",
+      "exercise_type": "group-sort",
+      "context": "Чоловічий та середній (-ому, -ьому)",
+      "role": "context"
+    },
+    {
+      "word": "жіночий",
+      "exercise_type": "group-sort",
+      "context": "Жіночий (-ій)",
+      "role": "context"
+    },
+    {
+      "word": "множина",
+      "exercise_type": "group-sort",
+      "context": "Множина (-им, -ім)",
+      "role": "context"
+    },
+    {
+      "word": "старим",
+      "exercise_type": "group-sort",
+      "context": "старим",
+      "role": "answer"
+    },
+    {
+      "word": "своя",
+      "exercise_type": "quiz",
+      "context": "Він допомагає (своя) сестрі.",
+      "role": "context"
+    },
+    {
+      "word": "твої",
+      "exercise_type": "quiz",
+      "context": "Ми завжди радіємо (твої) новим ідеям.",
+      "role": "context"
+    },
+    {
+      "word": "ваші",
+      "exercise_type": "quiz",
+      "context": "Директор дає премію (ваші) працівникам.",
+      "role": "context"
+    },
+    {
+      "word": "ті",
+      "exercise_type": "match-up",
+      "context": "ті розумні студенти",
+      "role": "answer"
+    },
+    {
+      "word": "розумні",
+      "exercise_type": "match-up",
+      "context": "ті розумні студенти",
+      "role": "answer"
+    },
+    {
+      "word": "розумним",
+      "exercise_type": "match-up",
+      "context": "тим розумним студентам",
+      "role": "context"
+    },
+    {
+      "word": "маленька",
+      "exercise_type": "match-up",
+      "context": "їхня маленька донька",
+      "role": "answer"
+    },
+    {
+      "word": "постійний",
+      "exercise_type": "match-up",
+      "context": "ваш постійний клієнт",
+      "role": "answer"
+    },
+    {
+      "word": "клієнт",
+      "exercise_type": "match-up",
+      "context": "ваш постійний клієнт",
+      "role": "answer"
+    },
+    {
+      "word": "постійному",
+      "exercise_type": "match-up",
+      "context": "вашому постійному клієнту",
+      "role": "context"
+    },
+    {
+      "word": "клієнту",
+      "exercise_type": "match-up",
+      "context": "вашому постійному клієнту",
+      "role": "context"
+    },
+    {
+      "word": "улюблена",
+      "exercise_type": "fill-in",
+      "context": "Ми купили квіти _____ (наша улюблена) вчительці.",
+      "role": "context"
+    },
+    {
+      "word": "коханий",
+      "exercise_type": "fill-in",
+      "context": "Вона присвятила пісню _____ (її коханий) чоловікові.",
+      "role": "context"
+    },
+    {
+      "word": "маленькі",
+      "exercise_type": "fill-in",
+      "context": "Що ви купили _____ (ваші маленькі) дітям?",
+      "role": "context"
+    },
+    {
+      "word": "постійні",
+      "exercise_type": "fill-in",
+      "context": "Він завжди допомагає _____ (свої постійні) клієнтам.",
+      "role": "context"
+    },
+    {
+      "word": "найкращій",
+      "exercise_type": "error-correction",
+      "context": "найкращій",
+      "role": "answer"
+    },
+    {
+      "word": "пише",
+      "exercise_type": "error-correction",
+      "context": "Вона пише повідомлення своїй найкраща подрузі.",
+      "role": "context"
+    },
+    {
+      "word": "найкраща",
+      "exercise_type": "error-correction",
+      "context": "Вона пише повідомлення своїй найкраща подрузі.",
+      "role": "context"
+    },
+    {
+      "word": "молодший",
+      "exercise_type": "error-correction",
+      "context": "Батько купив телефон своєму молодший синові.",
+      "role": "context"
+    },
+    {
+      "word": "хвора",
+      "exercise_type": "error-correction",
+      "context": "Лікар дав ліки її хвора сестрі.",
+      "role": "context"
+    },
+    {
+      "word": "вірити",
+      "exercise_type": "match-up",
+      "context": "вірити",
+      "role": "answer"
+    },
+    {
+      "word": "відмінок",
+      "exercise_type": "group-sort",
+      "context": "Давальний відмінок (кому? чому?)",
+      "role": "context"
+    },
+    {
+      "word": "чому",
+      "exercise_type": "group-sort",
+      "context": "Давальний відмінок (кому? чому?)",
+      "role": "context"
+    },
+    {
+      "word": "кого",
+      "exercise_type": "group-sort",
+      "context": "Родовий відмінок (кого? чого?)",
+      "role": "context"
+    },
+    {
+      "word": "чого",
+      "exercise_type": "group-sort",
+      "context": "Родовий відмінок (кого? чого?)",
+      "role": "context"
+    },
+    {
+      "word": "моєї",
+      "exercise_type": "group-sort",
+      "context": "моєї сестри",
+      "role": "answer"
+    },
+    {
+      "word": "цих",
+      "exercise_type": "group-sort",
+      "context": "цих студентів",
+      "role": "answer"
+    },
+    {
+      "word": "студентів",
+      "exercise_type": "group-sort",
+      "context": "цих студентів",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 15,
+    "tested_in_exercises": 7,
+    "not_tested": [
+      "вказівний",
+      "група",
+      "прикметник",
+      "присвійний",
+      "тому",
+      "узгодження",
+      "іменникова",
+      "їхньому"
+    ]
+  },
+  "all_grounded": false
+}

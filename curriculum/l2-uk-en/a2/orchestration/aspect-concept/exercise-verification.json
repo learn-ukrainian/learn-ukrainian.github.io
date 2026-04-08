@@ -1,0 +1,373 @@
+{
+  "total_items": 123,
+  "grounded_items": 64,
+  "ungrounded": [
+    {
+      "word": "шукати",
+      "exercise_type": "group-sort",
+      "context": "шукати",
+      "role": "answer"
+    },
+    {
+      "word": "пити",
+      "exercise_type": "group-sort",
+      "context": "пити",
+      "role": "answer"
+    },
+    {
+      "word": "їсти",
+      "exercise_type": "group-sort",
+      "context": "їсти",
+      "role": "answer"
+    },
+    {
+      "word": "бачити",
+      "exercise_type": "group-sort",
+      "context": "бачити",
+      "role": "answer"
+    },
+    {
+      "word": "знайти",
+      "exercise_type": "group-sort",
+      "context": "знайти",
+      "role": "answer"
+    },
+    {
+      "word": "випити",
+      "exercise_type": "group-sort",
+      "context": "випити",
+      "role": "answer"
+    },
+    {
+      "word": "поїсти",
+      "exercise_type": "group-sort",
+      "context": "поїсти",
+      "role": "answer"
+    },
+    {
+      "word": "побачити",
+      "exercise_type": "group-sort",
+      "context": "побачити",
+      "role": "answer"
+    },
+    {
+      "word": "робить",
+      "exercise_type": "fill-in",
+      "context": "робить",
+      "role": "answer"
+    },
+    {
+      "word": "свої",
+      "exercise_type": "fill-in",
+      "context": "Він довго _____ свої ключі.",
+      "role": "context"
+    },
+    {
+      "word": "ключі",
+      "exercise_type": "match-up",
+      "context": "Я шукав ключі, але",
+      "role": "answer"
+    },
+    {
+      "word": "забили",
+      "exercise_type": "fill-in",
+      "context": "забили",
+      "role": "answer"
+    },
+    {
+      "word": "тепер",
+      "exercise_type": "fill-in",
+      "context": "Я _____ квиток, тепер можемо їхати.",
+      "role": "context"
+    },
+    {
+      "word": "можемо",
+      "exercise_type": "fill-in",
+      "context": "Я _____ квиток, тепер можемо їхати.",
+      "role": "context"
+    },
+    {
+      "word": "їхати",
+      "exercise_type": "fill-in",
+      "context": "Я _____ квиток, тепер можемо їхати.",
+      "role": "context"
+    },
+    {
+      "word": "п'ють",
+      "exercise_type": "fill-in",
+      "context": "п'ють",
+      "role": "answer"
+    },
+    {
+      "word": "молоко",
+      "exercise_type": "fill-in",
+      "context": "Діти часто _____ молоко.",
+      "role": "context"
+    },
+    {
+      "word": "поїв",
+      "exercise_type": "fill-in",
+      "context": "поїв",
+      "role": "answer"
+    },
+    {
+      "word": "свій",
+      "exercise_type": "fill-in",
+      "context": "Він швидко _____ свій борщ.",
+      "role": "context"
+    },
+    {
+      "word": "лист",
+      "exercise_type": "match-up",
+      "context": "Він довго писав лист,",
+      "role": "answer"
+    },
+    {
+      "word": "ранок",
+      "exercise_type": "match-up",
+      "context": "цілий ранок.",
+      "role": "context"
+    },
+    {
+      "word": "грали",
+      "exercise_type": "match-up",
+      "context": "Вони грали у футбол,",
+      "role": "answer"
+    },
+    {
+      "word": "футбол",
+      "exercise_type": "match-up",
+      "context": "Вони грали у футбол,",
+      "role": "answer"
+    },
+    {
+      "word": "ще",
+      "exercise_type": "match-up",
+      "context": "але ще не прочитав.",
+      "role": "context"
+    },
+    {
+      "word": "робила",
+      "exercise_type": "match-up",
+      "context": "Вона щодня робила вправи,",
+      "role": "answer"
+    },
+    {
+      "word": "щоб",
+      "exercise_type": "match-up",
+      "context": "щоб бути сильною.",
+      "role": "context"
+    },
+    {
+      "word": "бути",
+      "exercise_type": "match-up",
+      "context": "щоб бути сильною.",
+      "role": "context"
+    },
+    {
+      "word": "сильною",
+      "exercise_type": "match-up",
+      "context": "щоб бути сильною.",
+      "role": "context"
+    },
+    {
+      "word": "робив",
+      "exercise_type": "error-correction",
+      "context": "робив",
+      "role": "answer"
+    },
+    {
+      "word": "зробив",
+      "exercise_type": "error-correction",
+      "context": "Він щодня зробив вправи вранці.",
+      "role": "context"
+    },
+    {
+      "word": "вранці",
+      "exercise_type": "error-correction",
+      "context": "Він щодня зробив вправи вранці.",
+      "role": "context"
+    },
+    {
+      "word": "написала",
+      "exercise_type": "error-correction",
+      "context": "Вона довго написала цей лист.",
+      "role": "context"
+    },
+    {
+      "word": "цей",
+      "exercise_type": "error-correction",
+      "context": "Вона довго написала цей лист.",
+      "role": "context"
+    },
+    {
+      "word": "купував",
+      "exercise_type": "error-correction",
+      "context": "купував",
+      "role": "answer"
+    },
+    {
+      "word": "хліб",
+      "exercise_type": "error-correction",
+      "context": "Я часто купив хліб у цьому магазині.",
+      "role": "context"
+    },
+    {
+      "word": "цьому",
+      "exercise_type": "error-correction",
+      "context": "Я часто купив хліб у цьому магазині.",
+      "role": "context"
+    },
+    {
+      "word": "магазині",
+      "exercise_type": "error-correction",
+      "context": "Я часто купив хліб у цьому магазині.",
+      "role": "context"
+    },
+    {
+      "word": "робили",
+      "exercise_type": "error-correction",
+      "context": "Ми нарешті робили це складне завдання!",
+      "role": "context"
+    },
+    {
+      "word": "складне",
+      "exercise_type": "error-correction",
+      "context": "Ми нарешті робили це складне завдання!",
+      "role": "context"
+    },
+    {
+      "word": "цікаву",
+      "exercise_type": "error-correction",
+      "context": "Я цілий вечір прочитав цікаву книгу.",
+      "role": "context"
+    },
+    {
+      "word": "чай",
+      "exercise_type": "error-correction",
+      "context": "Вони завжди випили чай після обіду.",
+      "role": "context"
+    },
+    {
+      "word": "після",
+      "exercise_type": "error-correction",
+      "context": "Вони завжди випили чай після обіду.",
+      "role": "context"
+    },
+    {
+      "word": "обіду",
+      "exercise_type": "error-correction",
+      "context": "Вони завжди випили чай після обіду.",
+      "role": "context"
+    },
+    {
+      "word": "описує",
+      "exercise_type": "true-false",
+      "context": "Недоконаний вид описує завершену дію та результат.",
+      "role": "context"
+    },
+    {
+      "word": "завершену",
+      "exercise_type": "true-false",
+      "context": "Недоконаний вид описує завершену дію та результат.",
+      "role": "context"
+    },
+    {
+      "word": "дію",
+      "exercise_type": "true-false",
+      "context": "Недоконаний вид описує завершену дію та результат.",
+      "role": "context"
+    },
+    {
+      "word": "та",
+      "exercise_type": "true-false",
+      "context": "Недоконаний вид описує завершену дію та результат.",
+      "role": "context"
+    },
+    {
+      "word": "відповідають",
+      "exercise_type": "true-false",
+      "context": "Дієслова недоконаного виду відповідають на питання «Що робит",
+      "role": "context"
+    },
+    {
+      "word": "слово",
+      "exercise_type": "true-false",
+      "context": "Слово «щодня» — це сильний сигнал для недоконаного виду.",
+      "role": "context"
+    },
+    {
+      "word": "сильний",
+      "exercise_type": "true-false",
+      "context": "Слово «щодня» — це сильний сигнал для недоконаного виду.",
+      "role": "context"
+    },
+    {
+      "word": "сигнал",
+      "exercise_type": "true-false",
+      "context": "Слово «щодня» — це сильний сигнал для недоконаного виду.",
+      "role": "context"
+    },
+    {
+      "word": "дієслово",
+      "exercise_type": "true-false",
+      "context": "Дієслово «зробити» — це доконаний вид (результат).",
+      "role": "context"
+    },
+    {
+      "word": "будь",
+      "exercise_type": "true-false",
+      "context": "Будь-яке дієслово в теперішньому часі означає процес.",
+      "role": "context"
+    },
+    {
+      "word": "теперішньому",
+      "exercise_type": "true-false",
+      "context": "Будь-яке дієслово в теперішньому часі означає процес.",
+      "role": "context"
+    },
+    {
+      "word": "часі",
+      "exercise_type": "true-false",
+      "context": "Будь-яке дієслово в теперішньому часі означає процес.",
+      "role": "context"
+    },
+    {
+      "word": "означає",
+      "exercise_type": "true-false",
+      "context": "Будь-яке дієслово в теперішньому часі означає процес.",
+      "role": "context"
+    },
+    {
+      "word": "бачили",
+      "exercise_type": "unjumble",
+      "context": "бачили",
+      "role": "answer"
+    },
+    {
+      "word": "телефон",
+      "exercise_type": "unjumble",
+      "context": "телефон?",
+      "role": "answer"
+    },
+    {
+      "word": "мій",
+      "exercise_type": "unjumble",
+      "context": "мій",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 14,
+    "tested_in_exercises": 8,
+    "not_tested": [
+      "дія",
+      "завершений",
+      "концепція",
+      "одноразовий",
+      "повторення",
+      "тривалий"
+    ]
+  },
+  "all_grounded": false
+}

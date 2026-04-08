@@ -1,0 +1,398 @@
+version: '1.0'
+module: dozvillia-i-khobi
+level: a2
+inline:
+- id: group-sort-categories
+  type: group-sort
+  instruction: Розподіліть види дозвілля за категоріями
+  groups:
+  - label: Спорт
+    items:
+    - плавання
+    - футбол
+    - теніс
+  - label: Мистецтво
+    items:
+    - малювання
+    - музика
+    - виставка
+  - label: На природі
+    items:
+    - ліс
+    - озеро
+    - гори
+  - label: У місті
+    items:
+    - кіно
+    - театр
+    - музей
+- id: fill-in-hobbies-cases
+  type: fill-in
+  instruction: Вставте слово в правильному відмінку
+  items:
+  - sentence: Я дуже захоплююся ____.
+    answer: плаванням
+    options:
+    - плавання
+    - плаванню
+    - плаванням
+  - sentence: Мій брат активно займається ____.
+    answer: спортом
+    options:
+    - спорт
+    - спортом
+    - спорту
+  - sentence: У неділю ми йдемо на ____.
+    answer: виставку
+    options:
+    - виставку
+    - виставка
+    - виставці
+  - sentence: Завтра я піду в ____.
+    answer: басейн
+    options:
+    - басейн
+    - басейні
+    - басейном
+  - sentence: Моя сестра часто грає в ____.
+    answer: теніс
+    options:
+    - теніс
+    - тенісі
+    - тенісом
+  - sentence: Моя подруга чудово грає на ____.
+    answer: гітарі
+    options:
+    - гітара
+    - гітару
+    - гітарі
+  - sentence: Взимку ми любимо кататися на ____.
+    answer: лижах
+    options:
+    - лижі
+    - лижах
+    - лижами
+  - sentence: Щовихідних вони ходять у ____.
+    answer: парк
+    options:
+    - парк
+    - парку
+    - парком
+- id: quiz-acc-loc
+  type: quiz
+  instruction: Оберіть правильний варіант (Знахідний чи Місцевий відмінок?)
+  items:
+  - question: Куди ти йдеш? — Я йду в ____.
+    options:
+    - театр
+    - театрі
+    - театру
+    - театром
+    correct: 0
+  - question: Де твій брат? — Він зараз у ____.
+    options:
+    - театр
+    - театрі
+    - театру
+    - театром
+    correct: 1
+  - question: Куди ми йдемо ввечері? — Ми йдемо на ____.
+    options:
+    - концерт
+    - концерті
+    - концерту
+    - концертом
+    correct: 0
+  - question: Де ви були вчора? — Ми були на ____.
+    options:
+    - концерт
+    - концерті
+    - концерту
+    - концертом
+    correct: 1
+  - question: Куди вона йде? — Вона йде на ____.
+    options:
+    - виставка
+    - виставку
+    - виставці
+    - виставкою
+    correct: 1
+  - question: Де ми зустрінемося? — Зустрінемося на ____.
+    options:
+    - виставка
+    - виставку
+    - виставці
+    - виставкою
+    correct: 2
+  - question: Куди вони їдуть? — Вони їдуть на ____.
+    options:
+    - змагання
+    - змаганні
+    - змаганню
+    - змаганням
+    correct: 0
+  - question: Де вона плаває? — Вона вже в ____.
+    options:
+    - басейн
+    - басейні
+    - басейну
+    - басейном
+    correct: 1
+- id: match-up-verb-govt
+  type: match-up
+  instruction: З'єднайте дієслово з правильним продовженням
+  pairs:
+  - left: захоплюватися
+    right: малюванням
+  - left: грати в
+    right: теніс
+  - left: грати на
+    right: гітарі
+  - left: кататися на
+    right: лижах
+  - left: ходити на
+    right: виставку
+  - left: займатися
+    right: спортом
+  - left: любити
+    right: читати
+  - left: йти в
+    right: кіно
+- id: error-correction-cases
+  type: error-correction
+  instruction: Знайдіть і виправте помилку
+  items:
+  - sentence: Я дуже захоплююся малювання.
+    error: малювання
+    correction: малюванням
+    error_type: word
+    options:
+    - малюванням
+    - малюванню
+    - малюваннях
+    explanation: Дієслово «захоплюватися» вимагає орудного відмінка (Instrumental).
+  - sentence: Мій друг займається футбол.
+    error: футбол
+    correction: футболом
+    error_type: word
+    options:
+    - футболом
+    - футболу
+    - футболі
+    explanation: Дієслово «займатися» вимагає орудного відмінка (Instrumental).
+  - sentence: У неділю ми йдемо в театрі.
+    error: театрі
+    correction: театр
+    error_type: word
+    options:
+    - театр
+    - театру
+    - театром
+    explanation: Для напрямку руху (куди?) використовуємо знахідний відмінок (Accusative).
+  - sentence: Вона любить грати на гітара.
+    error: гітара
+    correction: гітарі
+    error_type: word
+    options:
+    - гітарі
+    - гітару
+    - гітарою
+    explanation: Конструкція «грати на» (для інструментів) вимагає місцевого відмінка
+      (Locative).
+  - sentence: Взимку діти катаються на лижі.
+    error: лижі
+    correction: лижах
+    error_type: word
+    options:
+    - лижах
+    - лиж
+    - лижам
+    explanation: Дієслово «кататися на» вимагає місцевого відмінка (Locative).
+  - sentence: Ми часто граємо на теніс.
+    error: на
+    correction: в
+    error_type: word
+    options:
+    - в
+    - з
+    - для
+    explanation: Для спорту та ігор використовуємо конструкцію «грати в» + знахідний
+      відмінок.
+workbook:
+- type: unjumble
+  instruction: Складіть правильне речення зі слів
+  items:
+  - words:
+    - у
+    - Я
+    - грати
+    - футбол.
+    - люблю
+    correct_order:
+    - Я
+    - люблю
+    - грати
+    - у
+    - футбол.
+  - words:
+    - ми
+    - парк.
+    - ходимо
+    - в
+    - Часто
+    correct_order:
+    - Часто
+    - ми
+    - ходимо
+    - в
+    - парк.
+  - words:
+    - захоплюється
+    - Вона
+    - музикою.
+    - класичною
+    correct_order:
+    - Вона
+    - захоплюється
+    - класичною
+    - музикою.
+  - words:
+    - грати
+    - Моя
+    - вміє
+    - на
+    - сестра
+    - гітарі.
+    correct_order:
+    - Моя
+    - сестра
+    - вміє
+    - грати
+    - на
+    - гітарі.
+  - words:
+    - кататися
+    - човні.
+    - Ми
+    - на
+    - любимо
+    correct_order:
+    - Ми
+    - любимо
+    - кататися
+    - на
+    - човні.
+  - words:
+    - можу,
+    - На
+    - зайнятий.
+    - я
+    - жаль,
+    - не
+    correct_order:
+    - На
+    - жаль,
+    - не
+    - можу,
+    - я
+    - зайнятий.
+  - words:
+    - маєш
+    - Які
+    - ти
+    - вподобання?
+    correct_order:
+    - Які
+    - ти
+    - маєш
+    - вподобання?
+- type: translate
+  instruction: Оберіть правильний переклад
+  items:
+  - source: What do you like to do in your free time?
+    options:
+    - text: Що ти любиш робити у вільний час?
+      correct: true
+    - text: Що ти робиш завжди?
+      correct: false
+    - text: Яке твоє хобі?
+      correct: false
+  - source: I am passionate about drawing.
+    options:
+    - text: Я захоплююся малюванням.
+      correct: true
+    - text: Я займаюся малюванням.
+      correct: false
+    - text: Я люблю малювати.
+      correct: false
+  - source: Let's go to the movies!
+    options:
+    - text: Ходімо в кіно!
+      correct: true
+    - text: Може, підемо в музей?
+      correct: false
+    - text: Я йду в кіно.
+      correct: false
+  - source: Maybe we'll go for a walk?
+    options:
+    - text: Може, підемо на прогулянку?
+      correct: true
+    - text: Хочеш піти на виставку?
+      correct: false
+    - text: Давай пограємо в теніс!
+      correct: false
+  - source: With pleasure!
+    options:
+    - text: З задоволенням!
+      correct: true
+    - text: Чудова ідея!
+      correct: false
+    - text: Я — за!
+      correct: false
+  - source: At what time?
+    options:
+    - text: О котрій?
+      correct: true
+    - text: Де зустрінемося?
+      correct: false
+    - text: Коли ми йдемо?
+      correct: false
+- type: true-false
+  instruction: Правда чи ні?
+  items:
+  - statement: Дієслова «займатися» та «захоплюватися» вимагають орудного відмінка
+      (Instrumental case).
+    correct: true
+    explanation: 'Так, наприклад: займатися спортом, захоплюватися музикою.'
+  - statement: Коли ми говоримо про музичні інструменти, ми використовуємо «грати
+      в».
+    correct: false
+    explanation: Для інструментів ми використовуємо «грати на» + місцевий відмінок.
+  - statement: Фраза «Я йду в театр» означає напрямок руху (Accusative case).
+    correct: true
+    explanation: Так, для напрямку руху використовується знахідний відмінок.
+  - statement: Для регулярних занять часто використовують дієслово «ходити».
+    correct: true
+    explanation: 'Так, наприклад: я ходжу в басейн щовівторка.'
+  - statement: Фраза «О котрій?» використовується, щоб запитати про місце зустрічі.
+    correct: false
+    explanation: Ця фраза означає «At what time?». Про місце запитують «Де зустрінемося?».
+  - statement: Слово «обожнювати» показує дуже сильну любов до якогось заняття.
+    correct: true
+    explanation: Так, це означає «to adore».
+- type: order
+  instruction: Розставте репліки діалогу в правильному порядку
+  items:
+  - — Привіт, Тарасе! Хочеш піти на концерт?
+  - — Привіт! На жаль, не можу. У мене вже є плани.
+  - — Тоді, може, підемо в музей після обіду?
+  - — Музей — це цікаво, але погода дуже гарна. Ходімо краще в парк!
+  - — Чудова ідея! Де зустрінемося?
+  - — Давай зустрінемося біля входу в парк.
+  correct_order:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5

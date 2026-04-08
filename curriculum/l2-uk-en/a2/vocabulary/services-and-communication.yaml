@@ -1,0 +1,217 @@
+vocabulary:
+- word: по́шта
+  translation: post office, mail
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: відді́лення
+  translation: branch, post office
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: Укрпо́шта
+  translation: Ukrposhta (national postal service)
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: поштова скринька
+  translation: postbox
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: конве́рт
+  translation: envelope
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ма́рка
+  translation: stamp
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: листі́вка
+  translation: postcard
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: поси́лка
+  translation: parcel, package
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: паку́нок
+  translation: package
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: бандеро́ль
+  translation: small parcel, book post
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: опера́тор
+  translation: postal clerk
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: листоно́ша
+  translation: mail carrier
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: відпра́вник
+  translation: sender
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: оде́ржувач
+  translation: recipient
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: квита́нція
+  translation: receipt
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: бланк
+  translation: form
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ре́шта
+  translation: change
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: авіапо́шта
+  translation: airmail
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: і́ндекс
+  translation: postal code
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: адре́са
+  translation: address
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: надісла́ти
+  translation: to send
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відпра́вити
+  translation: to send, to dispatch
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: отри́мати
+  translation: to receive
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: забра́ти
+  translation: to pick up
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: заповнити бланк
+  translation: to fill out a form
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: підписати квитанцію
+  translation: to sign a receipt
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дати мені
+  translation: give me
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: допомага́ти
+  translation: to help
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: показа́ти
+  translation: to show
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ра́дити
+  translation: to advise, to suggest
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: скажіть мені
+  translation: tell me
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: поясніть нам
+  translation: explain to us
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: принесіть їй
+  translation: bring her
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: загорну́ти
+  translation: to wrap
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: посилаю тобі
+  translation: I am sending you
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вітаю тебе
+  translation: I congratulate you
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

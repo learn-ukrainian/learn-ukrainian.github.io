@@ -1,0 +1,55 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: The module misses the required `з + instrumental` preview construction
+    from the plan (e.g., "Вона з карими очима") and relies entirely on "У неї..."
+    and compound adjectives. It also misses the compoun
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: Repeated use of the calque/surzhyk "виглядати" for appearance ("Як виглядає
+    твій новий колега?", "Він виглядає дуже серйозно"). Textbooks classify this as
+    incorrect, preferring "мати вигляд". Addition
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: The text follows the PPP flow beautifully, with numerous well-integrated
+    contrast examples. However, failing to introduce the planned `з + instrumental`
+    construction removes an important stepping ston
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Most required vocabulary is present, but the word `стосунок` (relationship),
+    which is explicitly required by the plan, is missing (the English word "relationships"
+    is used in Section 3 without its Ukr
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: Exercises match the plan's focus, but `group-sort-traits` is placed after
+    the wrong section, creating a pedagogical disconnect between the teaching of character
+    traits and the subsequent test.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Excellent teacher persona. The cultural notes (e.g., the significance
+    of "добра людина" over "красива людина", and the positive connotation of "впертий")
+    are fantastic and engaging.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: The module exceeds the 2000-word target (3168 words), provides all required
+    sections, and maintains clean formatting.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Strong, decolonized explanations of how Ukrainians view and describe people
+    and relationships (e.g., the distinction between a "знайомий", "товариш", and
+    a true "друг").
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogues are natural and correctly formatted. They don't perfectly align
+    with the specific situational prompts in the plan, but they function well in context.
+findings: []

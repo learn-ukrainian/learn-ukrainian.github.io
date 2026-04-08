@@ -1,0 +1,18 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 3/10 required vocab: призначення (purpose, destination), відпочинок (rest, relaxation), бібліотека (library)"
+    },
+    {
+      "check": "EXERCISES",
+      "severity": "WARNING",
+      "message": "Plan expects 4 exercise(s) but content has 3"
+    }
+  ],
+  "timestamp": "2026-04-07T22:04:29.327959+00:00"
+}

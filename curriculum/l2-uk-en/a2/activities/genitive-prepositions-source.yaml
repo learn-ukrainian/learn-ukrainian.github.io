@@ -1,0 +1,463 @@
+version: '1.0'
+module: genitive-prepositions-source
+level: a2
+inline:
+- id: quiz-euphony-variants
+  type: quiz
+  instruction: Оберіть правильний варіант прийменника з/із/зі
+  items:
+  - question: Я _____ України.
+    options:
+    - з
+    - із
+    - зі
+    - від
+    correct: 0
+  - question: Я приїхав _____ Львова.
+    options:
+    - з
+    - зі
+    - із
+    - від
+    correct: 1
+  - question: Жінка _____ села привезла молоко.
+    options:
+    - з
+    - із
+    - зі
+    - в
+    correct: 1
+  - question: Це браслет _____ золота.
+    options:
+    - з
+    - зі
+    - із
+    - до
+    correct: 2
+  - question: Він родом _____ Швеції.
+    options:
+    - з
+    - із
+    - зі
+    - від
+    correct: 2
+  - question: Він іде _____ університету.
+    options:
+    - в
+    - із
+    - зі
+    - з
+    correct: 3
+  - question: Діти повертаються _____ школи.
+    options:
+    - з
+    - із
+    - зі
+    - до
+    correct: 2
+  - question: Я їду _____ Одеси.
+    options:
+    - від
+    - із
+    - зі
+    - з
+    correct: 3
+- id: fill-in-focus-complete-sentences-with-or-correct-genitive-noun-form
+  type: fill-in
+  instruction: Вставте правильні слова (з/від + іменник у родовому відмінку)
+  items:
+  - sentence: Це повідомлення _____
+    answer: від директора
+    options:
+    - від директора
+    - з директора
+    - від директору
+    - з директору
+  - sentence: Він пізно повернувся _____
+    answer: з роботи
+    options:
+    - з роботи
+    - від роботи
+    - з робота
+    - від роботу
+  - sentence: Це чудовий подарунок _____
+    answer: від друга
+    options:
+    - від друга
+    - з друга
+    - від другу
+    - з другу
+  - sentence: Вони летять _____
+    answer: з Харкова
+    options:
+    - з Харкова
+    - від Харкова
+    - з Харкову
+    - від Харкову
+  - sentence: Він чекає дзвінка _____
+    answer: від лікаря
+    options:
+    - від лікаря
+    - з лікаря
+    - від лікар
+    - з лікарю
+  - sentence: Вони живуть дуже далеко _____
+    answer: від моря
+    options:
+    - від моря
+    - з моря
+    - від морю
+    - з море
+  - sentence: На столі стоїть склянка _____
+    answer: зі скла
+    options:
+    - зі скла
+    - від скла
+    - зі скло
+    - від скло
+  - sentence: Вона взяла велику парасольку _____
+    answer: від дощу
+    options:
+    - від дощу
+    - з дощу
+    - від доща
+    - з доща
+- id: match-up-preposition-meanings
+  type: match-up
+  instruction: З'єднайте українські фрази з їх англійським значенням
+  pairs:
+  - left: з України
+    right: from Ukraine
+  - left: зі скла
+    right: from glass
+  - left: від брата
+    right: from a brother
+  - left: з дитинства
+    right: since childhood
+  - left: після роботи
+    right: after work
+  - left: від дощу
+    right: from the rain
+  - left: з дерева
+    right: from wood
+  - left: після сніданку
+    right: after breakfast
+- id: group-sort-preposition-usage
+  type: group-sort
+  instruction: Розподіліть фрази за правильним прийменником
+  groups:
+  - label: з / із / зі
+    items:
+    - з Лондона
+    - зі скла
+    - із золота
+    - з дитинства
+  - label: від
+    items:
+    - від мами
+    - від сонця
+    - від центру
+    - від сусіда
+  - label: після
+    items:
+    - після уроку
+    - після вечері
+    - після свята
+    - після канікул
+workbook:
+- type: error-correction
+  instruction: Знайдіть і виправте помилку
+  items:
+  - sentence: Я отримав повідомлення з директора.
+    error: з
+    correction: від
+    error_type: word
+    options:
+    - від
+    - до
+    - після
+    - біля
+    explanation: Ми використовуємо «від» для людей (from a person).
+  - sentence: Ця склянка від скла.
+    error: від
+    correction: зі
+    error_type: word
+    options:
+    - зі
+    - з
+    - із
+    - в
+    explanation: Ми використовуємо «з/із/зі» для матеріалів (from a material). Перед
+      збігом приголосних краще «зі».
+  - sentence: Вони повернулися з канікули.
+    error: канікули
+    correction: канікул
+    error_type: word
+    options:
+    - канікул
+    - канікулів
+    - канікулам
+    - канікулами
+    explanation: Після «з» потрібен родовий відмінок. Форма множини від «канікули»
+      — «канікул».
+  - sentence: Що ви зазвичай робите після сніданок?
+    error: сніданок
+    correction: сніданку
+    error_type: word
+    options:
+    - сніданку
+    - сніданка
+    - сніданком
+    - сніданкові
+    explanation: Після «після» потрібен родовий відмінок. Чоловічий рід часто має
+      закінчення -у для часу.
+  - sentence: Наш новий готель недалеко з вокзалу.
+    error: з
+    correction: від
+    error_type: word
+    options:
+    - від
+    - до
+    - біля
+    - після
+    explanation: Зі словами «далеко» і «недалеко» ми використовуємо прийменник «від».
+  - sentence: Вона взяла велику парасольку від дощ.
+    error: дощ
+    correction: дощу
+    error_type: word
+    options:
+    - дощу
+    - доща
+    - дощем
+    - дощеві
+    explanation: Захист від чого? Родовий відмінок від «дощ» — «дощу».
+- type: translate
+  instruction: Оберіть правильний переклад
+  items:
+  - source: from a neighbor
+    options:
+    - text: від сусіда
+      correct: true
+    - text: з сусіда
+      correct: false
+    - text: після сусіда
+      correct: false
+    - text: до сусіда
+      correct: false
+  - source: from wood
+    options:
+    - text: з дерева
+      correct: true
+    - text: від дерева
+      correct: false
+    - text: після дерева
+      correct: false
+    - text: до дерева
+      correct: false
+  - source: since childhood
+    options:
+    - text: з дитинства
+      correct: true
+    - text: від дитинства
+      correct: false
+    - text: після дитинства
+      correct: false
+    - text: до дитинства
+      correct: false
+  - source: after work
+    options:
+    - text: після роботи
+      correct: true
+    - text: з роботи
+      correct: false
+    - text: від роботи
+      correct: false
+    - text: до роботи
+      correct: false
+  - source: from the rain
+    options:
+    - text: від дощу
+      correct: true
+    - text: з дощу
+      correct: false
+    - text: після дощу
+      correct: false
+    - text: до дощу
+      correct: false
+  - source: from Odesa
+    options:
+    - text: з Одеси
+      correct: true
+    - text: від Одеси
+      correct: false
+    - text: після Одеси
+      correct: false
+    - text: в Одесу
+      correct: false
+- type: unjumble
+  instruction: Складіть правильне речення зі слів
+  items:
+  - words:
+    - овочів.
+    - смачний
+    - їмо
+    - Ми
+    - суп
+    - з
+    correct_order:
+    - Ми
+    - їмо
+    - смачний
+    - суп
+    - з
+    - овочів.
+  - words:
+    - директора.
+    - повідомлення
+    - від
+    - Це
+    correct_order:
+    - Це
+    - повідомлення
+    - від
+    - директора.
+  - words:
+    - Після
+    - фільму
+    - я
+    - відразу
+    - лягаю
+    - спати.
+    correct_order:
+    - Після
+    - фільму
+    - я
+    - відразу
+    - лягаю
+    - спати.
+  - words:
+    - родом
+    - Швеції.
+    - Він
+    - зі
+    correct_order:
+    - Він
+    - родом
+    - зі
+    - Швеції.
+  - words:
+    - з
+    - сік
+    - свіжий
+    - люблю
+    - Я
+    - яблук.
+    - пити
+    correct_order:
+    - Я
+    - люблю
+    - пити
+    - свіжий
+    - сік
+    - з
+    - яблук.
+  - words:
+    - застуди.
+    - від
+    - таблетки
+    - п'ємо
+    - завжди
+    - Ми
+    correct_order:
+    - Ми
+    - завжди
+    - п'ємо
+    - таблетки
+    - від
+    - застуди.
+  - words:
+    - сукню
+    - купила
+    - шовку.
+    - Вона
+    - з
+    correct_order:
+    - Вона
+    - купила
+    - сукню
+    - з
+    - шовку.
+- type: fill-in
+  instruction: Вставте правильне закінчення іменника (Родовий відмінок)
+  items:
+  - sentence: Ми зустрінемося в парку після _____
+    answer: обіду
+    options:
+    - обіду
+    - обід
+    - обіда
+    - обідом
+  - sentence: Я маю новий лист від _____
+    answer: мами
+    options:
+    - мами
+    - мама
+    - маму
+    - мамою
+  - sentence: Це старий стіл з _____
+    answer: дерева
+    options:
+    - дерева
+    - дерево
+    - дереву
+    - деревом
+  - sentence: Мені терміново потрібні ліки від _____
+    answer: головного болю
+    options:
+    - головного болю
+    - головний біль
+    - головному болю
+    - головним болем
+  - sentence: Діти повертаються зі _____
+    answer: школи
+    options:
+    - школи
+    - школа
+    - школу
+    - школою
+  - sentence: Він любить гуляти містом після важкого _____
+    answer: дня
+    options:
+    - дня
+    - день
+    - дню
+    - днем
+  - sentence: Вони летять з _____
+    answer: Харкова
+    options:
+    - Харкова
+    - Харків
+    - Харкову
+    - Харковом
+  - sentence: Вони живуть дуже далеко від _____
+    answer: моря
+    options:
+    - моря
+    - море
+    - морю
+    - морем
+- type: match-up
+  instruction: З'єднайте запитання з відповіддю
+  pairs:
+  - left: Звідки ти?
+    right: Я з Лондона.
+  - left: Від кого цей довгий лист?
+    right: Це лист від брата.
+  - left: А цей стіл з дерева?
+    right: Так, це дуже дороге дерево.
+  - left: А що ти робиш після роботи?
+    right: Йду на пробіжку.
+  - left: Ваш новий дім далеко від центру?
+    right: Ні, він зовсім недалеко від парку.
+  - left: Коли ми починаємо новий проект?
+    right: Ми працюємо з вівторка.

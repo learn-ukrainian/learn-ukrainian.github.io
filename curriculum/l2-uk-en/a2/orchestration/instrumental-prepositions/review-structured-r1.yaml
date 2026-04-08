@@ -1,0 +1,54 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Covers all required sections ("Просторові прийменники", "Описуємо кімнату",
+    "Часове значення", "Практика"). Integrates the planned museum dialogue flawlessly.
+    Exceeds the target word count appropriate
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: General grammar is strong. However, uses the calque "знаходиться" multiple
+    times instead of "розташований" or "є". The table incorrectly uses "дверима" to
+    illustrate the "-ями" ending.
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent breakdown of Location vs. Direction cases and spatial vs. temporal
+    meanings. Minor deduction for introducing the vocabulary "кут" (Instrumental "кутом")
+    but then practicing the diminutive lo
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Integrates all required words (над, під, перед, за, між, стіл, будинок,
+    ліжко, стіна, обід) naturally in prose. All recommended words are also seamlessly
+    present.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 4 exercise markers are accurately placed right after the corresponding
+    concepts, meeting the exact count and focus from the plan's `activity_hints`.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The writer adopts a warm, encouraging teacher persona ("Imagine you are
+    visiting a beautiful museum", "Language is highly metaphorical"). Tone is constructive
+    and avoids gamified clichés.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Uses clean Markdown, includes proper H2 headings that map to the outline,
+    effectively utilizes callout blocks, and safely exceeds the minimum word count
+    (2572 vs 2000).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Correctly identifies and warns learners against Russianisms like "по розкладу",
+    actively teaching them to use the authentic Ukrainian phrasing ("за розкладом").
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Multi-turn, natural dialogues. Roommates placing furniture or friends
+    describing a neighborhood feel realistic and appropriately contextualize the grammar.
+findings: []

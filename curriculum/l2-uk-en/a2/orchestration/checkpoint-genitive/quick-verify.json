@@ -1,0 +1,13 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 1/8 required vocab: однина (singular)"
+    }
+  ],
+  "timestamp": "2026-04-07T21:58:20.384102+00:00"
+}

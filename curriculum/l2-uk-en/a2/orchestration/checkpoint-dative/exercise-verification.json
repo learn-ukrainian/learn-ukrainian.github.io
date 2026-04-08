@@ -1,0 +1,372 @@
+{
+  "total_items": 181,
+  "grounded_items": 122,
+  "ungrounded": [
+    {
+      "word": "смачна",
+      "exercise_type": "quiz",
+      "context": "Ця смачна кава подобається _____.",
+      "role": "context"
+    },
+    {
+      "word": "без",
+      "exercise_type": "quiz",
+      "context": "_____ дуже сумно без тебе.",
+      "role": "context"
+    },
+    {
+      "word": "тебе",
+      "exercise_type": "quiz",
+      "context": "_____ дуже сумно без тебе.",
+      "role": "context"
+    },
+    {
+      "word": "допомагають",
+      "exercise_type": "quiz",
+      "context": "Вони завжди допомагають _____.",
+      "role": "context"
+    },
+    {
+      "word": "сьогодні",
+      "exercise_type": "quiz",
+      "context": "_____ дуже холодно сьогодні на вулиці.",
+      "role": "context"
+    },
+    {
+      "word": "вулиці",
+      "exercise_type": "quiz",
+      "context": "_____ дуже холодно сьогодні на вулиці.",
+      "role": "context"
+    },
+    {
+      "word": "роботу",
+      "exercise_type": "quiz",
+      "context": "Ми щиро дякуємо _____ за роботу.",
+      "role": "context"
+    },
+    {
+      "word": "йдемо",
+      "exercise_type": "fill-in",
+      "context": "Ми йдемо назустріч новій _____.",
+      "role": "context"
+    },
+    {
+      "word": "новій",
+      "exercise_type": "fill-in",
+      "context": "Ми йдемо назустріч новій _____.",
+      "role": "context"
+    },
+    {
+      "word": "комп'ютер",
+      "exercise_type": "fill-in",
+      "context": "Новому _____ потрібно купити комп'ютер.",
+      "role": "context"
+    },
+    {
+      "word": "дякують",
+      "exercise_type": "fill-in",
+      "context": "Вони щиро дякують _____ вчителю.",
+      "role": "context"
+    },
+    {
+      "word": "вчителю",
+      "exercise_type": "error-correction",
+      "context": "вчителю",
+      "role": "answer"
+    },
+    {
+      "word": "твоїй",
+      "exercise_type": "fill-in",
+      "context": "твоїй",
+      "role": "answer"
+    },
+    {
+      "word": "даю",
+      "exercise_type": "fill-in",
+      "context": "Я даю подарунок _____ маленькій сестрі.",
+      "role": "context"
+    },
+    {
+      "word": "маленькій",
+      "exercise_type": "fill-in",
+      "context": "Я даю подарунок _____ маленькій сестрі.",
+      "role": "context"
+    },
+    {
+      "word": "допомагаємо",
+      "exercise_type": "fill-in",
+      "context": "Ми допомагаємо нашим _____ друзям.",
+      "role": "context"
+    },
+    {
+      "word": "своїй",
+      "exercise_type": "match-up",
+      "context": "своїй любій мамі.",
+      "role": "context"
+    },
+    {
+      "word": "читати",
+      "exercise_type": "match-up",
+      "context": "читати старі книги.",
+      "role": "context"
+    },
+    {
+      "word": "старі",
+      "exercise_type": "match-up",
+      "context": "читати старі книги.",
+      "role": "context"
+    },
+    {
+      "word": "книги",
+      "exercise_type": "match-up",
+      "context": "читати старі книги.",
+      "role": "context"
+    },
+    {
+      "word": "маленькому",
+      "exercise_type": "match-up",
+      "context": "Моєму маленькому синові",
+      "role": "answer"
+    },
+    {
+      "word": "додому",
+      "exercise_type": "unjumble",
+      "context": "додому.",
+      "role": "answer"
+    },
+    {
+      "word": "дякує",
+      "exercise_type": "error-correction",
+      "context": "Вона щиро дякує вчителя за допомогу.",
+      "role": "context"
+    },
+    {
+      "word": "вчителя",
+      "exercise_type": "error-correction",
+      "context": "Вона щиро дякує вчителя за допомогу.",
+      "role": "context"
+    },
+    {
+      "word": "допомогу",
+      "exercise_type": "error-correction",
+      "context": "Вона щиро дякує вчителя за допомогу.",
+      "role": "context"
+    },
+    {
+      "word": "мій",
+      "exercise_type": "error-correction",
+      "context": "Я хочу надіслати лист мій брату.",
+      "role": "context"
+    },
+    {
+      "word": "більше",
+      "exercise_type": "error-correction",
+      "context": "Нового студенту потрібно більше часу.",
+      "role": "context"
+    },
+    {
+      "word": "часу",
+      "exercise_type": "error-correction",
+      "context": "Нового студенту потрібно більше часу.",
+      "role": "context"
+    },
+    {
+      "word": "маму",
+      "exercise_type": "error-correction",
+      "context": "Ми часто допомагаємо маму вдома.",
+      "role": "context"
+    },
+    {
+      "word": "брат",
+      "exercise_type": "group-sort",
+      "context": "брат",
+      "role": "answer"
+    },
+    {
+      "word": "брата",
+      "exercise_type": "group-sort",
+      "context": "брата",
+      "role": "answer"
+    },
+    {
+      "word": "нас",
+      "exercise_type": "group-sort",
+      "context": "нас",
+      "role": "answer"
+    },
+    {
+      "word": "ти",
+      "exercise_type": "match-up",
+      "context": "Ти",
+      "role": "answer"
+    },
+    {
+      "word": "чудовий",
+      "exercise_type": "fill-in",
+      "context": "Ми щиро дякуємо _____ за цей чудовий подарунок.",
+      "role": "context"
+    },
+    {
+      "word": "роботі",
+      "exercise_type": "fill-in",
+      "context": "_____ дуже холодно сьогодні на роботі.",
+      "role": "context"
+    },
+    {
+      "word": "вісімдесят",
+      "exercise_type": "fill-in",
+      "context": "Скільки років вашому дідусеві? _____ вісімдесят років.",
+      "role": "context"
+    },
+    {
+      "word": "зараз",
+      "exercise_type": "fill-in",
+      "context": "Моїй сестрі зараз сумно. Я допомагаю _____.",
+      "role": "context"
+    },
+    {
+      "word": "допомагаю",
+      "exercise_type": "fill-in",
+      "context": "Моїй сестрі зараз сумно. Я допомагаю _____.",
+      "role": "context"
+    },
+    {
+      "word": "вже",
+      "exercise_type": "fill-in",
+      "context": "_____ потрібно йти, тому що вже пізно.",
+      "role": "context"
+    },
+    {
+      "word": "пізно",
+      "exercise_type": "fill-in",
+      "context": "_____ потрібно йти, тому що вже пізно.",
+      "role": "context"
+    },
+    {
+      "word": "дякувати'",
+      "exercise_type": "true-false",
+      "context": "Дієслово 'дякувати' в українській мові вимагає після себе зн",
+      "role": "context"
+    },
+    {
+      "word": "вимагає",
+      "exercise_type": "true-false",
+      "context": "Дієслово 'дякувати' в українській мові вимагає після себе зн",
+      "role": "context"
+    },
+    {
+      "word": "кажемо",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо 'Мені холодно', а не 'Я холодний', щоб описати сві",
+      "role": "context"
+    },
+    {
+      "word": "холодно'",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо 'Мені холодно', а не 'Я холодний', щоб описати сві",
+      "role": "context"
+    },
+    {
+      "word": "холодний'",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо 'Мені холодно', а не 'Я холодний', щоб описати сві",
+      "role": "context"
+    },
+    {
+      "word": "описати",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо 'Мені холодно', а не 'Я холодний', щоб описати сві",
+      "role": "context"
+    },
+    {
+      "word": "фізичний",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо 'Мені холодно', а не 'Я холодний', щоб описати сві",
+      "role": "context"
+    },
+    {
+      "word": "можуть",
+      "exercise_type": "true-false",
+      "context": "Іменники чоловічого роду в давальному відмінку можуть мати т",
+      "role": "context"
+    },
+    {
+      "word": "мати",
+      "exercise_type": "true-false",
+      "context": "Іменники чоловічого роду в давальному відмінку можуть мати т",
+      "role": "context"
+    },
+    {
+      "word": "слові",
+      "exercise_type": "true-false",
+      "context": "У слові 'подруга' в давальному відмінку літера 'г' змінюєтьс",
+      "role": "context"
+    },
+    {
+      "word": "подруга'",
+      "exercise_type": "true-false",
+      "context": "У слові 'подруга' в давальному відмінку літера 'г' змінюєтьс",
+      "role": "context"
+    },
+    {
+      "word": "літера",
+      "exercise_type": "true-false",
+      "context": "У слові 'подруга' в давальному відмінку літера 'г' змінюєтьс",
+      "role": "context"
+    },
+    {
+      "word": "г'",
+      "exercise_type": "true-false",
+      "context": "У слові 'подруга' в давальному відмінку літера 'г' змінюєтьс",
+      "role": "context"
+    },
+    {
+      "word": "змінюється",
+      "exercise_type": "true-false",
+      "context": "У слові 'подруга' в давальному відмінку літера 'г' змінюєтьс",
+      "role": "context"
+    },
+    {
+      "word": "з'",
+      "exercise_type": "true-false",
+      "context": "У слові 'подруга' в давальному відмінку літера 'г' змінюєтьс",
+      "role": "context"
+    },
+    {
+      "word": "реченні",
+      "exercise_type": "true-false",
+      "context": "У реченні 'Моєму синові три роки' слово 'синові' стоїть у мі",
+      "role": "context"
+    },
+    {
+      "word": "роки'",
+      "exercise_type": "true-false",
+      "context": "У реченні 'Моєму синові три роки' слово 'синові' стоїть у мі",
+      "role": "context"
+    },
+    {
+      "word": "синові'",
+      "exercise_type": "true-false",
+      "context": "У реченні 'Моєму синові три роки' слово 'синові' стоїть у мі",
+      "role": "context"
+    },
+    {
+      "word": "місцевому",
+      "exercise_type": "true-false",
+      "context": "У реченні 'Моєму синові три роки' слово 'синові' стоїть у мі",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 12,
+    "tested_in_exercises": 7,
+    "not_tested": [
+      "допомагати",
+      "дякувати",
+      "подобатися",
+      "узгодження",
+      "чергування"
+    ]
+  },
+  "all_grounded": false
+}

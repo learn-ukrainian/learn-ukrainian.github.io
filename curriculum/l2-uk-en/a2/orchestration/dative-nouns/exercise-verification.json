@@ -1,0 +1,203 @@
+{
+  "total_items": 131,
+  "grounded_items": 100,
+  "ungrounded": [
+    {
+      "word": "брат",
+      "exercise_type": "fill-in",
+      "context": "Я пишу лист _____ (брат).",
+      "role": "context"
+    },
+    {
+      "word": "студент",
+      "exercise_type": "fill-in",
+      "context": "Що ти даси _____ (студент)?",
+      "role": "context"
+    },
+    {
+      "word": "слава",
+      "exercise_type": "fill-in",
+      "context": "Слава _____ (герой)!",
+      "role": "context"
+    },
+    {
+      "word": "герой",
+      "exercise_type": "fill-in",
+      "context": "Слава _____ (герой)!",
+      "role": "context"
+    },
+    {
+      "word": "лікар",
+      "exercise_type": "fill-in",
+      "context": "Я зателефоную _____ (лікар) завтра.",
+      "role": "context"
+    },
+    {
+      "word": "допомагає",
+      "exercise_type": "fill-in",
+      "context": "Він допомагає _____ (сусід).",
+      "role": "context"
+    },
+    {
+      "word": "сусід",
+      "exercise_type": "fill-in",
+      "context": "Він допомагає _____ (сусід).",
+      "role": "context"
+    },
+    {
+      "word": "друг",
+      "exercise_type": "fill-in",
+      "context": "Передай привіт нашому _____ (друг).",
+      "role": "context"
+    },
+    {
+      "word": "івану",
+      "exercise_type": "group-sort",
+      "context": "лікареві Івану",
+      "role": "answer"
+    },
+    {
+      "word": "дмитру",
+      "exercise_type": "group-sort",
+      "context": "товаришеві Дмитру",
+      "role": "answer"
+    },
+    {
+      "word": "максимові",
+      "exercise_type": "group-sort",
+      "context": "брату Максимові",
+      "role": "answer"
+    },
+    {
+      "word": "товаришу",
+      "exercise_type": "group-sort",
+      "context": "товаришу Дмитрові",
+      "role": "answer"
+    },
+    {
+      "word": "подарували",
+      "exercise_type": "quiz",
+      "context": "Ми подарували квіти цій _____ (жінка).",
+      "role": "context"
+    },
+    {
+      "word": "цій",
+      "exercise_type": "quiz",
+      "context": "Ми подарували квіти цій _____ (жінка).",
+      "role": "context"
+    },
+    {
+      "word": "колега",
+      "exercise_type": "quiz",
+      "context": "Він допомагає своїй _____ (колега).",
+      "role": "context"
+    },
+    {
+      "word": "вони",
+      "exercise_type": "unjumble",
+      "context": "Вони",
+      "role": "answer"
+    },
+    {
+      "word": "маленькій",
+      "exercise_type": "quiz",
+      "context": "Вони купили іграшку маленькій _____ (дівчинка).",
+      "role": "context"
+    },
+    {
+      "word": "дівчинка",
+      "exercise_type": "quiz",
+      "context": "Вони купили іграшку маленькій _____ (дівчинка).",
+      "role": "context"
+    },
+    {
+      "word": "сестра",
+      "exercise_type": "quiz",
+      "context": "Я розповім про це моїй _____ (сестра).",
+      "role": "context"
+    },
+    {
+      "word": "повинні",
+      "exercise_type": "unjumble",
+      "context": "повинні",
+      "role": "answer"
+    },
+    {
+      "word": "чоловічий",
+      "exercise_type": "group-sort",
+      "context": "Чоловічий рід (-ові/-еві/-єві, -у/-ю)",
+      "role": "context"
+    },
+    {
+      "word": "рід",
+      "exercise_type": "group-sort",
+      "context": "Чоловічий рід (-ові/-еві/-єві, -у/-ю)",
+      "role": "context"
+    },
+    {
+      "word": "жіночий",
+      "exercise_type": "group-sort",
+      "context": "Жіночий рід (-і, -ї)",
+      "role": "context"
+    },
+    {
+      "word": "середній",
+      "exercise_type": "group-sort",
+      "context": "Середній рід (-у/-ю, -аті/-яті)",
+      "role": "context"
+    },
+    {
+      "word": "написали",
+      "exercise_type": "error-correction",
+      "context": "Ми написали лист подругі.",
+      "role": "context"
+    },
+    {
+      "word": "подругі",
+      "exercise_type": "error-correction",
+      "context": "Ми написали лист подругі.",
+      "role": "context"
+    },
+    {
+      "word": "дала",
+      "exercise_type": "error-correction",
+      "context": "Мама дала молоко курчі.",
+      "role": "context"
+    },
+    {
+      "word": "молоко",
+      "exercise_type": "error-correction",
+      "context": "Мама дала молоко курчі.",
+      "role": "context"
+    },
+    {
+      "word": "курчі",
+      "exercise_type": "error-correction",
+      "context": "Мама дала молоко курчі.",
+      "role": "context"
+    },
+    {
+      "word": "відправив",
+      "exercise_type": "error-correction",
+      "context": "Він відправив пакунок мама.",
+      "role": "context"
+    },
+    {
+      "word": "радіє",
+      "exercise_type": "error-correction",
+      "context": "Вона дуже радіє сонце.",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 14,
+    "tested_in_exercises": 10,
+    "not_tested": [
+      "відміна",
+      "немовля",
+      "одержувач",
+      "чергування"
+    ]
+  },
+  "all_grounded": false
+}

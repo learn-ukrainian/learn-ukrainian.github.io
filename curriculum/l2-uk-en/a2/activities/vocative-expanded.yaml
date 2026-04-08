@@ -1,0 +1,627 @@
+version: '1.0'
+module: vocative-expanded
+level: a2
+inline:
+- id: fill-in-focus-form-the-correct-vocative-of-professional-titles-and-names
+  type: fill-in
+  instruction: Вставте правильну форму слова
+  items:
+  - sentence: Шановний _____, я маю до вас питання.
+    answer: добродію
+    options:
+    - добродію
+    - добродій
+    - добродія
+  - sentence: Пане _____, добрий день!
+    answer: директоре
+    options:
+    - директоре
+    - директор
+    - директору
+  - sentence: Пані _____, чи можу я увійти?
+    answer: лікарко
+    options:
+    - лікарко
+    - лікарка
+    - лікарку
+  - sentence: Пане _____, ви забули рецепт.
+    answer: лікарю
+    options:
+    - лікарю
+    - лікар
+    - лікаре
+  - sentence: Пане _____, дякую за урок.
+    answer: вчителю
+    options:
+    - вчителю
+    - вчитель
+    - вчителє
+  - sentence: Пані _____, ваш чай.
+    answer: Коваленко
+    options:
+    - Коваленко
+    - Коваленку
+    - Коваленці
+  - sentence: Пане _____, ваша кава.
+    answer: Шевченку
+    options:
+    - Шевченку
+    - Шевченко
+    - Шевченка
+  - sentence: Вельмишановна _____, дякую за лист.
+    answer: добродійко
+    options:
+    - добродійко
+    - добродійка
+    - добродійку
+- id: match-professions-vocative
+  type: match-up
+  instruction: З'єднайте називний та кличний відмінки
+  pairs:
+  - left: лікар
+    right: лікарю
+  - left: вчителька
+    right: вчителько
+  - left: директор
+    right: директоре
+  - left: водій
+    right: водію
+  - left: інженер
+    right: інженере
+  - left: майстер
+    right: майстре
+  - left: суддя
+    right: суддю
+  - left: колега
+    right: колего
+- id: error-correction-vocative
+  type: error-correction
+  instruction: Виправте помилку у звертанні
+  items:
+  - sentence: Привіт, Іван!
+    error: Іван
+    correction: Іване
+    error_type: word
+    options:
+    - Іване
+    - Іваню
+    - Івану
+    explanation: Іван takes the -е ending in the vocative case.
+  - sentence: Пане професор, вибачте!
+    error: професор
+    correction: професоре
+    error_type: word
+    options:
+    - професоре
+    - професорю
+    - професору
+    explanation: Професор takes the -е ending.
+  - sentence: Добрий день, пан лікарю!
+    error: пан
+    correction: пане
+    error_type: word
+    options:
+    - пане
+    - паню
+    - пану
+    explanation: Пан must also be in the vocative (пане).
+  - sentence: Пані Ковальчуку, привіт!
+    error: Ковальчуку
+    correction: Ковальчук
+    error_type: word
+    options:
+    - Ковальчук
+    - Ковальчука
+    - Ковальчуке
+    explanation: Women's surnames ending in a consonant do not change.
+  - sentence: Подруга моя, я рада тебе бачити!
+    error: Подруга
+    correction: Подруго
+    error_type: word
+    options:
+    - Подруго
+    - Подруге
+    - Подругу
+    explanation: Подруга takes the -о ending in the vocative.
+  - sentence: Добрий день, пане вчитель!
+    error: вчитель
+    correction: вчителю
+    error_type: word
+    options:
+    - вчителю
+    - вчителє
+    - вчительку
+    explanation: Вчитель has a soft stem and takes the -ю ending.
+  - sentence: Привіт, Ігоре!
+    error: Ігоре
+    correction: Ігорю
+    error_type: word
+    options:
+    - Ігорю
+    - Ігора
+    - Ігорем
+    explanation: The modern standard form for Ihor is Ігорю.
+  - sentence: Друже моя, як справи?
+    error: моя
+    correction: мій
+    error_type: word
+    options:
+    - мій
+    - моє
+    - мої
+    explanation: Друг is masculine, so we use мій.
+- id: quiz-register-choice
+  type: quiz
+  instruction: Оберіть правильне звертання для ситуації
+  items:
+  - question: Ви пишете офіційний електронний лист професору.
+    options:
+    - Шановний пане професоре!
+    - Привіт, професоре!
+    - Пане професор!
+    - Шановний професору!
+    correct: 0
+  - question: Ви зустріли сусідку Олену.
+    options:
+    - Пані Олено!
+    - Пані Олена!
+    - Оленочко!
+    - Шановна пані Олена!
+    correct: 0
+  - question: Ви звертаєтесь до лікаря чоловіка.
+    options:
+    - Пане лікарю!
+    - Пан лікар!
+    - Пане лікар!
+    - Пане лікаре!
+    correct: 0
+  - question: Ви звертаєтесь до керівниці (жінки).
+    options:
+    - Пані директорко!
+    - Пані директор!
+    - Пане директорко!
+    - Пані директоре!
+    correct: 0
+  - question: Ви розмовляєте з близьким другом на ім'я Андрій.
+    options:
+    - Андрію!
+    - Пане Андрію!
+    - Андрій!
+    - Шановний Андрію!
+    correct: 0
+  - question: Ви кличете офіціанта в ресторані.
+    options:
+    - Пане офіціанте!
+    - Офіціант!
+    - Пане офіціант!
+    - Офіціанту!
+    correct: 0
+  - question: Ви хочете лагідно звернутися до коханої людини.
+    options:
+    - Серденько!
+    - Пане серденько!
+    - Серденьку!
+    - Пан серденько!
+    correct: 0
+  - question: Ви розмовляєте з колегою на ім'я Марія.
+    options:
+    - Маріє!
+    - Пані Марія!
+    - Марія!
+    - Шановна Маріє!
+    correct: 0
+- id: group-sort-registers
+  type: group-sort
+  instruction: Розподіліть звертання за стилем (регістром)
+  groups:
+  - label: Офіційний / Професійний
+    items:
+    - пане професоре
+    - пані директорко
+    - пане лікарю
+    - пане Ковальчуку
+  - label: Нейтрально-ввічливий
+    items:
+    - пані Олено
+    - пане Андрію
+    - пане Степане
+  - label: Емоційний / Близький
+    items:
+    - друже мій
+    - люба подруго
+    - моє сонечко
+    - серденько
+    - зіронько
+workbook:
+- type: group-sort
+  instruction: М'який чи твердий приголосний? Розподіліть слова за закінченням у кличному
+    відмінку
+  groups:
+  - label: Закінчення -е (твердий приголосний)
+    items:
+    - директор
+    - професор
+    - інженер
+    - майстер
+    - друг
+  - label: Закінчення -ю (м'який приголосний)
+    items:
+    - лікар
+    - вчитель
+    - водій
+    - добродій
+    - Андрій
+- type: error-correction
+  instruction: Виправте помилку у закінченні кличного відмінка
+  items:
+  - sentence: Пане лікар! Допоможіть.
+    error: лікар
+    correction: лікарю
+    error_type: word
+    options:
+    - лікарю
+    - лікаре
+    - лікар
+    explanation: Лікар has a soft stem, so it takes -ю.
+  - sentence: Пане директору, добрий день.
+    error: директору
+    correction: директоре
+    error_type: word
+    options:
+    - директоре
+    - директор
+    - директорю
+    explanation: Директор is a hard stem (-ор), so it takes -е.
+  - sentence: Пане вчитель, це вам.
+    error: вчитель
+    correction: вчителю
+    error_type: word
+    options:
+    - вчителю
+    - вчителє
+    - вчитель
+    explanation: Вчитель has a soft stem, so it takes -ю.
+  - sentence: Пане водіє, зупиніть тут.
+    error: водіє
+    correction: водію
+    error_type: word
+    options:
+    - водію
+    - водій
+    - водіє
+    explanation: Водій ends in й (soft), so it takes -ю.
+  - sentence: Другу мій, привіт.
+    error: Другу
+    correction: Друже
+    error_type: word
+    options:
+    - Друже
+    - Друг
+    - Другю
+    explanation: The consonant г changes to ж, and takes the ending -е.
+  - sentence: Пане професору, ви маєте рацію.
+    error: професору
+    correction: професоре
+    error_type: word
+    options:
+    - професоре
+    - професор
+    - професорю
+    explanation: Професор is a hard stem (-ор), so it takes -е.
+- type: fill-in
+  instruction: Який? Яка? Яке? Вставте правильну форму емоційного звертання
+  items:
+  - sentence: _____ подруго, як ти?
+    answer: Люба
+    options:
+    - Люба
+    - Любий
+    - Любе
+  - sentence: _____ друже, радий бачити!
+    answer: Любий
+    options:
+    - Любий
+    - Люба
+    - Любі
+  - sentence: _____ мамо, я тебе люблю.
+    answer: Люба
+    options:
+    - Люба
+    - Любий
+    - Любе
+  - sentence: _____ брате, допоможи мені.
+    answer: Любий
+    options:
+    - Любий
+    - Люба
+    - Любі
+  - sentence: _____ зіронько моя!
+    answer: Люба
+    options:
+    - Люба
+    - Любий
+    - Любе
+  - sentence: _____ колего Андрію!
+    answer: Любий
+    options:
+    - Любий
+    - Люба
+    - Любе
+- type: error-correction
+  instruction: Знайдіть помилку в узгодженні прикметника й іменника
+  items:
+  - sentence: Люба друже, ходи сюди!
+    error: Люба
+    correction: Любий
+    error_type: word
+    options:
+    - Любий
+    - Любе
+    - Любі
+    explanation: Друг is masculine, so we use любий.
+  - sentence: Любий подруго, привіт.
+    error: Любий
+    correction: Люба
+    error_type: word
+    options:
+    - Люба
+    - Любе
+    - Любі
+    explanation: Подруга is feminine, so we use люба.
+  - sentence: Шановний пані Олено!
+    error: Шановний
+    correction: Шановна
+    error_type: word
+    options:
+    - Шановна
+    - Шановне
+    - Шановні
+    explanation: Пані is feminine, so we use Шановна.
+  - sentence: Шановна пане професоре!
+    error: Шановна
+    correction: Шановний
+    error_type: word
+    options:
+    - Шановний
+    - Шановне
+    - Шановні
+    explanation: Пан is masculine, so we use Шановний.
+  - sentence: Вельмишановна добродію!
+    error: Вельмишановна
+    correction: Вельмишановний
+    error_type: word
+    options:
+    - Вельмишановний
+    - Вельмишановне
+    - Вельмишановні
+    explanation: Добродій is masculine.
+  - sentence: Моя любий брате!
+    error: Моя
+    correction: Мій
+    error_type: word
+    options:
+    - Мій
+    - Моє
+    - Мої
+    explanation: Брат is masculine, so we use мій.
+- type: group-sort
+  instruction: Ти чи Ви? Розподіліть фрази на неформальні (ти) та формальні (Ви)
+  groups:
+  - label: Неформально (на «ти»)
+    items:
+    - Привіт, друже!
+    - Як справи, Олено?
+    - Люба подруго, дякую!
+    - Спи, моє сонечко.
+  - label: Офіційно (на «Ви»)
+    items:
+    - Добрий день, пане лікарю!
+    - Шановна пані директорко!
+    - Пане Ковальчуку, зачекайте.
+    - Вельмишановний добродію!
+- type: quiz
+  instruction: Ти чи Ви? Оберіть правильний займенник за контекстом звертання
+  items:
+  - question: Пане лікарю, як _____ справи?
+    options:
+    - Ваші
+    - твої
+    - його
+    - її
+    correct: 0
+  - question: Маріє, як _____ справи?
+    options:
+    - твої
+    - Ваші
+    - її
+    - їхні
+    correct: 0
+  - question: Шановна пані Олено, _____ можете сісти тут.
+    options:
+    - Ви
+    - ти
+    - вона
+    - вони
+    correct: 0
+  - question: Друже мій, _____ маєш рацію.
+    options:
+    - ти
+    - Ви
+    - він
+    - ми
+    correct: 0
+  - question: Пане професоре, це _____ книга?
+    options:
+    - Ваша
+    - твоя
+    - моя
+    - їхня
+    correct: 0
+  - question: Люба моя, _____ така красива сьогодні.
+    options:
+    - ти
+    - Ви
+    - вона
+    - вони
+    correct: 0
+- type: fill-in
+  instruction: У мене є... Вставте правильне слово
+  items:
+  - sentence: Лікарю, _____ мене дуже сильно болить голова.
+    answer: у
+    options:
+    - у
+    - на
+    - до
+  - sentence: Пане Ковальчуку, що _____ турбує?
+    answer: вас
+    options:
+    - вас
+    - тебе
+    - нас
+  - sentence: Друже, _____ тебе все добре?
+    answer: у
+    options:
+    - у
+    - на
+    - до
+  - sentence: Пані Олено, _____ вас є запитання?
+    answer: у
+    options:
+    - у
+    - на
+    - до
+  - sentence: _____ мене немає проблем зі здоров'ям.
+    answer: У
+    options:
+    - У
+    - На
+    - До
+  - sentence: Лікарю, _____ мене потрібні ліки?
+    answer: для
+    options:
+    - для
+    - у
+    - на
+- type: fill-in
+  instruction: Мій, твій, наш... Вставте правильний присвійний займенник
+  items:
+  - sentence: Друже _____, як ти?
+    answer: мій
+    options:
+    - мій
+    - моя
+    - моє
+  - sentence: Подруго _____, я так рада!
+    answer: моя
+    options:
+    - моя
+    - мій
+    - моє
+  - sentence: _____ сонечко, ходи сюди!
+    answer: Моє
+    options:
+    - Моє
+    - Мій
+    - Моя
+  - sentence: Брате _____, допоможи мені!
+    answer: мій
+    options:
+    - мій
+    - моя
+    - моє
+  - sentence: _____ зіронько, спи!
+    answer: Моя
+    options:
+    - Моя
+    - Мій
+    - Моє
+  - sentence: Мамо _____, добрий ранок!
+    answer: моя
+    options:
+    - моя
+    - мій
+    - моє
+- type: match-up
+  instruction: Чий? Чия? Чиє? З'єднайте займенник або прикметник зі словом у кличному
+    відмінку
+  pairs:
+  - left: Любий
+    right: друже
+  - left: Люба
+    right: подруго
+  - left: Шановний
+    right: пане
+  - left: Шановна
+    right: пані
+  - left: Моє
+    right: сонечко
+  - left: Моя
+    right: зіронько
+- type: unjumble
+  instruction: Складіть правильне речення зі слів
+  items:
+  - words:
+    - мій,
+    - Друже
+    - справи?
+    - як
+    correct_order:
+    - Друже
+    - мій,
+    - як
+    - справи?
+  - words:
+    - рада!
+    - моя,
+    - Подруго
+    - я
+    - так
+    correct_order:
+    - Подруго
+    - моя,
+    - я
+    - так
+    - рада!
+  - words:
+    - сонечко,
+    - моє
+    - Спи,
+    correct_order:
+    - Спи,
+    - моє
+    - сонечко,
+  - words:
+    - лікарю,
+    - мені
+    - Пане
+    - потрібна
+    - допомога.
+    correct_order:
+    - Пане
+    - лікарю,
+    - мені
+    - потрібна
+    - допомога.
+  - words:
+    - Ваша
+    - кава.
+    - Ковальчуку,
+    - Пане
+    - ось
+    correct_order:
+    - Пане
+    - Ковальчуку,
+    - ось
+    - Ваша
+    - кава.
+  - words:
+    - директорко,
+    - добрий
+    - день!
+    - Пані
+    correct_order:
+    - Пані
+    - директорко,
+    - добрий
+    - день!

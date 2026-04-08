@@ -1,0 +1,55 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: The module comprehensively covers the outline. However, two specific doctor
+    questions from the plan ("Як давно?" and "Чи є алергія на ліки?") were omitted
+    from the medical section prose, and the Engli
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'The Ukrainian is highly natural, but there is a critical grammar failure:
+    treating the masculine noun "нежить" as feminine ("нежиті" instead of "нежитю").
+    Verified via VESUM. There is also a slight in'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Outstanding. The explanation of the partitive genitive ending (-у/-ю)
+    for substances is clear, accurate, and highlights a beautiful native feature.
+    The explanation of numbers (1 takes Nom Sg, 2-4 take
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items from the plan are integrated
+    naturally into the prose and dialogue boxes without resorting to bare lists.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The 4 required activity markers are all present, correctly typed, and
+    placed perfectly after the relevant teaching blocks to ensure immediate practice.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is warm, encouraging, and culturally immersive. The inclusion
+    of specific markets (Besarabskyi, Zhytnii) and the note on vendors using diminutives
+    ("картопелька", "яблучка") adds excellent na
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: The word count (2651 words) comfortably exceeds the 2000-word target.
+    The formatting is clean and structural tags (`:::note`, `:::tip`) are properly
+    deployed.
+- dimension: 8
+  name: Cultural accuracy
+  score: 9
+  evidence: Highly accurate descriptions of Ukrainian market culture and the directness
+    of Ukrainian doctors. A minor deduction because referring to a primary care physician
+    solely as a "терапевт" (Soviet system)
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogues are natural and authentic. The market transaction includes
+    realistic mathematics (80 * 1.5 + 60 = 180). The phrasing used by the pharmacist
+    and doctor is spot-on.
+findings: []

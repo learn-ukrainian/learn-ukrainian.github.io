@@ -1,0 +1,416 @@
+version: '1.0'
+module: genitive-intro
+level: a2
+inline:
+- id: quiz-possession-vs-absence-drill-vs
+  type: quiz
+  instruction: Оберіть правильну форму слова (Є чи Немає?)
+  items:
+  - question: У мене є брат. У мене немає _____.
+    options:
+    - брат
+    - брату
+    - браті
+    - брата
+    correct: 3
+  - question: Тут є стіл. Тут немає _____.
+    options:
+    - столу
+    - стола
+    - стіл
+    - столі
+    correct: 1
+  - question: У мене є вода. У мене немає _____.
+    options:
+    - вода
+    - воду
+    - води
+    - воді
+    correct: 2
+  - question: У нас є вікно. У нас немає _____.
+    options:
+    - вікна
+    - вікну
+    - вікно
+    - вікні
+    correct: 0
+  - question: В офісі є директор. В офісі немає _____.
+    options:
+    - директору
+    - директора
+    - директор
+    - директорі
+    correct: 1
+  - question: У тебе є кава? Ні, у мене немає _____.
+    options:
+    - каві
+    - каву
+    - кава
+    - кави
+    correct: 3
+  - question: У мене є проблема. У мене немає _____.
+    options:
+    - проблема
+    - проблеми
+    - проблему
+    - проблемі
+    correct: 1
+  - question: Тут є телевізор. Тут немає _____.
+    options:
+    - телевізора
+    - телевізору
+    - телевізор
+    - телевізорі
+    correct: 0
+- id: fill-in-genitive-singular-formation
+  type: fill-in
+  instruction: Вставте правильне закінчення для родового відмінка однини
+  items:
+  - sentence: Сьогодні дуже поганий день, немає _____ (інтернет).
+    answer: інтернету
+    options:
+    - інтернету
+    - інтернета
+    - інтернет
+    - інтернеті
+  - sentence: Вибачте, у мене немає _____ (час).
+    answer: часу
+    options:
+    - час
+    - часу
+    - часа
+    - часі
+  - sentence: У каві немає _____ (цукор).
+    answer: цукру
+    options:
+    - цукру
+    - цукра
+    - цукор
+    - цукрі
+  - sentence: Сьогодні на вулиці немає _____ (сонце).
+    answer: сонця
+    options:
+    - сонця
+    - сонце
+    - сонцю
+    - сонцем
+  - sentence: У кімнаті немає _____ (шафа).
+    answer: шафи
+    options:
+    - шафу
+    - шафи
+    - шафі
+    - шафа
+  - sentence: Тут немає сухої _____ (земля).
+    answer: землі
+    options:
+    - землі
+    - землю
+    - земля
+    - землею
+  - sentence: У мене немає _____ (настрій) працювати.
+    answer: настрою
+    options:
+    - настрою
+    - настроя
+    - настрій
+    - настрої
+  - sentence: У місті немає _____ (море).
+    answer: моря
+    options:
+    - моря
+    - море
+    - морю
+    - морем
+- id: match-up-genitive-plural-quantity
+  type: match-up
+  instruction: З'єднайте кількість із правильною формою родового відмінка множини
+  pairs:
+  - left: багато (друг)
+    right: багато друзів
+  - left: кілька (машина)
+    right: кілька машин
+  - left: кілька (книжка)
+    right: кілька книжок
+  - left: багато (гроші)
+    right: багато грошей
+  - left: багато (студент)
+    right: багато студентів
+  - left: мало (місце)
+    right: мало місць
+  - left: багато (річ)
+    right: багато речей
+  - left: кілька (яблуко)
+    right: кілька яблук
+- id: match-up-translate-genitive
+  type: match-up
+  instruction: З'єднайте англійську фразу з українським перекладом
+  pairs:
+  - left: I don't have money.
+    right: У мене немає грошей.
+  - left: There is no time.
+    right: Немає часу.
+  - left: A lot of people.
+    right: Багато людей.
+  - left: How many friends?
+    right: Скільки друзів?
+  - left: A few questions.
+    right: Кілька питань.
+  - left: I don't have a car.
+    right: У мене немає машини.
+  - left: There are few trees here.
+    right: Тут мало дерев.
+  - left: I don't have a problem.
+    right: У мене немає проблеми.
+- id: unjumble-genitive-phrases
+  type: unjumble
+  instruction: Складіть правильне речення зі слів
+  items:
+  - words:
+    - У
+    - немає
+    - брата.
+    - мене
+    correct_order:
+    - У
+    - мене
+    - немає
+    - брата.
+  - words:
+    - кілька
+    - є
+    - У
+    - питань.
+    - нас
+    correct_order:
+    - У
+    - нас
+    - є
+    - кілька
+    - питань.
+  - words:
+    - грошей
+    - мене
+    - У
+    - немає
+    - на
+    - квиток.
+    correct_order:
+    - У
+    - мене
+    - немає
+    - грошей
+    - на
+    - квиток.
+  - words:
+    - місті
+    - У
+    - багато
+    - машин.
+    - нашому
+    - є
+    correct_order:
+    - У
+    - нашому
+    - місті
+    - є
+    - багато
+    - машин.
+  - words:
+    - нас
+    - зовсім
+    - немає
+    - У
+    - часу.
+    correct_order:
+    - У
+    - нас
+    - зовсім
+    - немає
+    - часу.
+  - words:
+    - Скільки
+    - тут
+    - живе
+    - студентів?
+    correct_order:
+    - Скільки
+    - студентів
+    - тут
+    - живе?
+workbook:
+- id: workbook-true-false-genitive
+  type: true-false
+  instruction: Правда чи ні? (Правила родового відмінка)
+  items:
+  - statement: Родовий відмінок часто показує відсутність (absence) або кількість
+      (quantity).
+    correct: true
+    explanation: Так, слова 'немає', 'багато', 'мало' вимагають родового відмінка.
+  - statement: Абстрактні іменники чоловічого роду в однині (як 'час' або 'досвід')
+      мають закінчення -а.
+    correct: false
+    explanation: Абстрактні поняття чоловічого роду мають закінчення -у / -ю.
+  - statement: Слово 'гроші' після слова 'багато' завжди має форму 'грошей'.
+    correct: true
+    explanation: Так, це родовий відмінок множини.
+  - statement: Якщо іменник жіночого роду закінчується на -а (кава), у родовому відмінку
+      він має закінчення -і.
+    correct: false
+    explanation: Іменники з твердим приголосним + -а мають закінчення -и (кави).
+  - statement: Слова 'багато' та 'мало' злічуваних предметів вимагають родового відмінка
+      множини.
+    correct: true
+    explanation: 'Наприклад: багато машин, мало дерев.'
+  - statement: Іменники середнього роду на -о (вікно) змінюють закінчення на -у.
+    correct: false
+    explanation: Іменники середнього роду на -о змінюють закінчення на -а (вікна).
+- id: workbook-group-sort-masculine
+  type: group-sort
+  instruction: 'Розподіліть іменники чоловічого роду (однина): яке закінчення вони
+    матимуть після слова ''немає''?'
+  groups:
+  - label: Закінчення -а / -я (конкретні об'єкти)
+    items:
+    - стіл
+    - брат
+    - автобус
+    - комп'ютер
+    - телевізор
+    - холодильник
+  - label: Закінчення -у / -ю (абстрактні, речовини)
+    items:
+    - час
+    - цукор
+    - досвід
+    - інтернет
+    - настрій
+    - чай
+- id: workbook-error-correction-genitive
+  type: error-correction
+  instruction: Знайдіть і виправте помилку
+  items:
+  - sentence: У мене немає комп'ютер.
+    error: комп'ютер
+    correction: комп'ютера
+    error_type: word
+    options:
+    - комп'ютера
+    - комп'ютеру
+    - комп'ютері
+    - комп'ютером
+    explanation: Після 'немає' потрібен родовий відмінок.
+  - sentence: Сьогодні зовсім немає час.
+    error: час
+    correction: часу
+    error_type: word
+    options:
+    - часа
+    - часу
+    - часі
+    - часом
+    explanation: '''Час'' — абстрактне поняття, має закінчення -у.'
+  - sentence: У нього є багато проблема.
+    error: проблема
+    correction: проблем
+    error_type: word
+    options:
+    - проблеми
+    - проблем
+    - проблемів
+    - проблемах
+    explanation: '''Багато'' вимагає множини: багато проблем.'
+  - sentence: Тут дуже мало місце.
+    error: місце
+    correction: місць
+    error_type: word
+    options:
+    - місця
+    - місць
+    - місцьів
+    - місцях
+    explanation: '''Мало'' вимагає родового відмінка множини.'
+  - sentence: У мене немає машина.
+    error: машина
+    correction: машини
+    error_type: word
+    options:
+    - машини
+    - машину
+    - машині
+    - машин
+    explanation: Жіночий рід на -а (машина) змінюється на -и (машини).
+  - sentence: Ми маємо кілька друг.
+    error: друг
+    correction: друзів
+    error_type: word
+    options:
+    - друга
+    - други
+    - друзів
+    - другами
+    explanation: '''Друг'' у множині має неправильну форму — ''друзів''.'
+- id: workbook-translate-genitive
+  type: translate
+  instruction: Оберіть правильний переклад
+  items:
+  - source: I don't have a brother.
+    options:
+    - text: У мене немає брата.
+      correct: true
+    - text: У мене немає брат.
+      correct: false
+    - text: У мене є брата.
+      correct: false
+    - text: Я не маю брату.
+      correct: false
+  - source: There is no water.
+    options:
+    - text: Немає води.
+      correct: true
+    - text: Немає воду.
+      correct: false
+    - text: Немає вода.
+      correct: false
+    - text: Є води.
+      correct: false
+  - source: A lot of things.
+    options:
+    - text: Багато речей.
+      correct: true
+    - text: Багато речі.
+      correct: false
+    - text: Багато речах.
+      correct: false
+    - text: Багато річ.
+      correct: false
+  - source: How much money?
+    options:
+    - text: Скільки грошей?
+      correct: true
+    - text: Скільки гроші?
+      correct: false
+    - text: Скільки грошах?
+      correct: false
+    - text: Скільки грошів?
+      correct: false
+  - source: He has few friends.
+    options:
+    - text: Він має мало друзів.
+      correct: true
+    - text: Він має мало друга.
+      correct: false
+    - text: Він має мало друг.
+      correct: false
+    - text: Він має багато друзів.
+      correct: false
+  - source: I have no time.
+    options:
+    - text: У мене немає часу.
+      correct: true
+    - text: У мене немає час.
+      correct: false
+    - text: У мене немає часа.
+      correct: false
+    - text: У мене є час.
+      correct: false

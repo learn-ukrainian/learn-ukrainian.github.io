@@ -1,0 +1,50 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Covered most core points, but missed specific outline phrases like "поливати
+    олією", "між нарадами", and "за розкладом".
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: Contains a grammatical case error ("з цьому відмінком"), factually incorrect
+    grammar rules ("завжди -им", "м'яке -ою"), and an English calque ("цікавимося
+    разом").
+- dimension: 3
+  name: Pedagogical quality
+  score: 7
+  evidence: Good use of examples and clear PPP flow, but the inaccurate presentation
+    of adjective endings teaches learners the wrong paradigm, which they will have
+    to unlearn later.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required words used naturally. Recommended word "начальник" is missing
+    (the writer used "менеджер" instead).
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers align perfectly with the plan and are placed logically after each
+    section.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Engaging and encouraging tone with culturally specific examples. The provided
+    English translations are helpful and contextual.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All sections are present and ordered correctly. The word count is 2644
+    (well over the 2000 target).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Correctly identifies and warns against common Russian calques ("повар",
+    "жарити") and explains authentic Ukrainian culinary concepts ("олія" vs "масло").
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: The final dialogue is somewhat transactional and disjointed ("Я теж! Це
+    дуже смачно. Цікаво, де ти працюєш?"), but the first dialogue is much more natural.
+findings: []

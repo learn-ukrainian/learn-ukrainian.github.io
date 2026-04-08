@@ -1,0 +1,265 @@
+vocabulary:
+- word: утво́рювати
+  translation: to form
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: словни́к
+  translation: dictionary
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: запам'ято́вувати
+  translation: to memorize
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ба́зовий
+  translation: basic
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: па́ра
+  translation: pair
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: префікс
+  translation: prefix
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: су́фікс
+  translation: suffix
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ко́рінь
+  translation: root
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: видова пара
+  translation: aspectual pair
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: чергува́ння
+  translation: vowel alternation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: писати / написати
+  translation: to write / to write down completely
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: читати / прочитати
+  translation: to read / to finish reading
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: прибирати / прибрати
+  translation: to clean / to have cleaned
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: робити / зробити
+  translation: to do / to have done
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: бачити / побачити
+  translation: to see / to catch sight of
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: чути / почути
+  translation: to hear / to catch a sound of
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: снідати / поснідати
+  translation: to have breakfast / to finish having breakfast
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дякувати / подякувати
+  translation: to thank / to express thanks
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: малювати / намалювати
+  translation: to draw / to finish drawing
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: жити / прожити
+  translation: to live / to live through a specific period
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: казати / сказати
+  translation: to say / to tell
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: фотографувати / сфотографувати
+  translation: to photograph / to take a photo
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пити / випити
+  translation: to drink / to drink up completely
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вчити / вивчити
+  translation: to study / to master or memorize
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: платити / заплатити
+  translation: to pay / to complete a payment
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: телефонувати / зателефонувати
+  translation: to call / to make a phone call
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: вирішувати / вирішити
+  translation: to decide (process) / to decide (result)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: запитувати / запитати
+  translation: to ask (process) / to ask (result)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: відчиняти / відчинити
+  translation: to open (process) / to open (result)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: відповідати / відповісти
+  translation: to answer (process) / to answer (result)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: допомагати / допомогти
+  translation: to help (process) / to help (result)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: стукати / стукнути
+  translation: to knock (repeatedly) / to give a single knock
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: кричати / крикнути
+  translation: to shout (process) / to let out a single cry
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: штовхати / штовхнути
+  translation: to push (continuously) / to give a single shove
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: брати / взяти
+  translation: to take (process) / to take (result)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: говорити / сказати
+  translation: to speak, talk / to say, tell
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ловити / піймати
+  translation: to catch (process) / to catch (result)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: шукати / знайти
+  translation: to search / to find
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: купувати / купити
+  translation: to buy (process) / to buy (result)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: готувати / приготувати
+  translation: to cook / to finish cooking
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ліпити / зліпити
+  translation: to form, sculpt / to finish forming
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: варити / зварити
+  translation: to boil, cook / to finish boiling
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: спливати / спливти
+  translation: to float up (process / result)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: варе́ники
+  translation: varenyky
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true

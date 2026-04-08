@@ -1,0 +1,193 @@
+vocabulary:
+- word: відмі́на
+  translation: declension
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: чергува́ння
+  translation: alternation (grammar)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: оде́ржувач
+  translation: recipient
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: немовля́
+  translation: baby, infant
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: студе́нтові
+  translation: to the student (dat.)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сестрі́
+  translation: to the sister (dat.)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: дру́гові
+  translation: to the friend (dat.)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: подарува́ти
+  translation: to give as a gift
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: показа́ти
+  translation: to show
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: написа́ти
+  translation: to write
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: розпові́сти́
+  translation: to tell, to narrate
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: поясни́ти
+  translation: to explain
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: відпові́сти́
+  translation: to answer, to reply
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: закі́нчення
+  translation: ending (grammar)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: дава́ти
+  translation: to give
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: подя́кувати
+  translation: to thank
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: допомогти́
+  translation: to help
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зателефонува́ти
+  translation: to call (by phone)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: бажа́ти
+  translation: to wish
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: раді́ти
+  translation: to rejoice, to be glad
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ві́рити
+  translation: to believe
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: з радістю
+  translation: gladly, with joy
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: передати привіт
+  translation: to send greetings
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: обов'язко́во
+  translation: definitely, certainly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: милозву́чність
+  translation: euphony, melodic quality
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: працівник пошти
+  translation: postal worker
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: відпра́вник
+  translation: sender
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: паку́нок
+  translation: package
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: листі́вка
+  translation: postcard
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: і́грашка
+  translation: toy
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: курча́
+  translation: chick
+  expression: false
+  pos: виг.
+  gender: ''
+  verified: true
+- word: офо́рмити
+  translation: to process, to register
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true

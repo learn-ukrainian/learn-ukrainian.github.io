@@ -1,0 +1,265 @@
+{
+  "total_items": 128,
+  "grounded_items": 88,
+  "ungrounded": [
+    {
+      "word": "вранці",
+      "exercise_type": "quiz",
+      "context": "Він був ___ парку вранці.",
+      "role": "context"
+    },
+    {
+      "word": "вчимося",
+      "exercise_type": "quiz",
+      "context": "Ми вчимося ___ університеті.",
+      "role": "context"
+    },
+    {
+      "word": "вийшла",
+      "exercise_type": "fill-in",
+      "context": "Вона швидко вийшла ___ кімнати.",
+      "role": "context"
+    },
+    {
+      "word": "ідемо",
+      "exercise_type": "fill-in",
+      "context": "Ми зараз ідемо ___ школи.",
+      "role": "context"
+    },
+    {
+      "word": "студент",
+      "exercise_type": "match-up",
+      "context": "Студент",
+      "role": "answer"
+    },
+    {
+      "word": "вчитель",
+      "exercise_type": "match-up",
+      "context": "і вчитель",
+      "role": "context"
+    },
+    {
+      "word": "яна",
+      "exercise_type": "error-correction",
+      "context": "Анна й Яна ідуть.",
+      "role": "context"
+    },
+    {
+      "word": "каву",
+      "exercise_type": "error-correction",
+      "context": "Він пив вранці каву.",
+      "role": "context"
+    },
+    {
+      "word": "зустрілися",
+      "exercise_type": "unjumble",
+      "context": "зустрілися",
+      "role": "answer"
+    },
+    {
+      "word": "його",
+      "exercise_type": "unjumble",
+      "context": "його",
+      "role": "answer"
+    },
+    {
+      "word": "друг",
+      "exercise_type": "unjumble",
+      "context": "друг",
+      "role": "answer"
+    },
+    {
+      "word": "після",
+      "exercise_type": "true-false",
+      "context": "Після коми ми завжди пишемо «й», якщо попереднє слово закінч",
+      "role": "context"
+    },
+    {
+      "word": "коми",
+      "exercise_type": "true-false",
+      "context": "Після коми ми завжди пишемо «й», якщо попереднє слово закінч",
+      "role": "context"
+    },
+    {
+      "word": "пишемо",
+      "exercise_type": "true-false",
+      "context": "Після коми ми завжди пишемо «й», якщо попереднє слово закінч",
+      "role": "context"
+    },
+    {
+      "word": "якщо",
+      "exercise_type": "true-false",
+      "context": "Після коми ми завжди пишемо «й», якщо попереднє слово закінч",
+      "role": "context"
+    },
+    {
+      "word": "попереднє",
+      "exercise_type": "true-false",
+      "context": "Після коми ми завжди пишемо «й», якщо попереднє слово закінч",
+      "role": "context"
+    },
+    {
+      "word": "слово",
+      "exercise_type": "true-false",
+      "context": "Після коми ми завжди пишемо «й», якщо попереднє слово закінч",
+      "role": "context"
+    },
+    {
+      "word": "закінчується",
+      "exercise_type": "true-false",
+      "context": "Після коми ми завжди пишемо «й», якщо попереднє слово закінч",
+      "role": "context"
+    },
+    {
+      "word": "правильні",
+      "exercise_type": "true-false",
+      "context": "Слова «зі мною» та «зі школи» — це правильні форми, бо вони ",
+      "role": "context"
+    },
+    {
+      "word": "форми",
+      "exercise_type": "true-false",
+      "context": "Слова «зі мною» та «зі школи» — це правильні форми, бо вони ",
+      "role": "context"
+    },
+    {
+      "word": "бо",
+      "exercise_type": "true-false",
+      "context": "Слова «зі мною» та «зі школи» — це правильні форми, бо вони ",
+      "role": "context"
+    },
+    {
+      "word": "уникають",
+      "exercise_type": "true-false",
+      "context": "Слова «зі мною» та «зі школи» — це правильні форми, бо вони ",
+      "role": "context"
+    },
+    {
+      "word": "важкого",
+      "exercise_type": "true-false",
+      "context": "Слова «зі мною» та «зі школи» — це правильні форми, бо вони ",
+      "role": "context"
+    },
+    {
+      "word": "збігу",
+      "exercise_type": "true-false",
+      "context": "Слова «зі мною» та «зі школи» — це правильні форми, бо вони ",
+      "role": "context"
+    },
+    {
+      "word": "словами",
+      "exercise_type": "true-false",
+      "context": "Перед словами, які починаються на «й», «я», «ю», «є», «ї», н",
+      "role": "context"
+    },
+    {
+      "word": "які",
+      "exercise_type": "true-false",
+      "context": "Перед словами, які починаються на «й», «я», «ю», «є», «ї», н",
+      "role": "context"
+    },
+    {
+      "word": "починаються",
+      "exercise_type": "true-false",
+      "context": "Перед словами, які починаються на «й», «я», «ю», «є», «ї», н",
+      "role": "context"
+    },
+    {
+      "word": "можна",
+      "exercise_type": "true-false",
+      "context": "Перед словами, які починаються на «й», «я», «ю», «є», «ї», н",
+      "role": "context"
+    },
+    {
+      "word": "ставити",
+      "exercise_type": "true-false",
+      "context": "Перед словами, які починаються на «й», «я», «ю», «є», «ї», н",
+      "role": "context"
+    },
+    {
+      "word": "підпорядковується",
+      "exercise_type": "true-false",
+      "context": "Сполучник «та» не підпорядковується правилам чергування і мо",
+      "role": "context"
+    },
+    {
+      "word": "правилам",
+      "exercise_type": "true-false",
+      "context": "Сполучник «та» не підпорядковується правилам чергування і мо",
+      "role": "context"
+    },
+    {
+      "word": "може",
+      "exercise_type": "true-false",
+      "context": "Сполучник «та» не підпорядковується правилам чергування і мо",
+      "role": "context"
+    },
+    {
+      "word": "використовуватися",
+      "exercise_type": "true-false",
+      "context": "Сполучник «та» не підпорядковується правилам чергування і мо",
+      "role": "context"
+    },
+    {
+      "word": "будь",
+      "exercise_type": "true-false",
+      "context": "Сполучник «та» не підпорядковується правилам чергування і мо",
+      "role": "context"
+    },
+    {
+      "word": "якій",
+      "exercise_type": "true-false",
+      "context": "Сполучник «та» не підпорядковується правилам чергування і мо",
+      "role": "context"
+    },
+    {
+      "word": "позиції",
+      "exercise_type": "true-false",
+      "context": "Сполучник «та» не підпорядковується правилам чергування і мо",
+      "role": "context"
+    },
+    {
+      "word": "уникає",
+      "exercise_type": "true-false",
+      "context": "Українська мова уникає збігу голосних і приголосних, щоб зву",
+      "role": "context"
+    },
+    {
+      "word": "звучати",
+      "exercise_type": "true-false",
+      "context": "Українська мова уникає збігу голосних і приголосних, щоб зву",
+      "role": "context"
+    },
+    {
+      "word": "більш",
+      "exercise_type": "true-false",
+      "context": "Українська мова уникає збігу голосних і приголосних, щоб зву",
+      "role": "context"
+    },
+    {
+      "word": "мелодійно",
+      "exercise_type": "true-false",
+      "context": "Українська мова уникає збігу голосних і приголосних, щоб зву",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 15,
+    "tested_in_exercises": 3,
+    "not_tested": [
+      "вживати",
+      "евфонія",
+      "збіг",
+      "межа",
+      "мелодійний",
+      "милозвучність",
+      "правило",
+      "приголосний",
+      "прийменник",
+      "складний",
+      "спрощення",
+      "уникати"
+    ]
+  },
+  "all_grounded": false
+}

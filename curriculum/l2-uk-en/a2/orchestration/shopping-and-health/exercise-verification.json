@@ -1,0 +1,285 @@
+{
+  "total_items": 154,
+  "grounded_items": 109,
+  "ungrounded": [
+    {
+      "word": "зважте",
+      "exercise_type": "fill-in",
+      "context": "Зважте мені великий шматок ____.",
+      "role": "context"
+    },
+    {
+      "word": "великий",
+      "exercise_type": "fill-in",
+      "context": "Зважте мені великий шматок ____.",
+      "role": "context"
+    },
+    {
+      "word": "свіжий",
+      "exercise_type": "fill-in",
+      "context": "Чи є у вас свіжий десяток ____?",
+      "role": "context"
+    },
+    {
+      "word": "банку",
+      "exercise_type": "fill-in",
+      "context": "Я хочу купити банку гречаного ____.",
+      "role": "context"
+    },
+    {
+      "word": "білого",
+      "exercise_type": "fill-in",
+      "context": "Можна мені кілограм білого ____?",
+      "role": "context"
+    },
+    {
+      "word": "яке",
+      "exercise_type": "quiz",
+      "context": "Яке запитання зазвичай ставить лікар?",
+      "role": "context"
+    },
+    {
+      "word": "запитання",
+      "exercise_type": "quiz",
+      "context": "Яке запитання зазвичай ставить лікар?",
+      "role": "context"
+    },
+    {
+      "word": "ставить",
+      "exercise_type": "quiz",
+      "context": "Яке запитання зазвичай ставить лікар?",
+      "role": "context"
+    },
+    {
+      "word": "висока",
+      "exercise_type": "match-up",
+      "context": "висока температура",
+      "role": "answer"
+    },
+    {
+      "word": "хочете",
+      "exercise_type": "quiz",
+      "context": "Якщо ви не хочете їсти, ви кажете:",
+      "role": "context"
+    },
+    {
+      "word": "кажете",
+      "exercise_type": "quiz",
+      "context": "Якщо ви не хочете їсти, ви кажете:",
+      "role": "context"
+    },
+    {
+      "word": "просите",
+      "exercise_type": "quiz",
+      "context": "Що ви просите в аптеці, коли болить голова?",
+      "role": "context"
+    },
+    {
+      "word": "відчуваєте",
+      "exercise_type": "quiz",
+      "context": "Як сказати, що ви відчуваєте нудоту?",
+      "role": "context"
+    },
+    {
+      "word": "нудоту",
+      "exercise_type": "quiz",
+      "context": "Як сказати, що ви відчуваєте нудоту?",
+      "role": "context"
+    },
+    {
+      "word": "купуєте",
+      "exercise_type": "quiz",
+      "context": "Що ви купуєте, якщо у вас сильна реакція на пилок або їжу?",
+      "role": "context"
+    },
+    {
+      "word": "сильна",
+      "exercise_type": "quiz",
+      "context": "Що ви купуєте, якщо у вас сильна реакція на пилок або їжу?",
+      "role": "context"
+    },
+    {
+      "word": "реакція",
+      "exercise_type": "quiz",
+      "context": "Що ви купуєте, якщо у вас сильна реакція на пилок або їжу?",
+      "role": "context"
+    },
+    {
+      "word": "пилок",
+      "exercise_type": "quiz",
+      "context": "Що ви купуєте, якщо у вас сильна реакція на пилок або їжу?",
+      "role": "context"
+    },
+    {
+      "word": "їжу",
+      "exercise_type": "quiz",
+      "context": "Що ви купуєте, якщо у вас сильна реакція на пилок або їжу?",
+      "role": "context"
+    },
+    {
+      "word": "відповісти",
+      "exercise_type": "quiz",
+      "context": "Як відповісти, якщо лікар питає про рецепт, а у вас його нем",
+      "role": "context"
+    },
+    {
+      "word": "які",
+      "exercise_type": "quiz",
+      "context": "Які слова описують загальний поганий стан, коли вам холодно?",
+      "role": "context"
+    },
+    {
+      "word": "слова",
+      "exercise_type": "quiz",
+      "context": "Які слова описують загальний поганий стан, коли вам холодно?",
+      "role": "context"
+    },
+    {
+      "word": "описують",
+      "exercise_type": "quiz",
+      "context": "Які слова описують загальний поганий стан, коли вам холодно?",
+      "role": "context"
+    },
+    {
+      "word": "загальний",
+      "exercise_type": "quiz",
+      "context": "Які слова описують загальний поганий стан, коли вам холодно?",
+      "role": "context"
+    },
+    {
+      "word": "поганий",
+      "exercise_type": "match-up",
+      "context": "поганий сон",
+      "role": "answer"
+    },
+    {
+      "word": "стан",
+      "exercise_type": "quiz",
+      "context": "Які слова описують загальний поганий стан, коли вам холодно?",
+      "role": "context"
+    },
+    {
+      "word": "імунітет",
+      "exercise_type": "match-up",
+      "context": "слабкий імунітет",
+      "role": "answer"
+    },
+    {
+      "word": "сон",
+      "exercise_type": "match-up",
+      "context": "поганий сон",
+      "role": "answer"
+    },
+    {
+      "word": "словосполучення",
+      "exercise_type": "true-false",
+      "context": "Словосполучення «два кілограми помідор» є правильним.",
+      "role": "context"
+    },
+    {
+      "word": "правильним",
+      "exercise_type": "true-false",
+      "context": "Словосполучення «два кілограми помідор» є правильним.",
+      "role": "context"
+    },
+    {
+      "word": "тому",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо «пляшка олії», тому що «пляшка» вимагає родового в",
+      "role": "context"
+    },
+    {
+      "word": "вимагає",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо «пляшка олії», тому що «пляшка» вимагає родового в",
+      "role": "context"
+    },
+    {
+      "word": "родового",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо «пляшка олії», тому що «пляшка» вимагає родового в",
+      "role": "context"
+    },
+    {
+      "word": "відмінка",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо «пляшка олії», тому що «пляшка» вимагає родового в",
+      "role": "context"
+    },
+    {
+      "word": "фраза",
+      "exercise_type": "true-false",
+      "context": "Фраза «У мене немає температура» граматично правильна.",
+      "role": "context"
+    },
+    {
+      "word": "граматично",
+      "exercise_type": "true-false",
+      "context": "Фраза «У мене немає температура» граматично правильна.",
+      "role": "context"
+    },
+    {
+      "word": "правильна",
+      "exercise_type": "true-false",
+      "context": "Фраза «У мене немає температура» граматично правильна.",
+      "role": "context"
+    },
+    {
+      "word": "сира",
+      "exercise_type": "true-false",
+      "context": "Правильно говорити «шматок сира».",
+      "role": "context"
+    },
+    {
+      "word": "користі",
+      "exercise_type": "true-false",
+      "context": "Коли ми щось купуємо для користі, ми кажемо «для здоров'я».",
+      "role": "context"
+    },
+    {
+      "word": "називний",
+      "exercise_type": "group-sort",
+      "context": "Називний відмінок (Що це?)",
+      "role": "context"
+    },
+    {
+      "word": "відсутність",
+      "exercise_type": "group-sort",
+      "context": "Родовий відмінок (Кількість або відсутність чого?)",
+      "role": "context"
+    },
+    {
+      "word": "чого",
+      "exercise_type": "group-sort",
+      "context": "Родовий відмінок (Кількість або відсутність чого?)",
+      "role": "context"
+    },
+    {
+      "word": "вранці",
+      "exercise_type": "error-correction",
+      "context": "Сьогодні вранці у мене болять голова.",
+      "role": "context"
+    },
+    {
+      "word": "сили",
+      "exercise_type": "error-correction",
+      "context": "Я дуже погано почуваюсь, у мене немає сили.",
+      "role": "context"
+    },
+    {
+      "word": "м'яса",
+      "exercise_type": "error-correction",
+      "context": "м'яса",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 15,
+    "tested_in_exercises": 13,
+    "not_tested": [
+      "ринок",
+      "таблетка"
+    ]
+  },
+  "all_grounded": false
+}

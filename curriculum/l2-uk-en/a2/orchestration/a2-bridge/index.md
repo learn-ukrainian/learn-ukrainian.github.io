@@ -1,6 +1,6 @@
 # Build Summary: a2-bridge (A2)
 
-Generated: 2026-04-07 20:03
+Generated: 2026-04-07 23:27
 
 ## Pipeline Phases
 
@@ -11,16 +11,16 @@ Generated: 2026-04-07 20:03
 | skeleton | complete | 2026-04-07 17:08:20 |
 | pre-verify | complete | 2026-04-07 17:12:10 |
 | write | complete | 2026-04-07 17:22:09 |
-| exercises | complete | 2026-04-07 17:22:09 |
+| exercises | complete | 2026-04-07 21:27:16 |
 | activities | complete | 2026-04-07 17:28:50 |
-| verify-exercises | complete | 2026-04-07 17:28:50 |
+| verify-exercises | complete | 2026-04-07 21:27:16 |
 | annotate | complete | 2026-04-07 17:28:50 |
 | vocab | complete | 2026-04-07 17:33:21 |
 | enrich | complete | 2026-04-07 17:33:21 |
 | verify | complete | 2026-04-07 17:33:21 |
 | review | complete | 2026-04-07 18:03:44 |
-| stress | complete | 2026-04-07 18:03:44 |
-| publish | complete | 2026-04-07 18:03:52 |
+| stress | complete | 2026-04-07 21:27:16 |
+| publish | complete | 2026-04-07 21:27:23 |
 
 ## Reviews
 

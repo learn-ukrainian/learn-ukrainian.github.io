@@ -1,0 +1,51 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Missed specific guest questions from Scenario 1 ("А скільки у вас кімнат?",
+    "Що на балконі?", "Де ви поставили книжки?"). Missed questions from Scenario 3
+    ("Хто у вас готує вечерю?", "Ви снідаєте вдом
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: The text incorrectly states "the preposition «по» with the Dative plural
+    form" for "по суботах" (it is Locative plural). Uses the calque "знаходиться/знаходитеся"
+    for physical location. Contains a typ
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent PPP flow. Grammar is explained with clear contrasting examples
+    ("У новій квартирі є великий балкон. У старій квартирі немає великого балкона.").
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: All required vocabulary is used naturally. However, the recommended word
+    "пригощатися" is completely missing from the text.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 4 activity markers are present, matching the types and focus in the
+    plan, and are placed directly after the relevant teaching sections.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Natural teacher phrasing ("Let's look closely at the vocabulary", "Now
+    let's furnish our empty home"). Tone is warm and engaging without corporate gamification.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, word count of 2614 exceeds the 2000 target, all H2 headings
+    match the plan exactly.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Accurate representation of Ukrainian hospitality ("Господарі відразу запрошують
+    їх до столу"). Correct explanation of culturally polite forms like "Мені подобається"
+    instead of literal "Я люблю".
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogues represent realistic situations (video tour, visiting friends)
+    with natural conversational flow, though some specific plan questions were omitted.
+findings: []

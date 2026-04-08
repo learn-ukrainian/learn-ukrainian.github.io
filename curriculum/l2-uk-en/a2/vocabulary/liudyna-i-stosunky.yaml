@@ -1,0 +1,355 @@
+vocabulary:
+- word: впе́ртий
+  translation: stubborn, persistent
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: чу́йний
+  translation: responsive, caring, empathetic
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: наполе́гливий
+  translation: persistent, determined
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ро́дич
+  translation: relative
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: знайо́мий
+  translation: acquaintance (male)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: люди́на
+  translation: person, human being
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: стосу́нок
+  translation: relationship
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: хара́ктер
+  translation: character, personality
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: зо́внішність
+  translation: appearance
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: приві́тний
+  translation: friendly, welcoming
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: щи́рий
+  translation: sincere, genuine
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: працьови́тий
+  translation: hardworking
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: терпля́чий
+  translation: patient
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: сусі́д
+  translation: neighbor (male)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: опи́сувати
+  translation: to describe
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: висо́кий
+  translation: tall
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: низьки́й
+  translation: short (height)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: худи́й
+  translation: thin
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: по́вний
+  translation: stout, plump, full
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: молоди́й
+  translation: young
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: стари́й
+  translation: old
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: середнього віку
+  translation: middle-aged
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: карі очі
+  translation: brown eyes
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: си́ні
+  translation: dark blue
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: блаки́тні
+  translation: light blue
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: зеле́ні
+  translation: green
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: сі́рі
+  translation: grey
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: кругле обличчя
+  translation: round face
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: прямий ніс
+  translation: straight nose
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: те́мне
+  translation: dark (hair/color)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: сві́тле
+  translation: light, fair (hair/color)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: руся́ве
+  translation: light brown (hair color)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: руде́
+  translation: red (hair color)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: си́ве
+  translation: grey, hoary (hair color)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: коро́тке
+  translation: short (hair/length)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: до́вге
+  translation: long (hair/length)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: хвиля́сте
+  translation: wavy
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: пряме́
+  translation: straight (hair/style)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: за́чіска
+  translation: haircut, hairstyle
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: струнка́
+  translation: slim, slender (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: до́брий
+  translation: kind
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: відповіда́льний
+  translation: responsible
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: леда́чий
+  translation: lazy
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: серйо́зний
+  translation: serious
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ти́хий
+  translation: quiet
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: справедли́ва
+  translation: fair, just (female)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: друг
+  translation: friend (male)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: по́друга
+  translation: friend (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: това́риш
+  translation: comrade, buddy, companion
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сусі́дка
+  translation: neighbor (female)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: двоюрідний брат
+  translation: male cousin
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: двоюрідна сестра
+  translation: female cousin
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: дя́дько
+  translation: uncle
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ті́тка
+  translation: aunt
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: допомага́ти
+  translation: to help
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: довіря́ти
+  translation: to trust
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: поважа́ти
+  translation: to respect
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: Рада знайомству
+  translation: Nice to meet you (said by a female)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Ми дружимо давно
+  translation: We have been friends for a long time
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "a2",
+  "slug": "dozvillia-i-khobi",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-08T00:23:23.867659+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-08T00:23:23.874965+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-08T00:27:00.030336+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-08T00:31:32.648928+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-08T00:35:15.655195+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-08T00:35:15.655362+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-08T00:36:55.559905+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-08T00:36:55.576283+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-08T00:36:55.582427+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-08T00:41:23.186889+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-08T00:41:23.187018+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-08T00:41:23.425368+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-08T00:47:23.710716+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-08T00:47:23.900099+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-08T00:47:25.559621+00:00"
+    }
+  }
+}

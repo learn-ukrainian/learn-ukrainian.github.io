@@ -1,0 +1,271 @@
+vocabulary:
+- word: навча́ння
+  translation: studying, education
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: це́рква
+  translation: church
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: вокза́л
+  translation: train station
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: рі́чка
+  translation: river
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: призна́чення
+  translation: purpose, destination
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: відпочи́нок
+  translation: rest, relaxation
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: допомо́га
+  translation: help, assistance
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: су́мнів
+  translation: doubt
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: буди́нок
+  translation: building, house
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: зупи́нка
+  translation: stop (bus/tram)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: бібліоте́ка
+  translation: library
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ліка́рня
+  translation: hospital
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пло́ща
+  translation: square (city)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ста́нція
+  translation: station
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: для кого?
+  translation: for whom?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: для чого?
+  translation: for what?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: подару́нок
+  translation: gift
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: здоро́в'я
+  translation: health
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: зу́стріч
+  translation: meeting
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: сюрпри́з
+  translation: surprise
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ща́стя
+  translation: happiness
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: життя́
+  translation: life
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: похі́д
+  translation: hike
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ко́вдра
+  translation: blanket
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: комфо́рт
+  translation: comfort
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: по́дорож
+  translation: trip, journey
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: без сумніву
+  translation: without doubt
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: без проблем
+  translation: without problems / no problem
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: без зупинки
+  translation: without a stop / non-stop
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: цу́кор
+  translation: sugar
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: молоко́
+  translation: milk
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: вода без газу
+  translation: still water
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ніж
+  translation: knife
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: парасо́лька
+  translation: umbrella
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: не можу без...
+  translation: I cannot without...
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: ліхта́рик
+  translation: flashlight
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: бі́ля
+  translation: near, next to
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: навпро́ти
+  translation: opposite, across from
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ко́ло
+  translation: near, by
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: апте́ка
+  translation: pharmacy
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ри́нок
+  translation: market
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: теа́тр
+  translation: theater
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: наме́т
+  translation: tent
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вого́нь
+  translation: fire
+  expression: false
+  pos: виг.
+  gender: ''
+  verified: true
+- word: дро́ва
+  translation: firewood
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true

@@ -1,0 +1,161 @@
+{
+  "total_items": 138,
+  "grounded_items": 114,
+  "ungrounded": [
+    {
+      "word": "цій",
+      "exercise_type": "fill-in",
+      "context": "Він довго був ____ у цій лікарні.",
+      "role": "context"
+    },
+    {
+      "word": "перукаркою",
+      "exercise_type": "fill-in",
+      "context": "перукаркою",
+      "role": "answer"
+    },
+    {
+      "word": "подруга",
+      "exercise_type": "fill-in",
+      "context": "Моя подруга працює ____ в салоні краси.",
+      "role": "context"
+    },
+    {
+      "word": "завтра",
+      "exercise_type": "fill-in",
+      "context": "Завтра він буде новим ____ компанії.",
+      "role": "context"
+    },
+    {
+      "word": "новим",
+      "exercise_type": "fill-in",
+      "context": "Завтра він буде новим ____ компанії.",
+      "role": "context"
+    },
+    {
+      "word": "його",
+      "exercise_type": "fill-in",
+      "context": "Його друг працює ____.",
+      "role": "context"
+    },
+    {
+      "word": "батько",
+      "exercise_type": "fill-in",
+      "context": "Його батько працює ____.",
+      "role": "context"
+    },
+    {
+      "word": "хороший",
+      "exercise_type": "quiz",
+      "context": "Він — дуже хороший ____.",
+      "role": "context"
+    },
+    {
+      "word": "колись",
+      "exercise_type": "quiz",
+      "context": "Колись вона була ____.",
+      "role": "context"
+    },
+    {
+      "word": "твоя",
+      "exercise_type": "fill-in",
+      "context": "— Ким працює твоя сестра?\n— Вона працює ____.",
+      "role": "context"
+    },
+    {
+      "word": "раніше",
+      "exercise_type": "fill-in",
+      "context": "— Ким вона була раніше?\n— Вона була ____.",
+      "role": "context"
+    },
+    {
+      "word": "ваш",
+      "exercise_type": "fill-in",
+      "context": "— Ким працює ваш син?\n— Він працює ____.",
+      "role": "context"
+    },
+    {
+      "word": "син",
+      "exercise_type": "fill-in",
+      "context": "— Ким працює ваш син?\n— Він працює ____.",
+      "role": "context"
+    },
+    {
+      "word": "працюєте",
+      "exercise_type": "fill-in",
+      "context": "— Ким ви працюєте?\n— Я працюю ____.",
+      "role": "context"
+    },
+    {
+      "word": "архітектор",
+      "exercise_type": "group-sort",
+      "context": "архітектор",
+      "role": "answer"
+    },
+    {
+      "word": "викладач",
+      "exercise_type": "group-sort",
+      "context": "викладач",
+      "role": "answer"
+    },
+    {
+      "word": "історія",
+      "exercise_type": "error-correction",
+      "context": "Вона захоплюється історія.",
+      "role": "context"
+    },
+    {
+      "word": "вчительом",
+      "exercise_type": "error-correction",
+      "context": "Мій брат працює вчительом.",
+      "role": "context"
+    },
+    {
+      "word": "спорт",
+      "exercise_type": "error-correction",
+      "context": "Він цікавиться спорт.",
+      "role": "context"
+    },
+    {
+      "word": "реченні",
+      "exercise_type": "true-false",
+      "context": "У реченні «Він — лікар» використовується орудний відмінок.",
+      "role": "context"
+    },
+    {
+      "word": "використовується",
+      "exercise_type": "true-false",
+      "context": "У реченні «Він — лікар» використовується орудний відмінок.",
+      "role": "context"
+    },
+    {
+      "word": "професіями",
+      "exercise_type": "true-false",
+      "context": "Дієслово «бути» в минулому часі з професіями використовує на",
+      "role": "context"
+    },
+    {
+      "word": "казати",
+      "exercise_type": "true-false",
+      "context": "В українській мові правильно казати «Я працюю як менеджер».",
+      "role": "context"
+    },
+    {
+      "word": "менеджер",
+      "exercise_type": "true-false",
+      "context": "В українській мові правильно казати «Я працюю як менеджер».",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 17,
+    "tested_in_exercises": 13,
+    "not_tested": [
+      "вчителька",
+      "мріяти",
+      "професія",
+      "фах"
+    ]
+  },
+  "all_grounded": false
+}

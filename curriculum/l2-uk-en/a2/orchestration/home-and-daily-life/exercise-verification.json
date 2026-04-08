@@ -1,0 +1,279 @@
+{
+  "total_items": 203,
+  "grounded_items": 161,
+  "ungrounded": [
+    {
+      "word": "коридора",
+      "exercise_type": "fill-in",
+      "context": "коридора",
+      "role": "answer"
+    },
+    {
+      "word": "вечеряю",
+      "exercise_type": "quiz",
+      "context": "Увечері я смачно вечеряю з ____.",
+      "role": "context"
+    },
+    {
+      "word": "цікаву",
+      "exercise_type": "match-up",
+      "context": "Я читаю цікаву книгу",
+      "role": "answer"
+    },
+    {
+      "word": "слухає",
+      "exercise_type": "match-up",
+      "context": "Вона ніколи не слухає музику",
+      "role": "answer"
+    },
+    {
+      "word": "автобусі",
+      "exercise_type": "error-correction",
+      "context": "Я їду на роботу на автобусі.",
+      "role": "context"
+    },
+    {
+      "word": "сідаємо",
+      "exercise_type": "error-correction",
+      "context": "Ми сідаємо за столом у вітальні.",
+      "role": "context"
+    },
+    {
+      "word": "подобаюсь",
+      "exercise_type": "error-correction",
+      "context": "Мені подобаюсь ваша квартира.",
+      "role": "context"
+    },
+    {
+      "word": "метром",
+      "exercise_type": "error-correction",
+      "context": "Вона їде в центр міста метром.",
+      "role": "context"
+    },
+    {
+      "word": "прийменник",
+      "exercise_type": "group-sort",
+      "context": "Прийменник НА (на поверхні)",
+      "role": "context"
+    },
+    {
+      "word": "поверхні",
+      "exercise_type": "group-sort",
+      "context": "Прийменник НА (на поверхні)",
+      "role": "context"
+    },
+    {
+      "word": "всередині",
+      "exercise_type": "group-sort",
+      "context": "Прийменник У/В (всередині)",
+      "role": "context"
+    },
+    {
+      "word": "дієвідміна",
+      "exercise_type": "group-sort",
+      "context": "І дієвідміна (закінчення -у/-ю, -еш/-єш)",
+      "role": "context"
+    },
+    {
+      "word": "закінчення",
+      "exercise_type": "group-sort",
+      "context": "І дієвідміна (закінчення -у/-ю, -еш/-єш)",
+      "role": "context"
+    },
+    {
+      "word": "еш",
+      "exercise_type": "group-sort",
+      "context": "І дієвідміна (закінчення -у/-ю, -еш/-єш)",
+      "role": "context"
+    },
+    {
+      "word": "єш",
+      "exercise_type": "group-sort",
+      "context": "І дієвідміна (закінчення -у/-ю, -еш/-єш)",
+      "role": "context"
+    },
+    {
+      "word": "снідаєш",
+      "exercise_type": "group-sort",
+      "context": "снідаєш",
+      "role": "answer"
+    },
+    {
+      "word": "працюють",
+      "exercise_type": "group-sort",
+      "context": "працюють",
+      "role": "answer"
+    },
+    {
+      "word": "иш",
+      "exercise_type": "group-sort",
+      "context": "ІІ дієвідміна (закінчення -у/-ю, -иш/-їш/іть)",
+      "role": "context"
+    },
+    {
+      "word": "їш",
+      "exercise_type": "group-sort",
+      "context": "ІІ дієвідміна (закінчення -у/-ю, -иш/-їш/іть)",
+      "role": "context"
+    },
+    {
+      "word": "іть",
+      "exercise_type": "group-sort",
+      "context": "ІІ дієвідміна (закінчення -у/-ю, -иш/-їш/іть)",
+      "role": "context"
+    },
+    {
+      "word": "лежиш",
+      "exercise_type": "group-sort",
+      "context": "лежиш",
+      "role": "answer"
+    },
+    {
+      "word": "стоять",
+      "exercise_type": "group-sort",
+      "context": "стоять",
+      "role": "answer"
+    },
+    {
+      "word": "встаєш",
+      "exercise_type": "match-up",
+      "context": "встаєш",
+      "role": "context"
+    },
+    {
+      "word": "снідає",
+      "exercise_type": "match-up",
+      "context": "снідає",
+      "role": "context"
+    },
+    {
+      "word": "одягаєтеся",
+      "exercise_type": "match-up",
+      "context": "одягаєтеся",
+      "role": "context"
+    },
+    {
+      "word": "сплять",
+      "exercise_type": "match-up",
+      "context": "сплять",
+      "role": "context"
+    },
+    {
+      "word": "ванній",
+      "exercise_type": "fill-in",
+      "context": "У ванній кімнаті я ____ та чищу зуби.",
+      "role": "context"
+    },
+    {
+      "word": "тепло",
+      "exercise_type": "fill-in",
+      "context": "Потім я тепло ____ і їду на роботу.",
+      "role": "context"
+    },
+    {
+      "word": "встає",
+      "exercise_type": "error-correction",
+      "context": "встає",
+      "role": "answer"
+    },
+    {
+      "word": "сестра",
+      "exercise_type": "error-correction",
+      "context": "Моя сестра встаю о сьомій годині.",
+      "role": "context"
+    },
+    {
+      "word": "снідають",
+      "exercise_type": "error-correction",
+      "context": "Ми снідають разом на кухні.",
+      "role": "context"
+    },
+    {
+      "word": "працюєш",
+      "exercise_type": "error-correction",
+      "context": "працюєш",
+      "role": "answer"
+    },
+    {
+      "word": "одягається",
+      "exercise_type": "error-correction",
+      "context": "Вони швидко одягається.",
+      "role": "context"
+    },
+    {
+      "word": "моїй",
+      "exercise_type": "unjumble",
+      "context": "моїй",
+      "role": "answer"
+    },
+    {
+      "word": "вечеряємо",
+      "exercise_type": "unjumble",
+      "context": "вечеряємо",
+      "role": "answer"
+    },
+    {
+      "word": "українські",
+      "exercise_type": "true-false",
+      "context": "Українські господарі дуже гостинні і завжди раді гостям.",
+      "role": "context"
+    },
+    {
+      "word": "гостям",
+      "exercise_type": "true-false",
+      "context": "Українські господарі дуже гостинні і завжди раді гостям.",
+      "role": "context"
+    },
+    {
+      "word": "звертаємося",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо «Оксана», коли звертаємося до Оксани особисто.",
+      "role": "context"
+    },
+    {
+      "word": "оксани",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо «Оксана», коли звертаємося до Оксани особисто.",
+      "role": "context"
+    },
+    {
+      "word": "особисто",
+      "exercise_type": "true-false",
+      "context": "Ми кажемо «Оксана», коли звертаємося до Оксани особисто.",
+      "role": "context"
+    },
+    {
+      "word": "приносять",
+      "exercise_type": "true-false",
+      "context": "Гості ніколи не приносять гостинці (gifts) господарям.",
+      "role": "context"
+    },
+    {
+      "word": "кава",
+      "exercise_type": "true-false",
+      "context": "Ми використовуємо прийменник «з», щоб сказати «кава з молоко",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 17,
+    "tested_in_exercises": 3,
+    "not_tested": [
+      "вставати",
+      "вітальня",
+      "господар",
+      "дня",
+      "коридор",
+      "кухня",
+      "кімната",
+      "лягати",
+      "меблі",
+      "помешкання",
+      "пригощатися",
+      "розпорядок",
+      "снідати",
+      "спальня"
+    ]
+  },
+  "all_grounded": false
+}

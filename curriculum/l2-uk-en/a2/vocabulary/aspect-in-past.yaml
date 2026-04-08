@@ -1,0 +1,133 @@
+vocabulary:
+- word: щодня́
+  translation: every day
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: наре́шті
+  translation: finally, at last
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: одного разу
+  translation: one time, once
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: трива́лість
+  translation: duration
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: минулий час
+  translation: past tense
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: закрива́ти / закри́ти
+  translation: to close
+  expression: false
+  pos: ''
+  gender: ''
+  verified: false
+- word: проце́с
+  translation: process
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: результа́т
+  translation: result
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: до́вго
+  translation: for a long time
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ра́птом
+  translation: suddenly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ма́йже
+  translation: almost
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ці́лий
+  translation: whole, entire
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: шви́дко
+  translation: quickly, fast
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: пові́льно
+  translation: slowly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вече́ря
+  translation: dinner
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: за́вжди́
+  translation: always
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ча́сто
+  translation: often
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: зазвича́й
+  translation: usually
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: коли́
+  translation: when
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: весь день
+  translation: all day
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: кожного ранку
+  translation: every morning
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: чиста правда
+  translation: pure truth
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

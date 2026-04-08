@@ -1,0 +1,211 @@
+vocabulary:
+- word: милозву́чність
+  translation: euphony, melodiousness
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: евфоні́я
+  translation: euphony (technical term)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: чергува́ння
+  translation: alternation
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: голосни́й
+  translation: vowel
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: при́голосний
+  translation: consonant
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: збіг
+  translation: cluster, collision
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сполу́чник
+  translation: conjunction
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вжива́ти
+  translation: to use, to apply
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: складний
+  translation: complex, compound
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: спро́щення
+  translation: simplification
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: уника́ти
+  translation: to avoid
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: мелоді́йний
+  translation: melodious
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: межа́
+  translation: boundary
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: у
+  translation: in, at (used before consonants)
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: в
+  translation: in, at (used before vowels)
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: з
+  translation: from, with (default form)
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: із
+  translation: from, with (vowel bridge form)
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: зі
+  translation: from, with (strong buffer form)
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: і
+  translation: and (full vowel form)
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: й
+  translation: and (glide/semi-vowel form)
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: та
+  translation: and (stable alternative)
+  expression: false
+  pos: спол.
+  gender: ''
+  verified: true
+- word: ура́нці
+  translation: in the morning
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вра́нці
+  translation: in the morning
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: задово́лення
+  translation: pleasure
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: вихідні́
+  translation: weekend
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: у́спіх
+  translation: success
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: тво́рчість
+  translation: creativity
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: філармо́нія
+  translation: philharmonic
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: квито́к
+  translation: ticket
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: збіг приголосних
+  translation: consonant cluster
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: збіг голосних
+  translation: vowel collision
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: із задоволенням
+  translation: with pleasure
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зі мною
+  translation: with me
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: минулого року
+  translation: last year
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: зі Львова
+  translation: from Lviv
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

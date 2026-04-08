@@ -1,0 +1,82 @@
+{
+  "total_items": 101,
+  "grounded_items": 91,
+  "ungrounded": [
+    {
+      "word": "знаю",
+      "exercise_type": "fill-in",
+      "context": "Я знаю багато ____ (казка).",
+      "role": "context"
+    },
+    {
+      "word": "місті",
+      "exercise_type": "fill-in",
+      "context": "У місті є багато ____ (школа).",
+      "role": "context"
+    },
+    {
+      "word": "сестрів",
+      "exercise_type": "true-false",
+      "context": "Тут є кілька сестрів.",
+      "role": "context"
+    },
+    {
+      "word": "яблуків",
+      "exercise_type": "true-false",
+      "context": "Скільки яблуків тут є?",
+      "role": "context"
+    },
+    {
+      "word": "тисячі",
+      "exercise_type": "true-false",
+      "context": "Тут є тисячі книгів.",
+      "role": "context"
+    },
+    {
+      "word": "книгів",
+      "exercise_type": "true-false",
+      "context": "Тут є тисячі книгів.",
+      "role": "context"
+    },
+    {
+      "word": "вікнів",
+      "exercise_type": "error-correction",
+      "context": "Скільки вікнів у місті?",
+      "role": "context"
+    },
+    {
+      "word": "музеї",
+      "exercise_type": "error-correction",
+      "context": "У місті є багато музеї.",
+      "role": "context"
+    },
+    {
+      "word": "країнів",
+      "exercise_type": "error-correction",
+      "context": "Тут є кілька країнів.",
+      "role": "context"
+    },
+    {
+      "word": "словів",
+      "exercise_type": "error-correction",
+      "context": "Ми знаємо п'ять словів.",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 16,
+    "tested_in_exercises": 7,
+    "not_tested": [
+      "виняток",
+      "вставний",
+      "відмінок",
+      "голосний",
+      "гривня",
+      "декілька",
+      "десяток",
+      "кількість",
+      "родовий"
+    ]
+  },
+  "all_grounded": false
+}

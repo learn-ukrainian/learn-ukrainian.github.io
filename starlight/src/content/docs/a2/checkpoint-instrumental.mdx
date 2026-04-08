@@ -1,0 +1,283 @@
+---
+title: "Контрольна точка: Орудний відмінок"
+sidebar:
+  order: 31
+  label: "31. Контрольна точка: Орудний відмінок"
+pipeline: v6
+build_status: draft
+---
+
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import FillIn from '@site/src/components/FillIn';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import GroupSort from '@site/src/components/GroupSort';
+import MatchUp from '@site/src/components/MatchUp';
+import Quiz from '@site/src/components/Quiz';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Частина 1: Розпізнавання та форми (Part 1: Recognition and Forms)
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Студент:</span> Що ми робимо сьогодні? *(What are we doing today?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Вчитель:</span> Сьогодні у нас **контрольна точка** *(checkpoint)*. Ми повторюємо **орудний відмінок** *(instrumental case)*.</div>
+
+</div>
+
+The **орудний відмінок** (instrumental case) is essential. It answers the questions **ким?** (by whom?) and **чим?** (by/with what?). In this module, we review five primary functions: tool or means (**інструмент або засіб**), accompaniment (**супровід**), profession (**професія**), spatial location (**місце**), and temporal expressions (**час**). Let us test your knowledge with a short **вправа** (exercise).
+
+Let's review the basic noun endings, as taught in Ukrainian school textbooks (Захарійчук Grade 4, Заболотний Grade 5). Words in the first and second declensions change depending on their stem (hard, soft, or mixed).
+
+For hard stems, we use the endings **-ою** (feminine) and **-ом** (masculine/neuter).
+* **Вона розмовляє з рідною сестрою.** (She is talking with her own sister.)
+* **Родина сидить за великим столом.** (The family sits behind the large table.)
+
+For soft and mixed stems, we use **-ею** and **-ем**.
+* **Фермер працює із сирою землею.** (The farmer works with the damp earth.)
+* **Чайки літають над синім морем.** (The seagulls fly above the blue sea.)
+
+For words ending in **-я**, **-є**, **-ї**, or **-й**, we use **-єю** and **-єм**.
+* **Ми живемо однією великою мрією.** (We live by one great dream.)
+* **Стежка йде самим краєм лісу.** (The path goes by the very edge of the forest.)
+
+Nouns in the third and fourth declensions have special phonetic changes. When a third declension feminine noun ends in a single consonant, that consonant doubles.
+* **Вона любить гуляти темною ніччю.** (She likes to walk during the dark night.)
+* **Ми купуємо хліб із морською сіллю.** (We buy bread with sea salt.)
+
+If the word ends in two consonants, there is no doubling (**радістю**). If it ends in an `р` or a labial consonant (б, п, в, м, ф), we use an apostrophe.
+* **Вона пише картину з великою любов'ю.** (She paints the picture with great love.)
+* **Він часто говорить з матір'ю.** (He often speaks with his mother.)
+
+Neuter nouns of the fourth declension can have parallel forms.
+* **Ми називаємо його своїм справжнім ім'ям.** (We call him by his real name.)
+* **Також можна сказати: своїм іменем.** (Also one can say: by his name.)
+
+Adjectives must agree with their nouns. For masculine and neuter words, the ending is **-им** (or **-ім**). For feminine words, the ending is **-ою** (or **-єю**). For plurals, adjectives take **-ими** (or **-іми**), and nouns take **-ами**, **-ями**, or **-ми** (like **дітьми**). As noted in Голуб (Grade 6, p. 179), personal pronouns also have specific forms. You must memorize these forms: **мною** (me), **тобою** (you), **ним** (him/it), **нею** (her), **нами** (us), **вами** (you, plural), and **ними** (them).
+
+A crucial rule applies to third-person pronouns. When they follow a preposition, they require a mandatory **н-** at the beginning.
+
+* **Він іде в кіно зі мною.** (He goes to the cinema with me.)
+* **Я хочу танцювати тільки з тобою.** (I want to dance only with you.)
+* **Сьогодні я обідаю з ним.** (Today I am having lunch with him.)
+* **Ми довго розмовляли з нею вчора.** (We talked with her for a long time yesterday.)
+* **Друзі хочуть поїхати з нами на море.** (Friends want to go to the sea with us.)
+* **Кіт любить спати між ними.** (The cat likes to sleep between them.)
+
+<Quiz client:only="react" questions={[{"question": "Ми йдемо в кіно з _____.", "options": [{"text": "він", "correct": false}, {"text": "ним", "correct": true}, {"text": "нього", "correct": false}, {"text": "ньому", "correct": false}]}, {"question": "Я завжди пишу синьою _____.", "options": [{"text": "ручку", "correct": false}, {"text": "ручці", "correct": false}, {"text": "ручкою", "correct": true}, {"text": "ручка", "correct": false}]}, {"question": "Вона багато років працює _____.", "options": [{"text": "перекладачкою", "correct": true}, {"text": "перекладачка", "correct": false}, {"text": "перекладачку", "correct": false}, {"text": "перекладачці", "correct": false}]}, {"question": "Чорна кішка спить під _____.", "options": [{"text": "столу", "correct": false}, {"text": "стіл", "correct": false}, {"text": "столі", "correct": false}, {"text": "столом", "correct": true}]}, {"question": "Мій брат дуже цікавиться українською _____.", "options": [{"text": "історію", "correct": false}, {"text": "історії", "correct": false}, {"text": "історією", "correct": true}, {"text": "історія", "correct": false}]}, {"question": "Я дуже сумую за _____.", "options": [{"text": "ти", "correct": false}, {"text": "тебе", "correct": false}, {"text": "тобою", "correct": true}, {"text": "тобі", "correct": false}]}, {"question": "Він часто розмовляє з _____.", "options": [{"text": "матір'ю", "correct": true}, {"text": "мати", "correct": false}, {"text": "матері", "correct": false}, {"text": "матір", "correct": false}]}, {"question": "Вони хочуть поїхати на море з _____.", "options": [{"text": "нас", "correct": false}, {"text": "нами", "correct": true}, {"text": "ми", "correct": false}, {"text": "нам", "correct": false}]}]} instruction={"Контрольна точка. Оберіть правильний варіант відповіді."} />
+
+## Частина 2: Вибір та застосування (Part 2: Choice and Application)
+
+Spatial prepositions describe where things are located. When we describe a static location — answering the question **де?** (where?) — we must use the **орудний відмінок** (instrumental case). The most common spatial prepositions are **над** (above), **під** (under), **між** (between), **перед** (in front of/before), and **за** (behind).
+
+* **Кругле дзеркало висить над умивальником.** (The round mirror hangs above the washbasin.)
+* **Велика картина висить над моїм ліжком.** (The large painting hangs above my bed.)
+* **Чорна кішка спить під столом.** (The black cat sleeps under the table.)
+* **Старі кросівки лежать під шафою.** (The old sneakers lie under the wardrobe.)
+* **Кіт любить сидіти між вікнами.** (The cat likes to sit between the windows.)
+* **Є вузький прохід між шафою і ліжком.** (There is a narrow passage between the wardrobe and the bed.)
+
+These prepositions can also be used for time (temporal expressions): **перед сном** (before sleep), **за вечерею** (during dinner).
+
+Notice that **між** (between) always requires at least two nouns, and both must be in the instrumental case.
+* **Вона стоїть між братом і сестрою.** (She stands between the brother and the sister.)
+
+:::tip
+Always ask yourself if the object is moving to a new location. If the object is stationary (**де?**), use the instrumental case with these prepositions.
+:::
+
+The most common mistake learners make is mixing up the tool function and the accompaniment function. Both use the instrumental case, but only accompaniment uses the preposition **з** (with). A tool NEVER takes a preposition.
+
+* **Я пишу синьою ручкою.** (I am writing with a blue pen.) — *Tool*
+* **Кухар ріже овочі гострим ножем.** (The cook cuts vegetables with a sharp knife.) — *Tool*
+
+If you add **з** to a tool, it creates an absurd situation where you and the object are companions.
+* ❌ **Я гуляю з ручкою.** (I am walking with a pen.) — *Incorrect for a tool!*
+* ✅ **Я гуляю з братом.** (I am walking with my brother.) — *Accompaniment*
+
+Only use **з** when two living beings or separate entities do something together.
+
+We use the **орудний відмінок** (instrumental case) to describe professions or temporary states when using verbs like **бути** (to be) in the past or future tense, **стати** (to become), and **працювати** (to work).
+
+* **Він хоче стати відомим архітектором.** (He wants to become a famous architect.)
+* **Коли вона виросте, вона буде лікаркою.** (When she grows up, she will be a doctor.)
+* **Моя старша сестра стала менеджеркою.** (My older sister became a manager.)
+* **Він багато років працює перекладачем.** (He has worked as a translator for many years.)
+* **У дитинстві я був тихим хлопчиком.** (In childhood, I was a quiet boy.)
+
+This structure shows that the profession or state is not permanent. It is something you do or become.
+
+Certain Ukrainian verbs require the **орудний відмінок** (instrumental case) directly, without any prepositions. The most common verbs in this category are **цікавитися** (to be interested in), **займатися** (to be occupied with / to do), and **пишатися** (to be proud of).
+
+* **Я дуже цікавлюся українською історією.** (I am very interested in Ukrainian history.)
+* **Мій брат цікавиться сучасною літературою.** (My brother is interested in modern literature.)
+* **Щоранку я займаюся активним спортом.** (Every morning I do active sports.)
+* **Діти займаються музикою та малюванням.** (The children study music and drawing.)
+* **Батьки завжди пишаються своїм сином.** (Parents are always proud of their son.)
+* **Ми щиро пишаємося вашим успіхом.** (We are sincerely proud of your success.)
+
+Whenever you use these verbs, immediately put the following noun into the instrumental case. Do not use any prepositions like "в" or "про".
+
+<FillIn client:only="react" items={[{"sentence": "Вона розмовляє з (рідна сестра) _____.", "answer": "рідною сестрою"}, {"sentence": "Кухар ріже овочі (гострий ніж) _____.", "answer": "гострим ножем"}, {"sentence": "Картина висить над (моє ліжко) _____.", "answer": "моїм ліжком"}, {"sentence": "Я цікавлюся (сучасна література) _____.", "answer": "сучасною літературою"}, {"sentence": "Він їде на роботу (швидкий автобус) _____.", "answer": "швидким автобусом"}, {"sentence": "Собака спить під (круглий стіл) _____.", "answer": "круглим столом"}, {"sentence": "Мати готує суп із (свіже м'ясо) _____.", "answer": "свіжим м'ясом"}, {"sentence": "Вони пишаються (свій син) _____.", "answer": "своїм сином"}]} instruction={"Завдання: вставте слова в дужках у правильній формі орудного відмінка."} />
+<GroupSort client:only="react" groups={{"Інструмент або засіб": ["Кухар ріже овочі гострим ножем.", "Ми їдемо в парк автобусом."], "Супровід": ["Вона часто говорить з матір'ю.", "Друзі обідають зі мною."], "Місце": ["Дзеркало висить над умивальником.", "Є прохід між шафою і ліжком."], "Професія": ["Мій брат працює архітектором."], "Час": ["Вона любить гуляти темною ніччю."]}} instruction={"Розподіліть речення за функцією орудного відмінка."} />
+
+## Частина 3: Вільне вживання (Part 3: Free Production)
+
+Let us look at a natural dialogue. In this scene, friends recall a perfect day out. Notice how many times they use the **орудний відмінок** (instrumental case).
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Пам'ятаєш наш чудовий день у парку? *(Do you remember our wonderful day in the park?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Тарас:</span> Звичайно! Ми **їхали автобусом**, і там було порожньо. *(Of course! We traveled by bus, and it was empty.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Так, а потім ми довго **гуляли з дітьми** біля озера. *(Yes, and then we walked for a long time with the children near the lake.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Тарас:</span> А на обід ми **їли канапки з сиром**. *(And for lunch, we ate sandwiches with cheese.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Оксана:</span> Було так тепло! Ми **сиділи під старою липою** і відпочивали. *(It was so warm! We sat under the old linden tree and rested.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Тарас:</span> Цей день був **найкращим**! *(This day was the best!)*</div>
+
+</div>
+
+Every highlighted phrase uses the instrumental case for a different reason: means of transport, accompaniment, ingredient, and location.
+
+When speaking Ukrainian, you must avoid translating directly from other languages. We call this linguistic hygiene. Avoid common Russianisms and calques by learning the correct Ukrainian verbs and their required cases.
+
+1. **Language of communication:** Always use the pure instrumental case when saying what language you speak.
+   ✅ **Ми розмовляємо українською мовою.** (We speak the Ukrainian language.)
+   ❌ *Ми розмовляємо на мові.* (Incorrect calque).
+2. **Missing someone:** The verb **сумувати** (to miss/be sad) requires the preposition **за** with the instrumental case.
+   ✅ **Я дуже сумую за тобою.** (I miss you very much.)
+   ❌ *Я сумую по тобі.* (Incorrect Russianism).
+3. **Laughing at something:** The verb **сміятися** (to laugh) requires the preposition **з** and the *genitive* case. Do not use **над** with the instrumental case.
+   ✅ **Ми голосно сміялися з нього.** (We laughed loudly at him.)
+   ❌ *Ми сміялися над ним.* (Incorrect Russian error).
+
+Let us analyze a visual scene to prepare for your next **завдання** (task). Imagine a busy kitchen. You must **визначити** (to identify) the objects and **описати** (to describe) the scene using the instrumental case.
+
+> **На кухні багато людей. Батько ріже свіжий хліб гострим ножем.** *(There are many people in the kitchen. The father is cutting fresh bread with a sharp knife.)*
+> **Мати готує смачний суп із м'ясом.** *(The mother is cooking a delicious soup with meat.)*
+> **Велика миска з фруктами стоїть між вікнами.** *(A large bowl with fruit stands between the windows.)*
+> **Білий рушник висить під мийкою.** *(A white towel hangs under the sink.)*
+> **Маленький собака лежить під обіднім столом.** *(A small dog lies under the dining table.)*
+
+This short **текст** (text) uses the instrumental case to show the tool (**гострим ножем**), the ingredients (**із м'ясом**), and the spatial relations (**між вікнами**, **під мийкою**, **під обіднім столом**).
+
+Now it is time to write your own paragraph. A great way to practice the **орудний відмінок** (instrumental case) is to describe your daily routine. You can build complex **речення** (sentences) by combining different functions.
+
+Use these sentence starters:
+* **Я працюю...** (I work as...) — Add your profession.
+* **Я добираюся на роботу...** (I commute to work by...) — Add a vehicle as a tool.
+* **На роботі я часто розмовляю з...** (At work I often talk with...) — Add a colleague or client.
+* **Ввечері я займаюся...** (In the evening I am occupied with...) — Add a hobby.
+
+By linking these **словосполучення** (phrases), you create a rich narrative. Ensure that every noun phrase has the **правильний** (correct) ending.
+
+Here is a sample narrative. Read this text about "My Tuesday" (**Мій вівторок**). It demonstrates the goal of your final writing task. It contains more than six different instrumental functions.
+
+> **Зазвичай мій вівторок дуже активний. Я працюю головним архітектором у великій компанії. Вранці я п'ю чорну каву з молоком. Потім я їду на роботу швидким поїздом. Вдень я маю зустріч із новим клієнтом. Ми довго сидимо за круглим столом у конференц-залі. Після роботи я цікавлюся фотографією, тому йду в парк. Там я гуляю зі своїм собакою. Ввечері я готую вечерю і ріжу овочі великим ножем. Я завжди пишаюся своїм продуктивним днем!**
+
+*(Usually my Tuesday is very active. I work as a chief architect in a large company. In the morning I drink black coffee with milk. Then I go to work by a fast train. During the day I have a meeting with a new client. We sit for a long time at a round table in the conference room. After work I am interested in photography, so I go to the park. There I walk with my dog. In the evening I cook dinner and cut vegetables with a large knife. I am always proud of my productive day!)*
+
+<ErrorCorrection client:only="react" items={[{"sentence": "Він працює лікар.", "errorWord": "лікар", "correctForm": "лікарем", "options": ["лікарем", "лікарю", "лікаря", "лікареві"], "explanation": "Для професій з дієсловом 'працювати' використовуємо орудний відмінок."}, {"sentence": "Ми розмовляємо на українській мові.", "errorWord": "на українській мові", "correctForm": "українською мовою", "options": ["в українській мові", "українською мовою", "за українською мовою", "українська мова"], "explanation": "Правильно казати 'розмовляти (якою?) мовою' без прийменника."}, {"sentence": "Вона йде в кіно з им.", "errorWord": "им", "correctForm": "ним", "options": ["його", "ним", "ньому", "йому"], "explanation": "Після прийменників займенник 'він' починається на 'н' (з ним)."}, {"sentence": "Ми купуємо хліб із сілю.", "errorWord": "сілю", "correctForm": "сіллю", "options": ["сілом", "сіллю", "сілею", "солею"], "explanation": "Іменники жіночого роду на приголосний в орудному відмінку подвоюють приголосний: сіль — сіллю."}, {"sentence": "Ми голосно сміялися над ним.", "errorWord": "над ним", "correctForm": "з нього", "options": ["під ним", "за ним", "з нього", "від нього"], "explanation": "Українською правильно 'сміятися з (кого/чого)', потрібен родовий відмінок."}, {"sentence": "Я дуже сумую по тобі.", "errorWord": "по тобі", "correctForm": "за тобою", "options": ["за тобою", "про тебе", "на тобі", "від тебе"], "explanation": "Українською 'сумувати' вимагає прийменника 'за' та орудного відмінка."}]} instruction={"Перевірка тексту. Знайдіть і виправте помилку в реченні."} />
+
+## Підсумок
+
+You have completed the checkpoint! Let us do a quick **перевірка** (check). Can you answer these questions with a **правильна відповідь** (correct answer)?
+
+*   **Can you form feminine endings with -ою/-ею?**
+    *   Yes, I know that hard stems take **-ою** (**мамою**) and soft stems take **-ею** (**землею**).
+*   **Do you remember to use 'н-' with 'з ним/нею'?**
+    *   Yes, after prepositions, third-person pronouns must start with "н", like **з ними** (with them).
+*   **Can you describe your profession?**
+    *   Yes, I use the verb **працювати** and the instrumental case: **Я працюю лікарем** (I work as a doctor).
+*   **Do you use 'з' only for company, not for tools?**
+    *   Yes, I write **ручкою** (with a pen, no "з"), but I walk **з братом** (with a brother).
+
+Review these points often. You are now ready for the next level of Ukrainian grammar!
+
+</TabItem>
+<TabItem label="Словник">
+
+### Обов'язкові та рекомендовані слова
+
+| Слово | Переклад | Частина мови | Рід |
+|-------|----------|-------------|-----|
+| **словосполу́чення** | phrase, word combination | ім. | с. |
+| **описа́ти** | to describe | дієсл. |  |
+| **ви́значити** | to identify, to determine | дієсл. |  |
+| **впра́ва** | exercise | ім. | ж. |
+| **завда́ння** | task | ім. | с. |
+| **ві́дповідь** | answer | ім. | ж. |
+| **пере́ві́рка** | check, test | ім. | ж. |
+| **ким?** | by whom? | ім. | ч. |
+| **чим?** | by what? with what? | спол. |  |
+| **інструме́нт** | tool | ім. | ч. |
+| **су́провід** | accompaniment | ім. | ч. |
+| **профе́сія** | profession | ім. | ж. |
+| **мі́сце** | place, location | ім. | с. |
+| **умива́льник** | washbasin | ім. | ч. |
+| **лі́жко** | bed | ім. | с. |
+| **ша́фа** | wardrobe | ім. | ж. |
+| **прохі́д** | passage | ім. | ч. |
+| **ку́хар** | cook | ім. | ч. |
+| **архіте́ктор** | architect | ім. | ч. |
+| **лі́карка** | doctor (female) | ім. | ж. |
+| **переклада́ч** | translator | ім. | ч. |
+| **ціка́витися** | to be interested in | дієсл. |  |
+| **займа́тися** | to do, to be occupied with, to study | дієсл. |  |
+| **пиша́тися** | to be proud of | дієсл. |  |
+| **у́спіх** | success | ім. | ч. |
+| **кана́пка** | sandwich | ім. | ж. |
+| **ли́па** | linden tree | ім. | ж. |
+| **відпочива́ти** | to rest | дієсл. |  |
+| **найкра́щий** | the best | прикм. |  |
+| **ра́ковина** | sink | ім. | ж. |
+| **по́їзд** | train | ім. | ч. |
+| **зу́стріч** | meeting | ім. | ж. |
+| **кліє́нт** | client | ім. | ч. |
+
+### Вирази
+
+| Вираз | Переклад |
+|-------|----------|
+| **розмовляти українською мовою** | to speak the Ukrainian language |
+| **сумувати за** | to miss (someone/something) |
+| **сміятися з** | to laugh at |
+
+### Картки — Flashcards
+
+<FlashcardDeck client:only="react" cards={[{ front: "словосполу́чення", back: "phrase, word combination", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "описа́ти", back: "to describe", subtitle: "дієсл." }, { front: "ви́значити", back: "to identify, to determine", subtitle: "дієсл." }, { front: "впра́ва", back: "exercise", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "завда́ння", back: "task", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ві́дповідь", back: "answer", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "пере́ві́рка", back: "check, test", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ким?", back: "by whom?", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "чим?", back: "by what? with what?", subtitle: "спол." }, { front: "інструме́нт", back: "tool", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "су́провід", back: "accompaniment", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "профе́сія", back: "profession", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "мі́сце", back: "place, location", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "умива́льник", back: "washbasin", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лі́жко", back: "bed", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ша́фа", back: "wardrobe", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "прохі́д", back: "passage", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ку́хар", back: "cook", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "архіте́ктор", back: "architect", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лі́карка", back: "doctor (female)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "переклада́ч", back: "translator", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ціка́витися", back: "to be interested in", subtitle: "дієсл." }, { front: "займа́тися", back: "to do, to be occupied with, to study", subtitle: "дієсл." }, { front: "пиша́тися", back: "to be proud of", subtitle: "дієсл." }, { front: "у́спіх", back: "success", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кана́пка", back: "sandwich", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "ли́па", back: "linden tree", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "відпочива́ти", back: "to rest", subtitle: "дієсл." }, { front: "найкра́щий", back: "the best", subtitle: "прикм." }, { front: "ра́ковина", back: "sink", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "по́їзд", back: "train", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "зу́стріч", back: "meeting", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кліє́нт", back: "client", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }]} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+<TrueFalse client:only="react" items={[{"statement": "З інструментами завжди використовуємо прийменник 'з' (наприклад: різати з ножем).", "isTrue": false, "explanation": "Інструмент завжди вживається без прийменника: різати ножем."}, {"statement": "Після прийменника 'між' обов'язково має бути два або більше предметів.", "isTrue": true, "explanation": "Так, наприклад: стояти між шафою і ліжком."}, {"statement": "Словосполучення 'розмовляти на українській мові' є правильним.", "isTrue": false, "explanation": "Це калька з російської. Правильно: розмовляти українською мовою."}, {"statement": "З дієсловом 'цікавитися' ми не використовуємо прийменників.", "isTrue": true, "explanation": "Так: цікавитися історією, музикою."}, {"statement": "Займенник 'вона' після прийменника 'з' звучить як 'з нею'.", "isTrue": true, "explanation": "Треба додавати букву 'н': з нею."}, {"statement": "Слова 'радість', 'сіль', 'ніч' в орудному відмінку не подвоюють приголосний.", "isTrue": false, "explanation": "Ці слова мають подвоєння: радістю, сіллю, ніччю."}]} instruction={"Чи правильні ці твердження про орудний відмінок?"} />
+
+<MatchUp client:only="react" pairs={[{"left": "я", "right": "зі мною"}, {"left": "ти", "right": "з тобою"}, {"left": "він/воно", "right": "з ним"}, {"left": "вона", "right": "з нею"}, {"left": "ми", "right": "з нами"}, {"left": "вони", "right": "з ними"}]} instruction={"Вправа: з'єднайте займенник і правильну форму з прийменником."} />
+
+<Unjumble client:only="react" items={[{"words": "Я / ножем. / свіжий / ріжу / гострим / хліб", "answer": "Я ріжу свіжий хліб гострим ножем."}, {"words": "Картина / ліжком. / над / моїм / висить / велика", "answer": "Велика картина висить над моїм ліжком."}, {"words": "архітектором / Він / працює / компанії. / у / великій", "answer": "Він працює архітектором у великій компанії."}, {"words": "м'ясом. / суп / готує / смачний / Мати / із", "answer": "Мати готує смачний суп із м'ясом."}, {"words": "українською / Я / історією. / цікавлюся / дуже", "answer": "Я дуже цікавлюся українською історією."}, {"words": "завжди / Батьки / сином. / своїм / пишаються", "answer": "Батьки завжди пишаються своїм сином."}]} instruction={"Складіть правильне речення зі слів."} />
+
+<Quiz client:only="react" questions={[{"question": "Я цікавлюся сучасн___ літературою.", "options": [{"text": "сучасній", "correct": false}, {"text": "сучасним", "correct": false}, {"text": "сучасною", "correct": true}, {"text": "сучасну", "correct": false}]}, {"question": "Кішка спить під кругл___ столом.", "options": [{"text": "круглого", "correct": false}, {"text": "круглим", "correct": true}, {"text": "круглому", "correct": false}, {"text": "круглою", "correct": false}]}, {"question": "Він їде швидк___ поїздом.", "options": [{"text": "швидкому", "correct": false}, {"text": "швидкою", "correct": false}, {"text": "швидким", "correct": true}, {"text": "швидкий", "correct": false}]}, {"question": "Вона гуляє з молодш___ братом.", "options": [{"text": "молодшим", "correct": true}, {"text": "молодшому", "correct": false}, {"text": "молодшою", "correct": false}, {"text": "молодший", "correct": false}]}, {"question": "Стежка йде сам___ краєм лісу.", "options": [{"text": "самого", "correct": false}, {"text": "самому", "correct": false}, {"text": "самою", "correct": false}, {"text": "самим", "correct": true}]}, {"question": "Ми живемо одні___ великою мрією.", "options": [{"text": "однією", "correct": true}, {"text": "одним", "correct": false}, {"text": "одні", "correct": false}, {"text": "одній", "correct": false}]}]} instruction={"Описати предмет: визначте правильне закінчення прикметника."} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+## Підручники (Textbooks)
+
+- [Глазова О. П. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-glazova-2018.pdf#page=26), стор. 26
+- [Караман С. О. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-karaman-2018.pdf#page=176), стор. 176
+- [Авраменко О. М. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-avramenko-2019.pdf#page=49), стор. 49
+- [Голуб Н. Б. — Українська мова, 5 клас (2022)](https://pidruchnyk.com.ua/uploads/book/5_ukrmova_golub_2022.pdf#page=102), стор. 102
+- [Літвінова І. М. — Українська мова, 5 клас (2022)](https://pidruchnyk.com.ua/uploads/book/5_ukrmova_litvinova_2022.pdf#page=191), стор. 191
+
+</TabItem>
+</Tabs>

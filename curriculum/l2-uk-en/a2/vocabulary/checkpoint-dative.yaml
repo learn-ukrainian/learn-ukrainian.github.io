@@ -1,0 +1,133 @@
+vocabulary:
+- word: закі́нчення
+  translation: ending (grammar)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: чергува́ння
+  translation: alternation (grammar)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: узго́дження
+  translation: agreement (grammar)
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: допомага́ти
+  translation: to help
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: подо́батися
+  translation: to be pleasing to, to like
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: подарува́ти
+  translation: to give as a gift
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: надісла́ти
+  translation: to send
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: потрі́бно
+  translation: necessary, needed
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: хо́лодно
+  translation: cold (impersonal state)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: тепло́
+  translation: warm (impersonal state)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: су́мно
+  translation: sad (impersonal state)
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: заме́рзнути
+  translation: to freeze / to get very cold
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: поси́лка
+  translation: parcel / package
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: кружка́
+  translation: mug
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: шеф
+  translation: boss
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Скільки років?
+  translation: How old?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: підпи́сувати
+  translation: to sign
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: конве́рт
+  translation: envelope
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вітальна листівка
+  translation: greeting card
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: лю́бий
+  translation: dear / beloved
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: шано́вний
+  translation: respected / honorable
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: місцевий відмінок
+  translation: locative case
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

@@ -1,0 +1,49 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: The text follows the outline precisely, allocating word counts appropriately.
+    It incorporates the "movie vs The End" analogy and all required outline points
+    perfectly.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: Excellent Ukrainian grammar and natural phrasing. Only a minor inconsistency
+    with the accusative of "лист" (using "писала листа" earlier but "писав лист" later).
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Extremely strong pedagogy. Uses clear question hacks («Що робити?» vs
+    «Що зробити?»), visual analogies, and contrasts process vs result effectively.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Integrates all required vocabulary seamlessly into the prose (вид дієслова,
+    процес, результат, тощо).
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Activity markers are placed exactly where learners need to test the newly
+    introduced concepts, and IDs match the plan hints exactly.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Warm and encouraging teacher persona, though it includes a "Welcome to..."
+    opener which the guidelines identify as an empty opener.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown, logical flow, and at 2489 words, it comfortably exceeds
+    the 2000-word target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Accurate and decolonized explanations, using natural cultural touchpoints
+    like eating borsch.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The football dialogue is a great contextual demonstration of aspect in
+    real-time observation.
+findings: []

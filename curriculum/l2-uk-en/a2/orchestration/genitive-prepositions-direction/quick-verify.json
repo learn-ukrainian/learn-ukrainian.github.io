@@ -1,0 +1,13 @@
+{
+  "attempt": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    {
+      "check": "VOCABULARY",
+      "severity": "WARNING",
+      "message": "Missing 2/10 required vocab: бабуся (grandmother), список (list)"
+    }
+  ],
+  "timestamp": "2026-04-07T20:08:27.159364+00:00"
+}

@@ -1,0 +1,256 @@
+---
+title: "Контрольна точка: Основи А2"
+sidebar:
+  order: 8
+  label: "08. Контрольна точка: Основи А2"
+pipeline: v6
+build_status: draft
+---
+
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import FillIn from '@site/src/components/FillIn';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import GroupSort from '@site/src/components/GroupSort';
+import MatchUp from '@site/src/components/MatchUp';
+import Quiz from '@site/src/components/Quiz';
+import TrueFalse from '@site/src/components/TrueFalse';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Частина 1: Вправи на розпізнавання (Part 1: Recognition Exercises)
+
+A **контрольна точка** (checkpoint) is an essential pedagogical tool for consolidating knowledge and confirming linguistic reflexes. According to the standard curriculum guidelines, such as those found in the classic *Заболотний Grade 5-6* textbook, a dedicated **повторення вивченого** (review of what has been learned) is necessary before advancing to complex sentence structures. This systematic **перевірка** (check, test) anchors the core concepts of verb aspect and the Genitive case into your active memory.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Олена:</span> Привіт, Марку! Ти готовий до перевірки? *(Hi, Marko! Are you ready for the test?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Марко:</span> Привіт! Не дуже. Ця **контрольна точка** здається складною. *(Hi! Not really. This checkpoint seems difficult.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Олена:</span> Давай повторимо разом. Скажи, скільки у тебе братів? *(Let's review together. Tell me, how many brothers do you have?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Марко:</span> У мене... двох братів... ні, два брати! Ох, я завжди плутаю. *(I have... two brothers... no, two brothers! Oh, I always confuse them.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Олена:</span> Дивись, після числа два ми використовуємо називний відмінок: два брати. А після п'яти — родовий множини: п'ять братів. *(Look, after the number two we use the nominative: two brothers. And after five — genitive plural: five brothers.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Марко:</span> А як щодо дієслів? Ти вчора читала **текст** чи прочитала його? *(And what about verbs? Did you read the text yesterday or read it completely?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Олена:</span> Я **читала** його довго, але нарешті **прочитала**. *(I was reading it for a long time, but finally I read it completely.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Марко:</span> Зрозумів. Процес і результат. Дякую! *(Understood. Process and result. Thanks!)*</div>
+
+</div>
+
+The foundation of recognizing verb aspect lies in distinguishing the duration of an action from its completion. Imperfective verbs describe a process, habit, or general fact, answering the question «що робити?» (what to be doing). Perfective verbs describe a finished result, a single occurrence, or a limit reached, answering the question «що зробити?» (what to get done). 
+
+In Exercise 1, a short text is provided. The learner must highlight all perfective verbs in one color and all imperfective verbs in another. This visual sorting helps map out the flow of the narrative, separating background actions from advancing plot points. 
+
+**Читаємо українською** (Reading in Ukrainian)
+* Кожного дня я **робив** свої **вправи**. (Every day I was doing my exercises.)
+* Учора я швидко **зробив** нове **завдання**. (Yesterday I quickly completed the new task.)
+* Студенти довго **писали** складне есе. (The students were writing the complex essay for a long time.)
+* Нарешті він **написав** ідеальне **речення**. (Finally he wrote a perfect sentence.)
+* Ми часто **зустрічали** друзів у парку. (We often met friends in the park.)
+* Сьогодні я **зустрів** брата біля школи. (Today I met my brother near the school.)
+
+For Exercise 2, you will see a list of sentences with a noun in parentheses. The learner must rewrite the sentence, putting the noun in the correct Genitive form. For example, changing «У мене немає (брат)» to «У мене немає брата». The Genitive case is fundamentally triggered by the concept of absence, mathematically represented by the word **немає** (there is no).
+
+**Форми родового відмінка** (Genitive case forms)
+* У мене немає **часу** на розмови. (I have no time for conversations.)
+* Сьогодні в магазині не було свіжого **хліба**. (There was no fresh bread in the store today.)
+* Без **тебе** тут дуже сумно. (It's very sad here without you.)
+* Я чекаю свого старого **друга**. (I am waiting for my old friend.)
+* Ми йдемо до великого **парку**. (We are going to the large park.)
+
+Exercise 3 asks you to match the imperfective verbs with their perfective partners. Creating mental links between verb pairs is crucial for choosing the right aspect later. Many pairs are formed simply by adding a prefix, while others change a suffix or adopt a completely different root.
+
+**Видові пари дієслів** (Verb aspect pairs)
+* робити — з**робити** (to do — to get done)
+* читати — **про**читати (to read — to finish reading)
+* писати — **на**писати (to write — to finish writing)
+* купувати — куп**ити** (to be buying — to buy)
+* говорити — сказ**ати** (to be speaking — to say)
+
+<Quiz client:only="react" questions={[{"question": "Я довго _____ це складне завдання.", "options": [{"text": "робив", "correct": true}, {"text": "зробив", "correct": false}, {"text": "роблю", "correct": false}, {"text": "зробити", "correct": false}]}, {"question": "У мене немає вільного _____.", "options": [{"text": "часу", "correct": true}, {"text": "час", "correct": false}, {"text": "часом", "correct": false}, {"text": "часи", "correct": false}]}, {"question": "Вона нарешті _____ довгу відповідь.", "options": [{"text": "писала", "correct": false}, {"text": "написала", "correct": true}, {"text": "пише", "correct": false}, {"text": "написати", "correct": false}]}, {"question": "У класі сидять шість _____.", "options": [{"text": "студенти", "correct": false}, {"text": "студент", "correct": false}, {"text": "студентів", "correct": true}, {"text": "студентами", "correct": false}]}, {"question": "Вчора ми _____ свіжі яблука на ринку.", "options": [{"text": "купили", "correct": true}, {"text": "купували", "correct": false}, {"text": "купуємо", "correct": false}, {"text": "купити", "correct": false}]}, {"question": "У нього є два _____.", "options": [{"text": "брати", "correct": true}, {"text": "братів", "correct": false}, {"text": "брат", "correct": false}, {"text": "братом", "correct": false}]}, {"question": "Ти вже _____ текст?", "options": [{"text": "прочитав", "correct": true}, {"text": "читав", "correct": false}, {"text": "читати", "correct": false}, {"text": "прочитати", "correct": false}]}, {"question": "В магазині не було свіжого _____.", "options": [{"text": "хліб", "correct": false}, {"text": "хліба", "correct": true}, {"text": "хлібом", "correct": false}, {"text": "хліби", "correct": false}]}]} instruction={"Оберіть правильний варіант"} />
+
+## Частина 2: Вправи на вибір (Part 2: Choice Exercises)
+
+Moving forward, Exercise 4 features multiple-choice sentences where the learner must choose between the perfective and imperfective form of a verb. A classic example is deciding between «Вчора я (читав / прочитав) цю книгу три години». The phrase «три години» (three hours) explicitly emphasizes the duration and continuous nature of the action. Because the focus is on the ongoing process rather than the final achievement, the imperfective form «читав» is the only **правильний** (correct) choice.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Мама:</span> Доню, ти вже зробила всі свої **вправи**? *(Daughter, have you already done all your exercises?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Донька:</span> Ще ні. Мені треба закінчити одне **завдання**. *(Not yet. I need to finish one task.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Мама:</span> Що саме ти повинна **зробити** сьогодні? *(What exactly must you get done today?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Донька:</span> Я маю **написати** довгу **відповідь**. *(I have to write a long answer.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Мама:</span> Добре, я не буду тобі заважати. Немає **часу** на розмови. *(Good, I will not bother you. There is no time for conversations.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Донька:</span> Дякую! Я знайду найкращий **варіант** дуже швидко. *(Thanks! I will find the best option very quickly.)*</div>
+
+</div>
+
+Context clues dictate the aspect. Words like «завжди» (always), «часто» (often), and «довго» (for a long time) trigger the imperfective. Words like «раптом» (suddenly), «нарешті» (finally), and «за хвилину» (in a minute) demand the perfective.
+
+**Вибір дієслова** (Choosing the verb)
+* Я **робив** це складне **завдання** весь вечір. (I was doing this complex task all evening.)
+* Я **зробив** це **завдання** за п'ять хвилин. (I got this task done in five minutes.)
+* Щовечора вона **дивилася** цікавий серіал. (Every evening she watched an interesting series.)
+* Вона **подивилася** фільм і пішла спати. (She watched the film completely and went to sleep.)
+* Ми **купували** продукти на ринку. (We were buying groceries at the market.)
+* Я **купив** свіжі яблука для пирога. (I bought fresh apples for the pie.)
+
+Exercise 5 involves fill-in-the-blanks with the correct quantity word or numeral, ensuring noun agreement. You will complete sentences like «У класі ___ (5) студентів» by applying the numerical rules. Historians of the Ukrainian language note that numbers like **п'ять** (five) and **десять** (ten) were originally nouns in Old East Slavic (давньоруська мова). Because they functioned as nouns, they required the word following them to take the Genitive plural case, literally translating to a phrase like "a five of tables." This historical logic is perfectly preserved in modern Ukrainian.
+
+When counting, the number «один» (one) acts like an adjective, agreeing fully with the noun. The numbers «два, три, чотири» (two, three, four) pair with the Nominative plural form of the noun. Numbers from «п'ять» (five) upward strictly govern the Genitive plural. 
+
+**Кількість і відмінок** (Quantity and case)
+* Один великий **стіл** стоїть у кімнаті. (One large table stands in the room.)
+* Два нові **столи** стоять у кімнаті. (Two new tables stand in the room.)
+* П'ять старих **столів** стоять у кімнаті. (Five old tables stand in the room.)
+* Одна цікава **книга** лежить на полиці. (One interesting book lies on the shelf.)
+* Три нові **книги** лежать на полиці. (Three new books lie on the shelf.)
+* Шість розумних **студентів** сидять у класі. (Six smart students sit in the classroom.)
+
+:::tip
+**Правильний варіант** (Correct option)
+When reviewing your work, you must look for the **правильний** (correct) answer, not "вірний". The adjective "вірний" means "loyal" or "faithful" (like a loyal dog). A correct answer on a test is always a **правильна відповідь**. Recognizing this distinction elevates your speech and avoids common calques.
+:::
+
+<FillIn client:only="react" items={[{"sentence": "У мене немає (брат) _____.", "answer": "брата"}, {"sentence": "Я чекаю свого старого (друг) _____.", "answer": "друга"}, {"sentence": "П'ять старих (стіл) _____ стоять у кімнаті.", "answer": "столів"}, {"sentence": "Три нові (книга) _____ лежать на полиці.", "answer": "книги"}, {"sentence": "Один великий (парк) _____ є в місті.", "answer": "парк"}, {"sentence": "Без (ти) _____ тут дуже сумно.", "answer": "тебе"}, {"sentence": "У мене немає (час) _____ на розмови.", "answer": "часу"}, {"sentence": "У неї є чотири (сестра) _____.", "answer": "сестри"}]} instruction={"Вставте правильну форму слова"} />
+
+## Частина 3: Практичне застосування (Part 3: Production Exercises)
+
+In Exercise 6, you will answer open-ended questions that require the Genitive case or a specific aspect. You will see questions like «Скільки у вас братів і сестер?», «Що ви зробили вчора?», and «Коли у вас день народження?». Formulating original responses forces the brain to retrieve the correct grammatical endings without a prompt, testing true mastery over the language patterns.
+
+When answering «Скільки у вас братів і сестер?», you must navigate the rules of possession and quantity simultaneously. If you lack siblings, you employ the absolute negation trigger **немає**, which immediately demands the Genitive case. If you have siblings, the number you use dictates whether you follow with the Nominative or Genitive plural.
+
+**Приклади відповідей** (Example answers)
+* У мене немає **братів** і **сестер**. (I have no brothers and sisters.)
+* У мене є один **брат** і дві **сестри**. (I have one brother and two sisters.)
+* У мене є три **брати** і чотири **сестри**. (I have three brothers and four sisters.)
+* Моя бабуся має п'ять **братів**. (My grandmother has five brothers.)
+* Я не маю вільного **часу** сьогодні. (I do not have free time today.)
+
+When answering «Що ви зробили вчора?», you must consciously choose your verb aspect based on your intent. If you want to communicate that an action was successfully completed, you must deploy the perfective form. If you merely want to state that an action occupied your time, the imperfective is required.
+
+**Минулий час** (Past tense)
+* Вчора я **написав** лист і **прочитав** довгу статтю. (Yesterday I wrote a letter and read a long article.)
+* Вчора я весь день **працював** і **відпочивав**. (Yesterday I worked all day and rested.)
+* Ми **купили** новий телефон для нашої мами. (We bought a new phone for our mom.)
+* Студенти уважно **слухали** новий **текст**. (The students were listening carefully to the new text.)
+
+Finally, Exercise 7 provides a short writing prompt of 5-7 sentences. The prompt is «Напишіть про свої плани на вихідні. Що ви будете робити? Що ви хочете зробити?». This encourages you to synthesize your knowledge into a cohesive paragraph. Discussing plans inherently involves the future tense, requiring another layer of aspectual choice. The phrase «Що ви будете робити?» invites process-oriented imperfective verbs constructed with the auxiliary verb **бути**. The phrase «Що ви хочете зробити?» targets concrete goals, requiring perfective infinitives.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Вчитель:</span> Доброго ранку! Хто хоче розповісти про свої плани на вихідні? *(Good morning! Who wants to tell about their plans for the weekend?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Анна:</span> Я можу розповісти. У суботу я **буду допомагати** батькам. *(I can tell. On Saturday I will be helping my parents.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Вчитель:</span> Дуже добре. А що ти **хочеш зробити** ввечері? *(Very good. And what do you want to get done in the evening?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Анна:</span> Я **хочу приготувати** смачну вечерю для всієї родини. *(I want to prepare a delicious dinner for the whole family.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Вчитель:</span> Чудовий план. Скільки страв ти приготуєш? *(A wonderful plan. How many dishes will you prepare?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Анна:</span> Я думаю, що я приготую три **страви** і спечу один пиріг. *(I think that I will prepare three dishes and bake one pie.)*</div>
+
+</div>
+
+To succeed in this final writing prompt, observe how native speakers combine these elements into a single narrative flow. You can use this example as a structural template.
+
+**Приклад тексту про плани** (Example text about plans)
+На ці вихідні я маю багато планів. У суботу вранці я **буду прибирати** свою кімнату. Це забере багато **часу**. Потім я **хочу зустрітися** з друзями в центрі міста. Ми підемо до нового кафе і **будемо пити** гарячу каву. У неділю я **буду відпочивати** вдома. Я планую **прочитати** цікаву статтю і **написати** невелике есе. Сподіваюся, мої вихідні будуть чудовими!
+
+:::caution
+**Уникаємо русизмів** (Avoiding Russianisms)
+As you write your sentences, remember that Ukrainian has its own unique idioms. The construction **брати участь** (to take part) is genuinely Ukrainian. You must never use the direct translation «приймати участь», which is a common calque. Additionally, when discussing school tasks, we say **складати іспит** (to take an exam), not «здавати іспит». Using authentic phrasing demonstrates true language proficiency.
+:::
+
+<FillIn client:only="react" items={[{"sentence": "Вчора я весь вечір _____ свої вправи.", "answer": "робив", "options": ["робив", "зробив"]}, {"sentence": "Сьогодні я швидко _____ нове завдання.", "answer": "зробив", "options": ["робив", "зробив"]}, {"sentence": "Ми довго _____ складне есе.", "answer": "писали", "options": ["писали", "написали"]}, {"sentence": "Нарешті він _____ ідеальне речення.", "answer": "написав", "options": ["писав", "написав"]}, {"sentence": "Щовечора вона _____ цікавий серіал.", "answer": "дивилася", "options": ["дивилася", "подивилася"]}, {"sentence": "Вона _____ фільм і пішла спати.", "answer": "подивилася", "options": ["дивилася", "подивилася"]}]} instruction={"Вставте правильне дієслово"} />
+<ErrorCorrection client:only="react" items={[{"sentence": "У мене немає два брати.", "errorWord": "два брати", "correctForm": "двох братів", "options": [], "explanation": "Після слова 'немає' потрібен родовий відмінок."}, {"sentence": "П'ять студентів читав текст.", "errorWord": "читав", "correctForm": "читали", "options": [], "explanation": "Студенти — це множина, тому дієслово має бути у множині."}, {"sentence": "Вчора я швидко робив це завдання.", "errorWord": "робив", "correctForm": "зробив", "options": [], "explanation": "Слово 'швидко' і результат вимагають доконаного виду."}, {"sentence": "Три нові книги лежить на полиці.", "errorWord": "лежить", "correctForm": "лежать", "options": [], "explanation": "Книги — це множина, тому дієслово 'лежать'."}, {"sentence": "Вона приймала участь у проекті.", "errorWord": "приймала участь", "correctForm": "брала участь", "options": [], "explanation": "Правильний український вислів — 'брати участь'."}, {"sentence": "У класі немає великий стіл.", "errorWord": "великий стіл", "correctForm": "великого стола", "options": [], "explanation": "Після слова 'немає' потрібен родовий відмінок."}]} instruction={"Знайдіть і виправте помилку"} />
+
+## Підсумок — Summary
+
+This checkpoint solidifies the essential grammatical pillars required for confident communication in Ukrainian. We reviewed the critical distinction between imperfective and perfective verb aspects, learning to accurately **обрати** (choose) between describing a continuous process and a completed result. We reinforced the mechanics of the Genitive case, confirming its role in expressing absence with **немає**, denoting possession, and modifying nouns following numbers like **п'ять** and above.
+
+By completing these recognition exercises, multiple-choice tasks, and open-ended writing prompts, you have tested your ability to apply rules dynamically. You constructed sentences about your personal plans, manipulated verb pairs, and corrected common numerical agreement errors. This rigorous review guarantees that your foundational knowledge is secure, providing a stable platform for mastering more complex vocabulary and syntax in the upcoming modules.
+
+</TabItem>
+<TabItem label="Словник">
+
+### Обов'язкові та рекомендовані слова
+
+| Слово | Переклад | Частина мови | Рід |
+|-------|----------|-------------|-----|
+| **правильний** | correct | прикм. |  |
+| **варіа́нт** | option, variant | ім. | ч. |
+| **обра́ти** | to choose | дієсл. |  |
+| **написа́ти** | to write | дієсл. |  |
+| **впра́ва** | exercise | ім. | ж. |
+| **пере́ві́рка** | check, test | ім. | ж. |
+| **завда́ння** | task | ім. | с. |
+| **текст** | text | ім. | ч. |
+| **речення** | sentence | ім. | с. |
+| **ві́дповідь** | answer | ім. | ж. |
+| **нема́є** | there is no |  |  |
+| **дієсло́во** | verb | ім. | с. |
+| **вихідні́** | weekend | прикм. |  |
+| **наре́шті** | finally | присл. |  |
+| **стра́ва** | dish | ім. | ж. |
+| **пирі́г** | pie | ім. | ч. |
+| **роби́ти** | to be doing | дієсл. |  |
+| **зроби́ти** | to get done | дієсл. |  |
+| **чита́ти** | to be reading | дієсл. |  |
+| **прочита́ти** | to finish reading | дієсл. |  |
+| **купува́ти** | to be buying | дієсл. |  |
+| **купи́ти** | to buy | дієсл. |  |
+| **говори́ти** | to be speaking | дієсл. |  |
+| **сказа́ти** | to say | дієсл. |  |
+
+### Вирази
+
+| Вираз | Переклад |
+|-------|----------|
+| **контрольна точка** | checkpoint |
+| **називний відмінок** | nominative case |
+| **день народження** | birthday |
+| **брати участь** | to take part |
+| **правильна відповідь** | correct answer |
+| **три години** | three hours |
+| **за хвилину** | in a minute |
+| **повторення вивченого** | review of what has been learned |
+
+### Картки — Flashcards
+
+<FlashcardDeck client:only="react" cards={[{ front: "правильний", back: "correct", subtitle: "прикм." }, { front: "варіа́нт", back: "option, variant", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "обра́ти", back: "to choose", subtitle: "дієсл." }, { front: "написа́ти", back: "to write", subtitle: "дієсл." }, { front: "впра́ва", back: "exercise", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "пере́ві́рка", back: "check, test", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "завда́ння", back: "task", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "текст", back: "text", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "речення", back: "sentence", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "ві́дповідь", back: "answer", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "нема́є", back: "there is no" }, { front: "дієсло́во", back: "verb", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "вихідні́", back: "weekend", subtitle: "прикм." }, { front: "наре́шті", back: "finally", subtitle: "присл." }, { front: "стра́ва", back: "dish", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "пирі́г", back: "pie", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "роби́ти", back: "to be doing", subtitle: "дієсл." }, { front: "зроби́ти", back: "to get done", subtitle: "дієсл." }, { front: "чита́ти", back: "to be reading", subtitle: "дієсл." }, { front: "прочита́ти", back: "to finish reading", subtitle: "дієсл." }, { front: "купува́ти", back: "to be buying", subtitle: "дієсл." }, { front: "купи́ти", back: "to buy", subtitle: "дієсл." }, { front: "говори́ти", back: "to be speaking", subtitle: "дієсл." }, { front: "сказа́ти", back: "to say", subtitle: "дієсл." }]} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+<MatchUp client:only="react" pairs={[{"left": "робити", "right": "зробити"}, {"left": "читати", "right": "прочитати"}, {"left": "писати", "right": "написати"}, {"left": "купувати", "right": "купити"}, {"left": "говорити", "right": "сказати"}, {"left": "зустрічати", "right": "зустріти"}]} instruction={"З'єднайте видові пари дієслів"} />
+
+<GroupSort client:only="react" groups={{"Називний відмінок": ["брат", "сестра", "стіл", "книга"], "Родовий відмінок": ["брата", "сестри", "стола", "книги"]}} instruction={"Розподіліть слова за відмінками"} />
+
+<TrueFalse client:only="react" items={[{"statement": "Після числа 'один' іменник стоїть у називному відмінку однини.", "isTrue": true, "explanation": "Число 'один' узгоджується з іменником."}, {"statement": "Після чисел 'два, три, чотири' ми використовуємо родовий відмінок множини.", "isTrue": false, "explanation": "Після 2, 3, 4 використовується називний відмінок множини (два брати)."}, {"statement": "Після числа 'п'ять' ми використовуємо родовий відмінок множини.", "isTrue": true, "explanation": "Наприклад: п'ять братів."}, {"statement": "Слово 'немає' завжди вимагає родового відмінка.", "isTrue": true, "explanation": "Наприклад: немає часу, немає хліба."}, {"statement": "Дієслова недоконаного виду відповідають на питання 'що зробити?'", "isTrue": false, "explanation": "Недоконаний вид відповідає на питання 'що робити?'."}, {"statement": "Вираз 'приймати участь' є правильним українським варіантом.", "isTrue": false, "explanation": "Правильний варіант — 'брати участь'."}]} instruction={"Оберіть правильний варіант"} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+## Підручники (Textbooks)
+
+- [Захарійчук М. Д. — Українська мова, 4 клас ()](https://shkola.in.ua/4-klas-ukrainska-mova-zaharijchuk.html), стор. 133
+- [Авраменко О. М. — Українська мова, 5 клас (2022)](https://pidruchnyk.com.ua/uploads/book/5_ukrmova_avramenko_2022.pdf#page=180), стор. 180
+- [Літвінова І. М. — Українська мова, 5 клас (2022)](https://pidruchnyk.com.ua/uploads/book/5_ukrmova_litvinova_2022.pdf#page=46), стор. 46
+- [Авраменко О. М. — Українська мова, 6 клас (2023)](https://pidruchnyk.com.ua/uploads/book/6-klas-ukrmova-avramenko-2023.pdf#page=43), стор. 43
+- [Літвінова І. М. — Українська мова, 6 клас (2023)](https://pidruchnyk.com.ua/uploads/book/6-klas-ukrmova-litvinova-2023.pdf#page=43), стор. 43
+
+</TabItem>
+</Tabs>

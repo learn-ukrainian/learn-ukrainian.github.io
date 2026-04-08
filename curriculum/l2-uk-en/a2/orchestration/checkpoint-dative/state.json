@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "a2",
+  "slug": "checkpoint-dative",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-07T23:59:17.583405+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-07T23:59:17.590231+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-08T00:00:03.983092+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-08T00:04:59.772958+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-08T00:06:42.710979+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-08T00:06:42.711151+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-08T00:08:49.845593+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-08T00:08:49.861663+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-08T00:08:49.866303+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-08T00:12:01.293722+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-08T00:12:01.293837+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-08T00:12:01.465734+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-08T00:21:20.342385+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-08T00:21:20.493288+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-08T00:21:21.869856+00:00"
+    }
+  }
+}

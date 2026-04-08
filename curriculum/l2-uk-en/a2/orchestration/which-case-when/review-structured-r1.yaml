@@ -1,0 +1,49 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'Missed specific examples required by `content_outline`: `читати`, `шукати`,
+    `заважати`, `у четвер`, `у середу`, `у двадцять першому столітті`, `у дитинстві`,
+    `жінка у білому пальті`, and the "Default '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Flawless grammatical descriptions and usage of cases. No Russianisms or
+    Surzhyk detected.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent pedagogical flow using vivid metaphors ("дієслово — це магніт",
+    "компас відмінків") and clear PPP structure.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Incorporated almost all required vocabulary effectively. Missed the recommended
+    word `керувати`.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers perfectly track the plan's requirements and follow immediately
+    after the relevant grammatical instruction blocks.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Warm, encouraging tone without any gamified clutter. The "grammar detective"
+    narrative sets the stage effectively.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Clean structure and word count is excellent (2870). A minor formatting
+    artifact `(~400 слів)` was left in one of the H2 headings.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Explains Ukrainian grammar naturally through its own logic rather than
+    drawing comparisons to Russian or forcing English paradigms onto it.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Natural conversational start that immediately introduces the core grammatical
+    anchor points in context.
+findings: []

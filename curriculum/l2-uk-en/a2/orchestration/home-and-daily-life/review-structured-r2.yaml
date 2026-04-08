@@ -1,0 +1,51 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'Missing several vocabulary items explicitly listed in the plan: `кабінет`,
+    `стіл`, `стілець`, `дзеркало`. The plan explicitly required teaching "Instrumental
+    for characteristics (стіл з дерева)", but '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: Excellent grasp of case endings and prepositions, but used the Russian
+    calque "одні і ті ж" instead of "ті самі".
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Grammar is presented clearly with logical examples (e.g., the contrast
+    between "у/в" for enclosed spaces and "на" for surfaces). Deducted 1 point because
+    it failed to teach the Instrumental case for c
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: Covered all required and recommended words, but missed some specific room
+    and furniture nouns from the plan outline (`кабінет`, `стіл`, `стілець`, `дзеркало`).
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Exercise markers are perfectly placed, matching the plan's exact requirements
+    and testing the freshly taught material.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Friendly, natural, and encouraging tone. Good use of the teacher persona
+    without being overly corporate or gamified.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Very solid structure. 2673 words, well above the 2000 target. Headings
+    map perfectly to the plan.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Represents Ukrainian hospitality naturally (e.g., offering tea/coffee,
+    conversational dynamics in a host's home). Use of 24-hour/12-hour time concepts
+    is accurate.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are natural and contextualized, providing a realistic framework
+    for the grammatical cases being taught.
+findings: []

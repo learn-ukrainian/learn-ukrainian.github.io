@@ -1,0 +1,291 @@
+{
+  "total_items": 169,
+  "grounded_items": 125,
+  "ungrounded": [
+    {
+      "word": "свято",
+      "exercise_type": "quiz",
+      "context": "Свято буде друге _____. (February 2nd)",
+      "role": "context"
+    },
+    {
+      "word": "буде",
+      "exercise_type": "quiz",
+      "context": "Свято буде друге _____. (February 2nd)",
+      "role": "context"
+    },
+    {
+      "word": "восьме",
+      "exercise_type": "quiz",
+      "context": "Завтра восьме _____. (March 8th)",
+      "role": "context"
+    },
+    {
+      "word": "концерт",
+      "exercise_type": "quiz",
+      "context": "Концерт буде шосте _____. (November 6th)",
+      "role": "context"
+    },
+    {
+      "word": "урок",
+      "exercise_type": "quiz",
+      "context": "Урок дев'яте _____. (September 9th)",
+      "role": "context"
+    },
+    {
+      "word": "народження",
+      "exercise_type": "quiz",
+      "context": "Мій день народження — сьоме _____. (July 7th)",
+      "role": "context"
+    },
+    {
+      "word": "сьоме",
+      "exercise_type": "quiz",
+      "context": "Мій день народження — сьоме _____. (July 7th)",
+      "role": "context"
+    },
+    {
+      "word": "класі",
+      "exercise_type": "fill-in",
+      "context": "У класі стоять п'ять _____",
+      "role": "context"
+    },
+    {
+      "word": "готелі",
+      "exercise_type": "fill-in",
+      "context": "У нашому готелі десять _____",
+      "role": "context"
+    },
+    {
+      "word": "цей",
+      "exercise_type": "match-up",
+      "context": "На скільки людей цей номер?",
+      "role": "answer"
+    },
+    {
+      "word": "після",
+      "exercise_type": "true-false",
+      "context": "Після цифри 'один' ми використовуємо іменник у множині.",
+      "role": "context"
+    },
+    {
+      "word": "цифри",
+      "exercise_type": "true-false",
+      "context": "Після цифри 'один' ми використовуємо іменник у множині.",
+      "role": "context"
+    },
+    {
+      "word": "один'",
+      "exercise_type": "true-false",
+      "context": "Після цифри 'один' ми використовуємо іменник у множині.",
+      "role": "context"
+    },
+    {
+      "word": "використовуємо",
+      "exercise_type": "true-false",
+      "context": "Після цифри 'один' ми використовуємо іменник у множині.",
+      "role": "context"
+    },
+    {
+      "word": "іменник",
+      "exercise_type": "true-false",
+      "context": "Після цифри 'один' ми використовуємо іменник у множині.",
+      "role": "context"
+    },
+    {
+      "word": "множині",
+      "exercise_type": "true-false",
+      "context": "Після цифри 'один' ми використовуємо іменник у множині.",
+      "role": "context"
+    },
+    {
+      "word": "слово",
+      "exercise_type": "true-false",
+      "context": "Слово 'число' може означати 'дата' (date).",
+      "role": "context"
+    },
+    {
+      "word": "число'",
+      "exercise_type": "true-false",
+      "context": "Слово 'число' може означати 'дата' (date).",
+      "role": "context"
+    },
+    {
+      "word": "може",
+      "exercise_type": "true-false",
+      "context": "Слово 'число' може означати 'дата' (date).",
+      "role": "context"
+    },
+    {
+      "word": "означати",
+      "exercise_type": "true-false",
+      "context": "Слово 'число' може означати 'дата' (date).",
+      "role": "context"
+    },
+    {
+      "word": "дата'",
+      "exercise_type": "true-false",
+      "context": "Слово 'число' може означати 'дата' (date).",
+      "role": "context"
+    },
+    {
+      "word": "місяці",
+      "exercise_type": "true-false",
+      "context": "Місяці в українській мові (січень, лютий...) — жіночого роду",
+      "role": "context"
+    },
+    {
+      "word": "українській",
+      "exercise_type": "true-false",
+      "context": "Місяці в українській мові (січень, лютий...) — жіночого роду",
+      "role": "context"
+    },
+    {
+      "word": "мові",
+      "exercise_type": "true-false",
+      "context": "Місяці в українській мові (січень, лютий...) — жіночого роду",
+      "role": "context"
+    },
+    {
+      "word": "вимагають",
+      "exercise_type": "true-false",
+      "context": "Цифри 2, 3 і 4 вимагають від іменника форми Називного відмін",
+      "role": "context"
+    },
+    {
+      "word": "від",
+      "exercise_type": "true-false",
+      "context": "Цифри 2, 3 і 4 вимагають від іменника форми Називного відмін",
+      "role": "context"
+    },
+    {
+      "word": "іменника",
+      "exercise_type": "true-false",
+      "context": "Цифри 2, 3 і 4 вимагають від іменника форми Називного відмін",
+      "role": "context"
+    },
+    {
+      "word": "форми",
+      "exercise_type": "true-false",
+      "context": "Цифри 2, 3 і 4 вимагають від іменника форми Називного відмін",
+      "role": "context"
+    },
+    {
+      "word": "називного",
+      "exercise_type": "true-false",
+      "context": "Цифри 2, 3 і 4 вимагають від іменника форми Називного відмін",
+      "role": "context"
+    },
+    {
+      "word": "відмінка",
+      "exercise_type": "true-false",
+      "context": "Цифри 2, 3 і 4 вимагають від іменника форми Називного відмін",
+      "role": "context"
+    },
+    {
+      "word": "множини",
+      "exercise_type": "true-false",
+      "context": "Цифри 2, 3 і 4 вимагають від іменника форми Називного відмін",
+      "role": "context"
+    },
+    {
+      "word": "форму",
+      "exercise_type": "true-false",
+      "context": "Після цифри 5 (п'ять) іменник має форму Родового відмінка мн",
+      "role": "context"
+    },
+    {
+      "word": "родового",
+      "exercise_type": "true-false",
+      "context": "Після цифри 5 (п'ять) іменник має форму Родового відмінка мн",
+      "role": "context"
+    },
+    {
+      "word": "закінчується",
+      "exercise_type": "true-false",
+      "context": "Якщо число закінчується на 1 (наприклад, 21), ми використову",
+      "role": "context"
+    },
+    {
+      "word": "наприклад",
+      "exercise_type": "true-false",
+      "context": "Якщо число закінчується на 1 (наприклад, 21), ми використову",
+      "role": "context"
+    },
+    {
+      "word": "множину",
+      "exercise_type": "true-false",
+      "context": "Якщо число закінчується на 1 (наприклад, 21), ми використову",
+      "role": "context"
+    },
+    {
+      "word": "кава",
+      "exercise_type": "error-correction",
+      "context": "Тут немає кава.",
+      "role": "context"
+    },
+    {
+      "word": "дощ",
+      "exercise_type": "error-correction",
+      "context": "Сьогодні немає дощ.",
+      "role": "context"
+    },
+    {
+      "word": "різниця",
+      "exercise_type": "error-correction",
+      "context": "Я не бачу різниця.",
+      "role": "context"
+    },
+    {
+      "word": "проблема",
+      "exercise_type": "error-correction",
+      "context": "Ми не маємо проблема.",
+      "role": "context"
+    },
+    {
+      "word": "третє",
+      "exercise_type": "fill-in",
+      "context": "Третє _____",
+      "role": "context"
+    },
+    {
+      "word": "як",
+      "exercise_type": "quiz",
+      "context": "Як українською 'numeral'?",
+      "role": "context"
+    },
+    {
+      "word": "означає",
+      "exercise_type": "quiz",
+      "context": "Яке слово означає 'month'?",
+      "role": "context"
+    },
+    {
+      "word": "запитанні",
+      "exercise_type": "quiz",
+      "context": "Яке слово означає 'date' у запитанні 'Яке сьогодні...?'",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 18,
+    "tested_in_exercises": 4,
+    "not_tested": [
+      "березень",
+      "вересень",
+      "грудень",
+      "додаток",
+      "жовтень",
+      "заперечення",
+      "квітень",
+      "липень",
+      "листопад",
+      "місяць",
+      "серпень",
+      "травень",
+      "червень",
+      "числівник"
+    ]
+  },
+  "all_grounded": false
+}

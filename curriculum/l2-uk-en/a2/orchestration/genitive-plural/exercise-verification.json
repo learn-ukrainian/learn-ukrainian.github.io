@@ -1,0 +1,63 @@
+{
+  "total_items": 103,
+  "grounded_items": 96,
+  "ungrounded": [
+    {
+      "word": "дав",
+      "exercise_type": "fill-in",
+      "context": "Учитель дав нам п'ять нових ____ (завдання).",
+      "role": "context"
+    },
+    {
+      "word": "нього",
+      "exercise_type": "unjumble",
+      "context": "нього",
+      "role": "answer"
+    },
+    {
+      "word": "павук",
+      "exercise_type": "quiz",
+      "context": "Скільки ____ (око) має цей павук?",
+      "role": "context"
+    },
+    {
+      "word": "статтів",
+      "exercise_type": "error-correction",
+      "context": "Вона написала п'ять наукових статтів.",
+      "role": "context"
+    },
+    {
+      "word": "вчителя",
+      "exercise_type": "error-correction",
+      "context": "У нього є кілька питання до вчителя.",
+      "role": "context"
+    },
+    {
+      "word": "людин",
+      "exercise_type": "error-correction",
+      "context": "Скільки людин працює в цьому офісі?",
+      "role": "context"
+    },
+    {
+      "word": "офісі",
+      "exercise_type": "error-correction",
+      "context": "Скільки людин працює в цьому офісі?",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 18,
+    "tested_in_exercises": 10,
+    "not_tested": [
+      "виняток",
+      "вставний",
+      "голосний",
+      "жіночий",
+      "множина",
+      "рід",
+      "середній",
+      "чоловічий"
+    ]
+  },
+  "all_grounded": false
+}

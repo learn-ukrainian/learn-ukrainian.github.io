@@ -1,6 +1,6 @@
 ## Що таке вид дієслова?
 
-Welcome to one of the most important concepts in Ukrainian grammar. Until now, you have focused on verb tenses. Tense tells us exactly when an action happens. However, Ukrainian verbs have a hidden dimension called **вид дієслова** (verb aspect). While tense answers the question of time, aspect tells us how the action unfolds. In English, you use complex tense structures to express whether an action is ongoing or completed. In Ukrainian, this information is built directly into the vocabulary. The concept of aspect is not about time at all. Instead, it is about the internal completion of the action. It describes whether we view an event as a continuous, flowing process or as a single, finished point in time. Understanding this difference is the key to speaking naturally.
+Until now, you have focused on verb tenses. Tense tells us exactly when an action happens. However, Ukrainian verbs have a hidden dimension called **вид дієслова** (verb aspect). While tense answers the question of time, aspect tells us how the action unfolds. In English, you use complex tense structures to express whether an action is ongoing or completed. In Ukrainian, this information is built directly into the vocabulary. The concept of aspect is not about time at all. Instead, it is about the internal completion of the action. It describes whether we view an event as a continuous, flowing process or as a single, finished point in time. Understanding this difference is the key to speaking naturally.
 
 To master this dimension, you need to meet the two main categories of Ukrainian verbs. The first category is called **недоконаний вид** (imperfective aspect). We will often abbreviate this as НВ. This aspect represents the unfinished nature of an action. We use it to describe an ongoing **процес** (process), a repeated habit, or a general fact. The second category is **доконаний вид** (perfective aspect). We will abbreviate this as ДВ. This represents the finished nature of an action. We use it when we want to highlight total completion and a successful **результат** (result). Every time you choose a verb, you must decide what matters more: the journey or the destination.
 
@@ -17,7 +17,6 @@ Let us look at how this plays out in real life. Imagine two friends watching a f
 
 In this scenario, **бігти** (to run) and **грати** (to play) describe the ongoing process. Meanwhile, **забити** (to score) and **передати** (to pass) report a final result.
 
-
 ## Недоконаний вид: Процес і повторення
 
 In the previous section, we established that the imperfective aspect (**недоконаний вид**) is like watching the middle of a movie. Now, let us dive deeper into its primary function: describing a process, or **процес** (process) in Ukrainian. When you use an imperfective verb, you signal to your listener that the duration or flow of the action matters much more than its end point. You are describing an ongoing action, which we call a **тривала дія** (ongoing action). Imagine you spent hours immersed in a novel. You want to emphasize the time spent, not whether you reached the final page. You would say: «Я читав книгу цілий вечір» *(I was reading the book all evening)*. In this sentence, the focus is entirely on the activity itself. We do not know if the person finished the book, and frankly, we do not care. The imperfective aspect allows you to paint a picture of an action unfolding over time without worrying about its conclusion. 
@@ -33,7 +32,6 @@ To help you instantly recognize when to use the imperfective aspect, look out fo
 <!-- INJECT_ACTIVITY: aspect-sorting-process-result -->
 <!-- INJECT_ACTIVITY: identify-aspect-in-sentences -->
 
-
 ## Доконаний вид: Результат! (Perfective: The Result!)
 
 Now that we have explored the ongoing nature of the imperfective aspect, it is time to meet its decisive counterpart: the perfective aspect, or **доконаний вид** (perfective aspect). If the imperfective aspect is about watching the movie unfold, the perfective aspect is the moment the "The End" screen appears. It is all about the result. We use the perfective aspect when we want to announce: "Mission accomplished." It describes a **завершена дія** (completed action). Think about the difference between reading and finishing a book. If you say «Я прочитав книгу» *(I have read the book)*, you are focusing entirely on the outcome. The process of reading is over. The book is now sitting on the shelf, and you know how the story ends. You have crossed the finish line. The perfective aspect does not care how long the action took or how difficult it was; its sole purpose is to confirm that the action reached its limit and produced a clear, final result.
@@ -48,17 +46,15 @@ To truly understand the difference between the two aspects, let's look at a clas
 
 <!-- INJECT_ACTIVITY: match-up-context-aspect -->
 
-
 ## Порівняння пар: Бачимо різницю
 
-Let's look at this in practice by comparing some common verb pairs side-by-side. Consider the verbs **писати** (to write, imperfective) and **написати** (to write, perfective). If you say «Він писав лист» *(He was writing a letter)*, you are describing a process. Maybe he was interrupted, or maybe he never finished. However, «Він написав лист» *(He wrote a letter)* means the letter is complete and ready to send. The same logic applies to food. «Ми пили каву» *(We were drinking coffee)* sets a scene, while «Ми випили каву» *(We drank the coffee)* means the cups are empty. «Вона їла борщ» *(She was eating borsch)* focuses on the activity, whereas «Вона поїла» *(She finished eating)* announces a clear result. We even see this with senses: «Я бачив це» *(I saw this, I was looking at it)* versus «Я побачив це» *(I spotted it)*.
+Let's look at this in practice by comparing some common verb pairs side-by-side. Consider the verbs **писати** (to write, imperfective) and **написати** (to write, perfective). If you say «Він писав листа» *(He was writing a letter)*, you are describing a process. Maybe he was interrupted, or maybe he never finished. However, «Він написав листа» *(He wrote a letter)* means the letter is complete and ready to send. The same logic applies to food. «Ми пили каву» *(We were drinking coffee)* sets a scene, while «Ми випили каву» *(We drank the coffee)* means the cups are empty. «Вона їла борщ» *(She was eating borsch)* focuses on the activity, whereas «Вона поїла» *(She finished eating)* announces a clear result. We even see this with senses: «Я бачив це» *(I saw this, I was looking at it)* versus «Я побачив це» *(I spotted it)*.
 
 To truly grasp this concept, try visualizing these two aspects as lines drawn on a page. Imagine the imperfective aspect as a wavy, continuous line. It flows across the page, representing the passage of time without a clear beginning or end. It fills the space, just as imperfective verbs fill our stories with ongoing background activities. Now, imagine the perfective aspect as a straight, sharp line that suddenly stops with a bold "X". That "X" is the concrete result, the exact moment of completion. Perfective verbs do not flow; they punctuate time. They act as milestones in your narrative, marking the moments when an action definitively ends.
 
 You might have noticed a pattern in our examples. In Ukrainian, most perfective verbs are created by attaching a prefix to their imperfective partner. For instance, **робити** (to do) becomes **зробити** (to finish doing). **Читати** (to read) becomes **прочитати** (to read completely). There are many different prefixes used for this purpose, such as **на-**, **з-**, **про-**, **ви-**, and **по-**. Their primary job is to flip the grammatical switch from a process to a result. At the A2 level, you do not need to memorize every prefix rule. Your main goal is simply to recognize these pairs and understand that the prefix signals a change in the verb's aspect.
 
 <!-- INJECT_ACTIVITY: error-correction-aspect -->
-
 
 ## Підсумок (Summary)
 

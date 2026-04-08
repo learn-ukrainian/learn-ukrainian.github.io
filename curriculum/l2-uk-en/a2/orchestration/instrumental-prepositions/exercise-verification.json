@@ -1,0 +1,56 @@
+{
+  "total_items": 85,
+  "grounded_items": 79,
+  "ungrounded": [
+    {
+      "word": "читаємо",
+      "exercise_type": "quiz",
+      "context": "Ми завжди читаємо книгу...",
+      "role": "context"
+    },
+    {
+      "word": "картину",
+      "exercise_type": "fill-in",
+      "context": "Куди? Повісь картину _____",
+      "role": "context"
+    },
+    {
+      "word": "простір",
+      "exercise_type": "group-sort",
+      "context": "Простір (Location)",
+      "role": "context"
+    },
+    {
+      "word": "час",
+      "exercise_type": "group-sort",
+      "context": "Час (Time)",
+      "role": "context"
+    },
+    {
+      "word": "допомогую",
+      "exercise_type": "error-correction",
+      "context": "Дякую за допомогую!",
+      "role": "context"
+    },
+    {
+      "word": "сніданок",
+      "exercise_type": "error-correction",
+      "context": "Я завжди п'ю воду перед сніданок.",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 15,
+    "tested_in_exercises": 8,
+    "not_tested": [
+      "кут",
+      "обід",
+      "підлога",
+      "розклад",
+      "сон",
+      "стеля",
+      "стіна"
+    ]
+  },
+  "all_grounded": false
+}

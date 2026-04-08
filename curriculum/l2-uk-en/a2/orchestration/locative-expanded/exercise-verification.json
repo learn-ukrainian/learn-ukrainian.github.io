@@ -1,0 +1,121 @@
+{
+  "total_items": 94,
+  "grounded_items": 77,
+  "ungrounded": [
+    {
+      "word": "чули",
+      "exercise_type": "quiz",
+      "context": "Ми чули цю новину по радіо.",
+      "role": "context"
+    },
+    {
+      "word": "новину",
+      "exercise_type": "quiz",
+      "context": "Ми чули цю новину по радіо.",
+      "role": "context"
+    },
+    {
+      "word": "книга",
+      "exercise_type": "quiz",
+      "context": "Книга лежить на столі.",
+      "role": "context"
+    },
+    {
+      "word": "лежить",
+      "exercise_type": "quiz",
+      "context": "Книга лежить на столі.",
+      "role": "context"
+    },
+    {
+      "word": "досягла",
+      "exercise_type": "quiz",
+      "context": "Вона досягла великого успіху у політиці.",
+      "role": "context"
+    },
+    {
+      "word": "великого",
+      "exercise_type": "quiz",
+      "context": "Вона досягла великого успіху у політиці.",
+      "role": "context"
+    },
+    {
+      "word": "успіху",
+      "exercise_type": "quiz",
+      "context": "Вона досягла великого успіху у політиці.",
+      "role": "context"
+    },
+    {
+      "word": "їдемо",
+      "exercise_type": "quiz",
+      "context": "На цьому тижні ми їдемо у подорож.",
+      "role": "context"
+    },
+    {
+      "word": "кабінет",
+      "exercise_type": "quiz",
+      "context": "Мій новий кабінет знаходиться в офісі.",
+      "role": "context"
+    },
+    {
+      "word": "знаходиться",
+      "exercise_type": "quiz",
+      "context": "Мій новий кабінет знаходиться в офісі.",
+      "role": "context"
+    },
+    {
+      "word": "нас",
+      "exercise_type": "fill-in",
+      "context": "На цьому (тиждень) ____ у нас цікава зустріч.",
+      "role": "context"
+    },
+    {
+      "word": "казок",
+      "exercise_type": "fill-in",
+      "context": "У (дитинство) ____ я читав багато казок.",
+      "role": "context"
+    },
+    {
+      "word": "розуміється",
+      "exercise_type": "fill-in",
+      "context": "Мій друг дуже добре розуміється у (мистецтво) ____.",
+      "role": "context"
+    },
+    {
+      "word": "телевізор",
+      "exercise_type": "fill-in",
+      "context": "Ці новини показують по (телевізор) ____.",
+      "role": "context"
+    },
+    {
+      "word": "телефоні",
+      "exercise_type": "error-correction",
+      "context": "Я подзвоню тобі у телефоні.",
+      "role": "context"
+    },
+    {
+      "word": "почула",
+      "exercise_type": "error-correction",
+      "context": "Я почула ці новини на радіо.",
+      "role": "context"
+    },
+    {
+      "word": "потребує",
+      "exercise_type": "group-sort",
+      "context": "потребує «у/в»",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 15,
+    "tested_in_exercises": 9,
+    "not_tested": [
+      "абстрактний",
+      "думка",
+      "майбутнє",
+      "минулий",
+      "місцевий",
+      "проблема"
+    ]
+  },
+  "all_grounded": false
+}

@@ -1,0 +1,401 @@
+---
+title: "Мені, тобі, йому..."
+sidebar:
+  order: 17
+  label: "17. Мені, тобі, йому..."
+pipeline: v6
+build_status: draft
+---
+
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import FillIn from '@site/src/components/FillIn';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import GroupSort from '@site/src/components/GroupSort';
+import MatchUp from '@site/src/components/MatchUp';
+import Quiz from '@site/src/components/Quiz';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Давальний відмінок: Кому? (The Dative Case: To Whom?)
+
+Welcome to the **давальний відмінок** *(dative case)*. The name of this case comes directly from the verb **давати** *(to give)*. This perfectly illustrates its primary function in the Ukrainian language: it points out the recipient of an action. When you give a gift, tell a secret, or send an email, the person on the receiving end is in the dative case. 
+
+To find the dative case in a sentence, we ask two core questions. For people and animals, we ask **«Кому?»** *(To whom?)*. For objects, concepts, or abstract ideas, we ask **«Чому?»** *(To what?)*. 
+
+> Читаємо українською:
+> Я купую новий подарунок. *(I am buying a new gift.)*
+> Кому я купую подарунок? *(To whom am I buying a gift?)*
+> Я купую подарунок мамі. *(I am buying a gift for mom.)*
+> Я даю холодну воду. *(I am giving cold water.)*
+> Чому я даю воду? *(To what am I giving water?)*
+> Я даю воду дереву. *(I am giving water to the tree.)*
+
+Let us look closer at the concept of the indirect object. In a standard sentence, each case has its own question and function. The Nominative acts as the doer of the action. We can compare this with the Genitive (Кого? Чого?), which shows possession, and the Accusative (Кого? Що?), which marks the direct object being handled. The Dative case steps in as the indirect object—the person who benefits from the action, receives the item, or gets the information. It is the target of your generosity or your words.
+
+Think of a simple, foundational interaction: «Я даю книгу тобі» *(I give the book to you)*. Here, **«я»** *(I)* is the active doer in the Nominative case. The word **«книгу»** *(the book)* is the direct object being physically moved, so it takes the Accusative case. Finally, the word **«тобі»** *(to you)* is the ultimate recipient, taking the Dative case. The dative always marks the end destination of the giving or telling process. Understanding this relationship is the key to mastering Ukrainian sentence structure.
+
+> Читаємо українською:
+> Брат зараз читає казку. *(The brother is reading a fairytale now.)*
+> Брат читає казку малій сестрі. *(The brother is reading a fairytale to the little sister.)*
+> Вчитель добре пояснює правило. *(The teacher explains the rule well.)*
+> Вчитель пояснює правило новому студенту. *(The teacher explains the rule to the new student.)*
+
+To start using this case immediately, you need a "Starter Kit" of verbs that naturally trigger the dative. Focus on these high-frequency verbs of communication and transfer. The verb **дарувати** *(to gift)* is essential for holidays. The verbs **казати** *(to say)* and **говорити** *(to speak/tell)* introduce shared information. The verb **писати** *(to write)* is used for messages, and **допомагати** *(to help)* shows who receives assistance.
+
+Whenever you use these verbs, the person receiving the action must take the dative form. 
+
+> Читаємо українською:
+> Я даю тобі синю ручку. *(I am giving you a blue pen.)*
+> Він часто дарує мені квіти. *(He often gifts me flowers.)*
+> Вона завжди каже йому правду. *(She always tells him the truth.)*
+> Ми сьогодні пишемо вам довгого листа. *(We are writing a long letter to you today.)*
+> Вони із радістю допомагають нам. *(They happily help us.)*
+> Вчитель пояснює їм нове правило. *(The teacher explains the new rule to them.)*
+
+Let us see how these forms work in a natural setting. Imagine a family gathering where a birthday is being celebrated, and the host is enthusiastically distributing gifts to everyone in the room. This scene relies heavily on personal pronouns in their dative forms.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Іменинник:</span> Ці великі пакунки — це наші подарунки! *(These big packages are our gifts!)*</div>
+
+<div class="dialogue-line"><span class="speaker">Мама:</span> Кому ці подарунки? *(To whom are these gifts?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Іменинник:</span> **Мені** — цікава книга. **Тобі** — солодкий шоколад. *(For me — an interesting book. For you — sweet chocolate.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Брат:</span> А що є для тата? *(And what is there for dad?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Іменинник:</span> **Йому** — теплий зимовий шарф. *(For him — a warm winter scarf.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Мама:</span> А нашій бабусі? *(And for our grandma?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Іменинник:</span> **Їй** — дуже гарні квіти. *(For her — very beautiful flowers.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Брат:</span> А що ми всі будемо їсти? *(And what will we all eat?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Іменинник:</span> **Нам** — великий і смачний торт! *(For us — a big and tasty cake!)*</div>
+
+</div>
+
+## Особові займенники у давальному відмінку (Personal Pronouns in the Dative)
+
+Now that we know the basic function of the dative case, we must learn how it changes our most common words: personal pronouns. In Ukrainian, the pronouns for the first and second person singular undergo a complete transformation. This is called a suppletive form, meaning the base word changes entirely. The pronoun **«я»** *(I)* becomes **«мені»** *(to me)*. The pronoun **«ти»** *(you, informal)* becomes **«тобі»** *(to you)*. You must memorize these two words as a set, because they are the absolute core of daily Ukrainian conversation. Many English speakers try to literally translate phrases like "give me" by using the nominative form, saying incorrect things like "Дай я книгу." This is a major error. You must always use the dative form when you are the recipient. The verb gives the action, and the dative pronoun catches it.
+
+> Читаємо українською:
+> Скажи мені правду зараз. *(Tell me the truth now.)*
+> Я даю тобі цей новий телефон. *(I am giving you this new phone.)*
+> Ця синя сорочка дуже тобі пасує. *(This blue shirt suits you very much.)*
+> Мама купує мені смачний торт. *(Mom is buying me a tasty cake.)*
+> Чи можу я тобі допомогти сьогодні? *(Can I help you today?)*
+> Мені треба купити свіжий хліб. *(I need to buy fresh bread.)*
+
+Next, we look at the third person singular pronouns. These forms are very distinct and help us talk about giving things to other people. The masculine pronoun **«він»** *(he)* and the neuter pronoun **«воно»** *(it)* share the exact same dative form: **«йому»** *(to him / to it)*. The feminine pronoun **«вона»** *(she)* has its own unique form: **«їй»** *(to her)*. Pay special attention to the spelling and pronunciation of «їй». It consists of the letter 'ї' followed by 'й', creating a soft, gliding sound. You will use these pronouns constantly when talking about friends, family members, or colleagues.
+
+> Читаємо українською:
+> Я телефоную йому пізно ввечері. *(I am calling him late in the evening.)*
+> Ми даруємо їй красиві весняні квіти. *(We are gifting her beautiful spring flowers.)*
+> Вчитель дає йому нове цікаве завдання. *(The teacher gives him a new interesting task.)*
+> Брат часто пише їй довгі повідомлення. *(The brother often writes her long messages.)*
+> Чи ти знаєш, що їй подобається? *(Do you know what she likes?)*
+> Ми купили йому чорний зимовий шарф. *(We bought him a black winter scarf.)*
+
+The plural forms of personal pronouns in the dative case are thankfully much simpler and feel more symmetrical to learners. The pronoun **«ми»** *(we)* becomes **«нам»** *(to us)*. The formal or plural pronoun **«ви»** *(you)* becomes **«вам»** *(to you)*. Finally, the third person plural pronoun **«вони»** *(they)* becomes **«їм»** *(to them)*. Notice how these endings share a similar 'м' sound, making them easier to group together in your memory. These plural forms are essential for addressing groups or talking about collective experiences.
+
+> Читаємо українською:
+> Наш новий вчитель добре пояснює нам правило. *(Our new teacher explains the rule to us well.)*
+> Я щиро дякую вам за вашу допомогу. *(I sincerely thank you for your help.)*
+> Нам потрібно їм швидко зателефонувати. *(We need to call them quickly.)*
+> Батьки дають нам гроші на нову квартиру. *(Parents give us money for a new apartment.)*
+> Директор розповідає їм про важливий проєкт. *(The director tells them about the important project.)*
+> Ми радіємо вам і вашим добрим новинам. *(We are happy for you and your good news.)*
+
+<MatchUp client:only="react" pairs={[{"left": "я", "right": "мені"}, {"left": "ти", "right": "тобі"}, {"left": "він", "right": "йому"}, {"left": "вона", "right": "їй"}, {"left": "воно", "right": "йому"}, {"left": "ми", "right": "нам"}, {"left": "ви", "right": "вам"}, {"left": "вони", "right": "їм"}]} instruction={"З'єднайте називний відмінок (хто?) з формою давального відмінка (кому?)."} />
+
+When learning the Genitive and Accusative cases, you likely learned that third-person pronouns gain an initial letter 'н' after prepositions (for example, «до нього» or «у неї»). However, the Dative case behaves differently. First, the dative is very rarely used with prepositions in basic speech. When it is used with rare prepositions like **«завдяки»** *(thanks to)*, the pronoun generally does NOT gain an 'н'. Therefore, you will almost always use the standard forms «йому», «їй», and «їм» for the recipient. Do not over-generalize the rule from other cases. Keep it simple: when you give something, tell something, or help someone, use the base dative forms without the extra letter.
+
+> Читаємо українською:
+> Завдяки йому ми маємо ці квитки. *(Thanks to him, we have these tickets.)*
+> Я розказую їй цю стару історію. *(I am telling her this old story.)*
+> Ми допомагаємо їм робити домашнє завдання. *(We are helping them do their homework.)*
+> Завдяки їй наш проєкт працює добре. *(Thanks to her, our project works well.)*
+> Дай йому трохи часу на відпочинок. *(Give him a little time for rest.)*
+> Напиши їм адресу нашого нового офісу. *(Write them the address of our new office.)*
+
+Let us see how these pronouns naturally shift during a conversation. Read this dialogue where two friends are planning a surprise and discussing who gets to know the secret. Pay attention to how the pronouns change based on who is receiving the information.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Максим:</span> Я маю великий секрет. Я скажу йому цей секрет сьогодні. *(I have a big secret. I will tell him this secret today.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Олена:</span> Це дуже цікаво! А нам ти скажеш? *(This is very interesting! And will you tell us?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Максим:</span> Так, вам я скажу трохи пізніше. *(Yes, I will tell you a little later.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Олена:</span> А що ми скажемо нашим друзям? *(And what will we tell our friends?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Максим:</span> Їм ми скажемо все завтра вранці. *(We will tell them everything tomorrow morning.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Олена:</span> Добре, а їй ми нічого не скажемо? *(Good, and will we not tell her anything?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Максим:</span> Ні, ми зробимо їй великий сюрприз! *(No, we will make a big surprise for her!)*</div>
+
+</div>
+
+<FillIn client:only="react" items={[{"sentence": "Це мій брат. Я купую ______ новий телефон.", "answer": "йому", "options": ["йому", "їй", "їм", "нам"]}, {"sentence": "Де моя сестра? Я хочу дати ______ цю книгу.", "answer": "їй", "options": ["йому", "їй", "тобі", "мені"]}, {"sentence": "Ми ваші найкращі друзі! Розкажіть ______ цей секрет.", "answer": "нам", "options": ["нам", "вам", "їм", "йому"]}, {"sentence": "Я не знаю, де вони зараз. Напиши ______ коротке повідомлення.", "answer": "їм", "options": ["їй", "йому", "їм", "нам"]}, {"sentence": "Ти дуже добра людина. Я щиро дякую ______ за допомогу.", "answer": "тобі", "options": ["мені", "тобі", "вам", "їй"]}, {"sentence": "Це мій улюблений торт! Дай ______ цей великий шматок, будь ласка.", "answer": "мені", "options": ["мені", "тобі", "йому", "нам"]}]} instruction={"Вставте правильний особовий займенник у давальному відмінку за змістом речення."} />
+
+## Мені холодно: Безособові конструкції (Impersonal Constructions)
+
+In English, you say "I am cold" or "She is sad" using the subject "I" or "She." In Ukrainian, many physical and emotional states are not something you "are," but something that "is to you." These are called impersonal constructions because there is no traditional subject doing an action. The person experiencing the feeling is the "logical subject" in the Dative case. Compare a permanent description of identity with a temporary feeling. When you say **«Я щаслива»** *(I am happy)*, you describe your overall state. When you say **«Мені весело»** *(I feel joyful)*, you describe a current feeling happening to you right now. 
+
+> Читаємо українською:
+> Я сьогодні дуже щаслива дівчина. *(I am very happy today.)*
+> Зараз мені дуже весело на святі. *(I feel very joyful at the party.)*
+> Він завжди спокійний і серйозний хлопець. *(He is a calm, serious guy.)*
+> Сьогодні йому дуже сумно без друзів. *(He feels sad without friends today.)*
+> Вона втомлена після важкого робочого дня. *(She is tired after a hard workday.)*
+> Їй важко працювати так багато годин. *(It is hard for her to work long hours.)*
+> Ми готові починати новий великий проєкт. *(We are ready to start a big project.)*
+> Нам страшно дивитися цей новий фільм. *(It is scary for us to watch this movie.)*
+
+We build these sentences using state adverbs that describe a physical sensation or emotional feeling. You will notice that they almost always end in the neutral letter **-о**. Common examples include **«холодно»** *(cold)*, **«тепло»** *(warm)*, **«сумно»** *(sad)*, **«весело»** *(joyful)*, **«приємно»** *(pleasant)*, **«цікаво»** *(interesting)*, **«легко»** *(easy)*, **«важко»** *(difficult)*, and **«нудно»** *(boring)*. To say "I am cold," you literally say "To me it is cold": **«Мені холодно»**. To ask if a friend is interested, you ask: **«Тобі цікаво?»**. You do not need a verb like "is" in the present tense. Just pair the Dative pronoun directly with the adverb.
+
+> Читаємо українською:
+> Взимку мені завжди дуже холодно. *(In winter I am always very cold.)*
+> Тобі цікаво читати цю нову книгу? *(Is it interesting for you to read this book?)*
+> Нам дуже приємно вас тут бачити. *(It is very pleasant for us to see you.)*
+> Їй весело грати з великим собакою. *(It is joyful for her to play with the dog.)*
+> Йому тепло у цій новій куртці. *(He is warm in this new jacket.)*
+> Їм нудно сидіти вдома цілий день. *(It is boring for them to sit at home.)*
+> Мені дуже соромно за цю велику помилку. *(I am very ashamed of this big mistake.)*
+> Вам зручно сидіти на цьому старому кріслі? *(Is it comfortable for you to sit on this chair?)*
+
+We also use the Dative case for modal adverbs expressing necessity, permission, or advice. The most important ones are **«треба»** or **«потрібно»** *(need)*, **«можна»** *(allowed / may)*, and **«варто»** *(should / worth doing)*. When you want to say "I need," you must literally say "To me it is necessary." You absolutely cannot use the word "I" (**я**) here. This is a common mistake for English speakers. Simply add an infinitive verb after these modal adverbs to show what action is needed or allowed.
+
+:::tip Запам'ятайте (Remember)
+**Я треба йти.** ❌
+**Мені треба йти.** ✅ *(I need to go.)*
+:::
+
+> Читаємо українською:
+> Мені треба йти додому негайно. *(I need to go home immediately.)*
+> Тобі потрібно купити новий мобільний телефон. *(You need to buy a new mobile phone.)*
+> Вам можна тут сидіти і читати. *(You are allowed to sit here and read.)*
+> Йому варто добре відпочити після роботи. *(He should rest well after work.)*
+> Їй не можна пити чорну каву. *(She is not allowed to drink black coffee.)*
+> Нам треба багато працювати сьогодні ввечері. *(We need to work a lot tonight.)*
+> Їм потрібно швидко написати цей довгий лист. *(They need to write this long letter quickly.)*
+> Мені варто запитати про це нашого вчителя. *(I should ask our teacher about this.)*
+
+Let us look at how these impersonal constructions sound in a real conversation. Read this dialogue between two friends sitting at a cafe. They discuss their comfort and what they need to order.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Анна:</span> Тобі тут тепло біля вікна? *(Are you warm near the window?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Богдан:</span> Так, мені приємно тут сидіти. *(Yes, it is pleasant to sit here.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Анна:</span> Мені цікаво, що ти сьогодні замовиш. *(I wonder what you will order today.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Богдан:</span> Мені потрібно випити велику чашку кави. *(I need to drink a big cup of coffee.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Анна:</span> Чому тобі хочеться саме чорної кави? *(Why exactly do you want black coffee?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Богдан:</span> Бо мені сумно без неї зранку. А тобі що треба? *(Because I feel sad without it in the morning. What do you need?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Анна:</span> Мені варто випити гарячий зелений чай. Мені трохи холодно. *(I should drink hot green tea. I am a little cold.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Богдан:</span> Тобі можна взяти ще теплий десерт. *(You can also take a warm dessert.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Анна:</span> Добре, зараз нам можна спокійно відпочити. *(Good, we are allowed to rest calmly now.)*</div>
+
+</div>
+
+<TrueFalse client:only="react" items={[{"statement": "Мені дуже холодно взимку.", "isTrue": true, "explanation": "Правильно. Для фізичних станів ми використовуємо давальний відмінок логічного суб'єкта."}, {"statement": "Я треба йти додому прямо зараз.", "isTrue": false, "explanation": "Неправильно. Зі словом «треба» обов'язково використовуємо давальний відмінок: Мені треба."}, {"statement": "Їй дуже цікаво читати цю нову книгу.", "isTrue": true, "explanation": "Правильно. Зі словом стану «цікаво» використовується давальний відмінок."}, {"statement": "Вона сумно без своїх друзів.", "isTrue": false, "explanation": "Неправильно. Зі словами емоційного стану (сумно) ми використовуємо давальний відмінок: Їй сумно."}, {"statement": "Йому варто добре відпочити після важкої роботи.", "isTrue": true, "explanation": "Правильно. Слово «варто» (should/worth doing) вимагає давального відмінка."}, {"statement": "Ми страшно дивитися цей новий фільм.", "isTrue": false, "explanation": "Неправильно. Правильно казати: Нам страшно."}, {"statement": "Вам зручно сидіти на цьому кріслі?", "isTrue": true, "explanation": "Правильно. Зі словом стану «зручно» використовується давальний відмінок."}, {"statement": "Ти можна взяти ще один теплий десерт.", "isTrue": false, "explanation": "Неправильно. Зі словом «можна» використовуємо давальний відмінок: Тобі можна."}]} instruction={"Прочитайте речення. Чи правильно використано безособову конструкцію (impersonal construction)?"} />
+
+## Давальний чи знахідний? (Dative or Accusative?)
+
+Learning to choose between the Dative and Accusative cases is a common challenge. In English, we simply use "you" or "her" for both direct objects and recipients. In Ukrainian, the choice depends entirely on the verb's logic of interaction. Let us look at some minimal pairs where the only difference is the pronoun case.
+
+> Читаємо українською:
+> Я бачу тебе щодня. *(I see you every day.)*
+> Я кажу тобі правду. *(I tell you the truth.)*
+> Він добре знає її. *(He knows her well.)*
+> Він часто дзвонить їй. *(He often calls her.)*
+> Ми слухаємо вас уважно. *(We listen to you carefully.)*
+> Ми даємо вам роботу. *(We give you work.)*
+
+In the first sentence of each pair, the action directly affects the person. You see them, you know them, you listen to them. This requires the Accusative case (**тебе**, **її**, **вас**). In the second sentence, the person is the recipient of the action. You tell something *to* them, call *to* them, give something *to* them. This requires the Dative case (**тобі**, **їй**, **вам**).
+
+How can you quickly decide which case to use? Use this simple strategy: if the action is directed *at* the person or given *to* them, use the Dative case. If the action uses, sees, or directly targets the person as an object, use the Accusative case.
+
+:::tip Важливе правило (Important rule)
+**Кому?** *(To whom?)* → Давальний відмінок: **мені, тобі, йому, їй, нам, вам, їм**.
+**Кого?** *(Whom?)* → Знахідний відмінок: **мене, тебе, його, її, нас, вас, їх**.
+:::
+
+However, you must be careful with False Friends. These are verbs that work differently in English and Ukrainian. A classic example is the verb **допомагати** *(to help)*. In English, you help someone directly. In Ukrainian, you literally give help *to* someone, so this verb always requires the Dative case. 
+
+Other common false friends include **дякувати** *(to thank)* and **заважати** *(to bother / to disturb)*. You must say «дякую тобі» *(I thank to you)*, not «дякую тебе» ❌. You also say «ти заважаєш мені» *(you are bothering to me)*.
+
+> Читаємо українською:
+> Я завжди допомагаю моїй сестрі. *(I always help my sister.)*
+> Вона допомагає мені робити домашнє завдання. *(She helps me do my homework.)*
+> Чи можу я допомогти вам сьогодні? *(Can I help you today?)*
+> Брат постійно заважає мені. *(My brother constantly bothers me.)*
+> Ми хочемо подякувати їм за подарунок. *(We want to thank them for the gift.)*
+
+Let us see how native speakers switch between these cases naturally in a conversation.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Олег:</span> Привіт! Я бачу тебе біля метро. *(Hi! I see you near the subway.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Ірина:</span> Привіт! А я саме телефоную тобі. *(Hi! And I am calling you right now.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Олег:</span> Я хочу щиро подякувати тобі за допомогу. *(I want to sincerely thank you for the help.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Ірина:</span> Будь ласка. Я завжди рада допомогти тобі. *(You are welcome. I am always glad to help you.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Олег:</span> Ти добре знаєш мого брата? Він хвалив тебе. *(Do you know my brother well? He praised you.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Ірина:</span> Так, я чудово знаю його. Він теж допомагає мені. *(Yes, I know him perfectly. He also helps me.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Олег:</span> Тоді я дарую вам обом квитки в театр. *(Then I give you both tickets to the theater.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Ірина:</span> О, ми дуже любимо тебе за це! *(Oh, we love you very much for this!)*</div>
+
+</div>
+
+<Quiz client:only="react" questions={[{"question": "Я часто бачу ______ біля метро.", "options": [{"text": "тебе", "correct": true}, {"text": "тобі", "correct": false}, {"text": "ти", "correct": false}, {"text": "тобою", "correct": false}]}, {"question": "Він завжди допомагає ______ робити домашнє завдання.", "options": [{"text": "мене", "correct": false}, {"text": "мені", "correct": true}, {"text": "я", "correct": false}, {"text": "мною", "correct": false}]}, {"question": "Директор уважно слухає ______ на зустрічі.", "options": [{"text": "вам", "correct": false}, {"text": "вас", "correct": true}, {"text": "ви", "correct": false}, {"text": "вами", "correct": false}]}, {"question": "Вчитель добре пояснює ______ нове граматичне правило.", "options": [{"text": "їх", "correct": false}, {"text": "їм", "correct": true}, {"text": "вони", "correct": false}, {"text": "ними", "correct": false}]}, {"question": "Я хочу щиро подякувати ______ за ці красиві квіти.", "options": [{"text": "її", "correct": false}, {"text": "їй", "correct": true}, {"text": "вона", "correct": false}, {"text": "нею", "correct": false}]}, {"question": "Чи ти добре знаєш ______?", "options": [{"text": "йому", "correct": false}, {"text": "його", "correct": true}, {"text": "він", "correct": false}, {"text": "ним", "correct": false}]}, {"question": "Мій брат постійно заважає ______ спокійно працювати.", "options": [{"text": "нас", "correct": false}, {"text": "нам", "correct": true}, {"text": "ми", "correct": false}, {"text": "нами", "correct": false}]}, {"question": "Мама зараз купує ______ смачний солодкий десерт.", "options": [{"text": "його", "correct": false}, {"text": "йому", "correct": true}, {"text": "він", "correct": false}, {"text": "ним", "correct": false}]}]} instruction={"Оберіть правильний займенник. Зверніть увагу на дієслово: воно вимагає давального (кому?) чи знахідного (кого?) відмінка?"} />
+
+## Підсумок (Summary)
+
+Let us review the Dative case of personal pronouns. The paradigm changes significantly from the Nominative case. 
+
+> Читаємо українською:
+> **я** → **мені** *(to me)*
+> **ти** → **тобі** *(to you)*
+> **він / воно** → **йому** *(to him / to it)*
+> **вона** → **їй** *(to her)*
+> **ми** → **нам** *(to us)*
+> **ви** → **вам** *(to you)*
+> **вони** → **їм** *(to them)*
+
+We use these forms for two main functions. The first function is the recipient of an action, answering the question **кому?** *(to whom?)*. 
+
+> Читаємо українською:
+> Дай **мені** цю книгу. *(Give me this book.)*
+> Я кажу **тобі** правду. *(I am telling you the truth.)*
+
+The second function is the logical subject in impersonal sentences, describing states, feelings, and needs.
+
+> Читаємо українською:
+> **Мені** холодно. *(I am cold.)*
+> **Тобі** потрібно йти. *(You need to go.)*
+
+Before we finish, do a quick self-check. Can you say "To her it is interesting"? It is **«Їй цікаво»**. Do you remember the Dative form of **ми**? It is **нам**. Always ask yourself who receives the action or who feels the state, and you will choose the right pronoun naturally!
+
+</TabItem>
+<TabItem label="Словник">
+
+### Обов'язкові та рекомендовані слова
+
+| Слово | Переклад | Частина мови | Рід |
+|-------|----------|-------------|-----|
+| **дава́ти** | to give | дієсл. |  |
+| **подару́нок** | gift | ім. | ч. |
+| **дарува́ти** | to gift | дієсл. |  |
+| **каза́ти** | to say | дієсл. |  |
+| **говори́ти** | to speak / to tell | дієсл. |  |
+| **допомага́ти** | to help | дієсл. |  |
+| **дякувати** | to thank | дієсл. |  |
+| **заважа́ти** | to bother / to disturb | дієсл. |  |
+| **пасува́ти** | to suit / to fit | дієсл. |  |
+| **телефонува́ти** | to call (by phone) | дієсл. |  |
+| **мені́** | to me | ім. |  |
+| **тобі́** | to you (informal) | ім. |  |
+| **йому** | to him / to it | ім. | ч. |
+| **їй** | to her | ім. | ж. |
+| **нам** | to us | ім. |  |
+| **вам** | to you (plural / formal) | ім. |  |
+| **їм** | to them | ім. |  |
+| **хо́лодно** | cold (impersonal state) | присл. |  |
+| **тепло́** | warm (impersonal state) | присл. |  |
+| **приє́мно** | pleasant (impersonal state) | присл. |  |
+| **ціка́во** | interesting (impersonal state) | присл. |  |
+| **ве́село** | joyful / fun (impersonal state) | присл. |  |
+| **су́мно** | sad (impersonal state) | присл. |  |
+| **ва́жко** | difficult / hard (impersonal state) | присл. |  |
+| **стра́шно** | scary (impersonal state) | присл. |  |
+| **ну́дно** | boring (impersonal state) | присл. |  |
+| **со́ромно** | ashamed (impersonal state) | присл. |  |
+| **зру́чно** | comfortable (impersonal state) | присл. |  |
+| **потрі́бно** | necessary / needed | присл. |  |
+| **тре́ба** | need / necessary |  |  |
+| **мо́жна** | allowed / may |  |  |
+| **ва́рто** | should / worth doing | ім. | ж. |
+| **завдяки́** | thanks to | прийм. |  |
+| **імени́нник** | birthday person / celebrant | ім. | ч. |
+| **паку́нок** | package / parcel | ім. | ч. |
+
+### Вирази
+
+| Вираз | Переклад |
+|-------|----------|
+| **давальний відмінок** | dative case |
+| **Кому?** | To whom? |
+| **Чому?** | To what? |
+| **із радістю** | happily / with joy |
+| **пізно ввечері** | late in the evening |
+| **домашнє завдання** | homework |
+| **йти додому** | to go home |
+
+### Картки — Flashcards
+
+<FlashcardDeck client:only="react" cards={[{ front: "дава́ти", back: "to give", subtitle: "дієсл." }, { front: "подару́нок", back: "gift", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "дарува́ти", back: "to gift", subtitle: "дієсл." }, { front: "каза́ти", back: "to say", subtitle: "дієсл." }, { front: "говори́ти", back: "to speak / to tell", subtitle: "дієсл." }, { front: "допомага́ти", back: "to help", subtitle: "дієсл." }, { front: "дякувати", back: "to thank", subtitle: "дієсл." }, { front: "заважа́ти", back: "to bother / to disturb", subtitle: "дієсл." }, { front: "пасува́ти", back: "to suit / to fit", subtitle: "дієсл." }, { front: "телефонува́ти", back: "to call (by phone)", subtitle: "дієсл." }, { front: "мені́", back: "to me", subtitle: "ім." }, { front: "тобі́", back: "to you (informal)", subtitle: "ім." }, { front: "йому", back: "to him / to it", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "їй", back: "to her", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "нам", back: "to us", subtitle: "ім." }, { front: "вам", back: "to you (plural / formal)", subtitle: "ім." }, { front: "їм", back: "to them", subtitle: "ім." }, { front: "хо́лодно", back: "cold (impersonal state)", subtitle: "присл." }, { front: "тепло́", back: "warm (impersonal state)", subtitle: "присл." }, { front: "приє́мно", back: "pleasant (impersonal state)", subtitle: "присл." }, { front: "ціка́во", back: "interesting (impersonal state)", subtitle: "присл." }, { front: "ве́село", back: "joyful / fun (impersonal state)", subtitle: "присл." }, { front: "су́мно", back: "sad (impersonal state)", subtitle: "присл." }, { front: "ва́жко", back: "difficult / hard (impersonal state)", subtitle: "присл." }, { front: "стра́шно", back: "scary (impersonal state)", subtitle: "присл." }, { front: "ну́дно", back: "boring (impersonal state)", subtitle: "присл." }, { front: "со́ромно", back: "ashamed (impersonal state)", subtitle: "присл." }, { front: "зру́чно", back: "comfortable (impersonal state)", subtitle: "присл." }, { front: "потрі́бно", back: "necessary / needed", subtitle: "присл." }, { front: "тре́ба", back: "need / necessary" }, { front: "мо́жна", back: "allowed / may" }, { front: "ва́рто", back: "should / worth doing", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "завдяки́", back: "thanks to", subtitle: "прийм." }, { front: "імени́нник", back: "birthday person / celebrant", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "паку́нок", back: "package / parcel", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }]} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+<GroupSort client:only="react" groups={{"Однина (Singular)": ["мені", "тобі", "йому", "їй"], "Множина (Plural)": ["нам", "вам", "їм"]}} instruction={"Розподіліть особові займенники у давальному відмінку за числом (однина чи множина)."} />
+
+<FillIn client:only="react" items={[{"sentence": "Я дуже щаслива. ______ дуже приємно вас тут бачити сьогодні.", "answer": "Мені", "options": ["Мені", "Тобі", "Йому", "Їй"]}, {"sentence": "Ти хочеш їсти? ______ можна взяти цей солодкий шоколад.", "answer": "Тобі", "options": ["Тобі", "Мені", "Йому", "Нам"]}, {"sentence": "Він зараз один удома. ______ сумно без друзів.", "answer": "Йому", "options": ["Йому", "Їй", "Їм", "Вам"]}, {"sentence": "Вона дуже втомлена. ______ важко працювати так багато годин.", "answer": "Їй", "options": ["Їй", "Йому", "Мені", "Нам"]}, {"sentence": "Ми маємо великий проєкт. ______ треба багато працювати ввечері.", "answer": "Нам", "options": ["Нам", "Вам", "Їм", "Мені"]}, {"sentence": "Вони не люблять кіно. ______ не цікаво дивитися цей фільм.", "answer": "Їм", "options": ["Їм", "Нам", "Вам", "Їй"]}]} instruction={"Вставте правильний займенник, щоб утворити правильну безособову конструкцію зі словами стану та модальними словами."} />
+
+<ErrorCorrection client:only="react" items={[{"sentence": "Я щиро дякую тебе за допомогу з проєктом.", "errorWord": "тебе", "correctForm": "тобі", "options": ["тобі", "ти", "тобою"], "explanation": "Дієслово «дякувати» (to thank) вимагає давального відмінка."}, {"sentence": "Я треба купити новий зимовий телефон.", "errorWord": "Я", "correctForm": "Мені", "options": ["Мені", "Мене", "Мною"], "explanation": "З модальним словом «треба» використовуємо давальний відмінок."}, {"sentence": "Вона дуже холодно у цій новій куртці.", "errorWord": "Вона", "correctForm": "Їй", "options": ["Їй", "Її", "Нею"], "explanation": "Для опису безособових станів (холодно) потрібен давальний відмінок."}, {"sentence": "Ти часто заважаєш мене читати книгу.", "errorWord": "мене", "correctForm": "мені", "options": ["мені", "я", "мною"], "explanation": "Дієслово «заважати» (to bother) вимагає давального відмінка."}, {"sentence": "Ми варто подивитися цей новий цікавий фільм.", "errorWord": "Ми", "correctForm": "Нам", "options": ["Нам", "Нас", "Нами"], "explanation": "Зі словом «варто» (worth doing / should) використовуємо давальний відмінок."}, {"sentence": "Він дуже цікаво слухати цю стару історію.", "errorWord": "Він", "correctForm": "Йому", "options": ["Йому", "Його", "Ним"], "explanation": "Зі словом стану «цікаво» потрібен давальний відмінок (Кому цікаво?)."}]} instruction={"Знайдіть і виправте граматичну помилку у використанні відмінка."} />
+
+<Unjumble client:only="react" items={[{"words": "потрібно / новий / шарф. / Мені / купити", "answer": "Мені потрібно купити новий шарф."}, {"words": "красиві / Я / дарую / їй / квіти.", "answer": "Я дарую їй красиві квіти."}, {"words": "у / куртці? / Тобі / цій / холодно", "answer": "Тобі холодно у цій куртці?"}, {"words": "друзям. / завжди / допомагаємо / нашим / Ми", "answer": "Ми завжди допомагаємо нашим друзям."}, {"words": "правило. / Вчитель / добре / нам / пояснює", "answer": "Вчитель добре пояснює нам правило."}, {"words": "читати / цю / книгу. / Йому / цікаво", "answer": "Йому цікаво читати цю книгу."}]} instruction={"Складіть правильні речення зі слів. Пам'ятайте про логіку давального відмінка."} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+**Джерела — References**
+
+- [ULP: Dative Case in Ukrainian](https://www.ukrainianlessons.com/dative-case/)
+  _Dative pronoun forms and impersonal constructions overview_
+
+## Підручники (Textbooks)
+
+- [Глазова О. П. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-glazova-2019.pdf#page=118), стор. 118
+- [Захарійчук М. Д. — Українська мова, 4 клас ()](https://shkola.in.ua/4-klas-ukrainska-mova-zaharijchuk.html), стор. 124
+- [Літвінова І. М. — Українська мова, 5 клас (2022)](https://pidruchnyk.com.ua/uploads/book/5_ukrmova_litvinova_2022.pdf#page=214), стор. 214
+- [Авраменко О. М. — Українська мова, 6 клас (2023)](https://pidruchnyk.com.ua/uploads/book/6-klas-ukrmova-avramenko-2023.pdf#page=90), стор. 90
+- [Беца І. Ф. — Українська мова, 6 клас (2023)](https://shkola.in.ua/6-klas-ukrainska-mova-betsa-2023.html), стор. 180
+
+**Статті — Articles**
+
+- [Ukrainian Cases](https://www.ukrainianlessons.com/intro-cases/) (Overview of all 7 cases)
+- [Dobra Forma 15-1: Personal Pronouns (Dative Forms)](https://opentext.ku.edu/dobraforma/chapter/15-1/) (University of Kansas)
+- [Dobra Forma 15-2: Personal Pronouns (Dative Indirect Object)](https://opentext.ku.edu/dobraforma/chapter/15-2/) (University of Kansas)
+- [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) (Practice exercises)
+- [Electronics and technology + Dative Case](https://www.ukrainianlessons.com/episode51/) (ukrainianlessons.com)
+
+**Відео — Videos**
+
+- [The Dative Case in Ukrainian ...](https://www.youtube.com/watch?v=ATeU7iwuyLU) (Nouns, Pronouns & How to Use Them)
+
+</TabItem>
+</Tabs>

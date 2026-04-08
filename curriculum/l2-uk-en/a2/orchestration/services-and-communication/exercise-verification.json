@@ -1,0 +1,184 @@
+{
+  "total_items": 197,
+  "grounded_items": 169,
+  "ungrounded": [
+    {
+      "word": "бандеролей",
+      "exercise_type": "fill-in",
+      "context": "Поясніть ____ нові правила відправлення бандеролей.",
+      "role": "context"
+    },
+    {
+      "word": "другому",
+      "exercise_type": "match-up",
+      "context": "Ви можете зробити це у другому вікні.",
+      "role": "context"
+    },
+    {
+      "word": "вікні",
+      "exercise_type": "match-up",
+      "context": "Ви можете зробити це у другому вікні.",
+      "role": "context"
+    },
+    {
+      "word": "біля",
+      "exercise_type": "match-up",
+      "context": "Вона стоїть на вулиці, біля входу у відділення.",
+      "role": "context"
+    },
+    {
+      "word": "входу",
+      "exercise_type": "match-up",
+      "context": "Вона стоїть на вулиці, біля входу у відділення.",
+      "role": "context"
+    },
+    {
+      "word": "дня",
+      "exercise_type": "match-up",
+      "context": "Будь ласка! Гарного вам дня.",
+      "role": "context"
+    },
+    {
+      "word": "хвилинку",
+      "exercise_type": "match-up",
+      "context": "Хвилинку, зараз принесу зі складу.",
+      "role": "context"
+    },
+    {
+      "word": "принесу",
+      "exercise_type": "match-up",
+      "context": "Хвилинку, зараз принесу зі складу.",
+      "role": "context"
+    },
+    {
+      "word": "складу",
+      "exercise_type": "match-up",
+      "context": "Хвилинку, зараз принесу зі складу.",
+      "role": "context"
+    },
+    {
+      "word": "свій",
+      "exercise_type": "group-sort",
+      "context": "Скажіть нам свій індекс",
+      "role": "answer"
+    },
+    {
+      "word": "подяка",
+      "exercise_type": "group-sort",
+      "context": "Подяка (Thanking)",
+      "role": "context"
+    },
+    {
+      "word": "надання",
+      "exercise_type": "group-sort",
+      "context": "Надання речей та поради (Giving and advising)",
+      "role": "context"
+    },
+    {
+      "word": "речей",
+      "exercise_type": "group-sort",
+      "context": "Надання речей та поради (Giving and advising)",
+      "role": "context"
+    },
+    {
+      "word": "поради",
+      "exercise_type": "group-sort",
+      "context": "Надання речей та поради (Giving and advising)",
+      "role": "context"
+    },
+    {
+      "word": "дідусеві",
+      "exercise_type": "quiz",
+      "context": "_____ дідусеві Петру.",
+      "role": "context"
+    },
+    {
+      "word": "петру",
+      "exercise_type": "quiz",
+      "context": "_____ дідусеві Петру.",
+      "role": "context"
+    },
+    {
+      "word": "журнали",
+      "exercise_type": "fill-in",
+      "context": "Якщо ви надсилаєте книги або журнали, це ____.",
+      "role": "context"
+    },
+    {
+      "word": "відправили",
+      "exercise_type": "fill-in",
+      "context": "Після того, як ви відправили посилку, вам дають ____.",
+      "role": "context"
+    },
+    {
+      "word": "дають",
+      "exercise_type": "fill-in",
+      "context": "Після того, як ви відправили посилку, вам дають ____.",
+      "role": "context"
+    },
+    {
+      "word": "велика",
+      "exercise_type": "fill-in",
+      "context": "Якщо ви хочете надіслати теплий зимовий одяг, це велика ____",
+      "role": "context"
+    },
+    {
+      "word": "обов'язкова",
+      "exercise_type": "true-false",
+      "context": "Щоб відправити лист, марка не обов'язкова.",
+      "role": "context"
+    },
+    {
+      "word": "зазвичай",
+      "exercise_type": "true-false",
+      "context": "Бандероль зазвичай легша і дешевша за посилку.",
+      "role": "context"
+    },
+    {
+      "word": "дешевша",
+      "exercise_type": "true-false",
+      "context": "Бандероль зазвичай легша і дешевша за посилку.",
+      "role": "context"
+    },
+    {
+      "word": "отримує",
+      "exercise_type": "true-false",
+      "context": "Людина, яка отримує посилку, називається відправник.",
+      "role": "context"
+    },
+    {
+      "word": "полі",
+      "exercise_type": "true-false",
+      "context": "У полі «Кому» на конверті ми завжди використовуємо давальний",
+      "role": "context"
+    },
+    {
+      "word": "довгий",
+      "exercise_type": "true-false",
+      "context": "Індекс — це довгий текст з назвою вулиці та міста.",
+      "role": "context"
+    },
+    {
+      "word": "назвою",
+      "exercise_type": "true-false",
+      "context": "Індекс — це довгий текст з назвою вулиці та міста.",
+      "role": "context"
+    },
+    {
+      "word": "правильний",
+      "exercise_type": "unjumble",
+      "context": "правильний",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 15,
+    "tested_in_exercises": 12,
+    "not_tested": [
+      "адреса",
+      "отримати",
+      "пошта"
+    ]
+  },
+  "all_grounded": false
+}

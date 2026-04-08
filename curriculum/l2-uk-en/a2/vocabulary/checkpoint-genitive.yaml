@@ -1,0 +1,139 @@
+vocabulary:
+- word: ви́правити
+  translation: to correct
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: впізна́ти
+  translation: to recognize
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: ви́брати
+  translation: to choose
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: прийме́нник
+  translation: preposition
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: узго́дження
+  translation: agreement
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: множина́
+  translation: plural
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: однина́
+  translation: singular
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: закі́нчення
+  translation: ending
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: пере́ві́рка
+  translation: check, review
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: по́ми́лка
+  translation: mistake, error
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: бі́ля
+  translation: near, by
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: навпро́ти
+  translation: opposite, across from
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ко́ло
+  translation: around, near
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: від
+  translation: from (a person or object)
+  expression: false
+  pos: прийм.
+  gender: ''
+  verified: true
+- word: пі́сля
+  translation: after
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: потребува́ти
+  translation: to need, to require
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: бага́то
+  translation: a lot, many
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ма́ло
+  translation: a little, few
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: кі́лька
+  translation: several, a few
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: будь ласка
+  translation: please
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: два кілограми
+  translation: two kilograms
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: пляшка води
+  translation: bottle of water
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: центр міста
+  translation: city center
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

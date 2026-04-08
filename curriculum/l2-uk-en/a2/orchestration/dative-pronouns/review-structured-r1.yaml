@@ -1,0 +1,50 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: All sections, vocabulary, and objectives are met. Word count (3304) exceeds
+    the 2000-word target significantly, providing rich examples and context.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Generally excellent, but contains a minor calque ("Мені треба йти додому
+    прямо зараз") and a slightly unnatural phrasing ("їй це буде великий сюрприз").
+    The explanation of third-person pronouns not ta
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Excellent PPP flow and grammar explanations, but the `match-up` activity
+    marker for the pronoun paradigm is placed in Section 1, before the forms are actually
+    taught in Section 2.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items from the plan are introduced
+    naturally within dialogues and example sentences.
+- dimension: 5
+  name: Exercise quality
+  score: 8
+  evidence: Exercises match the plan hints, but placing the paradigm match-up before
+    the teaching section is an error. Also, the quiz marker contains a prompt artifact.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Very natural and encouraging tone. Slight deduction for the cliché opening
+    ("Welcome to the dative case"), but the analogies and dialogues are engaging.
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Clean Markdown structure and pacing, but a prompt instruction artifact
+    (`[quiz, Choose between...]`) was left visible in the prose.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Culturally appropriate contexts (e.g., birthday gift distribution, coffee
+    shop orders).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Conversations are highly contextual, multi-turn, and effectively demonstrate
+    the difference between Accusative and Dative cases dynamically.
+findings: []

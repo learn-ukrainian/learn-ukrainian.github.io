@@ -1,0 +1,338 @@
+version: '1.0'
+module: genitive-prepositions-purpose
+level: a2
+inline:
+- id: match-up-purpose
+  type: match-up
+  instruction: З'єднайте українські фрази з їх англійськими відповідниками
+  pairs:
+  - left: для мами
+    right: for mom
+  - left: для навчання
+    right: for studying
+  - left: для відпочинку
+    right: for rest
+  - left: для роботи
+    right: for work
+  - left: для здоров'я
+    right: for health
+  - left: для дітей
+    right: for children
+  - left: для щастя
+    right: for happiness
+  - left: для комфорту
+    right: for comfort
+- id: quiz-prep-choice-choose-between-and-to-complete-everyday-sentences
+  type: quiz
+  instruction: Оберіть правильний прийменник
+  items:
+  - question: Я завжди п'ю каву _____ цукру.
+    options:
+    - без
+    - для
+    - біля
+    - коло
+    correct: 0
+  - question: Цей подарунок _____ мами.
+    options:
+    - для
+    - без
+    - навпроти
+    - біля
+    correct: 0
+  - question: Ми зустрінемося _____ театру.
+    options:
+    - біля
+    - для
+    - без
+    - навпроти
+    correct: 0
+  - question: Він швидко закінчив роботу _____ допомоги.
+    options:
+    - без
+    - для
+    - коло
+    - біля
+    correct: 0
+  - question: У нас є нові книги _____ навчання.
+    options:
+    - для
+    - без
+    - біля
+    - навпроти
+    correct: 0
+  - question: Цей чудовий ресторан розташований _____ парку.
+    options:
+    - біля
+    - без
+    - для
+    - навпроти
+    correct: 0
+  - question: Вранці я просто не можу _____ кави.
+    options:
+    - без
+    - для
+    - коло
+    - біля
+    correct: 0
+  - question: Ця весела музика _____ танців.
+    options:
+    - для
+    - без
+    - біля
+    - коло
+    correct: 0
+- id: fill-in-location
+  type: fill-in
+  instruction: Оберіть правильну форму слова
+  items:
+  - sentence: Нова кав'ярня відкрилася навпроти _____.
+    answer: банку
+    options:
+    - банку
+    - банк
+    - банка
+  - sentence: Ми живемо в квартирі біля _____.
+    answer: будинку
+    options:
+    - будинку
+    - будинок
+    - будинка
+  - sentence: Ми зупинили машину коло _____.
+    answer: зупинки
+    options:
+    - зупинки
+    - зупинка
+    - зупинку
+  - sentence: Наш готель знаходиться навпроти _____.
+    answer: вокзалу
+    options:
+    - вокзалу
+    - вокзал
+    - вокзала
+  - sentence: Влітку ми часто відпочиваємо біля _____.
+    answer: річки
+    options:
+    - річки
+    - річка
+    - річку
+  - sentence: Велика аптека знаходиться біля _____.
+    answer: площі
+    options:
+    - площі
+    - площа
+    - площу
+  - sentence: Ми припаркували автомобіль навпроти _____.
+    answer: лікарні
+    options:
+    - лікарні
+    - лікарня
+    - лікарню
+  - sentence: Ця довга вулиця закінчується біля _____.
+    answer: станції
+    options:
+    - станції
+    - станція
+    - станцію
+- id: true-false-grammar
+  type: true-false
+  instruction: Чи правильно написано словосполучення?
+  items:
+  - statement: біля школа
+    correct: false
+    explanation: 'Після «біля» має бути родовий відмінок: біля школи.'
+  - statement: без цукру
+    correct: true
+    explanation: Після «без» вживається родовий відмінок.
+  - statement: навпроти банку
+    correct: true
+    explanation: Після «навпроти» вживається родовий відмінок.
+  - statement: для брату
+    correct: false
+    explanation: 'Слово «брат» у родовому відмінку має закінчення -а: для брата.'
+  - statement: біля моря
+    correct: true
+    explanation: Після «біля» вживається родовий відмінок.
+  - statement: без проблем
+    correct: true
+    explanation: Після «без» вживається родовий відмінок (у множині).
+  - statement: коло хата
+    correct: false
+    explanation: 'Після «коло» має бути родовий відмінок: коло хати.'
+  - statement: для сестри
+    correct: true
+    explanation: Після «для» вживається родовий відмінок.
+workbook:
+- type: error-correction
+  instruction: Знайдіть і виправте помилку
+  items:
+  - sentence: Я завжди п'ю каву без молоко.
+    error: молоко
+    correction: молока
+    error_type: word
+    options:
+    - молока
+    - молоку
+    - молоком
+    explanation: 'Після «без» потрібен родовий відмінок: без молока.'
+  - sentence: Сьогодні буде смачна вечеря для тату.
+    error: тату
+    correction: тата
+    error_type: word
+    options:
+    - тата
+    - тато
+    - татові
+    explanation: 'Слово «тато» у родовому відмінку має закінчення -а: для тата.'
+  - sentence: Я часто гуляю біля парк.
+    error: парк
+    correction: парку
+    error_type: word
+    options:
+    - парку
+    - парка
+    - парком
+    explanation: 'Після «біля» потрібен родовий відмінок: біля парку.'
+  - sentence: Нова кав'ярня відкрилася навпроти церква.
+    error: церква
+    correction: церкви
+    error_type: word
+    options:
+    - церкви
+    - церкву
+    - церквою
+    explanation: 'Після «навпроти» потрібен родовий відмінок: навпроти церкви.'
+  - sentence: Мені потрібен час для відпочинок.
+    error: відпочинок
+    correction: відпочинку
+    error_type: word
+    options:
+    - відпочинку
+    - відпочинком
+    - відпочинка
+    explanation: 'Після «для» потрібен родовий відмінок: для відпочинку.'
+  - sentence: Вони працюють цілий день без зупинка.
+    error: зупинка
+    correction: зупинки
+    error_type: word
+    options:
+    - зупинки
+    - зупинку
+    - зупинкою
+    explanation: 'Після «без» потрібен родовий відмінок: без зупинки.'
+- type: unjumble
+  instruction: Складіть правильне речення зі слів
+  items:
+  - words:
+    - цукру.
+    - каву
+    - завжди
+    - п'ю
+    - Я
+    - без
+    correct_order:
+    - Я
+    - завжди
+    - п'ю
+    - каву
+    - без
+    - цукру.
+  - words:
+    - для
+    - дуже
+    - сина.
+    - гра
+    - цікава
+    - Це
+    correct_order:
+    - Це
+    - дуже
+    - цікава
+    - гра
+    - для
+    - сина.
+  - words:
+    - завтра
+    - Зустрінемося
+    - метро.
+    - біля
+    correct_order:
+    - Зустрінемося
+    - завтра
+    - біля
+    - метро.
+  - words:
+    - без
+    - закінчив
+    - роботу
+    - допомоги.
+    - швидко
+    - Він
+    correct_order:
+    - Він
+    - швидко
+    - закінчив
+    - роботу
+    - без
+    - допомоги.
+  - words:
+    - банку.
+    - відкрилася
+    - Нова
+    - кав'ярня
+    - навпроти
+    correct_order:
+    - Нова
+    - кав'ярня
+    - відкрилася
+    - навпроти
+    - банку.
+  - words:
+    - книги
+    - навчання.
+    - нові
+    - для
+    - У
+    - нас
+    - є
+    correct_order:
+    - У
+    - нас
+    - є
+    - нові
+    - книги
+    - для
+    - навчання.
+- type: group-sort
+  instruction: Розподіліть фрази за їхнім значенням
+  groups:
+  - label: Призначення (для кого/чого?)
+    items:
+    - для мами
+    - для відпочинку
+    - для здоров'я
+  - label: Відсутність (без чого?)
+    items:
+    - без цукру
+    - без проблем
+    - без допомоги
+  - label: Місцезнаходження (біля/навпроти/коло)
+    items:
+    - біля школи
+    - навпроти банку
+    - коло хати
+- type: match-up
+  instruction: З'єднайте запитання з правильною відповіддю
+  pairs:
+  - left: Для кого цей подарунок?
+    right: Для мами.
+  - left: Без чого ти п'єш каву?
+    right: Без цукру.
+  - left: Де знаходиться аптека?
+    right: Біля ринку.
+  - left: Навіщо нам цей великий стіл?
+    right: Для комфорту.
+  - left: Де ми поставимо намет?
+    right: Біля річки.
+  - left: Що відкрилося навпроти банку?
+    right: Нова кав'ярня.

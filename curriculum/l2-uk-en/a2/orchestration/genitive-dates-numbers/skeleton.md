@@ -1,0 +1,32 @@
+## Яке сьогодні число? Котра година? (~600 words total)
+- P1 (~100 words): [Introduction to asking about dates and time. Explain the difference between 'Яке сьогодні число?' (What's the date?) and 'Якого числа?' (On what date?). Mention that 'число' in this context means 'date'. Use examples: 'Яке сьогодні число? — Сьогодні десяте березня'.]
+- P2 (~120 words): [The formula for stating the date: Ordinal numeral in neuter nominative (since it agrees with the implied word 'число') + Month in Genitive Singular. Explain that unlike English 'January 1st', Ukrainian puts the month in the 'of' case (Genitive). Examples: 'перше січня', 'друге лютого', 'двадцять четверте серпня'.]
+- P3 (~180 words): [Comprehensive guide to the 12 months and their Genitive forms. Explain the -а/-я endings for masculine months (січня, березня, квітня) and the adjectival ending for 'лютий' (лютого). Highlight the mobile -е- that disappears in months like 'січень' -> 'січня' and 'березень' -> 'березня'.]
+- P4 (~100 words): [Introduction to telling time. Explain 'Котра година?' and 'О котрій годині?'. Briefly cover the use of ordinal numerals for hours (п'ята година, о дев'ятій) and the basic 'half-past' construction 'пів на [next hour]' (пів на другу). Examples: 'Зараз друга година', 'Зустріч о дев'ятій'.]
+- P5 (~100 words): [Dialogue: 'Booking an Appointment'. A client calls a salon. Client: 'Яке сьогодні число?' Admin: 'Сьогодні п'яте травня'. Client: 'Я хочу записатися на манікюр на шосте травня'. Admin: 'Добре, о котрій годині?'. Client: 'Об одинадцятій'. Focus on the contrast between Nom. and Gen. dates.]
+- <!-- INJECT_ACTIVITY: quiz-dates-drill --> [quiz, What's the Date? (Drill), 8 items]
+
+## Рахуємо предмети: правило «1, 2-4, 5+» (~850 words total)
+- P1 (~120 words): [The central hierarchy of counting in Ukrainian. Explain that the numeral determines the case and number of the noun. Introduce the three tiers: Tier 1 (number 1), Tier 2 (numbers 2, 3, 4), and Tier 3 (numbers 5 through 20). Use 'стіл' (table) as a consistent example throughout the explanation.]
+- P2 (~120 words): [The '1' Rule: Numerals ending in 'один' (1, 21, 31) take the Nominative Singular. Explain gender agreement: 'один стіл', 'одна книга', 'одне вікно'. Mention that even in large numbers like 101, the noun stays singular.]
+- P3 (~150 words): [The '2, 3, 4' Rule: Numerals ending in 2, 3, or 4 take the Nominative Plural. Contrast this with English where '2 tables' is just plural, but in Ukrainian it requires a specific plural form. Examples: 'два столи', 'три книги', 'чотири вікна'. Explicitly mention that feminine nouns like 'книги' use the Nom. Pl. ending -и.]
+- P4 (~150 words): [The '5-20' Rule (The Genitive Plural Tier): Numbers 5 through 20 (and 25-30, etc.) trigger the Genitive Plural. This is the biggest change for learners. Explain the endings: -ів for masculine (п'ять столів), zero ending for feminine (шість книг), and zero/ -ів for neuter (сім вікон). Contrast: 'одна книга' vs 'п'ять книг'.]
+- P5 (~100 words): [Compound numbers. Explain that for numbers like 22, 33, or 44, the rule follows the *last* word in the numeral. 'Двадцять два номери' (Nom. Pl.) vs 'Двадцять п'ять номерів' (Gen. Pl.). Use hotel room examples: 'двадцять один номер', 'двадцять чотири номери'.]
+- P6 (~100 words): [Special focus on feminine nouns. Address the potential confusion where Nominative Plural and Genitive Singular look identical (e.g., 'сестри'). Clarify that in 'дві сестри' (Nom. Pl.), the stress might shift or remain, but the grammatical function is 'counting 2-4'. Use examples like 'книги' and 'машини' to show the pattern.]
+- P7 (~110 words): [Dialogue: 'At the Hotel Reception'. Guest: 'Мені потрібно три номери'. Admin: 'На скільки людей?'. Guest: 'На п'ять гостей'. Admin: 'У нас є два великих номери і один малий'. Guest: 'Скільки це коштує?'. Focus on the '3', '5', '2', '1' agreement rules.]
+- <!-- INJECT_ACTIVITY: fill-in-counting-rule --> [fill-in, Counting Objects (1, 2-4, 5+ Rule), 8 items]
+- <!-- INJECT_ACTIVITY: match-up-quantity-qa --> [match-up, Q&A about quantities and dates, 8 items]
+
+## Заперечення з прямим додатком (~750 words total)
+- P1 (~130 words): [Introduction to the Genitive of Negation. Explain that when a positive sentence with a direct object (Accusative) is turned into a negative sentence (using 'не'), the object often shifts to the Genitive. This is a hallmark of Slavic syntax. Example: 'Я маю квиток' (Acc) -> 'Я не маю квитка' (Gen).]
+- P2 (~150 words): [The nuance of emphasis. Explain that while the Accusative is sometimes used in modern speech after negation, the Genitive is the standard for total negation ('not a single one'). Use the book example from the plan: 'Я не читав книгу' (I didn't read *the* book) vs 'Я не читав книги' (I didn't read *any* book / haven't been reading).]
+- P3 (~150 words): [Practical comparison with common masculine and feminine nouns. Show the transformation: 'Я купую хліб' -> 'Я не купую хліба'. 'Він бачить машину' -> 'Він не бачить машини'. Highlight the -а/-у endings for masculine and -и/-і for feminine Genitive singular.]
+- P4 (~120 words): [The verb 'немає' (there is no). Explain that 'немає' is a dedicated Genitive-triggering word that denotes absence. Contrast it with 'не маю' (I don't have). Examples: 'Тут немає кави' (There is no coffee here) vs 'Я не маю кави' (I don't have coffee).]
+- P5 (~100 words): [Abstract vs Concrete Negation. Discuss how abstract concepts like 'час' (time) or 'гроші' (money) almost always take the Genitive in negative sentences. Examples: 'Я не маю часу', 'У мене немає грошей', 'Він не потребує допомоги'.]
+- P6 (~100 words): [Dialogue: 'In the Store'. Customer: 'Чи є у вас свіжий хліб?'. Seller: 'Ні, сьогодні немає хліба'. Customer: 'А молоко?'. Seller: 'Я не бачу молока на полиці'. Customer: 'Шкода, я не маю часу чекати'. Focus on 'немає хліба', 'не бачу молока', 'не маю часу'.]
+- <!-- INJECT_ACTIVITY: match-up-negation-shift --> [match-up, Accusative to Genitive Negation, 8 items]
+
+## Підсумок — Summary (~150 words)
+- P1 (~150 words): [Recap of the three core rules. Provide a bulleted self-check list: 1) Яке сьогодні число? (десяте травня - Gen. month); 2) How do you count to 5? (один стіл, два столи, п'ять столів); 3) How do you negate 'Я бачу фільм'? (Я не бачу фільму - Gen. object). End with a note on how the Genitive case brings precision to Ukrainian quantities and absences.]
+
+Grand total: ~2350 words

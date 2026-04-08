@@ -1,0 +1,348 @@
+version: '1.0'
+module: genitive-plural
+level: a2
+inline:
+- id: match-up-match-nominative-singular-nouns-to-their-genitive-plural-forms
+  type: match-up
+  instruction: З'єднайте слова (однина — множина)
+  pairs:
+  - left: студент
+    right: студентів
+  - left: стаття
+    right: статей
+  - left: завдання
+    right: завдань
+  - left: питання
+    right: питань
+  - left: людина
+    right: людей
+  - left: книга
+    right: книг
+  - left: вікно
+    right: вікон
+  - left: брат
+    right: братів
+- id: fill-in-genitive-plural
+  type: fill-in
+  instruction: Вставте правильне слово
+  items:
+  - sentence: У цій бібліотеці дуже багато ____ (книга).
+    answer: книг
+    options:
+    - книги
+    - книг
+    - книгам
+  - sentence: У нас є кілька важливих ____ (питання).
+    answer: питань
+    options:
+    - питання
+    - питань
+    - питанням
+  - sentence: На площі стояло десять ____ (студент).
+    answer: студентів
+    options:
+    - студенти
+    - студентів
+    - студентам
+  - sentence: Скільки ____ (стаття) ти прочитав?
+    answer: статей
+    options:
+    - статтям
+    - статей
+    - статті
+  - sentence: Вона має мало вільних ____ (день).
+    answer: днів
+    options:
+    - дні
+    - днів
+    - дням
+  - sentence: Для цієї роботи треба багато ____ (людина).
+    answer: людей
+    options:
+    - людей
+    - людям
+    - люди
+  - sentence: На вулиці багато нових ____ (машина).
+    answer: машин
+    options:
+    - машини
+    - машин
+    - машинах
+  - sentence: Учитель дав нам п'ять нових ____ (завдання).
+    answer: завдань
+    options:
+    - завдання
+    - завдань
+    - завданням
+- id: quiz-ending-choice
+  type: quiz
+  instruction: Оберіть правильний варіант закінчення
+  items:
+  - question: Там стоїть багато ____ (стіл).
+    options:
+    - столів
+    - столей
+    - стіл
+    - столи
+    correct: 0
+  - question: У будинку живе кілька ____ (сім'я).
+    options:
+    - сім'їв
+    - сімей
+    - сім
+    - сім'ї
+    correct: 1
+  - question: Я знаю мало ____ (слово).
+    options:
+    - слів
+    - словей
+    - словів
+    - слова
+    correct: 0
+  - question: Ми знаємо п'ять ____ (герой).
+    options:
+    - героїв
+    - героєй
+    - герой
+    - герої
+    correct: 0
+  - question: У нього є багато ____ (сестра).
+    options:
+    - сестер
+    - сестрів
+    - сестрей
+    - сестри
+    correct: 0
+  - question: На планеті є десять ____ (море).
+    options:
+    - морей
+    - морів
+    - мор
+    - моря
+    correct: 1
+  - question: Скільки ____ (око) має цей павук?
+    options:
+    - оків
+    - ок
+    - очей
+    - ока
+    correct: 2
+  - question: Тут є багато великих ____ (подвір'я).
+    options:
+    - подвір'їв
+    - подвір'єй
+    - подвір
+    - подвір'я
+    correct: 0
+- id: group-sort-genitive
+  type: group-sort
+  instruction: Розподіліть слова за закінченнями у родовому відмінку множини
+  groups:
+  - label: Закінчення -ів / -їв
+    items:
+    - студентів
+    - олівців
+    - героїв
+  - label: Нульове закінчення
+    items:
+    - питань
+    - сумок
+    - міст
+  - label: Закінчення -ей
+    items:
+    - статей
+    - очей
+    - людей
+workbook:
+- type: error-correction
+  instruction: Знайдіть і виправте помилку
+  items:
+  - sentence: Скільки студенти сьогодні на лекції?
+    error: студенти
+    correction: студентів
+    error_type: word
+    options:
+    - студентів
+    - студентам
+    - студент
+    explanation: Після слова «скільки» потрібен родовий відмінок множини (Genitive
+      plural).
+  - sentence: Вона написала п'ять наукових статтів.
+    error: статтів
+    correction: статей
+    error_type: word
+    options:
+    - статей
+    - статті
+    - статтям
+    explanation: Слово «стаття» у родовому відмінку множини має закінчення -ей (статей).
+  - sentence: У цій бібліотеці багато книга.
+    error: книга
+    correction: книг
+    error_type: word
+    options:
+    - книг
+    - книги
+    - книгам
+    explanation: 'Після слова «багато» використовуємо родовий відмінок множини: багато
+      книг (нульове закінчення).'
+  - sentence: У нього є кілька питання до вчителя.
+    error: питання
+    correction: питань
+    error_type: word
+    options:
+    - питань
+    - питанням
+    - питаннях
+    explanation: Слово «питання» у родовому відмінку множини має нульове закінчення
+      (питань).
+  - sentence: Мама купила десять червоних сумка.
+    error: сумка
+    correction: сумок
+    error_type: word
+    options:
+    - сумок
+    - сумки
+    - сумкам
+    explanation: 'У слові «сумка» з''являється вставний голосний «о»: десять сумок.'
+  - sentence: Скільки людин працює в цьому офісі?
+    error: людин
+    correction: людей
+    error_type: word
+    options:
+    - людей
+    - люди
+    - людям
+    explanation: Множина від слова «людина» — «люди». У родовому відмінку — «людей».
+- type: translate
+  instruction: Оберіть правильний переклад
+  items:
+  - source: How many books do you have?
+    options:
+    - text: Скільки книг ви маєте?
+      correct: true
+    - text: Скільки книги ви маєте?
+      correct: false
+    - text: Скільки книгах ви маєте?
+      correct: false
+  - source: I have a few questions.
+    options:
+    - text: У мене є кілька питань.
+      correct: true
+    - text: У мене є кілька питання.
+      correct: false
+    - text: У мене є кілька питаннях.
+      correct: false
+  - source: There are many students here.
+    options:
+    - text: Тут багато студентів.
+      correct: true
+    - text: Тут багато студенти.
+      correct: false
+    - text: Тут багато студентам.
+      correct: false
+  - source: We wrote five articles.
+    options:
+    - text: Ми написали п'ять статей.
+      correct: true
+    - text: Ми написали п'ять статтів.
+      correct: false
+    - text: Ми написали п'ять статті.
+      correct: false
+  - source: I know very few people.
+    options:
+    - text: Я знаю дуже мало людей.
+      correct: true
+    - text: Я знаю дуже мало людин.
+      correct: false
+    - text: Я знаю дуже мало люди.
+      correct: false
+  - source: There are no tasks today.
+    options:
+    - text: Сьогодні немає завдань.
+      correct: true
+    - text: Сьогодні немає завдання.
+      correct: false
+    - text: Сьогодні немає завдані.
+      correct: false
+- type: unjumble
+  instruction: Складіть правильне речення зі слів
+  items:
+  - words:
+    - шкіл.
+    - багато
+    - місті
+    - У
+    - є
+    - нашому
+    correct_order:
+    - У
+    - нашому
+    - місті
+    - є
+    - багато
+    - шкіл.
+  - words:
+    - прочитав?
+    - ти
+    - статей
+    - Скільки
+    - цікавих
+    correct_order:
+    - Скільки
+    - цікавих
+    - статей
+    - ти
+    - прочитав?
+  - words:
+    - студентів
+    - дуже
+    - на
+    - мало
+    - Сьогодні
+    - лекції.
+    correct_order:
+    - Сьогодні
+    - дуже
+    - мало
+    - студентів
+    - на
+    - лекції.
+  - words:
+    - кілька
+    - є
+    - питань.
+    - У
+    - нього
+    - важливих
+    correct_order:
+    - У
+    - нього
+    - є
+    - кілька
+    - важливих
+    - питань.
+  - words:
+    - вирішили
+    - Ми
+    - завдань.
+    - складних
+    - п'ять
+    correct_order:
+    - Ми
+    - вирішили
+    - п'ять
+    - складних
+    - завдань.
+  - words:
+    - красивих
+    - вулиці
+    - На
+    - жінок.
+    - багато
+    correct_order:
+    - На
+    - вулиці
+    - багато
+    - красивих
+    - жінок.

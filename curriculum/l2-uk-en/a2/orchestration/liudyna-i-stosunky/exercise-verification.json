@@ -1,0 +1,396 @@
+{
+  "total_items": 144,
+  "grounded_items": 81,
+  "ungrounded": [
+    {
+      "word": "відкрита",
+      "exercise_type": "match-up",
+      "context": "відкрита людина, яка каже правду",
+      "role": "context"
+    },
+    {
+      "word": "каже",
+      "exercise_type": "match-up",
+      "context": "відкрита людина, яка каже правду",
+      "role": "context"
+    },
+    {
+      "word": "правду",
+      "exercise_type": "match-up",
+      "context": "відкрита людина, яка каже правду",
+      "role": "context"
+    },
+    {
+      "word": "радий",
+      "exercise_type": "match-up",
+      "context": "завжди радий бачити інших людей",
+      "role": "context"
+    },
+    {
+      "word": "бачити",
+      "exercise_type": "match-up",
+      "context": "завжди радий бачити інших людей",
+      "role": "context"
+    },
+    {
+      "word": "інших",
+      "exercise_type": "match-up",
+      "context": "завжди радий бачити інших людей",
+      "role": "context"
+    },
+    {
+      "word": "готовий",
+      "exercise_type": "match-up",
+      "context": "завжди готовий вислухати і допомогти",
+      "role": "context"
+    },
+    {
+      "word": "вислухати",
+      "exercise_type": "match-up",
+      "context": "завжди готовий вислухати і допомогти",
+      "role": "context"
+    },
+    {
+      "word": "допомогти",
+      "exercise_type": "match-up",
+      "context": "завжди готовий вислухати і допомогти",
+      "role": "context"
+    },
+    {
+      "word": "любить",
+      "exercise_type": "match-up",
+      "context": "любить працювати і не сидить без діла",
+      "role": "context"
+    },
+    {
+      "word": "працювати",
+      "exercise_type": "match-up",
+      "context": "любить працювати і не сидить без діла",
+      "role": "context"
+    },
+    {
+      "word": "те",
+      "exercise_type": "match-up",
+      "context": "завжди робить те, що обіцяв",
+      "role": "context"
+    },
+    {
+      "word": "що",
+      "exercise_type": "match-up",
+      "context": "завжди робить те, що обіцяв",
+      "role": "context"
+    },
+    {
+      "word": "обіцяв",
+      "exercise_type": "match-up",
+      "context": "завжди робить те, що обіцяв",
+      "role": "context"
+    },
+    {
+      "word": "може",
+      "exercise_type": "match-up",
+      "context": "може спокійно чекати або долати труднощі",
+      "role": "context"
+    },
+    {
+      "word": "спокійно",
+      "exercise_type": "match-up",
+      "context": "може спокійно чекати або долати труднощі",
+      "role": "context"
+    },
+    {
+      "word": "чекати",
+      "exercise_type": "match-up",
+      "context": "може спокійно чекати або долати труднощі",
+      "role": "context"
+    },
+    {
+      "word": "або",
+      "exercise_type": "match-up",
+      "context": "може спокійно чекати або долати труднощі",
+      "role": "context"
+    },
+    {
+      "word": "долати",
+      "exercise_type": "match-up",
+      "context": "може спокійно чекати або долати труднощі",
+      "role": "context"
+    },
+    {
+      "word": "труднощі",
+      "exercise_type": "match-up",
+      "context": "може спокійно чекати або долати труднощі",
+      "role": "context"
+    },
+    {
+      "word": "здається",
+      "exercise_type": "match-up",
+      "context": "не здається і йде до своєї мети",
+      "role": "context"
+    },
+    {
+      "word": "йде",
+      "exercise_type": "match-up",
+      "context": "не здається і йде до своєї мети",
+      "role": "context"
+    },
+    {
+      "word": "до",
+      "exercise_type": "match-up",
+      "context": "не здається і йде до своєї мети",
+      "role": "context"
+    },
+    {
+      "word": "своєї",
+      "exercise_type": "match-up",
+      "context": "не здається і йде до своєї мети",
+      "role": "context"
+    },
+    {
+      "word": "мети",
+      "exercise_type": "match-up",
+      "context": "не здається і йде до своєї мети",
+      "role": "context"
+    },
+    {
+      "word": "щось",
+      "exercise_type": "match-up",
+      "context": "не хоче працювати або щось робити",
+      "role": "context"
+    },
+    {
+      "word": "робити",
+      "exercise_type": "match-up",
+      "context": "не хоче працювати або щось робити",
+      "role": "context"
+    },
+    {
+      "word": "уважно",
+      "exercise_type": "quiz",
+      "context": "Він завжди допомагає людям і уважно їх слухає. Він дуже ____",
+      "role": "context"
+    },
+    {
+      "word": "їх",
+      "exercise_type": "quiz",
+      "context": "Він завжди допомагає людям і уважно їх слухає. Він дуже ____",
+      "role": "context"
+    },
+    {
+      "word": "слухає",
+      "exercise_type": "quiz",
+      "context": "Він завжди допомагає людям і уважно їх слухає. Він дуже ____",
+      "role": "context"
+    },
+    {
+      "word": "ця",
+      "exercise_type": "quiz",
+      "context": "Ця дівчина завжди посміхається і рада бачити гостей. Вона __",
+      "role": "context"
+    },
+    {
+      "word": "дівчина",
+      "exercise_type": "quiz",
+      "context": "Ця дівчина завжди посміхається і рада бачити гостей. Вона __",
+      "role": "context"
+    },
+    {
+      "word": "посміхається",
+      "exercise_type": "quiz",
+      "context": "Ця дівчина завжди посміхається і рада бачити гостей. Вона __",
+      "role": "context"
+    },
+    {
+      "word": "гостей",
+      "exercise_type": "quiz",
+      "context": "Ця дівчина завжди посміхається і рада бачити гостей. Вона __",
+      "role": "context"
+    },
+    {
+      "word": "довго",
+      "exercise_type": "quiz",
+      "context": "Вчитель може довго і спокійно пояснювати одне і те ж правило",
+      "role": "context"
+    },
+    {
+      "word": "пояснювати",
+      "exercise_type": "quiz",
+      "context": "Вчитель може довго і спокійно пояснювати одне і те ж правило",
+      "role": "context"
+    },
+    {
+      "word": "одне",
+      "exercise_type": "quiz",
+      "context": "Вчитель може довго і спокійно пояснювати одне і те ж правило",
+      "role": "context"
+    },
+    {
+      "word": "правило",
+      "exercise_type": "quiz",
+      "context": "Вчитель може довго і спокійно пояснювати одне і те ж правило",
+      "role": "context"
+    },
+    {
+      "word": "складно",
+      "exercise_type": "quiz",
+      "context": "Він не здається, коли складно, і завжди отримує результат. В",
+      "role": "context"
+    },
+    {
+      "word": "отримує",
+      "exercise_type": "quiz",
+      "context": "Він не здається, коли складно, і завжди отримує результат. В",
+      "role": "context"
+    },
+    {
+      "word": "результат",
+      "exercise_type": "quiz",
+      "context": "Він не здається, коли складно, і завжди отримує результат. В",
+      "role": "context"
+    },
+    {
+      "word": "нічого",
+      "exercise_type": "quiz",
+      "context": "Вона відкрита людина, нічого не приховує і завжди каже правд",
+      "role": "context"
+    },
+    {
+      "word": "приховує",
+      "exercise_type": "quiz",
+      "context": "Вона відкрита людина, нічого не приховує і завжди каже правд",
+      "role": "context"
+    },
+    {
+      "word": "студентка",
+      "exercise_type": "fill-in",
+      "context": "Ця студентка — дуже _____ дівчина.",
+      "role": "context"
+    },
+    {
+      "word": "чуйна",
+      "exercise_type": "fill-in",
+      "context": "Моя тітка — _____ і чуйна людина.",
+      "role": "context"
+    },
+    {
+      "word": "позитивні",
+      "exercise_type": "group-sort",
+      "context": "Позитивні риси",
+      "role": "context"
+    },
+    {
+      "word": "риси",
+      "exercise_type": "group-sort",
+      "context": "Позитивні риси",
+      "role": "context"
+    },
+    {
+      "word": "складні",
+      "exercise_type": "group-sort",
+      "context": "Складні або нейтральні риси",
+      "role": "context"
+    },
+    {
+      "word": "нейтральні",
+      "exercise_type": "group-sort",
+      "context": "Складні або нейтральні риси",
+      "role": "context"
+    },
+    {
+      "word": "якою",
+      "exercise_type": "true-false",
+      "context": "Знайомий — це людина, з якою ви дуже близькі і давно дружите",
+      "role": "context"
+    },
+    {
+      "word": "близькі",
+      "exercise_type": "true-false",
+      "context": "Знайомий — це людина, з якою ви дуже близькі і давно дружите",
+      "role": "context"
+    },
+    {
+      "word": "дружите",
+      "exercise_type": "true-false",
+      "context": "Знайомий — це людина, з якою ви дуже близькі і давно дружите",
+      "role": "context"
+    },
+    {
+      "word": "терпляча",
+      "exercise_type": "true-false",
+      "context": "Терпляча людина може спокійно чекати.",
+      "role": "context"
+    },
+    {
+      "word": "працівник",
+      "exercise_type": "true-false",
+      "context": "Відповідальний працівник часто забуває про свої обіцянки.",
+      "role": "context"
+    },
+    {
+      "word": "забуває",
+      "exercise_type": "true-false",
+      "context": "Відповідальний працівник часто забуває про свої обіцянки.",
+      "role": "context"
+    },
+    {
+      "word": "про",
+      "exercise_type": "true-false",
+      "context": "Відповідальний працівник часто забуває про свої обіцянки.",
+      "role": "context"
+    },
+    {
+      "word": "ледача",
+      "exercise_type": "error-correction",
+      "context": "Ця студентка завжди робить завдання, вона ледача.",
+      "role": "context"
+    },
+    {
+      "word": "світлий",
+      "exercise_type": "error-correction",
+      "context": "Його дідусь має світлий волосся.",
+      "role": "context"
+    },
+    {
+      "word": "мої",
+      "exercise_type": "error-correction",
+      "context": "Мої",
+      "role": "answer"
+    },
+    {
+      "word": "красиві",
+      "exercise_type": "error-correction",
+      "context": "красиві",
+      "role": "answer"
+    },
+    {
+      "word": "красиве",
+      "exercise_type": "error-correction",
+      "context": "Вона має красиве очі.",
+      "role": "context"
+    },
+    {
+      "word": "нашим",
+      "exercise_type": "unjumble",
+      "context": "нашим",
+      "role": "answer"
+    },
+    {
+      "word": "довіряємо",
+      "exercise_type": "unjumble",
+      "context": "довіряємо",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 15,
+    "tested_in_exercises": 10,
+    "not_tested": [
+      "зовнішність",
+      "описувати",
+      "родич",
+      "стосунок",
+      "характер"
+    ]
+  },
+  "all_grounded": false
+}

@@ -1,0 +1,409 @@
+version: '1.0'
+module: instrumental-accompaniment
+level: a2
+inline:
+- id: match-nom-inst
+  type: match-up
+  instruction: З'єднайте називний і орудний відмінки (Match nominative and instrumental
+    cases)
+  pairs:
+  - left: друг
+    right: другом
+  - left: подруга
+    right: подругою
+  - left: лимон
+    right: лимоном
+  - left: море
+    right: морем
+  - left: надія
+    right: надією
+  - left: герой
+    right: героєм
+  - left: ніж
+    right: ножем
+  - left: земля
+    right: землею
+- id: fill-in-instrumental-endings
+  type: fill-in
+  instruction: Оберіть правильне закінчення орудного відмінка (Choose the correct
+    instrumental ending)
+  items:
+  - sentence: Вона гуляє з собакою, а я йду з друг____.
+    answer: ом
+    options:
+    - ом
+    - ем
+    - ою
+    - ею
+  - sentence: Він розмовляє з брат____.
+    answer: ом
+    options:
+    - ом
+    - ем
+    - ою
+    - ею
+  - sentence: Директор розмовляє з учител____.
+    answer: ем
+    options:
+    - ом
+    - ем
+    - ою
+    - ею
+  - sentence: Я люблю борщ зі сметан____.
+    answer: ою
+    options:
+    - ом
+    - ем
+    - ою
+    - ею
+  - sentence: Я повністю погоджуюся із сестр____.
+    answer: ою
+    options:
+    - ом
+    - ем
+    - ою
+    - ею
+  - sentence: Я пишу ручк____.
+    answer: ою
+    options:
+    - ом
+    - ем
+    - ою
+    - ею
+  - sentence: Я їм суп ложк____.
+    answer: ою
+    options:
+    - ом
+    - ем
+    - ою
+    - ею
+  - sentence: Він ріже хліб нож____.
+    answer: ем
+    options:
+    - ом
+    - ем
+    - ою
+    - ею
+- id: fill-in-complete-cafe-dialogue-sentences-with-correct-instrumental-forms
+  type: fill-in
+  instruction: Доповніть речення з діалогу в кафе (Complete dialogue sentences in
+    the cafe)
+  items:
+  - sentence: Я буду чай з ____.
+    answer: лимоном
+    options:
+    - лимон
+    - лимону
+    - лимоном
+    - лимона
+  - sentence: А я хочу каву з ____.
+    answer: молоком
+    options:
+    - молоком
+    - молока
+    - молоко
+    - молоку
+  - sentence: І ще я буду бутерброд з ____.
+    answer: шинкою
+    options:
+    - шинкою
+    - шинки
+    - шинку
+    - шинка
+  - sentence: Можна мені млинець з ____?
+    answer: яблуком
+    options:
+    - яблуко
+    - яблука
+    - яблуком
+    - яблуку
+  - sentence: Я люблю хліб з ____.
+    answer: маслом
+    options:
+    - масла
+    - масло
+    - маслу
+    - маслом
+  - sentence: Мені, будь ласка, борщ зі ____.
+    answer: сметаною
+    options:
+    - сметана
+    - сметани
+    - сметаною
+    - сметану
+  - sentence: Дайте, будь ласка, пиріжок з ____.
+    answer: вишнею
+    options:
+    - вишня
+    - вишні
+    - вишнею
+    - вишню
+  - sentence: Я замовлю чай з ____.
+    answer: медом
+    options:
+    - мед
+    - медом
+    - меду
+    - меда
+workbook:
+- id: workbook-choose-preposition
+  type: quiz
+  instruction: 'Оберіть правильний прийменник: з, із або зі (Choose the correct preposition:
+    з, із or зі)'
+  items:
+  - question: Я хочу чай ____ лимоном.
+    options:
+    - з
+    - із
+    - зі
+    - без
+    correct: 0
+  - question: Я згоден ____ сестрою.
+    options:
+    - з
+    - із
+    - зі
+    - без
+    correct: 1
+  - question: Вона любить борщ ____ сметаною.
+    options:
+    - з
+    - із
+    - зі
+    - без
+    correct: 2
+  - question: Ти підеш у кіно ____ мною?
+    options:
+    - з
+    - із
+    - зі
+    - без
+    correct: 2
+  - question: Вона живе ____ батьками.
+    options:
+    - з
+    - із
+    - зі
+    - без
+    correct: 0
+  - question: Ми розмовляємо ____ вчителем.
+    options:
+    - з
+    - із
+    - зі
+    - без
+    correct: 0
+  - question: Він робить це ____ смаком.
+    options:
+    - з
+    - із
+    - зі
+    - без
+    correct: 2
+  - question: Вона грається ____ собакою.
+    options:
+    - з
+    - із
+    - зі
+    - без
+    correct: 0
+- id: workbook-sort-endings
+  type: group-sort
+  instruction: Розподіліть слова за їхнім закінченням в орудному відмінку (Sort words
+    by their instrumental ending)
+  groups:
+  - label: -ом
+    items:
+    - друг
+    - лимон
+    - брат
+    - молоко
+  - label: -ем / -єм
+    items:
+    - вчитель
+    - ніж
+    - море
+    - чай
+  - label: -ою
+    items:
+    - мама
+    - сестра
+    - книга
+    - сметана
+  - label: -ею / -єю
+    items:
+    - земля
+    - душа
+    - мрія
+    - надія
+- id: workbook-true-false
+  type: true-false
+  instruction: Правда чи ні? (True or false?)
+  items:
+  - statement: Ми використовуємо прийменник «з», коли говоримо про інструмент (наприклад,
+      ручкою).
+    correct: false
+    explanation: Ми не додаємо прийменники, коли говоримо про інструмент.
+  - statement: Орудний відмінок відповідає на питання «Ким?» та «Чим?».
+    correct: true
+    explanation: Це головні питання орудного відмінка.
+  - statement: Слово «сестра» в орудному відмінку має форму «сестрою».
+    correct: true
+    explanation: Жіночі іменники з твердою основою мають закінчення -ою.
+  - statement: Після прийменника «з» завжди йде знахідний відмінок.
+    correct: false
+    explanation: Після прийменника «з» (with) завжди йде орудний відмінок.
+  - statement: Ми використовуємо прийменник «зі» перед словом «сметаною».
+    correct: true
+    explanation: Перед словами, що починаються на «з», «с», «ш», використовується
+      «зі».
+  - statement: Слово «чай» в орудному відмінку стає формою «чайм».
+    correct: false
+    explanation: 'Слово «чай» закінчується на [й] і отримує закінчення -єм: «чаєм».'
+- id: workbook-error-correction
+  type: error-correction
+  instruction: Знайдіть і виправте помилку в реченні (Find and correct the mistake
+    in the sentence)
+  items:
+  - sentence: Він любить чай з лимона.
+    error: лимона
+    correction: лимоном
+    error_type: word
+    options:
+    - лимоном
+    - лимону
+    - лимон
+    explanation: 'Після прийменника ''з'' використовується орудний відмінок: лимоном.'
+  - sentence: Я йду в кіно з подруга.
+    error: подруга
+    correction: подругою
+    error_type: word
+    options:
+    - подругою
+    - подругу
+    - подруги
+    explanation: Орудний відмінок від слова 'подруга' — 'подругою'.
+  - sentence: Вона їсть борщ з сметаною.
+    error: з
+    correction: зі
+    error_type: word
+    options:
+    - зі
+    - із
+    - в
+    explanation: Перед словами, що починаються на 'с' та приголосний, використовуємо
+      'зі' (зі сметаною).
+  - sentence: Я розмовляю із брату.
+    error: брату
+    correction: братом
+    error_type: word
+    options:
+    - братом
+    - брата
+    - браті
+    explanation: Орудний відмінок від слова 'брат' — 'братом'.
+  - sentence: Ти працюєш з вчительом?
+    error: вчительом
+    correction: вчителем
+    error_type: word
+    options:
+    - вчителем
+    - вчителю
+    - вчителя
+    explanation: 'Слова з м''яким знаком отримують закінчення -ем: вчителем.'
+  - sentence: Я хочу хліб з маслу.
+    error: маслу
+    correction: маслом
+    error_type: word
+    options:
+    - маслом
+    - масла
+    - масло
+    explanation: Орудний відмінок від слова 'масло' — 'маслом'.
+- id: workbook-unjumble
+  type: unjumble
+  instruction: Складіть правильне речення зі слів (Make a correct sentence from the
+    words)
+  items:
+  - words:
+    - парк
+    - з
+    - Я
+    - іду
+    - другом.
+    - в
+    correct_order:
+    - Я
+    - іду
+    - в
+    - парк
+    - з
+    - другом.
+  - words:
+    - п'є
+    - чай
+    - Вона
+    - лимоном.
+    - часто
+    - з
+    correct_order:
+    - Вона
+    - часто
+    - п'є
+    - чай
+    - з
+    - лимоном.
+  - words:
+    - зі
+    - Мені,
+    - сметаною.
+    - будь
+    - борщ
+    - ласка,
+    correct_order:
+    - Мені,
+    - будь
+    - ласка,
+    - борщ
+    - зі
+    - сметаною.
+  - words:
+    - з
+    - Він
+    - батьками.
+    - в
+    - живе
+    - будинку
+    correct_order:
+    - Він
+    - живе
+    - в
+    - будинку
+    - з
+    - батьками.
+  - words:
+    - у
+    - зі
+    - підеш
+    - кіно
+    - Ти
+    - мною?
+    correct_order:
+    - Ти
+    - підеш
+    - у
+    - кіно
+    - зі
+    - мною?
+  - words:
+    - повністю
+    - з
+    - Я
+    - тобою.
+    - погоджуюся
+    correct_order:
+    - Я
+    - повністю
+    - погоджуюся
+    - з
+    - тобою.

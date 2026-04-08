@@ -1,0 +1,207 @@
+version: '1.0'
+module: checkpoint-foundations
+level: a2
+inline:
+- id: quiz
+  type: quiz
+  instruction: Оберіть правильний варіант
+  items:
+  - question: Я довго _____ це складне завдання.
+    options:
+    - робив
+    - зробив
+    - роблю
+    - зробити
+    correct: 0
+  - question: У мене немає вільного _____.
+    options:
+    - часу
+    - час
+    - часом
+    - часи
+    correct: 0
+  - question: Вона нарешті _____ довгу відповідь.
+    options:
+    - писала
+    - написала
+    - пише
+    - написати
+    correct: 1
+  - question: У класі сидять шість _____.
+    options:
+    - студенти
+    - студент
+    - студентів
+    - студентами
+    correct: 2
+  - question: Вчора ми _____ свіжі яблука на ринку.
+    options:
+    - купили
+    - купували
+    - купуємо
+    - купити
+    correct: 0
+  - question: У нього є два _____.
+    options:
+    - брати
+    - братів
+    - брат
+    - братом
+    correct: 0
+  - question: Ти вже _____ текст?
+    options:
+    - прочитав
+    - читав
+    - читати
+    - прочитати
+    correct: 0
+  - question: В магазині не було свіжого _____.
+    options:
+    - хліб
+    - хліба
+    - хлібом
+    - хліби
+    correct: 1
+- id: fill-in
+  type: fill-in
+  instruction: Вставте правильну форму слова
+  items:
+  - sentence: У мене немає (брат) _____.
+    answer: брата
+  - sentence: Я чекаю свого старого (друг) _____.
+    answer: друга
+  - sentence: П'ять старих (стіл) _____ стоять у кімнаті.
+    answer: столів
+  - sentence: Три нові (книга) _____ лежать на полиці.
+    answer: книги
+  - sentence: Один великий (парк) _____ є в місті.
+    answer: парк
+  - sentence: Без (ти) _____ тут дуже сумно.
+    answer: тебе
+  - sentence: У мене немає (час) _____ на розмови.
+    answer: часу
+  - sentence: У неї є чотири (сестра) _____.
+    answer: сестри
+- id: fill-in-2
+  type: fill-in
+  instruction: Вставте правильне дієслово
+  items:
+  - sentence: Вчора я весь вечір _____ свої вправи.
+    answer: робив
+    options:
+    - робив
+    - зробив
+  - sentence: Сьогодні я швидко _____ нове завдання.
+    answer: зробив
+    options:
+    - робив
+    - зробив
+  - sentence: Ми довго _____ складне есе.
+    answer: писали
+    options:
+    - писали
+    - написали
+  - sentence: Нарешті він _____ ідеальне речення.
+    answer: написав
+    options:
+    - писав
+    - написав
+  - sentence: Щовечора вона _____ цікавий серіал.
+    answer: дивилася
+    options:
+    - дивилася
+    - подивилася
+  - sentence: Вона _____ фільм і пішла спати.
+    answer: подивилася
+    options:
+    - дивилася
+    - подивилася
+- id: error-correction
+  type: error-correction
+  instruction: Знайдіть і виправте помилку
+  items:
+  - sentence: У мене немає два брати.
+    error: два брати
+    correction: двох братів
+    error_type: construction
+    explanation: Після слова 'немає' потрібен родовий відмінок.
+  - sentence: П'ять студентів читав текст.
+    error: читав
+    correction: читали
+    error_type: word
+    explanation: Студенти — це множина, тому дієслово має бути у множині.
+  - sentence: Вчора я швидко робив це завдання.
+    error: робив
+    correction: зробив
+    error_type: word
+    explanation: Слово 'швидко' і результат вимагають доконаного виду.
+  - sentence: Три нові книги лежить на полиці.
+    error: лежить
+    correction: лежать
+    error_type: word
+    explanation: Книги — це множина, тому дієслово 'лежать'.
+  - sentence: Вона приймала участь у проекті.
+    error: приймала участь
+    correction: брала участь
+    error_type: phrase
+    explanation: Правильний український вислів — 'брати участь'.
+  - sentence: У класі немає великий стіл.
+    error: великий стіл
+    correction: великого стола
+    error_type: construction
+    explanation: Після слова 'немає' потрібен родовий відмінок.
+workbook:
+- id: match-up-aspect
+  type: match-up
+  instruction: З'єднайте видові пари дієслів
+  pairs:
+  - left: робити
+    right: зробити
+  - left: читати
+    right: прочитати
+  - left: писати
+    right: написати
+  - left: купувати
+    right: купити
+  - left: говорити
+    right: сказати
+  - left: зустрічати
+    right: зустріти
+- id: group-sort-cases
+  type: group-sort
+  instruction: Розподіліть слова за відмінками
+  groups:
+  - label: Називний відмінок
+    items:
+    - брат
+    - сестра
+    - стіл
+    - книга
+  - label: Родовий відмінок
+    items:
+    - брата
+    - сестри
+    - стола
+    - книги
+- id: true-false-numbers
+  type: true-false
+  instruction: Оберіть правильний варіант
+  items:
+  - statement: Після числа 'один' іменник стоїть у називному відмінку однини.
+    correct: true
+    explanation: Число 'один' узгоджується з іменником.
+  - statement: Після чисел 'два, три, чотири' ми використовуємо родовий відмінок множини.
+    correct: false
+    explanation: Після 2, 3, 4 використовується називний відмінок множини (два брати).
+  - statement: Після числа 'п'ять' ми використовуємо родовий відмінок множини.
+    correct: true
+    explanation: 'Наприклад: п''ять братів.'
+  - statement: Слово 'немає' завжди вимагає родового відмінка.
+    correct: true
+    explanation: 'Наприклад: немає часу, немає хліба.'
+  - statement: Дієслова недоконаного виду відповідають на питання 'що зробити?'
+    correct: false
+    explanation: Недоконаний вид відповідає на питання 'що робити?'.
+  - statement: Вираз 'приймати участь' є правильним українським варіантом.
+    correct: false
+    explanation: Правильний варіант — 'брати участь'.

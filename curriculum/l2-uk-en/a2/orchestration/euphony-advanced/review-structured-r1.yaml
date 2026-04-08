@@ -1,0 +1,54 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'Covered all complex grammar rules and euphony scenarios. However, the
+    section titles dropped the English translations for 3 out of 4 sections (e.g.,
+    `## І чи й? У складних реченнях` instead of `(I or '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'Excellent application of euphony rules in examples. Two inaccuracies:
+    1) It incorrectly classifies "з, с, ц" as "шиплячі" ("перед шиплячими: з, с, ц,
+    ш, ч, ж") whereas they are "свистячі". 2) The summ'
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: 'Strong PPP flow with clear rules and realistic dialogue examples. One
+    pedagogical/cultural flaw: "А я вчуся у школі. Я ще студентка." In the Ukrainian
+    system, a person at a "школа" is an "учениця" (pu'
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required vocabulary (`милозвучність, евфонія, чергування, голосний,
+    приголосний, збіг, прийменник, сполучник, вживати, складний`) is used naturally
+    and correctly within the instructional text.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 4 requested activity hints are correctly mapped to injection markers
+    and placed logically after their respective instruction blocks.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Uses an encouraging, instructional tone. Explaining Ukrainian as having
+    a "phonetic ecology" and "forbidden collisions" makes the grammar rules feel intuitive
+    and engaging.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean markdown without artifacts. Word count is 2121 (safely above the
+    2000-word target). The logical sequence perfectly mirrors the plan.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Highly respectful and culturally accurate representation of Ukrainian
+    as a naturally melodic language.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: 'Good multi-turn dialogues demonstrating rules. Minor issues: A tense
+    mismatch ("Де всі студенти?" answered with past tense "Вона співала..."), and
+    speaker Оленка unnaturally stating she is traveling w'
+findings: []

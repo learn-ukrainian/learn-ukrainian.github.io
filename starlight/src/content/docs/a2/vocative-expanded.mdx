@@ -1,0 +1,225 @@
+---
+title: "Пане лікарю! Друже мій!"
+sidebar:
+  order: 27
+  label: "27. Пане лікарю! Друже мій!"
+pipeline: v6
+build_status: draft
+---
+
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import FillIn from '@site/src/components/FillIn';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import GroupSort from '@site/src/components/GroupSort';
+import MatchUp from '@site/src/components/MatchUp';
+import Quiz from '@site/src/components/Quiz';
+import Unjumble from '@site/src/components/Unjumble';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Пане, пані: формальне звертання (Formal Address)
+
+У базовому курсі ми вивчали прості форми звертання. Ви знаєте, як сказати **«Тарасе!»** *(Taras!)* або **«Олено!»** *(Olena!)*. Але для роботи та **офіційних** *(official, formal)* ситуацій нам потрібні формальні **звертання** *(addresses)*. Ukrainian culture highly values polite and formal address in professional or unfamiliar settings. The vocative case (**кличний відмінок** *(vocative case)*) is mandatory when you address someone directly. Using the nominative case for address is a serious grammatical error and is often considered a Russianism. Якщо ви скажете **«Привіт, Наталя!»** *(Hi, Nataliya!)*, це звучить неприродно. Українці так не говорять. Правильно казати **«Привіт, Наталю!»** *(Hi, Nataliya!)*. Для поваги ми додаємо слова **пан** *(Mr., sir)* та **пані** *(Mrs., Ms., madam)*. Отже, ми кажемо **«Пані Маріє!»** *(Ms. Mariia!)* замість просто «Маріє». Це дуже важливе правило нашої мови.
+
+Ми часто використовуємо конструкцію «пане» або «пані» плюс **професія** *(profession)*. The word **«пане»** *(sir)* is the vocative form of «пан», and it triggers the vocative case in the following noun. Both words must change. For hard-stem masculine nouns, the ending is usually **-е**. Ми кажемо: **«пане директоре»** *(Mr. director)*, **«пане професоре»** *(Mr. professor)*, **«пане міністре»** *(Mr. minister)*. For soft-stem masculine nouns, the ending is **-ю**. Тому правильно казати: **«пане лікарю»** *(Mr. doctor)*, **«пане вчителю»** *(Mr. teacher)*, **«пане водію»** *(Mr. driver)*. For women, the word «пані» is invariable (it never changes its form). However, the feminine profession takes the vocative ending **-о**. В українській мові ми активно використовуємо жіночі форми професій. Тому ми кажемо: **«пані вчителько»** *(Ms. teacher)*, **«пані директорко»** *(Ms. director)*, **«пані лікарко»** *(Ms. doctor)*. Це виявляє вашу повагу.
+
+Ми також можемо використовувати ці слова з прізвищами людей. When we address a man by his surname, the surname must also be in the vocative case if it is a declinable noun. Most masculine surnames (including those ending in a consonant, -о, or -ко) typically take the **-у** ending in the vocative. Тому ми кажемо: **«пане Коваленку»** *(Mr. Kovalenko)*, **«пане Шевченку»** *(Mr. Shevchenko)*, **«пане Ковальчуку»** *(Mr. Kovalchuk)*. The grammatical rule is very different for women. As we know, «пані» does not change. In addition, feminine surnames ending in a consonant or in -о/-ко are indeclinable in Ukrainian grammar. Вони завжди мають форму називного відмінка. Тому ми кажемо: **«пані Коваленко»** *(Ms. Kovalenko)*, **«пані Шевченко»** *(Ms. Shevchenko)*, **«пані Ковальчук»** *(Ms. Kovalchuk)*. Це правило треба запам'ятати.
+
+Слова «пан» і «пані» мають глибоке історичне коріння в українській культурі. Вони існували багато століть. During the Soviet era, these traditional polite forms were actively suppressed and banned from official language. The regime replaced them with the word **«товариш»** *(comrade)* to enforce artificial equality and Russian linguistic norms. Сьогодні використання слів «пане» та «пані» — це ваш свідомий вибір. It strongly signals authentic, decolonized Ukrainian identity and respect for the listener. Це справжнє повернення до нашої рідної мови. Ви можете часто почути цю красиву форму в давніх текстах і народних піснях. Є відома різдвяна колядка: **«Добрий вечір тобі, пане господарю!»** *(Good evening to you, Mr. host!)*.
+
+В українській мові також є красиві слова **«добродій»** *(sir, gentleman)* та **«добродійка»** *(madam, lady)*. Вони теж мають спеціальні форми кличного відмінка: **«добродію»** *(sir)* та **«добродійко»** *(madam)*. These are older, highly literary alternatives to «пане» and «пані». Today, they are much less common in everyday street conversation or modern slang. However, they remain very polite, highly respected forms used in formal writing, official letters, or by the Ukrainian diaspora. В офіційному листі ви пишете: **«Шановний добродію!»** *(Honorable sir!)* або **«Вельмишановна добродійко!»** *(Highly honorable madam!)*. Це звучить дуже інтелігентно та надзвичайно **ввічливо** *(politely)*. Використовуйте ці слова для створення особливого стилю.
+
+<FillIn client:only="react" items={[{"sentence": "Шановний _____, я маю до вас питання.", "answer": "добродію", "options": ["добродію", "добродій", "добродія"]}, {"sentence": "Пане _____, добрий день!", "answer": "директоре", "options": ["директоре", "директор", "директору"]}, {"sentence": "Пані _____, чи можу я увійти?", "answer": "лікарко", "options": ["лікарко", "лікарка", "лікарку"]}, {"sentence": "Пане _____, ви забули рецепт.", "answer": "лікарю", "options": ["лікарю", "лікар", "лікаре"]}, {"sentence": "Пане _____, дякую за урок.", "answer": "вчителю", "options": ["вчителю", "вчитель", "вчителє"]}, {"sentence": "Пані _____, ваш чай.", "answer": "Коваленко", "options": ["Коваленко", "Коваленку", "Коваленці"]}, {"sentence": "Пане _____, ваша кава.", "answer": "Шевченку", "options": ["Шевченку", "Шевченко", "Шевченка"]}, {"sentence": "Вельмишановна _____, дякую за лист.", "answer": "добродійко", "options": ["добродійко", "добродійка", "добродійку"]}]} instruction={"Вставте правильну форму слова"} />
+
+## Професійні звертання (Professional Vocative)
+
+Уявіть ситуацію на роботі або в університеті. Ви хочете звернутися до свого керівника, викладача або колеги. В українській мові ми використовуємо спеціальний кличний відмінок для назв **професій** *(professions)*. For masculine professional titles, the vocative ending depends directly on the final consonant of the word. Якщо слово закінчується на твердий приголосний звук, ми зазвичай додаємо закінчення **-е**. Наприклад, **інженер** *(engineer)* стає «інженере». Слово **майстер** *(master, foreman)* стає «майстре». Якщо слово закінчується на м'який приголосний звук, ми додаємо закінчення **-ю**. Наприклад, **лікар** *(doctor)* має форму «лікарю», а **вчитель** *(teacher)* стає «вчителю». Слово **водій** *(driver)* також має форму «водію». There is an important note about masculine words ending in the -ер or -ор suffixes, like **професор** *(professor)* or **директор** *(director)*. These are hard stems in Ukrainian, so they always take the -е ending: «професоре», «директоре». Ми часто використовуємо ці форми в офіційній розмові.
+
+Українська мова має дуже красиву та важливу особливість. Ми активно, часто та природно використовуємо **фемінітиви** *(femininitives)* у повсякденному житті. Це жіночі форми назв професій та соціальних ролей. For women, we use the first declension pattern that you learned previously in the A1 level. Більшість таких сучасних слів закінчується на суфікс **-ка** або на літеру **-а**. У кличному відмінку ці слова завжди і без винятків мають закінчення **-о**. Наприклад, слово **вчителька** *(female teacher)* стає «вчителько». Слово **лікарка** *(female doctor)* має форму «лікарко», а **журналістка** *(female journalist)* легко стає «журналістко». Популярне слово **директорка** *(female director)* має правильну форму «директорко». This reinforces the "feminine-hard" declension pattern perfectly. Ми можемо сказати просто «лікарко». Або ми додаємо слово «пані» для більшої поваги: «пані лікарко». Це звучить дуже ввічливо, професійно та сучасно.
+
+Існують також спеціальні слова, які ми однаково використовуємо для чоловіків і для жінок. Наприклад, популярне слово **колега** *(colleague)*. Це слово має спільний рід. У кличному відмінку воно завжди має форму «колего». Ми з повагою кажемо «колего Андрію» або «колего Маріє». Інше важливе слово у цій групі — це **суддя** *(judge)*. Воно закінчується на м'який приголосний, тому в кличному відмінку завжди має форму «суддю». Також є класичне слово **товариш** *(friend, comrade)*. Це іменник мішаної групи. У кличному відмінку він має закінчення **-у**. Тому ми кажемо «товаришу». Пам'ятайте ці спеціальні форми, коли ви працюєте або навчаєтесь в українському колективі.
+
+Подивімося, як це працює в реальному щоденному житті. Олег прийшов у поліклініку або **лікарню** *(clinic, hospital)*. Він має проблему зі здоров'ям і хоче поговорити з лікарем. Notice how Oleh starts the conversation with a formal title, and the doctor responds using Oleh's surname in the vocative case. This grammatical choice shows professional respect and social distance on both sides.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Пацієнт (Олег):</span> Добрий день! Пане лікарю, мені потрібна допомога. *(Good day! Mr. doctor, I need help.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Лікар:</span> Добрий день. Сідайте, будь ласка. Добре, пане Ковальчуку, що вас турбує? *(Good day. Sit down, please. Alright, Mr. Kovalchuk, what is bothering you?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Пацієнт (Олег):</span> У мене дуже сильно болить голова. *(I have a very bad headache.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Лікар:</span> Зрозуміло. Я дам вам ліки, пане Олегу. *(I understand. I will give you medicine, Mr. Oleh.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Пацієнт (Олег):</span> Дякую, лікарю. Ви дуже добрі. *(Thank you, doctor. You are very kind.)*</div>
+
+</div>
+
+У цьому короткому діалозі ми бачимо класичний приклад офіційної української поваги. Тепер ви знаєте, як правильно та ввічливо говорити з лікарем або зі своїм директором.
+
+<MatchUp client:only="react" pairs={[{"left": "лікар", "right": "лікарю"}, {"left": "вчителька", "right": "вчителько"}, {"left": "директор", "right": "директоре"}, {"left": "водій", "right": "водію"}, {"left": "інженер", "right": "інженере"}, {"left": "майстер", "right": "майстре"}, {"left": "суддя", "right": "суддю"}, {"left": "колега", "right": "колего"}]} instruction={"З'єднайте називний та кличний відмінки"} />
+
+## Друже мій, люба моя: емоційний кличний (Emotional Vocative)
+
+Коли ми говоримо з близькими друзями або родиною, ми також активно використовуємо кличний відмінок. Це робить нашу мову теплою та емоційною. Подивіться на дуже популярне слово **друг** *(friend)*. У кличному відмінку приголосний звук «г» завжди змінюється на «ж». Тому ми маємо казати «друже», а не «другу». Це дуже важливе правило української мови. Наприклад, ми часто кажемо: «Привіт, друже! Як твої справи?». Але жіноча форма **подруга** *(female friend)* має іншу структуру. Вона має твердий приголосний в кінці слова. Тому ми просто додаємо закінчення **-о**. Ми кажемо «подруго». Наприклад: «Моя люба подруго, я так рада тебе бачити!». Також ми використовуємо емоційні прикметники для звертання. Наприклад, **любий** *(dear - masculine)* та **люба** *(dear - feminine)*. When we use adjectives as forms of address, they always stay in the nominative case. Вони ніколи не змінюють свою форму. Ми завжди кажемо «люба» або «любий» без змін.
+
+Українці часто кажуть, що їхня рідна мова **пісенна** *(song-like)* та дуже **ніжна** *(tender)*. Це тому, що ми дуже любимо використовувати **пестливі форми** *(diminutive forms)*. Ми використовуємо їх кожного дня, коли говоримо з дітьми або нашими коханими. For these affectionate addresses, the vocative case is especially rich and natural. Найпопулярніші теплі слова — це **серденько** *(sweetheart, little heart)* та **сонечко** *(sunshine, little sun)*. Neuter nouns ending in -ко usually keep their exact form in the vocative case, or they can take the -о ending, which looks exactly the same in writing. Тому ми кажемо: «Спи, моє сонечко» або «Ходи сюди, серденько». Для дівчат ми часто використовуємо красиве слово **зіронька** *(little star)*. У кличному відмінку це слово має форму «зіронько». Також популярне ім'я Люба має ніжну форму **Любочка** *(darling)*. Ми лагідно кличемо її «Любочко». Це звучить дуже приємно.
+
+In Ukrainian, we have a very specific word order when we use possessive pronouns in the vocative case. Unlike in English, where you normally say "My friend", Ukrainian strongly prefers the grammatical pattern "Noun + Pronoun". Тому ми зазвичай кажемо «Друже мій!», а не «Мій друже!». Цей порядок слів звучить набагато природніше та емоційніше. Так само ми завжди говоримо «Мамо моя!», «Подруго моя!» або «Брате мій!». It is also very important to remember that possessive pronouns like **мій** *(my - masculine)* and **моя** *(my - feminine)* do not change their form. They always stay in the nominative case when used in a direct address. Ви змінюєте тільки сам іменник.
+
+The vocative case is also perfectly preserved in many common emotional exclamations. Наприклад, коли ми дуже дивуємося, ми кажемо «**Боже мій!**» *(My God!)*. Це правильний кличний відмінок від слова «Бог». Інше дуже популярне слово — це «**Господи!**» *(Lord!)*. Ми використовуємо ці слова щодня як сильні емоційні вигуки. What happens when we address a group of people? In the plural, the vocative case is usually identical to the nominative plural. Тому ми просто кажемо «Друзі!» *(Friends!)* або «Колеги!» *(Colleagues!)*. But there is one major historical exception. Слово «пани» у кличному відмінку має спеціальну форму «**Панове!**» *(Gentlemen! / Sirs! / Ladies and Gentlemen!)*. Це дуже красиве та поважне українське звертання.
+
+Подивімося на нову ситуацію. Після візиту до лікаря Олег телефонує своєму другу. Він хоче розповісти йому хороші новини. Notice how the formal register from the clinic completely disappears, and Oleh uses warm, emotional vocative forms.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Олег:</span> Алло! Привіт, друже мій! Як ти? *(Hello! Hi, my friend! How are you?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Друг:</span> Привіт, Олеже! Я добре. Як твій візит до лікаря? *(Hi, Oleh! I am good. How was your visit to the doctor?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Олег:</span> Усе чудово! Лікар каже, що я здоровий. Я дуже радий! *(Everything is great! The doctor says I am healthy. I am very happy!)*</div>
+
+<div class="dialogue-line"><span class="speaker">Друг:</span> Це супер! Твоя дружина вже знає? *(That is super! Does your wife already know?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Олег:</span> Ще ні. Зараз буду дзвонити їй. Скажу: «Кохана моя, усе добре, не хвилюйся, моє сонечко!». *(Not yet. I will call her now. I will say: "My beloved, everything is fine, don't worry, my sunshine!".)*</div>
+
+<div class="dialogue-line"><span class="speaker">Друг:</span> Добре, друже. Тоді до зустрічі! *(Good, friend. Then see you later!)*</div>
+
+</div>
+
+<ErrorCorrection client:only="react" items={[{"sentence": "Привіт, Іван!", "errorWord": "Іван", "correctForm": "Іване", "options": ["Іване", "Іваню", "Івану"], "explanation": "Іван takes the -е ending in the vocative case."}, {"sentence": "Пане професор, вибачте!", "errorWord": "професор", "correctForm": "професоре", "options": ["професоре", "професорю", "професору"], "explanation": "Професор takes the -е ending."}, {"sentence": "Добрий день, пан лікарю!", "errorWord": "пан", "correctForm": "пане", "options": ["пане", "паню", "пану"], "explanation": "Пан must also be in the vocative (пане)."}, {"sentence": "Пані Ковальчуку, привіт!", "errorWord": "Ковальчуку", "correctForm": "Ковальчук", "options": ["Ковальчук", "Ковальчука", "Ковальчуке"], "explanation": "Women's surnames ending in a consonant do not change."}, {"sentence": "Подруга моя, я рада тебе бачити!", "errorWord": "Подруга", "correctForm": "Подруго", "options": ["Подруго", "Подруге", "Подругу"], "explanation": "Подруга takes the -о ending in the vocative."}, {"sentence": "Добрий день, пане вчитель!", "errorWord": "вчитель", "correctForm": "вчителю", "options": ["вчителю", "вчителє", "вчительку"], "explanation": "Вчитель has a soft stem and takes the -ю ending."}, {"sentence": "Привіт, Ігоре!", "errorWord": "Ігоре", "correctForm": "Ігорю", "options": ["Ігорю", "Ігора", "Ігорем"], "explanation": "The modern standard form for Ihor is Ігорю."}, {"sentence": "Друже моя, як справи?", "errorWord": "моя", "correctForm": "мій", "options": ["мій", "моє", "мої"], "explanation": "Друг is masculine, so we use мій."}]} instruction={"Виправте помилку у звертанні"} />
+
+## Який кличний обрати? (Choosing the Right Vocative)
+
+У повсякденному житті ми постійно змінюємо дистанцію спілкування. The vocative case is your main tool to show exactly how close or formal you want to be. Коли ви говорите з незнайомими людьми, ви використовуєте офіційний стиль. Наприклад, ви кажете «**пане Ковальчуку**» *(Mr. Kovalchuk)* або «**пані директорко**» *(Madam Director)*. Для фахівців ми обираємо професійний кличний відмінок, як-от «**лікарю**» *(doctor)* або «**офіціанте**» *(waiter)*. Якщо ви знаєте людину, але зберігаєте дистанцію, найкращий вибір — це нейтрально-ввічливий стиль. Ми кажемо «**пані Олено**» *(Ms. Olena)* або «**пане Андрію**» *(Mr. Andriy)*. З друзями ми використовуємо звичайні імена: «**Тарасе**» *(Taras)* чи «**Анно**» *(Anna)*. А для найрідніших маємо інтимний стиль: «**серденько**» *(sweetheart)*. If you choose the wrong register, you might sound cold to a friend or overly familiar to a boss.
+
+Розгляньмо практичні життєві ситуації. Уявіть, що ви пишете електронний лист викладачу в університет. Ви повинні почати лист так: «**Шановний пане професоре!**» *(Dear Mr. Professor!)*. Це показує вашу повагу до його статусу. У ресторані ви кличете працівника просто: «**Пане офіціанте!**» *(Mr. Waiter!)*. А коли ви зустрічаєте сусіда, ви кажете: «**Пане Степане, добрий день!**» *(Mr. Stepan, good day!)*. First names in the vocative case without the titles "пан" or "пані" act as the perfect middle ground of politeness. Ми часто використовуємо їх на роботі з колегами. Ви кажете «**Маріє**» *(Maria)* або «**Олеже**» *(Oleh)*. Це звучить привітно, але не занадто інтимно.
+
+Коли іноземці вивчають українську мову, вони часто роблять типові помилки. The most common pitfall is using the nominative case for direct address. Ніколи не кажіть «*Привіт, Іван!*». Правильна форма завжди вимагає кличного відмінка: «**Привіт, Іване!**» *(Hi, Ivan!)*. Another frequent error is mixing up gender agreement in possessive phrases. Не можна казати «*друже моя*», тому що «друг» — це чоловічий рід. Жінці ми завжди кажемо «**подруго моя**» *(my friend)*. Також існує класична проблема з популярним ім'ям Ігор. Many learners fall into the trap of using the archaic form "Ігоре". The modern standard rule treats this name as a soft-stem noun. Тому єдина правильна форма сьогодні — це «**Ігорю**» *(Ihor)*. Запам'ятайте її!
+
+Кличний відмінок — це набагато більше, ніж просто граматичне правило. It is a profound mark of respect and a reflection of Ukrainian cultural identity. Коли ви використовуєте правильну форму, ви будуєте невидимий міст до людини. Ви показуєте, що ви відчуваєте контекст ситуації та поважаєте співрозмовника. Українська мова звучить дуже мелодійно саме завдяки цим м'яким закінченням. Слова «**мамо**» *(mom)*, «**брате**» *(brother)* або «**колего**» *(colleague)* роблять нашу комунікацію теплою та живою. The vocative case is the true music of the Ukrainian language. Використовуйте його щодня, і ви побачите приємну реакцію людей на ваші слова.
+
+<Quiz client:only="react" questions={[{"question": "Ви пишете офіційний електронний лист професору.", "options": [{"text": "Шановний пане професоре!", "correct": true}, {"text": "Привіт, професоре!", "correct": false}, {"text": "Пане професор!", "correct": false}, {"text": "Шановний професору!", "correct": false}]}, {"question": "Ви зустріли сусідку Олену.", "options": [{"text": "Пані Олено!", "correct": true}, {"text": "Пані Олена!", "correct": false}, {"text": "Оленочко!", "correct": false}, {"text": "Шановна пані Олена!", "correct": false}]}, {"question": "Ви звертаєтесь до лікаря чоловіка.", "options": [{"text": "Пане лікарю!", "correct": true}, {"text": "Пан лікар!", "correct": false}, {"text": "Пане лікар!", "correct": false}, {"text": "Пане лікаре!", "correct": false}]}, {"question": "Ви звертаєтесь до керівниці (жінки).", "options": [{"text": "Пані директорко!", "correct": true}, {"text": "Пані директор!", "correct": false}, {"text": "Пане директорко!", "correct": false}, {"text": "Пані директоре!", "correct": false}]}, {"question": "Ви розмовляєте з близьким другом на ім'я Андрій.", "options": [{"text": "Андрію!", "correct": true}, {"text": "Пане Андрію!", "correct": false}, {"text": "Андрій!", "correct": false}, {"text": "Шановний Андрію!", "correct": false}]}, {"question": "Ви кличете офіціанта в ресторані.", "options": [{"text": "Пане офіціанте!", "correct": true}, {"text": "Офіціант!", "correct": false}, {"text": "Пане офіціант!", "correct": false}, {"text": "Офіціанту!", "correct": false}]}, {"question": "Ви хочете лагідно звернутися до коханої людини.", "options": [{"text": "Серденько!", "correct": true}, {"text": "Пане серденько!", "correct": false}, {"text": "Серденьку!", "correct": false}, {"text": "Пан серденько!", "correct": false}]}, {"question": "Ви розмовляєте з колегою на ім'я Марія.", "options": [{"text": "Маріє!", "correct": true}, {"text": "Пані Марія!", "correct": false}, {"text": "Марія!", "correct": false}, {"text": "Шановна Маріє!", "correct": false}]}]} instruction={"Оберіть правильне звертання для ситуації"} />
+<GroupSort client:only="react" groups={{"Офіційний / Професійний": ["пане професоре", "пані директорко", "пане лікарю", "пане Ковальчуку"], "Нейтрально-ввічливий": ["пані Олено", "пане Андрію", "пане Степане"], "Емоційний / Близький": ["друже мій", "люба подруго", "моє сонечко", "серденько", "зіронько"]}} instruction={"Розподіліть звертання за стилем (регістром)"} />
+
+## Підсумок
+
+Згадаймо головне правило цієї теми. Кличний відмінок має три основні закінчення. Ми використовуємо закінчення **-о** для твердої групи жіночого роду: **Оксано** *(Oksana)*, **мамо** *(mom)*. Закінчення **-е** працює для чоловічого роду твердої групи: **пане** *(sir)*, **друже** *(friend)*. А закінчення **-ю** ми додаємо до м'якої групи та пестливих форм: **лікарю** *(doctor)*, **бабусю** *(grandma)*.
+
+Remember that formal addresses require the vocative for the title and the profession, but a surname stays in the nominative.
+
+Перевірте себе! *(Check yourself!)*
+1. Як звернутися до вчителя чоловіка? *(How to address a male teacher?)* — **Пане вчителю!** *(Mr. Teacher!)*
+2. Як сказати «My friend» українською? *(How to say "My friend" in Ukrainian?)* — **Друже мій!** *(My friend!)*
+3. Чи змінюється прізвище жінки після слова «пані»? *(Does a woman's surname change after the word "Ms."?)* — Ні, воно не змінюється. Ми кажемо: **пані Шевченко** *(Ms. Shevchenko)*.
+4. Яка форма є стандартною для імені Олег? *(Which form is standard for the name Oleh?)* — **Олегу!** *(Oleh!)*
+
+Тепер ви готові спілкуватися українською ввічливо та природно. *(Now )*
+
+</TabItem>
+<TabItem label="Словник">
+
+### Обов'язкові та рекомендовані слова
+
+| Слово | Переклад | Частина мови | Рід |
+|-------|----------|-------------|-----|
+| **добро́дій** | sir (literary/diaspora) | ім. | ч. |
+| **добро́дійка** | madam (literary/diaspora) | ім. | ж. |
+| **емоці́йний** | emotional | прикм. |  |
+| **ні́жний** | tender, affectionate | прикм. |  |
+| **коле́га** | colleague | ім. | ч. |
+| **кли́чний** | vocative (case) | прикм. |  |
+| **зверта́ння** | address, appeal | ім. | с. |
+| **пан** | Mr., sir | ім. | ч. |
+| **па́ні** | Mrs., Ms., madam | ім. | ч. |
+| **лі́кар** | doctor | ім. | ч. |
+| **вчи́тель** | teacher | ім. | ч. |
+| **вві́чливий** | polite | прикм. |  |
+| **офіці́йний** | official, formal | прикм. |  |
+| **профе́сія** | profession | ім. | ж. |
+| **відмі́нок** | grammatical case | ім. | ч. |
+| **дире́ктор** | director | ім. | ч. |
+| **профе́сор** | professor | ім. | ч. |
+| **міні́стр** | minister | ім. | ч. |
+| **воді́й** | driver | ім. | ч. |
+| **вчи́телька** | female teacher | ім. | ж. |
+| **дире́кторка** | female director | ім. | ж. |
+| **лі́карка** | female doctor | ім. | ж. |
+| **прі́звище** | surname | ім. | с. |
+| **това́риш** | comrade, friend | ім. | ч. |
+| **інжене́р** | engineer | ім. | ч. |
+| **ма́йстер** | master, foreman | ім. | ч. |
+| **фемінітиви** | femininitives | ім. |  |
+| **журналі́стка** | female journalist | ім. | ж. |
+| **суддя́** | judge | ім. | ч. |
+| **ліка́рня** | clinic, hospital | ім. | ж. |
+| **паціє́нт** | patient | ім. | ч. |
+| **лі́ки** | medicine | ім. |  |
+| **лю́бий** | dear | прикм. |  |
+| **пісе́нна** | song-like | прикм. |  |
+| **се́рде́нько** | sweetheart, little heart | ім. | с. |
+| **со́нечко** | sunshine, little sun | ім. | с. |
+| **зі́ронька** | little star | ім. | ж. |
+| **Го́споди** | Lord! | ім. | ж. |
+| **панове** | gentlemen, sirs | ім. |  |
+| **кохана** | beloved (feminine) | ім. | ж. |
+| **офіціа́нт** | waiter | ім. | ч. |
+| **сусі́д** | neighbor | ім. | ч. |
+| **шано́вний** | honorable, dear | прикм. |  |
+| **вельмишано́вна** | highly honorable | прикм. |  |
+
+### Вирази
+
+| Вираз | Переклад |
+|-------|----------|
+| **пестливі форми** | diminutive forms |
+| **Боже мій!** | My God! |
+
+### Картки — Flashcards
+
+<FlashcardDeck client:only="react" cards={[{ front: "добро́дій", back: "sir (literary/diaspora)", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "добро́дійка", back: "madam (literary/diaspora)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "емоці́йний", back: "emotional", subtitle: "прикм." }, { front: "ні́жний", back: "tender, affectionate", subtitle: "прикм." }, { front: "коле́га", back: "colleague", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "кли́чний", back: "vocative (case)", subtitle: "прикм." }, { front: "зверта́ння", back: "address, appeal", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "пан", back: "Mr., sir", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "па́ні", back: "Mrs., Ms., madam", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лі́кар", back: "doctor", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вчи́тель", back: "teacher", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вві́чливий", back: "polite", subtitle: "прикм." }, { front: "офіці́йний", back: "official, formal", subtitle: "прикм." }, { front: "профе́сія", back: "profession", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "відмі́нок", back: "grammatical case", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "дире́ктор", back: "director", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "профе́сор", back: "professor", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "міні́стр", back: "minister", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "воді́й", back: "driver", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "вчи́телька", back: "female teacher", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "дире́кторка", back: "female director", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "лі́карка", back: "female doctor", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "прі́звище", back: "surname", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "това́риш", back: "comrade, friend", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "інжене́р", back: "engineer", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ма́йстер", back: "master, foreman", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "фемінітиви", back: "femininitives", subtitle: "ім." }, { front: "журналі́стка", back: "female journalist", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "суддя́", back: "judge", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "ліка́рня", back: "clinic, hospital", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "паціє́нт", back: "patient", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лі́ки", back: "medicine", subtitle: "ім." }, { front: "лю́бий", back: "dear", subtitle: "прикм." }, { front: "пісе́нна", back: "song-like", subtitle: "прикм." }, { front: "се́рде́нько", back: "sweetheart, little heart", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "со́нечко", back: "sunshine, little sun", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "зі́ронька", back: "little star", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "Го́споди", back: "Lord!", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "панове", back: "gentlemen, sirs", subtitle: "ім." }, { front: "кохана", back: "beloved (feminine)", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "офіціа́нт", back: "waiter", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "сусі́д", back: "neighbor", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "шано́вний", back: "honorable, dear", subtitle: "прикм." }, { front: "вельмишано́вна", back: "highly honorable", subtitle: "прикм." }]} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+<GroupSort client:only="react" groups={{"Закінчення -е (твердий приголосний)": ["директор", "професор", "інженер", "майстер", "друг"], "Закінчення -ю (м'який приголосний)": ["лікар", "вчитель", "водій", "добродій", "Андрій"]}} instruction={"М'який чи твердий приголосний? Розподіліть слова за закінченням у кличному відмінку"} />
+
+<ErrorCorrection client:only="react" items={[{"sentence": "Пане лікар! Допоможіть.", "errorWord": "лікар", "correctForm": "лікарю", "options": ["лікарю", "лікаре", "лікар"], "explanation": "Лікар has a soft stem, so it takes -ю."}, {"sentence": "Пане директору, добрий день.", "errorWord": "директору", "correctForm": "директоре", "options": ["директоре", "директор", "директорю"], "explanation": "Директор is a hard stem (-ор), so it takes -е."}, {"sentence": "Пане вчитель, це вам.", "errorWord": "вчитель", "correctForm": "вчителю", "options": ["вчителю", "вчителє", "вчитель"], "explanation": "Вчитель has a soft stem, so it takes -ю."}, {"sentence": "Пане водіє, зупиніть тут.", "errorWord": "водіє", "correctForm": "водію", "options": ["водію", "водій", "водіє"], "explanation": "Водій ends in й (soft), so it takes -ю."}, {"sentence": "Другу мій, привіт.", "errorWord": "Другу", "correctForm": "Друже", "options": ["Друже", "Друг", "Другю"], "explanation": "The consonant г changes to ж, and takes the ending -е."}, {"sentence": "Пане професору, ви маєте рацію.", "errorWord": "професору", "correctForm": "професоре", "options": ["професоре", "професор", "професорю"], "explanation": "Професор is a hard stem (-ор), so it takes -е."}]} instruction={"Виправте помилку у закінченні кличного відмінка"} />
+
+<FillIn client:only="react" items={[{"sentence": "_____ подруго, як ти?", "answer": "Люба", "options": ["Люба", "Любий", "Любе"]}, {"sentence": "_____ друже, радий бачити!", "answer": "Любий", "options": ["Любий", "Люба", "Любі"]}, {"sentence": "_____ мамо, я тебе люблю.", "answer": "Люба", "options": ["Люба", "Любий", "Любе"]}, {"sentence": "_____ брате, допоможи мені.", "answer": "Любий", "options": ["Любий", "Люба", "Любі"]}, {"sentence": "_____ зіронько моя!", "answer": "Люба", "options": ["Люба", "Любий", "Любе"]}, {"sentence": "_____ колего Андрію!", "answer": "Любий", "options": ["Любий", "Люба", "Любе"]}]} instruction={"Який? Яка? Яке? Вставте правильну форму емоційного звертання"} />
+
+<ErrorCorrection client:only="react" items={[{"sentence": "Люба друже, ходи сюди!", "errorWord": "Люба", "correctForm": "Любий", "options": ["Любий", "Любе", "Любі"], "explanation": "Друг is masculine, so we use любий."}, {"sentence": "Любий подруго, привіт.", "errorWord": "Любий", "correctForm": "Люба", "options": ["Люба", "Любе", "Любі"], "explanation": "Подруга is feminine, so we use люба."}, {"sentence": "Шановний пані Олено!", "errorWord": "Шановний", "correctForm": "Шановна", "options": ["Шановна", "Шановне", "Шановні"], "explanation": "Пані is feminine, so we use Шановна."}, {"sentence": "Шановна пане професоре!", "errorWord": "Шановна", "correctForm": "Шановний", "options": ["Шановний", "Шановне", "Шановні"], "explanation": "Пан is masculine, so we use Шановний."}, {"sentence": "Вельмишановна добродію!", "errorWord": "Вельмишановна", "correctForm": "Вельмишановний", "options": ["Вельмишановний", "Вельмишановне", "Вельмишановні"], "explanation": "Добродій is masculine."}, {"sentence": "Моя любий брате!", "errorWord": "Моя", "correctForm": "Мій", "options": ["Мій", "Моє", "Мої"], "explanation": "Брат is masculine, so we use мій."}]} instruction={"Знайдіть помилку в узгодженні прикметника й іменника"} />
+
+<GroupSort client:only="react" groups={{"Неформально (на «ти»)": ["Привіт, друже!", "Як справи, Олено?", "Люба подруго, дякую!", "Спи, моє сонечко."], "Офіційно (на «Ви»)": ["Добрий день, пане лікарю!", "Шановна пані директорко!", "Пане Ковальчуку, зачекайте.", "Вельмишановний добродію!"]}} instruction={"Ти чи Ви? Розподіліть фрази на неформальні (ти) та формальні (Ви)"} />
+
+<Quiz client:only="react" questions={[{"question": "Пане лікарю, як _____ справи?", "options": [{"text": "Ваші", "correct": true}, {"text": "твої", "correct": false}, {"text": "його", "correct": false}, {"text": "її", "correct": false}]}, {"question": "Маріє, як _____ справи?", "options": [{"text": "твої", "correct": true}, {"text": "Ваші", "correct": false}, {"text": "її", "correct": false}, {"text": "їхні", "correct": false}]}, {"question": "Шановна пані Олено, _____ можете сісти тут.", "options": [{"text": "Ви", "correct": true}, {"text": "ти", "correct": false}, {"text": "вона", "correct": false}, {"text": "вони", "correct": false}]}, {"question": "Друже мій, _____ маєш рацію.", "options": [{"text": "ти", "correct": true}, {"text": "Ви", "correct": false}, {"text": "він", "correct": false}, {"text": "ми", "correct": false}]}, {"question": "Пане професоре, це _____ книга?", "options": [{"text": "Ваша", "correct": true}, {"text": "твоя", "correct": false}, {"text": "моя", "correct": false}, {"text": "їхня", "correct": false}]}, {"question": "Люба моя, _____ така красива сьогодні.", "options": [{"text": "ти", "correct": true}, {"text": "Ви", "correct": false}, {"text": "вона", "correct": false}, {"text": "вони", "correct": false}]}]} instruction={"Ти чи Ви? Оберіть правильний займенник за контекстом звертання"} />
+
+<FillIn client:only="react" items={[{"sentence": "Лікарю, _____ мене дуже сильно болить голова.", "answer": "у", "options": ["у", "на", "до"]}, {"sentence": "Пане Ковальчуку, що _____ турбує?", "answer": "вас", "options": ["вас", "тебе", "нас"]}, {"sentence": "Друже, _____ тебе все добре?", "answer": "у", "options": ["у", "на", "до"]}, {"sentence": "Пані Олено, _____ вас є запитання?", "answer": "у", "options": ["у", "на", "до"]}, {"sentence": "_____ мене немає проблем зі здоров'ям.", "answer": "У", "options": ["У", "На", "До"]}, {"sentence": "Лікарю, _____ мене потрібні ліки?", "answer": "для", "options": ["для", "у", "на"]}]} instruction={"У мене є... Вставте правильне слово"} />
+
+<FillIn client:only="react" items={[{"sentence": "Друже _____, як ти?", "answer": "мій", "options": ["мій", "моя", "моє"]}, {"sentence": "Подруго _____, я так рада!", "answer": "моя", "options": ["моя", "мій", "моє"]}, {"sentence": "_____ сонечко, ходи сюди!", "answer": "Моє", "options": ["Моє", "Мій", "Моя"]}, {"sentence": "Брате _____, допоможи мені!", "answer": "мій", "options": ["мій", "моя", "моє"]}, {"sentence": "_____ зіронько, спи!", "answer": "Моя", "options": ["Моя", "Мій", "Моє"]}, {"sentence": "Мамо _____, добрий ранок!", "answer": "моя", "options": ["моя", "мій", "моє"]}]} instruction={"Мій, твій, наш... Вставте правильний присвійний займенник"} />
+
+<MatchUp client:only="react" pairs={[{"left": "Любий", "right": "друже"}, {"left": "Люба", "right": "подруго"}, {"left": "Шановний", "right": "пане"}, {"left": "Шановна", "right": "пані"}, {"left": "Моє", "right": "сонечко"}, {"left": "Моя", "right": "зіронько"}]} instruction={"Чий? Чия? Чиє? З'єднайте займенник або прикметник зі словом у кличному відмінку"} />
+
+<Unjumble client:only="react" items={[{"words": "мій, / Друже / справи? / як", "answer": "Друже мій, як справи?"}, {"words": "рада! / моя, / Подруго / я / так", "answer": "Подруго моя, я так рада!"}, {"words": "сонечко, / моє / Спи,", "answer": "Спи, моє сонечко,"}, {"words": "лікарю, / мені / Пане / потрібна / допомога.", "answer": "Пане лікарю, мені потрібна допомога."}, {"words": "Ваша / кава. / Ковальчуку, / Пане / ось", "answer": "Пане Ковальчуку, ось Ваша кава."}, {"words": "директорко, / добрий / день! / Пані", "answer": "Пані директорко, добрий день!"}]} instruction={"Складіть правильне речення зі слів"} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+**Джерела — References**
+
+- [ULP: Ukrainian Vocative Case](https://www.ukrainianlessons.com/vocative-case/)
+  _Vocative forms including formal address_
+
+## Підручники (Textbooks)
+
+- [Авраменко О. М. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-avramenko-2018.pdf#page=176), стор. 176
+- [Заболотний О. В. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-zabolotnij-2018.pdf#page=165), стор. 165
+- [Караман С. О. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-karaman-2018.pdf#page=149), стор. 149
+- [Заболотний О. В. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrajinska-mova-zabolotnij-2018.pdf#page=165), стор. 165
+- [Глазова О. П. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-glazova-2019.pdf#page=104), стор. 104
+
+</TabItem>
+</Tabs>

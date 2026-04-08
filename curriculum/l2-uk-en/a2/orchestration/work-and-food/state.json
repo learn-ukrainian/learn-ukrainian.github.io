@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "a2",
+  "slug": "work-and-food",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-07T23:07:18.330648+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-07T23:07:18.343181+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-07T23:08:09.578885+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-07T23:12:18.867305+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-07T23:16:59.476151+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-07T23:16:59.476308+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-07T23:17:56.660905+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-07T23:17:56.676310+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-07T23:17:56.682280+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-07T23:19:08.501146+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-07T23:19:08.501282+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-07T23:19:08.694235+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-07T23:24:30.714412+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-07T23:24:30.890319+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-07T23:24:32.899145+00:00"
+    }
+  }
+}

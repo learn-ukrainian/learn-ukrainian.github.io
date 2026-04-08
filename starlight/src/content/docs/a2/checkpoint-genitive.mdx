@@ -1,0 +1,343 @@
+---
+title: "Контрольна робота — родовий відмінок"
+sidebar:
+  order: 16
+  label: "16. Контрольна робота — родовий відмінок"
+pipeline: v6
+build_status: draft
+---
+
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import FillIn from '@site/src/components/FillIn';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import GroupSort from '@site/src/components/GroupSort';
+import MatchUp from '@site/src/components/MatchUp';
+import Order from '@site/src/components/Order';
+import Quiz from '@site/src/components/Quiz';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Частина 1: Впізнавання форм (Part 1: Recognizing Forms)
+
+This module consolidates your knowledge of the **родовий відмінок** (genitive case) covered in modules M08-M13. The Genitive case is the most frequently used case in the Ukrainian language. We use it to express negation, possession, quantity, and movement. Before moving to more complex case interactions, this checkpoint ensures your foundation is solid. You must be able to recognize which **прийменник** (preposition) triggers the Genitive and correctly apply the **закінчення** (ending) for **однина** (singular) and plural nouns. Let's review the core preposition groups.
+
+Spatial prepositions describe physical location and proximity. The prepositions **біля** (near/by), **навпроти** (opposite/across from), **коло** (around/near), and **до** (to/towards) always require the Genitive case. When you hear these words, immediately anticipate a Genitive ending. The preposition **до** indicates direction towards a destination, while the others indicate static location. Notice the endings in the following examples.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Читаємо українською:</span> </div>
+
+<div class="dialogue-line">Ми стоїмо **біля собору**. (We are standing near the cathedral.)</div>
+
+<div class="dialogue-line">Наш готель розташований **навпроти театру**. (Our hotel is located opposite the theater.)</div>
+
+<div class="dialogue-line">Діти граються **коло школи**. (The children are playing near the school.)</div>
+
+<div class="dialogue-line">Туристи йдуть **до станції**. (The tourists are walking to the station.)</div>
+
+<div class="dialogue-line">Машина під'їхала **до будинку**. (The car drove up to the house.)</div>
+
+</div>
+
+Source and time prepositions explain where something comes from or when an event occurs in a sequence. We use **від** (from/away from a person or object), **з / із / зі** (from/out of a place or material), and **після** (after). The preposition **з** takes the form **із** or **зі** to make pronunciation easier, especially before clusters of consonants.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Читаємо українською:</span> </div>
+
+<div class="dialogue-line">Цей лист **від мами**. (This letter is from mom.)</div>
+
+<div class="dialogue-line">Я отримав повідомлення **від лікаря**. (I received a message from the doctor.)</div>
+
+<div class="dialogue-line">Мій друг приїхав **зі Львова**. (My friend arrived from Lviv.)</div>
+
+<div class="dialogue-line">Вона взяла книгу **з полиці**. (She took the book from the shelf.)</div>
+
+<div class="dialogue-line">Ми підемо гуляти **після обіду**. (We will go for a walk after lunch.)</div>
+
+<div class="dialogue-line">**Після роботи** я читаю новини. (After work, I read the news.)</div>
+
+</div>
+
+Purpose and lack prepositions define who benefits from an action or what is missing. The preposition **для** (for) indicates the recipient or purpose. The preposition **без** (without) indicates absence, similar to the negative construction with **немає**. These are essential for everyday situations like ordering food or buying gifts.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Читаємо українською:</span> </div>
+
+<div class="dialogue-line">Я купив подарунок **для сестри**. (I bought a gift for my sister.)</div>
+
+<div class="dialogue-line">Ця кімната **для гостей**. (This room is for guests.)</div>
+
+<div class="dialogue-line">Мені, будь ласка, чорний чай **без цукру**. (Black tea without sugar for me, please.)</div>
+
+<div class="dialogue-line">Я не можу читати **без окулярів**. (I cannot read without glasses.)</div>
+
+<div class="dialogue-line">Це **квиток для студента**. (This is a ticket for a student.)</div>
+
+</div>
+
+To recognize the function of a preposition, ask the question **кого?** (whom?) for people and animals, or **чого?** (what?) for objects and concepts. Distinguish between direction (**до кого? до чого?**), location (**біля кого? біля чого?**), and source (**від кого? з чого?**). When you identify the correct question, the Genitive ending follows naturally.
+
+<Quiz client:only="react" questions={[{"question": "Цей цікавий лист ... мого брата.", "options": [{"text": "від", "correct": true}, {"text": "з", "correct": false}, {"text": "до", "correct": false}, {"text": "біля", "correct": false}]}, {"question": "Ми зустрілися ... старого парку.", "options": [{"text": "біля", "correct": true}, {"text": "до", "correct": false}, {"text": "від", "correct": false}, {"text": "для", "correct": false}]}, {"question": "Вони повернулися ... нового магазину.", "options": [{"text": "з", "correct": true}, {"text": "від", "correct": false}, {"text": "до", "correct": false}, {"text": "без", "correct": false}]}, {"question": "Ця чашка чорної кави ... моєї сестри.", "options": [{"text": "для", "correct": true}, {"text": "після", "correct": false}, {"text": "з", "correct": false}, {"text": "до", "correct": false}]}, {"question": "Ми підемо гуляти ... смачного обіду.", "options": [{"text": "після", "correct": true}, {"text": "від", "correct": false}, {"text": "до", "correct": false}, {"text": "біля", "correct": false}]}, {"question": "Туристи йдуть ... великого собору.", "options": [{"text": "до", "correct": true}, {"text": "з", "correct": false}, {"text": "для", "correct": false}, {"text": "без", "correct": false}]}, {"question": "Вона не може читати ... нових окулярів.", "options": [{"text": "без", "correct": true}, {"text": "після", "correct": false}, {"text": "від", "correct": false}, {"text": "до", "correct": false}]}]} instruction={"Оберіть правильний прийменник"} />
+
+## Частина 2: Вибір правильної форми (Part 2: Choosing the Correct Form)
+
+When forming the Genitive case, we must maintain **узгодження** (agreement) between the noun and its modifiers. Adjectives and possessive pronouns must match the noun in gender, number, and case. For masculine and neuter singular words, the Genitive ending is **-ого** (for adjectives and pronouns). For feminine singular words, the ending is **-ої** (or **-єї** after soft consonants).
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Читаємо українською:</span> </div>
+
+<div class="dialogue-line">Це рюкзак **мого нового друга**. (This is the backpack of my new friend.)</div>
+
+<div class="dialogue-line">Я не бачив **твоєї старшої сестри**. (I haven't seen your older sister.)</div>
+
+<div class="dialogue-line">Колір **цього старого стола** дуже темний. (The color of this old table is very dark.)</div>
+
+<div class="dialogue-line">У нас немає **чистої води**. (We don't have clean water.)</div>
+
+<div class="dialogue-line">Я чекаю **наступного автобуса**. (I am waiting for the next bus.)</div>
+
+</div>
+
+Forming the Genitive **множина** (plural) is often the most challenging part of Ukrainian grammar. The endings depend on the noun's gender and declension group. Masculine nouns (and some neuter nouns) typically take the ending **-ів** or **-їв**. Feminine nouns (and most neuter nouns) usually have a zero ending, meaning the final vowel is dropped. A small group of nouns, primarily feminine nouns ending in a consonant and some irregular plurals, take the ending **-ей**.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Читаємо українською:</span> </div>
+
+<div class="dialogue-line">На вечірці було **десять друзів**. (There were ten friends at the party.)</div>
+
+<div class="dialogue-line">Вона прочитала **п'ять книжок**. (She read five books.)</div>
+
+<div class="dialogue-line">На вулиці **багато людей**. (There are many people on the street.)</div>
+
+<div class="dialogue-line">Ми не спали **кілька ночей**. (We didn't sleep for a few nights.)</div>
+
+<div class="dialogue-line">У мене немає **грошей**. (I don't have money.)</div>
+
+</div>
+
+For masculine nouns in the singular, you must choose between the ending **-а / -я** and **-у / -ю**. Animate nouns (people and animals) always take **-а / -я**. For inanimate nouns, the logic relies on how "concrete" the item is. Concrete objects and specific terms take **-а / -я**. Abstract concepts, collective nouns, materials, and phenomena take **-у / -ю**. 
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Читаємо українською:</span> </div>
+
+<div class="dialogue-line">Водій чекає біля **автобуса**. (The driver is waiting near the bus.) *Concrete object.*</div>
+
+<div class="dialogue-line">У мене зовсім немає вільних годин, немає **часу**. (I have no free hours at all, I have no time.) *Abstract concept.*</div>
+
+<div class="dialogue-line">Я дістав зошит з **рюкзака**. (I took a notebook from the backpack.) *Concrete object.*</div>
+
+<div class="dialogue-line">Я п'ю каву без **цукру**. (I drink coffee without sugar.) *Material/substance.*</div>
+
+<div class="dialogue-line">Тут немає **вітру**. (There is no wind here.) *Natural phenomenon.*</div>
+
+</div>
+
+<FillIn client:only="react" items={[{"sentence": "У мене зовсім немає вільного ____.", "answer": "часу", "options": ["часу", "часа", "часом"]}, {"sentence": "Я не бачив твоєї старшої ____.", "answer": "сестри", "options": ["сестри", "сестру", "сестрою"]}, {"sentence": "На вечірці було багато нових ____.", "answer": "друзів", "options": ["друзів", "друзі", "друга"]}, {"sentence": "Ми живемо навпроти старого ____.", "answer": "театру", "options": ["театру", "театр", "театром"]}, {"sentence": "Колір цього ____ стола дуже темний.", "answer": "старого", "options": ["старого", "старий", "старому"]}, {"sentence": "У цьому місті немає чистої ____.", "answer": "води", "options": ["води", "воду", "водою"]}]} instruction={"Вставте правильну форму слова"} />
+
+Minimal pairs of prepositions often confuse learners. Compare **з** (from/out of a place) and **від** (from/away from a person). You return **з** роботи (from work), but you receive a letter **від** колеги (from a colleague). Compare **біля** (near/next to) and **навпроти** (opposite/facing). A park can be **біля** дому (near the house), while a pharmacy might be **навпроти** дому (across from the house). Remember that **з** changes to **зі** for phonetic ease when the next word starts with multiple consonants.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Читаємо українською:</span> </div>
+
+<div class="dialogue-line">Він приїхав **зі Львова**. (He arrived from Lviv.)</div>
+
+<div class="dialogue-line">Вона взяла зошит **зі столу**. (She took the notebook from the table.)</div>
+
+<div class="dialogue-line">Лікарня розташована **навпроти парку**. (The hospital is located opposite the park.)</div>
+
+<div class="dialogue-line">Ми зустрілися **біля парку**. (We met near the park.)</div>
+
+</div>
+
+A frequent **помилка** (mistake) among English speakers is leaving the noun in the Nominative case after **немає** or after prepositions. English does not change the noun's form to show absence. Another common error is using the Accusative case instead of the Genitive with certain verbs. For example, the verb **потребувати** (to need/require) always governs the Genitive case. Saying "Я потребую допомогу" (Accusative) is incorrect. The correct form is "Я потребую допомоги" (Genitive). You must **впізнати** (recognize) the trigger word to **виправити** (correct) the error.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Читаємо українською:</span> </div>
+
+<div class="dialogue-line">❌ *У мене немає брат.*</div>
+
+<div class="dialogue-line">✅ У мене немає **брата**. (I don't have a brother.)</div>
+
+<div class="dialogue-line">❌ *Я потребую допомогу.*</div>
+
+<div class="dialogue-line">✅ Я потребую **допомоги**. (I need help.)</div>
+
+<div class="dialogue-line">❌ *Він прийшов без квиток.*</div>
+
+<div class="dialogue-line">✅ Він прийшов **без квитка**. (He arrived without a ticket.)</div>
+
+</div>
+
+<ErrorCorrection client:only="react" items={[{"sentence": "У мене немає брат.", "errorWord": "брат", "correctForm": "брата", "options": ["брата", "братом", "брату"], "explanation": "Після слова 'немає' іменник завжди стоїть у родовому відмінку (кого? чого?)."}, {"sentence": "Україна потребує допомогу.", "errorWord": "допомогу", "correctForm": "допомоги", "options": ["допомоги", "допомогою", "допомозі"], "explanation": "Дієслово 'потребувати' (to need) завжди вимагає родового відмінка, а не знахідного."}, {"sentence": "Він прийшов у театр без квиток.", "errorWord": "квиток", "correctForm": "квитка", "options": ["квитка", "квитком", "квитку"], "explanation": "Прийменник 'без' (without) вимагає родового відмінка."}, {"sentence": "Ми чекаємо свого друга після робота.", "errorWord": "робота", "correctForm": "роботи", "options": ["роботи", "роботу", "роботою"], "explanation": "Прийменник 'після' (after) вимагає родового відмінка."}, {"sentence": "Дайте мені, будь ласка, пляшку вода.", "errorWord": "вода", "correctForm": "води", "options": ["води", "воду", "водою"], "explanation": "Кількість (пляшка чого?) передається родовим відмінком."}, {"sentence": "Скільки коштує кілограм сир?", "errorWord": "сир", "correctForm": "сиру", "options": ["сиру", "сир", "сиром"], "explanation": "Міра ваги (кілограм чого?) вимагає родового відмінка."}, {"sentence": "На вулиці сьогодні багато люди.", "errorWord": "люди", "correctForm": "людей", "options": ["людей", "людям", "людьми"], "explanation": "Слова кількості (багато, мало) вимагають родового відмінка."}]} instruction={"Знайдіть і виправте помилку"} />
+
+## Частина 3: Вільне вживання (Part 3: Free Production)
+
+To truly master the Genitive case, you must apply it in real-world contexts. At the market, you will use it to specify quantities and measures. At the pharmacy, you will use the preposition **від** (from/against) to describe the purpose of medication, or **для** (for) to specify the body part. Let's look at how native speakers build these phrases.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Читаємо українською:</span> </div>
+
+<div class="dialogue-line">Дайте мені, будь ласка, **два кілограми яблук**. (Give me two kilograms of apples, please.)</div>
+
+<div class="dialogue-line">Мені потрібна велика **пляшка води**. (I need a large bottle of water.)</div>
+
+<div class="dialogue-line">У вас є **таблетки від болю**? (Do you have pills for pain?)</div>
+
+<div class="dialogue-line">Я хочу купити **крем для рук**. (I want to buy hand cream.)</div>
+
+<div class="dialogue-line">Скільки коштує кілограм **сиру**? (How much does a kilogram of cheese cost?)</div>
+
+</div>
+
+Let's observe a multi-turn dialogue. In this scenario, a tour guide shows a group around Kyiv. Notice how many times the Genitive case appears to express location, direction, purpose, and lack.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Гід:</span> Добрий день! Ми стоїмо **біля Золотих воріт**. *(Good day! We are standing near the Golden Gates.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Туристи:</span> Яка краса! А куди ми йдемо далі? *(What beauty! And where are we going next?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Гід:</span> Зараз ми йдемо **до Софійського собору**. Це близько. *(Now we are walking to St. Sophia's Cathedral. It is close.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Туристи:</span> Скільки часу туди йти? *(How much time to walk there?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Гід:</span> **До Хрещатика** десять хвилин, а до собору — п'ять. *(To Khreshchatyk it is ten minutes, and to the cathedral — five.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Туристи:</span> Чи потрібен квиток? *(Is a ticket needed?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Гід:</span> Так, **без квитка** заходити не можна. Але ця екскурсія **для групи з десяти людей**, тому вхід безкоштовний! *(Yes, without a ticket you cannot enter. But this tour is for tourists from Ukraine, so entry is free!)*</div>
+
+</div>
+
+When translating from English to Ukrainian, you must adjust your strategy. English uses an apostrophe with an "s" ('s) or the preposition "of" to show possession. Ukrainian uses the Genitive case directly on the noun and its modifiers. Do not simply place two Nominative nouns next to each other.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Читаємо українською:</span> </div>
+
+<div class="dialogue-line">Це **машина мого брата**. (This is my brother's car.)</div>
+
+<div class="dialogue-line">Де розташований **центр міста**? (Where is the city center?)</div>
+
+<div class="dialogue-line">Ми читаємо **книгу відомого автора**. (We are reading the book of a famous author.)</div>
+
+<div class="dialogue-line">Це **смак дитинства**. (This is the taste of childhood.)</div>
+
+</div>
+
+Quantity words always require the Genitive case. The words **багато** (a lot / many), **мало** (a little / few), and **кілька** (several / a few) behave like numbers. When dealing with countable objects, use the Genitive plural. When dealing with uncountable substances or abstract concepts, use the Genitive singular. You will **вибрати** (choose) the correct number form based on whether the noun is countable.
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Читаємо українською:</span> </div>
+
+<div class="dialogue-line">У нього дуже **багато часу**. (He has a lot of time.) *Uncountable, singular.*</div>
+
+<div class="dialogue-line">На лекції було **кілька студентів**. (There were several students at the lecture.) *Countable, plural.*</div>
+
+<div class="dialogue-line">У річці залишилося **мало води**. (There is little water left in the river.) *Uncountable, singular.*</div>
+
+<div class="dialogue-line">Ми купили **багато свіжих овочів**. (We bought many fresh vegetables.) *Countable, plural.*</div>
+
+</div>
+
+<MatchUp client:only="react" pairs={[{"left": "Дайте, будь ласка, два кілограми...", "right": "яблук."}, {"left": "Мені потрібні таблетки від...", "right": "болю."}, {"left": "Аптека знаходиться навпроти...", "right": "парку."}, {"left": "Скільки коштує пляшка...", "right": "води?"}, {"left": "Ми йдемо до великого...", "right": "театру."}, {"left": "Я хочу купити крем для...", "right": "рук."}]} instruction={"З'єднайте частини речень"} />
+
+Consistent use of correct Genitive endings is a strong sign of A2 and early B1 proficiency. Native speakers naturally hear the difference between a concrete object and an abstract concept, or recognize the zero ending in the plural. You will make mistakes, and that is normal. The goal of a **перевірка** (review/check) is to identify your weak spots so you can practice them. Every time you correctly say "для мами" instead of "для мама", or "п'ять книжок" instead of "п'ять книги", you are thinking in Ukrainian. Pay attention to the prepositions you hear in daily conversations, and observe the endings that follow them. Your brain will gradually absorb these patterns.
+
+## Підсумок
+
+This checkpoint confirms your readiness to use the Genitive case in daily life. Use this self-assessment checklist to evaluate your progress. If you answer "yes" to these questions, you are ready to move on: 
+
+*   Чи можу я використати прийменники **до**, **біля**, **від**, **для** без помилок?
+*   Чи правильно я утворюю множину (**друзів**, **книжок**, **людей**)?
+*   Чи вмію я узгоджувати прикметники (**мого нового**) з іменниками?
+*   Чи розумію я різницю між **автобуса** та **часу**?
+*   Чи можу я пояснити напрямок або рецепт, використовуючи родовий відмінок?
+
+If you feel confident with these points, keep practicing, and always listen for the prepositions that signal a change in the ending.
+
+</TabItem>
+<TabItem label="Словник">
+
+### Обов'язкові та рекомендовані слова
+
+| Слово | Переклад | Частина мови | Рід |
+|-------|----------|-------------|-----|
+| **ви́правити** | to correct | дієсл. |  |
+| **впізна́ти** | to recognize | дієсл. |  |
+| **ви́брати** | to choose | дієсл. |  |
+| **прийме́нник** | preposition | ім. | ч. |
+| **узго́дження** | agreement | ім. | с. |
+| **множина́** | plural | ім. | ж. |
+| **однина́** | singular | ім. | ж. |
+| **закі́нчення** | ending | ім. | с. |
+| **пере́ві́рка** | check, review | ім. | ж. |
+| **по́ми́лка** | mistake, error | ім. | ж. |
+| **бі́ля** | near, by | прийм. |  |
+| **навпро́ти** | opposite, across from | присл. |  |
+| **ко́ло** | around, near | ім. | ж. |
+| **від** | from (a person or object) | прийм. |  |
+| **пі́сля** | after | присл. |  |
+| **потребува́ти** | to need, to require | дієсл. |  |
+| **бага́то** | a lot, many | присл. |  |
+| **ма́ло** | a little, few | присл. |  |
+| **кі́лька** | several, a few | ім. | ж. |
+
+### Вирази
+
+| Вираз | Переклад |
+|-------|----------|
+| **будь ласка** | please |
+| **два кілограми** | two kilograms |
+| **пляшка води** | bottle of water |
+| **центр міста** | city center |
+
+### Картки — Flashcards
+
+<FlashcardDeck client:only="react" cards={[{ front: "ви́правити", back: "to correct", subtitle: "дієсл." }, { front: "впізна́ти", back: "to recognize", subtitle: "дієсл." }, { front: "ви́брати", back: "to choose", subtitle: "дієсл." }, { front: "прийме́нник", back: "preposition", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "узго́дження", back: "agreement", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "множина́", back: "plural", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "однина́", back: "singular", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "закі́нчення", back: "ending", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "пере́ві́рка", back: "check, review", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "по́ми́лка", back: "mistake, error", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "бі́ля", back: "near, by", subtitle: "прийм." }, { front: "навпро́ти", back: "opposite, across from", subtitle: "присл." }, { front: "ко́ло", back: "around, near", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "від", back: "from (a person or object)", subtitle: "прийм." }, { front: "пі́сля", back: "after", subtitle: "присл." }, { front: "потребува́ти", back: "to need, to require", subtitle: "дієсл." }, { front: "бага́то", back: "a lot, many", subtitle: "присл." }, { front: "ма́ло", back: "a little, few", subtitle: "присл." }, { front: "кі́лька", back: "several, a few", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }]} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+<GroupSort client:only="react" groups={{"Закінчення -а / -я (конкретні об'єкти)": ["автобуса", "стола", "магазина", "зошита", "паспорта"], "Закінчення -у / -ю (абстрактні, речовини)": ["часу", "цукру", "вітру", "сиру", "чаю"]}} instruction={"Розподіліть іменники чоловічого роду за закінченням родового відмінка однини (-а/-я чи -у/-ю)"} />
+
+<Quiz client:only="react" questions={[{"question": "На нашій вулиці живе багато ...", "options": [{"text": "людей", "correct": true}, {"text": "люди", "correct": false}, {"text": "людям", "correct": false}, {"text": "людях", "correct": false}]}, {"question": "Вона прочитала вже п'ять ...", "options": [{"text": "книжок", "correct": true}, {"text": "книги", "correct": false}, {"text": "книгам", "correct": false}, {"text": "книгах", "correct": false}]}, {"question": "На вечірці було десять нових ...", "options": [{"text": "друзів", "correct": true}, {"text": "друзі", "correct": false}, {"text": "друзям", "correct": false}, {"text": "другах", "correct": false}]}, {"question": "Ми не спали кілька ...", "options": [{"text": "ночей", "correct": true}, {"text": "ночі", "correct": false}, {"text": "ночам", "correct": false}, {"text": "ночах", "correct": false}]}, {"question": "У мене зовсім немає вільних ...", "options": [{"text": "грошей", "correct": true}, {"text": "гроші", "correct": false}, {"text": "грошам", "correct": false}, {"text": "грошах", "correct": false}]}, {"question": "Для цього рецепта треба кілька зелених ...", "options": [{"text": "яблук", "correct": true}, {"text": "яблука", "correct": false}, {"text": "яблукам", "correct": false}, {"text": "яблуках", "correct": false}]}]} instruction={"Оберіть правильну форму множини"} />
+
+<Unjumble client:only="react" items={[{"words": "вільного / немає / У / мене / часу. / зовсім", "answer": "У мене зовсім немає вільного часу."}, {"words": "старого / зі / Вона / взяла / столу. / зошит", "answer": "Вона взяла зошит зі старого столу."}, {"words": "великого / парку. / Лікарня / знаходиться / міського / навпроти", "answer": "Лікарня знаходиться навпроти великого міського парку."}, {"words": "цього / коштує / сиру? / Скільки / твердого / кілограм", "answer": "Скільки коштує кілограм цього твердого сиру?"}, {"words": "тільки / України. / Ця / з / для / екскурсія / туристів", "answer": "Ця екскурсія тільки для туристів з України."}, {"words": "до / після / Києва / тільки / обіду. / Вони / приїхали", "answer": "Вони приїхали до Києва тільки після обіду."}]} instruction={"Складіть правильне речення зі слів"} />
+
+<TrueFalse client:only="react" items={[{"statement": "Прийменники 'навпроти' та 'біля' вимагають родового відмінка.", "isTrue": true, "explanation": "Ці прийменники завжди використовуються з родовим відмінком (навпроти парку, біля дому)."}, {"statement": "Слово 'час' у родовому відмінку має закінчення -а (часа).", "isTrue": false, "explanation": "Абстрактні поняття чоловічого роду зазвичай мають закінчення -у (часу)."}, {"statement": "Дієслово 'потребувати' (to need) завжди використовується зі знахідним відмінком.", "isTrue": false, "explanation": "Дієслово 'потребувати' вимагає родового відмінка (потребувати допомоги)."}, {"statement": "Після слова 'багато' ми використовуємо іменники в родовому відмінку.", "isTrue": true, "explanation": "Слова кількості (багато, мало, кілька) вимагають родового відмінка (багато людей)."}, {"statement": "Слова 'від' та 'з' — це прийменники, які вказують на напрямок до об'єкта.", "isTrue": false, "explanation": "Вони вказують на джерело (звідки? від кого?), а напрямок до об'єкта показує прийменник 'до'."}, {"statement": "У множині слово 'люди' має форму 'людей' у родовому відмінку.", "isTrue": true, "explanation": "Це правильна форма родового відмінка множини (немає людей)."}]} instruction={"Правда чи ні? Перевірте свої знання правил родового відмінка."} />
+
+<Order client:only="react" items={["— Добрий день! Що вам підказати?", "— Добрий день. Мені потрібні таблетки від болю.", "— Ось, будь ласка. Щось ще?", "— Так, дайте ще крем для рук і пляшку мінеральної води.", "— Добре. З вас сто двадцять гривень.", "— Ось гроші. Дякую!"]} correct_order={[0, 1, 2, 3, 4, 5]} instruction={"Розставте репліки діалогу в аптеці та магазині в правильному порядку"} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+**Джерела — References**
+
+- [ULP: 10 Uses of Genitive Case](https://www.ukrainianlessons.com/genitive-case/)
+  _Full overview for self-study review_
+
+## Підручники (Textbooks)
+
+- [Глазова О. П. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-glazova-2018.pdf#page=173), стор. 173
+- [Авраменко О. М. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-avramenko-2019.pdf#page=54), стор. 54
+- [Глазова О. П. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-glazova-2019.pdf#page=9), стор. 9
+- [Авраменко О. М. — Українська мова, 5 клас (2022)](https://pidruchnyk.com.ua/uploads/book/5_ukrmova_avramenko_2022.pdf#page=58), стор. 58
+- [Авраменко О. М. — Українська мова, 6 клас (2023)](https://pidruchnyk.com.ua/uploads/book/6-klas-ukrmova-avramenko-2023.pdf#page=96), стор. 96
+
+</TabItem>
+</Tabs>

@@ -1,0 +1,31 @@
+## Давальний відмінок: Кому? (The Dative Case: To Whom?) (~550 words total)
+- P1 (~120 words): Introduction to the Dative case (Давальний відмінок) through its name and origin. Explain that it comes from the verb "давати" (to give), which perfectly illustrates its primary function: the recipient of an action. Introduce the core questions "Кому?" (To whom? for people) and "Чому?" (To what? for objects/concepts).
+- P2 (~150 words): Explain the concept of the indirect object. Contrast it with the Nominative (the doer) and Accusative (the direct object affected). Use a simple foundational example: "Я (Nom) даю книгу (Acc) тобі (Dat)." Explain that the Dative marks the person who benefits or receives information.
+- P3 (~150 words): Introduce a "Starter Kit" of verbs that trigger the Dative case. Focus on high-frequency communication verbs: давати (to give), дарувати (to gift), казати/говорити (to say/tell), писати (to write), and допомагати (to help). Provide short, punchy examples for each: "Я пишу тобі листа," "Він допомагає мені."
+- P4 (~130 words): Dialogue — The Birthday Gathering. A family scene where gifts are being distributed. Use the plan's specific motivation: "Мені — книгу. Тобі — шоколад. Йому — шарф. Їй — квіти. Нам — торт!" This establishes the pronouns in a natural, repetitive "recipient" context.
+- <!-- INJECT_ACTIVITY: match-up-pronoun-forms --> [match-up, Match Nominative pronoun to its Dative form (я→мені, ти→тобі, ми→нам, ви→вам, він→йому, вона→їй, воно→йому, вони→ї їм), 8 items]
+
+## Особові займенники у давальному відмінку (Personal Pronouns in the Dative) (~750 words total)
+- P1 (~180 words): Focus on the 1st and 2nd person singular (я → мені, ти → тобі). Explain that these forms are "suppletive" (the word changes completely from the Nominative base). Emphasize the unique endings and warn against English-influenced errors like "Дай я книгу." Use examples of personal requests: "Скажи мені правду," "Тобі пасує ця сорочка."
+- P2 (~150 words): Present the 3rd person singular forms (він/воно → йому, вона → їй). Note that the masculine and neuter share the form "йому," while the feminine "їй" is distinct. Mention the spelling of "їй" (with 'ї'). Example sentences: "Я телефоную йому ввечері," "Ми даруємо їй квіти."
+- P3 (~140 words): Present the plural forms (ми → нам, ви → вам, вони → їм). Highlight the relative simplicity of these forms compared to the singulars, as they often feel more symmetrical to learners. Examples: "Вчитель пояснює нам правило," "Я дякую вам за допомогу," "Потрібно їм зателефонувати."
+- P4 (~160 words): Address the "Initial Н" rule for 3rd person pronouns. Explain that while the Dative is rarely used with prepositions in basic speech, when it is (e.g., завдяки — thanks to), the pronoun does NOT usually gain an 'н'. However, contrast this with other cases the learner knows (до нього, у неї) to prevent over-generalization. Stick to the rule: "йому/їй/їм" are the standard forms for the recipient.
+- P5 (~120 words): Practice dialogue — Planning a surprise. Two friends discussing what to tell others. "Я скажу йому секрет," "А нам ти скажеш?", "Вам я скажу пізніше, а їм — завтра." This reinforces plural and 3rd person shifts in a single conversation.
+- <!-- INJECT_ACTIVITY: fill-in-dative-pronouns --> [fill-in, Complete sentences with the correct Dative pronoun based on context (я/ти/він/ми provided in brackets), 8 items]
+
+## Мені холодно: Безособові конструкції (Impersonal Constructions) (~550 words total)
+- P1 (~160 words): Introduce the concept of "Logical Subject" sentences. Explain that in Ukrainian, many physical and emotional states aren't something you "are" (like in English "I am cold"), but something that "is to you." Compare "Я (Nom) щаслива" (description of identity/long-term state) vs. "Мені (Dat) весело" (current feeling/impersonal state).
+- P2 (~140 words): List the "State Adverbs" used with Dative pronouns. Focus on: холодно (cold), тепло (warm), сумно (sad), весело (joyful), приємно (pleasant), цікаво (interesting). Provide clear pairs: "Мені холодно" vs. "Тобі цікаво?". Mention the "neutral" feel of these adverbs ending in -о.
+- P3 (~130 words): Introduce modal adverbs and necessity: треба / потрібно (need), можна (allowed), варто (should/worth). Explain that "I need" in Ukrainian is literally "To me (it is) necessary." Examples: "Мені треба йти," "Вам можна тут сидіти," "Йому варто відпочити."
+- P4 (~120 words): Dialogue — At a cafe. Characters expressing their current comfort levels. "Тобі тут тепло? Так, мені приємно тут сидіти. Мені цікаво, що ти замовиш. Мені потрібно випити кави, бо мені сумно без неї."
+- <!-- INJECT_ACTIVITY: true-false-impersonal --> [true-false, Judge whether impersonal Dative sentences (e.g., "Я холодно" vs "Мені холодно") are grammatically correct, 8 items]
+
+## Давальний чи знахідний? (Dative or Accusative?) (~350 words total)
+- P1 (~180 words): The "Minimal Pairs" challenge. Contrast sentences where the only difference is the pronoun case: "Я бачу тебе" (Acc — direct sight) vs. "Я кажу тобі" (Dat — recipient of speech). "Він знає її" (Acc — direct knowledge) vs. "Він дзвонить їй" (Dat — recipient of call). Explain that the choice depends entirely on the verb's "logic" of interaction.
+- P2 (~170 words): Provide a strategy for L2 learners to distinguish between the two. If the action is directed *at* the person (to them), use Dative. If the action "uses" or "sees" the person as an object, use Accusative. Highlight "False Friends" for English speakers like "допомагати" (help TO someone) which feels like it should be Accusative but is Dative.
+- <!-- INJECT_ACTIVITY: quiz-case-choice --> [quiz, Choose between Dative and Accusative pronoun forms (e.g., тобі vs тебе) based on the verb in the sentence, 8 items]
+
+## Підсумок (~150 words)
+- P1 (~150 words): Recap the paradigm: я→мені, ти→тобі, він/воно→йому, вона→їй, ми→нам, ви→вам, вони→їм. Summarize the two main uses: 1) Recipient of an action (Дай мені), 2) Logical subject of states (Мені холодно). Self-check list: Can you say "To her it is interesting"? (Їй цікаво). Do you remember the dative of "ми"? (нам).
+
+Grand total: ~2150 words

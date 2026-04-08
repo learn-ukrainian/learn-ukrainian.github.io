@@ -1,0 +1,47 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: 'Missed the specific required practice sentence: `Practice: building sentences
+    that use 2-3 locative functions together: У минулому місяці я розмовляв по телефону
+    з другом у Києві.`'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Contained Russianisms/calques ("Давайте прочитаємо", "по інтернету").
+- dimension: 3
+  name: Pedagogical quality
+  score: 6
+  evidence: Writer explicitly taught that "at work" is ALWAYS "на роботі, never «у
+    роботі»", but then violated their own rule twice in the summary section ("у новій
+    роботі", "у роботі"). Exercises are also placed
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary items were used naturally in context.
+- dimension: 5
+  name: Exercise quality
+  score: 7
+  evidence: The markers are placed before the required concepts are taught. Exercise
+    1 tests all four locative functions, but is placed after only one function has
+    been introduced.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Excellent, encouraging teacher tone. Clear explanations without corporate
+    filler.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All sections present, word count (2914) exceeds the target of 2000 perfectly.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Factually correct. Uses realistic and culturally appropriate examples.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are natural, multi-turn, and effectively demonstrate the target
+    grammar in context.
+findings: []

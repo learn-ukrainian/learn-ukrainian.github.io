@@ -1,0 +1,277 @@
+vocabulary:
+- word: добро́дій
+  translation: sir (literary/diaspora)
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: добро́дійка
+  translation: madam (literary/diaspora)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: емоці́йний
+  translation: emotional
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: ні́жний
+  translation: tender, affectionate
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: коле́га
+  translation: colleague
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: кли́чний
+  translation: vocative (case)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: зверта́ння
+  translation: address, appeal
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: пан
+  translation: Mr., sir
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: па́ні
+  translation: Mrs., Ms., madam
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лі́кар
+  translation: doctor
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вчи́тель
+  translation: teacher
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вві́чливий
+  translation: polite
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: офіці́йний
+  translation: official, formal
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: профе́сія
+  translation: profession
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: відмі́нок
+  translation: grammatical case
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: дире́ктор
+  translation: director
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: профе́сор
+  translation: professor
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: міні́стр
+  translation: minister
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: воді́й
+  translation: driver
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: вчи́телька
+  translation: female teacher
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: дире́кторка
+  translation: female director
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: лі́карка
+  translation: female doctor
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: прі́звище
+  translation: surname
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: това́риш
+  translation: comrade, friend
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: інжене́р
+  translation: engineer
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ма́йстер
+  translation: master, foreman
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: фемінітиви
+  translation: femininitives
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: журналі́стка
+  translation: female journalist
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: суддя́
+  translation: judge
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ліка́рня
+  translation: clinic, hospital
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: паціє́нт
+  translation: patient
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: лі́ки
+  translation: medicine
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: лю́бий
+  translation: dear
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: пісе́нна
+  translation: song-like
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: пестливі форми
+  translation: diminutive forms
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: се́рде́нько
+  translation: sweetheart, little heart
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: со́нечко
+  translation: sunshine, little sun
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: зі́ронька
+  translation: little star
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: Боже мій!
+  translation: My God!
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Го́споди
+  translation: Lord!
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: панове
+  translation: gentlemen, sirs
+  expression: false
+  pos: ім.
+  gender: ''
+  verified: true
+- word: кохана
+  translation: beloved (feminine)
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: офіціа́нт
+  translation: waiter
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: сусі́д
+  translation: neighbor
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: шано́вний
+  translation: honorable, dear
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: вельмишано́вна
+  translation: highly honorable
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true

@@ -1,0 +1,21 @@
+{
+  "total_items": 139,
+  "grounded_items": 139,
+  "ungrounded": [],
+  "vocab_coverage": {
+    "plan_vocab_total": 14,
+    "tested_in_exercises": 5,
+    "not_tested": [
+      "вечеря",
+      "джерело",
+      "дитинство",
+      "матеріал",
+      "парасолька",
+      "походження",
+      "прийменник",
+      "сусід",
+      "шовк"
+    ]
+  },
+  "all_grounded": true
+}

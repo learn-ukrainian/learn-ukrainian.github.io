@@ -1,0 +1,54 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: 'The module skipped the required `у/в (direction)` preposition from the
+    plan: "combine with prepositions that take Accusative (через, на (direction),
+    у/в (direction), про)". The preposition paragraph c'
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: 'The word "підказник" is an AI hallucination: "Контекст речення — це завжди
+    наш найкращий граматичний підказник." Grammatical terminology is clunky: "Тут
+    живі люди активно роблять дію" (must be "викону'
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow. It uses a strong analogy ("golden rule", "split concepts
+    in your mind") and provides abundant contrasting examples for animate vs. inanimate
+    Accusative (e.g., "Студенти читають" vs
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: Covered almost all required/recommended words ("множина", "люди", "діти",
+    "закінчення"), but missed the recommended word "чергування", using the English
+    "consonant alternation" without giving the Ukra
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers perfectly track the pedagogical flow and the explicit instructions
+    from the `activity_hints`.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Very supportive, natural teacher persona. Minor deduction for slight filler
+    ("Сьогодні ми зробили великий крок уперед", "Українська мова має дуже логічну
+    та прозору структуру").
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: 2412 words (solidly above the 2000 target). All H2 headings present. Markdown
+    is clean and robust.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Uses natural, realistic situations (zoo, university, outdoor market).
+    Decolonized perspective.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The "zoo" and "market" dialogues are highly natural. Minor deduction for
+    the "zoo" dialogue missing the accusative animate form "жирафів" that was explicitly
+    requested by the plan.
+findings: []

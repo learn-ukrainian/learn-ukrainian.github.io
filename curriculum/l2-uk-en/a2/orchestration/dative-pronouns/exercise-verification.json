@@ -1,0 +1,189 @@
+{
+  "total_items": 160,
+  "grounded_items": 131,
+  "ungrounded": [
+    {
+      "word": "де",
+      "exercise_type": "fill-in",
+      "context": "Де моя сестра? Я хочу дати ______ цю книгу.",
+      "role": "context"
+    },
+    {
+      "word": "моя",
+      "exercise_type": "fill-in",
+      "context": "Де моя сестра? Я хочу дати ______ цю книгу.",
+      "role": "context"
+    },
+    {
+      "word": "сестра",
+      "exercise_type": "fill-in",
+      "context": "Де моя сестра? Я хочу дати ______ цю книгу.",
+      "role": "context"
+    },
+    {
+      "word": "дати",
+      "exercise_type": "fill-in",
+      "context": "Де моя сестра? Я хочу дати ______ цю книгу.",
+      "role": "context"
+    },
+    {
+      "word": "ваші",
+      "exercise_type": "fill-in",
+      "context": "Ми ваші найкращі друзі! Розкажіть ______ цей секрет.",
+      "role": "context"
+    },
+    {
+      "word": "найкращі",
+      "exercise_type": "fill-in",
+      "context": "Ми ваші найкращі друзі! Розкажіть ______ цей секрет.",
+      "role": "context"
+    },
+    {
+      "word": "друзі",
+      "exercise_type": "fill-in",
+      "context": "Ми ваші найкращі друзі! Розкажіть ______ цей секрет.",
+      "role": "context"
+    },
+    {
+      "word": "розкажіть",
+      "exercise_type": "fill-in",
+      "context": "Ми ваші найкращі друзі! Розкажіть ______ цей секрет.",
+      "role": "context"
+    },
+    {
+      "word": "коротке",
+      "exercise_type": "fill-in",
+      "context": "Я не знаю, де вони зараз. Напиши ______ коротке повідомлення",
+      "role": "context"
+    },
+    {
+      "word": "добра",
+      "exercise_type": "fill-in",
+      "context": "Ти дуже добра людина. Я щиро дякую ______ за допомогу.",
+      "role": "context"
+    },
+    {
+      "word": "людина",
+      "exercise_type": "fill-in",
+      "context": "Ти дуже добра людина. Я щиро дякую ______ за допомогу.",
+      "role": "context"
+    },
+    {
+      "word": "улюблений",
+      "exercise_type": "fill-in",
+      "context": "Це мій улюблений торт! Дай ______ цей великий шматок, будь л",
+      "role": "context"
+    },
+    {
+      "word": "шматок",
+      "exercise_type": "fill-in",
+      "context": "Це мій улюблений торт! Дай ______ цей великий шматок, будь л",
+      "role": "context"
+    },
+    {
+      "word": "своїх",
+      "exercise_type": "true-false",
+      "context": "Вона сумно без своїх друзів.",
+      "role": "context"
+    },
+    {
+      "word": "важкої",
+      "exercise_type": "true-false",
+      "context": "Йому варто добре відпочити після важкої роботи.",
+      "role": "context"
+    },
+    {
+      "word": "один",
+      "exercise_type": "true-false",
+      "context": "Ти можна взяти ще один теплий десерт.",
+      "role": "context"
+    },
+    {
+      "word": "слухає",
+      "exercise_type": "quiz",
+      "context": "Директор уважно слухає ______ на зустрічі.",
+      "role": "context"
+    },
+    {
+      "word": "зустрічі",
+      "exercise_type": "quiz",
+      "context": "Директор уважно слухає ______ на зустрічі.",
+      "role": "context"
+    },
+    {
+      "word": "граматичне",
+      "exercise_type": "quiz",
+      "context": "Вчитель добре пояснює ______ нове граматичне правило.",
+      "role": "context"
+    },
+    {
+      "word": "однина",
+      "exercise_type": "group-sort",
+      "context": "Однина (Singular)",
+      "role": "context"
+    },
+    {
+      "word": "множина",
+      "exercise_type": "group-sort",
+      "context": "Множина (Plural)",
+      "role": "context"
+    },
+    {
+      "word": "хочеш",
+      "exercise_type": "fill-in",
+      "context": "Ти хочеш їсти? ______ можна взяти цей солодкий шоколад.",
+      "role": "context"
+    },
+    {
+      "word": "удома",
+      "exercise_type": "fill-in",
+      "context": "Він зараз один удома. ______ сумно без друзів.",
+      "role": "context"
+    },
+    {
+      "word": "люблять",
+      "exercise_type": "fill-in",
+      "context": "Вони не люблять кіно. ______ не цікаво дивитися цей фільм.",
+      "role": "context"
+    },
+    {
+      "word": "кіно",
+      "exercise_type": "fill-in",
+      "context": "Вони не люблять кіно. ______ не цікаво дивитися цей фільм.",
+      "role": "context"
+    },
+    {
+      "word": "проєктом",
+      "exercise_type": "error-correction",
+      "context": "Я щиро дякую тебе за допомогу з проєктом.",
+      "role": "context"
+    },
+    {
+      "word": "подивитися",
+      "exercise_type": "error-correction",
+      "context": "Ми варто подивитися цей новий цікавий фільм.",
+      "role": "context"
+    },
+    {
+      "word": "цікавий",
+      "exercise_type": "error-correction",
+      "context": "Ми варто подивитися цей новий цікавий фільм.",
+      "role": "context"
+    },
+    {
+      "word": "слухати",
+      "exercise_type": "error-correction",
+      "context": "Він дуже цікаво слухати цю стару історію.",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 15,
+    "tested_in_exercises": 13,
+    "not_tested": [
+      "відмінок",
+      "давальний"
+    ]
+  },
+  "all_grounded": false
+}

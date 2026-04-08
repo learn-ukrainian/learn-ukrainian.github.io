@@ -1,0 +1,187 @@
+{
+  "total_items": 137,
+  "grounded_items": 109,
+  "ungrounded": [
+    {
+      "word": "вона",
+      "exercise_type": "unjumble",
+      "context": "Вона",
+      "role": "answer"
+    },
+    {
+      "word": "гуляє",
+      "exercise_type": "fill-in",
+      "context": "Вона гуляє з собакою, а я йду з друг____.",
+      "role": "context"
+    },
+    {
+      "word": "учител",
+      "exercise_type": "fill-in",
+      "context": "Директор розмовляє з учител____.",
+      "role": "context"
+    },
+    {
+      "word": "сметан",
+      "exercise_type": "fill-in",
+      "context": "Я люблю борщ зі сметан____.",
+      "role": "context"
+    },
+    {
+      "word": "сестр",
+      "exercise_type": "fill-in",
+      "context": "Я повністю погоджуюся із сестр____.",
+      "role": "context"
+    },
+    {
+      "word": "ручк",
+      "exercise_type": "fill-in",
+      "context": "Я пишу ручк____.",
+      "role": "context"
+    },
+    {
+      "word": "суп",
+      "exercise_type": "fill-in",
+      "context": "Я їм суп ложк____.",
+      "role": "context"
+    },
+    {
+      "word": "ложк",
+      "exercise_type": "fill-in",
+      "context": "Я їм суп ложк____.",
+      "role": "context"
+    },
+    {
+      "word": "ріже",
+      "exercise_type": "fill-in",
+      "context": "Він ріже хліб нож____.",
+      "role": "context"
+    },
+    {
+      "word": "нож",
+      "exercise_type": "fill-in",
+      "context": "Він ріже хліб нож____.",
+      "role": "context"
+    },
+    {
+      "word": "будь",
+      "exercise_type": "unjumble",
+      "context": "будь",
+      "role": "answer"
+    },
+    {
+      "word": "ласка",
+      "exercise_type": "unjumble",
+      "context": "ласка,",
+      "role": "answer"
+    },
+    {
+      "word": "дайте",
+      "exercise_type": "fill-in",
+      "context": "Дайте, будь ласка, пиріжок з ____.",
+      "role": "context"
+    },
+    {
+      "word": "замовлю",
+      "exercise_type": "fill-in",
+      "context": "Я замовлю чай з ____.",
+      "role": "context"
+    },
+    {
+      "word": "згоден",
+      "exercise_type": "quiz",
+      "context": "Я згоден ____ сестрою.",
+      "role": "context"
+    },
+    {
+      "word": "любить",
+      "exercise_type": "quiz",
+      "context": "Вона любить борщ ____ сметаною.",
+      "role": "context"
+    },
+    {
+      "word": "підеш",
+      "exercise_type": "unjumble",
+      "context": "підеш",
+      "role": "answer"
+    },
+    {
+      "word": "розмовляємо",
+      "exercise_type": "quiz",
+      "context": "Ми розмовляємо ____ вчителем.",
+      "role": "context"
+    },
+    {
+      "word": "грається",
+      "exercise_type": "quiz",
+      "context": "Вона грається ____ собакою.",
+      "role": "context"
+    },
+    {
+      "word": "чайм",
+      "exercise_type": "true-false",
+      "context": "Слово «чай» в орудному відмінку стає формою «чайм».",
+      "role": "context"
+    },
+    {
+      "word": "лимона",
+      "exercise_type": "error-correction",
+      "context": "Він любить чай з лимона.",
+      "role": "context"
+    },
+    {
+      "word": "їсть",
+      "exercise_type": "error-correction",
+      "context": "Вона їсть борщ з сметаною.",
+      "role": "context"
+    },
+    {
+      "word": "брату",
+      "exercise_type": "error-correction",
+      "context": "Я розмовляю із брату.",
+      "role": "context"
+    },
+    {
+      "word": "працюєш",
+      "exercise_type": "error-correction",
+      "context": "Ти працюєш з вчительом?",
+      "role": "context"
+    },
+    {
+      "word": "вчительом",
+      "exercise_type": "error-correction",
+      "context": "Ти працюєш з вчительом?",
+      "role": "context"
+    },
+    {
+      "word": "маслу",
+      "exercise_type": "error-correction",
+      "context": "Я хочу хліб з маслу.",
+      "role": "context"
+    },
+    {
+      "word": "парк",
+      "exercise_type": "unjumble",
+      "context": "парк",
+      "role": "answer"
+    },
+    {
+      "word": "п'є",
+      "exercise_type": "unjumble",
+      "context": "п'є",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 15,
+    "tested_in_exercises": 9,
+    "not_tested": [
+      "гриби",
+      "компанія",
+      "масло",
+      "мед",
+      "разом",
+      "супутник"
+    ]
+  },
+  "all_grounded": false
+}

@@ -25,7 +25,43 @@
     },
     "exercises": {
       "status": "complete",
-      "ts": "2026-04-07T18:48:33.439079+00:00"
+      "ts": "2026-04-07T21:27:23.742378+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-07T18:52:59.096448+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-07T21:27:23.757984+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-07T18:52:59.115807+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-07T18:57:09.635484+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-07T18:57:09.635604+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-07T18:57:09.743521+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-07T18:58:08.125313+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-07T21:27:23.874141+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-07T21:27:29.876942+00:00"
     }
   }
 }

@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "a2",
+  "slug": "instrumental-profession",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-07T21:29:19.980329+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-07T21:29:19.987438+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-07T21:30:53.511666+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-07T21:39:02.858817+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-07T21:44:30.260702+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-07T21:44:30.260870+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-07T21:47:33.473583+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-07T21:47:33.490188+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-07T21:47:33.496504+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-07T21:51:38.724377+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-07T21:51:38.724502+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-07T21:51:38.929707+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-07T21:56:57.272571+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-07T21:56:57.497144+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-07T21:56:59.122307+00:00"
+    }
+  }
+}

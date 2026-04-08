@@ -1,0 +1,54 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 7
+  evidence: 'The plan required "готувати / приготувати" as a core example in Section
+    2, but it was skipped and only included in the table. The plan required "класти
+    / покласти" in Section 4, but it was completely '
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: The perfective verb for "відповідати" is spelled as "відповідісти" in
+    the summary table. This is a critical grammatical error. The correct form is "відповісти".
+    All other forms and explanations are ac
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent explanation of the difference between process and result. The
+    "Кафе Птах" mnemonic is taught brilliantly and contextually. Minor deduction for
+    wordy English explanations of prefixes (~90 wor
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: Required vocabulary words `префікс`, `суфікс`, and `корінь` are only used
+    in Ukrainian within section headings or table formatting. They are never explicitly
+    introduced to the learner as vocabulary te
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: All 4 activity markers are present, mapped exactly to the plan's requirements,
+    and correctly placed after the relevant grammatical concepts are taught.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is warm, encouraging, and highly instructional. The shoe store
+    analogy effectively illustrates the concept of aspectual pairs.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Word count is a robust 3027 words (exceeding the 2000 target). Markdown
+    formatting is clean, and all requested sections are present in order.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: The module appropriately integrates real Ukrainian pedagogical tools (Кафе
+    Птах) and authentic cultural practices (making varenyky with grandmother) into
+    the grammar instruction.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The dialogue between the grandmother and granddaughter making varenyky
+    perfectly demonstrates the functional difference between imperfective and perfective
+    commands in real life.
+findings: []

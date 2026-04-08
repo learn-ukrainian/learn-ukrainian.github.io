@@ -1,0 +1,53 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Covers all grammar points and dialogue constraints flawlessly, but misses
+    explicitly referencing the "Захарійчук Grade 4, с. 92" declension table from the
+    content outline.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Excellent breakdown of gender agreement, but uses several Russian calques
+    for imperative instructions ("давайте + verb"), contains an awkward noun-chain
+    ("стандарт закінчення"), and introduces an unid
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: The explanation of why "його/її" never change in the Instrumental case
+    ("Many students try to invent forms like «йогом»") is brilliant, practical, and
+    highly relevant for learners.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required words (мій, твій, сусід, найкращий, etc.) are integrated
+    naturally into the prose and dialogue examples.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Five placeholders match the requested focus and types, testing syntax,
+    substitution, and error correction exactly as directed.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Extremely encouraging, clear, and focused on patterns. Explaining that
+    the feminine ending "-ою" rhymes ("нов**ою** подруг**ою**") is a great memorization
+    aid.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All H2 headers match the plan exactly. Word count (2509) is well above
+    the 2000-word target.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Uses appropriate cultural naming ("Андрій", "Богдан") and accurately captures
+    Ukrainian communication rhythms.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The diary entry and dialogue ("А якою машиною ви їхали в центр? ... ми
+    їхали його старою Тойотою.") showcase authentic Instrumental chains in a very
+    natural way.
+findings: []

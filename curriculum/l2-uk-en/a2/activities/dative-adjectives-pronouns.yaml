@@ -1,0 +1,397 @@
+version: '1.0'
+module: dative-adjectives-pronouns
+level: a2
+inline:
+- id: group-sort-sort-dative-adjective-forms-by-gender-masculine-feminine-plural
+  type: group-sort
+  instruction: Розподіліть форми прикметників за родом у давальному відмінку
+  groups:
+  - label: Чоловічий та середній (-ому, -ьому)
+    items:
+    - новому
+    - старому
+    - синьому
+  - label: Жіночий (-ій)
+    items:
+    - новій
+    - старій
+    - синій
+  - label: Множина (-им, -ім)
+    items:
+    - новим
+    - старим
+    - синім
+- id: quiz-pronoun-forms-choose-the-correct-dative-form-of-the-possessive-pronoun-vs-vs
+  type: quiz
+  instruction: Оберіть правильну форму займенника у давальному відмінку
+  items:
+  - question: Я зараз телефоную (мій) батькові.
+    options:
+    - моєму
+    - моїй
+    - моїм
+    - мого
+    correct: 0
+  - question: Він допомагає (своя) сестрі.
+    options:
+    - своїй
+    - своєму
+    - своїм
+    - свою
+    correct: 0
+  - question: Вони дякують (наш) вчителю.
+    options:
+    - нашому
+    - нашій
+    - нашим
+    - нашого
+    correct: 0
+  - question: Ми завжди радіємо (твої) новим ідеям.
+    options:
+    - твоїм
+    - твоєму
+    - твоїй
+    - твоїх
+    correct: 0
+  - question: Люди заздрять (їхній) сусідові.
+    options:
+    - їхньому
+    - їхній
+    - їхнім
+    - їхнього
+    correct: 0
+  - question: Директор дає премію (ваші) працівникам.
+    options:
+    - вашим
+    - вашому
+    - вашій
+    - ваших
+    correct: 0
+- id: match-up-nom-dat-match-nominative-noun-phrases-to-their-dative-equivalents
+  type: match-up
+  instruction: З'єднайте іменникову групу у називному відмінку з її формою у давальному
+  pairs:
+  - left: мій старший брат
+    right: моєму старшому братові
+  - left: наша нова сусідка
+    right: нашій новій сусідці
+  - left: цей гарний будинок
+    right: цьому гарному будинку
+  - left: ті розумні студенти
+    right: тим розумним студентам
+  - left: їхня маленька донька
+    right: їхній маленькій доньці
+  - left: ваш постійний клієнт
+    right: вашому постійному клієнту
+- id: fill-in-dative-phrases
+  type: fill-in
+  instruction: Вставте правильну форму прикметника або займенника
+  items:
+  - sentence: Я хочу подарувати цю книгу _____ (мій найкращий) другові.
+    answer: моєму найкращому
+    options:
+    - моєму найкращому
+    - мій найкращий
+    - мого найкращого
+  - sentence: Ми купили квіти _____ (наша улюблена) вчительці.
+    answer: нашій улюбленій
+    options:
+    - нашій улюбленій
+    - нашої улюбленої
+    - наша улюблена
+  - sentence: Вона присвятила пісню _____ (її коханий) чоловікові.
+    answer: її коханому
+    options:
+    - її коханому
+    - її коханий
+    - їй коханому
+  - sentence: Що ви купили _____ (ваші маленькі) дітям?
+    answer: вашим маленьким
+    options:
+    - вашим маленьким
+    - ваші маленькі
+    - ваших маленьких
+  - sentence: Він завжди допомагає _____ (свої постійні) клієнтам.
+    answer: своїм постійним
+    options:
+    - своїм постійним
+    - свої постійні
+    - своїх постійних
+  - sentence: Поясни нове правило _____ (та нова) студентці.
+    answer: тій новій
+    options:
+    - тій новій
+    - тієї нової
+    - та нова
+- id: error-correction-agreement
+  type: error-correction
+  instruction: Знайдіть і виправте помилку в узгодженні
+  items:
+  - sentence: Я телефоную моєму старий другові.
+    error: старий
+    correction: старому
+    error_type: word
+    options:
+    - старому
+    - старого
+    - старим
+    explanation: Прикметник «старий» має стояти у давальному відмінку (старому), щоб
+      узгоджуватися з «другові».
+  - sentence: Ми допомагаємо нашій нова сусідці.
+    error: нова
+    correction: новій
+    error_type: word
+    options:
+    - новій
+    - нової
+    - новим
+    explanation: Прикметник «нова» має стояти у давальному відмінку (новій), щоб узгоджуватися
+      з «сусідці».
+  - sentence: Вона пише повідомлення своїй найкраща подрузі.
+    error: найкраща
+    correction: найкращій
+    error_type: word
+    options:
+    - найкращій
+    - найкращої
+    - найкращим
+    explanation: Прикметник «найкраща» має стояти у давальному відмінку (найкращій),
+      щоб узгоджуватися з «подрузі».
+  - sentence: Я не вірю цим нові новинам.
+    error: нові
+    correction: новим
+    error_type: word
+    options:
+    - новим
+    - нових
+    - новими
+    explanation: Прикметник «нові» має стояти у давальному відмінку множини (новим),
+      щоб узгоджуватися з «новинам».
+  - sentence: Батько купив телефон своєму молодший синові.
+    error: молодший
+    correction: молодшому
+    error_type: word
+    options:
+    - молодшому
+    - молодшого
+    - молодшим
+    explanation: Прикметник «молодший» має стояти у давальному відмінку (молодшому),
+      щоб узгоджуватися з «синові».
+  - sentence: Лікар дав ліки її хвора сестрі.
+    error: хвора
+    correction: хворій
+    error_type: word
+    options:
+    - хворій
+    - хворої
+    - хворим
+    explanation: Прикметник «хвора» має стояти у давальному відмінку (хворій), щоб
+      узгоджуватися з «сестрі».
+- id: match-up
+  type: match-up
+  instruction: З'єднайте дієслово з правильною іменниковою групою у давальному відмінку
+  pairs:
+  - left: давати
+    right: цьому чоловікові
+  - left: дарувати
+    right: моїй мамі
+  - left: телефонувати
+    right: нашому лікарю
+  - left: допомагати
+    right: старому сусідові
+  - left: дякувати
+    right: вашому синові
+  - left: вірити
+    right: його другу
+- id: group-sort
+  type: group-sort
+  instruction: Давальний чи родовий відмінок? Розподіліть фрази.
+  groups:
+  - label: Давальний відмінок (кому? чому?)
+    items:
+    - новому другові
+    - моїй сестрі
+    - старшому братові
+    - цим студентам
+  - label: Родовий відмінок (кого? чого?)
+    items:
+    - нового друга
+    - моєї сестри
+    - старшого брата
+    - цих студентів
+workbook:
+- type: translate
+  instruction: Оберіть правильний переклад
+  items:
+  - source: to my old friend
+    options:
+    - text: моєму старому другові
+      correct: true
+    - text: мій старий друг
+      correct: false
+    - text: мого старого друга
+      correct: false
+  - source: to our new teacher (female)
+    options:
+    - text: нашій новій вчительці
+      correct: true
+    - text: наша нова вчителька
+      correct: false
+    - text: нашої нової вчительки
+      correct: false
+  - source: to this boy
+    options:
+    - text: цьому хлопцю
+      correct: true
+    - text: цей хлопець
+      correct: false
+    - text: цього хлопця
+      correct: false
+  - source: to that girl
+    options:
+    - text: тій дівчині
+      correct: true
+    - text: та дівчина
+      correct: false
+    - text: тієї дівчини
+      correct: false
+  - source: to their parents
+    options:
+    - text: їхнім батькам
+      correct: true
+    - text: їхні батьки
+      correct: false
+    - text: їхніх батьків
+      correct: false
+  - source: to your (plural) children
+    options:
+    - text: вашим дітям
+      correct: true
+    - text: ваші діти
+      correct: false
+    - text: ваших дітей
+      correct: false
+- type: unjumble
+  instruction: Складіть правильне речення зі слів
+  items:
+  - words:
+    - допомагаю
+    - моєму
+    - Я
+    - братові.
+    - старшому
+    correct_order:
+    - Я
+    - допомагаю
+    - моєму
+    - старшому
+    - братові.
+  - words:
+    - нашій
+    - квіти
+    - Ми
+    - вчительці.
+    - улюбленій
+    - купили
+    correct_order:
+    - Ми
+    - купили
+    - квіти
+    - нашій
+    - улюбленій
+    - вчительці.
+  - words:
+    - подаруєш
+    - Що
+    - другові?
+    - найкращому
+    - твоєму
+    - ти
+    correct_order:
+    - Що
+    - ти
+    - подаруєш
+    - твоєму
+    - найкращому
+    - другові?
+  - words:
+    - студентці.
+    - нове
+    - Поясни
+    - новій
+    - тій
+    - правило
+    correct_order:
+    - Поясни
+    - нове
+    - правило
+    - тій
+    - новій
+    - студентці.
+  - words:
+    - новим
+    - Я
+    - не
+    - новинам.
+    - цим
+    - вірю
+    correct_order:
+    - Я
+    - не
+    - вірю
+    - цим
+    - новим
+    - новинам.
+  - words:
+    - працівникам.
+    - дає
+    - премію
+    - найкращим
+    - Директор
+    - нашим
+    correct_order:
+    - Директор
+    - дає
+    - премію
+    - нашим
+    - найкращим
+    - працівникам.
+- type: fill-in
+  instruction: Вставте правильний займенник у речення
+  items:
+  - sentence: Кожна людина бажає щастя _____ (своя) родині.
+    answer: своїй
+    options:
+    - своїй
+    - своїм
+    - своєму
+  - sentence: Студенти щиро дякують _____ (наш) вчителю.
+    answer: нашому
+    options:
+    - нашому
+    - нашій
+    - нашим
+  - sentence: Ми не можемо зарадити _____ (їхні) проблемам.
+    answer: їхнім
+    options:
+    - їхнім
+    - їхньому
+    - їхній
+  - sentence: Я повністю вірю _____ (його) другу.
+    answer: його
+    options:
+    - його
+    - йому
+    - їх
+  - sentence: Ми щиро радіємо _____ (її) успіхам.
+    answer: її
+    options:
+    - її
+    - їй
+    - їх
+  - sentence: Я маю надіслати документи _____ (ваш) відділу.
+    answer: вашому
+    options:
+    - вашому
+    - вашій
+    - вашим

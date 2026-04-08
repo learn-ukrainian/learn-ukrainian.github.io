@@ -1,0 +1,295 @@
+---
+title: "Контрольна робота — давальний відмінок"
+sidebar:
+  order: 23
+  label: "23. Контрольна робота — давальний відмінок"
+pipeline: v6
+build_status: draft
+---
+
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import FillIn from '@site/src/components/FillIn';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import GroupSort from '@site/src/components/GroupSort';
+import MatchUp from '@site/src/components/MatchUp';
+import Quiz from '@site/src/components/Quiz';
+import Translate from '@site/src/components/Translate';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок">
+
+## Частина 1: Розпізнавання (Part 1: Recognition)
+
+У модулях 15–19 ми детально вивчали **давальний відмінок** (the dative case). Головна функція цього відмінка — показувати адресата або отримувача дії. Він відповідає на питання **кому?** (to whom?) та **чому?** (to what?). Ми розглянули різні форми слів та безособові конструкції. Цей модуль допоможе вам повторити та закріпити всі правила.
+
+In this checkpoint, we consolidate your knowledge of the dative case. The dative case identifies the recipient of an action, the person experiencing a state, or the object of specific verbs.
+
+Почнемо з найважливішого: особових займенників у давальному відмінку. Щоб вільно спілкуватися, ви повинні миттєво впізнавати ці маленькі слова: **мені** (to me), **тобі** (to you), **йому** (to him/it), **їй** (to her), **нам** (to us), **вам** (to you all/formal), та **їм** (to them). Дуже важливо не плутати їх із називним відмінком або знахідним відмінком. 
+
+* **Він бачив мене.** (He saw me.)
+* **Він дав мені книгу.** (He gave a book to me.)
+
+Notice the difference in the logical roles. The accusative case identifies the direct object of the action, while the dative case identifies the recipient.
+
+Займенники у давальному відмінку також відіграють головну роль у безособових реченнях. У таких конструкціях немає активного суб'єкта, а є людина, яка відчуває певний стан.
+
+* **Я замерзла.** (I am frozen.)
+* **Мені холодно.** (It is cold to me. / I am cold.)
+
+Інші приклади станів:
+* **Тобі сумно?** (Are you sad?)
+* **Нам треба йти.** (We need to go.)
+* **Йому дуже тепло.** (He is very warm.)
+
+Impersonal constructions describe a physical or emotional state without assigning direct action to a subject. The person experiencing the state must be in the dative case.
+
+Ще одна важлива конструкція — це дієслово **подобатися** (to be pleasing to / to like). В українській мові людина, якій щось подобається, стоїть у давальному відмінку.
+
+* **Студентові подобається мова.** (The student likes the language.)
+* **Дівчині подобаються квіти.** (The girl likes flowers.)
+* **Моїй мамі подобається ця кава.** (My mom likes this coffee.)
+* **Чи подобаються тобі нові фільми?** (Do you like new movies?)
+
+The verb "подобатися" agrees with the object that is liked, which is the subject in the nominative case. It does not agree with the person who likes it, because the experiencer is in the dative case.
+
+<Quiz client:only="react" questions={[{"question": "Він дав нову книгу _____.", "options": [{"text": "мені", "correct": true}, {"text": "я", "correct": false}, {"text": "мене", "correct": false}, {"text": "мною", "correct": false}]}, {"question": "Ця смачна кава подобається _____.", "options": [{"text": "твоя мама", "correct": false}, {"text": "твою маму", "correct": false}, {"text": "твоїй мамі", "correct": true}, {"text": "твоєю мамою", "correct": false}]}, {"question": "_____ потрібно йти назустріч.", "options": [{"text": "Нам", "correct": true}, {"text": "Ми", "correct": false}, {"text": "Нас", "correct": false}, {"text": "Нами", "correct": false}]}, {"question": "_____ дуже сумно без тебе.", "options": [{"text": "Його", "correct": false}, {"text": "Ним", "correct": false}, {"text": "Він", "correct": false}, {"text": "Йому", "correct": true}]}, {"question": "Скільки років вашому _____?", "options": [{"text": "дідусь", "correct": false}, {"text": "дідусем", "correct": false}, {"text": "дідуся", "correct": false}, {"text": "дідусеві", "correct": true}]}, {"question": "Вони завжди допомагають _____.", "options": [{"text": "своя сестра", "correct": false}, {"text": "свою сестру", "correct": false}, {"text": "своїй сестрі", "correct": true}, {"text": "своєю сестрою", "correct": false}]}, {"question": "_____ дуже холодно сьогодні на вулиці.", "options": [{"text": "Вони", "correct": false}, {"text": "Їм", "correct": true}, {"text": "Їх", "correct": false}, {"text": "Ними", "correct": false}]}, {"question": "Ми щиро дякуємо _____ за роботу.", "options": [{"text": "вас", "correct": false}, {"text": "ви", "correct": false}, {"text": "вами", "correct": false}, {"text": "вам", "correct": true}]}]} instruction={"Оберіть правильний варіант у давальному відмінку"} />
+
+## Частина 2: Вибір форми (Part 2: Choosing the Correct Form)
+
+Для іменників чоловічого роду ми маємо дві правильні форми для **закінчення** (ending (grammar)): **-ові** та **-у**, або **-еві** / **-єві** та **-ю**. Обидві форми є абсолютно нормативними.
+
+* **братові** або **брату** (to a brother)
+* **директорові** або **директору** (to a director)
+* **учителеві** або **учителю** (to a teacher)
+
+Якщо ми використовуємо два слова чоловічого роду разом, працює правило уникнення одноманітності. Ми чергуємо ці закінчення, щоб слова звучали гарно.
+
+* **панові директору** (to Mr. Director)
+* **другові Василю** (to friend Vasyl)
+
+Іменники середнього роду завжди мають закінчення **-у** або **-ю**.
+* **місту** (to the city)
+* **морю** (to the sea)
+* **обличчю** (to the face)
+
+Ukrainian uses these parallel masculine endings to avoid repetitive sounds, which adds a natural melody to the language.
+
+:::note
+The parallel endings **-ові**, **-еві** / **-єві** for masculine nouns are a unique and beautiful feature of the Ukrainian language. They make sentences flow better and sound more poetic.
+:::
+
+Для іменників жіночого роду твердої групи в однині типовим закінченням є **-і**. Але найважливіше правило тут — це **чергування** (alternation (grammar)) приголосних. Перед закінченням **-і** звуки **г, к, х** завжди змінюються на **з, ц, с**.
+
+* **г** → **з**: **дорога** (road) → **назустріч дорозі** (towards the road).
+* **к** → **ц**: **рука** (hand) → **дати руці** (to give to the hand).
+* **х** → **с**: **муха** (fly) → **мусі** (to the fly).
+
+Іменники м'якої групи просто отримують закінчення **-і** або **-ї**.
+* **земля** (earth) → **землі** (to the earth)
+* **мрія** (dream) → **мрії** (to the dream)
+
+This phonetic shift is mandatory and happens automatically whenever a hard velar consonant meets the soft vowel 'і'.
+
+Коли ми додаємо прикметники або присвійні займенники до іменника, ми повинні пам'ятати про **узгодження** (agreement (grammar)). Вони також повинні стояти в давальному відмінку. Прикметники чоловічого та середнього роду мають закінчення **-ому**. Прикметники жіночого роду мають закінчення **-ій**. Для множини всіх родів ми використовуємо закінчення **-им**.
+
+* **новому колезі** (to the new colleague)
+* **моєму брату** (to my brother)
+* **старій подрузі** (to the old friend)
+* **синьому морю** (to the blue sea)
+* **нашим новим друзям** (to our new friends)
+
+Це особливо важливо, коли ви приходите на пошту або користуєтеся службами доставки.
+
+* **Я хочу надіслати посилку моєму старому другові.** (I want to send a package to my old friend.)
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Працівник пошти:</span> Кому ви хочете надіслати цю посилку?</div>
+
+<div class="dialogue-line"><span class="speaker">Клієнт:</span> **Моєму старому другові**.</div>
+
+<div class="dialogue-line"><span class="speaker">Працівник пошти:</span> Добре. А цей лист **новій колезі**?</div>
+
+<div class="dialogue-line"><span class="speaker">Клієнт:</span> Так.</div>
+
+</div>
+
+Adjectives and possessives must always agree with the noun they modify in gender, number, and case.
+
+Подивімося, як давальний відмінок працює в реальному житті. Уявіть ситуацію в офісі напередодні свят. Колеги обговорюють подарунки для гри "Таємний Санта".
+
+<div class="dialogue">
+
+<div class="dialogue-line"><span class="speaker">Організатор:</span> Колеги, скоро свято! Що ми вирішили **подарувати** (to give as a gift) **Олексієві**? *(Colleagues, the holiday is soon! What did we decide to give to Oleksiy?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Колега 1:</span> Я дам цю нову книгу **Наталці**. А **Олексієві** — смачну каву. *(I will give this new book to Natalka. And to Oleksiy — delicious coffee.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Організатор:</span> Добре. А що **потрібно** (necessary, needed) купити **новому колезі**? *(Good. And what is necessary to buy for the new colleague?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Колега 2:</span> **Новому колезі** — красиву чашку. *(To the new colleague — a beautiful mug.)*</div>
+
+<div class="dialogue-line"><span class="speaker">Організатор:</span> А **нашому шефу**? *(And to our boss?)*</div>
+
+<div class="dialogue-line"><span class="speaker">Колега 1:</span> Ми вирішили подякувати **нашому шефу** і подарувати **йому** гарне вино! *(We decided to thank our boss and give him good wine!)*</div>
+
+</div>
+
+У цьому діалозі всі виділені слова позначають отримувачів дії, тому вони стоять у давальному відмінку.
+
+<FillIn client:only="react" items={[{"sentence": "Я хочу надіслати посилку моєму старому _____.", "answer": "другові", "options": ["друг", "другові", "другом", "друга"]}, {"sentence": "Що ми вирішили подарувати _____?", "answer": "Олексієві", "options": ["Олексій", "Олексія", "Олексієві", "Олексієм"]}, {"sentence": "Ми йдемо назустріч новій _____.", "answer": "дорозі", "options": ["дорога", "дорогу", "дорозі", "дорогою"]}, {"sentence": "Новому _____ потрібно купити комп'ютер.", "answer": "колезі", "options": ["колезі", "колегу", "колега", "колегою"]}, {"sentence": "Моїй _____ подобається ця кава.", "answer": "мамі", "options": ["мама", "маму", "мамі", "мамою"]}, {"sentence": "Вони щиро дякують _____ вчителю.", "answer": "своєму", "options": ["свій", "свого", "своєму", "своїм"]}, {"sentence": "Я даю подарунок _____ маленькій сестрі.", "answer": "твоїй", "options": ["твоя", "твою", "твоїй", "твоєю"]}, {"sentence": "Ми допомагаємо нашим _____ друзям.", "answer": "новим", "options": ["новий", "нових", "новим", "новими"]}]} instruction={"Вставте слово у правильній формі"} />
+
+## Частина 3: Продукування (Part 3: Production)
+
+Деякі українські дієслова завжди вимагають після себе давального відмінка. Найпоширеніші з них — це **дякувати** (to thank) та **допомагати** (to help). 
+
+* **Я дякую вчителеві за урок.** (I thank the teacher for the lesson.)
+* **Вона завжди допомагає мамі вдома.** (She always helps mom at home.)
+* **Ми щиро дякуємо вам.** (We sincerely thank you.)
+
+Також сюди належать слова **подарувати** та **надіслати** (to send).
+* **Я дарую червоні квіти моїй сестрі.** (I gift red flowers to my sister.)
+* **Він надіслав довгий лист своєму другові.** (He sent a long letter to his friend.)
+
+In English, verbs like "to thank" and "to help" take a direct object in the accusative case. In Ukrainian, these actions are directed toward a recipient, so they strictly require the dative case.
+
+Давальний відмінок також використовується для того, щоб сказати про свій вік. Конструкція складається з людини у давальному відмінку, числа, та слова рік, роки або років.
+
+* **Моєму синові три роки.** (My son is three years old.)
+* **Наталії двадцять один рік.** (Nataliya is twenty-one years old.)
+* **Скільки років вашому дідусеві?** (How old is your grandfather?)
+* **Моїй молодшій сестрі тільки вісім років.** (My younger sister is only eight years old.)
+
+Age is expressed as a state that happens to someone, similar to impersonal constructions. Therefore, the person whose age is being stated takes the dative case.
+
+Побудова повних і правильних іменникових фраз — це ознака гарного володіння мовою. Ви повинні вміти узгоджувати всі частини фрази.
+
+* **Я пишу лист моїй найкращій подрузі.** (I am writing a letter to my best friend.)
+
+Тут слово **подрузі** має закінчення **-і** з чергуванням. Займенник **моїй** та прикметник **найкращій** мають жіноче закінчення **-ій**.
+
+* **Ми надіслали подарунок нашому старому вчителеві.** (We sent a gift to our old teacher.)
+
+Тут слово **вчителеві** має закінчення **-еві**. Займенник **нашому** та прикметник **старому** мають чоловіче закінчення **-ому**.
+
+Коли ви підписуєте конверт, вітальну листівку або подарунок, ви використовуєте повні фрази в давальному відмінку. 
+
+* **Любій мамі** (To dear mom)
+* **Шановному панові Івану** (To respected Mr. Ivan)
+* **Дорогому другові** (To a dear friend)
+
+Addressing an envelope correctly ensures the package reaches the intended recipient, which is the core meaning of the dative case.
+
+<MatchUp client:only="react" pairs={[{"left": "Ми дуже дякуємо", "right": "нашому новому вчителю."}, {"left": "Вона завжди допомагає", "right": "своїй любій мамі."}, {"left": "Я хочу подарувати", "right": "квіти найкращій подрузі."}, {"left": "Моєму брату подобається", "right": "читати старі книги."}, {"left": "Мені потрібно надіслати", "right": "довгий лист колезі."}, {"left": "Моєму маленькому синові", "right": "тільки три роки."}, {"left": "Їй дуже потрібно", "right": "йти сьогодні додому."}, {"left": "Йому дуже сумно", "right": "і дуже холодно."}]} instruction={"З'єднайте частини речення"} />
+
+<ErrorCorrection client:only="react" items={[{"sentence": "Вона щиро дякує вчителя за допомогу.", "errorWord": "вчителя", "correctForm": "вчителю", "options": ["вчителю", "вчителя", "вчителів", "вчителем"], "explanation": "Дієслово 'дякувати' завжди вимагає давального відмінка."}, {"sentence": "Він дуже холодно на вулиці.", "errorWord": "Він", "correctForm": "Йому", "options": ["Йому", "Його", "Він", "Ним"], "explanation": "Використовуйте давальний відмінок для опису фізичного або емоційного стану: 'Йому холодно'."}, {"sentence": "Моїй старій подругі тільки двадцять років.", "errorWord": "подругі", "correctForm": "подрузі", "options": ["подрузі", "подругу", "подругі", "подругою"], "explanation": "Не забувайте про чергування приголосних: 'г' змінюється на 'з' перед 'і' (подрузі)."}, {"sentence": "Я хочу надіслати лист мій брату.", "errorWord": "мій", "correctForm": "моєму", "options": ["моєму", "мого", "мій", "моїм"], "explanation": "Прикметники та займенники повинні мати узгодження з іменником у давальному відмінку."}, {"sentence": "Нового студенту потрібно більше часу.", "errorWord": "Нового", "correctForm": "Новому", "options": ["Новому", "Нового", "Новий", "Новим"], "explanation": "Для вираження необхідності (потрібно) використовується давальний відмінок."}, {"sentence": "Ми часто допомагаємо маму вдома.", "errorWord": "маму", "correctForm": "мамі", "options": ["мамі", "маму", "мамою", "мами"], "explanation": "Дієслово 'допомагати' завжди вимагає давального відмінка."}]} instruction={"Знайдіть і виправте помилку в реченні"} />
+
+## Огляд помилок та порівняння відмінків (Error Review and Case Comparison)
+
+Тепер розглянемо типові помилки, яких припускаються студенти, та навчимося їх уникати. Одна з найчастіших помилок — це використання знахідного відмінка після дієслова **дякувати**. Правильно казати **Дякую вам**, а не "Дякую вас". Інша поширена проблема — забування про чергування приголосних у жіночому роді: правильно **моїй подрузі**, а не "моїй подругі". Крім того, студенти часто плутають давальний відмінок із місцевим через однакові закінчення.
+
+* **в книзі** (in the book) — місцевий відмінок (Locative).
+* **дати книзі** (to give to the book) — давальний відмінок (Dative).
+
+For successful mastery, review this comparison chart and complete the self-assessment list. Pay attention to the questions each case answers.
+
+| Відмінок (Case) | Питання | Приклад іменника | Приклад прикметника | Займенник |
+| :--- | :--- | :--- | :--- | :--- |
+| **Називний** (Nom.) | Хто? Що? | студент, сестра | новий, стара | він, вона |
+| **Родовий** (Gen.) | Кого? Чого? | студента, сестри | нового, старої | його, її |
+| **Давальний** (Dat.) | Кому? Чому? | студенту, сестрі | новому, старій | йому, їй |
+
+**Список для самоперевірки (Self-check list):**
+1. Can I say "I am 25 years old" in Ukrainian? (**Мені двадцять п'ять років.**)
+2. Do I remember to change **г** to **з** in **подрузі**?
+3. Do I use **дякую** with the dative case? (**Дякую вам**, not "Дякую вас")
+4. Can I correctly use **мені подобається**? (**Мені подобається музика.**)
+
+Якщо ви відповіли "Так" на всі запитання — ви готові рухатися далі!
+
+:::caution
+Never translate English "I am cold" literally into Ukrainian as "Я холодний" (which means your body is physically cold to the touch). Always use the dative case: **Мені холодно** (It is cold to me).
+:::
+
+## Підсумок
+
+Ця контрольна робота охоплює всі базові функції давального відмінка. Ви повторили, як використовувати цей відмінок для позначення адресата або отримувача дії. Ви також пригадали безособові конструкції для вираження стану та віку.
+
+Особливу увагу ми приділили правилам побудови форм: чергуванню приголосних, паралельним закінченням для чоловічого роду та узгодженню прикметників. Розуміння того, що такі дієслова як **дякувати** та **допомагати** завжди вимагають давального відмінка, допоможе вам звучати природно та уникати поширених помилок.
+
+Продовжуйте практикувати ці форми у щоденному спілкуванні, звертайте увагу на те, кому ви адресуєте свої дії, і давальний відмінок стане для вас легким та звичним інструментом!
+
+:::tip
+Always ask "кому?" (to whom?) or "чому?" (to what?) when constructing a sentence to instantly recognize if you need the dative case.
+:::
+
+</TabItem>
+<TabItem label="Словник">
+
+### Обов'язкові та рекомендовані слова
+
+| Слово | Переклад | Частина мови | Рід |
+|-------|----------|-------------|-----|
+| **закі́нчення** | ending (grammar) | ім. | с. |
+| **чергува́ння** | alternation (grammar) | ім. | с. |
+| **узго́дження** | agreement (grammar) | ім. | с. |
+| **допомага́ти** | to help | дієсл. |  |
+| **подо́батися** | to be pleasing to, to like | дієсл. |  |
+| **подарува́ти** | to give as a gift | дієсл. |  |
+| **надісла́ти** | to send | дієсл. |  |
+| **потрі́бно** | necessary, needed | присл. |  |
+| **хо́лодно** | cold (impersonal state) | присл. |  |
+| **тепло́** | warm (impersonal state) | присл. |  |
+| **су́мно** | sad (impersonal state) | присл. |  |
+| **заме́рзнути** | to freeze / to get very cold | дієсл. |  |
+| **поси́лка** | parcel / package | ім. | ж. |
+| **кружка́** | mug | присл. |  |
+| **шеф** | boss | ім. | ч. |
+| **підпи́сувати** | to sign | дієсл. |  |
+| **конве́рт** | envelope | ім. | ч. |
+| **лю́бий** | dear / beloved | прикм. |  |
+| **шано́вний** | respected / honorable | прикм. |  |
+
+### Вирази
+
+| Вираз | Переклад |
+|-------|----------|
+| **Скільки років?** | How old? |
+| **вітальна листівка** | greeting card |
+| **місцевий відмінок** | locative case |
+
+### Картки — Flashcards
+
+<FlashcardDeck client:only="react" cards={[{ front: "закі́нчення", back: "ending (grammar)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "чергува́ння", back: "alternation (grammar)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "узго́дження", back: "agreement (grammar)", subtitle: "ім.", tag: "с.", tagColor: "#E65100" }, { front: "допомага́ти", back: "to help", subtitle: "дієсл." }, { front: "подо́батися", back: "to be pleasing to, to like", subtitle: "дієсл." }, { front: "подарува́ти", back: "to give as a gift", subtitle: "дієсл." }, { front: "надісла́ти", back: "to send", subtitle: "дієсл." }, { front: "потрі́бно", back: "necessary, needed", subtitle: "присл." }, { front: "хо́лодно", back: "cold (impersonal state)", subtitle: "присл." }, { front: "тепло́", back: "warm (impersonal state)", subtitle: "присл." }, { front: "су́мно", back: "sad (impersonal state)", subtitle: "присл." }, { front: "заме́рзнути", back: "to freeze / to get very cold", subtitle: "дієсл." }, { front: "поси́лка", back: "parcel / package", subtitle: "ім.", tag: "ж.", tagColor: "#C2185B" }, { front: "кружка́", back: "mug", subtitle: "присл." }, { front: "шеф", back: "boss", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "підпи́сувати", back: "to sign", subtitle: "дієсл." }, { front: "конве́рт", back: "envelope", subtitle: "ім.", tag: "ч.", tagColor: "#0057B8" }, { front: "лю́бий", back: "dear / beloved", subtitle: "прикм." }, { front: "шано́вний", back: "respected / honorable", subtitle: "прикм." }]} />
+
+</TabItem>
+<TabItem label="Зошит">
+
+<GroupSort client:only="react" groups={{"Називний відмінок": ["брат", "сестра", "ми", "вони"], "Родовий відмінок": ["брата", "сестри", "нас", "їх"], "Давальний відмінок": ["братові", "сестрі", "нам", "їм"]}} instruction={"Розподіліть слова за відмінками"} />
+
+<MatchUp client:only="react" pairs={[{"left": "Я", "right": "Мені дуже холодно."}, {"left": "Ти", "right": "Тобі подобається ця кава?"}, {"left": "Він", "right": "Йому тільки три роки."}, {"left": "Вона", "right": "Їй потрібно йти додому."}, {"left": "Ми", "right": "Нам сумно сьогодні."}, {"left": "Ви", "right": "Скільки вам років?"}]} instruction={"З'єднайте займенник у називному відмінку з реченням у давальному"} />
+
+<FillIn client:only="react" items={[{"sentence": "Чи подобаються _____ ці нові фільми?", "answer": "тобі", "options": ["ти", "тебе", "тобі", "тобою"]}, {"sentence": "Ми щиро дякуємо _____ за цей чудовий подарунок.", "answer": "вам", "options": ["ви", "вас", "вам", "вами"]}, {"sentence": "_____ дуже холодно сьогодні на роботі.", "answer": "Мені", "options": ["Я", "Мене", "Мені", "Мною"]}, {"sentence": "Скільки років вашому дідусеві? _____ вісімдесят років.", "answer": "Йому", "options": ["Він", "Його", "Йому", "Ним"]}, {"sentence": "Моїй сестрі зараз сумно. Я допомагаю _____.", "answer": "їй", "options": ["вона", "її", "їй", "нею"]}, {"sentence": "_____ потрібно йти, тому що вже пізно.", "answer": "Нам", "options": ["Ми", "Нас", "Нам", "Нами"]}]} instruction={"Вставте правильний особовий займенник у давальному відмінку"} />
+
+<TrueFalse client:only="react" items={[{"statement": "Дієслово 'дякувати' в українській мові вимагає після себе знахідного відмінка (Accusative).", "isTrue": false, "explanation": "Дієслово 'дякувати' завжди вимагає давального відмінка."}, {"statement": "Ми кажемо 'Мені холодно', а не 'Я холодний', щоб описати свій фізичний стан.", "isTrue": true, "explanation": "Стан людини завжди виражається через давальний відмінок (безособові конструкції)."}, {"statement": "Іменники чоловічого роду в давальному відмінку можуть мати тільки закінчення -у / -ю.", "isTrue": false, "explanation": "Вони також можуть мати паралельні закінчення -ові, -еві, -єві."}, {"statement": "Прикметники чоловічого роду в давальному відмінку мають закінчення -ому.", "isTrue": true, "explanation": "Наприклад: 'моєму новому другу'."}, {"statement": "У слові 'подруга' в давальному відмінку літера 'г' змінюється на 'з' (подрузі).", "isTrue": true, "explanation": "Це обов'язкове чергування приголосних перед 'і'."}, {"statement": "У реченні 'Моєму синові три роки' слово 'синові' стоїть у місцевому відмінку (Locative).", "isTrue": false, "explanation": "Слово 'синові' стоїть у давальному відмінку, оскільки ми говоримо про вік."}]} instruction={"Правда чи ні? (Про давальний відмінок)"} />
+
+<Translate client:only="react" questions={[{"source": "I am writing a letter to my best friend.", "options": [{"text": "Я пишу лист моїй найкращій подрузі.", "correct": true}, {"text": "Я пишу лист мою найкращу подругу.", "correct": false}]}, {"source": "He sent a long letter to his friend.", "options": [{"text": "Він надіслав довгий лист своєму другові.", "correct": true}, {"text": "Він надіслав довгий лист свого друга.", "correct": false}]}, {"source": "Do you like new movies?", "options": [{"text": "Тобі подобаються нові фільми?", "correct": true}, {"text": "Ти подобаєшся нові фільми?", "correct": false}]}, {"source": "I am cold.", "options": [{"text": "Мені холодно.", "correct": true}, {"text": "Я холодний.", "correct": false}]}, {"source": "We sincerely thank you.", "options": [{"text": "Ми щиро дякуємо вам.", "correct": true}, {"text": "Ми щиро дякуємо вас.", "correct": false}]}, {"source": "My son is three years old.", "options": [{"text": "Моєму синові три роки.", "correct": true}, {"text": "Мій син є три роки.", "correct": false}]}]} instruction={"Оберіть правильний переклад речення"} />
+
+<Unjumble client:only="react" items={[{"words": "дякую / урок. / за / Я / вчителеві", "answer": "Я дякую вчителеві за урок."}, {"words": "Моїй / вісім / сестрі / років. / молодшій", "answer": "Моїй молодшій сестрі вісім років."}, {"words": "книгу / цю / Я / дам / Наталці.", "answer": "Я дам цю книгу Наталці."}, {"words": "подобається / мамі / кава. / ця / Моїй", "answer": "Моїй мамі подобається ця кава."}, {"words": "треба / Нам / йти / додому.", "answer": "Нам треба йти додому."}, {"words": "подарунок / надіслали / Ми / другові. / нашому", "answer": "Ми надіслали подарунок нашому другові."}]} instruction={"Складіть правильне речення зі слів"} />
+
+</TabItem>
+<TabItem label="Ресурси">
+
+## Підручники (Textbooks)
+
+- [Караман С. О. — Українська мова, 10 клас (2018)](https://pidruchnyk.com.ua/uploads/book/10-klas-ukrmova-karaman-2018.pdf#page=52), стор. 52
+- [Авраменко О. М. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-avramenko-2019.pdf#page=34), стор. 34
+- [Глазова О. П. — Українська мова, 11 клас (2019)](https://pidruchnyk.com.ua/uploads/book/11-klas-ukrajinska-mova-glazova-2019.pdf#page=54), стор. 54
+- [Заболотний О. В. — Українська мова, 11 клас (2019)](https://shkola.in.ua/11-klas-ukrainska-mova-zabolotnyi-2019.html), стор. 238
+- [Авраменко О. М. — Українська мова, 5 клас (2022)](https://pidruchnyk.com.ua/uploads/book/5_ukrmova_avramenko_2022.pdf#page=58), стор. 58
+
+</TabItem>
+</Tabs>

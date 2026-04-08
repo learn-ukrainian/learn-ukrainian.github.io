@@ -1,0 +1,51 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Covers all grammatical rules flawlessly (`-ів`, zero ending, `-ей`, exceptions)
+    and integrates all vocabulary hints (`множина`, `нульове закінчення`, `кілька`,
+    `багато`, etc.) smoothly into the text.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Superb breakdown of the rules and vowel insertions. However, `тиш` is
+    a hallucinated plural form for an uncountable noun, and using `діл` to mean "things
+    to do" is a Russianism calque.
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Excellent PPP flow. Introduces the "Rule of 5" explicitly and effectively,
+    backs up every abstract pattern with strong bulleted examples and connected reading
+    sentences.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Integrated all required words gracefully without feeling like a forced
+    checklist.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers reflect exactly the types specified in the plan and are distributed
+    ideally to test learning section by section.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Very natural and encouraging teacher persona ("Welcome to the 'final boss'
+    of Ukrainian cases"). Direct, concise, and focused.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Markdown is completely clean, word count exceeds expectations without
+    being bloated (3125 words), and all H2 headers strictly map to the `content_outline`.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Uses great, culturally neutral, and idiomatic examples (Ukrainian songs,
+    heroes, villages).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: The inventory dialogue is a perfect, realistic framing device for quantity
+    Genitive plurals. The closing dialogue effectively recaps the grammar in context.
+findings: []

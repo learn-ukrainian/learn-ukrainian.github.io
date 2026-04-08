@@ -1,0 +1,52 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Deductions for missing the explicit comparison with the Genitive case
+    question (Кого? Чого?) in the opening section and omitting "легко", "важко", and
+    "нудно" from the initial list of common impersona
+- dimension: 2
+  name: Linguistic accuracy
+  score: 9
+  evidence: 'Generally flawless Ukrainian grammar, but there is a case inconsistency
+    in the first dialogue. "Мені — цікаву книгу" implies an accusative transitive
+    verb, while the next lines use "є" which requires '
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Exceptional explanations. The breakdown of "I am sad" vs "It is sad to
+    me" and the note on English speakers saying "Дай я книгу" are highly targeted
+    and effective.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended words (давальний відмінок, мені, тобі, йому,
+    їй, нам, вам, їм, холодно, потрібно, приємно, цікаво, сумно, важко) are incorporated
+    naturally into explanations and examples.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The 4 injected activity markers match the `activity_hints` completely
+    and are appropriately spaced.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is warm and encouraging. It uses clear, narrative-driven situations
+    (family birthdays, cafe orders) without reverting to empty corporate language.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: The markdown is clean. Headers match the plan. The word count is robust
+    at 3281 words, providing excellent depth for an A2 grammar module.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Scenarios are authentic and accurate to Ukrainian interactions.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: 'Dialogues are natural, but Dialogue 1 has a minor logical flaw. The speaker
+    says "Цей великий пакунок" (singular) but extracts a book, chocolate, a scarf,
+    flowers, and a cake from it. Pluralizing the '
+findings: []

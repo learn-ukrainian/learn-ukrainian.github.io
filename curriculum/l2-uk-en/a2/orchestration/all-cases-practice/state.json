@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "a2",
+  "slug": "all-cases-practice",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-08T01:27:36.269233+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-08T01:27:36.277645+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-08T01:29:26.174120+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-08T01:36:48.643716+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-08T01:41:15.853429+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-08T01:41:15.853596+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-08T01:42:53.750392+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-08T01:42:53.763817+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-08T01:42:53.769475+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-08T01:44:15.188579+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-08T01:44:15.188693+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-08T01:44:15.422307+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-08T01:49:34.971272+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-08T01:49:35.151036+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-08T01:49:36.572111+00:00"
+    }
+  }
+}

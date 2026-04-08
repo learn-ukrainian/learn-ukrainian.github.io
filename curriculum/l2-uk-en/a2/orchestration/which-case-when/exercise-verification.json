@@ -1,0 +1,206 @@
+{
+  "total_items": 128,
+  "grounded_items": 97,
+  "ungrounded": [
+    {
+      "word": "користуємося",
+      "exercise_type": "quiz",
+      "context": "Ми користуємося _____",
+      "role": "context"
+    },
+    {
+      "word": "цікавиться",
+      "exercise_type": "quiz",
+      "context": "Брат цікавиться _____",
+      "role": "context"
+    },
+    {
+      "word": "чого",
+      "exercise_type": "group-sort",
+      "context": "Вимагає Родового відмінка (Кого? Чого?)",
+      "role": "context"
+    },
+    {
+      "word": "місцевого",
+      "exercise_type": "group-sort",
+      "context": "Вимагає Місцевого відмінка (Де? По чому?)",
+      "role": "context"
+    },
+    {
+      "word": "ціна",
+      "exercise_type": "group-sort",
+      "context": "за (ціна)",
+      "role": "answer"
+    },
+    {
+      "word": "орудного",
+      "exercise_type": "group-sort",
+      "context": "Вимагає Орудного відмінка (Ким? Чим?)",
+      "role": "context"
+    },
+    {
+      "word": "позаду",
+      "exercise_type": "group-sort",
+      "context": "за (позаду)",
+      "role": "answer"
+    },
+    {
+      "word": "народилася",
+      "exercise_type": "fill-in",
+      "context": "Вона народилася у 2024 _____.",
+      "role": "context"
+    },
+    {
+      "word": "ця",
+      "exercise_type": "fill-in",
+      "context": "Хто ця дівчина в _____?",
+      "role": "context"
+    },
+    {
+      "word": "зроблю",
+      "exercise_type": "fill-in",
+      "context": "Я зроблю це за _____.",
+      "role": "context"
+    },
+    {
+      "word": "кімната",
+      "exercise_type": "true-false",
+      "context": "Кіт бігає по кімната.",
+      "role": "context"
+    },
+    {
+      "word": "маму",
+      "exercise_type": "true-false",
+      "context": "Я дякую маму.",
+      "role": "context"
+    },
+    {
+      "word": "собаку",
+      "exercise_type": "true-false",
+      "context": "Він боїться собаку.",
+      "role": "context"
+    },
+    {
+      "word": "брата",
+      "exercise_type": "true-false",
+      "context": "Це подарунок для брата.",
+      "role": "context"
+    },
+    {
+      "word": "музикою",
+      "exercise_type": "true-false",
+      "context": "Вона цікавиться музикою.",
+      "role": "context"
+    },
+    {
+      "word": "політиці",
+      "exercise_type": "true-false",
+      "context": "Ми говоримо про політиці.",
+      "role": "context"
+    },
+    {
+      "word": "сестра",
+      "exercise_type": "fill-in",
+      "context": "Він телефонує (сестра) _____.",
+      "role": "context"
+    },
+    {
+      "word": "історією",
+      "exercise_type": "fill-in",
+      "context": "історією",
+      "role": "answer"
+    },
+    {
+      "word": "цікавимося",
+      "exercise_type": "fill-in",
+      "context": "Ми цікавимося (історія) _____.",
+      "role": "context"
+    },
+    {
+      "word": "історія",
+      "exercise_type": "fill-in",
+      "context": "Ми цікавимося (історія) _____.",
+      "role": "context"
+    },
+    {
+      "word": "школа",
+      "exercise_type": "fill-in",
+      "context": "Діти йдуть в (школа) _____.",
+      "role": "context"
+    },
+    {
+      "word": "робота",
+      "exercise_type": "fill-in",
+      "context": "Я працюю на (робота) _____.",
+      "role": "context"
+    },
+    {
+      "word": "ручка",
+      "exercise_type": "error-correction",
+      "context": "Він користується ручка.",
+      "role": "context"
+    },
+    {
+      "word": "вчителя",
+      "exercise_type": "error-correction",
+      "context": "Ми дякуємо вчителя.",
+      "role": "context"
+    },
+    {
+      "word": "кімнату",
+      "exercise_type": "error-correction",
+      "context": "Кіт бігає по кімнату.",
+      "role": "context"
+    },
+    {
+      "word": "майбутньому",
+      "exercise_type": "error-correction",
+      "context": "Я думаю про майбутньому.",
+      "role": "context"
+    },
+    {
+      "word": "мама",
+      "exercise_type": "error-correction",
+      "context": "Це подарунок для мама.",
+      "role": "context"
+    },
+    {
+      "word": "собаки",
+      "exercise_type": "unjumble",
+      "context": "собаки.",
+      "role": "answer"
+    },
+    {
+      "word": "великої",
+      "exercise_type": "unjumble",
+      "context": "великої",
+      "role": "answer"
+    },
+    {
+      "word": "новим",
+      "exercise_type": "unjumble",
+      "context": "новим",
+      "role": "answer"
+    },
+    {
+      "word": "сидить",
+      "exercise_type": "unjumble",
+      "context": "сидить",
+      "role": "answer"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 14,
+    "tested_in_exercises": 7,
+    "not_tested": [
+      "алгоритм",
+      "відмінок",
+      "дієслово",
+      "керувати",
+      "контекст",
+      "прийменник",
+      "характеристика"
+    ]
+  },
+  "all_grounded": false
+}

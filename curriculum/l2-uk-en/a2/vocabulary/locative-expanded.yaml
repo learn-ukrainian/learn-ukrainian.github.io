@@ -1,0 +1,277 @@
+vocabulary:
+- word: місце́вий
+  translation: locative (case)
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: абстра́ктний
+  translation: abstract
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: дити́нство
+  translation: childhood
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: мо́лодість
+  translation: youth
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ста́рість
+  translation: old age
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: мину́ле
+  translation: the past
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: майбу́тнє
+  translation: the future
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: осві́та
+  translation: education
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: мисте́цтво
+  translation: art
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: полі́тика
+  translation: politics
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: еконо́міка
+  translation: economics
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: нау́ка
+  translation: science
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: культу́ра
+  translation: culture
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: бі́знес
+  translation: business
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: життя́
+  translation: life
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: навча́ння
+  translation: studies, learning
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: мі́сяць
+  translation: month
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ти́ждень
+  translation: week
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: мину́лий
+  translation: past, previous
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: насту́пний
+  translation: next
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: телефо́н
+  translation: phone, telephone
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ра́діо
+  translation: radio
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: телеві́зор
+  translation: television, TV
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: по́шта
+  translation: mail, post
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: доро́га
+  translation: way, road
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: підру́чник
+  translation: textbook
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: істо́рія
+  translation: history
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: зу́стріч
+  translation: meeting, encounter
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: по́дорож
+  translation: journey, trip
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: ду́мка
+  translation: thought, opinion
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: пробле́ма
+  translation: problem
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: нови́ни
+  translation: news
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: відря́дження
+  translation: business trip
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: сі́чень
+  translation: January
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: бе́резень
+  translation: March
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: тра́вень
+  translation: May
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: жо́втень
+  translation: October
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: Що нового?
+  translation: What is new?
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: по телефону
+  translation: by phone
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: по радіо
+  translation: on the radio
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: по телевізору
+  translation: on TV
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: по пошті
+  translation: by mail
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: по дорозі
+  translation: on the way
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на цьому тижні
+  translation: this week
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на минулому тижні
+  translation: last week
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: на наступному тижні
+  translation: next week
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true

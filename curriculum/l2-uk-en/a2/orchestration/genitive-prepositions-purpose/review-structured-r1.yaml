@@ -1,0 +1,49 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: The module follows the outline nicely and provides detailed examples.
+    However, the required vocabulary word `призначення` is missing from the prose.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Excellent. The gender/case endings (-а/-у for masculine, etc.) are applied
+    correctly, and the prepositions' specific nuances are explained accurately.
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: The grammar explanations are solid, but the `quiz-prep-choice` activity
+    testing "для, без, біля" is injected before "біля" is actually taught, which violates
+    the pedagogical sequence.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 9
+  evidence: The required word `призначення` is missing from the text. All other required
+    and recommended words are included and contextualized naturally.
+- dimension: 5
+  name: Exercise quality
+  score: 9
+  evidence: The activities perfectly match the plan's hints, but the placement of
+    the quiz activity is pedagogically flawed.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: The tone is warm and encouraging. Dialogues between Ігор and Марта are
+    contextual and natural.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: Clean Markdown, headers map perfectly to the plan, and the word count
+    is excellent (3271 words).
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Culturally neutral and natural examples (борщ без хліба, дача біля моря,
+    etc.).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Good use of continuous situational dialogues (packing for a camping trip,
+    arriving at the campsite) that integrate the target grammar seamlessly.
+findings: []

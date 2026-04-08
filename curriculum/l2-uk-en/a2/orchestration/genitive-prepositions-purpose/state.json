@@ -1,0 +1,67 @@
+{
+  "mode": "v6",
+  "track": "a2",
+  "slug": "genitive-prepositions-purpose",
+  "phases": {
+    "check": {
+      "status": "complete",
+      "ts": "2026-04-07T21:54:38.524245+00:00"
+    },
+    "research": {
+      "status": "complete",
+      "ts": "2026-04-07T21:54:38.532249+00:00"
+    },
+    "skeleton": {
+      "status": "complete",
+      "ts": "2026-04-07T21:57:29.747622+00:00"
+    },
+    "pre-verify": {
+      "status": "complete",
+      "ts": "2026-04-07T22:00:49.961895+00:00"
+    },
+    "write": {
+      "status": "complete",
+      "ts": "2026-04-07T22:04:29.328758+00:00"
+    },
+    "exercises": {
+      "status": "complete",
+      "ts": "2026-04-07T22:04:29.328936+00:00"
+    },
+    "activities": {
+      "status": "complete",
+      "ts": "2026-04-07T22:06:16.919579+00:00"
+    },
+    "verify-exercises": {
+      "status": "complete",
+      "ts": "2026-04-07T22:06:16.933432+00:00"
+    },
+    "annotate": {
+      "status": "complete",
+      "ts": "2026-04-07T22:06:16.939254+00:00"
+    },
+    "vocab": {
+      "status": "complete",
+      "ts": "2026-04-07T22:07:43.663132+00:00"
+    },
+    "enrich": {
+      "status": "complete",
+      "ts": "2026-04-07T22:07:43.663249+00:00"
+    },
+    "verify": {
+      "status": "complete",
+      "ts": "2026-04-07T22:07:43.831685+00:00"
+    },
+    "review": {
+      "status": "complete",
+      "ts": "2026-04-07T22:08:36.365106+00:00"
+    },
+    "stress": {
+      "status": "complete",
+      "ts": "2026-04-07T22:08:36.503833+00:00"
+    },
+    "publish": {
+      "status": "complete",
+      "ts": "2026-04-07T22:08:38.156868+00:00"
+    }
+  }
+}

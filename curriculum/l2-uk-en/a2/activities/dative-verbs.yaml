@@ -1,0 +1,497 @@
+version: '1.0'
+module: dative-verbs
+level: a2
+inline:
+- id: fill-in-focus-completing-sentences-with-correct-dative-noun-pronoun-forms-after-help-thank-call
+  type: fill-in
+  instruction: Вставте правильну форму займенника або іменника (давальний відмінок)
+  items:
+  - sentence: Я завжди допомагаю _____.
+    answer: мамі
+    options:
+    - маму
+    - мамі
+    - мама
+    - мамою
+  - sentence: Ми щиро дякуємо _____.
+    answer: вчителеві
+    options:
+    - вчителя
+    - вчителеві
+    - вчитель
+    - вчителем
+  - sentence: Подзвони _____ завтра вранці.
+    answer: їй
+    options:
+    - її
+    - їй
+    - вона
+    - нею
+  - sentence: Цей шум дуже заважає _____.
+    answer: мені
+    options:
+    - мене
+    - мені
+    - я
+    - мною
+  - sentence: Я часто дзвоню своєму _____.
+    answer: другові
+    options:
+    - друга
+    - другові
+    - друг
+    - другом
+  - sentence: Він не відповідає _____.
+    answer: нам
+    options:
+    - нас
+    - нам
+    - ми
+    - нами
+  - sentence: Вона радить _____ прочитати цю книгу.
+    answer: сестрі
+    options:
+    - сестру
+    - сестрі
+    - сестра
+    - сестрою
+  - sentence: Я щиро дякую _____ за цю допомогу.
+    answer: йому
+    options:
+    - його
+    - йому
+    - він
+    - ним
+- id: match-up-focus-matching-ukrainian-sentences-to-english-i-like-equivalents-to-cement-the-subject-object-shift
+  type: match-up
+  instruction: З'єднайте українські речення з їхніми англійськими перекладами
+  pairs:
+  - left: Мені подобається ця книга.
+    right: I like this book.
+  - left: Їй подобаються ці квіти.
+    right: She likes these flowers.
+  - left: Йому не подобається цей фільм.
+    right: He doesn't like this movie.
+  - left: Нам подобалася та стара квартира.
+    right: We liked that old apartment.
+  - left: Тобі подобається кава?
+    right: Do you like coffee?
+  - left: Їм подобалися ті яблука.
+    right: They liked those apples.
+  - left: Вам не подобається гучна музика.
+    right: You (plural/formal) don't like loud music.
+  - left: Мені подобалося солодке морозиво.
+    right: I liked sweet ice cream.
+- id: true-false-focus-judging-the-correctness-of-age-expressions-dative-form-correct-year-noun-agreement
+  type: true-false
+  instruction: Правда чи ні? Визначте, чи правильно написано вік.
+  items:
+  - statement: Моєму братові двадцять один роки.
+    correct: false
+    explanation: Для чисел, що закінчуються на 1 (крім 11), використовуємо форму «рік».
+  - statement: Їй двадцять два роки.
+    correct: true
+    explanation: Для чисел, що закінчуються на 2, 3, 4 (крім 12, 13, 14), використовуємо
+      форму «роки».
+  - statement: Моїй мамі п'ятдесят років.
+    correct: true
+    explanation: Для чисел, що закінчуються на 5-9 та 0, використовуємо форму «років».
+  - statement: Дідусеві вісімдесят рік.
+    correct: false
+    explanation: Для чисел, що закінчуються на 0, використовуємо форму «років».
+  - statement: Мені тридцять три років.
+    correct: false
+    explanation: Для чисел, що закінчуються на 2, 3, 4 (крім 12, 13, 14), використовуємо
+      форму «роки».
+  - statement: Скільки йому років?
+    correct: true
+    explanation: У запитанні «скільки» завжди використовується родовий відмінок множини
+      — «років».
+  - statement: Моїй сестрі одинадцять рік.
+    correct: false
+    explanation: Для групи чисел від 11 до 19 використовуємо форму «років».
+  - statement: Йому двадцять п'ять років.
+    correct: true
+    explanation: Для чисел, що закінчуються на 5, використовуємо форму «років».
+- id: quiz-focus-choosing-between-dative-and-accusative-for-the-noun-pronoun-after-specific-verbs-e-g
+  type: quiz
+  instruction: Оберіть правильний відмінок (давальний чи знахідний?)
+  items:
+  - question: Я часто бачу мою _____ в парку.
+    correct: 0
+    options:
+    - подругу
+    - подрузі
+    - подруга
+    - подругою
+  - question: Я часто дзвоню моїй _____ ввечері.
+    correct: 1
+    options:
+    - подругу
+    - подрузі
+    - подруга
+    - подругою
+  - question: Ми дуже любимо нашу _____.
+    correct: 1
+    options:
+    - мамі
+    - маму
+    - мама
+    - мамою
+  - question: Ми дуже дякуємо нашій _____.
+    correct: 0
+    options:
+    - мамі
+    - маму
+    - мама
+    - мамою
+  - question: Я добре знаю _____.
+    correct: 0
+    options:
+    - його
+    - йому
+    - він
+    - ним
+  - question: Я завжди допомагаю _____.
+    correct: 1
+    options:
+    - його
+    - йому
+    - він
+    - ним
+  - question: Вона чекає _____ біля школи.
+    correct: 1
+    options:
+    - сестрі
+    - сестру
+    - сестра
+    - сестрою
+  - question: Він постійно заважає _____ працювати.
+    correct: 0
+    options:
+    - сестрі
+    - сестру
+    - сестра
+    - сестрою
+workbook:
+- id: wb-group-sort-cases
+  type: group-sort
+  instruction: 'Розподіліть дієслова: які вимагають давального відмінка, а які — знахідного?'
+  groups:
+  - label: Давальний відмінок (кому?)
+    items:
+    - допомагати
+    - дякувати
+    - дзвонити
+    - радити
+    - заважати
+    - відповідати
+  - label: Знахідний відмінок (кого? що?)
+    items:
+    - бачити
+    - чекати
+    - любити
+    - знати
+    - кликати
+    - купувати
+- id: wb-error-correction-dative
+  type: error-correction
+  instruction: Знайдіть і виправте помилку в реченні
+  items:
+  - sentence: Я дякую вас за допомогу.
+    error: вас
+    correction: вам
+    error_type: word
+    options:
+    - вам
+    - ви
+    - вами
+    explanation: 'Дієслово «дякувати» вимагає давального відмінка: дякую кому? — вам.'
+  - sentence: Мені подобається ці красиві квіти.
+    error: подобається
+    correction: подобаються
+    error_type: word
+    options:
+    - подобаються
+    - подобаюся
+    - подобаємося
+    explanation: Слово «квіти» у множині, тому дієслово має бути у формі множини —
+      «подобаються».
+  - sentence: Моєму братові двадцять один роки.
+    error: роки
+    correction: рік
+    error_type: word
+    options:
+    - рік
+    - років
+    - роком
+    explanation: Для числа 21 використовується форма «рік».
+  - sentence: Він часто дзвонить до мами.
+    error: до мами
+    correction: мамі
+    error_type: construction
+    options:
+    - маму
+    - мамі
+    - на маму
+    explanation: 'З дієсловом «дзвонити» ми використовуємо давальний відмінок без
+      прийменника: дзвонить мамі.'
+  - sentence: Вона дуже заважає мене.
+    error: мене
+    correction: мені
+    error_type: word
+    options:
+    - мені
+    - я
+    - мною
+    explanation: 'Дієслово «заважати» вимагає давального відмінка: заважає кому? —
+      мені.'
+  - sentence: Скільки ти років?
+    error: ти
+    correction: тобі
+    error_type: word
+    options:
+    - тобі
+    - тебе
+    - тобою
+    explanation: 'Для віку ми використовуємо давальний відмінок: тобі.'
+- id: wb-fill-in-dative
+  type: fill-in
+  instruction: Вставте іменник у правильній формі (давальний відмінок)
+  items:
+  - sentence: Студент відповідає _____.
+    answer: вчителеві
+    options:
+    - вчителя
+    - вчителеві
+    - вчителем
+  - sentence: Ми допомагаємо _____.
+    answer: бабусі
+    options:
+    - бабусю
+    - бабусі
+    - бабусею
+  - sentence: Син телефонує _____.
+    answer: татові
+    options:
+    - тата
+    - татові
+    - татом
+  - sentence: Вона посміхається своєму _____.
+    answer: другові
+    options:
+    - друга
+    - другові
+    - другом
+  - sentence: Я раджу _____ подивитися цей фільм.
+    answer: подрузі
+    options:
+    - подругу
+    - подрузі
+    - подругою
+  - sentence: Дідусь щиро дякує _____.
+    answer: лікарю
+    options:
+    - лікаря
+    - лікарю
+    - лікарем
+- id: wb-unjumble-sentences
+  type: unjumble
+  instruction: Складіть правильне речення зі слів
+  items:
+  - words:
+    - дуже
+    - Мені
+    - подобається
+    - книга.
+    - ця
+    correct_order:
+    - Мені
+    - дуже
+    - подобається
+    - ця
+    - книга.
+  - words:
+    - дзвонить
+    - Мама
+    - кожного
+    - синові
+    - вечора.
+    correct_order:
+    - Мама
+    - дзвонить
+    - синові
+    - кожного
+    - вечора.
+  - words:
+    - років
+    - твоєму
+    - Скільки
+    - братові?
+    correct_order:
+    - Скільки
+    - років
+    - твоєму
+    - братові?
+  - words:
+    - щиро
+    - за
+    - Я
+    - допомогу.
+    - дякую
+    - вам
+    correct_order:
+    - Я
+    - щиро
+    - дякую
+    - вам
+    - за
+    - допомогу.
+  - words:
+    - не
+    - йому
+    - Ми
+    - заважаємо
+    - працювати.
+    correct_order:
+    - Ми
+    - не
+    - заважаємо
+    - йому
+    - працювати.
+  - words:
+    - Дідусеві
+    - один
+    - сімдесят
+    - рік.
+    correct_order:
+    - Дідусеві
+    - сімдесят
+    - один
+    - рік.
+- id: wb-translate-phrases
+  type: translate
+  instruction: Оберіть правильний переклад
+  items:
+  - source: I thank him for the help.
+    options:
+    - text: Я дякую йому за допомогу.
+      correct: true
+    - text: Я дякую його за допомогу.
+      correct: false
+    - text: Я дякую він за допомогу.
+      correct: false
+    - text: Я дякую ньому за допомогу.
+      correct: false
+  - source: How old is your sister?
+    options:
+    - text: Скільки років твоїй сестрі?
+      correct: true
+    - text: Скільки років твою сестру?
+      correct: false
+    - text: Скільки років твоя сестра?
+      correct: false
+    - text: Скільки років твоєю сестрою?
+      correct: false
+  - source: She likes these flowers.
+    options:
+    - text: Їй подобаються ці квіти.
+      correct: true
+    - text: Їй подобається ці квіти.
+      correct: false
+    - text: Вона подобається ці квіти.
+      correct: false
+    - text: Її подобаються ці квіти.
+      correct: false
+  - source: Do not bother me.
+    options:
+    - text: Не заважай мені.
+      correct: true
+    - text: Не заважай мене.
+      correct: false
+    - text: Не заважай мною.
+      correct: false
+    - text: Не чекай мені.
+      correct: false
+  - source: We help the doctor.
+    options:
+    - text: Ми допомагаємо лікарю.
+      correct: true
+    - text: Ми допомагаємо лікаря.
+      correct: false
+    - text: Ми дякуємо лікарю.
+      correct: false
+    - text: Ми допомагаємо лікарем.
+      correct: false
+  - source: I advise you to read this.
+    options:
+    - text: Я раджу тобі це прочитати.
+      correct: true
+    - text: Я раджу тебе це прочитати.
+      correct: false
+    - text: Я прошу тобі це прочитати.
+      correct: false
+    - text: Я бачу тобі це прочитати.
+      correct: false
+- id: wb-match-up-age
+  type: match-up
+  instruction: З'єднайте цифри із правильними словами
+  pairs:
+  - left: '21'
+    right: двадцять один рік
+  - left: '32'
+    right: тридцять два роки
+  - left: '15'
+    right: п'ятнадцять років
+  - left: '41'
+    right: сорок один рік
+  - left: '54'
+    right: п'ятдесят чотири роки
+  - left: '12'
+    right: дванадцять років
+- id: wb-quiz-vocab
+  type: quiz
+  instruction: Оберіть правильне дієслово за контекстом
+  items:
+  - question: Я завжди _____ моєму другові, він чесний.
+    correct: 1
+    options:
+    - заважаю
+    - довіряю
+    - заздрю
+    - дзвоню
+  - question: Ми _____ цій людині, це складна ситуація.
+    correct: 2
+    options:
+    - радимо
+    - посміхаємося
+    - співчуваємо
+    - заважаємо
+  - question: Вона _____ другові, і він теж радіє.
+    correct: 0
+    options:
+    - посміхається
+    - вибачає
+    - довіряє
+    - заздрить
+  - question: Не треба _____ іншим людям, треба багато працювати.
+    correct: 3
+    options:
+    - допомагати
+    - довіряти
+    - вибачати
+    - заздрити
+  - question: Мама _____ синові його велику помилку.
+    correct: 1
+    options:
+    - радить
+    - вибачає
+    - співчуває
+    - дякує
+  - question: Лікар _____ бабусі багато відпочивати.
+    correct: 0
+    options:
+    - радить
+    - довіряє
+    - заздрить
+    - заважає

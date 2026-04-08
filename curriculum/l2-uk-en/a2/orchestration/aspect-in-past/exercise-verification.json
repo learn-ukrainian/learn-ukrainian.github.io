@@ -1,0 +1,139 @@
+{
+  "total_items": 131,
+  "grounded_items": 112,
+  "ungrounded": [
+    {
+      "word": "прочитала",
+      "exercise_type": "quiz",
+      "context": "Вона прочитала нову книгу.",
+      "role": "context"
+    },
+    {
+      "word": "готували",
+      "exercise_type": "quiz",
+      "context": "Вони готували смачний обід.",
+      "role": "context"
+    },
+    {
+      "word": "студент",
+      "exercise_type": "quiz",
+      "context": "Студент нарешті написав текст.",
+      "role": "context"
+    },
+    {
+      "word": "швидка",
+      "exercise_type": "match-up",
+      "context": "Швидка дія (ДВ): Раптом він відкрив двері.",
+      "role": "context"
+    },
+    {
+      "word": "звичка",
+      "exercise_type": "match-up",
+      "context": "Звичка (НВ): Я щодня готував сніданок.",
+      "role": "context"
+    },
+    {
+      "word": "вивчили",
+      "exercise_type": "match-up",
+      "context": "Результат (ДВ): Ми нарешті вивчили ці слова.",
+      "role": "context"
+    },
+    {
+      "word": "унікальна",
+      "exercise_type": "match-up",
+      "context": "Унікальна подія (ДВ): Одного разу я побачив актора.",
+      "role": "context"
+    },
+    {
+      "word": "купувала",
+      "exercise_type": "match-up",
+      "context": "Звичка (НВ): Вона завжди купувала тут хліб.",
+      "role": "context"
+    },
+    {
+      "word": "їсти",
+      "exercise_type": "fill-in",
+      "context": "Я ____ смачну вечерю, і ми можемо їсти.",
+      "role": "context"
+    },
+    {
+      "word": "цікавий",
+      "exercise_type": "fill-in",
+      "context": "Він весь день ____ цей цікавий роман.",
+      "role": "context"
+    },
+    {
+      "word": "написала",
+      "exercise_type": "fill-in",
+      "context": "написала",
+      "role": "answer"
+    },
+    {
+      "word": "бачив",
+      "exercise_type": "error-correction",
+      "context": "Одного разу він бачив відомого актора.",
+      "role": "context"
+    },
+    {
+      "word": "написали",
+      "exercise_type": "error-correction",
+      "context": "Ми весь день написали довгий лист.",
+      "role": "context"
+    },
+    {
+      "word": "брав",
+      "exercise_type": "group-sort",
+      "context": "брав",
+      "role": "answer"
+    },
+    {
+      "word": "приготував",
+      "exercise_type": "group-sort",
+      "context": "приготував",
+      "role": "answer"
+    },
+    {
+      "word": "вивчив",
+      "exercise_type": "group-sort",
+      "context": "вивчив",
+      "role": "answer"
+    },
+    {
+      "word": "взяв",
+      "exercise_type": "group-sort",
+      "context": "взяв",
+      "role": "answer"
+    },
+    {
+      "word": "відповідають",
+      "exercise_type": "true-false",
+      "context": "Дієслова недоконаного виду відповідають на питання «що зроби",
+      "role": "context"
+    },
+    {
+      "word": "раптових",
+      "exercise_type": "true-false",
+      "context": "Для раптових подій у минулому ми завжди використовуємо недок",
+      "role": "context"
+    }
+  ],
+  "vocab_coverage": {
+    "plan_vocab_total": 21,
+    "tested_in_exercises": 9,
+    "not_tested": [
+      "вивчити",
+      "вчити",
+      "готувати",
+      "зробити",
+      "минулий",
+      "написати",
+      "писати",
+      "приготувати",
+      "прочитати",
+      "робити",
+      "час",
+      "читати"
+    ]
+  },
+  "all_grounded": false
+}

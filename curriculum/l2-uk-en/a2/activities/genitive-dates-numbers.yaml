@@ -1,0 +1,361 @@
+version: '1.0'
+module: genitive-dates-numbers
+level: a2
+inline:
+- id: quiz-what-s-the-date-drill
+  type: quiz
+  instruction: Оберіть правильну дату
+  items:
+  - question: Сьогодні перше _____. (January 1st)
+    options:
+    - січень
+    - січня
+    - січню
+    - січнем
+    correct: 1
+  - question: Свято буде друге _____. (February 2nd)
+    options:
+    - лютий
+    - лютого
+    - лютому
+    - лютим
+    correct: 1
+  - question: Завтра восьме _____. (March 8th)
+    options:
+    - березень
+    - березня
+    - березню
+    - березнем
+    correct: 1
+  - question: Сьогодні двадцять четверте _____. (August 24th)
+    options:
+    - серпень
+    - серпня
+    - серпню
+    - серпнем
+    correct: 1
+  - question: Концерт буде шосте _____. (November 6th)
+    options:
+    - листопад
+    - листопада
+    - листопаду
+    - листопадом
+    correct: 1
+  - question: Урок дев'яте _____. (September 9th)
+    options:
+    - вересень
+    - вересня
+    - вересню
+    - вереснем
+    correct: 1
+  - question: Зустріч десяте _____. (October 10th)
+    options:
+    - жовтень
+    - жовтня
+    - жовтню
+    - жовтнем
+    correct: 1
+  - question: Мій день народження — сьоме _____. (July 7th)
+    options:
+    - липень
+    - липня
+    - липню
+    - липнем
+    correct: 1
+- id: fill-in-counting-objects-1-2-4-5-rule
+  type: fill-in
+  instruction: Вставте правильну форму іменника (1, 2-4, або 5+)
+  items:
+  - sentence: У кімнаті стоїть один _____
+    answer: стіл
+    options:
+    - стіл
+    - столи
+    - столів
+  - sentence: Я маю два _____
+    answer: столи
+    options:
+    - стіл
+    - столи
+    - столів
+  - sentence: У класі стоять п'ять _____
+    answer: столів
+    options:
+    - стіл
+    - столи
+    - столів
+  - sentence: Це мій двадцять один _____
+    answer: рік
+    options:
+    - рік
+    - роки
+    - років
+  - sentence: Ми забронювали три _____
+    answer: номери
+    options:
+    - номер
+    - номери
+    - номерів
+  - sentence: У нашому готелі десять _____
+    answer: номерів
+    options:
+    - номер
+    - номери
+    - номерів
+  - sentence: У цій кімнаті чотири _____
+    answer: вікна
+    options:
+    - вікно
+    - вікна
+    - вікон
+  - sentence: На столі лежать сім _____
+    answer: книг
+    options:
+    - книга
+    - книги
+    - книг
+- id: match-up-q-a-about-quantities-and-dates
+  type: match-up
+  instruction: З'єднайте запитання з відповіддю
+  pairs:
+  - left: Яке сьогодні число?
+    right: Сьогодні десяте травня.
+  - left: О котрій годині зустріч?
+    right: Об одинадцятій.
+  - left: Скільки це коштує?
+    right: Дві тисячі гривень.
+  - left: Скільки тут номерів?
+    right: Тут двадцять один номер.
+  - left: На скільки людей цей номер?
+    right: На п'ять гостей.
+  - left: Яке завтра число?
+    right: Завтра одинадцяте березня.
+  - left: Скільки вікон у кімнаті?
+    right: Чотири вікна.
+  - left: Котра зараз година?
+    right: Зараз друга година.
+- id: match-up-accusative-to-genitive-negation
+  type: match-up
+  instruction: З'єднайте позитивне речення з негативним (заперечення)
+  pairs:
+  - left: Я маю квиток.
+    right: Я не маю квитка.
+  - left: Він знає цю пісню.
+    right: Він не знає цієї пісні.
+  - left: Вона п'є каву.
+    right: Вона не п'є кави.
+  - left: Я купую свіжий хліб.
+    right: Я не купую свіжого хліба.
+  - left: Ми розуміємо це правило.
+    right: Ми не розуміємо цього правила.
+  - left: Вона пише довгий лист.
+    right: Вона не пише довгого листа.
+  - left: Я їм смачну піцу.
+    right: Я не їм смачної піци.
+  - left: Він бачить нову машину.
+    right: Він не бачить нової машини.
+workbook:
+- id: true-false-counting-rules
+  type: true-false
+  instruction: Правда чи ні?
+  items:
+  - statement: Після цифри 'один' ми використовуємо іменник у множині.
+    correct: false
+    explanation: Після 'один' іменник завжди в однині.
+  - statement: Слово 'число' може означати 'дата' (date).
+    correct: true
+    explanation: Запитання 'Яке число?' означає 'What date is it?'
+  - statement: Місяці в українській мові (січень, лютий...) — жіночого роду.
+    correct: false
+    explanation: Усі місяці в українській мові чоловічого роду.
+  - statement: Цифри 2, 3 і 4 вимагають від іменника форми Називного відмінка множини
+      (Nominative Plural).
+    correct: true
+    explanation: 'Наприклад: два столи, три книги, чотири вікна.'
+  - statement: Після цифри 5 (п'ять) іменник має форму Родового відмінка множини (Genitive
+      Plural).
+    correct: true
+    explanation: 'Наприклад: п''ять столів, десять книг.'
+  - statement: Якщо число закінчується на 1 (наприклад, 21), ми використовуємо множину.
+    correct: false
+    explanation: 'Для чисел, що закінчуються на 1 (крім 11), використовується однина.
+      Наприклад: 21 стіл.'
+- id: group-sort-counting-cases
+  type: group-sort
+  instruction: Розподіліть слова після цифр (2-4 або 5-20)
+  groups:
+  - label: Після 2, 3, 4
+    items:
+    - столи
+    - книги
+    - номери
+    - машини
+  - label: Після 5 і більше
+    items:
+    - столів
+    - книг
+    - номерів
+    - машин
+- id: error-correction-genitive-negation
+  type: error-correction
+  instruction: Знайдіть і виправте помилку у запереченні
+  items:
+  - sentence: У мене немає час.
+    error: час
+    correction: часу
+    error_type: word
+    options:
+    - часу
+    - часом
+    - часі
+    explanation: Слово 'час' — абстрактне, після 'немає' потрібен Родовий відмінок.
+  - sentence: Тут немає кава.
+    error: кава
+    correction: кави
+    error_type: word
+    options:
+    - кави
+    - каву
+    - кавою
+    explanation: Після 'немає' завжди потрібен Родовий відмінок.
+  - sentence: Я не маю гроші.
+    error: гроші
+    correction: грошей
+    error_type: word
+    options:
+    - грошей
+    - грошам
+    - грошами
+    explanation: Гроші (множина) у Родовому відмінку — грошей.
+  - sentence: Сьогодні немає дощ.
+    error: дощ
+    correction: дощу
+    error_type: word
+    options:
+    - дощу
+    - дощем
+    - дощі
+    explanation: Після 'немає' іменник чоловічого роду приймає закінчення -у/-а.
+  - sentence: Я не бачу різниця.
+    error: різниця
+    correction: різниці
+    error_type: word
+    options:
+    - різниці
+    - різницю
+    - різницею
+    explanation: Родовий відмінок від слова 'різниця' — 'різниці'.
+  - sentence: Ми не маємо проблема.
+    error: проблема
+    correction: проблем
+    error_type: word
+    options:
+    - проблем
+    - проблеми
+    - проблемою
+    explanation: 'Заперечення множини: проблеми -> проблем.'
+- id: fill-in-months-genitive
+  type: fill-in
+  instruction: Вставте правильний місяць у Родовому відмінку (Genitive Case)
+  items:
+  - sentence: Перше _____
+    answer: січня
+    options:
+    - січня
+    - січень
+    - січню
+  - sentence: Друге _____
+    answer: лютого
+    options:
+    - лютого
+    - лютий
+    - лютому
+  - sentence: Третє _____
+    answer: березня
+    options:
+    - березня
+    - березень
+    - березню
+  - sentence: Четверте _____
+    answer: квітня
+    options:
+    - квітня
+    - квітень
+    - квітню
+  - sentence: П'яте _____
+    answer: травня
+    options:
+    - травня
+    - травень
+    - травню
+  - sentence: Шосте _____
+    answer: червня
+    options:
+    - червня
+    - червень
+    - червню
+- id: quiz-grammar-terms
+  type: quiz
+  instruction: Оберіть правильний термін
+  items:
+  - question: Як українською 'numeral'?
+    options:
+    - числівник
+    - додаток
+    - правило
+    - заперечення
+    correct: 0
+  - question: Як українською 'object (grammatical)'?
+    options:
+    - додаток
+    - числівник
+    - заперечення
+    - правило
+    correct: 0
+  - question: Як українською 'negation'?
+    options:
+    - заперечення
+    - правило
+    - додаток
+    - числівник
+    correct: 0
+  - question: Як українською 'rule'?
+    options:
+    - правило
+    - числівник
+    - додаток
+    - заперечення
+    correct: 0
+  - question: Яке слово означає 'month'?
+    options:
+    - місяць
+    - число
+    - рік
+    - день
+    correct: 0
+  - question: Яке слово означає 'date' у запитанні 'Яке сьогодні...?'
+    options:
+    - число
+    - місяць
+    - додаток
+    - правило
+    correct: 0
+- id: order-hotel-booking-dialogue
+  type: order
+  instruction: Розставте репліки діалогу в правильному порядку
+  items:
+  - — Добрий день! Мені потрібно три номери.
+  - — Добре. На скільки людей?
+  - — На п'ять гостей.
+  - — У нас є два великих номери і один малий номер.
+  - — Чудово. Скільки це коштує?
+  - — Це коштує дві тисячі гривень за добу.
+  - — Дякую, я беру ці три номери.
+  correct_order:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6

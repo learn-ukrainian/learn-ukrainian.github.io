@@ -1,0 +1,199 @@
+vocabulary:
+- word: заве́ршений
+  translation: completed, finished
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: трива́лий
+  translation: ongoing, lasting
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: одноразо́вий
+  translation: single, one-time
+  expression: false
+  pos: прикм.
+  gender: ''
+  verified: true
+- word: конце́пція
+  translation: concept
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: вид дієслова
+  translation: verb aspect
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: недоконаний вид
+  translation: imperfective aspect
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: доконаний вид
+  translation: perfective aspect
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: проце́с
+  translation: process
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: результа́т
+  translation: result
+  expression: false
+  pos: ім.
+  gender: ч.
+  verified: true
+- word: ді́я
+  translation: action
+  expression: false
+  pos: ім.
+  gender: ж.
+  verified: true
+- word: тривала дія
+  translation: ongoing action
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: завершена дія
+  translation: completed action
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: повто́рення
+  translation: repetition
+  expression: false
+  pos: ім.
+  gender: с.
+  verified: true
+- word: роби́ти
+  translation: to do, to be doing (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: зроби́ти
+  translation: to do, to finish doing (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: писа́ти
+  translation: to write (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: написа́ти
+  translation: to write (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: чита́ти
+  translation: to read (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: прочита́ти
+  translation: to read (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: за́вжди́
+  translation: always
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ча́сто
+  translation: often
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: зазвича́й
+  translation: usually
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: регуля́рно
+  translation: regularly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: щодня́
+  translation: every day
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: до́вго
+  translation: for a long time
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: наре́шті
+  translation: finally
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: вже
+  translation: already
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: ра́птом
+  translation: suddenly
+  expression: false
+  pos: присл.
+  gender: ''
+  verified: true
+- word: Що робити?
+  translation: What to do? (imperfective question)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: Що зробити?
+  translation: What to do? (perfective question)
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: забити гол
+  translation: to score a goal
+  expression: true
+  pos: ''
+  gender: ''
+  verified: true
+- word: шука́ти
+  translation: to look for (imperfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true
+- word: знайти́
+  translation: to find (perfective)
+  expression: false
+  pos: дієсл.
+  gender: ''
+  verified: true

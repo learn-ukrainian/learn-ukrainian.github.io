@@ -1,0 +1,72 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: All required sections, grammar rules, exceptions, and required vocabulary
+    (родовий відмінок, багато, кілька, гривня) are thoroughly covered with clear examples.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 8
+  evidence: Generally excellent, but uses the morphological calque "вижившими" in
+    `Ці слова є своєрідними "історичними вижившими" (historical survivors).` and has
+    a minor agreement error in `мало дверей (doors) в
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Exceptional clarity in contrasting the 2-4 rule with Russian (decolonized
+    pedagogy), and explains the zero-ending logic well, but erroneously refers to
+    a consonant cluster as an ending in `ми отримаєм
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: Integrates all 10 required words seamlessly, including expressions of
+    quantity (скілько, декілька) and required nouns (гроші).
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The 4 activity markers are present and correspond perfectly to the planned
+    types and focuses.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Very natural, encouraging tone that highlights the logic of Ukrainian
+    without empty filler. E.g., `Ця маленька фонетична зміна робить українську мову
+    дуже зручною для розмови.`
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: 'Word count is a healthy 2878 words. However, a prompt instruction artifact
+    leaked into a heading: `## Скільки чого? Кількість у житті (~550 words total)`.'
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Effectively promotes authentic Ukrainian forms by explicitly contrasting
+    the counting system with Russian ("Ukrainian grammar is entirely different and
+    has its own deep historical logic"), avoiding Su
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 10
+  evidence: Dialogues are highly contextual, demonstrating natural conversations in
+    realistic settings (cafeteria, supermarket, tour) rather than robotic textbook
+    exchanges.
+findings:
+- dimension: Pedagogical quality
+  severity: critical
+  location: '`Наприклад, якщо ми заберемо останню літеру у слові «сестра», ми отримаємо
+    складне закінчення «-стр».`'
+  issue: The text wrongly calls "-стр" an "закінчення" (ending). It is a consonant
+    cluster at the end of the stem; the grammatical ending itself is zero, as the
+    text correctly explains just sentences prior. Calling it an ending is factually
+    incorrect and confusing.
+  fix: "```yaml\n- find: \"ми отримаємо складне закінчення «-стр».\"\n  replace: \"\
+    ми отримаємо складне скупчення приголосних «-стр».\""
+- dimension: Linguistic accuracy
+  severity: minor
+  location: '`У цьому будинку багато вікон (windows), але мало дверей (doors) відкриті
+    для туристів.`'
+  issue: When "мало" functions as the subject, the predicate should take the impersonal/neuter
+    singular form ("відкрито"), not plural ("відкриті"), particularly with short passive
+    participles.
+  fix: "```yaml\n- find: \"але мало дверей (doors) відкриті для туристів.\"\n  replace:\
+    \ \"але мало дверей (doors) відкрито для туристів.\""

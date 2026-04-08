@@ -1,0 +1,54 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 10
+  evidence: Covers all 3 formation methods, includes the "shoe store" analogy for
+    importance, explains dictionary usage, highlights "Кафе Птах" phonetic rule, includes
+    20 essential pairs in a summary table.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 10
+  evidence: Flawless Ukrainian. Mnemonic "Кафе Птах" correctly explains `з-` to `с-`
+    assimilation. Examples perfectly demonstrate imperfective process vs. perfective
+    result (`Я жив там довго` vs `Я прожив там рік
+- dimension: 3
+  name: Pedagogical quality
+  score: 10
+  evidence: Exceptional PPP flow. Introduces concept with relatable analogy, gives
+    clear examples before explaining rules, explicitly defines process vs. result.
+    The separation of `шукати/знайти` as a logical but
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required words (`пара`, `префікс`, `суфікс`, `корінь`, `читати / прочитати`,
+    `писати / написати`, `брати / взяти`, `говорити / сказати`) are used naturally
+    in prose and highlighted.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: The 4 requested activity markers are injected logically at the end of
+    their respective sections.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Warm, encouraging tone without being patronizing. Very natural teacher
+    phrasing ("Imagine going to a shoe store...", "Notice how she naturally switches...").
+- dimension: 7
+  name: Structural integrity
+  score: 9
+  evidence: Word count is well above target (3112 words). Headers match the outline.
+    However, there are two stray formatting artifacts (unintended line breaks) mid-sentence
+    in the prose.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Varenyky cooking dialogue is highly authentic. Standard Ukrainian school
+    mnemonic "Кафе Птах" is used appropriately.
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: The grandmother-granddaughter dialogue is functional and perfectly demonstrates
+    the grammar, though slightly repetitive with two back-to-back grandmother lines.
+    Very minor issue, overall highly effect
+findings: []

@@ -1,0 +1,49 @@
+round: 2
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 8
+  evidence: Missing the required post office dialogue from Part 2 ("Fill in correct
+    forms in post office and service dialogues from М19"). Only a single sentence
+    was provided.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 7
+  evidence: Found a syntactic calque ("Давайте подивимося"), a lexical calque ("сервісами
+    доставки"), and a missing comma with "такі дієслова, як".
+- dimension: 3
+  name: Pedagogical quality
+  score: 9
+  evidence: Excellent pedagogical notes (e.g., explaining why "подобатися" agrees
+    with the object). However, the "подобатися" grammar was moved to Part 1 instead
+    of Part 3 where the plan requested it.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 10
+  evidence: All required and recommended vocabulary hints are used naturally in context.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers match the plan exactly and test the recently taught material.
+- dimension: 6
+  name: Engagement & tone
+  score: 9
+  evidence: Tone is encouraging and appropriate. The Secret Santa scenario is culturally
+    relevant.
+- dimension: 7
+  name: Structural integrity
+  score: 10
+  evidence: All headers present, word count (1648 words) exceeds the 1500 target,
+    clean Markdown.
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: '"Таємний Санта" is an authentic representation of modern Ukrainian office
+    culture. Phonetic rules like parallel endings are explained accurately.'
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 8
+  evidence: The Secret Santa dialogue feels slightly transactional and textbook-like
+    ("А що потрібно купити новому колезі?"), though it effectively drills the dative
+    forms.
+findings: []

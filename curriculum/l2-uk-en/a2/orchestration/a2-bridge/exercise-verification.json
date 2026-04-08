@@ -1,277 +1,253 @@
 {
-  "total_items": 110,
-  "grounded_items": 57,
+  "total_items": 94,
+  "grounded_items": 54,
   "ungrounded": [
     {
       "word": "мій",
       "exercise_type": "quiz",
-      "context": "Це мій **друг**."
+      "context": "Це мій **друг**.",
+      "role": "context"
     },
     {
       "word": "друг",
       "exercise_type": "quiz",
-      "context": "Це мій **друг**."
+      "context": "Це мій **друг**.",
+      "role": "context"
     },
     {
       "word": "п'ю",
-      "exercise_type": "quiz",
-      "context": "Я п'ю **каву**."
+      "exercise_type": "unjumble",
+      "context": "п'ю",
+      "role": "answer"
     },
     {
       "word": "живе",
       "exercise_type": "quiz",
-      "context": "Вона живе в **Києві**."
+      "context": "Вона живе в **Києві**.",
+      "role": "context"
     },
     {
       "word": "читаю",
       "exercise_type": "quiz",
-      "context": "Я читаю цікаву **книжку**."
+      "context": "Я читаю цікаву **книжку**.",
+      "role": "context"
     },
     {
       "word": "цікаву",
       "exercise_type": "quiz",
-      "context": "Я читаю цікаву **книжку**."
+      "context": "Я читаю цікаву **книжку**.",
+      "role": "context"
     },
     {
       "word": "працюємо",
+      "exercise_type": "match-up",
+      "context": "Ми працюємо",
+      "role": "answer"
+    },
+    {
+      "word": "добрий",
       "exercise_type": "quiz",
-      "context": "Ми працюємо на **заводі**."
+      "context": "Добрий день, **вчителю**!",
+      "role": "context"
     },
     {
       "word": "день",
       "exercise_type": "quiz",
-      "context": "Добрий день, **вчителю**!"
+      "context": "Добрий день, **вчителю**!",
+      "role": "context"
     },
     {
       "word": "немає",
       "exercise_type": "fill-in",
-      "context": "Це мій стіл. Немає _____."
-    },
-    {
-      "word": "стілу",
-      "exercise_type": "fill-in",
-      "context": "стілу"
+      "context": "Це мій стіл. Немає _____.",
+      "role": "context"
     },
     {
       "word": "їду",
       "exercise_type": "fill-in",
-      "context": "Це Київ. Я їду з _____."
-    },
-    {
-      "word": "київу",
-      "exercise_type": "fill-in",
-      "context": "Київу"
+      "context": "Це Київ. Я їду з _____.",
+      "role": "context"
     },
     {
       "word": "довга",
       "exercise_type": "fill-in",
-      "context": "Довга дорога. Машина на _____."
+      "context": "Довга дорога. Машина на _____.",
+      "role": "context"
     },
     {
       "word": "машина",
       "exercise_type": "fill-in",
-      "context": "Довга дорога. Машина на _____."
-    },
-    {
-      "word": "дорогі",
-      "exercise_type": "fill-in",
-      "context": "дорогі"
-    },
-    {
-      "word": "дорожі",
-      "exercise_type": "fill-in",
-      "context": "дорожі"
+      "context": "Довга дорога. Машина на _____.",
+      "role": "context"
     },
     {
       "word": "моя",
       "exercise_type": "fill-in",
-      "context": "Моя рука. Телефон у _____."
+      "context": "Моя рука. Телефон у _____.",
+      "role": "context"
     },
     {
       "word": "телефон",
       "exercise_type": "fill-in",
-      "context": "Моя рука. Телефон у _____."
-    },
-    {
-      "word": "рукі",
-      "exercise_type": "fill-in",
-      "context": "рукі"
-    },
-    {
-      "word": "ручі",
-      "exercise_type": "fill-in",
-      "context": "ручі"
+      "context": "Моя рука. Телефон у _____.",
+      "role": "context"
     },
     {
       "word": "велика",
       "exercise_type": "fill-in",
-      "context": "Велика муха. Даю крихту _____."
+      "context": "Велика муха. Даю крихту _____.",
+      "role": "context"
     },
     {
       "word": "даю",
       "exercise_type": "fill-in",
-      "context": "Велика муха. Даю крихту _____."
+      "context": "Велика муха. Даю крихту _____.",
+      "role": "context"
     },
     {
       "word": "крихту",
       "exercise_type": "fill-in",
-      "context": "Велика муха. Даю крихту _____."
-    },
-    {
-      "word": "мухі",
-      "exercise_type": "fill-in",
-      "context": "мухі"
-    },
-    {
-      "word": "муші",
-      "exercise_type": "fill-in",
-      "context": "муші"
+      "context": "Велика муха. Даю крихту _____.",
+      "role": "context"
     },
     {
       "word": "маленька",
       "exercise_type": "fill-in",
-      "context": "Маленька нога — це _____."
-    },
-    {
-      "word": "ножка",
-      "exercise_type": "fill-in",
-      "context": "ножка"
-    },
-    {
-      "word": "нужка",
-      "exercise_type": "fill-in",
-      "context": "нужка"
-    },
-    {
-      "word": "річка",
-      "exercise_type": "fill-in",
-      "context": "річка"
-    },
-    {
-      "word": "руца",
-      "exercise_type": "fill-in",
-      "context": "руца"
+      "context": "Маленька нога — це _____.",
+      "role": "context"
     },
     {
       "word": "маленьке",
       "exercise_type": "fill-in",
-      "context": "Маленьке вухо — це _____."
-    },
-    {
-      "word": "вішко",
-      "exercise_type": "fill-in",
-      "context": "вішко"
-    },
-    {
-      "word": "вюшко",
-      "exercise_type": "fill-in",
-      "context": "вюшко"
+      "context": "Маленьке вухо — це _____.",
+      "role": "context"
     },
     {
       "word": "брат",
       "exercise_type": "match-up",
-      "context": "Брат"
+      "context": "Брат",
+      "role": "answer"
     },
     {
       "word": "сестра",
       "exercise_type": "match-up",
-      "context": "і сестра"
+      "context": "і сестра",
+      "role": "context"
     },
     {
       "word": "мама",
       "exercise_type": "match-up",
-      "context": "Мама"
+      "context": "Мама",
+      "role": "answer"
     },
     {
       "word": "тато",
       "exercise_type": "match-up",
-      "context": "й тато"
+      "context": "й тато",
+      "role": "context"
     },
     {
       "word": "підеш",
       "exercise_type": "match-up",
-      "context": "Ти підеш"
+      "context": "Ти підеш",
+      "role": "answer"
     },
     {
       "word": "вітаю",
       "exercise_type": "match-up",
-      "context": "Я вітаю вас"
+      "context": "Я вітаю вас",
+      "role": "answer"
     },
     {
       "word": "вас",
       "exercise_type": "match-up",
-      "context": "Я вітаю вас"
+      "context": "Я вітаю вас",
+      "role": "answer"
     },
     {
       "word": "піде",
       "exercise_type": "error-correction",
-      "context": "Вона піде сьогодні з мною."
+      "context": "Вона піде сьогодні з мною.",
+      "role": "context"
     },
     {
       "word": "сьогодні",
       "exercise_type": "error-correction",
-      "context": "Вона піде сьогодні з мною."
+      "context": "Вона піде сьогодні з мною.",
+      "role": "context"
     },
     {
       "word": "робимо",
       "exercise_type": "error-correction",
-      "context": "Ми робимо це з задоволенням."
+      "context": "Ми робимо це з задоволенням.",
+      "role": "context"
     },
     {
       "word": "книжка",
       "exercise_type": "fill-in",
-      "context": "Я читаю цікаву _____ (книжка)."
+      "context": "Я читаю цікаву _____ (книжка).",
+      "role": "context"
     },
     {
       "word": "працює",
-      "exercise_type": "fill-in",
-      "context": "Вона працює на _____ (завод)."
+      "exercise_type": "unjumble",
+      "context": "працює",
+      "role": "answer"
     },
     {
       "word": "завод",
       "exercise_type": "fill-in",
-      "context": "Вона працює на _____ (завод)."
+      "context": "Вона працює на _____ (завод).",
+      "role": "context"
     },
     {
       "word": "стоїть",
       "exercise_type": "fill-in",
-      "context": "Машина стоїть на _____ (дорога)."
+      "context": "Машина стоїть на _____ (дорога).",
+      "role": "context"
     },
     {
       "word": "чорну",
       "exercise_type": "fill-in",
-      "context": "Я п'ю чорну _____ (кава)."
+      "context": "Я п'ю чорну _____ (кава).",
+      "role": "context"
     },
     {
       "word": "кава",
       "exercise_type": "fill-in",
-      "context": "Я п'ю чорну _____ (кава)."
-    },
-    {
-      "word": "звертання",
-      "exercise_type": "group-sort",
-      "context": "Кличний (Звертання)"
+      "context": "Я п'ю чорну _____ (кава).",
+      "role": "context"
     },
     {
       "word": "смачна",
       "exercise_type": "error-correction",
-      "context": "Я п'ю смачна кава."
+      "context": "Я п'ю смачна кава.",
+      "role": "context"
     },
     {
       "word": "вчитель",
       "exercise_type": "error-correction",
-      "context": "Добрий день, вчитель!"
+      "context": "Добрий день, вчитель!",
+      "role": "context"
     },
     {
       "word": "уроку",
       "exercise_type": "error-correction",
-      "context": "Починається новий уроку."
+      "context": "Починається новий уроку.",
+      "role": "context"
+    },
+    {
+      "word": "тримаю",
+      "exercise_type": "unjumble",
+      "context": "тримаю",
+      "role": "answer"
     }
   ],
   "vocab_coverage": {
     "plan_vocab_total": 13,
-    "tested_in_exercises": 5,
+    "tested_in_exercises": 4,
     "not_tested": [
+      "відмінок",
       "голосний",
       "милозвучність",
       "наголос",

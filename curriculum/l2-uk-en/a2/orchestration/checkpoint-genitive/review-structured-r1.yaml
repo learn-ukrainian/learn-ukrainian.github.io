@@ -1,0 +1,44 @@
+round: 1
+scores:
+- dimension: 1
+  name: Plan adherence
+  score: 9
+  evidence: Missed the required vocabulary word "однина", though translated it multiple
+    times in English. Otherwise followed all outlines.
+- dimension: 2
+  name: Linguistic accuracy
+  score: 6
+  evidence: Critical error in teaching `-а` for "concrete building" using `магазина`
+    (buildings take `-у`). Incorrect form `Хрещатику`. Calque `знаходиться`.
+- dimension: 3
+  name: Pedagogical quality
+  score: 8
+  evidence: Excellent structure and PPP flow, but the rule about "concrete building"
+    taking `-а` is misleading and factually wrong.
+- dimension: 4
+  name: Vocabulary coverage
+  score: 8
+  evidence: Missed the required word `однина`. The rest are present.
+- dimension: 5
+  name: Exercise quality
+  score: 10
+  evidence: Markers perfectly align with the `activity_hints` in both type and count.
+- dimension: 6
+  name: Engagement & tone
+  score: 10
+  evidence: Natural, encouraging teacher tone.
+- dimension: 7
+  name: Structural integrity
+  score: 6
+  evidence: Two dangling, incomplete sentences in the conclusion ("If you answer yes
+    to these questions, ").
+- dimension: 8
+  name: Cultural accuracy
+  score: 10
+  evidence: Good use of Kyiv landmarks (Golden Gates, Khreshchatyk, St. Sophia).
+- dimension: 9
+  name: Dialogue & conversation quality
+  score: 9
+  evidence: Dialogue is natural and effectively uses the Genitive, but was marred
+    by the `Хрещатику` error.
+findings: []
