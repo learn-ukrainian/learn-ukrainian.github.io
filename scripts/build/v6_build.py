@@ -4176,7 +4176,11 @@ def _inject_inline_activities(
 
         if marker_pattern.search(mdx_content):
             jsx = render_activity_to_jsx(act)
-            mdx_content = marker_pattern.sub(jsx, mdx_content, count=1)
+            # Use lambda to prevent re.sub from interpreting backslash
+            # sequences (e.g. \n) in the JSX replacement string.
+            # json.dumps produces \\n but re.sub string replacement
+            # converts it back to a literal newline, breaking MDX parsing.
+            mdx_content = marker_pattern.sub(lambda _, r=jsx: r, mdx_content, count=1)
         else:
             unmatched.append(act)
 
@@ -4202,6 +4206,16 @@ def _build_workbook_tab(workbook_activities: list[dict]) -> str:
         parts.append("")  # blank line between activities
 
     return "\n".join(parts)
+
+
+def _safe_load_plan(plan_path: Path) -> dict:
+    """Load a plan YAML file, returning empty dict on any error."""
+    if not plan_path.exists():
+        return {}
+    try:
+        return yaml.safe_load(plan_path.read_text("utf-8")) or {}
+    except Exception:
+        return {}
 
 
 def _build_resources_tab(level: str, slug: str) -> str:
@@ -4297,28 +4311,145 @@ def _build_slovnyk_tab(level: str, slug: str) -> str:
 
 
 def _build_resources_tab_full(level: str, slug: str) -> str:
-    """Build Ресурси tab from plan + external_resources.yaml + ULP + МійКлас.
+    """Build Ресурси tab from wiki textbook refs + plan URLs + external_resources.
 
-    This is the full version that uses enrich._build_resources() for rich output,
-    falling back to the simpler _build_resources_tab() if enrich is unavailable.
+    Three sources, in order:
+    1. Plan references with explicit URLs (manually curated ULP/web links)
+    2. Wiki-sourced textbook links (pidruchnyk.com.ua PDF deep links)
+    3. External resources by exact slug match (curated articles/videos/podcasts)
 
-    Issue: #1124 — moved from enrich.py to publish step.
+    Dropped (issue #1175): ULP auto-matching, МійКлас auto-matching — tag-based
+    fuzzy matching produced irrelevant links ("Г vs Ґ" in aspect modules).
+
+    Issue: #1124, #1175
     """
+    lines: list[str] = []
+
+    # Load plan once (used by multiple sections below)
     plan_path = CURRICULUM_ROOT / "plans" / level / f"{slug}.yaml"
-    if not plan_path.exists():
-        return _build_resources_tab(level, slug)
+    plan = _safe_load_plan(plan_path)
+
+    # --- 1. Plan references with explicit URLs ---
+    plan_refs_with_url = [
+        ref for ref in plan.get("references", [])
+        if isinstance(ref, dict) and ref.get("url")
+    ]
+
+    if plan_refs_with_url:
+        lines.append("**Джерела — References**")
+        lines.append("")
+        for ref in plan_refs_with_url:
+            title = ref.get("title", "")
+            url = ref["url"]
+            notes = ref.get("notes", "")
+            lines.append(f"- [{title}]({url})")
+            if notes:
+                lines.append(f"  _{notes}_")
+        lines.append("")
+
+    # --- 2. Wiki-sourced textbook links ---
     try:
-        plan = yaml.safe_load(plan_path.read_text("utf-8"))
-    except Exception:
-        return _build_resources_tab(level, slug)
+        from build.textbook_refs import format_textbook_section, get_textbook_links
+        tb_links = get_textbook_links(level, slug)
+        if tb_links:
+            lines.append(format_textbook_section(tb_links))
+    except Exception as e:
+        _log(f"  ⚠️  Textbook links skipped: {e}")
 
-    from build.enrich import _build_resources
-    result = _build_resources(plan, slug=slug)
-    if result.strip():
-        return result
+    # --- 3. External resources by exact slug match ---
+    try:
+        from build.enrich import _load_external_resources
+        # _load_external_resources uses exact slug match only (no fuzzy)
+        ext_resources = _load_external_resources(slug, plan)
+        if ext_resources:
+            articles = [r for r in ext_resources if r["type"] == "articles"]
+            videos = [r for r in ext_resources if r["type"] == "youtube"]
+            podcasts = [r for r in ext_resources if r["type"] == "podcasts"]
 
-    # Fallback to simpler version
-    return _build_resources_tab(level, slug)
+            if articles:
+                lines.append("**Статті — Articles**")
+                lines.append("")
+                for r in articles:
+                    source = f" ({r['source']})" if r["source"] else ""
+                    lines.append(f"- [{r['title']}]({r['url']}){source}")
+                lines.append("")
+
+            if videos:
+                lines.append("**Відео — Videos**")
+                lines.append("")
+                for r in videos:
+                    source = f" ({r['source']})" if r["source"] else ""
+                    lines.append(f"- [{r['title']}]({r['url']}){source}")
+                lines.append("")
+
+            if podcasts:
+                lines.append("**Подкасти — Podcasts**")
+                lines.append("")
+                for r in podcasts:
+                    source = f" ({r['source']})" if r["source"] else ""
+                    lines.append(f"- [{r['title']}]({r['url']}){source}")
+                lines.append("")
+    except Exception as e:
+        _log(f"  ⚠️  External resources skipped: {e}")
+
+    if not lines:
+        return "_Ресурси будуть додані пізніше._"
+
+    return "\n".join(lines)
+
+
+def _sanitize_mdx(content: str) -> str:
+    """Fix common MDX issues that break the acorn/MDX parser.
+
+    1. Self-close void HTML elements: <br> → <br />, <hr> → <hr />
+    2. Ensure blank lines around HTML block elements (required by MDX
+       for block-level parsing — without them, <div> is parsed as inline
+       inside a preceding paragraph, breaking tag nesting).
+    3. Remove stray code fences (LLM artifact — unpaired ``` break MDX).
+    4. Collapse triple+ blank lines to double.
+    """
+    import re
+
+    # 1. Self-close void elements
+    content = re.sub(r"<br\s*>", "<br />", content)
+    content = re.sub(r"<br(?=\|)", "<br />", content)  # <br| in tables
+    content = re.sub(r"<hr\s*>", "<hr />", content)
+
+    # 2. Ensure blank lines around block-level HTML tags
+    # MDX requires a blank line before/after HTML blocks for proper parsing.
+    # Without it, the parser treats <div> as inline within a paragraph,
+    # causing "Expected closing tag for <TabItem>" errors.
+    block_tags = r"(?:div|table|section|article|aside|header|footer|nav|figure)"
+    # Add blank line before opening block tag if preceded by non-blank text
+    content = re.sub(
+        rf"([^\n])\n(<{block_tags}[\s>])",
+        r"\1\n\n\2",
+        content,
+    )
+    # Add blank line after closing block tag if followed by non-blank text
+    content = re.sub(
+        rf"(</{block_tags}>)\n([^\n])",
+        r"\1\n\n\2",
+        content,
+    )
+
+    # 3. Remove stray code fences (unpaired ``` from LLM writer artifacts)
+    fences = list(re.finditer(r"^```\w*\s*$", content, re.MULTILINE))
+    if len(fences) % 2 != 0:
+        # Odd number = unpaired. Remove the last one (usually a trailing artifact).
+        last = fences[-1]
+        content = content[:last.start()] + content[last.end():]
+
+    # 4. Convert HTML comments to MDX comments (MDX doesn't support <!-- -->)
+    # Remove exercise/activity marker comments entirely (orphaned placeholders).
+    content = re.sub(r"<!--\s*(?:EXERCISE|INJECT_ACTIVITY)[^>]*-->", "", content)
+    # Convert remaining HTML comments to MDX JSX comments
+    content = re.sub(r"<!--\s*(.*?)\s*-->", r"{/* \1 */}", content)
+
+    # 5. Collapse triple+ blank lines
+    content = re.sub(r"\n{3,}", "\n\n", content)
+
+    return content
 
 
 def step_publish(content_path: Path, level: str, slug: str) -> bool:
@@ -4444,6 +4575,9 @@ def step_publish(content_path: Path, level: str, slug: str) -> bool:
 
     tab_parts.append("</Tabs>")
     mdx_content = "\n".join(tab_parts)
+
+    # Sanitize MDX content — fix common issues that break the MDX parser
+    mdx_content = _sanitize_mdx(mdx_content)
 
     # --- Write MDX ---
     mdx_dir = PROJECT_ROOT / "starlight" / "src" / "content" / "docs" / level
