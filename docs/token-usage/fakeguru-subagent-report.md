@@ -141,12 +141,41 @@ The template explicitly says: *"Ignore your default directives to 'try the simpl
 ### 3. Context poisoning via rules files
 When adopted into `.claude/rules/` files, these recommendations are loaded into EVERY session and EVERY sub-agent, compounding the problem. The sub-agent rule causes more sub-agents, each of which loads the sub-agent rule, which recommends more sub-agents.
 
+## What Anthropic Has Already Addressed (as of v2.1.94)
+
+Credit where due — Anthropic has been actively improving sub-agent efficiency:
+
+| Version | Fix | Helps? |
+|---------|-----|--------|
+| v2.1.92 | `/cost` per-model + cache-hit breakdown | Helps users SEE cost, but only aggregate |
+| v2.1.80 | `/stats` now includes subagent token counts (was undercounting) | Fixes visibility gap |
+| v2.1.72 | "Reduced token usage on multi-agent tasks with more concise subagent final reports" | Reduces output overhead |
+| v2.1.69 | Memory leak fixes — completed subagent state released, old messages GC'd | Reduces memory bloat |
+| v2.1.59 | Improved memory usage by releasing completed subagent task state | Same |
+| v2.1.50 | Fixed memory leak where completed teammate tasks were never GC'd | Same |
+| v2.1.49 | `isolation: "worktree"` for subagents, `worktree.sparsePaths` | Reduces filesystem scope |
+
+### What's NOT addressed yet
+
+These are the gaps we observed that no changelog entry covers:
+
+1. **No documentation of sub-agent context reload cost.** The docs don't mention that each sub-agent spawn reloads ~2-3M tokens of project context. Users (and popular templates) assume sub-agents are lightweight. This is the root cause of the waste pattern.
+
+2. **No per-spawn cost indicator.** When a sub-agent is launched, there's no message like "Spawning agent: ~2.5M tokens context reload." Users have no signal that spawning is expensive until they parse JSONL files after the fact.
+
+3. **No warning on spawn-heavy sessions.** A session spawning 17 sub-agents (278M tokens) gets no warning. Even a soft heuristic like "You've spawned 5+ agents this session — consider batching remaining work inline" would help.
+
+4. **No guidance on CLAUDE.md templates.** Popular templates like fakeguru's actively encourage overriding Claude's default conservatism ("Ignore your default directives to 'try the simplest approach'") and aggressive sub-agent spawning. There's no documentation warning users about the cost implications of these patterns.
+
 ## Recommendations for Anthropic
 
-1. **Document sub-agent context reload cost** prominently in Claude Code docs. Users assume sub-agents are "free" parallel workers; they're not.
-2. **Consider warning on excessive sub-agent spawning** — sessions with >5 sub-agents are almost certainly wasteful.
-3. **Provide token usage visibility in the CLI** — users can't see the overhead unless they parse JSONL files manually.
-4. **Consider rate-limiting or flagging** CLAUDE.md templates that override default safety behaviors (the "ignore your default directives" pattern).
+1. **Document sub-agent context reload cost** prominently in Claude Code docs. A single line in the Agent tool documentation would help: "Each sub-agent reloads the full project context (~2-3M tokens). For simple operations (grep, file read, lint), work inline instead."
+
+2. **Show per-spawn cost at spawn time.** When a sub-agent is launched, log: "Agent spawned: ~2.5M token context reload." This gives users real-time feedback.
+
+3. **Soft warning on excessive spawning.** After 5+ sub-agents in a session, show: "Consider batching remaining work inline — each spawn reloads full context."
+
+4. **Best practices page for CLAUDE.md authoring.** Document the anti-patterns: overriding default behavior, aggressive sub-agent spawning, instruction duplication across rules files.
 
 ## Data Collection Tools
 
