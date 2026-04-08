@@ -4873,7 +4873,9 @@ def main():
     if use_skeleton and skeleton_text:
         _log(f"\n  📐 Skeleton active ({len(skeleton_text.split())} words) — will constrain writer")
     elif use_skeleton and not skeleton_text and "skeleton" not in completed_phases and steps == "all":
-        _log("\n  ⚠️  Skeleton was requested but generation failed — writing without skeleton")
+        _log("\n  ❌ Skeleton was requested but generation failed — halting build")
+        _log("     Re-run with --no-skeleton to skip, or fix the skeleton timeout")
+        sys.exit(1)
 
     # Try to load existing skeleton from disk if running single step
     if steps == "write" and not skeleton_text and use_skeleton:

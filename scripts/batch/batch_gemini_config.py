@@ -24,7 +24,7 @@ QUICK_REF_DIR = PROJECT_ROOT / "claude_extensions" / "quick-ref"
 
 # Model Tiering — Gemini (3 tiers, mirrors Claude: Pro≈Opus, Flash≈Sonnet, Flash-Lite≈Haiku)
 PRO_MODEL = "gemini-3.1-pro-preview"                 # Deep reasoning: writing, content, review
-FLASH_MODEL = "auto"                                  # gemini-3-flash-preview offline; auto-route until back
+FLASH_MODEL = "gemini-3-flash-preview"                 # Back online 2026-04-08
 FLASH_LITE_MODEL = "gemini-3.1-flash-lite-preview"   # Fast structured output: skeleton, vocab, activities
 GEMINI_REVIEW_MODEL = PRO_MODEL                      # Review needs Pro for strict schema + linguistic analysis
 FALLBACK_MODEL = "auto"                              # Let gemini-cli route when a model is unavailable
