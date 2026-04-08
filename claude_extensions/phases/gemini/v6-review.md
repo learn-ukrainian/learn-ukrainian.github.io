@@ -85,7 +85,7 @@ Also check: Are there enough exercise markers/blocks total? The plan's `activity
 
 ### PROOF OF ABSENCE — mandatory before claiming ANYTHING is missing
 
-**Before you claim a word, symbol, notation, or plan point is MISSING from the content, you MUST search for it.** Use your MCP tools (`verify_words`, `search_text`) or carefully re-read the specific section where it should appear.
+**Before you claim a word, symbol, notation, or plan point is MISSING from the content, you MUST search for it.** Carefully re-read the specific section where it should appear. Do NOT claim absence based on a quick scan — your tokenizer can miss special characters.
 
 Rules:
 - If you claim "[•] notation is missing" — you must have searched the content for `[•]` and confirmed 0 occurrences

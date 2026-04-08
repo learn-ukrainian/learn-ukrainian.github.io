@@ -3575,9 +3575,13 @@ def step_review(content_path: Path, level: str, module_num: int,
         from batch_gemini_config import GEMINI_REVIEW_MODEL
 
         review_timeout = 900  # 15 min — generous for a ~30K prompt
+        # No MCP tools for review — reviewer has full content inline.
+        # Gemini gets stuck in tool-call loops (e.g. query_grac repeated
+        # with identical input) which burns the timeout doing nothing.
         ok, raw = _dispatch(
-            prompt, agent=reviewer_agent, phase="review", orch_dir=orch_dir,
-            timeout=review_timeout, mcp_tools=True,
+            prompt, agent=reviewer_agent.replace("-tools", ""),
+            phase="review", orch_dir=orch_dir,
+            timeout=review_timeout, mcp_tools=False,
             model=GEMINI_REVIEW_MODEL,
         )
         if not ok or not raw:
