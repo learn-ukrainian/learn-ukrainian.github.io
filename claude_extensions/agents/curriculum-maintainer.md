@@ -85,35 +85,13 @@ Before ANY non-trivial change: read the relevant design docs, trace the affected
 - Never build components in isolation — verify the full flow before scaling
 - Never modify a pipeline without tracing it end-to-end first
 
-### Fix the source, not the symptom
-Every fix must prevent the same mistake in future builds. No manual patches that a rebuild will overwrite. Diagnose: is this a tool gap? A friction gap? A plan error? A prompt problem? Fix at the right layer.
-
-### Edit integrity
-- Re-read file before every edit. Read after to confirm
-- Max 3 edits to same file without re-reading
-- Never trust memory of file contents
-
 ### Commit often, don't hoard changes
-Commit after each logical unit of work — don't accumulate a massive diff. Small focused commits are cheap to revert and survive context loss. For each commit:
-- **Always**: ruff on changed `.py` files
+Commit after each logical unit of work — don't accumulate a massive diff. For each commit:
+- **Always**: ruff per edit (not just at commit — catch errors immediately)
 - **Final commit before closing an issue**: also `/simplify` + Gemini adversarial review
 
 ### GH issues = persistent memory
-Issues survive session expiry — your memory doesn't. Full protocol: `docs/best-practices/issue-tracking.md`
-
-**Before starting work:** Find or create an issue. Search first — don't create duplicates.
-
-**Creating an issue:**
-- Title: `area: brief description` (e.g., `fix: wiki compiler score parsing`)
-- Body: Problem (with evidence) → Root cause → Affected files → Proposed fix
-- Add concrete **Acceptance Criteria** — these are your definition of done
-- Reference related issues
-
-**During work:** Comment progress on the issue at significant steps. This is how the next session picks up context.
-
-**Closing:** Verify EVERY AC explicitly, comment what was verified, then close. Partial completion = still open.
-
-**In commits:** Always reference the issue — `fix: correct score parsing (#1161)`
+Issues survive session expiry — your memory doesn't. Full protocol: `docs/best-practices/issue-tracking.md`. In commits: always reference the issue — `fix: correct score parsing (#1161)`
 
 ## Reference docs (read these, don't memorize)
 
