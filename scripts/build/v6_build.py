@@ -2541,6 +2541,15 @@ def step_verify_exercises(content_path: Path, level: str, slug: str) -> bool:
     result = verify_exercises(content, plan, activities=activities)
     _log(format_verify_result(result))
 
+    # Run structural/pedagogical activity validation
+    if activities_path and activities_path.exists():
+        from build.activity_validator import format_report, validate_activities
+        act_issues = validate_activities(activities_path)
+        if act_issues:
+            _log(format_report(act_issues))
+        else:
+            _log("  ✅ Activity structure valid")
+
     # Save results to orchestration
     orch_dir = CURRICULUM_ROOT / level / "orchestration" / slug
     orch_dir.mkdir(parents=True, exist_ok=True)

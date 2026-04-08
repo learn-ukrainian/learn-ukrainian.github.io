@@ -249,13 +249,14 @@ These patterns come from МійКлас and Ukrainian textbook analysis. They sh
 6. **No duplicate options** — each option in a quiz item must be unique
 7. **Answer must be in options** — for quiz items, `correct` must be a valid index. For fill-in with options, `answer` must appear in `options`.
 8. **Plausible distractors** — wrong options should be real Ukrainian words that test the specific skill. Not random words.
-9. **Min 6 pairs for match-up** — to prevent trivial elimination
-10. **Explanations for true-false and error-correction** — help the learner understand WHY
-11. **Test LANGUAGE, not trivia** — exercises must test Ukrainian language skills. Not "In what year..." factual recall.
+9. **FILL-IN: NO HINTS in parentheses.** Never write "Я йду в ____ (магазин)." — the learner just copies the hint. The sentence context alone must be enough to produce the answer. Write: "Я йду в ____ купити хліб." — now the learner needs to know the word for store.
+10. **Min 6 pairs for match-up** — to prevent trivial elimination
+11. **Explanations for true-false and error-correction** — help the learner understand WHY
+12. **Test LANGUAGE, not trivia** — exercises must test Ukrainian language skills. Not "In what year..." factual recall.
 
 **UNJUMBLE — critical rules (Ukrainian has flexible word order!):**
-12. **No commas or semicolons inside tiles** — punctuation like `,` and `;` is invisible in the UI. Only sentence-final punctuation (`.!?`) on the LAST word is allowed. If the sentence has commas, either rephrase without commas or choose a different sentence.
-13. **Use positional anchors** — the learner sees tiles and must figure out the order. Help them with visual cues that lock tile positions:
+13. **No commas or semicolons inside tiles** — punctuation like `,` and `;` is invisible in the UI. Only sentence-final punctuation (`.!?`) on the LAST word is allowed. If the sentence has commas, either rephrase without commas or choose a different sentence.
+14. **Use positional anchors** — the learner sees tiles and must figure out the order. Help them with visual cues that lock tile positions:
     - **Capital letter** on the first word → learner knows it's first
     - **Final punctuation** (`.!?`) on the last word → learner knows it's last
     - **Prepositions** (на, в, до, з, із, за, під) → must precede their noun, locks a pair
