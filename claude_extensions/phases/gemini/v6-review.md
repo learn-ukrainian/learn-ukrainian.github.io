@@ -85,7 +85,9 @@ Also check: Are there enough exercise markers/blocks total? The plan's `activity
 
 ### PROOF OF ABSENCE — mandatory before claiming ANYTHING is missing
 
-**Before you claim a word, symbol, notation, or plan point is MISSING from the content, you MUST search for it.** Carefully re-read the specific section where it should appear. Do NOT claim absence based on a quick scan — your tokenizer can miss special characters.
+**Before you claim a word, symbol, notation, or plan point is MISSING from the content, you MUST search for it.** Use `verify_words` or `search_style_guide` to check, or carefully re-read the specific section. Do NOT claim absence based on a quick scan — your tokenizer can miss special characters.
+
+**FORBIDDEN tools during review:** Do NOT call `query_grac`, `query_e2u`, `query_r2u`, or `query_ulif`. These corpus/dictionary lookups are irrelevant to content review and waste time. Use only: `verify_words`, `verify_word`, `search_style_guide`, `search_synonyms`, `query_pravopys`.
 
 Rules:
 - If you claim "[•] notation is missing" — you must have searched the content for `[•]` and confirmed 0 occurrences
