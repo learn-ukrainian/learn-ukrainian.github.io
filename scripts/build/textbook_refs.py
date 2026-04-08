@@ -127,23 +127,40 @@ def get_textbook_links(level: str, slug: str, max_refs: int = 5) -> list[dict]:
 
     wiki_text = wiki_path.read_text("utf-8")
 
-    # Extract Source N references
-    source_nums = set(int(m.group(1)) for m in re.finditer(r"Source\s+(\d+)", wiki_text))
-    if not source_nums:
-        return []
+    # Extract chunk_ids from wiki article — supports both old and new formats:
+    # Old: "Source N" → meta comment → chunk_ids
+    # New: YAML "sources: [chunk_id, ...]" header or inline "Джерело: `chunk_id`"
+    chunk_ids: list[str] = []
 
-    # The wiki compiler assigns Source N based on the order chunks appear
-    # in the enrichment. We need to find which chunk_ids were used.
-    # Strategy: look for chunk_ids referenced in the wiki article's meta comment
-    meta_match = re.search(r"<!--\s*wiki-meta\b(.*?)-->", wiki_text, re.DOTALL)
-    chunk_ids = []
-    if meta_match:
-        meta = meta_match.group(1)
-        # Extract chunk_ids from sources list in meta
-        chunk_ids = re.findall(r"([\w-]+_s\d+)", meta)
+    # Strategy 1: YAML sources header (new wiki format)
+    # Format: sources: [7-klas-ukrmova-litvinova-2024_s0047, ext-other_blogs-50, ...]
+    sources_match = re.search(r"^sources:\s*\[([^\]]+)\]", wiki_text, re.MULTILINE)
+    if sources_match:
+        chunk_ids = [cid.strip() for cid in sources_match.group(1).split(",")
+                     if "_s" in cid.strip()]
 
-    # If no chunk_ids in meta, search SQLite for chunks matching this module's topics
-    # Fall back to plan references
+    # Strategy 2: Inline Джерело backtick references (new wiki format)
+    # Format: (Джерело: `7-klas-ukrmova-litvinova-2024_s0047`)
+    if not chunk_ids:
+        chunk_ids = re.findall(r"Джерело:\s*`([\w-]+_s\d+)`", wiki_text)
+
+    # Strategy 3: Old format — Source N → meta comment → chunk_ids
+    if not chunk_ids:
+        source_nums = set(int(m.group(1)) for m in re.finditer(r"Source\s+(\d+)", wiki_text))
+        if source_nums:
+            meta_match = re.search(r"<!--\s*wiki-meta\b(.*?)-->", wiki_text, re.DOTALL)
+            if meta_match:
+                chunk_ids = re.findall(r"([\w-]+_s\d+)", meta_match.group(1))
+
+    # Deduplicate while preserving order
+    seen = set()
+    unique_ids = []
+    for cid in chunk_ids:
+        if cid not in seen:
+            seen.add(cid)
+            unique_ids.append(cid)
+    chunk_ids = unique_ids
+
     if not chunk_ids:
         return _refs_from_plan(level, slug)
 
