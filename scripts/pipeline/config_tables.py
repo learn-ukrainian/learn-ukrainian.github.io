@@ -1020,19 +1020,13 @@ ACTIVITY_CONFIGS: dict[str, dict[str, str]] = {
         "ALLOWED_ACTIVITY_TYPES": "quiz, true-false, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction, group-sort, watch-and-repeat, classify, image-to-letter",
         "REQUIRED_TYPES": "", "PRIORITY_TYPES": "error-correction, unjumble, fill-in, classify, watch-and-repeat",
     },
-    "b1-bridge": {
-        "ACTIVITY_COUNT_TARGET": "6", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "10", "ITEMS_MIN": "6",
-        "VOCAB_COUNT_TARGET": "25",
-        "FORBIDDEN_ACTIVITY_TYPES": "anagram, comparative-study, authorial-intent",
-        "ALLOWED_ACTIVITY_TYPES": "quiz, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction, essay-response, critical-analysis",
-        "REQUIRED_TYPES": "", "PRIORITY_TYPES": "quiz, match-up, fill-in, error-correction, mark-the-words",
-    },
+    # b1-bridge removed — bridge is now in A2. B1 starts at full core from module 1.
     "b1-core": {
-        "ACTIVITY_COUNT_TARGET": "8", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "15", "ITEMS_MIN": "12",
+        "ACTIVITY_COUNT_TARGET": "12", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "18", "ITEMS_MIN": "8",
         "VOCAB_COUNT_TARGET": "30",
-        "FORBIDDEN_ACTIVITY_TYPES": "anagram, essay-response, critical-analysis, comparative-study, authorial-intent",
-        "ALLOWED_ACTIVITY_TYPES": "quiz, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction",
-        "REQUIRED_TYPES": "", "PRIORITY_TYPES": "fill-in, unjumble, error-correction",
+        "FORBIDDEN_ACTIVITY_TYPES": "anagram, image-to-letter, letter-grid, watch-and-repeat, divide-words, count-syllables, pick-syllables, critical-analysis, source-evaluation, comparative-study, authorial-intent, debate, paleography-analysis, dialect-comparison, transcription, translation-critique, etymology-trace",
+        "ALLOWED_ACTIVITY_TYPES": "quiz, true-false, fill-in, match-up, unjumble, mark-the-words, cloze, error-correction, group-sort, translate, essay-response, grammar-identify, highlight-morphemes",
+        "REQUIRED_TYPES": "", "PRIORITY_TYPES": "cloze, error-correction, translate, mark-the-words, essay-response",
     },
     "b2": {
         "ACTIVITY_COUNT_TARGET": "8", "ACTIVITY_MIN": "0", "ACTIVITY_MAX": "15", "ITEMS_MIN": "14",
@@ -1236,7 +1230,7 @@ def get_activity_config(track: str, module_num: int) -> dict[str, str]:
     if track.startswith("lit-"):
         return ACTIVITY_CONFIGS["lit"]
     if track == "b1":
-        return ACTIVITY_CONFIGS["b1-bridge" if module_num <= 5 else "b1-core"]
+        return ACTIVITY_CONFIGS["b1-core"]
     if track == "c1":
         return ACTIVITY_CONFIGS["c1-core"]
     if track in ACTIVITY_CONFIGS:
