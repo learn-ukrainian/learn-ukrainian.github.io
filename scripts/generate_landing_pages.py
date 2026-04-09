@@ -86,11 +86,9 @@ def generate_landing_page(level: str) -> str:
         "word_target": 4000,
     })
 
-    # Group modules by phase
-    units: list[tuple[str, list[str]]] = []
-    current_phase = None
-    current_items: list[str] = []
-
+    # Group modules by phase — consolidate (same phase may appear at multiple positions)
+    from collections import OrderedDict
+    phase_items: OrderedDict[str, list[str]] = OrderedDict()
     done_count = 0
 
     for i, slug in enumerate(modules, 1):
@@ -99,14 +97,10 @@ def generate_landing_page(level: str) -> str:
         subtitle = plan.get("subtitle", "")
         phase = plan.get("phase", "")
 
-        # Use phase as unit name
         unit_name = phase if phase else f"{level.upper()} Modules"
 
-        if unit_name != current_phase:
-            if current_items:
-                units.append((current_phase or "Modules", current_items))
-            current_phase = unit_name
-            current_items = []
+        if unit_name not in phase_items:
+            phase_items[unit_name] = []
 
         status = get_module_status(level, slug)
         if status == "done":
@@ -115,13 +109,12 @@ def generate_landing_page(level: str) -> str:
         sub_escaped = escape_js_string(subtitle[:80])
         title_escaped = escape_js_string(title)
 
-        current_items.append(
+        phase_items[unit_name].append(
             f'        {{ num: {i}, slug: "{slug}", title: "{title_escaped}", '
             f'sub: "{sub_escaped}", status: "{status}" }}'
         )
 
-    if current_items:
-        units.append((current_phase or "Modules", current_items))
+    units = list(phase_items.items())
 
     # Build the modules JS array
     modules_js_lines = []
