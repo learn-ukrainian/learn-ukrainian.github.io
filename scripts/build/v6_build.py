@@ -5002,7 +5002,7 @@ def main():
             # Inject deterministic abetka activities (letter-grid, watch-and-repeat)
             _inject_abetka_activities(activity_path, args.level, slug)
             _save_v6_state(args.level, slug, "activities")
-        elif steps == "activities":
+        else:
             _log("\n❌ Build FAILED at Step 5e (activity generation)")
             sys.exit(1)
 
@@ -5029,6 +5029,9 @@ def main():
         )
         if vocab_path:
             _save_v6_state(args.level, slug, "vocab")
+        else:
+            _log("\n❌ Build FAILED at Step 5c (vocabulary generation)")
+            sys.exit(1)
 
     # Step 7b: ENRICH — SKIPPED (#1124: enrichment moved to publish step)
     # Kept for backward compat: mark as completed so pipeline doesn't stall
@@ -5052,6 +5055,9 @@ def main():
             content_path, args.level, args.module, slug,
             writer=args.writer, reviewer_override=args.reviewer,
         )
+        if score == 0.0 and not review_text:
+            _log("\n❌ Build FAILED at Step 8 (review — no output from reviewer)")
+            sys.exit(1)
         _save_v6_state(args.level, slug, "review")
 
         # Fix strategy:
