@@ -4823,14 +4823,14 @@ def main():
         else:
             _log("   Resume requested but no completed phases found — starting fresh")
 
-    # Pre-flight: check RAG server is running (needed for MCP tools)
+    # Pre-flight: check MCP server is running (VESUM, dictionaries, textbooks via SQLite)
     if "tools" in args.writer:
         import urllib.request
         try:
             resp = urllib.request.urlopen("http://127.0.0.1:8766/health", timeout=3)
-            _log(f"   RAG server: ✅ running ({resp.read().decode()})")
+            _log(f"   MCP server: ✅ running ({resp.read().decode()})")
         except Exception:
-            _log("   ❌ RAG server is not running. Start it: ./services.sh start")
+            _log("   ❌ MCP server is not running. Start it: ./services.sh start")
             sys.exit(1)
 
     # Clean previous build artifacts for a fresh full build (skip when resuming)
