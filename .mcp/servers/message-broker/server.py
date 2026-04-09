@@ -20,6 +20,7 @@ import asyncio
 import json
 import os
 import sys
+from contextlib import suppress
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -40,7 +41,7 @@ DB_PATH = Path(__file__).parent / "messages.db"
 
 # Limits
 MAX_CONTENT_LENGTH = 10000
-VALID_AGENTS = ("claude", "gemini")
+VALID_AGENTS = ("claude", "gemini", "codex")
 
 # Write lock — serializes all DB writes within this process.
 # Cross-process writes are serialized by SQLite WAL mode + busy_timeout.
@@ -79,24 +80,25 @@ async def init_db():
             CREATE INDEX IF NOT EXISTS idx_task ON messages(task_id)
         """)
         # Migration: add claimed_by/claimed_at to existing tables
-        try:
+        with suppress(Exception):
             await db.execute("ALTER TABLE messages ADD COLUMN claimed_by TEXT")
-        except Exception:
-            pass  # Column already exists
-        try:
+        with suppress(Exception):
             await db.execute("ALTER TABLE messages ADD COLUMN claimed_at TEXT")
-        except Exception:
-            pass  # Column already exists
         # Sessions table - track CLI session IDs for each agent per task
         await db.execute("""
             CREATE TABLE IF NOT EXISTS sessions (
                 task_id TEXT PRIMARY KEY,
                 claude_session_id TEXT,
                 gemini_session_id TEXT,
+                codex_session_id TEXT,
                 created_at TEXT NOT NULL,
                 updated_at TEXT NOT NULL
             )
         """)
+        cursor = await db.execute("PRAGMA table_info(sessions)")
+        session_columns = [row[1] for row in await cursor.fetchall()]
+        if "codex_session_id" not in session_columns:
+            await db.execute("ALTER TABLE sessions ADD COLUMN codex_session_id TEXT")
         # Message history table - soft-delete audit trail
         await db.execute("""
             CREATE TABLE IF NOT EXISTS message_history (
@@ -142,7 +144,7 @@ async def list_tools() -> list[Tool]:
                     "to": {
                         "type": "string",
                         "description": "Recipient LLM (e.g., 'gemini', 'claude')",
-                        "enum": ["claude", "gemini"]
+                        "enum": ["claude", "gemini", "codex"]
                     },
                     "content": {
                         "type": "string",
@@ -165,7 +167,7 @@ async def list_tools() -> list[Tool]:
                     "from_llm": {
                         "type": "string",
                         "description": "Sender identity (e.g., 'claude', 'gemini')",
-                        "enum": ["claude", "gemini"]
+                        "enum": ["claude", "gemini", "codex"]
                     },
                     "from_model": {
                         "type": "string",
@@ -188,7 +190,7 @@ async def list_tools() -> list[Tool]:
                     "for_llm": {
                         "type": "string",
                         "description": "Your identity (who you are)",
-                        "enum": ["claude", "gemini"]
+                        "enum": ["claude", "gemini", "codex"]
                     },
                     "since_id": {
                         "type": "integer",
@@ -221,7 +223,7 @@ async def list_tools() -> list[Tool]:
                     "for_llm": {
                         "type": "string",
                         "description": "Your identity",
-                        "enum": ["claude", "gemini"]
+                        "enum": ["claude", "gemini", "codex"]
                     }
                 },
                 "required": ["for_llm"]
@@ -419,7 +421,7 @@ async def handle_receive_messages(args: dict) -> list[TextContent]:
                     ORDER BY id ASC
                     LIMIT ?
                 )
-            """, [session_id, now] + params + [limit])
+            """, [session_id, now, *params, limit])
 
             # Fetch the messages we just claimed
             cursor = await db.execute("""

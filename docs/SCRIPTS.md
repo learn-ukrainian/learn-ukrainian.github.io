@@ -16,6 +16,31 @@ This document describes all scripts and workflows for module creation, validatio
 
 ---
 
+## Startup Wrappers
+
+Project-local wrappers for interactive agent sessions:
+
+```bash
+# Claude Code wrapper
+./start-claude.sh
+
+# Codex wrapper
+./start-codex.sh
+```
+
+`start-codex.sh` launches Codex with:
+- interactive Codex in dangerous bypass mode
+- `CODEX_SESSION=1` so repo scripts can identify an interactive Codex session
+- repo subprocess defaults unchanged unless you explicitly export override env vars
+
+Override before launch if you need different behavior:
+
+```bash
+CODEX_DISPATCH_MODE=workspace-write CODEX_BRIDGE_MODE=safe ./start-codex.sh
+```
+
+---
+
 ## Claude Code Hooks
 
 Session hooks live in `claude_extensions/hooks/` (deployed to `.claude/hooks/` via `npm run claude:deploy`).
@@ -2045,11 +2070,14 @@ npm run sync:landing:dry      # Preview changes without applying
 | `context` | Share state/knowledge |
 | `feedback` | Review or comment |
 
-### Gemini Bridge CLI
+### Agent Bridge CLI
 
 ```bash
-# Check inbox for messages from Claude
+# Check inbox for Gemini by default
 .venv/bin/python scripts/ai_agent_bridge/__main__.py inbox
+
+# Check inbox for Codex explicitly
+.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox --for codex
 
 # Read specific message
 .venv/bin/python scripts/ai_agent_bridge/__main__.py read <message_id>
@@ -2073,7 +2101,30 @@ npm run sync:landing:dry      # Preview changes without applying
   --allow-write \
   --delimiters FINAL_REVIEW,FRICTION \
   --model gemini-3-pro-preview
+
+# Quick question to Codex (read-only bridge path)
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex \
+  "Review posted on #1177. Please read and respond." \
+  --task-id issue-1177
 ```
+
+**Codex sandbox control:**
+
+```bash
+# Shared fallback for all Codex CLI launches
+export CODEX_CLI_MODE=danger
+
+# ai_agent_bridge Codex path only: safe | workspace-write | danger
+export CODEX_BRIDGE_MODE=safe
+
+# scripts/build/dispatch.py Codex path only: safe | workspace-write | danger
+export CODEX_DISPATCH_MODE=workspace-write
+```
+
+Defaults:
+- `ai_agent_bridge` Codex calls default to `safe` (`codex exec -s read-only`)
+- `dispatch.py` defaults to `safe` for `codex` and `workspace-write` for `codex-tools`
+- `danger` maps to `codex exec --dangerously-bypass-approvals-and-sandbox`
 
 **Multi-turn conversation (new):**
 ```bash
@@ -2405,4 +2456,3 @@ npm run pipeline l2-uk-en a1 5  # In terminal 2
 ```
 
 ---
-

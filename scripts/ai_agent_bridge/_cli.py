@@ -8,6 +8,7 @@ from batch_gemini_config import FLASH_MODEL
 
 from ._broker import bridge_status, broker_cleanup
 from ._claude import ask_claude, process_for_claude
+from ._codex import ask_codex, process_all_codex, process_for_codex
 from ._db import get_db
 from ._gemini import ask_gemini, converse_gemini, process_and_respond
 from ._messaging import (
@@ -153,12 +154,12 @@ def process_all_claude(new_session: bool = False):
 
 def _build_parser() -> argparse.ArgumentParser:
     """Build the CLI argument parser."""
-    parser = argparse.ArgumentParser(description="AI Agent Bridge - Claude/Gemini/LLM Communication")
+    parser = argparse.ArgumentParser(description="AI Agent Bridge - Claude/Gemini/Codex Communication")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # inbox
     inbox_parser = subparsers.add_parser("inbox", help="Check inbox for messages")
-    inbox_parser.add_argument("--for", dest="for_llm", default="gemini", choices=['gemini', 'claude'],
+    inbox_parser.add_argument("--for", dest="for_llm", default="gemini", choices=['gemini', 'claude', 'codex'],
                              help="Check inbox for which agent (default: gemini)")
 
     # read
@@ -168,7 +169,7 @@ def _build_parser() -> argparse.ArgumentParser:
     # send
     send_parser = subparsers.add_parser("send", help="Send message to another agent")
     send_parser.add_argument("content", help="Message content")
-    send_parser.add_argument("--to", dest="to_llm", default="claude", choices=['claude', 'gemini'],
+    send_parser.add_argument("--to", dest="to_llm", default="claude", choices=['claude', 'gemini', 'codex'],
                             help="Target agent (default: claude)")
     send_parser.add_argument("--from", dest="from_llm", default="gemini",
                             help="Sender agent name (default: gemini)")
@@ -184,7 +185,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
     # ack-all
     ack_all_parser = subparsers.add_parser("ack-all", help="Acknowledge ALL unread messages for an agent")
-    ack_all_parser.add_argument("agent", choices=['claude', 'gemini'], help="Agent whose inbox to clear")
+    ack_all_parser.add_argument("agent", choices=['claude', 'gemini', 'codex'], help="Agent whose inbox to clear")
 
     # conversation
     conv_parser = subparsers.add_parser("conversation", help="Get conversation history")
@@ -207,6 +208,14 @@ def _build_parser() -> argparse.ArgumentParser:
     proc_claude_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true",
                                     help="Run sync without timeout (used internally by fire-and-forget)")
 
+    # process-codex
+    proc_codex_parser = subparsers.add_parser("process-codex", help="Process message with Codex CLI (headless)")
+    proc_codex_parser.add_argument("message_id", type=int, help="Message ID for Codex to process")
+    proc_codex_parser.add_argument("--new-session", dest="new_session", action="store_true",
+                                   help="Force new session even if one exists")
+    proc_codex_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true",
+                                   help="Run sync without timeout")
+
     # ask-claude
     ask_claude_parser = subparsers.add_parser("ask-claude", help="Send message AND invoke Claude (one-step)")
     ask_claude_parser.add_argument("content", help="Message content")
@@ -221,6 +230,21 @@ def _build_parser() -> argparse.ArgumentParser:
                                    help="Exact sender model ID")
     ask_claude_parser.add_argument("--to-model", dest="to_model",
                                    help="Target model ID")
+
+    # ask-codex
+    ask_codex_parser = subparsers.add_parser("ask-codex", help="Send message AND invoke Codex (one-step; use '-' to read from stdin)")
+    ask_codex_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
+    ask_codex_parser.add_argument("--task-id", required=True, help="Task ID (required for session tracking)")
+    ask_codex_parser.add_argument("--type", default="query", help="Message type (default: query)")
+    ask_codex_parser.add_argument("--data", help="Path to data file to attach")
+    ask_codex_parser.add_argument("--new-session", dest="new_session", action="store_true",
+                                  help="Force new session even if one exists")
+    ask_codex_parser.add_argument("--from", dest="from_llm", default="gemini",
+                                  help="Sender agent family (gemini, claude, codex). Default: gemini")
+    ask_codex_parser.add_argument("--from-model", dest="from_model",
+                                  help="Exact sender model ID")
+    ask_codex_parser.add_argument("--to-model", dest="to_model",
+                                  help="Target model ID")
 
     # ask-gemini
     ask_gemini_parser = subparsers.add_parser("ask-gemini", help="Send message AND invoke Gemini (one-step)")
@@ -265,6 +289,11 @@ def _build_parser() -> argparse.ArgumentParser:
     proc_claude_all_parser.add_argument("--new-session", dest="new_session", action="store_true",
                                         help="Force new sessions for each message")
 
+    # process-codex-all
+    proc_codex_all_parser = subparsers.add_parser("process-codex-all", help="Process ALL unread messages with Codex")
+    proc_codex_all_parser.add_argument("--new-session", dest="new_session", action="store_true",
+                                       help="Force new sessions for each message")
+
     # check-model
     check_model_parser = subparsers.add_parser("check-model", help="Check if a Gemini model is available")
     check_model_parser.add_argument("model", help="Model name")
@@ -305,8 +334,12 @@ def _dispatch_command(args):
         process_and_respond(args.message_id, args.model, no_timeout=args.no_timeout)
     elif args.command == "process-claude":
         process_for_claude(args.message_id, args.new_session, args.fire_and_forget, args.no_timeout)
+    elif args.command == "process-codex":
+        process_for_codex(args.message_id, args.new_session, args.no_timeout)
     elif args.command == "ask-claude":
         _handle_ask_claude(args)
+    elif args.command == "ask-codex":
+        _handle_ask_codex(args)
     elif args.command == "ask-gemini":
         _handle_ask_gemini(args)
     elif args.command == "converse":
@@ -317,6 +350,8 @@ def _dispatch_command(args):
         process_all_gemini(args.model)
     elif args.command == "process-claude-all":
         process_all_claude(args.new_session)
+    elif args.command == "process-codex-all":
+        process_all_codex(args.new_session)
     elif args.command == "check-model":
         ok = check_model(args.model, force=True)
         sys.exit(0 if ok else 1)
@@ -338,6 +373,16 @@ def _handle_ask_claude(args):
         data = Path(args.data).read_text()
     ask_claude(args.content, args.task_id, args.type, data,
                args.new_session, args.from_llm, args.from_model, args.to_model)
+
+
+def _handle_ask_codex(args):
+    """Handle ask-codex subcommand."""
+    data = None
+    if args.data:
+        data = Path(args.data).read_text()
+    content = sys.stdin.read() if args.content == "-" else args.content
+    ask_codex(content, args.task_id, args.type, data,
+              args.new_session, args.from_llm, args.from_model, args.to_model)
 
 
 def _handle_ask_gemini(args):

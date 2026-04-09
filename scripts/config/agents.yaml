@@ -11,3 +11,7 @@ agents:
   gemini:
     bridge_command: process
     process_pattern: "gemini-cli"
+
+  codex:
+    bridge_command: process-codex
+    process_pattern: "codex"

@@ -161,6 +161,67 @@ class TestDispatchAgent:
         assert "--mcp-config" in cmd
         assert "--allowedTools" in cmd
 
+    @patch.dict("os.environ", {}, clear=True)
+    @patch("build.dispatch.subprocess.run")
+    def test_codex_dispatch_uses_output_file(self, mock_run, tmp_path):
+        def _fake_run(cmd, **kwargs):
+            output_path = cmd[cmd.index("-o") + 1]
+            Path(output_path).write_text("Codex final answer", encoding="utf-8")
+            return MagicMock(returncode=0, stdout="session id: test-session", stderr="")
+
+        mock_run.side_effect = _fake_run
+        ok, raw = dispatch_agent(
+            "test prompt", agent="codex", phase="review",
+            orch_dir=tmp_path, timeout=600, model="gpt-5.4",
+        )
+        assert ok is True
+        assert raw == "Codex final answer"
+        cmd = mock_run.call_args[0][0]
+        assert cmd[:2] == ["codex", "exec"]
+        assert "-o" in cmd
+        assert "-s" in cmd
+        assert "read-only" in cmd
+        assert cmd[-1] == "-"
+
+    @patch.dict("os.environ", {}, clear=True)
+    @patch("build.dispatch.subprocess.run")
+    def test_codex_tools_dispatch_uses_full_auto(self, mock_run, tmp_path):
+        def _fake_run(cmd, **kwargs):
+            output_path = cmd[cmd.index("-o") + 1]
+            Path(output_path).write_text("OK", encoding="utf-8")
+            return MagicMock(returncode=0, stdout="", stderr="")
+
+        mock_run.side_effect = _fake_run
+        ok, raw = dispatch_agent(
+            "test prompt", agent="codex-tools", phase="write",
+            orch_dir=tmp_path, timeout=600, model="gpt-5.4",
+        )
+        assert ok is True
+        assert raw == "OK"
+        cmd = mock_run.call_args[0][0]
+        assert "--full-auto" in cmd
+        assert cmd[-1] == "-"
+
+    @patch.dict("os.environ", {"CODEX_DISPATCH_MODE": "danger"}, clear=True)
+    @patch("build.dispatch.subprocess.run")
+    def test_codex_dispatch_honors_danger_override(self, mock_run, tmp_path):
+        def _fake_run(cmd, **kwargs):
+            output_path = cmd[cmd.index("-o") + 1]
+            Path(output_path).write_text("OK", encoding="utf-8")
+            return MagicMock(returncode=0, stdout="", stderr="")
+
+        mock_run.side_effect = _fake_run
+        ok, raw = dispatch_agent(
+            "test prompt", agent="codex", phase="review",
+            orch_dir=tmp_path, timeout=600, model="gpt-5.4",
+        )
+        assert ok is True
+        assert raw == "OK"
+        cmd = mock_run.call_args[0][0]
+        assert "--dangerously-bypass-approvals-and-sandbox" in cmd
+        assert "-s" not in cmd
+        assert cmd[-1] == "-"
+
     @patch("build.dispatch.subprocess.run")
     def test_timeout_logged(self, mock_run, tmp_path):
         import subprocess as sp

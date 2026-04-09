@@ -1,6 +1,6 @@
 # Agent Cooperation Best Practices
 
-> **Scope:** How Claude and Gemini work together without degrading each other's output quality.
+> **Scope:** How Claude, Gemini, and Codex work together without degrading each other's output quality.
 > Full protocol: `docs/CLAUDE-GEMINI-COOPERATION.md`
 
 ---
@@ -11,6 +11,7 @@
 |------|-------|------|
 | 💙 **Синя команда** (Blue) | Claude | Architect, reviewer, quality gate |
 | 💛 **Жовта команда** (Gold) | Gemini | Content builder, implementer |
+| 🟢 **Зелена команда** (Green) | Codex | Adversarial reviewer, bug finder, code improver |
 
 **Both teams are adversarial by design.** The purpose is quality through finding mistakes, not agreement. An approved module means both teams couldn't find serious problems — not that both teams were polite.
 
@@ -25,9 +26,11 @@ Self-review produces inflated scores. Observed in production: Gemini reviewing i
 ### Valid review paths
 - ✅ Claude reviews Gemini's content
 - ✅ Gemini reviews Claude's architecture proposals
+- ✅ Codex reviews Claude or Gemini implementation work
 - ✅ Automated audit gates (no LLM bias)
 - ❌ Gemini reviews its own content
 - ❌ Claude reviews its own code without external validation
+- ❌ Codex reviews its own code without external validation
 
 ---
 
@@ -44,12 +47,16 @@ All substantive discussion happens on GitHub where it is persistent and searchab
 
 **Never put full reviews or code in broker messages.** Post on GitHub, then ping with "review posted on #559."
 
-### Direct dispatch (ask-gemini)
+### Direct dispatch (ask-gemini / ask-codex)
 For requests needing immediate response:
 ```bash
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini \
   "Review posted on #559. Please read and respond." \
   --task-id issue-559
+
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex \
+  "Bug report posted on #560. Please read and respond." \
+  --task-id issue-560
 ```
 
 ### Multi-turn conversations (converse)
@@ -71,11 +78,11 @@ Each turn includes full conversation history. Oldest messages truncated first if
 The bridge is **not** an MCP tool. MCP is one-directional (client→server). The bridge uses a different architecture:
 
 1. **SQLite broker DB** (`data/broker.db`) — shared message queue
-2. **CLI wrapper** spawns gemini-cli as a subprocess with the message as prompt
-3. Gemini runs, output is captured and stored back in the broker DB
+2. **CLI wrapper** spawns the target agent CLI (`gemini`, `claude`, or `codex`) as a subprocess with the message as prompt
+3. The target agent runs, output is captured and stored back in the broker DB
 4. Reviews auto-posted to GitHub issues (when task_id matches `issue-NNN`)
 
-This means: Claude always initiates. Gemini responds. Gemini cannot initiate contact with Claude (the broker supports it, but nobody polls).
+This means the broker can route among Claude, Gemini, and Codex. In practice, GitHub remains the source of truth and broker messages should stay short.
 
 ### Automatic Review Persistence
 
@@ -112,7 +119,7 @@ At the start of every session:
    mcp__memory__search_nodes(query="next session todo")
    ```
 
-2. **Check inbox** — notifications from Gemini:
+2. **Check inbox** — notifications from other agents:
    ```python
    mcp__message-broker__check_inbox(for_llm="claude")
    ```
@@ -134,14 +141,14 @@ At session end: save progress summary to memory.
 
 When starting an issue:
 ```bash
-gh issue edit {N} --add-label "working:claude"
+gh issue edit {N} --add-label "working:{agent}"
 gh issue comment {N} --body "Starting work on X"
 ```
 
 When done:
 ```bash
-gh issue edit {N} --remove-label "working:claude"
-gh issue edit {N} --add-label "review:gemini"  # or review:human
+gh issue edit {N} --remove-label "working:{agent}"
+gh issue edit {N} --add-label "review:{reviewer}"  # or review:human
 # or: gh issue close {N}
 ```
 

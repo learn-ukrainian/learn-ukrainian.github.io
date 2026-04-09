@@ -13,6 +13,7 @@ PID_DIR = Path(__file__).parent.parent.parent / ".mcp/servers/message-broker/pid
 # Returns a list: ["npx", "@anthropic-ai/claude-code"] to use as cmd prefix.
 CLAUDE_CMD = ["npx", "@anthropic-ai/claude-code@latest"]
 GEMINI_CLI = shutil.which("gemini") or "gemini"
+CODEX_CLI = shutil.which("codex") or "codex"
 
 # Snapshot environment for passing to detached children
 # Set GEMINI_SESSION so .bashrc disables hostile aliases (eza, bat, zoxide)

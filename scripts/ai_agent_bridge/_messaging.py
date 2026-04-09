@@ -141,8 +141,14 @@ def send_message(content: str, task_id: str | None = None, msg_type: str = "resp
 def detect_sender() -> str:
     """Detect if the current process is running as Gemini or Claude."""
     if (os.environ.get("GEMINI_SESSION") or
-        os.environ.get("GOOGLE_API_KEY") or
-        Path(".gemini").exists()):
+        os.environ.get("GOOGLE_API_KEY")):
+        return "gemini"
+    if (os.environ.get("CLAUDE_PROJECT_DIR") or
+        os.environ.get("CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS")):
+        return "claude"
+    if os.environ.get("CODEX_SESSION"):
+        return "codex"
+    if Path(".gemini").exists():
         return "gemini"
     return "claude"
 
@@ -153,6 +159,14 @@ def send_to_gemini(content: str, task_id: str | None = None, msg_type: str = "qu
     """Send a message to Gemini with auto-detected sender."""
     return send_message(content, task_id, msg_type, data, from_llm=detect_sender(),
                        to_llm="gemini", from_model=from_model, to_model=to_model, quiet=quiet)
+
+
+def send_to_codex(content: str, task_id: str | None = None, msg_type: str = "query",
+                  data: str | None = None, from_model: str | None = None,
+                  to_model: str | None = None, quiet: bool = False):
+    """Send a message to Codex with auto-detected sender."""
+    return send_message(content, task_id, msg_type, data, from_llm=detect_sender(),
+                        to_llm="codex", from_model=from_model, to_model=to_model, quiet=quiet)
 
 
 def acknowledge(message_ids: list[int] | int, quiet: bool = False):

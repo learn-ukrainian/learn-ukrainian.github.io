@@ -31,6 +31,7 @@ def init_db():
             task_id TEXT PRIMARY KEY,
             claude_session_id TEXT,
             gemini_session_id TEXT,
+            codex_session_id TEXT,
             created_at TEXT NOT NULL,
             updated_at TEXT NOT NULL
         )
@@ -62,10 +63,16 @@ def get_db():
                 task_id TEXT PRIMARY KEY,
                 claude_session_id TEXT,
                 gemini_session_id TEXT,
+                codex_session_id TEXT,
                 created_at TEXT NOT NULL,
                 updated_at TEXT NOT NULL
             )
         """)
+        cursor.execute("PRAGMA table_info(sessions)")
+        session_columns = [row[1] for row in cursor.fetchall()]
+        if "codex_session_id" not in session_columns:
+            print("🔧 Migrating database: adding 'codex_session_id' column to 'sessions' table")
+            conn.execute("ALTER TABLE sessions ADD COLUMN codex_session_id TEXT")
         conn.commit()
     except Exception:
         conn.rollback()
@@ -76,17 +83,32 @@ def get_db():
 def get_session(task_id: str) -> dict:
     """Get session IDs for a task."""
     if not task_id:
-        return {"claude": None, "gemini": None}
+        return {"claude": None, "gemini": None, "codex": None}
 
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute("SELECT claude_session_id, gemini_session_id FROM sessions WHERE task_id = ?", (task_id,))
+    cursor.execute(
+        "SELECT claude_session_id, gemini_session_id, codex_session_id FROM sessions WHERE task_id = ?",
+        (task_id,),
+    )
     row = cursor.fetchone()
     conn.close()
 
     if row:
-        return {"claude": row[0], "gemini": row[1]}
-    return {"claude": None, "gemini": None}
+        return {"claude": row[0], "gemini": row[1], "codex": row[2]}
+    return {"claude": None, "gemini": None, "codex": None}
+
+
+def _session_column(agent: str) -> str:
+    """Map agent name to session table column."""
+    columns = {
+        "claude": "claude_session_id",
+        "gemini": "gemini_session_id",
+        "codex": "codex_session_id",
+    }
+    if agent not in columns:
+        raise ValueError(f"Unknown session agent: {agent}")
+    return columns[agent]
 
 
 def set_session(task_id: str, agent: str, session_id: str):
@@ -97,23 +119,20 @@ def set_session(task_id: str, agent: str, session_id: str):
     conn = get_db()
     cursor = conn.cursor()
     timestamp = datetime.now(UTC).isoformat()
+    column = _session_column(agent)
 
     # Upsert session
     cursor.execute("SELECT task_id FROM sessions WHERE task_id = ?", (task_id,))
     if cursor.fetchone():
-        if agent == "claude":
-            cursor.execute("UPDATE sessions SET claude_session_id = ?, updated_at = ? WHERE task_id = ?",
-                          (session_id, timestamp, task_id))
-        else:
-            cursor.execute("UPDATE sessions SET gemini_session_id = ?, updated_at = ? WHERE task_id = ?",
-                          (session_id, timestamp, task_id))
+        cursor.execute(
+            f"UPDATE sessions SET {column} = ?, updated_at = ? WHERE task_id = ?",
+            (session_id, timestamp, task_id),
+        )
     else:
-        if agent == "claude":
-            cursor.execute("INSERT INTO sessions (task_id, claude_session_id, created_at, updated_at) VALUES (?, ?, ?, ?)",
-                          (task_id, session_id, timestamp, timestamp))
-        else:
-            cursor.execute("INSERT INTO sessions (task_id, gemini_session_id, created_at, updated_at) VALUES (?, ?, ?, ?)",
-                          (task_id, session_id, timestamp, timestamp))
+        cursor.execute(
+            f"INSERT INTO sessions (task_id, {column}, created_at, updated_at) VALUES (?, ?, ?, ?)",
+            (task_id, session_id, timestamp, timestamp),
+        )
 
     conn.commit()
     conn.close()

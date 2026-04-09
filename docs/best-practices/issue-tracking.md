@@ -8,7 +8,7 @@
 
 **If it's not in a GitHub issue, it didn't happen.**
 
-GH issues are the external memory of this project. Every significant decision, bug, change, and cross-agent handoff must have an issue trail. This is especially critical because Claude and Gemini sessions expire — issues don't.
+GH issues are the external memory of this project. Every significant decision, bug, change, and cross-agent handoff must have an issue trail. This is especially critical because Claude, Gemini, and Codex sessions expire — issues don't.
 
 ---
 
@@ -18,11 +18,12 @@ GH issues are the external memory of this project. Every significant decision, b
 |--------|--------|---------|
 | `priority:` | `blocking`, `high` | Urgency (no label = normal) |
 | `area:` | `infra`, `tooling`, `content`, `docs` | What kind of work |
-| `working:` | `claude`, `gemini` | Who's actively working |
-| `review:` | `gemini`, `human` | Ready for review |
-| `agent:` | `claude`, `gemini` | Preferred assignee |
+| `working:` | `claude`, `gemini`, `codex` | Who's actively working |
+| `review:` | `gemini`, `codex`, `human` | Ready for review |
+| `agent:` | `claude`, `gemini`, `codex` | Preferred assignee |
 
 **Never create labels outside this taxonomy.** Labels are the API for dispatch queries.
+If a new agent joins and the matching label is missing in GitHub, create the matching label inside this taxonomy before using it in workflow examples.
 
 ---
 
@@ -116,14 +117,14 @@ gh issue list --label area:content --state open
 
 1. User assigns → agent claims:
    ```bash
-   gh issue edit {N} --add-label "working:claude"
+   gh issue edit {N} --add-label "working:{agent}"
    gh issue comment {N} --body "Starting: [brief plan]"
    ```
 
 2. Agent completes → removes working label:
    ```bash
-   gh issue edit {N} --remove-label "working:claude"
-   gh issue edit {N} --add-label "review:human"  # or review:gemini
+   gh issue edit {N} --remove-label "working:{agent}"
+   gh issue edit {N} --add-label "review:human"  # or review:{agent}
    ```
 
 3. Work done, no review needed:
@@ -140,7 +141,7 @@ Issues serve as memory because they survive session expiry. Use this pattern:
 **Start of session:**
 ```bash
 # What was I working on?
-gh issue list --label working:claude --state open
+gh issue list --label working:{agent} --state open
 ```
 
 **During work:** Comment progress on the issue every significant step.
@@ -153,7 +154,7 @@ This means the next Claude session can pick up context from the issue without re
 
 ## Cross-Agent Handoff
 
-When handing off to Gemini:
+When handing off to another agent:
 
 ```bash
 # Post content on the issue
@@ -161,6 +162,10 @@ gh issue comment {N} --body "[full review/spec/request]"
 
 # Ping Gemini
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini \
+  "New task posted on #N. Please read and start." --task-id issue-N
+
+# Ping Codex
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex \
   "New task posted on #N. Please read and start." --task-id issue-N
 ```
 

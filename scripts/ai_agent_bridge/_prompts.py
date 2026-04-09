@@ -198,3 +198,31 @@ Your response will be automatically sent back to the sender via the message brok
 Do NOT use MCP tools to send your response - just output your response directly.
 """
     return prompt
+
+
+def build_codex_prompt(msg: dict) -> str:
+    """Build prompt for Codex invocation."""
+    prompt = f"""You are Codex, receiving a message from {msg['from'].title()} via the message broker.
+
+---
+Task ID: {msg['task_id'] or 'none'}
+Type: {msg['type']}
+From: {msg['from']}
+
+{msg['content']}
+"""
+    if msg['data']:
+        prompt += f"""
+---
+Attached data:
+{msg['data']}
+"""
+    prompt += """
+
+---
+
+Respond directly to this message. Be concise and helpful.
+This bridge is for quick questioning and short coordination, not long-running task execution.
+Do NOT use broker or MCP messaging tools to send your response - just output your response directly.
+"""
+    return prompt

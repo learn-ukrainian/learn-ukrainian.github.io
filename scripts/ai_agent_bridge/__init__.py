@@ -18,11 +18,13 @@ from ._broker import (
 )
 from ._claude import ask_claude, process_for_claude
 from ._cli import interactive_mode, main, process_all_claude, process_all_gemini
+from ._codex import ask_codex, process_all_codex, process_for_codex
 from ._config import (
     _MODEL_CACHE,
     _MODEL_CACHE_TTL,
     _PARENT_ENV,
     CLAUDE_CMD,
+    CODEX_CLI,
     DB_PATH,
     GEMINI_CLI,
     GH_CHAR_LIMIT,
@@ -45,13 +47,15 @@ from ._messaging import (
     get_conversation,
     read_message,
     send_message,
+    send_to_codex,
     send_to_gemini,
 )
 from ._model import _detect_model_error, check_model
-from ._prompts import build_claude_prompt, build_gemini_prompt
+from ._prompts import build_claude_prompt, build_codex_prompt, build_gemini_prompt
 
 __all__ = [
     "CLAUDE_CMD",
+    "CODEX_CLI",
     # Config
     "DB_PATH",
     "GEMINI_CLI",
@@ -77,11 +81,13 @@ __all__ = [
     "acknowledge_all",
     # Claude
     "ask_claude",
+    "ask_codex",
     # Gemini
     "ask_gemini",
     "bridge_status",
     "broker_cleanup",
     "build_claude_prompt",
+    "build_codex_prompt",
     # Prompts
     "build_gemini_prompt",
     # Messaging
@@ -98,11 +104,14 @@ __all__ = [
     "interactive_mode",
     "main",
     "process_all_claude",
+    "process_all_codex",
     "process_all_gemini",
     "process_and_respond",
     "process_for_claude",
+    "process_for_codex",
     "read_message",
     "send_message",
+    "send_to_codex",
     "send_to_gemini",
     "set_session",
 ]

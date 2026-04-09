@@ -57,7 +57,7 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 
 ## Inter-Agent Communication
 
-**Gemini is your colleague.** Claude = architect/reviewer, Gemini = content builder. Full protocol: [`agent-cooperation.md`](docs/best-practices/agent-cooperation.md)
+**Gemini and Codex are your colleagues.** Claude = architect/reviewer, Gemini = content builder, Codex = Green Team adversarial reviewer and bug hunter. Full protocol: [`agent-cooperation.md`](docs/best-practices/agent-cooperation.md)
 
 ---
 

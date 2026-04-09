@@ -131,13 +131,13 @@ class TestDb:
     def test_get_session_empty_task(self, tmp_db):
         from scripts.ai_agent_bridge._db import get_session
         result = get_session("")
-        assert result == {"claude": None, "gemini": None}
+        assert result == {"claude": None, "gemini": None, "codex": None}
 
     def test_get_session_not_found(self, tmp_db):
         from scripts.ai_agent_bridge._db import get_session, init_db
         init_db()
         result = get_session("nonexistent-task")
-        assert result == {"claude": None, "gemini": None}
+        assert result == {"claude": None, "gemini": None, "codex": None}
 
     def test_set_session_and_get_session_claude(self, tmp_db):
         from scripts.ai_agent_bridge._db import get_session, init_db, set_session

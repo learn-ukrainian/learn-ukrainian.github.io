@@ -67,7 +67,7 @@ def test_wal_mode_enabled(tmp_path):
 
 def test_send_message_validation(tmp_path):
     """Invalid inputs are rejected without DB writes."""
-    broker, db_path = _get_broker(tmp_path)
+    broker, _db_path = _get_broker(tmp_path)
 
     async def _test():
         await broker.init_db()
@@ -96,7 +96,7 @@ def test_send_message_validation(tmp_path):
 
 def test_send_and_receive(tmp_path):
     """Basic send/receive round-trip."""
-    broker, db_path = _get_broker(tmp_path)
+    broker, _db_path = _get_broker(tmp_path)
 
     async def _test():
         await broker.init_db()
@@ -123,6 +123,31 @@ def test_send_and_receive(tmp_path):
         })
         data = json.loads(result[0].text)
         assert data["count"] == 0
+
+    asyncio.run(_test())
+
+
+def test_send_and_receive_codex(tmp_path):
+    """Codex is a valid broker participant."""
+    broker, _db_path = _get_broker(tmp_path)
+
+    async def _test():
+        await broker.init_db()
+
+        result = await broker.handle_send_message({
+            "from_llm": "claude", "to": "codex",
+            "content": "Hello Codex", "task_id": "test-codex"
+        })
+        data = json.loads(result[0].text)
+        assert data["status"] == "sent"
+
+        result = await broker.handle_receive_messages({
+            "for_llm": "codex", "unread_only": True
+        })
+        data = json.loads(result[0].text)
+        assert data["count"] == 1
+        assert data["messages"][0]["content"] == "Hello Codex"
+        assert data["messages"][0]["from"] == "claude"
 
     asyncio.run(_test())
 
@@ -191,7 +216,7 @@ def test_concurrent_writes(tmp_path):
 
 def test_check_inbox(tmp_path):
     """check_inbox returns correct unread count."""
-    broker, db_path = _get_broker(tmp_path)
+    broker, _db_path = _get_broker(tmp_path)
 
     async def _test():
         await broker.init_db()

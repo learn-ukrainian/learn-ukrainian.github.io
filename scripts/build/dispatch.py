@@ -17,6 +17,7 @@ import json
 import os
 import re
 import subprocess
+import tempfile
 import time
 from datetime import datetime
 from pathlib import Path
@@ -42,6 +43,8 @@ _RATE_LIMIT_PATTERNS = (
 _GEMINI_INTER_CALL_DELAY = 3.0
 _last_gemini_call_time: float = 0.0
 
+_CODEX_MODES = {"safe", "workspace-write", "full-auto", "danger"}
+
 
 def _is_rate_limited(stderr: str) -> bool:
     """Check if a failure was caused by rate limiting."""
@@ -58,6 +61,30 @@ def _pace_gemini_calls() -> None:
             wait = _GEMINI_INTER_CALL_DELAY - elapsed
             time.sleep(wait)
     _last_gemini_call_time = time.monotonic()
+
+
+def _codex_dispatch_mode(agent: str) -> str:
+    """Resolve Codex sandbox mode for tool-enabled dispatch calls."""
+    requested = (
+        os.environ.get("CODEX_DISPATCH_MODE")
+        or os.environ.get("CODEX_CLI_MODE")
+        or ""
+    ).strip().lower()
+    if requested:
+        if requested in _CODEX_MODES:
+            return "workspace-write" if requested == "full-auto" else requested
+        _log(f"  ⚠️  Invalid CODEX_DISPATCH_MODE='{requested}' — falling back to default")
+    return "workspace-write" if agent.endswith("-tools") else "safe"
+
+
+def _codex_dispatch_flags(agent: str) -> list[str]:
+    """Translate Codex dispatch mode to CLI flags."""
+    mode = _codex_dispatch_mode(agent)
+    if mode == "danger":
+        return ["--dangerously-bypass-approvals-and-sandbox"]
+    if mode == "workspace-write":
+        return ["--full-auto"]
+    return ["-s", "read-only"]
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
@@ -192,7 +219,8 @@ def dispatch_agent(
 
     Args:
         prompt: The full prompt text to send.
-        agent: Writer/reviewer mode — "gemini", "gemini-tools", "claude", "claude-tools".
+        agent: Writer/reviewer mode — "gemini", "gemini-tools", "claude", "claude-tools",
+            "codex", or "codex-tools".
         phase: Pipeline phase name — "skeleton", "write", "vocab", "review".
         orch_dir: Path to orchestration/{slug}/ for saving logs.
         timeout: Subprocess timeout in seconds.
@@ -205,8 +233,9 @@ def dispatch_agent(
     """
     is_gemini = agent.startswith("gemini")
     is_claude = agent.startswith("claude")
+    is_codex = agent.startswith("codex")
 
-    if not is_gemini and not is_claude:
+    if not is_gemini and not is_claude and not is_codex:
         _log(f"  ❌ Unknown agent: {agent}")
         return False, ""
 
@@ -215,6 +244,8 @@ def dispatch_agent(
         if is_gemini:
             from batch_gemini_config import PRO_MODEL
             model = PRO_MODEL
+        elif is_codex:
+            model = "gpt-5.4"
         else:
             from batch_gemini_config import CLAUDE_MODEL_CORE_CONTENT
             model = CLAUDE_MODEL_CORE_CONTENT
@@ -227,6 +258,20 @@ def dispatch_agent(
         cmd = ["gemini", "-m", model, "-y"]
         if mcp_tools:
             cmd.extend(["--allowed-mcp-server-names", "rag"])
+    elif is_codex:
+        cmd = [
+            "codex",
+            "exec",
+            "--skip-git-repo-check",
+            "-C",
+            str(PROJECT_ROOT),
+            "--color",
+            "never",
+            "-m",
+            model,
+        ]
+        cmd.extend(_codex_dispatch_flags(agent))
+        cmd.append("-")  # Explicit stdin prompt mode
     else:
         mcp_config = str(PROJECT_ROOT / ".mcp.json")
         cmd = [
@@ -243,6 +288,16 @@ def dispatch_agent(
 
     def _run_cmd(run_cmd, run_label, run_timeout):
         t0 = time.monotonic()
+        output_path: str | None = None
+        if is_codex:
+            with tempfile.NamedTemporaryFile(
+                prefix="codex-dispatch-", suffix=".txt", delete=False
+            ) as tmp:
+                output_path = tmp.name
+            if run_cmd and run_cmd[-1] == "-":
+                run_cmd = [*run_cmd[:-1], "-o", output_path, "-"]
+            else:
+                run_cmd = [*run_cmd, "-o", output_path]
         try:
             result = subprocess.run(
                 run_cmd,
@@ -257,6 +312,12 @@ def dispatch_agent(
             ok = result.returncode == 0
             raw = result.stdout if ok else ""
             stderr = result.stderr or ""
+            if is_codex:
+                file_output = Path(output_path).read_text("utf-8") if output_path and Path(output_path).exists() else ""
+                raw = file_output if ok else ""
+                if not ok and file_output.strip():
+                    stderr = "\n".join(part for part in (stderr.strip(), "[codex output file]", file_output.strip()) if part)
+                stderr = "\n".join(part for part in ((result.stdout or "").strip(), stderr.strip()) if part)
 
             if not ok:
                 _log(f"  ❌ {run_label} returned error (rc={result.returncode}): {stderr[:200]}")
@@ -286,6 +347,9 @@ def dispatch_agent(
                 ok=False,
             )
             return False, ""
+        finally:
+            if output_path:
+                Path(output_path).unlink(missing_ok=True)
 
     # Pace Gemini calls to avoid burst-induced rate limits
     if is_gemini:
