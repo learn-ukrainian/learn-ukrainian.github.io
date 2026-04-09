@@ -3024,6 +3024,30 @@ def step_activities(
                     if isinstance(act, dict) and "title" not in act and "instruction" in act:
                         act["title"] = act["instruction"][:80]
 
+        # Strip parenthetical hints from fill-in sentences.
+        # Gemini persistently generates "Я йду в ____ (магазин)." despite prompt rule.
+        # Deterministic post-process: remove (hint) so learner must produce from context.
+        _HINT_RE = re.compile(r"\s*\([^)]+\)\s*")
+        hint_strip_count = 0
+        for section in ("inline", "workbook"):
+            for act in data.get(section, []) or []:
+                if not isinstance(act, dict) or act.get("type") != "fill-in":
+                    continue
+                for item in act.get("items", []) or []:
+                    if not isinstance(item, dict):
+                        continue
+                    sent = item.get("sentence", "")
+                    cleaned = _HINT_RE.sub(" ", sent).strip()
+                    # Fix double spaces and trailing space before punctuation
+                    cleaned = re.sub(r"\s+", " ", cleaned)
+                    cleaned = re.sub(r"\s+([.!?,;:])", r"\1", cleaned)
+                    if cleaned != sent:
+                        item["sentence"] = cleaned
+                        hint_strip_count += 1
+        if hint_strip_count:
+            _log(f"  🔧 Stripped {hint_strip_count} parenthetical hints from fill-in sentences")
+            clean = yaml.dump(data, allow_unicode=True, default_flow_style=False, sort_keys=False)
+
         # Validate against JSON Schema
         validator = jsonschema.Draft7Validator(schema)
         errors = sorted(validator.iter_errors(data), key=lambda e: list(e.absolute_path))
